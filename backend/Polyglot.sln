@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot", "Polyglot\Polyglot.csproj", "{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.DataAccess", "Polyglot.DataAccess\Polyglot.DataAccess.csproj", "{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Common", "Polyglot.Common\Polyglot.Common.csproj", "{B54C111B-45DE-4E69-AE6B-1764EE818FDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{5A62E1BC-444C-40A4-A20E-445288EF7D91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Tests", "Polyglot.Tests\Polyglot.Tests.csproj", "{7C540677-38C4-4536-B66B-0506308F7E62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Core", "Polyglot.Core\Polyglot.Core.csproj", "{24031DB4-8738-4ADA-BA0C-91192257AC0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B54C111B-45DE-4E69-AE6B-1764EE818FDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B54C111B-45DE-4E69-AE6B-1764EE818FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B54C111B-45DE-4E69-AE6B-1764EE818FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B54C111B-45DE-4E69-AE6B-1764EE818FDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A62E1BC-444C-40A4-A20E-445288EF7D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A62E1BC-444C-40A4-A20E-445288EF7D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A62E1BC-444C-40A4-A20E-445288EF7D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A62E1BC-444C-40A4-A20E-445288EF7D91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C540677-38C4-4536-B66B-0506308F7E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C540677-38C4-4536-B66B-0506308F7E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C540677-38C4-4536-B66B-0506308F7E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C540677-38C4-4536-B66B-0506308F7E62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24031DB4-8738-4ADA-BA0C-91192257AC0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24031DB4-8738-4ADA-BA0C-91192257AC0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24031DB4-8738-4ADA-BA0C-91192257AC0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24031DB4-8738-4ADA-BA0C-91192257AC0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5AA6013D-F776-4411-8BCC-CD661D9F55C0}
+	EndGlobalSection
+EndGlobal
