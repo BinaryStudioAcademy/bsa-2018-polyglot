@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Implementations.HttpServices
 {
-    class HttpService<TEntity, TIdentifyer> : IHttpService<TEntity, TIdentifyer>, IDisposable where TEntity : class
+    public class HttpService<TEntity, TIdentifyer> : IHttpService<TEntity, TIdentifyer>, IDisposable where TEntity : class
     {
         private bool disposed = false;
         private HttpClient httpClient;
