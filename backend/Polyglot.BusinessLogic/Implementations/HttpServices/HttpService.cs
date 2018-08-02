@@ -43,7 +43,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             {
                 return;
             }
-            throw new Exception(responseMessage.ReasonPhrase);
+            throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
         public async Task<TEntity> GetOneAsync(TIdentifyer identifier)
@@ -51,8 +51,11 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             var responseMessage = await httpClient.GetAsync(addressSuffix + identifier.ToString());
             responseMessage.EnsureSuccessStatusCode();
             string json = await responseMessage.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<TEntity>(json);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<TEntity>(json);
+            }
+            throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
         public async Task<IEnumerable<TEntity>> GetListAsync()
@@ -60,8 +63,11 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             var responseMessage = await httpClient.GetAsync(addressSuffix);
             responseMessage.EnsureSuccessStatusCode();
             string json = await responseMessage.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<IEnumerable<TEntity>>(json);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<TEntity>>(json);
+            }
+            throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
         public async Task PutAsync(TIdentifyer identifier, TEntity entity)
@@ -74,7 +80,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             {
                 return;
             }
-            throw new Exception(responseMessage.ReasonPhrase);
+            throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
         public async Task PostAsync(TEntity entity)
@@ -87,7 +93,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             {
                 return;
             }
-            throw new Exception(responseMessage.ReasonPhrase);
+            throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
         public void Dispose()
