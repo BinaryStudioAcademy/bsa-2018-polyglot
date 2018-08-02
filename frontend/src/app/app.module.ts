@@ -1,13 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  MatButtonModule,
   MatToolbarModule,
+  MatButtonModule,
   MatSidenavModule,
   MatIconModule,
-  MatListModule
+  MatListModule,
+  MatSelectModule,
+  MatInputModule,
+  MatAutocompleteModule,
+  MatBadgeModule,
+  MatCardModule,
+  MatDatepickerModule,
+  MatGridListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatTableModule,
+  MatTabsModule,
+  MatTooltipModule,
 
 } from '@angular/material';
 
@@ -27,13 +41,26 @@ import { DataService } from './services/data.service';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    
+    MatSelectModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatBadgeModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatFormFieldModule
     
   ],
   providers: [DataService],
