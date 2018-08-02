@@ -9,7 +9,7 @@ import { DataService } from './services/data.service';
 export class LandingComponent {
   title: string;
 
-  constructor(private DataService: DataService) {
+  constructor(private DataService: DataService<Object>) {
 
   }
 
