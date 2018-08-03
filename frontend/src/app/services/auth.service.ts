@@ -26,15 +26,28 @@ export class AuthService {
     );
    }
 
+   //TODO: Implement try-catch block with exceptions handle
   signInWithGoogle() {
-    return this._firebaseAuth.auth.signInWithPopup(
-      new firebase.auth.GoogleAuthProvider()
-    )
+    if (!this.isLoggedIn()) {
+      return this._firebaseAuth.auth.signInWithPopup(
+        new firebase.auth.GoogleAuthProvider()
+      );
+    }
   }
 
-  signInRegular(email, password) {
-    const credential = firebase.auth.EmailAuthProvider.credential( email, password );
-    return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
+  //TODO: Implement try-catch block with exceptions handle
+  registerInRegular(email: string, password: string) {
+    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password).then(
+      // TODO: do email verification in better way
+      () => this._firebaseAuth.auth.currentUser.sendEmailVerification()
+    );
+  }
+
+  //TODO: Implement try-catch block with exceptions handle
+  signInRegular(email: string, password: string) {
+    if (!this.isLoggedIn()) {
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
+    }
   }
 
   isLoggedIn() {
@@ -46,7 +59,9 @@ export class AuthService {
   }
 
   logout() {
-    this._firebaseAuth.auth.signOut();
+    if (this.isLoggedIn()) {
+      this._firebaseAuth.auth.signOut();
+    }
   }
 }
 
