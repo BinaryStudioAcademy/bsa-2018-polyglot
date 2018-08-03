@@ -4,17 +4,14 @@ using System.Text;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Translator
+    public class Team
     {
         public int Id { get; set; }
-        public UserProfile UserProfile { get; set; }
-        public Rating Rating { get; set; }
-
         public List<TeamTranslator> TeamTranslators { get; set; }
 
-        public Translator()
+        public Team()
         {
             TeamTranslators = new List<TeamTranslator>();
-        }
+        }    
     }
 }
