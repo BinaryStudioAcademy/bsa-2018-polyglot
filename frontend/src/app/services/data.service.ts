@@ -11,8 +11,8 @@ export class DataService <T> {
 
   constructor(
     private httpClient: HttpClient,
-    private url: string,
-    private endpoint: string,) { 
+    protected url: string = "baseUrl",
+    protected endpoint: string = "baseEndpoint",) { 
       this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
     }
 
