@@ -8,12 +8,13 @@ import { Observable } from 'rxjs';
 export class DataService <T> {
 
   private headers: HttpHeaders;
+  protected url: string;
+  protected endpoint: string;
 
-  constructor(
-    private httpClient: HttpClient,
-    protected url: string = "baseUrl",
-    protected endpoint: string = "baseEndpoint",) { 
+  constructor(private httpClient: HttpClient, url: string,  endpoint: string,) { 
       this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+      this.url = url;
+      this.endpoint = endpoint;
     }
 
     public create(item: T): Observable<T> {
