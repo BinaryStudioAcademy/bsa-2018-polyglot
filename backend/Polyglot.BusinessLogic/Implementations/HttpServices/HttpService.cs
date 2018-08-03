@@ -12,9 +12,9 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
     public class HttpService<TEntity, TIdentifyer> : IHttpService<TEntity, TIdentifyer>, IDisposable where TEntity : class
     {
         private bool disposed = false;
-        private HttpClient httpClient;
+        protected HttpClient httpClient;
         protected readonly string serviceBaseAddress;
-        private readonly string addressSuffix;
+        protected readonly string addressSuffix;
 
         public HttpService(string serviceBaseAddress, string addresSufix)
         {
