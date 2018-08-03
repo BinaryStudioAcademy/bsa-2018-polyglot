@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   //TODO: Implement try-catch block with exceptions handle
-  registerInRegular(email: string, password: string) {
+  signUpRegular(email: string, password: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password).then(
       // TODO: do email verification in better way
       () => this._firebaseAuth.auth.currentUser.sendEmailVerification()
