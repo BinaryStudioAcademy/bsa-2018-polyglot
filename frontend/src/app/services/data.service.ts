@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class DataService <T> {
+export abstract class DataService <T> {
 
   private headers: HttpHeaders;
-  protected url: string = "baseUrl";
-  protected endpoint: string = "baseEndpoint";
+  protected  url: string= "http://localhost:58828/api";
+  protected abstract endpoint: string;
 
-  constructor(private httpClient: HttpClient) { 
+  constructor(protected httpClient: HttpClient) { 
       this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
     }
 
@@ -30,9 +30,9 @@ export class DataService <T> {
         .get<T>(`${this.url}/${this.endpoint}/${id}`, {headers: this.headers});
     }
   
-    public getList(): Observable<T> {
+    public getList(): Observable<T[]> {
       return this.httpClient
-        .get<T>(`${this.url}`) as Observable<T>
+        .get<T[]>(`${this.url}/${this.endpoint}`, {headers: this.headers}) 
     }
   
     public delete(id: number) : Observable<T> {
