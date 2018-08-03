@@ -6,6 +6,12 @@ import { LandingComponent } from './landing.component';
 import { DataService } from './services/data.service';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
+import { environment } from '../environments/environment';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AuthService } from './services/auth.service';
+
 @NgModule({
   declarations: [
     LandingComponent,
@@ -13,9 +19,12 @@ import { NavigationComponent } from './components/navigation/navigation.componen
   ],
   imports: [
     HttpClientModule,
-    BrowserModule
+    BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
-  providers: [DataService],
+  providers: [DataService, AuthService],
   bootstrap: [LandingComponent]
 })
 export class AppModule { }
