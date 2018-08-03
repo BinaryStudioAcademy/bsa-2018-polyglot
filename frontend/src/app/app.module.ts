@@ -26,6 +26,7 @@ import {
 } from '@angular/material';
 
 import { LayoutModule } from '@angular/cdk/layout';
+import { HttpClientModule } from '@angular/common/http';
 
 import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -39,6 +40,7 @@ import { DataService } from './services/data.service';
     NavigationComponent
   ],
   imports: [
+
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -61,7 +63,9 @@ import { DataService } from './services/data.service';
     MatTabsModule,
     MatTooltipModule,
     MatFormFieldModule
+    HttpClientModule,
     
+
   ],
   providers: [DataService],
   bootstrap: [NavigationComponent]
