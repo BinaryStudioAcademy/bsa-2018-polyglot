@@ -12,9 +12,9 @@ namespace Polyglot.DataAccess.NoSQL_Models
 		public string Description { get; set; }
 		public string PictureLink { get; set; }
 
-		List<Translation> Translations { get; set; }
-		List<Comment> Comments { get; set; }
-		List<string> Tags { get; set; }
+		public List<Translation> Translations { get; set; }
+		public List<Comment> Comments { get; set; }
+		public List<string> Tags { get; set; }
 
 		public ComplexString()
 		{

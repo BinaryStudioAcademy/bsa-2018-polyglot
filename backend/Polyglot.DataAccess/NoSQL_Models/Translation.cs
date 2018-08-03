@@ -11,8 +11,8 @@ namespace Polyglot.DataAccess.NoSQL_Models
 		public int UserId { get; set; }
 		public DateTime CreatedOn { get; set; }
 
-		List<AdditionalTranslation> History { get; set; }
-		List<AdditionalTranslation> OptionalTranslations { get; set; }
+		public List<AdditionalTranslation> History { get; set; }
+		public List<AdditionalTranslation> OptionalTranslations { get; set; }
 
 		public Translation()
 		{
