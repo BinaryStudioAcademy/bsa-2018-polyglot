@@ -9,11 +9,11 @@ import { DataService } from './services/data.service';
 export class LandingComponent {
   title: string;
 
-  constructor(private DataService: DataService) {
+  constructor() { 
 
   }
 
   ngOnInit() {
-    this.title = this.DataService.getAppTitle();
+    this.title = "Poliglot";
   }
 }

@@ -12,9 +12,9 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
     public class HttpService<TEntity, TIdentifyer> : IHttpService<TEntity, TIdentifyer>, IDisposable where TEntity : class
     {
         private bool disposed = false;
-        private HttpClient httpClient;
+        protected HttpClient httpClient;
         protected readonly string serviceBaseAddress;
-        private readonly string addressSuffix;
+        protected readonly string addressSuffix;
 
         public HttpService(string serviceBaseAddress, string addresSufix)
         {
@@ -30,13 +30,13 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
 
             #region headers
             httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Poliglot", "1.0")));
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Polyglot", "1.0")));
             #endregion
 
             return httpClient;
         }
 
-        public async Task DeleteAsync(TIdentifyer identifier)
+        public virtual async Task DeleteAsync(TIdentifyer identifier)
         {
             var responseMessage = await httpClient.DeleteAsync(addressSuffix + identifier.ToString());
             if(responseMessage.IsSuccessStatusCode)
@@ -46,7 +46,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
-        public async Task<TEntity> GetOneAsync(TIdentifyer identifier)
+        public virtual async Task<TEntity> GetOneAsync(TIdentifyer identifier)
         {
             var responseMessage = await httpClient.GetAsync(addressSuffix + identifier.ToString());
             responseMessage.EnsureSuccessStatusCode();
@@ -58,7 +58,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
-        public async Task<IEnumerable<TEntity>> GetListAsync()
+        public virtual async Task<IEnumerable<TEntity>> GetListAsync()
         {
             var responseMessage = await httpClient.GetAsync(addressSuffix);
             responseMessage.EnsureSuccessStatusCode();
@@ -70,7 +70,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
-        public async Task PutAsync(TIdentifyer identifier, TEntity entity)
+        public virtual async Task PutAsync(TIdentifyer identifier, TEntity entity)
         {
             var requestMessage = new HttpRequestMessage();
             string json = JsonConvert.SerializeObject(entity);
@@ -83,7 +83,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
             throw new HttpRequestException(responseMessage.ReasonPhrase);
         }
 
-        public async Task PostAsync(TEntity entity)
+        public virtual async Task PostAsync(TEntity entity)
         {
             var requestMessage = new HttpRequestMessage();
             string json = JsonConvert.SerializeObject(entity);
