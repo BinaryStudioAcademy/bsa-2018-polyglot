@@ -6,6 +6,8 @@ namespace Polyglot.DataAccess.NoSQL_Models
 {
     public class ComplexString
     {
+		public int Id { get; set; }
+
 		public int ProjectId { get; set; }
 		public string Language { get; set; }
 		public string OriginalValue { get; set; }
