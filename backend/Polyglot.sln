@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot", "Polyglot\Polyglot.csproj", "{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot", "Polyglot\Polyglot.csproj", "{6E24DF43-68E0-4C60-9583-2F681D3ABB7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.DataAccess", "Polyglot.DataAccess\Polyglot.DataAccess.csproj", "{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.DataAccess", "Polyglot.DataAccess\Polyglot.DataAccess.csproj", "{B0D53D09-430E-4CA8-B18F-58ABA67A05DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Common", "Polyglot.Common\Polyglot.Common.csproj", "{B54C111B-45DE-4E69-AE6B-1764EE818FDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.Common", "Polyglot.Common\Polyglot.Common.csproj", "{B54C111B-45DE-4E69-AE6B-1764EE818FDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{5A62E1BC-444C-40A4-A20E-445288EF7D91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{5A62E1BC-444C-40A4-A20E-445288EF7D91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Tests", "Polyglot.Tests\Polyglot.Tests.csproj", "{7C540677-38C4-4536-B66B-0506308F7E62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.Tests", "Polyglot.Tests\Polyglot.Tests.csproj", "{7C540677-38C4-4536-B66B-0506308F7E62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Core", "Polyglot.Core\Polyglot.Core.csproj", "{24031DB4-8738-4ADA-BA0C-91192257AC0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.Core", "Polyglot.Core\Polyglot.Core.csproj", "{24031DB4-8738-4ADA-BA0C-91192257AC0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
