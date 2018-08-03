@@ -30,7 +30,7 @@ namespace Polyglot.BusinessLogic.Implementations.HttpServices
 
             #region headers
             httpClient.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Poliglot", "1.0")));
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Polyglot", "1.0")));
             #endregion
 
             return httpClient;
