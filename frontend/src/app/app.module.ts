@@ -62,7 +62,7 @@ import { DataService } from './services/data.service';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
-    MatFormFieldModule
+    MatFormFieldModule,
     HttpClientModule,
     
 
