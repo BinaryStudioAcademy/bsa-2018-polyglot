@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class UserProfule
+    public class UserProfile
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
