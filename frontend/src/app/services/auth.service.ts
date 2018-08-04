@@ -37,10 +37,7 @@ export class AuthService {
 
   //TODO: Implement try-catch block with exceptions handle
   signUpRegular(email: string, password: string) {
-    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password).then(
-      // TODO: do email verification in better way
-      () => this._firebaseAuth.auth.currentUser.sendEmailVerification()
-    );
+    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password);
   }
 
   //TODO: Implement try-catch block with exceptions handle
@@ -61,6 +58,12 @@ export class AuthService {
   logout() {
     if (this.isLoggedIn()) {
       this._firebaseAuth.auth.signOut();
+    }
+  }
+
+  sendEmailVerification() {
+    if (this.isLoggedIn && !this.userDetails.emailVerified) {
+      this._firebaseAuth.auth.currentUser.sendEmailVerification();
     }
   }
 }
