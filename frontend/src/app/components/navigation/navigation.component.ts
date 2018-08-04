@@ -12,6 +12,7 @@ export class NavigationComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   
+  
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 640px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();

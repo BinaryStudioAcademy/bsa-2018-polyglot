@@ -18,3 +18,4 @@ namespace Polyglot.DataAccess.Entities
         public string AvatarUrl { get; set; }
     }
 }
+

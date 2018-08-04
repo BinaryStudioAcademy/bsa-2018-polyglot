@@ -31,7 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
-import { DataService } from './services/data.service';
+import { UserService } from './services/user.service';
 
 
 @NgModule({
@@ -67,7 +67,7 @@ import { DataService } from './services/data.service';
     
 
   ],
-  providers: [DataService],
+  providers: [UserService],
   bootstrap: [NavigationComponent]
 })
 export class AppModule { }
