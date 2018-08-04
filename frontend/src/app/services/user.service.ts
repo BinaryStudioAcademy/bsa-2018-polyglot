@@ -1,15 +1,31 @@
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
-import { User } from '../models/user';
-import { HttpClient } from '@angular/common/http';
+import { DataService, RequestMethod } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService extends DataService<String> {
+export class UserService {
 
-  protected endpoint: string = "users";
-  constructor(httpClient: HttpClient) {
-    super(httpClient);
+  private endpoint: string = "users";
+  constructor(private DataService: DataService) { }
+
+   getAll(){
+    return this.DataService.sendRequest(RequestMethod.Get, this.endpoint);
+   }
+
+   getOne(id: number){
+    return this.DataService.sendRequest(RequestMethod.Get, this.endpoint, id);
+   }
+
+   create(body){
+    return this.DataService.sendRequest(RequestMethod.Post, this.endpoint, undefined, body);
+   }
+
+   update(id: number, body){
+    return this.DataService.sendRequest(RequestMethod.Put, this.endpoint, id, body);
+   }
+
+   delete(id: number){
+    return this.DataService.sendRequest(RequestMethod.Delete, this.endpoint, id);
    }
 }
