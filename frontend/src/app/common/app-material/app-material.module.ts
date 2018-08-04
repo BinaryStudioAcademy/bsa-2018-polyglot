@@ -21,6 +21,9 @@ import {
   MatTableModule,
   MatTabsModule,
   MatTooltipModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+
 
 } from '@angular/material';
 
@@ -46,6 +49,8 @@ import {
     MatTabsModule,
     MatTooltipModule,
     MatFormFieldModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     LayoutModule,
@@ -66,7 +71,9 @@ import {
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class AppMaterialModule { }
