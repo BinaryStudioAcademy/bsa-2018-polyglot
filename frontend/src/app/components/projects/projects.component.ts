@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 
 export interface Project {
-  cols: number;
-  rows: number;
+
   text: string;
   progress: number;
 }
@@ -16,11 +15,12 @@ export interface Project {
 export class ProjectsComponent implements OnInit {
 
   cards: Project[] = [
-    { text: 'Project1', cols: 1, rows: 2, progress:40 },
-    { text: 'Project2', cols: 1, rows: 2, progress:30 },
-    { text: 'Project3', cols: 1, rows: 2, progress:29 },
-    { text: 'Project4', cols: 1, rows: 2, progress:85 },
+    { text: 'Project1', progress: 40 },
+    { text: 'Project2', progress: 30 },
+    { text: 'Project3', progress: 29 },
+    { text: 'Project4', progress: 85 },
   ];
+
 
   constructor() { }
 

@@ -16,6 +16,7 @@ import { TeamsComponent } from './components/teams/teams.component';
 import { GlossariesComponent } from './components/glossaries/glossaries.component';
 import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { NoFoundComponent } from './components/no-found/no-found.component';
 
 
 
@@ -26,7 +27,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     ProjectsComponent,
     TeamsComponent,
     GlossariesComponent,
-    DashboardComponent
+    DashboardComponent,
+    NoFoundComponent
   ],
   imports: [
     BrowserModule,

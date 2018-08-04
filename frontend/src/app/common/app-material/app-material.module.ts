@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LayoutModule } from '@angular/cdk/layout';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   MatToolbarModule,
@@ -23,9 +24,12 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
+  
+ 
 
 
 } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -51,6 +55,8 @@ import {
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    FlexLayoutModule
+    
   ],
   exports: [
     LayoutModule,
@@ -74,6 +80,7 @@ import {
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    FlexLayoutModule
   ]
 })
 export class AppMaterialModule { }

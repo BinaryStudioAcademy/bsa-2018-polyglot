@@ -1,4 +1,4 @@
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+<!-- <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="example-toolbar">
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
@@ -25,5 +25,56 @@
     <mat-sidenav-content>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
+  </mat-sidenav-container>
+</div> -->
+
+
+<div style="height: 100vh;">
+  <mat-toolbar color="primary">
+    <div fxShow="true" fxHide.gt-sm="true">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
+    <a mat-button class="companyName" routerLink="/">
+      <span>Polyglot</span>
+    </a>
+    <span class="example-spacer"></span>
+    <div fxShow="true" fxHide.lt-md="true">
+      <a mat-button routerLink="/about-us">About us</a>
+      <a mat-button routerLink="/prices">Prices</a>
+      <a mat-button routerLink="Dashboard">Dashboard</a>
+      <a mat-button routerLink="/offer">Offer</a>
+      <a mat-button routerLink="/contact">Contact</a>
+      <span class="toolbar-spacer"></span>
+      <mat-icon class="toolbar-icon">notifications</mat-icon>
+      <mat-icon class="toolbar-icon">account_circle</mat-icon>
+    </div>
+
+  </mat-toolbar>
+  <mat-sidenav-container fxFlexFill class="example-container">
+
+    <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
+      <div fxLayout="column">
+        <a mat-button routerLink="/about-us">About us</a>
+        <a mat-button routerLink="/prices">Prices</a>
+        <a mat-button routerLink="Dashboard">
+          <mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
+        <a mat-button routerLink="/offer">Offer</a>
+        <a mat-button routerLink="/contact">Contact</a>
+        <mat-divider></mat-divider>
+        <a mat-button>
+          <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+        <a mat-button>
+          <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+
+
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content fxFlexFill>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
   </mat-sidenav-container>
 </div>

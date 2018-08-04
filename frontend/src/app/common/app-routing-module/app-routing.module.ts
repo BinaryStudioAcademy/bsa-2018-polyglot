@@ -6,20 +6,21 @@ import { ProjectsComponent } from 'src/app/components/projects/projects.componen
 import { TeamsComponent } from 'src/app/components/teams/teams.component';
 import { GlossariesComponent } from 'src/app/components/glossaries/glossaries.component';
 import { DashboardComponent } from 'src/app/components/dashboard/dashboard.component';
+import { NoFoundComponent } from 'src/app/components/no-found/no-found.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
-  { path: 'Dashboard', component: DashboardComponent,
-
-  children: [
-  { path: 'Projects', component: ProjectsComponent, pathMatch: 'full' },
-  { path: 'Teams', component: TeamsComponent },
-  { path: 'Glossaries', component: GlossariesComponent }, 
-  ]
-},
- 
-  { path: '**', redirectTo: '/', pathMatch: 'full' }
+  {
+    path: 'Dashboard', component: DashboardComponent,
+    children: [
+      { path: 'Projects', component: ProjectsComponent },
+      { path: 'Teams', component: TeamsComponent },
+      { path: 'Glossaries', component: GlossariesComponent },
+    ]
+  },
+  {path: '404', component: NoFoundComponent},
+  {path: '**', redirectTo: '/404'}
 ];
 
 
