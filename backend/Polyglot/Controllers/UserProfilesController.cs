@@ -11,7 +11,7 @@ namespace Polyglot.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserProfilesController : ControllerBase
     {
         // GET: api/Users
         [HttpGet]
@@ -29,13 +29,13 @@ namespace Polyglot.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public void Post([FromBody] User value)
+        public void Post([FromBody] UserProfile value)
         {
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] User value)
+        public void Put(int id, [FromBody] UserProfile value)
         {
         }
 
