@@ -14,15 +14,15 @@ export class DashboardComponent implements OnInit {
     this.routeLinks = [
       {
         label: 'Projects',
-        link: '/Projects',
+        link: 'Projects',
         index: 0
       }, {
         label: 'Teams',
-        link: '/Teams',
+        link: 'Teams',
         index: 1
       }, {
         label: 'Glossaries',
-        link: '/Glossaries',
+        link: 'Glossaries',
         index: 2
       }
     ];

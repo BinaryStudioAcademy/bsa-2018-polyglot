@@ -9,15 +9,16 @@ import { DashboardComponent } from 'src/app/components/dashboard/dashboard.compo
 
 
 const routes: Routes = [
-  {
-      path: '',
-      redirectTo: '/',
-      pathMatch: 'full'
-  },
-  { path: 'Dashboard', component: DashboardComponent },
-  { path: 'Projects', component: ProjectsComponent },
+  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: 'Dashboard', component: DashboardComponent,
+
+  children: [
+  { path: 'Projects', component: ProjectsComponent, pathMatch: 'full' },
   { path: 'Teams', component: TeamsComponent },
-  { path: 'Glossaries', component: GlossariesComponent },
+  { path: 'Glossaries', component: GlossariesComponent }, 
+  ]
+},
+ 
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 
@@ -29,6 +30,6 @@ const routes: Routes = [
   ],
   exports: [
     RouterModule
-]
+  ]
 })
 export class AppRoutingModule { }
