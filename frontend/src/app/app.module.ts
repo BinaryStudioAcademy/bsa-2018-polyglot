@@ -33,13 +33,15 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 
 import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 
 
 @NgModule({
   declarations: [
     LandingComponent,
     NavigationComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    SignupDialogComponent
   ],
   imports: [
 
@@ -69,7 +71,7 @@ import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.compon
 
 
   ],
-  entryComponents: [LoginDialogComponent],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent],
   providers: [UserService],
   bootstrap: [LandingComponent]
 })
