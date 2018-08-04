@@ -32,12 +32,14 @@ import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
 import { UserService } from './services/user.service';
+import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 
 
 @NgModule({
   declarations: [
     LandingComponent,
-    NavigationComponent
+    NavigationComponent,
+    LoginDialogComponent
   ],
   imports: [
 
@@ -64,10 +66,11 @@ import { UserService } from './services/user.service';
     MatTooltipModule,
     MatFormFieldModule,
     HttpClientModule,
-    
+
 
   ],
+  entryComponents: [LoginDialogComponent],
   providers: [UserService],
-  bootstrap: [NavigationComponent]
+  bootstrap: [LandingComponent]
 })
 export class AppModule { }
