@@ -15,7 +15,7 @@ namespace Polyglot.DataAccess.Entities
         public Language MainLanguage { get; set; }
 
         public List<Team> Teams { get; set; }
-        public List<Translation> Translation { get; set; }
+        public List<Translation> Translations { get; set; }
         public List<ProjectLanguage> ProjectLanguageses { get; set; }
         public List<ProjectGlossary> ProjectGlossaries { get; set; }
         public List<ProjectTag> ProjectTags { get; set; }
@@ -23,7 +23,7 @@ namespace Polyglot.DataAccess.Entities
         public Project()
         {
             Teams = new List<Team>();
-            Translation = new List<Translation>();
+            Translations = new List<Translation>();
             ProjectLanguageses = new List<ProjectLanguage>();
             ProjectGlossaries = new List<ProjectGlossary>();
             ProjectTags = new List<ProjectTag>();
