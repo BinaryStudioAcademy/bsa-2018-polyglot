@@ -28,7 +28,7 @@ import {
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
 
-import { LandingComponent } from './landing.component';
+import { LandingComponent } from './components/landing/landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
 import { DataService } from './services/data.service';
@@ -68,6 +68,6 @@ import { DataService } from './services/data.service';
 
   ],
   providers: [DataService],
-  bootstrap: [NavigationComponent]
+  bootstrap: [NavigationComponent, LandingComponent]
 })
 export class AppModule { }
