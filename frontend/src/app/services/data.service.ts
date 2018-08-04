@@ -12,7 +12,7 @@ export class DataService {
   private  url: string= "http://localhost:58828/api";
   constructor(private httpClient: HttpClient) { }
 
-  sendRequest<T>(
+  sendRequest(
     type: RequestMethod,
     endpoint: string,
     params: number | string = "",
@@ -23,7 +23,6 @@ export class DataService {
           headers = new HttpHeaders({ 'Content-Type': 'application/json' });
       }
       
-
       let request: Observable<any>;
 
       switch (type) {
