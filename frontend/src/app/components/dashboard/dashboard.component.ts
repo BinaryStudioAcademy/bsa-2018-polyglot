@@ -6,8 +6,9 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass']
 })
-export class DashboardComponent  {
+export class DashboardComponent {
   routeLinks: any[];
+  activeLinkIndex = 0;
 
   constructor(private router: Router) {
     this.routeLinks = [
@@ -25,9 +26,10 @@ export class DashboardComponent  {
         index: 2
       }
     ];
+
+
   }
 
 
-
-  }
+}
 
