@@ -18,7 +18,6 @@ export class AuthService {
       (user) => {
         if (user) {
           this.userDetails = user;
-          console.log(this.userDetails);
         }
         else {
           this.userDetails = null;
@@ -43,8 +42,10 @@ export class AuthService {
   }
 
 
-  signUpRegular(email: string, password: string) {
+  signUpRegular(email: string, password: string, name: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+    .then(() => this._firebaseAuth.auth.currentUser
+      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
     .catch(error => console.log(error));
   }
 
