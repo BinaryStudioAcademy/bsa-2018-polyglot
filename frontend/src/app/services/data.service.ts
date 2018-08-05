@@ -1,44 +1,77 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataService <T> {
+export class DataService {
 
-  private headers: HttpHeaders;
+  private  url: string= "http://localhost:58828/api";
+  constructor(private httpClient: HttpClient) { }
 
-  constructor(
-    private httpClient: HttpClient,
-    private url: string,
-    private endpoint: string,) { 
-      this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
-    }
+  sendRequest(
+    type: RequestMethod,
+    endpoint: string,
+    params: number | string = "",
+    body: any = {}) : Observable<any> {
 
-    public create(item: T): Observable<T> {
-      return this.httpClient
-        .post<T>(`${this.url}/${this.endpoint}`, item, {headers: this.headers});
-    }
-  
-    public update(id: number, item: T): Observable<T> {
-      return this.httpClient
-        .put<T>(`${this.url}/${this.endpoint}/${id}`, item, {headers: this.headers});
-    }
-  
-    public getOne (id: number): Observable<T> {
-      return this.httpClient
-        .get<T>(`${this.url}/${this.endpoint}/${id}`, {headers: this.headers});
-    }
-  
-    public getList(): Observable<T> {
-      return this.httpClient
-        .get<T>(`${this.url}`) as Observable<T>
-    }
-  
-    public delete(id: number) : Observable<T> {
-      return this.httpClient
-        .delete<T>(`${this.url}/${this.endpoint}/${id}`, {headers: this.headers}); 
+      let headers;
+      if (type === RequestMethod.Post || type === RequestMethod.Put) {
+          headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      }
+      
+      let request: Observable<any>;
+
+      switch (type) {
+        case RequestMethod.Get:
+            request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, headers);
+            break;
+        case RequestMethod.Post:
+            request = this.httpClient.post(`${this.url}/${endpoint}/`, body, headers);
+            break;
+        case RequestMethod.Put:
+            request = this.httpClient.put(`${this.url}/${endpoint}/${params}`, body, headers);
+            break;
+        case RequestMethod.Delete:
+            request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, headers);
+            break;
     }
 
+    return request.pipe(
+        catchError((res: HttpErrorResponse) => this.handleError(res))
+    );
+  }
+  
+  protected handleError(error: HttpErrorResponse | any): any {
+    let errMsg: string;
+    let errorData: any;
+    if (error instanceof HttpErrorResponse) {
+        errorData = error.error || '';
+        const err = errorData || JSON.stringify(errorData);
+        errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+        errMsg = error.Message ? error.Message : error.toString();
+    }
+    console.error(errMsg);
+
+    if (errorData) {
+        return throwError(errorData);
+    }
+
+    return throwError(errMsg);
+  }
+}
+
+
+export enum RequestMethod {
+  Get,
+  Post,
+  Put,
+  Delete,
+  Options,
+  Head,
+  Patch
 }

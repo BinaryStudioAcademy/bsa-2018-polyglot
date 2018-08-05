@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from './services/data.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ export class LandingComponent {
   }
 
   ngOnInit() {
-    this.title = "Poliglot";
+    this.title = "Polyglot";
+
   }
 }
