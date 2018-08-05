@@ -1,4 +1,5 @@
-<nav mat-tab-nav-bar aria-label="weather navigation links">
+<app-navigation></app-navigation>
+<nav mat-tab-nav-bar aria-label="navigation links">
     <a mat-tab-link
         *ngFor="let routeLink of routeLinks; let i = index"
          [routerLink]="routeLink.link"
@@ -7,14 +8,5 @@
          {{routeLink.label}}
      </a>
 </nav>
-
-
-<!-- <nav mat-tab-nav-bar >
-    <a mat-tab-link *ngFor="let routeLink of routeLinks"
-    [routerLink]="routeLink.link"
-       (click)="activeLink = routeLink"
-       [active]="activeLink == routeLink">  {{routeLink.label}} </a>
-    
-  </nav> -->
 
 <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-<div style="height: 100vh;">
+<div>
   <mat-toolbar color="primary">
     <div fxShow="true" fxHide.gt-sm="true">
       <button mat-icon-button (click)="sidenav.toggle()">
@@ -11,15 +11,16 @@
     </a>
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
-      <a mat-button routerLink="/about-us">About us</a>
-      <a mat-button routerLink="Dashboard">Dashboard</a>
-      <a mat-button routerLink="/contact">Contact</a>
+      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button routerLink="/dashboard">Dashboard</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <span class="toolbar-spacer"></span>
       <mat-icon class="toolbar-icon">notifications</mat-icon>
       <mat-icon class="toolbar-icon">account_circle</mat-icon>
     </div>
 
   </mat-toolbar>
+
   <mat-sidenav-container fxFlexFill class="example-container">
 
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
@@ -39,9 +40,8 @@
 
       </div>
     </mat-sidenav>
-    <mat-sidenav-content fxFlexFill>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
+   
 
   </mat-sidenav-container>
+
 </div>

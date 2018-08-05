@@ -14,22 +14,18 @@ export class DashboardComponent {
     this.routeLinks = [
       {
         label: 'Projects',
-        link: 'Projects',
-        index: 0
+        link: 'projects',
+        
       }, {
         label: 'Teams',
-        link: 'Teams',
-        index: 1
+        link: 'teams',
+        
       }, {
         label: 'Glossaries',
-        link: 'Glossaries',
-        index: 2
+        link: 'glossaries',
+        
       }
     ];
-
-
   }
-
-
 }
 
