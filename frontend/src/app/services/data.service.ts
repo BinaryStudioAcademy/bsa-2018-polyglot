@@ -13,18 +13,18 @@ export class DataService {
   private  url: string= "http://localhost:58828/api";
   constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
-  sendRequest(
+  async sendRequest(
     type: RequestMethod,
     endpoint: string,
     params: number | string = "",
-    body: any = {}) : Observable<any> {
+    body: any = {}) {
 
       let headers;
       if (type === RequestMethod.Post || type === RequestMethod.Put) {
-        headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${async () => await this.authService.getCurrentToken()}`});
-        } else {
-        headers = new HttpHeaders({'Authorization': `Bearer ${async () => await this.authService.getCurrentToken()}`})
-        }
+        headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${await this.authService.getCurrentToken()}`});
+      } else {
+        headers = new HttpHeaders({'Authorization': `Bearer ${await this.authService.getCurrentToken()}`})
+      }
       
       let request: Observable<any>;
 
