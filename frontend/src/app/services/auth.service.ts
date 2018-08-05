@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,12 @@ export class AuthService {
   private user: Observable<firebase.User>;
   private userDetails: firebase.User = null;
 
-  constructor(private _firebaseAuth: AngularFireAuth) {
+  constructor(private _firebaseAuth: AngularFireAuth, private router: Router) {
     this.user = _firebaseAuth.authState;
     this.user.subscribe(
       (user) => {
         if (user) {
           this.userDetails = user;
-          console.log(this.userDetails);
         }
         else {
           this.userDetails = null;
@@ -26,24 +26,34 @@ export class AuthService {
     );
    }
 
-   //TODO: Implement try-catch block with exceptions handle
+  getCurrentToken() : Promise<string>{
+    if (!this.isLoggedIn()){
+      return Promise.resolve("");
+    }
+    return this._firebaseAuth.auth.currentUser.getIdToken();
+  }
+
   signInWithGoogle() {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
-      );
+      ).catch(error => console.log(error));
     }
   }
 
-  //TODO: Implement try-catch block with exceptions handle
-  signUpRegular(email: string, password: string) {
-    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password);
+
+  signUpRegular(email: string, password: string, name: string) {
+    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+    .then(() => this._firebaseAuth.auth.currentUser
+      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
+    .catch(error => console.log(error));
   }
 
-  //TODO: Implement try-catch block with exceptions handle
+
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
-      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
+      .catch(error => console.log(error));
     }
   }
 
@@ -57,7 +67,8 @@ export class AuthService {
 
   logout() {
     if (this.isLoggedIn()) {
-      this._firebaseAuth.auth.signOut();
+      this._firebaseAuth.auth.signOut()
+      .then(() => this.router.navigate(['/']));
     }
   }
 
