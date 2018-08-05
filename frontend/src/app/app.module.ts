@@ -31,7 +31,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
+
 import { UserService } from './services/user.service';
+import { environment } from '../environments/environment';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AuthService } from './services/auth.service';
+import { DataService } from './services/data.service';
 
 
 @NgModule({
@@ -64,10 +71,11 @@ import { UserService } from './services/user.service';
     MatTooltipModule,
     MatFormFieldModule,
     HttpClientModule,
-    
-
+    AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
-  providers: [UserService],
+  providers: [DataService, AuthService, UserService],
   bootstrap: [NavigationComponent]
 })
 export class AppModule { }
