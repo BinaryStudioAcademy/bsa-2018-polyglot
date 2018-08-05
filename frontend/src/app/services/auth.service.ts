@@ -26,11 +26,11 @@ export class AuthService {
     );
    }
 
-  getCurrentToken() : Promise<string>{
+  async getCurrentToken() : Promise<string>{
     if (!this.isLoggedIn()){
       return Promise.resolve("");
     }
-    return this._firebaseAuth.auth.currentUser.getIdToken();
+    return await this._firebaseAuth.auth.currentUser.getIdToken();
   }
 
   signInWithGoogle() {
