@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { throwError } from 'rxjs';
 export class DataService {
 
   private  url: string= "http://localhost:58828/api";
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
   sendRequest(
     type: RequestMethod,
@@ -20,8 +21,10 @@ export class DataService {
 
       let headers;
       if (type === RequestMethod.Post || type === RequestMethod.Put) {
-          headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      }
+        headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${async () => await this.authService.getCurrentToken()}`});
+        } else {
+        headers = new HttpHeaders({'Authorization': `Bearer ${async () => await this.authService.getCurrentToken()}`})
+        }
       
       let request: Observable<any>;
 

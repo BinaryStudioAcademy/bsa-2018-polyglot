@@ -26,6 +26,13 @@ export class AuthService {
     );
    }
 
+  getCurrentToken() : Promise<string>{
+    if (!this.isLoggedIn()){
+      return Promise.resolve("");
+    }
+    return this._firebaseAuth.auth.currentUser.getIdToken();
+  }
+
    //TODO: Implement try-catch block with exceptions handle
   signInWithGoogle() {
     if (!this.isLoggedIn()) {
