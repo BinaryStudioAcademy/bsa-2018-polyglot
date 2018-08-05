@@ -32,12 +32,14 @@ import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
 import { DataService } from './services/data.service';
+import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
 @NgModule({
   declarations: [
     LandingComponent,
-    NavigationComponent
+    NavigationComponent,
+    TranslatorProfileComponent
   ],
   imports: [
 
