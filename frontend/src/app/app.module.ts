@@ -62,7 +62,7 @@ import { AuthGuard } from './services/auth-guard.service'
     
   ],
   providers: [DataService, AuthService, UserService, AuthGuard],
-  bootstrap: [NavigationComponent]
+  bootstrap: [AppComponent]
 
 })
 export class AppModule { }
