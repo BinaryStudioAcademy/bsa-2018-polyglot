@@ -11,6 +11,7 @@ import { LandingComponent } from './components/landing/landing.component';
 
 
 
+
 import { DataService } from './services/data.service';
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -25,6 +26,16 @@ import { HomeComponent } from './components/landing/home/home.component';
 import { AboutUsComponent } from './components/landing/about-us/about-us.component';
 import { ContactComponent } from './components/landing/contact/contact.component';
 import { NavigationComponent } from './components/landing/navigation/navigation.component';
+
+
+
+import { UserService } from './services/user.service';
+import { environment } from '../environments/environment';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AuthService } from './services/auth.service';
+import { DataService } from './services/data.service';
 
 
 
@@ -48,10 +59,19 @@ import { NavigationComponent } from './components/landing/navigation/navigation.
     FormsModule,
     AppMaterialModule,
     HttpClientModule,
+
     AppRoutingModule
     
   ],
   providers: [UserService, LandingGuard],
   bootstrap: [AppComponent]
+
+    AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
+  ],
+  providers: [DataService, AuthService, UserService],
+  bootstrap: [NavigationComponent]
+
 })
 export class AppModule { }
