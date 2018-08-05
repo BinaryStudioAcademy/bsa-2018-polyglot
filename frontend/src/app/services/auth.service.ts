@@ -34,24 +34,25 @@ export class AuthService {
     return this._firebaseAuth.auth.currentUser.getIdToken();
   }
 
-   //TODO: Implement try-catch block with exceptions handle
   signInWithGoogle() {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
-      );
+      ).catch(error => console.log(error));
     }
   }
 
-  //TODO: Implement try-catch block with exceptions handle
+
   signUpRegular(email: string, password: string) {
-    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password);
+    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+    .catch(error => console.log(error));
   }
 
-  //TODO: Implement try-catch block with exceptions handle
+
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
-      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
+      .catch(error => console.log(error));
     }
   }
 
@@ -67,7 +68,6 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this._firebaseAuth.auth.signOut()
       .then(() => this.router.navigate(['/']));
-      
     }
   }
 
