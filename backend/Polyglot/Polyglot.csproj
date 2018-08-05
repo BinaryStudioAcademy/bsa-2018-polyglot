@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Polyglot.DataAccess\Polyglot.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
