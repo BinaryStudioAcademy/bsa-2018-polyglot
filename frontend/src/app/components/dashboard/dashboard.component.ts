@@ -6,9 +6,8 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent  {
   routeLinks: any[];
-  activeLinkIndex = -1;
 
   constructor(private router: Router) {
     this.routeLinks = [
@@ -28,12 +27,7 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
-    this.router.events.subscribe((res) => {
-      this.activeLinkIndex = this.routeLinks.indexOf(this.routeLinks.find
-        (tab => tab.link === '.' + this.router.url));
-    });
+
 
   }
 
-}

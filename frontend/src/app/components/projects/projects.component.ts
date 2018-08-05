@@ -19,6 +19,9 @@ export class ProjectsComponent implements OnInit {
     { text: 'Project2', progress: 30 },
     { text: 'Project3', progress: 29 },
     { text: 'Project4', progress: 85 },
+    { text: 'Project5', progress: 100 },
+    { text: 'Project6', progress: 15 },
+    { text: 'Project7', progress: 26 },
   ];
 
 
