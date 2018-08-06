@@ -29,6 +29,8 @@ deploy:
     username: $polyglot-bsa
     password:
       secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
-    remove_files: true
+    remove_files: false
     app_offline: true
     artifact: api
+    folder: api
+    
