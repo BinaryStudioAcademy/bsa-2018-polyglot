@@ -15,21 +15,17 @@ export class DashboardComponent {
       {
         label: 'Projects',
         link: 'projects',
-        
+
       }, {
         label: 'Teams',
         link: 'teams',
-        
+
       }, {
-        label: 'User Guide',
+        label: 'Glossaries',
         link: 'glossaries',
-        
-      },
-      {
-        label: 'Strings',
-        link: 'strings',
-        
+
       }
+
     ];
   }
 }
