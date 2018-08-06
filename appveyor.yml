@@ -21,15 +21,14 @@ test_script:
  # - cmd: dotnet xunit
 artifacts:
  - path: '\backend\Polyglot\bin\Release\netcoreapp2.1\publish'
-   name: api
-   type: WebDeployPackage
+   name: api   
 deploy:
-  provider: FTP
-  protocol: ftp
-  host: $(url)
-  username: $(login)
-  password: $(pwd)
-  folder: api
-  artifact: api
-  application: polyglot-bsa
-  
+ - provider: WebDeploy
+    server: polyglot-bsa.scm.azurewebsites.net:443
+    website: polyglot-bsa
+    username: $polyglot-bsa
+    password:
+      secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==  
+    remove_files: true
+    app_offline: true
+    artifact: api
