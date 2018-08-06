@@ -26,9 +26,8 @@ artifacts:
 deploy:
   provider: FTP
   protocol: ftp
-  host: $url
-  username: $login
-  password: $pwd
+  host: $(url)
+  username: $(login)
+  password: $(pwd)
   folder: api
   artifact: api
-  
