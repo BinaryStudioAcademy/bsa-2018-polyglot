@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { IUserLogin } from '../../models';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -12,7 +13,8 @@ export class LoginDialogComponent implements OnInit {
   public user: IUserLogin;
 
   constructor(
-    public dialogRef: MatDialogRef<LoginDialogComponent>
+    public dialogRef: MatDialogRef<LoginDialogComponent>,
+    private authService : AuthService
   ) { }
 
   ngOnInit() {
@@ -20,18 +22,21 @@ export class LoginDialogComponent implements OnInit {
       email: '',
       password: ''
     };
+    console.log(this.authService.isLoggedIn());
   }
 
-  onLoginFormSubmit(user: IUserLogin) {
-    // when form submited you will get all data from it
-    // here can you make all auth logic and then navigate
-    // to other page ... or when error -> show it
-
-    console.log(user);
+  async onLoginFormSubmit(user: IUserLogin) {
+    await this.authService.signInRegular(user.email, user.password);
+    if(this.authService.isLoggedIn()){
+      this.dialogRef.close();
+    }
   }
 
-  onGoogleClick() {
-    // google sign in
+  async onGoogleClick() {
+    await this.authService.signInWithGoogle();
+    if(this.authService.isLoggedIn()){
+      this.dialogRef.close();
+    }
   }
 
 }

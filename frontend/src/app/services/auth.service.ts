@@ -52,6 +52,7 @@ export class AuthService {
 
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
+      console.log(email + " | " + password);
       return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
       .catch(error => console.log(error));
     }
