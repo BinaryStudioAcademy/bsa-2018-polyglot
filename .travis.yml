@@ -15,5 +15,5 @@ deploy:
   provider: azure_web_apps
   username: $USERNAME
   password: $PASSWORD
-  site: polyglot-bsa
+  site: $SITE
   skip_cleanup: true
