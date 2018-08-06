@@ -3,7 +3,7 @@ node_js:
 - '10.5.0'
 branches:
   only:
-  - develop
+  - master
 before_script:
 - cd frontend
 - npm install
