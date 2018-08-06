@@ -11,10 +11,9 @@ before_build:
   # Display minimal restore text
   - cmd: cd backend
   - cmd: dotnet restore --verbosity m
-build:
-  publish_wap_xcopy: true
 build_script:
-  # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/  
+  # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/
+  publish_wap_xcopy: true
   - cmd: dotnet publish -c Release
 test_script:
  # tests in here
