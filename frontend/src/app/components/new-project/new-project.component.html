@@ -1,3 +1,17 @@
-<p>
-  new-project works!
-</p>
+HIII THERE
+<form [formGroup]="ProjectForm"  class="project-form"  (submit)="saveChanges(ProjectForm.value)" >
+   
+  <!-- <input [hidden] = "true" placeholder="-" formControlName="id"> -->
+
+  <mat-form-field class="project-full-width">
+      <input matInput placeholder="Enter name" formControlName="progress">
+  </mat-form-field>
+
+  <mat-form-field class="project-full-width">
+      <input matInput  placeholder="Enter surname" formControlName="text">
+  </mat-form-field>
+
+   <div class="saveButton">
+      <button mat-button  [disabled]="ProjectForm.invalid">Create</button>
+   </div> 
+</form>
