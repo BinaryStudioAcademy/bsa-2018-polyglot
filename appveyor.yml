@@ -24,7 +24,7 @@ artifacts:
    name: api   
 deploy:
  - provider: WebDeploy
-    server: polyglot-bsa.scm.azurewebsites.net:443
+    server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
     website: polyglot-bsa
     username: $polyglot-bsa
     password:
