@@ -1,5 +1,5 @@
 <div>
-  <mat-toolbar color="primary">
+  <mat-toolbar >
     <div fxShow="true" fxHide.gt-sm="true">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
@@ -17,8 +17,7 @@
       <a mat-button (click)="onLoginClick()">Login</a>
       <a mat-button (click)="onSignUpClick()">SignUp</a>
       <span class="toolbar-spacer"></span>
-      <mat-icon class="toolbar-icon">notifications</mat-icon>
-      <mat-icon class="toolbar-icon">account_circle</mat-icon>
+     
     </div>
 
   </mat-toolbar>
@@ -42,8 +41,9 @@
 
       </div>
     </mat-sidenav>
+    <router-outlet></router-outlet>
 
-
-  </mat-sidenav-container>
+    </mat-sidenav-container>
 
 </div>
+<mat-divider class="navigation-divider"></mat-divider>
