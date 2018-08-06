@@ -10,11 +10,11 @@ before_script:
 script:
 - npx ng build --prod
 after_success:
-  - cd dist/polyglot
-  - ls
+  - cd dist/polyglot  
 deploy:
   provider: azure_web_apps
   username: $USERNAME
   password: $PASSWORD
   site: $SITE
   skip_cleanup: true
+  verbose: true
