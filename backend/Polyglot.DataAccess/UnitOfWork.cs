@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess
 {
     public class UnitOfWork : IUnitOfWork
     {
-		private IFileRepository _fileRepository;
-		private IGlossaryRepository _glossaryRepository;
-		private ILanguageRepository _languageRepository;
-		private IManagerRepository _managerRepository;
-		private IProjectRepository _projectRepository;
-		private IRatingRepository _ratingRepository;
-		private IRightRepository _rightRepository;
-		private ITagRepository _tagRepository;
-		private ITeamRepository _teamRepository;
-		private ITranslationRepository _translationRepository;
-		private ITranslatorRepository _translatorRepository;
-		private IUserProfileRepository _userProfileRepository;
+		private IRepository<File> _fileRepository;
+		private IRepository<Glossary> _glossaryRepository;
+		private IRepository<Language> _languageRepository;
+		private IRepository<Manager> _managerRepository;
+		private IRepository<Project> _projectRepository;
+		private IRepository<Rating> _ratingRepository;
+		private IRepository<Right> _rightRepository;
+		private IRepository<Tag> _tagRepository;
+		private IRepository<Team> _teamRepository;
+		private IRepository<Translation> _translationRepository;
+		private IRepository<Translator> _translatorRepository;
+		private IRepository<UserProfile> _userProfileRepository;
+
+		private IRepository<ProjectHistory> _projectHistoryRepository;
+		private IRepository<TranslatorLanguage> _translatorLanguageRepository;
 
 		private DataContext _context;
 
@@ -28,136 +33,163 @@ namespace Polyglot.DataAccess
 			_context = c;
 		}
 
-		public IFileRepository FileRepository
+		public IRepository<File> FileRepository
 		{
 			get
 			{
 				if (_fileRepository == null)
-					_fileRepository = new FileRepository(_context);
+					_fileRepository = new Repository<File>(_context);
 
 				return _fileRepository;
 			}
 		}
 
-		public IGlossaryRepository GlossaryRepository
+		public IRepository<Glossary> GlossaryRepository
 		{
 			get
 			{
 				if (_glossaryRepository == null)
-					_glossaryRepository = new GlossaryRepository(_context);
+					_glossaryRepository = new Repository<Glossary>(_context);
 
 				return _glossaryRepository;
 			}
 		}
 
-		public ILanguageRepository LanguageRepository
+		public IRepository<Language> LanguageRepository
 		{
 			get
 			{
 				if (_languageRepository == null)
-					_languageRepository = new LanguageRepository(_context);
+					_languageRepository = new Repository<Language>(_context);
 
 				return _languageRepository;
 			}
 		}
 
-		public IManagerRepository ManagerRepository
+		public IRepository<Manager> ManagerRepository
 		{
 			get
 			{
 				if (_managerRepository == null)
-					_managerRepository = new ManagerRepository(_context);
+					_managerRepository = new Repository<Manager>(_context);
 
 				return _managerRepository;
 			}
 		}
 
-		public IProjectRepository ProjectRepository
+		public IRepository<Project> ProjectRepository
 		{
 			get
 			{
 				if (_projectRepository == null)
-					_projectRepository = new ProjectRepository(_context);
+					_projectRepository = new Repository<Project>(_context);
 
 				return _projectRepository;
 			}
 		}
 
-		public IRatingRepository RatingRepository
+		public IRepository<Rating> RatingRepository
 		{
 			get
 			{
 				if (_ratingRepository == null)
-					_ratingRepository = new RatingRepository(_context);
+					_ratingRepository = new Repository<Rating>(_context);
 
 				return _ratingRepository;
 			}
 		}
 
-		public IRightRepository RightRepository
+		public IRepository<Right> RightRepository
 		{
 			get
 			{
 				if (_rightRepository == null)
-					_rightRepository = new RightRepository(_context);
+					_rightRepository = new Repository<Right>(_context);
 
 				return _rightRepository;
 			}
 		}
 
-		public ITagRepository TagRepository
+		public IRepository<Tag> TagRepository
 		{
 			get
 			{
 				if (_tagRepository == null)
-					_tagRepository = new TagRepository(_context);
+					_tagRepository = new Repository<Tag>(_context);
 
 				return _tagRepository;
 			}
 		}
 
-		public ITeamRepository TeamRepository
+		public IRepository<Team> TeamRepository
 		{
 			get
 			{
 				if (_teamRepository == null)
-					_teamRepository = new TeamRepository(_context);
+					_teamRepository = new Repository<Team>(_context);
 
 				return _teamRepository;
 			}
 		}
 
-		public ITranslationRepository TranslationRepository
+		public IRepository<Translation> TranslationRepository
 		{
 			get
 			{
 				if (_translationRepository == null)
-					_translationRepository = new TranslationRepository(_context);
+					_translationRepository = new Repository<Translation>(_context);
 
 				return _translationRepository;
 			}
 		}
 
-		public ITranslatorRepository TranslatorRepository
+		public IRepository<Translator> TranslatorRepository
 		{
 			get
 			{
 				if (_translatorRepository == null)
-					_translatorRepository = new TranslatorRepository(_context);
+					_translatorRepository = new Repository<Translator>(_context);
 
 				return _translatorRepository;
 			}
 		}
 
-		public IUserProfileRepository UserProfileRepository
+		public IRepository<UserProfile> UserProfileRepository
 		{
 			get
 			{
 				if (_userProfileRepository == null)
-					_userProfileRepository = new UserProfileRepository(_context);
+					_userProfileRepository = new Repository<UserProfile>(_context);
 
 				return _userProfileRepository;
 			}
+		}
+
+		public IRepository<ProjectHistory> ProjectHistoryRepository
+		{
+			get
+			{
+				if (_projectHistoryRepository == null)
+					_projectHistoryRepository = new Repository<ProjectHistory>(_context);
+
+				return _projectHistoryRepository;
+			}
+		}
+
+		public IRepository<TranslatorLanguage> TranslatorLanguageRepository
+		{
+			get
+			{
+				if (_translatorLanguageRepository == null)
+					_translatorLanguageRepository = new Repository<TranslatorLanguage>(_context);
+
+				return _translatorLanguageRepository;
+			}
+		}
+
+		public async Task SaveAsync()
+		{
+			await _context.SaveChangesAsync();
 		}
 	}
 }

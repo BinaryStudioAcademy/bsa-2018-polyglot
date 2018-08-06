@@ -18,20 +18,17 @@ namespace Polyglot.DataAccess.Repositories
 			DbSet = context.Set<TEntity>();
 		}
 
-
-		public async Task Create(TEntity entity)
+		public void Create(TEntity entity)
 		{
-			await DbSet.AddAsync(entity);
-			await context.SaveChangesAsync();
+			DbSet.AddAsync(entity);			
 		}
 
-		public async Task Delete(int id)
+		public void Delete(int id)
 		{
-			TEntity temp = await DbSet.FindAsync(id);
+			TEntity temp = DbSet.Find(id);
 			if(temp != null)
 			{
-				DbSet.Remove(temp);
-				await context.SaveChangesAsync();
+				DbSet.Remove(temp);				
 			}			
 		}
 
@@ -45,10 +42,9 @@ namespace Polyglot.DataAccess.Repositories
 			return await DbSet.ToListAsync();
 		}
 
-		public async Task Update(TEntity entity)
+		public void Update(TEntity entity)
 		{
-			DbSet.Update(entity);
-			await context.SaveChangesAsync();
+			DbSet.Update(entity);			
 		}
 	}
 }

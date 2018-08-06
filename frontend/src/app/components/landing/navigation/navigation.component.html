@@ -14,6 +14,8 @@
       <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
       <a mat-button routerLink="/dashboard">Dashboard</a>
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a mat-button (click)="onLoginClick()">Login</a>
+      <a mat-button (click)="onSignUpClick()">SignUp</a>
       <span class="toolbar-spacer"></span>
       <mat-icon class="toolbar-icon">notifications</mat-icon>
       <mat-icon class="toolbar-icon">account_circle</mat-icon>
@@ -40,7 +42,7 @@
 
       </div>
     </mat-sidenav>
-   
+
 
   </mat-sidenav-container>
 
