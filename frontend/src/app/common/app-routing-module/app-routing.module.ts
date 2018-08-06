@@ -12,6 +12,7 @@ import { HomeComponent } from '../../components/landing/home/home.component';
 import { AboutUsComponent } from '../../components/landing/about-us/about-us.component';
 import { ContactComponent } from '../../components/landing/contact/contact.component';
 import { AuthGuard } from '../../services/auth-guard.service';
+import { LandingGuard } from '../../components/landing/landing.guard.service';
 
 const routes: Routes = [
   { // TODO landing routes should be extracted to separate routing module. 
@@ -26,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    canActivate: [AuthGuard],
+    canActivate: [LandingGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
