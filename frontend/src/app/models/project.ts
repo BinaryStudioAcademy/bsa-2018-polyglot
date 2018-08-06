@@ -15,9 +15,9 @@ export interface Project {
     CreatedOn: Date;
     Manager: Manager;
     MainLanguage: Language;
-    Teams: Array<Team>;
-    Translations: Array<Translation>;
-    ProjectLanguageses: Array<ProjectLanguage>;
-    ProjectGlossaries: Array<ProjectGlossary>;
-    ProjectTags: Array<ProjectTag>;
+    Teams: Team[];
+    Translations: Translation[];
+    ProjectLanguageses: ProjectLanguage[];
+    ProjectGlossaries: ProjectGlossary[];
+    ProjectTags: ProjectTag[];
 }

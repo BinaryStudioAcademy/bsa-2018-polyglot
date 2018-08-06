@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-
-
 import { DataService } from './services/data.service';
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -34,6 +32,7 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { WorkspaceComponent } from './components/workspace/workspace.component';
 
 
 @NgModule({
@@ -51,7 +50,8 @@ import { AuthGuard } from './services/auth-guard.service';
 
     AboutUsComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    WorkspaceComponent
   ],
   imports: [
     BrowserModule,

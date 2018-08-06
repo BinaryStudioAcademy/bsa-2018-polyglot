@@ -13,6 +13,7 @@ import { AuthGuard } from '../../services/auth-guard.service';
 import { LandingGuard } from '../../components/landing/landing.guard.service';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 import { ContactComponent } from '../../components/contact/contact.component';
+import { WorkspaceComponent } from '../../components/workspace/workspace.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -29,6 +30,10 @@ const routes: Routes = [
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'strings', component: NoFoundComponent },
     ]
+  },
+  {
+    path: 'workspace/:projectId',
+    component: WorkspaceComponent
   },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
