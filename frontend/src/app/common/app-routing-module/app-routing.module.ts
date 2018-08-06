@@ -33,6 +33,7 @@ const routes: Routes = [
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
+      { path: 'strings', component: NoFoundComponent },
     ]
   },
   {path: '404', component: NoFoundComponent},

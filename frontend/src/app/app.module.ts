@@ -10,8 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingComponent } from './components/landing/landing.component';
 
 
-
-
 import { DataService } from './services/data.service';
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -32,9 +30,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-
-
-
 
 @NgModule({
   declarations: [
@@ -65,7 +60,6 @@ import { AuthService } from './services/auth.service';
   providers: [DataService, AuthService, UserService, LandingGuard],
   bootstrap: [AppComponent]
 
- 
 
 })
 export class AppModule { }
