@@ -10,7 +10,7 @@ before_script:
 script:
 - npx ng build --prod
 after_success:
-  - cd dist\polyglot  
+  - cd dist/polyglot  
 deploy:
   provider: azure_web_apps
   username: $USERNAME
