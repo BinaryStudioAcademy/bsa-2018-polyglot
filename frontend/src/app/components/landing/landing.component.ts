@@ -21,7 +21,6 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = 'Polyglot';
-
+    document.body.classList.add('bg-image');
   }
 }
