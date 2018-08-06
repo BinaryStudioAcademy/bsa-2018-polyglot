@@ -70,9 +70,6 @@ namespace Polyglot.DataAccess
                 .HasForeignKey(pt => pt.ProjectId);
 
             modelBuilder.Entity<TeamTranslator>()
-                .HasKey(tt => new { tt.TeamId, tt.TranslatorId });
-
-            modelBuilder.Entity<TeamTranslator>()
                 .HasOne(tt => tt.Team)
                 .WithMany(team => team.TeamTranslators)
                 .HasForeignKey(tt => tt.TeamId);
