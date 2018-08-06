@@ -22,6 +22,7 @@ import {
   MatTableModule,
   MatTabsModule,
   MatTooltipModule,
+  MatProgressBarModule
 
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -63,7 +64,8 @@ import { TranslatorProfileComponent } from './components/translatorProfile/trans
     MatTooltipModule,
     MatFormFieldModule,
     HttpClientModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatProgressBarModule
   ],
   providers: [DataService],
   bootstrap: [NavigationComponent]
