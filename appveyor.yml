@@ -14,8 +14,7 @@ before_build:
 build:
   publish_wap_xcopy: true
 build_script:
-  # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/
-  - cmd: cd backend
+  # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/  
   - cmd: dotnet publish -c Release
 test_script:
  # tests in here
