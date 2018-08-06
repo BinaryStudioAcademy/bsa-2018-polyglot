@@ -14,9 +14,9 @@ import { AuthService } from '../../../services/auth.service';
 export class NavigationComponent {
 
   constructor(
-    public dialog: MatDialog
-  ) {
-  }
+    public dialog: MatDialog,
+    private authService: AuthService
+  ) { }
 
   onLoginClick() {
     this.dialog.open(LoginDialogComponent);
@@ -26,4 +26,11 @@ export class NavigationComponent {
     this.dialog.open(SignupDialogComponent);
   }
 
+  onLogoutClick() {
+    this.authService.logout();
+  }
+
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
 }

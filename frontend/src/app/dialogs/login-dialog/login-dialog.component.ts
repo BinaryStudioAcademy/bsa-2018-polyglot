@@ -39,4 +39,11 @@ export class LoginDialogComponent implements OnInit {
     }
   }
 
+  async onFacebookClick() {
+    await this.authService.signInWithFacebook();
+    if(this.authService.isLoggedIn()){
+      this.dialogRef.close();
+    }
+  }
+
 }

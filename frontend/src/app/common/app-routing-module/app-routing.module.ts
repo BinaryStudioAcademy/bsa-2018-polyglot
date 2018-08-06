@@ -20,8 +20,8 @@ const routes: Routes = [
     
     children: [
       { path: '', component: HomeComponent },
-      { path: 'about-us', component: AboutUsComponent },
-      { path: 'contact', component: ContactComponent },
+      { path: 'about-us', canActivate: [AuthGuard], component: AboutUsComponent },
+      { path: 'contact', canActivate: [AuthGuard], component: ContactComponent },
     ]
   },
   {
