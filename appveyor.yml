@@ -11,6 +11,8 @@ before_build:
   # Display minimal restore text
   - cmd: cd backend
   - cmd: dotnet restore --verbosity m
+build:
+  publish_wap_xcopy: true
 build_script:
   # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/
   - cmd: cd backend
@@ -24,7 +26,6 @@ artifacts:
  - path: '\backend\Polyglot\bin\Release\netcoreapp2.1\publish'
    name: api
    type: WebDeployPackage
-   publish_wap_xcopy: true
 deploy:
 - provider: AzureAppServiceZipDeploy
   name: polyglot-bsa
