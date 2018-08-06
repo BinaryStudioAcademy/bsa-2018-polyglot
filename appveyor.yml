@@ -23,12 +23,12 @@ artifacts:
  - path: '\backend\Polyglot\bin\Release\netcoreapp2.1\publish'
    name: api   
 deploy:
- - provider: WebDeploy
+  - provider: WebDeploy
     server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
     website: polyglot-bsa
     username: $polyglot-bsa
     password:
-      secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==  
+      secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
     remove_files: true
     app_offline: true
     artifact: api
