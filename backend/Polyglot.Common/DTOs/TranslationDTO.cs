@@ -1,6 +1,6 @@
-namespace Polyglot.DataAccess.Entities
+namespace Polyglot.Common.DTOs
 {
-    public class Translation
+    public class TranslationDTO
     {
         public int Id { get; set; }
         public string TranslationKey { get; set; }
