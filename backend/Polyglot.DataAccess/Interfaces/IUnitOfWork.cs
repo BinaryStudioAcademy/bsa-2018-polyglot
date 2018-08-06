@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.Interfaces
 {
     public interface IUnitOfWork
     {
-		IFileRepository FileRepository { get; }
-		IGlossaryRepository GlossaryRepository { get; }
-		ILanguageRepository LanguageRepository { get; }
-		IManagerRepository ManagerRepository { get; }
-		IProjectRepository ProjectRepository { get; }
-		IRatingRepository RatingRepository { get; }
-		IRightRepository RightRepository { get; }
-		ITagRepository TagRepository { get; }
-		ITeamRepository TeamRepository { get; }
-		ITranslationRepository TranslationRepository { get; }
-		ITranslatorRepository TranslatorRepository { get; }
-		IUserProfileRepository UserProfileRepository { get; }
+		IRepository<File> FileRepository { get; }
+		IRepository<Glossary> GlossaryRepository { get; }
+		IRepository<Language> LanguageRepository { get; }
+		IRepository<Manager> ManagerRepository { get; }
+		IRepository<Project> ProjectRepository { get; }
+		IRepository<Rating> RatingRepository { get; }
+		IRepository<Right> RightRepository { get; }
+		IRepository<Tag> TagRepository { get; }
+		IRepository<Team> TeamRepository { get; }
+		IRepository<Translation> TranslationRepository { get; }
+		IRepository<Translator> TranslatorRepository { get; }
+		IRepository<UserProfile> UserProfileRepository { get; }
 	}
 }
