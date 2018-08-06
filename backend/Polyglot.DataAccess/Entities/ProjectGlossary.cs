@@ -1,6 +1,6 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class ProjectGlossary
+    public class ProjectGlossary : Entity
     {
         public int GlossaryId { get; set; }
         public Glossary Glossary { get; set; }
