@@ -26,16 +26,21 @@ namespace Polyglot.Authentication.Extensions
             return GetClaimValue(current, "picture");
         }
 
-        public static DateTime GetExpirationDateTime(this ClaimsPrincipal current)
+        public static DateTime GetExpirationDateTimeUtc(this ClaimsPrincipal current)
         {
             var timestamp = long.Parse(GetClaimValue(current, "exp"));
             var datetime = DateTimeOffset.FromUnixTimeSeconds(timestamp).UtcDateTime;
             return datetime;
         }
 
+        public static bool IsEmailVerified(this ClaimsPrincipal current)
+        {
+            return Convert.ToBoolean(GetClaimValue(current, "email_verified"));
+        }
+
         public static string GetClaimValue(ClaimsPrincipal principal, string type)
         {
-            return principal.Claims.FirstOrDefault(c => c.Type.Equals(type)).Value;
+            return principal.Claims.FirstOrDefault(c => c.Type.Equals(type))?.Value;
         }
     }
 }
