@@ -13,7 +13,6 @@ before_build:
   - cmd: dotnet restore --verbosity m
 build_script:
   # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/
-  publish_wap_xcopy: true
   - cmd: dotnet publish -c Release
 test_script:
  # tests in here
@@ -25,11 +24,11 @@ artifacts:
    name: api
    type: WebDeployPackage
 deploy:
-- provider: AzureAppServiceZipDeploy
-  name: polyglot-bsa
-  username: $polyglot-bsa
-  password:
-    secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
+  provider: FTP
+  protocol: ftp
+  host: $url
+  username: $login
+  password: $pwd
+  folder: api
   artifact: api
-  remove_files: true
   
