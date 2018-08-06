@@ -12,6 +12,7 @@ import { HomeComponent } from '../../components/landing/home/home.component';
 import { AboutUsComponent } from '../../components/landing/about-us/about-us.component';
 import { ContactComponent } from '../../components/landing/contact/contact.component';
 import { AuthGuard } from '../../services/auth-guard.service';
+import { NewProjectComponent } from '../../components/new-project/new-project.component';
 
 const routes: Routes = [
   { // TODO landing routes should be extracted to separate routing module. 
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'about-us', component: AboutUsComponent },
       { path: 'contact', component: ContactComponent },
+      { path: 'newproject', component: NewProjectComponent },
     ]
   },
   {

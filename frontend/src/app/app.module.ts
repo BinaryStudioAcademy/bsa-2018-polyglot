@@ -34,7 +34,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
 
 
-import { AuthGuard } from './services/auth-guard.service'
+import { AuthGuard } from './services/auth-guard.service';
+import { NewProjectComponent } from './components/new-project/new-project.component'
 
 
 
@@ -53,7 +54,8 @@ import { AuthGuard } from './services/auth-guard.service'
     AppComponent,
     HomeComponent,
     AboutUsComponent,
-    ContactComponent
+    ContactComponent,
+    NewProjectComponent
   ],
   imports: [
     BrowserModule,
