@@ -24,16 +24,14 @@ import {
   MatTooltipModule,
 
 } from '@angular/material';
-
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
-
+import {FlexLayoutModule} from '@angular/flex-layout';
 import { LandingComponent } from './landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
 import { DataService } from './services/data.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
-
 
 @NgModule({
   declarations: [
@@ -42,7 +40,6 @@ import { TranslatorProfileComponent } from './components/translatorProfile/trans
     TranslatorProfileComponent
   ],
   imports: [
-
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -66,8 +63,7 @@ import { TranslatorProfileComponent } from './components/translatorProfile/trans
     MatTooltipModule,
     MatFormFieldModule,
     HttpClientModule,
-    
-
+    FlexLayoutModule
   ],
   providers: [DataService],
   bootstrap: [NavigationComponent]
