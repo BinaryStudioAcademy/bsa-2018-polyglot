@@ -23,6 +23,9 @@ namespace Polyglot.DataAccess
 		private IRepository<Translator> _translatorRepository;
 		private IRepository<UserProfile> _userProfileRepository;
 
+		private IRepository<ProjectHistory> _projectHistoryRepository;
+		private IRepository<TranslatorLanguage> _translatorLanguageRepository;
+
 		private DataContext _context;
 
 		public UnitOfWork(DataContext c)
@@ -159,6 +162,28 @@ namespace Polyglot.DataAccess
 					_userProfileRepository = new Repository<UserProfile>(_context);
 
 				return _userProfileRepository;
+			}
+		}
+
+		public IRepository<ProjectHistory> ProjectHistoryRepository
+		{
+			get
+			{
+				if (_projectHistoryRepository == null)
+					_projectHistoryRepository = new Repository<ProjectHistory>(_context);
+
+				return _projectHistoryRepository;
+			}
+		}
+
+		public IRepository<TranslatorLanguage> TranslatorLanguageRepository
+		{
+			get
+			{
+				if (_translatorLanguageRepository == null)
+					_translatorLanguageRepository = new Repository<TranslatorLanguage>(_context);
+
+				return _translatorLanguageRepository;
 			}
 		}
 

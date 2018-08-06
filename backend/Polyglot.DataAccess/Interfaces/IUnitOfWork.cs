@@ -20,6 +20,10 @@ namespace Polyglot.DataAccess.Interfaces
 		IRepository<Translation> TranslationRepository { get; }
 		IRepository<Translator> TranslatorRepository { get; }
 		IRepository<UserProfile> UserProfileRepository { get; }
+
+		IRepository<ProjectHistory> ProjectHistoryRepository { get; }
+		IRepository<TranslatorLanguage> TranslatorLanguageRepository { get; }
+
 		Task SaveAsync();
 	}
 }
