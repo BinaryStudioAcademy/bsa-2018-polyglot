@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
 using Polyglot.DataAccess.Entities;
@@ -159,6 +160,11 @@ namespace Polyglot.DataAccess
 
 				return _userProfileRepository;
 			}
+		}
+
+		public async Task SaveAsync()
+		{
+			await _context.SaveChangesAsync();
 		}
 	}
 }

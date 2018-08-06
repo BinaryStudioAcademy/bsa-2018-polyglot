@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.Interfaces
@@ -19,5 +20,6 @@ namespace Polyglot.DataAccess.Interfaces
 		IRepository<Translation> TranslationRepository { get; }
 		IRepository<Translator> TranslatorRepository { get; }
 		IRepository<UserProfile> UserProfileRepository { get; }
+		Task SaveAsync();
 	}
 }
