@@ -22,20 +22,22 @@ import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/landing/home/home.component';
-import { AboutUsComponent } from './components/landing/about-us/about-us.component';
-import { ContactComponent } from './components/landing/contact/contact.component';
-import { NavigationComponent } from './components/landing/navigation/navigation.component';
+
 
 import { environment } from '../environments/environment';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-import { FooterComponent } from './components/footer/footer.component';
+
 
 
 import { AuthGuard } from './services/auth-guard.service'
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { FooterComponent } from './components/footer/footer.component';
+
 
 
 
@@ -52,7 +54,7 @@ import { AuthGuard } from './services/auth-guard.service'
     DashboardComponent,
     NoFoundComponent,
     AppComponent,
-    HomeComponent,
+
     AboutUsComponent,
     ContactComponent,
     FooterComponent
