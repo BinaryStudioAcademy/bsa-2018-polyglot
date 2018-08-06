@@ -41,6 +41,13 @@ export class AuthService {
     }
   }
 
+  signInWithFacebook() {
+    if (!this.isLoggedIn()) {
+      return this._firebaseAuth.auth.signInWithPopup(
+        new firebase.auth.FacebookAuthProvider()
+      ).catch(error => console.log(error));
+    }
+  }
 
   signUpRegular(email: string, password: string, name: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
