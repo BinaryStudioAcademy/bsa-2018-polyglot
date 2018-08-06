@@ -14,7 +14,7 @@ import { ContactComponent } from '../../components/landing/contact/contact.compo
 import { LandingGuard } from '../../components/landing/landing.guard.service';
 
 const routes: Routes = [
-  { // TODO landing routes should be extracted to separate routing module. ok? ok!
+  { // TODO landing routes should be extracted to separate routing module. 
     path: '', 
     component: LandingComponent,
     
