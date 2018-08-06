@@ -1,6 +1,6 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class ProjectTag
+    public class ProjectTag : Entity
     {
         public int ProjectId { get; set; }
         public Project Project { get; set; }
