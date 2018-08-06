@@ -32,11 +32,16 @@ import { AuthService } from './services/auth.service';
 
 
 
-import { AuthGuard } from './services/auth-guard.service'
+
+
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+
+
+import { AuthGuard } from './services/auth-guard.service';
+
 
 
 

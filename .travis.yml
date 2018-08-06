@@ -21,3 +21,4 @@ deploy:
   site: $SITE
   skip_cleanup: true
   verbose: true
+  on: develop
