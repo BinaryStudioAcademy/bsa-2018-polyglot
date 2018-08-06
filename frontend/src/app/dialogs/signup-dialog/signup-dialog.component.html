@@ -11,8 +11,8 @@
   </mat-form-field>
 
   <mat-form-field class="">
-    <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email" #email="ngModel"
-      autocomplete="yes">
+    <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
+      #email="ngModel" autocomplete="yes">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>

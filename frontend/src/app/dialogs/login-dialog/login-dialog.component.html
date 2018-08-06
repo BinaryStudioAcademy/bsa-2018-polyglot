@@ -2,8 +2,8 @@
 
   <h4 class="text-center">Login</h4>
   <mat-form-field class="my-1">
-    <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email" #email="ngModel"
-      autocomplete="yes">
+    <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
+      #email="ngModel" autocomplete="yes">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>

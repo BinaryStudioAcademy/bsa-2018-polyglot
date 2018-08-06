@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Polyglot.Authentication.Extensions;
 using Polyglot.DataAccess;
 
 namespace Polyglot
@@ -27,7 +30,9 @@ namespace Polyglot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<DataContext>(options => options.UseSqlServer("PolyglotDatabase"));
+            string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+            services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,8 +42,15 @@ namespace Polyglot
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
-            .AllowCredentials().AllowAnyHeader().AllowAnyMethod());
+
+            app.UseCors(builder => builder
+                .WithOrigins("http://localhost:4200")
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }
