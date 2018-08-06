@@ -19,6 +19,8 @@ import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
 import { UserService } from './services/user.service';
+import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/landing/home/home.component';
 import { AboutUsComponent } from './components/landing/about-us/about-us.component';
@@ -41,6 +43,8 @@ import { AuthGuard } from './services/auth-guard.service'
   declarations: [
     LandingComponent,
     NavigationComponent,
+    LoginDialogComponent,
+    SignupDialogComponent,
     ProjectsComponent,
     TeamsComponent,
     GlossariesComponent,
@@ -58,12 +62,13 @@ import { AuthGuard } from './services/auth-guard.service'
     AppMaterialModule,
     HttpClientModule,
 
-    AppRoutingModule, 
+    AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule
-    
+
   ],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent],
   providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
   bootstrap: [AppComponent]
 
