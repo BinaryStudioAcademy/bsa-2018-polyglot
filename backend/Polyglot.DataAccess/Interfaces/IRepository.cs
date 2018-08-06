@@ -9,8 +9,8 @@ namespace Polyglot.DataAccess.Interfaces
     {
 		Task<TEntity> Get(int id);
 		Task<List<TEntity>> GetAll();
-		Task Delete(int id);
-		Task Create(TEntity entity);
-		Task Update(TEntity entity);
+		void Delete(int id);
+		void Create(TEntity entity);
+		void Update(TEntity entity);
     }
 }

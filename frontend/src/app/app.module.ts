@@ -10,8 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingComponent } from './components/landing/landing.component';
 
 
-
-
 import { DataService } from './services/data.service';
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -21,11 +19,14 @@ import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
 import { UserService } from './services/user.service';
+import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/landing/home/home.component';
 import { AboutUsComponent } from './components/landing/about-us/about-us.component';
 import { ContactComponent } from './components/landing/contact/contact.component';
 import { NavigationComponent } from './components/landing/navigation/navigation.component';
+
 import { environment } from '../environments/environment';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -36,10 +37,13 @@ import { FooterComponent } from './components/landing/footer/footer.component'
 
 
 
+
 @NgModule({
   declarations: [
     LandingComponent,
     NavigationComponent,
+    LoginDialogComponent,
+    SignupDialogComponent,
     ProjectsComponent,
     TeamsComponent,
     GlossariesComponent,
@@ -57,14 +61,17 @@ import { FooterComponent } from './components/landing/footer/footer.component'
     FormsModule,
     AppMaterialModule,
     HttpClientModule,
+
+    AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
-    AngularFireAuthModule,
-    AppRoutingModule
-    
+    AngularFireAuthModule
+
   ],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent],
+  providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
   bootstrap: [AppComponent]
+
 
 })
 export class AppModule { }
