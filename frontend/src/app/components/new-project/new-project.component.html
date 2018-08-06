@@ -1,17 +1,32 @@
-HIII THERE
-<form [formGroup]="ProjectForm"  class="project-form"  (submit)="saveChanges(ProjectForm.value)" >
-   
-  <!-- <input [hidden] = "true" placeholder="-" formControlName="id"> -->
 
-  <mat-form-field class="project-full-width">
-      <input matInput placeholder="Enter name" formControlName="progress">
-  </mat-form-field>
 
-  <mat-form-field class="project-full-width">
-      <input matInput  placeholder="Enter surname" formControlName="text">
-  </mat-form-field>
+<div class="form-container">
+<form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
+    <mat-form-field class="project-full-width">
+        <input matInput placeholder="Enter name" formControlName="name">
+    </mat-form-field>
 
-   <div class="saveButton">
-      <button mat-button  [disabled]="ProjectForm.invalid">Create</button>
-   </div> 
-</form>
+    <mat-form-field class="project-full-width">
+        <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
+    </mat-form-field>
+
+     <mat-form-field>
+        <mat-select placeholder="Choose main language" formControlName="mainLanguage">
+            <mat-option *ngFor="let language of languages" [value]="language">
+                {{language.name}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    <!-- <mat-form-field>
+        <mat-select placeholder="Choose main language" formControlName="technology">
+            <mat-option *ngFor="let language of languages" [value]="language">
+                {{language.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field> -->
+    <div class="saveButton">
+        <button mat-button  [disabled]="projectForm.invalid">Create</button>
+    </div>
+    </form>
+<div class="example-container">

@@ -13,6 +13,7 @@ import { AboutUsComponent } from '../../components/landing/about-us/about-us.com
 import { ContactComponent } from '../../components/landing/contact/contact.component';
 import { AuthGuard } from '../../services/auth-guard.service';
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
+import { ManagerComponent } from '../../components/manager/manager.component';
 
 const routes: Routes = [
   { // TODO landing routes should be extracted to separate routing module. 
@@ -38,6 +39,8 @@ const routes: Routes = [
       { path: 'strings', component: NoFoundComponent },
     ]
   },
+  
+  // { path: 'newproject', component: NewProjectComponent },
   {path: '404', component: NoFoundComponent},
   {path: '**', redirectTo: '/404'}
 ];

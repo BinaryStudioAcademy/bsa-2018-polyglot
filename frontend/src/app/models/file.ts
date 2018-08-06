@@ -2,13 +2,13 @@ import { UserProfile } from "./user-profile";
 import { Project } from "./project";
 
 export interface File {
-    Id: number;
+    id: number;
     
-    Link: string;
+    link: string;
     
-    CreatedOn: Date;
+    createdOn: Date;
     
-    UploadedBy: UserProfile;
+    uploadedBy: UserProfile;
     
-    Project: Project;
+    project: Project;
 }

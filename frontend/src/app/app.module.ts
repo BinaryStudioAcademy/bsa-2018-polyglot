@@ -35,7 +35,8 @@ import { AuthService } from './services/auth.service';
 
 
 import { AuthGuard } from './services/auth-guard.service';
-import { NewProjectComponent } from './components/new-project/new-project.component'
+import { NewProjectComponent } from './components/new-project/new-project.component';
+import { ManagerComponent } from './components/manager/manager.component'
 
 
 
@@ -55,7 +56,8 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
     HomeComponent,
     AboutUsComponent,
     ContactComponent,
-    NewProjectComponent
+    NewProjectComponent,
+    ManagerComponent
   ],
   imports: [
     BrowserModule,
