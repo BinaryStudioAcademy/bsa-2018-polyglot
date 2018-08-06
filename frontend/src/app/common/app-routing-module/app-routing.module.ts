@@ -14,7 +14,7 @@ import { ContactComponent } from '../../components/landing/contact/contact.compo
 import { AuthGuard } from '../../services/auth-guard.service';
 
 const routes: Routes = [
-  { // TODO landing routes should be extracted to separate routing module. ok? ok!
+  { // TODO landing routes should be extracted to separate routing module. 
     path: '', 
     component: LandingComponent,
     
@@ -33,6 +33,7 @@ const routes: Routes = [
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
+      { path: 'strings', component: NoFoundComponent },
     ]
   },
   {path: '404', component: NoFoundComponent},

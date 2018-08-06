@@ -21,8 +21,13 @@ export class DashboardComponent {
         link: 'teams',
         
       }, {
-        label: 'Glossaries',
+        label: 'User Guide',
         link: 'glossaries',
+        
+      },
+      {
+        label: 'Strings',
+        link: 'strings',
         
       }
     ];
