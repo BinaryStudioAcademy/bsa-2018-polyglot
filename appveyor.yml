@@ -31,3 +31,5 @@ deploy:
   password: $(pwd)
   folder: api
   artifact: api
+  application: polyglot-bsa
+  
