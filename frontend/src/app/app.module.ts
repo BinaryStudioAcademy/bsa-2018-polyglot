@@ -32,9 +32,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-
-
-import { AuthGuard } from './services/auth-guard.service'
+import { AuthGuard } from './services/auth-guard.service';
+import { FooterComponent } from './components/landing/footer/footer.component'
 
 
 
@@ -53,7 +52,8 @@ import { AuthGuard } from './services/auth-guard.service'
     AppComponent,
     HomeComponent,
     AboutUsComponent,
-    ContactComponent
+    ContactComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
