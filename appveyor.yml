@@ -1,0 +1,36 @@
+version: '1.0.{build}'
+image: Visual Studio 2017
+branches:
+  only:
+  - master
+clone_depth: 1
+init:
+  # Good practise, because Windows
+  - git config --global core.autocrlf true
+before_build:
+  # Display minimal restore text
+  - cmd: cd backend
+  - cmd: dotnet restore --verbosity m
+build_script:
+  # output will be in ./backend/Polyglot/bin/Release/netcoreapp2.1/publish/
+  - cmd: cd backend
+  - cmd: dotnet publish -c Release
+test_script:
+ # tests in here
+ # Temporarily disabling tests
+ # - cmd: cd backend\Polyglot.Tests
+ # - cmd: dotnet xunit
+artifacts:
+ - path: '\backend\Polyglot\bin\Release\netcoreapp2.1\publish'
+   name: api
+   type: WebDeployPackage
+   publish_wap_xcopy: true
+deploy:
+- provider: AzureAppServiceZipDeploy
+  name: polyglot-bsa
+  username: $polyglot-bsa
+  password:
+    secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
+  artifact: api
+  remove_files: true
+  
