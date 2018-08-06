@@ -32,6 +32,12 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
 import { FooterComponent } from './components/footer/footer.component';
 
+
+import { AuthGuard } from './services/auth-guard.service'
+
+
+
+
 @NgModule({
   declarations: [
     LandingComponent,
@@ -53,13 +59,14 @@ import { FooterComponent } from './components/footer/footer.component';
     FormsModule,
     AppMaterialModule,
     HttpClientModule,
+
     AppRoutingModule, 
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule
     
   ],
-  providers: [DataService, AuthService, UserService, LandingGuard],
+  providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
   bootstrap: [AppComponent]
 
 
