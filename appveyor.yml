@@ -22,7 +22,13 @@ test_script:
  # - cmd: dotnet xunit
 artifacts:
  - path: '\backend\Polyglot\bin\Release\netcoreapp2.1\publish'
-   name: api   
+   name: api
+notifications:
+  - provider: Slack
+  incoming_webhook:
+    secure: f9gLlC9+i3TN/u2sQ7E28WD25BtX8DcEP1bKfKH9aaBb1NHqWEcix0xzDGAAuKBt8dWSKeTWmR7B+g+K6PSilHkRSKME4zExkwAmpc2WGNs=
+  on_build_failure: true
+  on_build_success: true
 deploy:
   - provider: WebDeploy
     server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
