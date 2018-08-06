@@ -25,12 +25,10 @@ artifacts:
 deploy:
   - provider: WebDeploy
     server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
-    website: polyglot-bsa
+    website: polyglot-bsa/api
     username: $polyglot-bsa
     password:
       secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
     remove_files: false
     app_offline: true
-    artifact: api
-    folder: api
-    
+    artifact: api    
