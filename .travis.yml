@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- '10.5.0'
+branches:
+  only:
+  - develop
+before_script:
+- cd frontend
+- npm install
+script:
+- npx ng build --prod
+after_success:
+  - cd dist\polyglot  
+deploy:
+  provider: azure_web_apps
+  username: $USERNAME
+  password: $PASSWORD
+  site: polyglot-bsa
+  skip_cleanup: true
