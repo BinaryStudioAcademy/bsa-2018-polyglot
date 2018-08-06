@@ -8,7 +8,7 @@ import { IUserSignUp } from '../../models/user-signup';
 })
 export class SignupDialogComponent implements OnInit {
 
-  private user: IUserSignUp;
+  public user: IUserSignUp;
 
   constructor() { }
 
