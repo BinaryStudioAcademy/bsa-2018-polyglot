@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginDialogComponent implements OnInit {
 
   public user: IUserLogin;
+  public firebaseError: string;
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
@@ -22,25 +23,32 @@ export class LoginDialogComponent implements OnInit {
       email: '',
       password: ''
     };
-    console.log(this.authService.isLoggedIn());
   }
 
-  async onLoginFormSubmit(user: IUserLogin) {
-    await this.authService.signInRegular(user.email, user.password);
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
+  async onLoginFormSubmit(user: IUserLogin, form) {
+    if (form.valid) {
+      await this.authService.signInRegular(user.email, user.password).catch(
+        (error) => this.firebaseError = error.message
+      );
+      if(this.authService.isLoggedIn()){
+        this.dialogRef.close();
+      }
     }
   }
 
   async onGoogleClick() {
-    await this.authService.signInWithGoogle();
+    await this.authService.signInWithGoogle().catch(
+      (error) => this.firebaseError = error.message
+    );
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }
   }
 
   async onFacebookClick() {
-    await this.authService.signInWithFacebook();
+    await this.authService.signInWithFacebook().catch(
+      (error) => this.firebaseError = error.message
+    );
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }

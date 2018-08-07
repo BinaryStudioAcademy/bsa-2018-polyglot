@@ -1,23 +1,43 @@
-<form (submit)="onLoginFormSubmit(user)" class="d-flex flex-column px-3" action="javascript:void(0)">
+<form (submit)="onLoginFormSubmit(user, form)" class="d-flex flex-column px-3" action="javascript:void(0)" #form="ngForm">
 
   <h4 class="text-center">Login</h4>
   <mat-form-field class="my-1">
     <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
-      #email="ngModel" autocomplete="yes">
+      #email="ngModel" autocomplete="on"
+      pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+      maxlength="25">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>
+    </mat-error>
+
+    <mat-error *ngIf="email.errors && email.errors.pattern">
+      Email is
+      <strong>not valid</strong>
+    </mat-error>
+
+    <mat-error *ngIf="email.errors && email.errors.maxlength">
+      Email <strong>cannot</strong> be more than 25 characters long
     </mat-error>
   </mat-form-field>
 
   <mat-form-field class="my-1">
     <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
-      #password="ngModel" autocomplete="yes">
+      #password="ngModel"
+      maxlength="30">
     <mat-error *ngIf="password.errors && password.errors.required">
       Password is
       <strong>required</strong>
     </mat-error>
+
+    <mat-error *ngIf="password.errors && password.errors.maxlength">
+      Password <strong>cannot</strong> be more than 30 characters long
+    </mat-error>
   </mat-form-field>
+
+  <mat-error *ngIf="firebaseError">
+    {{firebaseError}}
+  </mat-error>
 
   <button mat-button type="submit">Login</button>
 

@@ -11,6 +11,7 @@ import { MatDialogRef } from '@angular/material';
 export class SignupDialogComponent implements OnInit {
 
   public user: IUserSignUp;
+  public firebaseError: string;
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
@@ -22,25 +23,33 @@ export class SignupDialogComponent implements OnInit {
       email: '',
       password: '',
       fullname: ''
-    }
+    };
   }
 
-  async onSignUpFormSubmit(user: IUserSignUp) {
-    await this.authService.signUpRegular(user.email, user.password, user.fullname);
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
+  async onSignUpFormSubmit(user: IUserSignUp, form) {
+    if (form.valid) {
+      await this.authService.signUpRegular(user.email, user.password, user.fullname).catch(
+        (error) => this.firebaseError = error.message
+      );
+      if(this.authService.isLoggedIn()){
+        this.dialogRef.close();
+      }
     }
   }
 
   async onGoogleClick() {
-    await this.authService.signInWithGoogle();
+    await this.authService.signInWithGoogle().catch(
+      (error) => this.firebaseError = error.message
+    );
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }
   }
 
   async onFacebookClick() {
-    await this.authService.signInWithFacebook();
+    await this.authService.signInWithFacebook().catch(
+      (error) => this.firebaseError = error.message
+    );
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }
