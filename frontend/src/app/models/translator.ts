@@ -3,8 +3,8 @@ import { UserProfile } from "./user-profile";
 import { TeamTranslator } from "./team-translator";
 
 export interface Translator {
-    Id: number;
-    UserProfile: UserProfile;
-    Rating: Rating;
-    TeamTranslators: Array<TeamTranslator>;
+    id: number;
+    userProfile: UserProfile;
+    rating: Rating;
+    teamTranslators: Array<TeamTranslator>;
 }

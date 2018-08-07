@@ -4,7 +4,8 @@ import { AuthService } from './services/auth.service';
 @Component({
   providers: [AuthService],
   selector: 'app',
-  template: '<router-outlet></router-outlet>',
+  templateUrl: './app.component.html'
+  
 })
 export class AppComponent implements OnInit {
 

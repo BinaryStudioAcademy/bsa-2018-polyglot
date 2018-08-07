@@ -7,6 +7,7 @@ import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../../services/auth.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './landing.component.html',
@@ -23,7 +24,14 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = 'Polyglot';
+    document.body.classList.add('bg-image');
+  }
 
+  onLoginClick() {
+    this.dialog.open(LoginDialogComponent);
+  }
+
+  onSignUpClick() {
+    this.dialog.open(SignupDialogComponent);
   }
 }

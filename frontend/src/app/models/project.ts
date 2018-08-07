@@ -7,17 +7,17 @@ import { Translation } from "./translation";
 import { Team } from "./team";
 
 export interface Project {
-    Id: number;
-    Name: string;
-    Description: string;
-    Technology: string;
-    ImageUrl: string;
-    CreatedOn: Date;
-    Manager: Manager;
-    MainLanguage: Language;
-    Teams: Array<Team>;
-    Translations: Array<Translation>;
-    ProjectLanguageses: Array<ProjectLanguage>;
-    ProjectGlossaries: Array<ProjectGlossary>;
-    ProjectTags: Array<ProjectTag>;
+    id: number;
+    name: string;
+    description: string;
+    technology: string;
+    imageUrl: string;
+    createdOn: Date;
+    manager: Manager;
+    mainLanguage: Language;
+    teams: Array<Team>;
+    translations: Array<Translation>;
+    projectLanguageses: Array<ProjectLanguage>;
+    projectGlossaries: Array<ProjectGlossary>;
+    projectTags: Array<ProjectTag>;
 }

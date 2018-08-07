@@ -12,12 +12,9 @@ before_script:
 - npm install
 script:
 - npx ng build --prod
-after_success:
-  - cd dist/polyglot  
 deploy:
-  provider: azure_web_apps
-  username: $USERNAME
-  password: $PASSWORD
-  site: $SITE
   skip_cleanup: true
-  verbose: true
+  provider: script
+  script: node ../deploy.js
+  on:
+    branch: master

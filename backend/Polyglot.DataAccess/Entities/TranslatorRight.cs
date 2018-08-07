@@ -1,6 +1,6 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class TranslatorRight
+    public class TranslatorRight : Entity
     {
         public int TeamTranslatorId { get; set; }
         public TeamTranslator TeamTranslator { get; set; }

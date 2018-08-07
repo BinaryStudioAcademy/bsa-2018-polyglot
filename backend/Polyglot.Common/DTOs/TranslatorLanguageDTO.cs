@@ -2,6 +2,7 @@ namespace Polyglot.Common.DTOs
 {
     public class TranslatorLanguageDTO
     {
+        public int Id { get; set; }
         public int TranslatorId { get; set; }
         public TranslatorDTO Translator { get; set; }
 
