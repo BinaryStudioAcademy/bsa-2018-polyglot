@@ -6,7 +6,7 @@ namespace Polyglot.Common.DTOs
     {
         public int Id { get; set; }
         public UserProfileDTO UserProfile { get; set; }
-        public RatingDTO Rating { get; set; }
+        public List<RatingDTO> Ratings { get; set; }
 
         public List<TeamTranslatorDTO> TeamTranslators { get; set; }
 
