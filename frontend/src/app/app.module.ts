@@ -2,6 +2,7 @@ import { LandingGuard } from './components/landing/landing.guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ngfModule, ngf } from "angular-file"
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,6 +39,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerComponent } from './components/manager/manager.component'
+import { UploadImageComponent } from './components/upload-image/upload-image.component';
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 
 
 
@@ -59,7 +62,9 @@ import { ManagerComponent } from './components/manager/manager.component'
     ContactComponent,
     FooterComponent,
     NewProjectComponent,
-    ManagerComponent
+    ManagerComponent,
+    UploadImageComponent,
+    ManagerProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { ManagerComponent } from './components/manager/manager.component'
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    ngfModule
 
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],

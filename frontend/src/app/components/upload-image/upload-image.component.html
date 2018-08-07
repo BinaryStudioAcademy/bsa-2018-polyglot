@@ -1,0 +1,18 @@
+<form #imageForm = ngForm>
+  <div [ngfBackground]="fileToUpload" class = "img">
+    <img *ngIf="!fileToUpload" class="defaultImg" src = "/assets/images/default.jpg">
+  </div>
+  <div ngfDrop selectable="1" multiple="1"
+  [(file)]="fileToUpload"
+  [(validDrag)]="validDrag"
+  [(invalidDrag)]="invalidDrag"
+  [class.invalid-drag] = "validDrag===false"
+  [class.valid-drag]   = "validDrag"
+  accept= "image/*"
+  class="drop"
+>
+  Select Image
+</div>
+  <button type="submit" [disabled] = "!fileToUpload" mat-raised-button color="primary"  
+  (click) = "uploadImage()">Upload</button>
+</form>
