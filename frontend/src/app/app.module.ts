@@ -5,10 +5,13 @@ import { FormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 import { DataService } from './services/data.service';
+import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
+
+
+
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
@@ -27,19 +30,22 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-
 import { LandingComponent } from './components/landing/landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { NewProjectComponent } from './components/new-project/new-project.component';
+import { ManagerComponent } from './components/manager/manager.component'
+
 
 
 @NgModule({
   declarations: [
     LandingComponent,
     NavigationComponent,
+    TranslatorProfileComponent,
     LoginDialogComponent,
     SignupDialogComponent,
     ProjectsComponent,
@@ -51,7 +57,9 @@ import { AuthGuard } from './services/auth-guard.service';
 
     AboutUsComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    NewProjectComponent,
+    ManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +67,7 @@ import { AuthGuard } from './services/auth-guard.service';
     FormsModule,
     AppMaterialModule,
     HttpClientModule,
-
+    FlexLayoutModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,

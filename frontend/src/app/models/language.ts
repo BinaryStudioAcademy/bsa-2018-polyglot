@@ -1,7 +1,7 @@
 export interface Language {
-    Id: number;
+    id: number;
     
-    Name: string;
+    name: string;
     
-    Code: string;
+    code: string;
 }

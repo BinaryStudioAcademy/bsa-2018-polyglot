@@ -24,12 +24,14 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
-  
+
  
 
 
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -55,8 +57,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    FlexLayoutModule
-    
+    FlexLayoutModule,
+    FormsModule, 
+    ReactiveFormsModule, 
   ],
   exports: [
     LayoutModule,
@@ -80,7 +83,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class AppMaterialModule { }
