@@ -7,14 +7,13 @@ branches:
   - develop
 notifications:
     slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
+before_install:
+  - sudo apt-get install ncftp
 before_script:
 - cd frontend
 - npm install
 script:
 - npx ng build --prod
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: node ../deploy.js
-  on:
-    branch: master
+after_success:
+  - cd dist/polyglot
+  - ncftpput -R -v -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_SERVER_HOST $FTP_PATH ./
