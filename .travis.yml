@@ -10,15 +10,12 @@ notifications:
 before_script:
 - cd frontend
 - npm install
+- npm install easy-ftp -g
 script:
 - npx ng build --prod
-after_success:
-  - cd dist/polyglot  
 deploy:
-  provider: azure_web_apps
-  username: $USERNAME
-  password: $PASSWORD
-  site: $SITE
   skip_cleanup: true
-  verbose: true
-  on: develop
+  provider: script
+  script: node ../deploy.js
+  on:
+    branch: develop
