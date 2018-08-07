@@ -1,4 +1,3 @@
-import { LandingGuard } from './components/landing/landing.guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -82,7 +81,7 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
-  providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
+  providers: [DataService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 
