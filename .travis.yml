@@ -17,4 +17,4 @@ deploy:
   provider: script
   script: node ../deploy.js
   on:
-    branch: master
+    branch: develop
