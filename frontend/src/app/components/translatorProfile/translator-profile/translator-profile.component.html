@@ -5,16 +5,16 @@ fxLayout.xs="column"
 fxLayoutAlign="center"
 fxLayoutGap="20px">
 <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
-    <img src="{{Avatar}}" alt="">
+    <img src="{{Translator.Avatar}}" alt="avatar">
 </div>
 <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
 <div fxFlex="50%">
-  <div class="user-name">{{Name}}</div>
-  <mat-card-subtitle>Registration date : <span  style="color: black ;" > 25.06.2018</span>
+  <div class="user-name">{{Translator.Name}}</div>
+  <mat-card-subtitle>Registration date : <span> {{Translator.RegistrationDate}}</span>
    </mat-card-subtitle>
 </div>
 <div class="user-rating" fxFlex="50%">
-    <mat-card-subtitle>Rating <span  style="color: black ;" >{{Rating}}/10
+    <mat-card-subtitle>Rating <span>7.8/10
         <i class="material-icons" style="color: orange ;">star</i>
        </span>
      </mat-card-subtitle>
@@ -27,33 +27,21 @@ fxLayoutGap="20px">
      fxLayout.xs="column"
      fxLayoutGap="20px">
      <div fxLayout="column" fxLayoutGap="20px"  fxFlex="25%" fxLayout.xs="column" >
-        <div class="item" style="padding: 10px;" fxFlex>
+        <div class="item" fxFlex>
             <div>
               <h2> Languages</h2> <hr>
+              <div *ngFor="let l of Languages">
                       <mat-card-header>
-                        <mat-card-title>French</mat-card-title>
-                        <mat-card-subtitle>40/100</mat-card-subtitle>
+                        <mat-card-title>{{l.Name}}</mat-card-title>
+                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
                       </mat-card-header>
                       <mat-card-content>
-                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+                    <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
                       </mat-card-content>
-                      <mat-card-header>
-                          <mat-card-title>Spanish</mat-card-title>
-                          <mat-card-subtitle>78/100</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                      <mat-progress-bar mode="determinate" value="78"></mat-progress-bar>
-                        </mat-card-content>
-                        <mat-card-header>
-                            <mat-card-title>English</mat-card-title>
-                            <mat-card-subtitle>99/100</mat-card-subtitle>
-                          </mat-card-header>
-                          <mat-card-content>
-                        <mat-progress-bar mode="determinate" value="99"></mat-progress-bar>
-                          </mat-card-content>
+              </div>      
             </div>
           </div> 
-          <div class="item" style="padding: 10px;" fxFlex>
+          <div class="item" fxFlex>
               <div>
                 <h2> Experience </h2><hr>
                         <mat-card-header>
@@ -71,62 +59,40 @@ fxLayoutGap="20px">
     <mat-card>
         <h2>Personal detail</h2>
         <hr>
-        <mat-card-subtitle>Birth : <span  style="color: black ;" > 25.05.1999</span></mat-card-subtitle>
+        <mat-card-subtitle>Birth : <span> {{Translator.Birth}}</span></mat-card-subtitle>
         <mat-card-title>Location</mat-card-title><hr>    
-        <mat-card-subtitle>Country : <span  style="color: black ;" > Ukraine</span></mat-card-subtitle>
-        <mat-card-subtitle>City : <span  style="color: black ;" > Kyiv</span></mat-card-subtitle>
-        <mat-card-subtitle>Region : <span  style="color: black ;" > Dniprovski</span></mat-card-subtitle>
-        <mat-card-subtitle>Address : <span  style="color: black ;" > Darnitska Street</span></mat-card-subtitle>
-        <mat-card-subtitle>Postal code : <span  style="color: black ;" > 02160</span></mat-card-subtitle>
+        <mat-card-subtitle>Country : <span> {{Translator.Country}}</span></mat-card-subtitle>
+        <mat-card-subtitle>City : <span> {{Translator.City}}</span></mat-card-subtitle>
+        <mat-card-subtitle>Region : <span> {{Translator.Region}}</span></mat-card-subtitle>
+        <mat-card-subtitle>Address : <span> {{Translator.Address}}</span></mat-card-subtitle>
+        <mat-card-subtitle>Postal code : <span> {{Translator.PostalCode}}</span></mat-card-subtitle>
         <mat-card-title>Contacts</mat-card-title><hr>
-        <mat-card-subtitle>Phone : <span  style="color: black ;" > +380-95-666-66-66</span></mat-card-subtitle>
+        <mat-card-subtitle>Phone : <span> {{Translator.Phone}}</span></mat-card-subtitle>
         </mat-card>
  </div>
    <div fxFlex style="margin-top: 20px;">
      <mat-card>
       <h2>Review</h2>
+      <div *ngFor="let c of Comments">
       <hr>
       <br>
         <mat-card-header>
-            <img mat-card-avatar src="{{Avatar}}" alt="">
-          <mat-card-title>Full Name</mat-card-title>
+            <img mat-card-avatar src="{{c.Avatar}}" alt="">
+          <mat-card-title>{{c.Name}}</mat-card-title>
         </mat-card-header>
         <br>
         <mat-card-content>
-            <mat-card-subtitle>Comment : <span  style="color: black ;" > "Comment Text"
-               
+            <mat-card-subtitle>Comment : <span> "{{c.Body}}"              
                </span>
              </mat-card-subtitle>
-            <mat-card-subtitle>Rating :<span  style="color: black ;" >{{Rating}}/10
+            <mat-card-subtitle>Rating :<span>{{c.Rating}}/10
                 <i class="material-icons" style="color: orange ;">star</i>
                </span>
              </mat-card-subtitle>
-             <mat-card-subtitle>Created :<span  style="color: black ;" >{{DateComment}}
-                
-               </span>
+             <mat-card-subtitle>Created :<span>{{c.CreatedOn}}</span>
              </mat-card-subtitle>
           </mat-card-content>
-        <hr>
-        <br>
-        <mat-card-header>
-            <img mat-card-avatar src="{{Avatar}}" alt="">
-          <mat-card-title>Full Name</mat-card-title>
-        </mat-card-header>
-        <br>
-        <mat-card-content>
-            <mat-card-subtitle>Comment : <span  style="color: black ;" > "Comment Text"
-               
-               </span>
-             </mat-card-subtitle>
-            <mat-card-subtitle>Rating :<span  style="color: black ;" >{{Rating}}/10
-                <i class="material-icons" style="color: orange ;">star</i>
-               </span>
-             </mat-card-subtitle>
-             <mat-card-subtitle>Created :<span  style="color: black ;" >{{DateComment}}
-                
-               </span>
-             </mat-card-subtitle>
-          </mat-card-content>
+        </div>
       </mat-card>
     </div>
 </div>
