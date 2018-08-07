@@ -10,21 +10,39 @@ namespace Polyglot.DataAccess
 {
     class FileStorageProvider : IFileStorageProvider
     {
-        private CloudStorageAccount _storageAccount;
+        private readonly CloudStorageAccount _storageAccount;
+        private readonly CloudBlobClient _cloudBlobClient;
+        private readonly CloudBlobContainer _cloudBlobContainer;
 
-        public FileStorageProvider(string storageConnectionString)
+        public FileStorageProvider(string storageConnectionString,string container)
         {
             _storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            _cloudBlobClient = _storageAccount.CreateCloudBlobClient();
+            _cloudBlobContainer = _cloudBlobClient.GetContainerReference(container);
         }
 
         public async Task<string> UploadFileAsync(byte[] buffer)
         {
-            throw new System.NotImplementedException();
+            await _cloudBlobContainer.CreateAsync();
+
+            await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
+
+            string localFileName = "polyglot_" + Guid.NewGuid() + ".txt";
+            CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(localFileName);
+            await blob.UploadFromByteArrayAsync(buffer, 0, buffer.Length);
+            return blob.Uri.ToString();
         }
 
         public async Task<string> UploadFileAsync(Stream source)
         {
-            throw new System.NotImplementedException();
+            await _cloudBlobContainer.CreateAsync();
+
+            await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
+
+            string localFileName = "polyglot_" + Guid.NewGuid() + ".txt";
+            CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(localFileName);
+            await blob.UploadFromStreamAsync(source);
+            return blob.Uri.ToString();
         }
 
         public async Task DeleteFileAsync(string url)
