@@ -10,12 +10,7 @@ notifications:
 before_script:
 - cd frontend
 - npm install
-- npm install easy-ftp -g
 script:
 - npx ng build --prod
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: node ../deploy.js
-  on:
-    branch: develop
+after_success:
+  'find dist/polyglot/ -type f -exec curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-create-dirs -T {} $FTP_SERVER_HOST{} ";"'
