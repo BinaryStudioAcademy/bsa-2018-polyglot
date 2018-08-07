@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Implementations;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 
@@ -16,36 +17,49 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Project, int> service;
+		// private readonly IMapper mapper;
+		// private readonly ICRUDService<Project, int> service;
+		private IProjectService projectService;
 
-        public ProjectsController(ICRUDService<Project, int> service, IMapper mapper)
+        public ProjectsController(/*ICRUDService<Project, int> service, IMapper mapper*/)
         {
+			/*
             this.service = service;
             this.mapper = mapper;
+			*/
+			projectService = new ProjectService();
         }
+
+
+		/*
+
 
         // GET: api/Projects
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
+			
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No projects found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));
+                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));			
+			return Ok("ok");
         }
 
         // GET: api/Projects/5
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
+			
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<ProjectDTO>(project));
-        }
+                : Ok(mapper.Map<ProjectDTO>(project));			
+		}
 
-        // POST: api/Projects
-        public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
-        {
+		// POST: api/Projects
+		[HttpPost]
+		public async Task<IActionResult> AddProject(IFormFile files)
+		{
+			
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
@@ -59,6 +73,7 @@ namespace Polyglot.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
         {
+			
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
@@ -71,8 +86,30 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
+			
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
-    }
+		*/
+
+
+		[HttpPost]
+		[Route("files")]
+		public async Task<IActionResult> AddFile(IFormFile files)
+		{
+
+			await projectService.FileParse(Request.Form.Files[0]);
+			return Ok();
+		}
+
+
+		[HttpPost]
+		[Route("dictionary")]
+		public async Task<IActionResult> AddFileDictionary(IFormFile files)
+		{
+
+			await projectService.FileParseDictionary(Request.Form.Files[0]);
+			return Ok();
+		}
+	}
 }
