@@ -2,9 +2,8 @@ using System;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class File
+    public class File : Entity
     {
-        public int Id { get; set; }
         public string Link { get; set; }
         public DateTime CreatedOn { get; set; }
         public UserProfile UploadedBy { get; set; }
