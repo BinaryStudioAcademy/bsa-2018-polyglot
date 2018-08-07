@@ -10,10 +10,11 @@ notifications:
 before_script:
 - cd frontend
 - npm install
-- npm install -g gulp
-- npm install vinyl-ftp gulp-util minimist --save-dev
-- npm link gulp
 script:
 - npx ng build --prod
-after_success:  
-  - gulp --gulpfile ../deploy.js deploy --user $USERNAME --password $PASSWORD
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: node ../deploy.js
+  on:
+    branch: master
