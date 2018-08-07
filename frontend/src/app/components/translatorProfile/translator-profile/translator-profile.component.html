@@ -26,10 +26,13 @@ fxLayoutGap="20px">
      fxLayoutAlign="center"
      fxLayout.xs="column"
      fxLayoutGap="20px">
-     <div fxLayout="column" fxLayoutGap="20px"  fxFlex="25%" fxLayout.xs="column" >
+     <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" >
         <div class="item" fxFlex>
             <div>
-              <h2> Languages</h2> <hr>
+              <h2 class="title"> Languages</h2>
+              <hr>
+              <div class="languages-list">
+              <br>
               <div *ngFor="let l of Languages">
                       <mat-card-header>
                         <mat-card-title>{{l.Name}}</mat-card-title>
@@ -38,12 +41,14 @@ fxLayoutGap="20px">
                       <mat-card-content>
                     <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
                       </mat-card-content>
-              </div>      
+              </div>  
+            </div>    
             </div>
           </div> 
           <div class="item" fxFlex>
               <div>
-                <h2> Experience </h2><hr>
+                <h2 class="title"> Experience </h2>
+                <hr>
                         <mat-card-header>
                           <mat-card-title>Position</mat-card-title>
                           <mat-card-subtitle>Company</mat-card-subtitle>
@@ -54,7 +59,7 @@ fxLayoutGap="20px">
               </div>
             </div>
        </div>
-  <div fxLayout="column" fxFlex="75%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
+  <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
  <div fxFlex>
     <mat-card>
         <h2>Personal detail</h2>
@@ -78,7 +83,7 @@ fxLayoutGap="20px">
       <br>
         <mat-card-header>
             <img mat-card-avatar src="{{c.Avatar}}" alt="">
-          <mat-card-title>{{c.Name}}</mat-card-title>
+          <mat-card-title>{{c.CreatedBy}}</mat-card-title>
         </mat-card-header>
         <br>
         <mat-card-content>

@@ -37,7 +37,8 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component'
+import { ManagerComponent } from './components/manager/manager.component';
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
 
 
 
@@ -59,7 +60,8 @@ import { ManagerComponent } from './components/manager/manager.component'
     ContactComponent,
     FooterComponent,
     NewProjectComponent,
-    ManagerComponent
+    ManagerComponent,
+    ManagerProfileComponent
   ],
   imports: [
     BrowserModule,
