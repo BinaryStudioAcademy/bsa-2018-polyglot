@@ -10,6 +10,7 @@ notifications:
 before_script:
 - cd frontend
 - npm install
+- npm install easy-ftp -g
 script:
 - npx ng build --prod
 deploy:
@@ -17,4 +18,4 @@ deploy:
   provider: script
   script: node ../deploy.js
   on:
-    branch: master
+    branch: develop

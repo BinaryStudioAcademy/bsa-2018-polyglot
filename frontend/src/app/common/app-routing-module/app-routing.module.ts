@@ -18,6 +18,7 @@ import { TranslatorProfileComponent } from '../../components/translatorProfile/t
 
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
 import { ManagerComponent } from '../../components/manager/manager.component';
+import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
   
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -38,7 +39,7 @@ const routes: Routes = [
     ]
   },
   { path: 'translator', component: TranslatorProfileComponent },
-  { path: 'manager', component: ManagerComponent },
+  { path: 'manager', component: ManagerProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
