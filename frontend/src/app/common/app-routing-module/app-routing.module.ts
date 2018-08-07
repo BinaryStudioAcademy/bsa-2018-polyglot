@@ -10,8 +10,6 @@ import { NoFoundComponent } from '../../components/no-found/no-found.component';
 import { LandingComponent } from '../../components/landing/landing.component';
 
 import { AuthGuard } from '../../services/auth-guard.service';
-
-import { LandingGuard } from '../../components/landing/landing.guard.service';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 import { ContactComponent } from '../../components/contact/contact.component';
 import { TranslatorProfileComponent } from '../../components/translatorProfile/translator-profile/translator-profile.component';
@@ -27,7 +25,7 @@ const routes: Routes = [
 
   {
     path: 'dashboard',
-    canActivate: [LandingGuard],
+    canActivate: [AuthGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
