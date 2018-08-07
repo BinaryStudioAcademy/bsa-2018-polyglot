@@ -59,8 +59,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     MatProgressSpinnerModule,
     FlexLayoutModule,
     FormsModule, 
-    ReactiveFormsModule 
-    
+    ReactiveFormsModule, 
   ],
   exports: [
     LayoutModule,
@@ -86,7 +85,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     MatProgressSpinnerModule,
     FlexLayoutModule,
     FormsModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule,
   ]
 })
 export class AppMaterialModule { }

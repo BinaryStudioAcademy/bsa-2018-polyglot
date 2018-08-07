@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { Project } from '../../models/project';
 import { Language } from '../../models/language';
+import { TypeTechnology } from '../../models/type-technology.enum';
 
 @Component({
   selector: 'app-new-project',
@@ -12,12 +13,12 @@ import { Language } from '../../models/language';
 export class NewProjectComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {
+
   }
 
-
+  
   ngOnInit() {
     this.createProjectForm();
-   
     this.languages = [
     {
       code: 'en',
@@ -41,8 +42,9 @@ export class NewProjectComponent implements OnInit {
   project: Project;
   projectForm: FormGroup;
   languages: Array<Language>;
-
+  
   createProjectForm(): void {
+    
       this.projectForm = this.fb.group({
         name: [ '', []],
         description: [ '', []],

@@ -1,5 +1,4 @@
-
-
+<h1>Create new project</h1>
 <div class="form-container">
 <form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
     <mat-form-field class="project-full-width">
@@ -10,6 +9,13 @@
         <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
     </mat-form-field>
 
+    <mat-form-field>
+        <mat-select placeholder="Choose technology" formControlName="technology">
+            <mat-option value="Machine">Machine</mat-option>
+            <mat-option value = "Manual">Manual</mat-option> 
+        </mat-select>
+    </mat-form-field>
+    
      <mat-form-field>
         <mat-select placeholder="Choose main language" formControlName="mainLanguage">
             <mat-option *ngFor="let language of languages" [value]="language">
@@ -18,15 +24,22 @@
         </mat-select>
       </mat-form-field>
 
-    <!-- <mat-form-field>
-        <mat-select placeholder="Choose main language" formControlName="technology">
-            <mat-option *ngFor="let language of languages" [value]="language">
-                {{language.name}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field> -->
+    
     <div class="saveButton">
         <button mat-button  [disabled]="projectForm.invalid">Create</button>
     </div>
     </form>
 <div class="example-container">
+<!-- 
+        +name: string;
+        +description: string;
+        +technology: string;
+        imageUrl: string;
+        +createdOn: Date;
+        +manager: Manager;
+        +mainLanguage: Language;
+        teams: Array<Team>;
+        translations: Array<Translation>;
+        projectLanguageses: Array<ProjectLanguage>;
+        projectGlossaries: Array<ProjectGlossary>;
+        projectTags: Array<ProjectTag>; -->
