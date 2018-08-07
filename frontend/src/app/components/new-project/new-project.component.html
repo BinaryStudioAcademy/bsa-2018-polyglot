@@ -1,8 +1,10 @@
-<h2>Create new project</h2>
 <div class="form-container">
+<h2>Create new project</h2>
 <form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
     <mat-form-field class="project-full-width">
-        <input matInput placeholder="Enter name" formControlName="name">
+        <input matInput placeholder="Enter name" formControlName="name" required>
+        <!-- <mat-error *ngIf="name.required">{{getErrorMessage()}}</mat-error> -->
+
     </mat-form-field>
 
     <mat-form-field class="project-full-width">
@@ -10,7 +12,6 @@
     </mat-form-field>
 
     <div class="field-choose-wraper">
-        <div></div>
         <mat-form-field class="mat-select-wraper">
             <mat-select class="mat-select" placeholder="Choose technology" formControlName="technology">
                 <mat-option value="JS">JS</mat-option>
