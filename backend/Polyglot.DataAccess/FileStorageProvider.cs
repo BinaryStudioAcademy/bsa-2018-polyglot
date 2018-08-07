@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.DataAccess
@@ -14,19 +16,37 @@ namespace Polyglot.DataAccess
             _storageAccount = CloudStorageAccount.Parse(storageConnectionString);
         }
 
-        public Task<string> UploadFileAsync(string path)
+        public async Task<string> UploadFileAsync(string path)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteFileAsync(string url)
+        public async Task DeleteFileAsync(string url)
         {
-            throw new System.NotImplementedException();
+            var path = new Uri(url);
+            var client = _storageAccount.CreateCloudBlobClient();
+            var blob = await client.GetBlobReferenceFromServerAsync(path);
+            await blob.DeleteIfExistsAsync();
         }
 
-        public Task<List<string>> GetFilesAsync()
+        public async Task<List<string>> GetFilesAsync()
         {
-            throw new System.NotImplementedException();
+            List<string> result = new List<string>();
+            CloudBlobClient cloudBlobClient = _storageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference("polyglot");
+            BlobContinuationToken blobContinuationToken = null;
+            do
+            {
+                var res = await cloudBlobContainer.ListBlobsSegmentedAsync(null, blobContinuationToken);
+                blobContinuationToken = res.ContinuationToken;
+                foreach (IListBlobItem item in res.Results)
+                {
+                    result.Add(item.Uri.ToString());
+                }
+            }
+            while (blobContinuationToken != null);
+
+            return result;
         }
 
         public enum FileType
@@ -35,6 +55,15 @@ namespace Polyglot.DataAccess
             Photo,
             ProjectImg,
             Screenshot
+        }
+
+        private async Task SetPublicContainerPermissionsAsync(CloudBlobContainer container)
+        {
+            BlobContainerPermissions permissions = new BlobContainerPermissions
+            {
+                PublicAccess = BlobContainerPublicAccessType.Blob
+            };
+            await container.SetPermissionsAsync(permissions);
         }
     }
 }
