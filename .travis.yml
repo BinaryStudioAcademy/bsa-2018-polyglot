@@ -10,7 +10,8 @@ notifications:
 before_script:
 - cd frontend
 - npm install
-- npm install vinyl-ftp gulp gulp-util minimist --save-dev
+- npm install -g gulp
+- npm install vinyl-ftp gulp-util minimist --save-dev
 script:
 - npx ng build --prod
 after_success:  
