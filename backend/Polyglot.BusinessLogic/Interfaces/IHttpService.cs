@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    interface IHttpService<TEntity, TIdentifier> where TEntity : class
+    public interface IHttpService<TEntity, TIdentifier> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetListAsync();
         Task<TEntity> GetOneAsync(TIdentifier identifier);

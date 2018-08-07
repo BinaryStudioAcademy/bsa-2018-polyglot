@@ -1,8 +1,7 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class Translation
+    public class Translation : Entity
     {
-        public int Id { get; set; }
-        public string TanslationKey { get; set; }
+        public string TranslationKey { get; set; }
     }
 }

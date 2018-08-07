@@ -1,0 +1,25 @@
+<form (submit)="onLoginFormSubmit(user)" class="d-flex flex-column px-3" action="javascript:void(0)">
+
+  <h4 class="text-center">Login</h4>
+  <mat-form-field class="my-1">
+    <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
+      #email="ngModel" autocomplete="yes">
+    <mat-error *ngIf="email.errors && email.errors.required">
+      Email is
+      <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="my-1">
+    <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
+      #password="ngModel" autocomplete="yes">
+    <mat-error *ngIf="password.errors && password.errors.required">
+      Password is
+      <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-button type="submit">Login</button>
+
+  <button mat-button type="button" (click)="onGoogleClick()">Login using Google</button>
+</form>

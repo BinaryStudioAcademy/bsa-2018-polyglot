@@ -1,6 +1,7 @@
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {MediaMatcher} from '@angular/cdk/layout';
-
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { LoginDialogComponent } from 'src/app/dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from 'src/app/dialogs/signup-dialog/signup-dialog.component';
 
 
 @Component({
@@ -8,18 +9,19 @@ import {MediaMatcher} from '@angular/cdk/layout';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.sass']
 })
-export class NavigationComponent implements OnDestroy {
-  mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
-  
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
-    this.mobileQuery = media.matchMedia('(max-width: 640px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+export class NavigationComponent {
+
+  constructor(
+    public dialog: MatDialog
+  ) {
   }
 
-ngOnDestroy(): void {
-  this.mobileQuery.removeListener(this._mobileQueryListener);
-}
+  onLoginClick() {
+    this.dialog.open(LoginDialogComponent);
+  }
+
+  onSignUpClick() {
+    this.dialog.open(SignupDialogComponent);
+  }
 
 }

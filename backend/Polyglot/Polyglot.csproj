@@ -9,11 +9,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Polyglot.Common\Polyglot.Common.csproj" />
     <ProjectReference Include="..\Polyglot.DataAccess\Polyglot.DataAccess.csproj" />
   </ItemGroup>
 

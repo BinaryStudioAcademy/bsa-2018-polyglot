@@ -1,8 +1,9 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class Manager
+    public class Manager : Entity
     {
-        public int Id { get; set; }
         public UserProfile UserProfile { get; set; }
+		
+		public List<Project> Projects { get; set; }
     }
 }
