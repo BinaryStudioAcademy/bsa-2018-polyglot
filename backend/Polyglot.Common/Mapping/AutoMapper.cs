@@ -192,12 +192,12 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
 
                 cfg.CreateMap<TranslatorDTO, Translator>()
-                    .ForMember(p => p.Rating, opt => opt.MapFrom(po => po.Rating))
+                    .ForMember(p => p.Ratings, opt => opt.MapFrom(po => po.Ratings))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(po => po.TeamTranslators))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile));
                 cfg.CreateMap<Translator, TranslatorDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.Rating, opt => opt.MapFrom(pt => pt.Rating))
+                    .ForMember(p => p.Ratings, opt => opt.MapFrom(pt => pt.Ratings))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(pt => pt.TeamTranslators))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile));
 
