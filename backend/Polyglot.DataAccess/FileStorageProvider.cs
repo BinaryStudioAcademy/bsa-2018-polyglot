@@ -28,5 +28,13 @@ namespace Polyglot.DataAccess
         {
             throw new System.NotImplementedException();
         }
+
+        public enum FileType
+        {
+            Text,
+            Photo,
+            ProjectImg,
+            Screenshot
+        }
     }
 }
