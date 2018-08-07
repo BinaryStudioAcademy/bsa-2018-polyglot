@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -16,7 +17,12 @@ namespace Polyglot.DataAccess
             _storageAccount = CloudStorageAccount.Parse(storageConnectionString);
         }
 
-        public async Task<string> UploadFileAsync(string path)
+        public async Task<string> UploadFileAsync(byte[] buffer)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<string> UploadFileAsync(Stream source)
         {
             throw new System.NotImplementedException();
         }
@@ -34,6 +40,7 @@ namespace Polyglot.DataAccess
             List<string> result = new List<string>();
             CloudBlobClient cloudBlobClient = _storageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference("polyglot");
+
             BlobContinuationToken blobContinuationToken = null;
             do
             {
