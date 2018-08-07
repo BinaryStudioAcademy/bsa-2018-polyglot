@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Right
+    public class Right : Entity
     {
-        public int Id { get; set; }
         public string Definition { get; set; }
         public List<TranslatorRight> TranslatorRights { get; set; }
 

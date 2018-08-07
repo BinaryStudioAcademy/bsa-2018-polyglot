@@ -1,16 +1,16 @@
-import { LandingGuard } from './components/landing/landing.guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-import { LandingComponent } from './components/landing/landing.component';
-
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 import { DataService } from './services/data.service';
+import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
+
+
+
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
@@ -22,20 +22,21 @@ import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/landing/home/home.component';
-import { AboutUsComponent } from './components/landing/about-us/about-us.component';
-import { ContactComponent } from './components/landing/contact/contact.component';
-import { NavigationComponent } from './components/landing/navigation/navigation.component';
+
 
 import { environment } from '../environments/environment';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-
-
-import { AuthGuard } from './services/auth-guard.service'
-
+import { LandingComponent } from './components/landing/landing.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { AuthGuard } from './services/auth-guard.service';
+import { NewProjectComponent } from './components/new-project/new-project.component';
+import { ManagerComponent } from './components/manager/manager.component'
 
 
 
@@ -43,6 +44,7 @@ import { AuthGuard } from './services/auth-guard.service'
   declarations: [
     LandingComponent,
     NavigationComponent,
+    TranslatorProfileComponent,
     LoginDialogComponent,
     SignupDialogComponent,
     ProjectsComponent,
@@ -51,9 +53,12 @@ import { AuthGuard } from './services/auth-guard.service'
     DashboardComponent,
     NoFoundComponent,
     AppComponent,
-    HomeComponent,
+
     AboutUsComponent,
-    ContactComponent
+    ContactComponent,
+    FooterComponent,
+    NewProjectComponent,
+    ManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +66,7 @@ import { AuthGuard } from './services/auth-guard.service'
     FormsModule,
     AppMaterialModule,
     HttpClientModule,
-
+    FlexLayoutModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
@@ -69,7 +74,7 @@ import { AuthGuard } from './services/auth-guard.service'
 
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
-  providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
+  providers: [DataService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 

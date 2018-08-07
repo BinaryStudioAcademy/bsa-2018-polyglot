@@ -2,9 +2,8 @@
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class UserProfile
+    public class UserProfile : Entity
     {
-        public int Id { get; set; }
         public string FullName { get; set; }
         public string Uid { get; set; }
         public DateTime BirthDate { get; set; }
