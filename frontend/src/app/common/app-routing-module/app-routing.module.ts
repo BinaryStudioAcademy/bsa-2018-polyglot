@@ -8,35 +8,40 @@ import { GlossariesComponent } from '../../components/glossaries/glossaries.comp
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { NoFoundComponent } from '../../components/no-found/no-found.component';
 import { LandingComponent } from '../../components/landing/landing.component';
-import { HomeComponent } from '../../components/landing/home/home.component';
-import { AboutUsComponent } from '../../components/landing/about-us/about-us.component';
-import { ContactComponent } from '../../components/landing/contact/contact.component';
+
 import { AuthGuard } from '../../services/auth-guard.service';
 
+import { LandingGuard } from '../../components/landing/landing.guard.service';
+import { AboutUsComponent } from '../../components/about-us/about-us.component';
+import { ContactComponent } from '../../components/contact/contact.component';
+import { TranslatorProfileComponent } from '../../components/translatorProfile/translator-profile/translator-profile.component';
+
+import { NewProjectComponent } from '../../components/new-project/new-project.component';
+import { ManagerComponent } from '../../components/manager/manager.component';
+import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
+  
 const routes: Routes = [
-  { // TODO landing routes should be extracted to separate routing module. ok? ok!
-    path: '', 
-    component: LandingComponent,
-    
-    children: [
-      { path: '', component: HomeComponent },
-      { path: 'about-us', component: AboutUsComponent },
-      { path: 'contact', component: ContactComponent },
-    ]
-  },
+  { path: '', component: LandingComponent },
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'newproject', component: NewProjectComponent },
+
   {
     path: 'dashboard',
-    canActivate: [AuthGuard],
+    canActivate: [LandingGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
+      { path: 'strings', component: NoFoundComponent },
     ]
   },
-  {path: '404', component: NoFoundComponent},
-  {path: '**', redirectTo: '/404'}
+  { path: 'translator', component: TranslatorProfileComponent },
+  { path: 'manager', component: ManagerProfileComponent },
+  { path: '404', component: NoFoundComponent },
+  { path: '**', redirectTo: '/404' }
 ];
 
 

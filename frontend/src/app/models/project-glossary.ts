@@ -2,11 +2,11 @@ import { Project } from "./project";
 import { Glossary } from "./glossary";
 
 export interface ProjectGlossary {
-    GlossaryId: number;
+    glossaryId: number;
         
-    Glossary: Glossary;
+    glossary: Glossary;
         
-    ProjectId: number;
+    projectId: number;
         
-    Project: Project;        
+    project: Project;        
 }

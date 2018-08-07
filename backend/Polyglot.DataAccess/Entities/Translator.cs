@@ -2,12 +2,11 @@ using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Translator
+    public class Translator : Entity
     {
-        public int Id { get; set; }
         public UserProfile UserProfile { get; set; }
-        public Rating Rating { get; set; }
-
+		
+        public List<Rating> Ratings { get; set; }
         public List<TeamTranslator> TeamTranslators { get; set; }
 
         public Translator()
