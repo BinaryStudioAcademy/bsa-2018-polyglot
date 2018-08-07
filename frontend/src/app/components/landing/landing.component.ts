@@ -6,6 +6,7 @@ import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.co
 import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
 import { MatDialog } from '@angular/material';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './landing.component.html',
@@ -21,7 +22,14 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = 'Polyglot';
+    document.body.classList.add('bg-image');
+  }
 
+  onLoginClick() {
+    this.dialog.open(LoginDialogComponent);
+  }
+
+  onSignUpClick() {
+    this.dialog.open(SignupDialogComponent);
   }
 }

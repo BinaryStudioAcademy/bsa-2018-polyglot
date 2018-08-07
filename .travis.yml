@@ -4,6 +4,9 @@ node_js:
 branches:
   only:
   - master
+  - develop
+notifications:
+    slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
 before_script:
 - cd frontend
 - npm install
@@ -18,3 +21,4 @@ deploy:
   site: $SITE
   skip_cleanup: true
   verbose: true
+  on: develop

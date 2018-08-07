@@ -2,10 +2,8 @@ using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class TeamTranslator
+    public class TeamTranslator : Entity
     {
-        public int Id { get; set; }
-
         public int TeamId { get; set; }
         public Team Team { get; set; }
 

@@ -9,7 +9,7 @@ import { IUserLogin } from '../../models';
 })
 export class LoginDialogComponent implements OnInit {
 
-  private user: IUserLogin;
+  public user: IUserLogin;
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>
@@ -19,7 +19,7 @@ export class LoginDialogComponent implements OnInit {
     this.user = {
       email: '',
       password: ''
-    }
+    };
   }
 
   onLoginFormSubmit(user: IUserLogin) {
