@@ -33,6 +33,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { UploadImageComponent } from './components/upload-image/upload-image.component';
+import { ngfModule } from 'angular-file';
 
 
 
@@ -60,7 +61,8 @@ import { UploadImageComponent } from './components/upload-image/upload-image.com
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ngfModule
     
   ],
   providers: [DataService, AuthService, UserService, AuthGuard],
