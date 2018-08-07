@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Polyglot.DataAccess.Entities
 {
     public class Manager : Entity

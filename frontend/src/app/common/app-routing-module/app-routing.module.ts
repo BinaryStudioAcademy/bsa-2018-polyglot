@@ -38,7 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'translator', component: TranslatorProfileComponent },
-
+  { path: 'manager', component: ManagerComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
