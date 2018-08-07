@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import { Project } from '../../models/project';
 import { Language } from '../../models/language';
 import { TypeTechnology } from '../../models/type-technology.enum';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-new-project',
@@ -12,7 +13,7 @@ import { TypeTechnology } from '../../models/type-technology.enum';
 
 export class NewProjectComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private projectService: ProjectService) {
 
   }
 
@@ -56,6 +57,7 @@ export class NewProjectComponent implements OnInit {
   saveChanges(project: Project): void{
     debugger
     project.createdOn = new Date(Date.now()); 
+    this.projectService.createEntity(project);
     //Save current manager
   }
 }
