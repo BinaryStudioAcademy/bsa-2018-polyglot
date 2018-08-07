@@ -35,6 +35,7 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { AuthGuard } from './services/auth-guard.service';
 
     AboutUsComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    StringDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +68,7 @@ import { AuthGuard } from './services/auth-guard.service';
     AngularFireAuthModule
 
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, StringDialogComponent],
   providers: [DataService, AuthService, UserService, LandingGuard, AuthGuard],
   bootstrap: [AppComponent]
 
