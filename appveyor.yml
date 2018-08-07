@@ -32,11 +32,11 @@ notifications:
     on_build_failure: true
 deploy:
   - provider: WebDeploy
-    server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
-    website: polyglot-bsa/api
-    username: $polyglot-bsa
+    server: https:/polyglotbsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglotbsa
+    website: polyglotbsa/api
+    username: $polyglotbsa
     password:
-      secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
+      secure: kQ6PvUryNFlenx+LzO/R7XPs4weBk4vvwfXtYDuj008Qz6hL0Txm48v/PwOLA8zaqfye+FH+yZR8CDt3vieMxw==
     remove_files: false
     app_offline: true
     artifact: api    
