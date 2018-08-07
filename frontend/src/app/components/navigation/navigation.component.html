@@ -12,9 +12,9 @@
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
       <!-- Do this in better way (ngIf) -->
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
       <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" (click)="onSignUpClick()">SignUp</a>
       <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
