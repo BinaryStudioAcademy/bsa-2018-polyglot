@@ -1,5 +1,6 @@
 version: '1.0.{build}'
 image: Visual Studio 2017
+skip_branch_with_pr: true
 branches:
   only:
   - master
@@ -31,11 +32,14 @@ notifications:
     on_build_failure: true
 deploy:
   - provider: WebDeploy
-    server: https://polyglot-bsa.scm.azurewebsites.net:443/msdeploy.axd?site=polyglot-bsa
-    website: polyglot-bsa/api
-    username: $polyglot-bsa
+    server:
+      secure: hQ5WVXzlUlrB7IQoeE40gV4w7hl4z+M71k1g1SUBrOFNf6sYA9/ETSDF3AS/LCL/Qg4dEBTAkWZDlY+70eorydgnzzkeZyDeUjwHVo12qh4=
+    website:
+      secure: KjgEasqpRVplsdM68amI2w==
+    username:
+      secure: LlLs2KhCZ+8by+luAAY5Zw==
     password:
-      secure: UtjEbvgez9ZJzqVeErmVxs22Gs09Rj8duZuHddHtvbzXxfUhRZOGE1VsCVLhqmCqnUeRbKxbSn8eB2RSmzU1UA==
+      secure: dshhhT1MyhqyTCrdj7dP6fyofJWsAePJxv3FWo7eTtpt9VzbK8x7FpAIAwAC5oXwsGoQaeOl9xWRH5zU2MWMrg==
     remove_files: false
     app_offline: true
     artifact: api    

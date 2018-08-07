@@ -11,18 +11,20 @@
     </a>
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
-      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-      <a mat-button routerLink="/dashboard">Dashboard</a>
+      <!-- Do this in better way (ngIf) -->
+      <a mat-button  routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
-      <a mat-button (click)="onLoginClick()">Login</a>
-      <a mat-button (click)="onSignUpClick()">SignUp</a>
+      <a mat-button *ngIf="!isLoggedIn()" (click)="onLoginClick()">Login</a>
+      <a mat-button *ngIf="!isLoggedIn()" (click)="onSignUpClick()">SignUp</a>
+      <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
       <a mat-button (click)="onNewStrClick()">My</a>
       <span class="toolbar-spacer"></span>
      
     </div>
 
   </mat-toolbar>
-
+  <mat-divider class="navigation-divider"></mat-divider>
   <mat-sidenav-container fxFlexFill class="example-container">
 
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
@@ -47,4 +49,5 @@
     </mat-sidenav-container>
 
 </div>
-<mat-divider class="navigation-divider"></mat-divider>
+
+

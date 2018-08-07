@@ -7,18 +7,13 @@ branches:
   - develop
 notifications:
     slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
+before_install:
+  - sudo apt-get install ncftp
 before_script:
 - cd frontend
 - npm install
 script:
 - npx ng build --prod
 after_success:
-  - cd dist/polyglot  
-deploy:
-  provider: azure_web_apps
-  username: $USERNAME
-  password: $PASSWORD
-  site: $SITE
-  skip_cleanup: true
-  verbose: true
-  on: develop
+  - cd dist/polyglot
+  - ncftpput -R -v -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_SERVER_HOST $FTP_PATH ./

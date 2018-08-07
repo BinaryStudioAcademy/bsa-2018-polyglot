@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -26,34 +25,39 @@ export class AuthService {
     );
    }
 
-  async getCurrentToken() : Promise<string>{
+  getCurrentToken() : Observable<string>{
     if (!this.isLoggedIn()){
-      return Promise.resolve("");
+      return from(Promise.resolve(""));
     }
-    return await this._firebaseAuth.auth.currentUser.getIdToken();
+    return from(this._firebaseAuth.auth.currentUser.getIdToken());
   }
 
   signInWithGoogle() {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
-      ).catch(error => console.log(error));
+      );
     }
   }
 
+  signInWithFacebook() {
+    if (!this.isLoggedIn()) {
+      return this._firebaseAuth.auth.signInWithPopup(
+        new firebase.auth.FacebookAuthProvider()
+      );
+    }
+  }
 
   signUpRegular(email: string, password: string, name: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
     .then(() => this._firebaseAuth.auth.currentUser
-      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
-    .catch(error => console.log(error));
+      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}));
   }
 
 
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
-      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
-      .catch(error => console.log(error));
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
     }
   }
 
