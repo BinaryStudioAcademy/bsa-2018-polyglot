@@ -29,6 +29,18 @@ namespace Polyglot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
@@ -42,13 +54,15 @@ namespace Polyglot
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("AllowAll");
+            /*
             app.UseCors(builder => builder
                 .WithOrigins("http://localhost:4200")
+                .AllowAnyOrigin()
                 .AllowCredentials()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
-
+            */
             app.UseAuthentication();
 
             app.UseMvc();

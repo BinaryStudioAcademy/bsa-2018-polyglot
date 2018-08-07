@@ -20,7 +20,7 @@ export class DataService {
     body: any = {}) {
 
       let headers;
-      if (type === RequestMethod.Post || type === RequestMethod.Put) {
+      if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "image") {
         headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${await this.authService.getCurrentToken()}`});
       } else {
         headers = new HttpHeaders({ 'Authorization': `Bearer ${await this.authService.getCurrentToken()}`});

@@ -1,0 +1,6 @@
+<form #imageForm = ngForm>
+  <img id="upload-image" [src]="ImageUrl">
+  <input type="file" #Image (change)="handleFileInput($event.target.files)">
+  <button type="submit" [disabled] = "Image.value == ''" mat-raised-button color="primary"  
+  (click) = "uploadImage()">Upload</button>
+</form>
