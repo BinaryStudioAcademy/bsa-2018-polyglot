@@ -12,6 +12,7 @@ before_script:
 - npm install
 - npm install -g gulp
 - npm install vinyl-ftp gulp-util minimist --save-dev
+- npm link gulp
 script:
 - npx ng build --prod
 after_success:  
