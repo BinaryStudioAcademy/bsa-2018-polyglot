@@ -10,15 +10,8 @@ notifications:
 before_script:
 - cd frontend
 - npm install
+- npm install vinyl-ftp gulp-util minimist --save-dev
 script:
 - npx ng build --prod
-after_success:
-  - cd dist/polyglot  
-deploy:
-  provider: azure_web_apps
-  username: $USERNAME
-  password: $PASSWORD
-  site: $SITE
-  skip_cleanup: true
-  verbose: true
-  on: develop
+after_success:  
+  - gulp --gulpfile ../deploy.js deploy --user $USERNAME --password $PASSWORD
