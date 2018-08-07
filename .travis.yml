@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+- '10.5.0'
+branches:
+  only:
+  - master
+  - develop
+notifications:
+    slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
+before_script:
+- cd frontend
+- npm install
+script:
+- npx ng build --prod
+after_success:
+  - cd dist/polyglot  
+deploy:
+  provider: azure_web_apps
+  username: $USERNAME
+  password: $PASSWORD
+  site: $SITE
+  skip_cleanup: true
+  verbose: true
+  on: develop

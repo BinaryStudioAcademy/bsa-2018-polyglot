@@ -30,7 +30,8 @@ namespace Polyglot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<DataContext>(options => options.UseSqlServer("PolyglotDatabase"));
+            string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
         }
 
