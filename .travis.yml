@@ -10,6 +10,7 @@ notifications:
 before_script:
 - cd frontend
 - npm install
+- npm install easy-ftp -g
 script:
 - npx ng build --prod
 deploy:
