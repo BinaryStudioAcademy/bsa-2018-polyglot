@@ -24,8 +24,8 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
-  
- 
+  MatChipsModule
+
 
 
 } from '@angular/material';
@@ -55,8 +55,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    FlexLayoutModule
-    
+    FlexLayoutModule,
+    MatChipsModule
+
   ],
   exports: [
     LayoutModule,
@@ -80,7 +81,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatChipsModule
   ]
 })
 export class AppMaterialModule { }

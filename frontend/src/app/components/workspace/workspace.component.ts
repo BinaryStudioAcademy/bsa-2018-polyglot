@@ -51,15 +51,16 @@ let MOCK_KEYS = [
   {
     id: 1,
     name: 'HELLO',
-    originalValue: 'hello'
+    originalValue: 'hello',
+    tags: ['it', 'header', 'app', 'workspace', 'lection1']
   },
   {
-    id: 1,
+    id: 2,
     name: 'CANCEL',
     originalValue: 'cancel'
   },
   {
-    id: 1,
+    id: 3,
     name: 'CONFIRM',
     originalValue: 'confirm'
   }

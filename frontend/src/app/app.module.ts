@@ -33,6 +33,8 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { KeyComponent } from './components/workspace/key/key.component';
+import { KeyDetailsComponent } from './components/workspace/key-details/key-details.component';
 
 
 @NgModule({
@@ -51,7 +53,9 @@ import { WorkspaceComponent } from './components/workspace/workspace.component';
     AboutUsComponent,
     ContactComponent,
     FooterComponent,
-    WorkspaceComponent
+    WorkspaceComponent,
+    KeyComponent,
+    KeyDetailsComponent
   ],
   imports: [
     BrowserModule,

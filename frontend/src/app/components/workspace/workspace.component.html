@@ -1,4 +1,4 @@
-<header class="project-header d-flex align-items-center">
+<header class="project-header d-flex align-items-center py-2">
   <img src="{{project.ImageUrl}}" class="mat-elevation-z8 project-logo m-1 p-1">
 
   <div class="d-flex flex-column grow-1 px-1 secondary">
@@ -9,7 +9,7 @@
   </div>
 </header>
 
-<section class="my-2">
+<section>
   <mat-card class="d-flex align-items-center py-0 px-1 justify-space-between ">
     <div>
       <mat-form-field class="search-form-field" [floatLabel]="'never'">
@@ -28,12 +28,18 @@
     <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
   </mat-card>
 
-  <mat-card class="keys-list d-flex my-1">
-    <mat-nav-list class="keys-list__nav">
-      <a mat-list-item href="#" *ngFor="let key of keys">
-        <h4>{{ key.name }}</h4>
-        <p>{{key.originalValue}}</p>
-      </a>
-    </mat-nav-list>
-  </mat-card>
+  <div class="d-flex">
+    <mat-card class="keys-list d-flex my-1">
+      <mat-nav-list class="keys-list__nav">
+        <a mat-list-item [routerLink]="['key', key.id]" routerLinkActive="active" *ngFor="let key of keys">
+          <app-workspace-key [key]="key"></app-workspace-key>
+          <mat-divider></mat-divider>
+        </a>
+      </mat-nav-list>
+    </mat-card>
+
+    <mat-card class="key-details-card m-1 grow-1">
+      <router-outlet></router-outlet>
+    </mat-card>
+  </div>
 </section>

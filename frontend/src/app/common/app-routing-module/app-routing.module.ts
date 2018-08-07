@@ -14,6 +14,7 @@ import { LandingGuard } from '../../components/landing/landing.guard.service';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 import { ContactComponent } from '../../components/contact/contact.component';
 import { WorkspaceComponent } from '../../components/workspace/workspace.component';
+import { KeyDetailsComponent } from '../../components/workspace/key-details/key-details.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -33,7 +34,18 @@ const routes: Routes = [
   },
   {
     path: 'workspace/:projectId',
-    component: WorkspaceComponent
+    component: WorkspaceComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'key/',
+        pathMatch: 'full'
+      },
+      {
+        path: 'key/:keyId',
+        component: KeyDetailsComponent
+      }
+    ]
   },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
