@@ -11,6 +11,10 @@ using Polyglot.DataAccess.NoSQL_Repository;
 using System.IO;
 using Newtonsoft.Json;
 
+
+using System.Xml;
+using System.Xml.Linq;
+
 namespace Polyglot.BusinessLogic.Implementations
 {
 	public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
@@ -49,16 +53,51 @@ namespace Polyglot.BusinessLogic.Implementations
 
 			try
 			{
-				Dictionary<string, string> dictionary;
-
+				Dictionary<string, string> dictionary = new Dictionary<string, string>();
 				string str = String.Empty;
 
-				using (var reader = new StreamReader(file.OpenReadStream()))
+
+
+
+
+				switch (file.ContentType)
 				{
-					str = reader.ReadToEnd();
+					case "application/json":
+						
+						using (var reader = new StreamReader(file.OpenReadStream()))
+						{
+							str = reader.ReadToEnd();
+						}
+						dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+						break;
+
+					case "application/xml":
+
+						using (var reader = new StreamReader(file.OpenReadStream()))
+						{
+							str = reader.ReadToEnd();
+						}
+
+						XmlDocument doc = new XmlDocument();
+						doc.LoadXml(str);
+
+						// XElement xml = XElement.Parse(str);
+						foreach (XmlNode n in doc.SelectNodes("/xml/*"))
+						{
+							// dictionary.Add(element.Name.LocalName, element.Value);
+							dictionary[n.Name] = n.Value;
+						}
+						break;
 				}
 
-				dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+
+				
+
+				
+
+				
+
+				
 
 				foreach(var i in dictionary)
 				{
