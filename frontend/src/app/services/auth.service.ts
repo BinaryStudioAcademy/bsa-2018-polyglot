@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -26,11 +26,11 @@ export class AuthService {
     );
    }
 
-  async getCurrentToken() : Promise<string>{
+  getCurrentToken() : Observable<string>{
     if (!this.isLoggedIn()){
-      return Promise.resolve("");
+      return from(Promise.resolve(""));
     }
-    return await this._firebaseAuth.auth.currentUser.getIdToken();
+    return from(this._firebaseAuth.auth.currentUser.getIdToken());
   }
 
   signInWithGoogle() {
