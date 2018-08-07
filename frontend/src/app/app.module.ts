@@ -27,13 +27,15 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-
 import { LandingComponent } from './components/landing/landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { NewProjectComponent } from './components/new-project/new-project.component';
+import { ManagerComponent } from './components/manager/manager.component'
+
 
 
 @NgModule({
@@ -52,6 +54,8 @@ import { AuthGuard } from './services/auth-guard.service';
     AboutUsComponent,
     ContactComponent,
     FooterComponent
+    NewProjectComponent,
+    ManagerComponent
   ],
   imports: [
     BrowserModule,
