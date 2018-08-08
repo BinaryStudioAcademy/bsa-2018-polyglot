@@ -39,16 +39,18 @@ namespace Polyglot.BusinessLogic.Implementations
 				{
 
 
-					case "application/json":
+				case "application/json":
 						
-						using (var reader = new StreamReader(file.OpenReadStream()))
-						{
-							str = reader.ReadToEnd();
-						}
-						dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-						break;
+					using (var reader = new StreamReader(file.OpenReadStream()))
+					{
+						str = await reader.ReadToEndAsync();
+					}
+					dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+					break;
+
 
 					case "text/xml":
+
 
 						using (var reader = new StreamReader(file.OpenReadStream()))
 						{
@@ -63,17 +65,36 @@ namespace Polyglot.BusinessLogic.Implementations
 							dictionary[n.Name] = n.InnerXml;
 						}
 						break;
+					*/
 
-					default:
+				case "application/octet-stream":
+
+					using (var reader = new StreamReader(file.OpenReadStream()))
+					{
+						str = await reader.ReadToEndAsync();
+					}
+					XDocument doc = XDocument.Parse(str);					
+					
+					foreach (XElement data in doc.Element("root").Elements("data"))
+					{
+						dictionary[data.Attribute("name").Value] = data.Element("value").Value;
+					}
+
+
+					break;
+
+				default:
 						throw new NotImplementedException();
 				}
 
 				foreach(var i in dictionary)
 				{
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
+
                 // repository isn`t working now
                 await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }			
+
 		}
 	}
 }
