@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.Common.Mapping;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
-using System.IO;
+﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-
-
-using System.Xml;
+using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.DataAccess.NoSQL_Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using Polyglot.DataAccess;
-using MongoDB.Driver;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
-	public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
+    public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
 	{
 		private IRepository<ComplexString> repository;
         
@@ -93,7 +85,7 @@ namespace Polyglot.BusinessLogic.Implementations
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
-                await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await repository.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }			
 
 		}
