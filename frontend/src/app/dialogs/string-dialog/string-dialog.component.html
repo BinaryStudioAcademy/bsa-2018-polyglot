@@ -1,4 +1,4 @@
-<form (submit)="onSubmit(str)">
+<form (submit)="onSubmit()">
   <h4>Create String</h4>
   <mat-grid-list cols="2">
     <mat-grid-tile>
@@ -28,7 +28,11 @@
         <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <app-tags></app-tags>
-    <button type="submit" [disabled] = "str.key == '' || str.base == '' || !image" mat-raised-button color="primary"  
-    (click) = "onSubmit()">Upload</button>
+    <app-tags (tagsEvent) = "receiveTags($event)"></app-tags>
+    <button 
+      type="submit" 
+      [disabled] = "str.key == '' || str.base == '' || !image" 
+      mat-raised-button color="primary">
+      Upload
+    </button>
 </form>

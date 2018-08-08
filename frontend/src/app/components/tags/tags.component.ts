@@ -1,6 +1,6 @@
 import { Tag } from '../../models/tag';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild, OnInit, Output, EventEmitter} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
 import {Observable} from 'rxjs';
@@ -20,6 +20,7 @@ export class TagsComponent  {
   tagCtrl = new FormControl();
   filteredTags: Observable<string[]> = new Observable<string[]>();
   tags: string[] = new Array<string>();
+  @Output() tagsEvent = new EventEmitter<string[]>();
   allTags: string[] = ['BasicTag', 'StandartTag', 'AnotherTag', 'SomeTag', 'NewTag'];
 
   @ViewChild('tagInput') tagInput: ElementRef;
@@ -45,6 +46,7 @@ export class TagsComponent  {
     }
 
     this.tagCtrl.setValue(null);
+    this.tagsEvent.emit(this.tags);
   }
 
   remove(tag: string): void {

@@ -10,12 +10,14 @@ import { UploadImageComponent } from '../../components/upload-image/upload-image
 export class StringDialogComponent implements OnInit {
 
   public str: IString;
-  public projectTags: string[];
   public image: File;
-  public tags: Array<String>;
 
   receiveImage($event){
     this.image = $event;
+  }
+
+  receiveTags($event){
+    this.str.tags = $event;
   }
 
   constructor() { }
@@ -29,15 +31,11 @@ export class StringDialogComponent implements OnInit {
       tags: [''],
     };
 
-    // get tag list from server
-    this.projectTags = ['sometag1', 'tag2', 'sometag3', 'tag4', 'sometag5'];
   }
 
-  onSubmit(str: IString) {
-
-    // get only checked items from projectTags in str.tags
-
-    console.log(str);
+  onSubmit() {
+    console.log(this.str);
+    console.log(this.image);
     // POST method
   }
 }
