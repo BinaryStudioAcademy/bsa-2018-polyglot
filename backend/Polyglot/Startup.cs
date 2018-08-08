@@ -54,6 +54,9 @@ namespace Polyglot
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
 
+            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
+                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
+
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             // automapper
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
@@ -102,10 +105,6 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));
             services.AddScoped(typeof(ICRUDService<UserProfile, int>), typeof(CRUDService<UserProfile>));
             // ======================================================================================================
-
-
-            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
-                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
