@@ -15,14 +15,14 @@ import { ContactComponent } from '../../components/contact/contact.component';
 import { TranslatorProfileComponent } from '../../components/translatorProfile/translator-profile/translator-profile.component';
 
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
-import { ManagerComponent } from '../../components/manager/manager.component';
 import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
   
 const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'newproject', component: NewProjectComponent },
+  { path: 'profile', component: ManagerProfileComponent},
+  { path: 'profile/newproject', component: NewProjectComponent },
 
   {
     path: 'dashboard',
@@ -33,11 +33,11 @@ const routes: Routes = [
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
+      { path: 'newproject', component: NewProjectComponent },
       { path: 'strings', component: NoFoundComponent },
     ]
   },
   { path: 'translator', component: TranslatorProfileComponent },
-  { path: 'manager', component: ManagerProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
