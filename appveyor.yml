@@ -5,7 +5,6 @@ branches:
   only:
   - master
   - develop
-  - appveyor-test
 clone_depth: 1
 init:
   # Good practise, because Windows
@@ -28,9 +27,10 @@ artifacts:
 notifications:
   - provider: Slack
     incoming_webhook:
-      secure: f9gLlC9+i3TN/u2sQ7E28WD25BtX8DcEP1bKfKH9aaBb1NHqWEcix0xzDGAAuKBt8dWSKeTWmR7B+g+K6PSilHkRSKME4zExkwAmpc2WGNs=
-    on_build_success: true
-    on_build_failure: true
+      secure: YEqYADnFRmmkD0iJxExaQIR/EtPx3CsRa4UsEluaDaZziW3H5vzFGvRDUkXa4WhBg0DJZK1W+4ikMs82BgyqjA5ZKsK6WhsIq4i2lKQSNmk=
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: true
 deploy:
   - provider: WebDeploy
     server:
