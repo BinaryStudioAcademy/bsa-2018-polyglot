@@ -17,7 +17,22 @@
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" (click)="onSignUpClick()">SignUp</a>
-      <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
+      <!-- <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a> -->
+      
+      <button mat-button
+      [mdePopoverTriggerFor]="appPopover"
+      mdePopoverTriggerOn="click">
+        User
+      </button>
+
+      <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
+        <mat-card style="max-width: 300px">
+          <mat-card-content>
+          A material design popover component created using Angular version 6 with the Angular CDK.
+          </mat-card-content>
+        </mat-card>
+      </mde-popover>
+
       <span class="toolbar-spacer"></span>
      
     </div>

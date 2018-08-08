@@ -78,6 +78,7 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     AngularFireAuthModule,
     AppRoutingModule,
     ngfModule
+
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
