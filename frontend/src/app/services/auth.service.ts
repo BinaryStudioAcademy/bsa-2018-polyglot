@@ -3,6 +3,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable, from } from 'rxjs';
 import { Router } from '@angular/router';
+import { SessionStorage } from "ngx-store";
+import { async } from 'q';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,12 @@ import { Router } from '@angular/router';
 export class AuthService {
   private user: Observable<firebase.User>;
   private userDetails: firebase.User = null;
+  @SessionStorage() token: string;
+  @SessionStorage() isLogged: boolean;
 
   constructor(private _firebaseAuth: AngularFireAuth, private router: Router) {
+    console.log(this.token);
+    console.log(this.isLogged);
     this.user = _firebaseAuth.authState;
     this.user.subscribe(
       (user) => {
@@ -26,17 +32,17 @@ export class AuthService {
    }
 
   getCurrentToken() : Observable<string>{
-    if (!this.isLoggedIn()){
-      return from(Promise.resolve(""));
-    }
-    return from(this._firebaseAuth.auth.currentUser.getIdToken());
+    return from(Promise.resolve(this.token));
   }
 
   signInWithGoogle() {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
-      );
+      ).then(async () => {
+        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
+        this.isLogged = true;
+      });
     }
   }
 
@@ -44,35 +50,44 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.FacebookAuthProvider()
-      );
+      ).then(async () => {
+        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
+        this.isLogged = true;
+      });
     }
   }
 
   signUpRegular(email: string, password: string, name: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
     .then(() => this._firebaseAuth.auth.currentUser
-      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}));
+      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
+    .then(async () => {
+      this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
+      this.isLogged = true;
+    });
   }
 
 
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
-      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password).then(async () => {
+        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
+        this.isLogged = true;
+      });
     }
   }
 
-  isLoggedIn() {
-    if (this.userDetails == null ) {
-      return false;
-    } else {
-      return true;
-    }
+  isLoggedIn() : boolean{
+    return this.isLogged;
   }
 
   logout() {
     if (this.isLoggedIn()) {
-      this._firebaseAuth.auth.signOut()
-      .then(() => this.router.navigate(['/']));
+      this._firebaseAuth.auth.signOut().then(async () => {
+        this.token = "";
+        this.isLogged = false;
+        this.router.navigate(['/']);
+      });
     }
   }
 
