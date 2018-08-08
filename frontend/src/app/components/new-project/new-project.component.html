@@ -13,14 +13,14 @@
 
     <div class="field-choose-wraper">
         <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Choose technology" formControlName="technology">
+            <mat-select class="mat-select" placeholder="Technology" formControlName="technology">
                 <mat-option value="JS">JS</mat-option>
                 <mat-option value = "Angular">Angular</mat-option> 
             </mat-select>
         </mat-form-field>
         
          <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Choose main language" formControlName="mainLanguage">
+            <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage">
                 <mat-option *ngFor="let language of languages" [value]="language">
                     {{language.name}}
                 </mat-option>
@@ -30,7 +30,8 @@
 
     
     <div class="saveButton">
-        <button mat-button  [disabled]="projectForm.invalid" routerLink="../">Create</button>
+        <button mat-button  [disabled]="projectForm.invalid">Create</button>
+        <!-- routerLink="../" -->
     </div>
     </form>
 <div class="example-container">
