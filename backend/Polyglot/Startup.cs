@@ -14,6 +14,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Polyglot.Authentication.Extensions;
 using Polyglot.DataAccess;
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot
 {
@@ -32,7 +34,16 @@ namespace Polyglot
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
+
+            services.Configure<Settings>(options =>{
+                        options.ConnectionString = Configuration.GetSection("MongoDb:ConnectionString").Value;
+                        options.Database = Configuration.GetSection("MongoDb:Database").Value;
+            });
+            services.AddTransient<IComplexStringRepository, ComplexStringRepository>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

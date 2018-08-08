@@ -14,19 +14,21 @@ using Newtonsoft.Json;
 
 using System.Xml;
 using System.Xml.Linq;
+using Polyglot.DataAccess;
+using MongoDB.Driver;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
 	public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
 	{
-		IRepository<ComplexString> repository;
+		private IComplexStringRepository repository;
+        MongoDataContext context;
 
 		public ProjectService()
 		{
 			
 		}
-
-		
+        
 
 		public async Task FileParseDictionary(IFormFile file)
 		{			
@@ -47,7 +49,7 @@ namespace Polyglot.BusinessLogic.Implementations
 						dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
 						break;
 
-					case "application/xml":
+					case "text/xml":
 
 						using (var reader = new StreamReader(file.OpenReadStream()))
 						{
@@ -70,9 +72,12 @@ namespace Polyglot.BusinessLogic.Implementations
 				foreach(var i in dictionary)
 				{
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
-					// repository isn`t working now
-					// await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
-				}			
+                // repository isn`t working now
+                    
+
+
+                //await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+            }			
 		}
 	}
 }
