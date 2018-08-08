@@ -30,7 +30,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
+import { AuthGuard } from './services/guards/auth-guard.service';
 import { UploadImageComponent } from './components/upload-image/upload-image.component';
 import { ngfModule } from 'angular-file';
 import { LandingComponent } from './components/landing/landing.component';
@@ -40,7 +40,6 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 import { TagsComponent } from './components/tags/tags.component'
 import { WebStorageModule } from 'ngx-store';
@@ -66,7 +65,6 @@ import { WebStorageModule } from 'ngx-store';
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
-    ManagerComponent,
     ManagerProfileComponent,
     TagsComponent
   ],
