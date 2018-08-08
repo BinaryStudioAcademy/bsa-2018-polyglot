@@ -11,7 +11,7 @@ using AutoMapper;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Tags
+        // GET: Tags
         [HttpGet]
         public async Task<IActionResult> GetAllTags()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<TagDTO>>(projects));
         }
 
-        // GET: api/Tags/5
+        // GET: Tags/5
         [HttpGet("{id}", Name = "GetTag")]
         public async Task<IActionResult> GetTag(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TagDTO>(project));
         }
 
-        // POST: api/Tags
+        // POST: Tags
         public async Task<IActionResult> AddTag([FromBody]TagDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<TagDTO>(entity));
         }
 
-        // PUT: api/Tags/5
+        // PUT: Tags/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTag(int id, [FromBody]TagDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TagDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(int id)
         {

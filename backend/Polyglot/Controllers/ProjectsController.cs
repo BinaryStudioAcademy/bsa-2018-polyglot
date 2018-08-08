@@ -12,7 +12,7 @@ using Polyglot.DataAccess.Entities;
 namespace Polyglot.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Projects
+        // GET: Projects
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
@@ -34,7 +34,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));
         }
 
-        // GET: api/Projects/5
+        // GET: Projects/5
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
@@ -43,7 +43,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<ProjectDTO>(project));
         }
 
-        // POST: api/Projects
+        // POST: Projects
         public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
         {
             if (!ModelState.IsValid)
@@ -55,7 +55,7 @@ namespace Polyglot.Controllers
                 mapper.Map<ProjectDTO>(entity));
         }
 
-        // PUT: api/Projects/5
+        // PUT: Projects/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
         {
@@ -67,7 +67,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<ProjectDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {

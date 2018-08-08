@@ -11,7 +11,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProjectHistoriesController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/ProjectHistorys
+        // GET: ProjectHistorys
         [HttpGet]
         public async Task<IActionResult> GetAllProjectHistorys()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<ProjectHistoryDTO>>(projects));
         }
 
-        // GET: api/ProjectHistorys/5
+        // GET: ProjectHistorys/5
         [HttpGet("{id}", Name = "GetProjectHistory")]
         public async Task<IActionResult> GetProjectHistory(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<ProjectHistoryDTO>(project));
         }
 
-        // POST: api/ProjectHistorys
+        // POST: ProjectHistorys
         public async Task<IActionResult> AddProjectHistory([FromBody]ProjectHistoryDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<ProjectHistoryDTO>(entity));
         }
 
-        // PUT: api/ProjectHistorys/5
+        // PUT: ProjectHistorys/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyProjectHistory(int id, [FromBody]ProjectHistoryDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<ProjectHistoryDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProjectHistory(int id)
         {
