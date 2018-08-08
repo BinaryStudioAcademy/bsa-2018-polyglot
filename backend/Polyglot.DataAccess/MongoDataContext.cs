@@ -6,13 +6,11 @@ using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot.DataAccess
 {
-    public class MongoDataContext 
+    public class MongoDataContext : IMongoDataContext
     {
         public IMongoDatabase MongoDatabase { get; }
 
         public MongoDataContext(IOptions<Settings> settings)
-
-
         {
             var client = new MongoClient(settings.Value.ConnectionString);
             if (client != null)
@@ -20,7 +18,7 @@ namespace Polyglot.DataAccess
             
         }
 
-        public IMongoCollection<ComplexString> Notes
+        public IMongoCollection<ComplexString> ComplexStrings
         {
             get
             {
@@ -28,6 +26,6 @@ namespace Polyglot.DataAccess
             }
         }
 
-
+        
     }
 }

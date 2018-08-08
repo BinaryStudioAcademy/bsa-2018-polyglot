@@ -21,12 +21,11 @@ namespace Polyglot.BusinessLogic.Implementations
 {
 	public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
 	{
-		private IComplexStringRepository repository;
-        MongoDataContext context;
-
-		public ProjectService()
+		private IRepository<ComplexString> repository;
+        
+		public ProjectService(IRepository<ComplexString> rep)
 		{
-			
+			this.repository = rep;
 		}
         
 
@@ -73,10 +72,7 @@ namespace Polyglot.BusinessLogic.Implementations
 				{
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
                 // repository isn`t working now
-                    
-
-
-                //await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }			
 		}
 	}

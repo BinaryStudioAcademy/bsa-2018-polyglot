@@ -13,9 +13,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Polyglot.Authentication.Extensions;
+using Polyglot.BusinessLogic.Implementations;
+using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.Repositories;
 
 namespace Polyglot
 {
@@ -38,10 +42,14 @@ namespace Polyglot
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
             services.Configure<Settings>(options =>{
-                        options.ConnectionString = Configuration.GetSection("MongoDb:ConnectionString").Value;
-                        options.Database = Configuration.GetSection("MongoDb:Database").Value;
+                        options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                        options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
             services.AddTransient<IComplexStringRepository, ComplexStringRepository>();
+            services.AddTransient<DataAccess.NoSQL_Repository.IRepository<ComplexString>, ComplexStringRepository>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IMongoDataContext, MongoDataContext>();
+
 
 
         }
