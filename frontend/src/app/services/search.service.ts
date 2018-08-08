@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient} from '@angular/common/http';
 import { Translator } from '../models/Translator';
 
 @Injectable({
@@ -8,10 +11,9 @@ export class SearchService {
 
   constructor() { }
 
-  FindTranslatorsByEmail(email: string) : Translator[]{
-    let translators = 
-[
-  {
+  FindTranslatorsByEmail(email: string) : Observable<Translator>{
+    
+    return of({
       id: 1,
       userProfile: {
         id: 1,
@@ -143,10 +145,7 @@ export class SearchService {
       },
       rating: null,
       teamTranslators: null
-  }
-];
-    
-  return translators;
+  });
   }
 
 }
