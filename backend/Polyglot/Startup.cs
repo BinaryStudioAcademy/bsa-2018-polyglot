@@ -21,6 +21,7 @@ using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot
 {
@@ -103,6 +104,8 @@ namespace Polyglot
             // ======================================================================================================
 
 
+            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
+                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
