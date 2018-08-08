@@ -9,8 +9,8 @@ namespace Polyglot.DataAccess.Interfaces
     {
 		Task<TEntity> GetAsync(int id);
 		Task<List<TEntity>> GetAllAsync();
-		void DeleteAsync(int id);
-		void CreateAsync(TEntity entity);
-		void Update(TEntity entity);
+		Task<TEntity> DeleteAsync(int id);
+        Task<TEntity> CreateAsync(TEntity entity);
+        TEntity Update(TEntity entity);
     }
 }
