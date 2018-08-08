@@ -45,7 +45,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
-
+import { SearchService } from './services/search.service';
 
 @NgModule({
   declarations: [
@@ -90,7 +90,7 @@ import { SearchComponent } from './components/search/search.component';
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  providers: [DataService, AuthService, UserService, AuthGuard, SearchService],
   bootstrap: [AppComponent]
 
 
