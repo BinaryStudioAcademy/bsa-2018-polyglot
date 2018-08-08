@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable, from } from 'rxjs';
@@ -37,23 +36,28 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
-      ).catch(error => console.log(error));
+      );
     }
   }
 
+  signInWithFacebook() {
+    if (!this.isLoggedIn()) {
+      return this._firebaseAuth.auth.signInWithPopup(
+        new firebase.auth.FacebookAuthProvider()
+      );
+    }
+  }
 
   signUpRegular(email: string, password: string, name: string) {
     return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
     .then(() => this._firebaseAuth.auth.currentUser
-      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
-    .catch(error => console.log(error));
+      .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}));
   }
 
 
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
-      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password)
-      .catch(error => console.log(error));
+      return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
     }
   }
 
@@ -78,4 +82,3 @@ export class AuthService {
     }
   }
 }
-
