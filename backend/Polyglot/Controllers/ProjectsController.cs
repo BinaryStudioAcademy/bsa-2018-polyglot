@@ -17,8 +17,8 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-		// private readonly IMapper mapper;
-		// private readonly ICRUDService<Project, int> service;
+		 private readonly IMapper mapper;
+		 private readonly ICRUDService<Project, int> service;
 		private IProjectService projectService;
 
         public ProjectsController(/*ICRUDService<Project, int> service, IMapper mapper*/)
@@ -37,33 +37,26 @@ namespace Polyglot.Controllers
         // GET: api/Projects
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
-        {
-			/*
+        {			
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));			
-			return Ok("ok");
-			*/
-			return Ok();
         }
 
         // GET: api/Projects/5
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
-        {
-			/*	
+        {	
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<ProjectDTO>(project));
-			*/
-			return Ok();
+			
 		}
 
 		// POST: api/Projects
 		[HttpPost]
 		public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
-		{
-			/*	
+		{	
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
@@ -71,34 +64,27 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 mapper.Map<ProjectDTO>(entity));
-			*/
-			return Ok();
+			
 		}
 
         // PUT: api/Projects/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
-        {
-			/*	
+        {			
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
             var entity = await service.PutAsync(id, mapper.Map<Project>(project));
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(mapper.Map<ProjectDTO>(entity));
-			*/
-			return Ok();
 		}
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
-        {
-			/*	
+        {				
             var success = await service.TryDeleteAsync(id);
-            return success ? Ok() : StatusCode(304) as IActionResult;
-			*/
-			return Ok();
+            return success ? Ok() : StatusCode(304) as IActionResult;			
 		}
 		
 
