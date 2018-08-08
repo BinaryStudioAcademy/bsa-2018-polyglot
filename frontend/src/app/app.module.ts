@@ -39,7 +39,8 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerComponent } from './components/manager/manager.component';
-import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { WebStorageModule } from 'ngx-store';
 
 
 
@@ -77,7 +78,8 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AppRoutingModule,
-    ngfModule
+    ngfModule,
+    WebStorageModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],

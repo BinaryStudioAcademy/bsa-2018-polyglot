@@ -11,7 +11,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class RightsController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Rights
+        // GET: Rights
         [HttpGet]
         public async Task<IActionResult> GetAllRights()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<RightDTO>>(projects));
         }
 
-        // GET: api/Rights/5
+        // GET: Rights/5
         [HttpGet("{id}", Name = "GetRight")]
         public async Task<IActionResult> GetRight(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<RightDTO>(project));
         }
 
-        // POST: api/Rights
+        // POST: Rights
         public async Task<IActionResult> AddRight([FromBody]RightDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<RightDTO>(entity));
         }
 
-        // PUT: api/Rights/5
+        // PUT: Rights/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyRight(int id, [FromBody]RightDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<RightDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRight(int id)
         {

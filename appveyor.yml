@@ -27,19 +27,20 @@ artifacts:
 notifications:
   - provider: Slack
     incoming_webhook:
-      secure: f9gLlC9+i3TN/u2sQ7E28WD25BtX8DcEP1bKfKH9aaBb1NHqWEcix0xzDGAAuKBt8dWSKeTWmR7B+g+K6PSilHkRSKME4zExkwAmpc2WGNs=
+      secure: YEqYADnFRmmkD0iJxExaQIR/EtPx3CsRa4UsEluaDaZziW3H5vzFGvRDUkXa4WhBg0DJZK1W+4ikMs82BgyqjA5ZKsK6WhsIq4i2lKQSNmk=
     on_build_success: true
     on_build_failure: true
+    on_build_status_changed: false
 deploy:
   - provider: WebDeploy
     server:
-      secure: hQ5WVXzlUlrB7IQoeE40gV4w7hl4z+M71k1g1SUBrOFNf6sYA9/ETSDF3AS/LCL/Qg4dEBTAkWZDlY+70eorydgnzzkeZyDeUjwHVo12qh4=
+      secure: zch084bYYMjr0naE0/aKSkLsWQ8z6qV69JF9oRPEAOBjuHPOmveznq71pdM1fKuz1BNsf7ZfSkM309/AehGYmhhj1iWe0Glu0exjAIlLqbs=
     website:
-      secure: KjgEasqpRVplsdM68amI2w==
+      secure: YLtSO680AhtWb+z0OQHmfA==
     username:
-      secure: LlLs2KhCZ+8by+luAAY5Zw==
+      secure: Ea6MTSea5LnvA3+mky63Ww==
     password:
-      secure: dshhhT1MyhqyTCrdj7dP6fyofJWsAePJxv3FWo7eTtpt9VzbK8x7FpAIAwAC5oXwsGoQaeOl9xWRH5zU2MWMrg==
-    remove_files: false
+      secure: VFzIPoXztNfAKYa9dkJlOKX+6o38oWLUrJaJZj7C6anrji3bda5YbotHItCwnxBjdLSuxT65QuiYjbnUhfWXHQ==
+    remove_files: true
     app_offline: true
     artifact: api    
