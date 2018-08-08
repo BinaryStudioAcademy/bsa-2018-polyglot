@@ -29,7 +29,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
+import { AuthGuard } from './services/guards/auth-guard.service';
 import { UploadImageComponent } from './components/upload-image/upload-image.component';
 import { ngfModule } from 'angular-file';
 import { LandingComponent } from './components/landing/landing.component';
