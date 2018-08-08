@@ -41,7 +41,9 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
 import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 import { WebStorageModule } from 'ngx-store';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material';
+import { TeamComponent } from './components/teams/team/team.component';
 
 
 @NgModule({
@@ -64,7 +66,8 @@ import { WebStorageModule } from 'ngx-store';
     FooterComponent,
     NewProjectComponent,
     ManagerComponent,
-    ManagerProfileComponent
+    ManagerProfileComponent,
+    TeamComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,9 @@ import { WebStorageModule } from 'ngx-store';
     AngularFireAuthModule,
     AppRoutingModule,
     ngfModule,
-    WebStorageModule
+    WebStorageModule,
+    MatTableModule,
+    MatPaginatorModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
