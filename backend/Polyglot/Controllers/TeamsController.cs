@@ -11,7 +11,7 @@ using AutoMapper;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TeamsController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Teams
+        // GET: Teams
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<TeamDTO>>(projects));
         }
 
-        // GET: api/Teams/5
+        // GET: Teams/5
         [HttpGet("{id}", Name = "GetTeam")]
         public async Task<IActionResult> GetTeam(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TeamDTO>(project));
         }
 
-        // POST: api/Teams
+        // POST: Teams
         public async Task<IActionResult> AddTeam([FromBody]TeamDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<TeamDTO>(entity));
         }
 
-        // PUT: api/Teams/5
+        // PUT: Teams/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTeam(int id, [FromBody]TeamDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TeamDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeam(int id)
         {

@@ -11,7 +11,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class GlossariesController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Glossarys
+        // GET: Glossarys
         [HttpGet]
         public async Task<IActionResult> GetAllGlossarys()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<GlossaryDTO>>(projects));
         }
 
-        // GET: api/Glossarys/5
+        // GET: Glossarys/5
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<GlossaryDTO>(project));
         }
 
-        // POST: api/Glossarys
+        // POST: Glossarys
         public async Task<IActionResult> AddGlossary([FromBody]GlossaryDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<GlossaryDTO>(entity));
         }
 
-        // PUT: api/Glossarys/5
+        // PUT: Glossarys/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyGlossary(int id, [FromBody]GlossaryDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<GlossaryDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGlossary(int id)
         {

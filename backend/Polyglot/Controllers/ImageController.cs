@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ImageController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace Polyglot.Controllers
         {
             _hostingEnvironment = hostingEnvironvent;
         }
-        // POST: api/Image
+        // POST: Image
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult Post()
         {
