@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DataService, RequestMethod } from '../../services/data.service';
 import { ngfModule, ngf } from "angular-file"
 
@@ -8,21 +8,21 @@ import { ngfModule, ngf } from "angular-file"
   styleUrls: ['./upload-image.component.sass']
 })
 export class UploadImageComponent implements OnInit {
-  fileToUpload: File;
+  @Output() fileEvent = new EventEmitter<File>();
+  fileToUpload: File = new File(["empty"], "empty");
+
   validDrag;
   invalidDrag;
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
+    console.log(this.fileToUpload.name);
   }
 
 
 
-  async uploadImage(){
-
-    const formData = new FormData();
-    formData.append(this.fileToUpload.name, this.fileToUpload);
-    this.dataService.sendRequest(RequestMethod.Post, "image", undefined, formData).subscribe();
+  sendImage(){
+    this.fileEvent.emit(this.fileToUpload);
   }
 
 }

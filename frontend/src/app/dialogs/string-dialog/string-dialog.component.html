@@ -1,32 +1,38 @@
 <form (submit)="onSubmit(str)">
   <h4>Create String</h4>
+  <mat-grid-list cols="2">
+    <mat-grid-tile>
+      <div>
+        <mat-form-field>
+          <input id="key" name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
+                 #key="ngModel" autocomplete="yes">
+          <mat-error *ngIf="key.errors">
+            Key is required
+          </mat-error>
+        </mat-form-field>
 
-  <mat-form-field>
-    <input id="key" name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
-      #key="ngModel" autocomplete="yes">
-    <mat-error *ngIf="key.errors">
-      Key is required
-    </mat-error>
-  </mat-form-field>
-
-  <mat-form-field>
-    <input id="base" name="base" type="text" [(ngModel)]="str.base" required matInput placeholder="Base Translation"
-      #base="ngModel" autocomplete="yes">
-    <mat-error *ngIf="base.errors">
-      Base Translation is required
-    </mat-error>
-  </mat-form-field>
-
-  <mat-form-field>
-    <textarea id="description" name="description" type="text" [(ngModel)]="str.description" matInput placeholder="Description"
-      #description="ngModel" autocomplete="yes"></textarea>
-  </mat-form-field>
-
-  <div class="tags">
-  <span *ngFor="let i of projectTags">
-    <label class="checkbox-item" for="{{i}}"><input type="checkbox"id="{{i}}">{{i}}</label>
-  </span> 
-  </div>
-  <app-upload-image></app-upload-image>
-  <button mat-button type="submit">Create!</button>
+        <mat-form-field>  
+          <input id="base" name="base" type="text" [(ngModel)]="str.base" required matInput placeholder="Base Translation"
+                 #base="ngModel" autocomplete="yes">
+          <mat-error *ngIf="base.errors">
+            Base Translation is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea id="description" name="description" type="text" [(ngModel)]="str.description" matInput placeholder="Description"
+                    #description="ngModel" autocomplete="yes"></textarea>
+        </mat-form-field>
+      </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="tags">
+      <span *ngFor="let i of projectTags">
+        <label class="checkbox-item" for="{{i}}"><input type="checkbox"id="{{i}}">{{i}}</label>
+      </span> 
+    </div>
+    <button type="submit" [disabled] = "str.key == '' || str.base == '' || !image" mat-raised-button color="primary"  
+    (click) = "onSubmit()">Upload</button>
 </form>

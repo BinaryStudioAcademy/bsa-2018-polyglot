@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { IString } from '../../models/string';
+import { UploadImageComponent } from '../../components/upload-image/upload-image.component';
 
 @Component({
   selector: 'app-string-dialog',
@@ -10,17 +11,22 @@ export class StringDialogComponent implements OnInit {
 
   public str: IString;
   public projectTags: string[];
+  image: File;
+
+  receiveImage($event){
+    this.image = $event;
+  }
 
   constructor() { }
+
 
   ngOnInit() {
     this.str = {
       key: '',
       base: '',
       description: '',
-      tags: ['']
+      tags: [''],
     };
-
 
     // get tag list from server
     this.projectTags = ['sometag1', 'tag2', 'sometag3', 'tag4', 'sometag5'];
