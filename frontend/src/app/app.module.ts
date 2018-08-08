@@ -43,6 +43,7 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
 import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 import { TagsComponent } from './components/tags/tags.component'
+import { WebStorageModule } from 'ngx-store';
 
 
 
@@ -82,7 +83,8 @@ import { TagsComponent } from './components/tags/tags.component'
     AngularFireAuthModule,
     AppRoutingModule,
     MatChipsModule,
-    ngfModule
+    ngfModule,
+    WebStorageModule,
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, StringDialogComponent],

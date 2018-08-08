@@ -21,6 +21,7 @@ using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot
 {
@@ -52,6 +53,9 @@ namespace Polyglot
 
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+
+            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
+                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             // automapper
@@ -101,8 +105,6 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));
             services.AddScoped(typeof(ICRUDService<UserProfile, int>), typeof(CRUDService<UserProfile>));
             // ======================================================================================================
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

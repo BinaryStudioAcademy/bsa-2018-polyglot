@@ -11,7 +11,7 @@ using AutoMapper;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TranslatorRightsController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/TranslatorRights
+        // GET: TranslatorRights
         [HttpGet]
         public async Task<IActionResult> GetAllTranslatorRights()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<TranslatorRightDTO>>(projects));
         }
 
-        // GET: api/TranslatorRights/5
+        // GET: TranslatorRights/5
         [HttpGet("{id}", Name = "GetTranslatorRight")]
         public async Task<IActionResult> GetTranslatorRight(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TranslatorRightDTO>(project));
         }
 
-        // POST: api/TranslatorRights
+        // POST: TranslatorRights
         public async Task<IActionResult> AddTranslatorRight([FromBody]TranslatorRightDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<TranslatorRightDTO>(entity));
         }
 
-        // PUT: api/TranslatorRights/5
+        // PUT: TranslatorRights/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]TranslatorRightDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TranslatorRightDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTranslatorRight(int id)
         {
