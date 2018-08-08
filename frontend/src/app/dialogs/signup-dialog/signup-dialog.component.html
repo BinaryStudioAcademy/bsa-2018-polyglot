@@ -57,8 +57,8 @@
     {{firebaseError}}
   </mat-error>
 
-  <button mat-button type="submit">Sign Up!</button>
+  <button class="simplebtn" mat-button type="submit">Sign Up!</button>
 
-  <button mat-button type="button" (click)="onGoogleClick()">Sign up using Google</button>
-  <button mat-button type="button" (click)="onFacebookClick()">Sign up using Facebook</button>
+  <button class="socialbtn" mat-button type="button" (click)="onGoogleClick()"><img class="btnlogo" src="/src/assets/images/googlelogo.png" alt="G" height="30">Sign Up using Google</button>
+  <button class="socialbtn" mat-button type="button" (click)="onFacebookClick()"><img class="btnlogo" src="/src/assets/images/facebooklogo.png" alt="F" height="30">Sign Up using Facebook</button>
 </form>
