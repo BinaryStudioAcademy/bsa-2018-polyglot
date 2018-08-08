@@ -26,42 +26,18 @@ namespace Polyglot.BusinessLogic.Implementations
 			
 		}
 
-		public async Task FileParse(IFormFile file)
-		{
-			try
-			{
-				string str = String.Empty;
-
-				using (var reader = new StreamReader(file.OpenReadStream()))
-				{
-					str = reader.ReadToEnd();
-				}
-
-				ComplexString c = JsonConvert.DeserializeObject<ComplexString>(str);
-
-				// repository isn`t working now
-				// await repository.Add(c);
-			}
-			catch(Exception e)
-			{
-				throw e;
-			}
-		}
+		
 
 		public async Task FileParseDictionary(IFormFile file)
-		{
-
-			try
-			{
+		{			
 				Dictionary<string, string> dictionary = new Dictionary<string, string>();
 				string str = String.Empty;
 
 
-
-
-
 				switch (file.ContentType)
 				{
+
+
 					case "application/json":
 						
 						using (var reader = new StreamReader(file.OpenReadStream()))
@@ -77,40 +53,26 @@ namespace Polyglot.BusinessLogic.Implementations
 						{
 							str = reader.ReadToEnd();
 						}
-
 						XmlDocument doc = new XmlDocument();
-						doc.LoadXml(str);
-
-						// XElement xml = XElement.Parse(str);
-						foreach (XmlNode n in doc.SelectNodes("/xml/*"))
-						{
-							// dictionary.Add(element.Name.LocalName, element.Value);
-							dictionary[n.Name] = n.Value;
+						doc.LoadXml(str);						
+						XmlElement root = doc.DocumentElement;
+						XmlNodeList childnodes = root.SelectNodes("*");
+						foreach (XmlNode n in childnodes)
+						{							
+							dictionary[n.Name] = n.InnerXml;
 						}
 						break;
+
+					default:
+						throw new NotImplementedException();
 				}
-
-
-				
-
-				
-
-				
-
-				
 
 				foreach(var i in dictionary)
 				{
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
 					// repository isn`t working now
 					// await repository.Add(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
-				}
-
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
+				}			
 		}
 	}
 }

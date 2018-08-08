@@ -11,7 +11,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IProjectService // : ICRUDService<ProjectDTO,int>
     {
-		Task FileParse(IFormFile file);
+		
 
 		Task FileParseDictionary(IFormFile file);
 	}

@@ -103,14 +103,6 @@ namespace Polyglot.Controllers
 		
 
 
-		[HttpPost]
-		[Route("files")]
-		public async Task<IActionResult> AddFile(IFormFile files)
-		{
-
-			await projectService.FileParse(Request.Form.Files[0]);
-			return Ok();
-		}
 
 
 		[HttpPost]
