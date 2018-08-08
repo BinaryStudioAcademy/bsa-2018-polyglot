@@ -28,11 +28,7 @@
         <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <div class="tags">
-      <span *ngFor="let i of projectTags">
-        <label class="checkbox-item" for="{{i}}"><input type="checkbox"id="{{i}}">{{i}}</label>
-      </span> 
-    </div>
+    <app-tags></app-tags>
     <button type="submit" [disabled] = "str.key == '' || str.base == '' || !image" mat-raised-button color="primary"  
     (click) = "onSubmit()">Upload</button>
 </form>

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { MatChipsModule } from '@angular/material';
 
 import { DataService } from './services/data.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -40,7 +41,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerComponent } from './components/manager/manager.component';
-import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { TagsComponent } from './components/tags/tags.component'
 
 
 
@@ -64,7 +66,8 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     FooterComponent,
     StringDialogComponent,
     ManagerComponent,
-    ManagerProfileComponent
+    ManagerProfileComponent,
+    TagsComponent
   ],
   imports: [
     BrowserModule,
@@ -78,6 +81,7 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AppRoutingModule,
+    MatChipsModule,
     ngfModule
     
   ],

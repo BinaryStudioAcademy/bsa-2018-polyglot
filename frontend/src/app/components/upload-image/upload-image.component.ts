@@ -16,7 +16,6 @@ export class UploadImageComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-    console.log(this.fileToUpload.name);
   }
 
 
