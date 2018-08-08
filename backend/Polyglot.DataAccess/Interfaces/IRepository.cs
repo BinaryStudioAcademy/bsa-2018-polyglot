@@ -7,10 +7,10 @@ namespace Polyglot.DataAccess.Interfaces
 {
     public interface IRepository <TEntity> where TEntity : class
     {
-		Task<TEntity> Get(int id);
-		Task<List<TEntity>> GetAll();
-		void Delete(int id);
-		void Create(TEntity entity);
+		Task<TEntity> GetAsync(int id);
+		Task<List<TEntity>> GetAllAsync();
+		void DeleteAsync(int id);
+		void CreateAsync(TEntity entity);
 		void Update(TEntity entity);
     }
 }
