@@ -6,9 +6,10 @@ namespace Polyglot.DataAccess.Interfaces
 {
     public interface IFileStorageProvider
     {
-        Task<string> UploadFileAsync(Stream sorce);
-        Task<string> UploadFileAsync(byte[] buffer);
+        Task<string> UploadFileAsync(Stream sorce,FileStorageProvider.FileType type,string extension);
+        Task<string> UploadFileAsync(byte[] buffer, FileStorageProvider.FileType type, string extension);
         Task DeleteFileAsync(string url);
-        Task<List<string>> GetFilesAsync();
+        Task<List<string>> GetFilesAsync();   
     }
+
 }
