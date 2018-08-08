@@ -1,0 +1,74 @@
+<h2>Team {{id}}</h2>
+<div class="container team-details_menu">
+  <mat-form-field class="search-full-width team-details_search">
+
+    <input type="search" matInput placeholder="Search">
+    <button class="btn search" mat-raised-button color="primary" matSuffix>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+  <a mat-raised-button routerLink=".">Add new translator</a>
+  <a mat-raised-button routerLink=".">Invite new user</a>
+
+</div>
+
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 team-datails_table">
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.userProfile.firstName}} {{element.userProfile.lastName}} </td>
+  </ng-container>
+  <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+      <td mat-cell *matCellDef="let element"> not implemented </td>
+  </ng-container>
+  <ng-container matColumnDef="rights">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Rights </th>
+      <td mat-cell *matCellDef="let element">
+          <div class="button-row">
+              <a mat-raised-button routerLink=".">
+                  <button mat-icon-button color="primary">
+                      <mat-icon aria-label="">add_circle</mat-icon>
+                  </button>
+                  Add new language
+              </a>
+              <a mat-raised-button routerLink=".">
+                  <button mat-icon-button color="primary">
+                      <mat-icon aria-label="">add_circle</mat-icon>
+                  </button>
+                  Add new key
+              </a>
+            <a mat-raised-button routerLink=".">
+                <button mat-icon-button color="primary">
+                    <mat-icon aria-label="">create</mat-icon>
+                </button>
+              Select new language
+            </a>
+          </div>
+      </td>
+  </ng-container>
+  <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+      <td mat-cell *matCellDef="let element">
+          <div class="button-row">
+              <button mat-icon-button color="primary">
+                  <mat-icon aria-label="">settings</mat-icon>
+              </button>
+              <button mat-icon-button color="primary">
+                  <mat-icon aria-label="">stars</mat-icon>
+              </button>
+          </div>
+      </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
