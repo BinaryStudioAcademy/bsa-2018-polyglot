@@ -11,14 +11,14 @@ export class SearchService {
 
   constructor() { }
 
-  FindTranslatorsByEmail(email: string) : Observable<Translator>{
+  FindTranslatorsByEmail(email: string) : Observable<Translator[]>{
     
-    return of({
+    return of([{
       id: 1,
       userProfile: {
         id: 1,
-        firstName: 'Vasilij',
-        lastName: 'Polietilen',
+        firstName: 's_Vasilij',
+        lastName: 's_Polietilen',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -36,8 +36,8 @@ export class SearchService {
       id: 2,
       userProfile: {
         id: 1,
-        firstName: 'Grigorij',
-        lastName: 'Butylka',
+        firstName: 's_Grigorij',
+        lastName: 's_Butylka',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -55,8 +55,8 @@ export class SearchService {
       id: 3,
       userProfile: {
         id: 1,
-        firstName: 'Alexej',
-        lastName: 'Chibo',
+        firstName: 's_Alexej',
+        lastName: 's_Chibo',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -74,8 +74,8 @@ export class SearchService {
       id: 4,
       userProfile: {
         id: 1,
-        firstName: 'Andrej',
-        lastName: 'Mers',
+        firstName: 's_Andrej',
+        lastName: 's_Mers',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -93,8 +93,8 @@ export class SearchService {
       id: 5,
       userProfile: {
         id: 1,
-        firstName: 'Viktor',
-        lastName: 'Rozembaum',
+        firstName: 's_Viktor',
+        lastName: 's_Rozembaum',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -112,8 +112,8 @@ export class SearchService {
       id: 6,
       userProfile: {
         id: 1,
-        firstName: 'Alexander',
-        lastName: 'Denisov',
+        firstName: 's_Alexander',
+        lastName: 's_Denisov',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -131,8 +131,8 @@ export class SearchService {
       id: 7,
       userProfile: {
         id: 1,
-        firstName: 'Viktor',
-        lastName: 'Boroda',
+        firstName: 's_Viktor',
+        lastName: 's_Boroda',
         birthDate: new Date(1992, 1,1),
         registrationDate: new Date(),
         country: 'Ukraine',
@@ -145,7 +145,7 @@ export class SearchService {
       },
       rating: null,
       teamTranslators: null
-  });
+  }]);
   }
 
 }
