@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IString } from '../../models/string';
 import { UploadImageComponent } from '../../components/upload-image/upload-image.component';
+import { Tag } from '../../models/tag';
 
 @Component({
   selector: 'app-string-dialog',
@@ -17,7 +18,20 @@ export class StringDialogComponent implements OnInit {
   }
 
   receiveTags($event){
-    this.str.tags = $event;
+    this.str.tags = [];
+    let tags: Tag[] = $event;
+    for(let i = 0;i < tags.length; i++){
+      this.str.tags.push(tags[i].name);
+    }
+  }
+
+  getAllTags(): Tag[]{
+     let tags: Tag[] = [
+      {name: 'FirstTag', color: '', id: 0, projectTags:[]},
+      {name: 'SecondTag', color: '', id: 0, projectTags:[]},
+      {name: 'ThirdTag', color: '', id: 0, projectTags:[]}
+    ];
+    return tags;
   }
 
   constructor() { }
@@ -28,14 +42,14 @@ export class StringDialogComponent implements OnInit {
       key: '',
       base: '',
       description: '',
-      tags: [''],
+      tags: [],
     };
-
+    this.image = undefined;
   }
 
   onSubmit() {
+    alert("submited(change this to push)");
     console.log(this.str);
     console.log(this.image);
-    // POST method
   }
 }
