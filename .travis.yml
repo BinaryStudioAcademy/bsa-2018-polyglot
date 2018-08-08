@@ -12,5 +12,6 @@ before_script:
 - npm install
 script:
 - npx ng build --prod
-after_success:  
-- find dist/polyglot -name '*' -type f -exec curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://$FTP_SERVER_HOST/{} \;
+after_success:
+- cd dist/polyglot
+- find ./ -name '*' -type f -exec curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://$FTP_SERVER_HOST/{} \;
