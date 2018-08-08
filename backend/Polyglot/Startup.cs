@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Polyglot.Authentication.Extensions;
 using Polyglot.DataAccess;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot
 {
@@ -33,6 +34,8 @@ namespace Polyglot
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
+            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
+                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
