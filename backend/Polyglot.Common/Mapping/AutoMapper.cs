@@ -275,15 +275,16 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.Text, opt => opt.MapFrom(pt => pt.Text))
                   .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId));
 
-                cfg.CreateMap<ComplexStringDTO, ComplexString>()
-                  .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))
-                  .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
-                  .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
-                  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
-                  .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
-                  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
-                  .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
-                  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations));
+				cfg.CreateMap<ComplexStringDTO, ComplexString>()
+				  .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))
+				  .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
+				  .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
+				  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
+				  .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
+				  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+				  .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
+				  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
+				  .ForMember(p => p.Key, opt => opt.MapFrom(po => po.Key));
                 cfg.CreateMap<ComplexString, ComplexStringDTO>()
                   .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                   .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))

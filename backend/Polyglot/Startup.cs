@@ -17,11 +17,17 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
+
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
 using Polyglot.DataAccess.Interfaces;
+
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.Repositories;
 
 namespace Polyglot
 {
@@ -54,6 +60,7 @@ namespace Polyglot
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
 
+
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
                 new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
 
@@ -63,6 +70,19 @@ namespace Polyglot
             //  uow
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
+           services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
+
+            services.Configure<Settings>(options =>{
+                        options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                        options.Database = Configuration.GetSection("MongoConnection:Database").Value;
+            });
+            services.AddTransient<IComplexStringRepository, ComplexStringRepository>();
+            services.AddTransient<DataAccess.NoSQL_Repository.IRepository<ComplexString>, ComplexStringRepository>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IMongoDataContext, MongoDataContext>();
+
+          
+          
 #warning костыль
             //repo
             services.AddScoped(typeof(IRepository<File>), typeof(Repository<File>));
@@ -105,6 +125,7 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));
             services.AddScoped(typeof(ICRUDService<UserProfile, int>), typeof(CRUDService<UserProfile>));
             // ======================================================================================================
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
