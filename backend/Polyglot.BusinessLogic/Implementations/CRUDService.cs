@@ -25,17 +25,17 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<IEnumerable<T>> GetListAsync()
         {
-            return await repository.GetAll() ?? null;
+            return await repository.GetAllAsync() ?? null;
         }
 
         public async Task<T> GetOneAsync(int identifier)
         {
-            return await repository.Get(identifier) ?? null;
+            return await repository.GetAsync(identifier) ?? null;
         }
 
         public async Task<T> PostAsync(T entity)
         {
-            repository.Create(entity);
+            repository.CreateAsync(entity);
             await uow.SaveAsync();
             return entity ?? null;
         }
@@ -50,7 +50,7 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<bool> TryDeleteAsync(int identifier)
         {
-            repository.Delete(identifier);
+            repository.DeleteAsync(identifier);
             await uow.SaveAsync();
             return true;
         }
