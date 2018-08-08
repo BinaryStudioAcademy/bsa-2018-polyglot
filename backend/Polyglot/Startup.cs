@@ -26,7 +26,7 @@ using Polyglot.DataAccess.Interfaces;
 
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
+//using Polyglot.DataAccess.NoSQL_Repository;
 using Polyglot.DataAccess.Repositories;
 
 namespace Polyglot
@@ -70,14 +70,14 @@ namespace Polyglot
             //  uow
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
-           services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
+           
 
-            services.Configure<Settings>(options =>{
+            services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
                         options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
-            services.AddTransient<IComplexStringRepository, ComplexStringRepository>();
-            services.AddTransient<DataAccess.NoSQL_Repository.IRepository<ComplexString>, ComplexStringRepository>();
+            services.AddTransient<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
+            services.AddTransient<DataAccess.NoSQL_Repository.IRepository<ComplexString>, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
 
@@ -99,7 +99,7 @@ namespace Polyglot
             services.AddScoped(typeof(IRepository<Tag>), typeof(Repository<Tag>));
             services.AddScoped(typeof(IRepository<Team>), typeof(Repository<Team>));
             services.AddScoped(typeof(IRepository<TeamTranslator>), typeof(Repository<TeamTranslator>));
-            services.AddScoped(typeof(IRepository<Translation>), typeof(Repository<Translation>));
+            services.AddScoped(typeof(IRepository<DataAccess.Entities.Translation>), typeof(Repository<DataAccess.Entities.Translation>));
             services.AddScoped(typeof(IRepository<Translator>), typeof(Repository<Translator>));
             services.AddScoped(typeof(IRepository<TranslatorLanguage>), typeof(Repository<TranslatorLanguage>));
             services.AddScoped(typeof(IRepository<TranslatorRight>), typeof(Repository<TranslatorRight>));
@@ -119,7 +119,7 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<Tag, int>), typeof(CRUDService<Tag>));
             services.AddScoped(typeof(ICRUDService<Team, int>), typeof(CRUDService<Team>));
             services.AddScoped(typeof(ICRUDService<TeamTranslator, int>), typeof(CRUDService<TeamTranslator>));
-            services.AddScoped(typeof(ICRUDService<Translation, int>), typeof(CRUDService<Translation>));
+            services.AddScoped(typeof(ICRUDService<DataAccess.Entities.Translation, int>), typeof(CRUDService<DataAccess.Entities.Translation>));
             services.AddScoped(typeof(ICRUDService<Translator, int>), typeof(CRUDService<Translator>));
             services.AddScoped(typeof(ICRUDService<TranslatorLanguage, int>), typeof(CRUDService<TranslatorLanguage>));
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));

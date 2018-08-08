@@ -21,12 +21,12 @@ namespace Polyglot.Controllers
 		 private readonly ICRUDService<Project, int> service;
 		private IProjectService projectService;
 
-        public ProjectsController(IProjectService projectService /*ICRUDService<Project, int> service, IMapper mapper*/)
+        public ProjectsController(IProjectService projectService, ICRUDService<Project, int> service, IMapper mapper)
         {
-			/*
+			
             this.service = service;
             this.mapper = mapper;
-			*/
+			
 			this.projectService =  projectService;
         }
 
