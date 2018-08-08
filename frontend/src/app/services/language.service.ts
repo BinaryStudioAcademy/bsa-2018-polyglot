@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { DataService, RequestMethod } from './data.service';
-import { Project } from '../models/project';
 import { Observable } from 'rxjs';
+import { Language } from '../models/language';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectService {
-
+export class LanguageService {
   api: string;
   constructor(private dataService: DataService) { 
-    this.api = "projects";
+    this.api = "languages";
   }
 
   getAll() : Observable<any> {
@@ -21,15 +20,15 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(project: Project) : Observable<Project> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
+  create(language: Language) : Observable<Language> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', language);
   }
 
-  update(project: Project, id: number) : Observable<Project> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, project);
+  update(language: Language, id: number) : Observable<Language> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, language);
   }
 
-  delete(id: number) : Observable<Project> {
+  delete(id: number) : Observable<Language> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 }

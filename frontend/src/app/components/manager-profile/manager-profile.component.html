@@ -31,7 +31,12 @@
        <div fxLayout="column" fxLayoutGap="20px" fxFlex.sm="30%" fxFlex="25%" fxLayout.xs="column" >
           <div class="item" fxFlex>
               <div>
-                <h2 class="title"> Projects</h2> <hr>
+                <div class="project-button-wrapper">
+                    <h2 class="title"> Projects</h2>
+                    <a mat-button class="crete-project-button" routerLink="./newproject">Create new</a>
+                </div>
+                
+                <hr>
                 <div class="project-list">
                 <br>
                 <div *ngFor="let p of Projects">

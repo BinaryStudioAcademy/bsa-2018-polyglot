@@ -4,6 +4,7 @@ import { Project } from '../../models/project';
 import { Language } from '../../models/language';
 import { TypeTechnology } from '../../models/type-technology.enum';
 import { ProjectService } from '../../services/project.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-new-project',
@@ -13,7 +14,8 @@ import { ProjectService } from '../../services/project.service';
 
 export class NewProjectComponent implements OnInit {
 
-  constructor(private fb: FormBuilder,private projectService: ProjectService) {
+  constructor(private fb: FormBuilder, private projectService: ProjectService,
+    private languageService: LanguageService) {
 
   }
 
@@ -23,21 +25,29 @@ export class NewProjectComponent implements OnInit {
     this.languages = [
     {
       code: 'en',
-      id: 1,
+      id: undefined,
       name: 'English'
     },
     {
       code: 'fr',
-      id: 2,
-      name: 'France'
+      id: undefined,
+      name: 'French'
     },{
       code: 'pl',
-      id: 3,
+      id: undefined,
       name: 'Polish'
     }, ];
 
-    //languages = getAll();
-  
+    // this.languageService.getAll()
+    //   .subscribe(
+    //   (d)=> {
+    //     this.languages = d;
+    //     console.log(d);
+    //   },
+    //   err => {
+    //     console.log('err', err);
+    //   }
+    // );  
   }
 
   project: Project;
@@ -62,7 +72,15 @@ export class NewProjectComponent implements OnInit {
   saveChanges(project: Project): void{
     debugger
     project.createdOn = new Date(Date.now()); 
-    this.projectService.createEntity(project);
     //Save current manager
+    this.projectService.create(project)
+    .subscribe(
+      (d)=> {
+        console.log(d);
+      },
+      err => {
+        console.log('err', err);
+      }
+    );
   }
 }

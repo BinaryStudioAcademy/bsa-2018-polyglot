@@ -29,7 +29,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
+import { AuthGuard } from './services/guards/auth-guard.service';
 import { UploadImageComponent } from './components/upload-image/upload-image.component';
 import { ngfModule } from 'angular-file';
 import { LandingComponent } from './components/landing/landing.component';
@@ -38,10 +38,10 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
 import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
+import { WebStorageModule } from 'ngx-store';
 
 
 @NgModule({
@@ -63,7 +63,6 @@ import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
     UploadImageComponent,
     FooterComponent,
     NewProjectComponent,
-    ManagerComponent,
     ManagerProfileComponent,
     ImageCropperComponent,
     CropperComponent
@@ -80,7 +79,8 @@ import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AppRoutingModule,
-    ngfModule
+    ngfModule,
+    WebStorageModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent],

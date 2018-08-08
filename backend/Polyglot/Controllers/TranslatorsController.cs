@@ -12,7 +12,7 @@ using Polyglot.DataAccess.Entities;
 namespace Polyglot.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TranslatorsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Translators
+        // GET: Translators
         [HttpGet]
         public async Task<IActionResult> GetAllTranslators()
         {
@@ -34,7 +34,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<TranslatorDTO>>(translators));
         }
 
-        // GET: api/Translators/5
+        // GET: Translators/5
         [HttpGet("{id}", Name = "GetTranslator")]
         public async Task<IActionResult> GetTranslator(int id)
         {
@@ -43,7 +43,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TranslatorDTO>(project));
         }
 
-        // POST: api/Translators
+        // POST: Translators
         public async Task<IActionResult> AddTranslator([FromBody]TranslatorDTO project)
         {
             if (!ModelState.IsValid)
@@ -55,7 +55,7 @@ namespace Polyglot.Controllers
                 mapper.Map<TranslatorDTO>(entity));
         }
 
-        // PUT: api/Translators/5
+        // PUT: Translators/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTranslator(int id, [FromBody]TranslatorDTO project)
         {
@@ -67,7 +67,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<TranslatorDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTranslator(int id)
         {
