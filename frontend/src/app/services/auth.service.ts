@@ -38,8 +38,7 @@ export class AuthService {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.GoogleAuthProvider()
       ).then(async () => {
-        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
-        this.isLogged = true;
+        this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
       });
     }
   }
@@ -49,8 +48,7 @@ export class AuthService {
       return this._firebaseAuth.auth.signInWithPopup(
         new firebase.auth.FacebookAuthProvider()
       ).then(async () => {
-        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
-        this.isLogged = true;
+        this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
       });
     }
   }
@@ -60,8 +58,7 @@ export class AuthService {
     .then(() => this._firebaseAuth.auth.currentUser
       .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
     .then(async () => {
-      this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
-      this.isLogged = true;
+      this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
     });
   }
 
@@ -69,8 +66,7 @@ export class AuthService {
   signInRegular(email: string, password: string) {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password).then(async () => {
-        this.token = await this._firebaseAuth.auth.currentUser.getIdToken();
-        this.isLogged = true;
+        this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
       });
     }
   }
@@ -81,14 +77,20 @@ export class AuthService {
 
   logout() {
     if (this.isLoggedIn()) {
-      this._firebaseAuth.auth.signOut().then(async () => {
-        this.token = "";
-        this.isLogged = false;
-        this.router.navigate(['/']);
-      });
+      this._firebaseAuth.auth.signOut();
+      this.updateStorage("", false);
+      this.router.navigate(['/']);
     }
   }
 
+  private updateStorage(token : string, isLogged : boolean){
+    this.token = token;
+    this.isLogged = isLogged; //Don`t fix, it shold be twice
+    this.token = token;       //(yes, in docs written do like it, I laughed a lot)
+    this.isLogged = isLogged;
+  }
+
+  
   sendEmailVerification() {
     if (this.isLoggedIn && !this.userDetails.emailVerified) {
       this._firebaseAuth.auth.currentUser.sendEmailVerification();
