@@ -38,9 +38,10 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
+import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
+import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
-
 
 
 @NgModule({
@@ -62,7 +63,9 @@ import { WebStorageModule } from 'ngx-store';
     UploadImageComponent,
     FooterComponent,
     NewProjectComponent,
-    ManagerProfileComponent
+    ManagerProfileComponent,
+    ImageCropperComponent,
+    CropperComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,7 @@ import { WebStorageModule } from 'ngx-store';
     WebStorageModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent],
   providers: [DataService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 

@@ -20,15 +20,10 @@ export class LandingComponent implements OnInit {
   constructor(
     public dialog: MatDialog
   ) {
-
   }
 
   ngOnInit() {
     document.body.classList.add('bg-image');
-  }
-
-  onLoginClick() {
-    this.dialog.open(LoginDialogComponent);
   }
 
   onSignUpClick() {
