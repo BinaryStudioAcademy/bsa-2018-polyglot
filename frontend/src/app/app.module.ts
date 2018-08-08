@@ -38,7 +38,6 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 import { WebStorageModule } from 'ngx-store';
 
@@ -63,7 +62,6 @@ import { WebStorageModule } from 'ngx-store';
     UploadImageComponent,
     FooterComponent,
     NewProjectComponent,
-    ManagerComponent,
     ManagerProfileComponent
   ],
   imports: [
