@@ -4,7 +4,6 @@ import * as firebase from 'firebase/app';
 import { Observable, from } from 'rxjs';
 import { Router } from '@angular/router';
 import { SessionStorage } from "ngx-store";
-import { async } from 'q';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +38,7 @@ export class AuthService {
         new firebase.auth.GoogleAuthProvider()
       ).then(async () => {
         this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
+        this.router.navigate(['/dashboard']);
       });
     }
   }
@@ -49,6 +49,7 @@ export class AuthService {
         new firebase.auth.FacebookAuthProvider()
       ).then(async () => {
         this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
+        this.router.navigate(['/dashboard']);
       });
     }
   }
@@ -59,6 +60,7 @@ export class AuthService {
       .updateProfile({displayName: name, photoURL: this._firebaseAuth.auth.currentUser.photoURL}))
     .then(async () => {
       this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
+      this.router.navigate(['/dashboard']);
     });
   }
 
@@ -67,6 +69,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password).then(async () => {
         this.updateStorage(await this._firebaseAuth.auth.currentUser.getIdToken(), true);
+        this.router.navigate(['/dashboard']);
       });
     }
   }
