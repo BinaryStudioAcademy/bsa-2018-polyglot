@@ -48,7 +48,7 @@ namespace Polyglot.BusinessLogic.Implementations
 					dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
 					break;
 
-
+					/*
 					case "text/xml":
 
 
@@ -65,7 +65,8 @@ namespace Polyglot.BusinessLogic.Implementations
 							dictionary[n.Name] = n.InnerXml;
 						}
 						break;
-					*/
+						*/
+					
 
 				case "application/octet-stream":
 
