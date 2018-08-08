@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Project } from '../../models/project';
 import { Language } from '../../models/language';
 import { TypeTechnology } from '../../models/type-technology.enum';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-new-project',
@@ -12,7 +13,7 @@ import { TypeTechnology } from '../../models/type-technology.enum';
 
 export class NewProjectComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private projectService: ProjectService) {
 
   }
 
@@ -42,11 +43,16 @@ export class NewProjectComponent implements OnInit {
   project: Project;
   projectForm: FormGroup;
   languages: Array<Language>;
+
   
+  // public errorMessages = {
+  //   name: 'This field is required'
+  // };
+
   createProjectForm(): void {
     
       this.projectForm = this.fb.group({
-        name: [ '', []],
+        name: [ '', [Validators.required]],
         description: [ '', []],
         technology: [ '', []],
         mainLanguage: [ '', []],
@@ -56,6 +62,7 @@ export class NewProjectComponent implements OnInit {
   saveChanges(project: Project): void{
     debugger
     project.createdOn = new Date(Date.now()); 
+    this.projectService.createEntity(project);
     //Save current manager
   }
 }

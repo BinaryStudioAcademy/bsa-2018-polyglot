@@ -24,6 +24,6 @@ namespace Polyglot.DataAccess.Interfaces
 		IRepository<ProjectHistory> ProjectHistoryRepository { get; }
 		IRepository<TranslatorLanguage> TranslatorLanguageRepository { get; }
 
-		Task SaveAsync();
+		Task<int> SaveAsync();
 	}
 }

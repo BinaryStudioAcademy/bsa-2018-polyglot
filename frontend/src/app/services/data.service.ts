@@ -27,7 +27,7 @@ export class DataService {
       );
 
       let headers;
-      if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "images") {
+      if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "image") {
         headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.authToken}`});
       } else {
         headers = new HttpHeaders({ 'Authorization': `Bearer ${this.authToken}`});
@@ -81,7 +81,4 @@ export enum RequestMethod {
   Post,
   Put,
   Delete,
-  Options,
-  Head,
-  Patch
 }

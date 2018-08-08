@@ -1,4 +1,8 @@
 export enum TypeTechnology {
-    machine,
-    manual
+    JS,
+    Angular,
+    dotNet,
+    iOS,
+    Android,
+    Java
 }

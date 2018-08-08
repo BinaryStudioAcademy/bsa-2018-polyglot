@@ -28,7 +28,11 @@ export class TranslatorProfileComponent implements OnInit{
      this.Languages = [
        {Name : "French",Proficiency : 47},
        {Name : "Spanish",Proficiency : 77},
-       {Name : "English",Proficiency : 97}
+       {Name : "English",Proficiency : 97},
+       {Name : "OtherLang",Proficiency : 50},
+       {Name : "OtherLang",Proficiency : 50},
+       {Name : "OtherLang",Proficiency : 50},
+       {Name : "OtherLang",Proficiency : 50}
      ]
      
   }

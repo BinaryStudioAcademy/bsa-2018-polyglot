@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ngfModule, ngf } from "angular-file"
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -30,17 +29,18 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
+import { AuthGuard } from './services/auth-guard.service';
+import { UploadImageComponent } from './components/upload-image/upload-image.component';
+import { ngfModule } from 'angular-file';
 import { LandingComponent } from './components/landing/landing.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { AuthGuard } from './services/auth-guard.service';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component'
-import { UploadImageComponent } from './components/upload-image/upload-image.component';
-import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { ManagerComponent } from './components/manager/manager.component';
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
 
 
 
@@ -60,10 +60,10 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
+    UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
     ManagerComponent,
-    UploadImageComponent,
     ManagerProfileComponent
   ],
   imports: [
@@ -77,8 +77,9 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AppRoutingModule,
     ngfModule
-
+    
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, StringDialogComponent],
   providers: [DataService, AuthService, UserService, AuthGuard],
