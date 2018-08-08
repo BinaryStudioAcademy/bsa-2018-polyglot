@@ -1,33 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
-
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.Repositories;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
-using Polyglot.DataAccess.Interfaces;
-
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
 //using Polyglot.DataAccess.NoSQL_Repository;
-using Polyglot.DataAccess.Repositories;
 
 namespace Polyglot
 {
@@ -77,7 +64,7 @@ namespace Polyglot
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
             services.AddTransient<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddTransient<DataAccess.NoSQL_Repository.IRepository<ComplexString>, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
+            services.AddTransient<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
 
