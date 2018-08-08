@@ -1,0 +1,52 @@
+<div>
+  <mat-toolbar >
+    <div fxShow="true" fxHide.gt-sm="true">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
+    <a mat-button class="companyName" routerLink="/">
+      <span>Polyglot</span>
+    </a>
+    <span class="example-spacer"></span>
+    <div fxShow="true" fxHide.lt-md="true">
+      <!-- Do this in better way (ngIf) -->
+      <a mat-button  routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a mat-button *ngIf="!isLoggedIn()" (click)="onLoginClick()">Login</a>
+      <a mat-button *ngIf="!isLoggedIn()" (click)="onSignUpClick()">SignUp</a>
+      <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
+      <span class="toolbar-spacer"></span>
+     
+    </div>
+
+  </mat-toolbar>
+  <mat-divider class="navigation-divider"></mat-divider>
+  <mat-sidenav-container fxFlexFill class="example-container">
+
+    <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
+      <div fxLayout="column">
+        <a mat-button routerLink="/about-us">
+          <mat-icon mat-list-icon>home</mat-icon> About us</a>
+        <a mat-button routerLink="/dashboard">
+          <mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
+        <a mat-button routerLink="/contact">
+          <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
+        <mat-divider></mat-divider>
+        <a mat-button>
+          <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+        <a mat-button>
+          <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+
+
+      </div>
+    </mat-sidenav>
+    <router-outlet></router-outlet>
+
+    </mat-sidenav-container>
+
+</div>
+
+

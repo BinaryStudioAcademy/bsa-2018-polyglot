@@ -1,4 +1,4 @@
 export interface Translation {
-    Id: number;
-    TanslationKey: string;
+    id: number;
+    tanslationKey: string;
 }

@@ -2,9 +2,8 @@ using System;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class ProjectHistory
+    public class ProjectHistory : Entity
     {
-        public int Id { get; set; }  
         public Project Project { get; set; }
         public UserProfile Actor { get; set; }
         public string TableName { get; set; }

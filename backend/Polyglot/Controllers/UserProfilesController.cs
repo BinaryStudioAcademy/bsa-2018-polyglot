@@ -9,37 +9,37 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserProfilesController : ControllerBase
     {
-        // GET: api/Users
+        // GET: Users
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Users/5
+        // GET: Users/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
             return JsonConvert.SerializeObject("value");
         }
 
-        // POST: api/Users
+        // POST: Users
         [HttpPost]
         public void Post([FromBody] UserProfile value)
         {
         }
 
-        // PUT: api/Users/5
+        // PUT: Users/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] UserProfile value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

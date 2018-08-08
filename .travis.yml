@@ -4,17 +4,14 @@ node_js:
 branches:
   only:
   - master
+  - develop
+notifications:
+  slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
 before_script:
 - cd frontend
 - npm install
 script:
 - npx ng build --prod
 after_success:
-  - cd dist/polyglot  
-deploy:
-  provider: azure_web_apps
-  username: $USERNAME
-  password: $PASSWORD
-  site: $SITE
-  skip_cleanup: true
-  verbose: true
+- cd dist/polyglot
+- find ./ -name '*' -type f -exec curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://$FTP_SERVER_HOST/{} \;

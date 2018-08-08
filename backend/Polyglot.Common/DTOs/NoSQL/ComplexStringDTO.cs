@@ -5,7 +5,7 @@ namespace Polyglot.Common.DTOs.NoSQL
     public class ComplexStringDTO
     {
 		public int Id { get; set; }
-
+		public string Key { get; set; }
 		public int ProjectId { get; set; }
 		public string Language { get; set; }
 		public string OriginalValue { get; set; }

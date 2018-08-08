@@ -10,20 +10,21 @@ import { AuthService } from './auth.service';
 })
 export class DataService {
 
-  private  url: string= "http://localhost:58828/api";
+  private url: string= "http://localhost:58828/api";
+
   constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
-  async sendRequest(
+  sendRequest(
     type: RequestMethod,
     endpoint: string,
     params: number | string = "",
     body: any = {}) {
 
       let headers;
-      if (type === RequestMethod.Post || type === RequestMethod.Put) {
-        headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${await this.authService.getCurrentToken()}`});
+      if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "image") {
+        headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.authService.getCurrentToken()}`});
       } else {
-        headers = new HttpHeaders({ 'Authorization': `Bearer ${await this.authService.getCurrentToken()}`});
+        headers = new HttpHeaders({ 'Authorization': `Bearer ${this.authService.getCurrentToken()}`});
       }
       
       let request: Observable<any>;
@@ -74,7 +75,4 @@ export enum RequestMethod {
   Post,
   Put,
   Delete,
-  Options,
-  Head,
-  Patch
 }

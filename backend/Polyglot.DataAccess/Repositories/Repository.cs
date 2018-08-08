@@ -18,33 +18,34 @@ namespace Polyglot.DataAccess.Repositories
 			DbSet = context.Set<TEntity>();
 		}
 
-		public void Create(TEntity entity)
+		public async Task<TEntity> CreateAsync(TEntity entity)
 		{
-			DbSet.AddAsync(entity);			
+			return (await DbSet.AddAsync(entity)).Entity;			
 		}
 
-		public void Delete(int id)
+		public async Task<TEntity> DeleteAsync(int id)
 		{
-			TEntity temp = DbSet.Find(id);
+			TEntity temp = await DbSet.FindAsync(id);
 			if(temp != null)
 			{
-				DbSet.Remove(temp);				
-			}			
+				return DbSet.Remove(temp).Entity;				
+			}
+            return null;
 		}
 
-		public async Task<TEntity> Get(int id)
+		public async Task<TEntity> GetAsync(int id)
 		{
 			return await DbSet.FindAsync(id);
 		}
 
-		public async Task<List<TEntity>> GetAll()
+		public async Task<List<TEntity>> GetAllAsync()
 		{
 			return await DbSet.ToListAsync();
 		}
 
-		public void Update(TEntity entity)
+		public TEntity Update(TEntity entity)
 		{
-			DbSet.Update(entity);			
+			return DbSet.Update(entity).Entity;			
 		}
 	}
 }
