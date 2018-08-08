@@ -11,39 +11,43 @@ import {map, startWith} from 'rxjs/operators';
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.sass']
 })
-export class TagsComponent implements OnInit {
-  allTags: Tag[] = new Array<Tag>();
+export class TagsComponent  {
   visible = true;
   selectable = true;
   removable = true;
-  tagCtrl = new FormControl();
   addOnBlur = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredTags: Observable<Tag[]>;
-  tags: Tag[] = new Array<Tag>();
+  tagCtrl = new FormControl();
+  filteredTags: Observable<string[]> = new Observable<string[]>();
+  tags: string[] = new Array<string>();
+  allTags: string[] = ['BasicTag', 'StandartTag', 'AnotherTag', 'SomeTag', 'NewTag'];
 
-  constructor() { 
+  @ViewChild('tagInput') tagInput: ElementRef;
+
+  constructor() {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
-      startWith(null),
-      map((tag: Tag | null) => tag ? this._filter(tag.name) : this.allTags.slice()));
+        startWith(null),
+        map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
-    // Add our fruit
+    // Add our tag
     if ((value || '').trim()) {
-      this.tags.push({name: value, id: 0, color: "primary", projectTags:[]});
+      this.tags.push(value.trim());
     }
 
     // Reset the input value
     if (input) {
       input.value = '';
     }
+
+    this.tagCtrl.setValue(null);
   }
 
-  remove(tag: Tag): void {
+  remove(tag: string): void {
     const index = this.tags.indexOf(tag);
 
     if (index >= 0) {
@@ -51,20 +55,16 @@ export class TagsComponent implements OnInit {
     }
   }
 
-  private _filter(value: string): Tag[] {
-    const filterValue = value.toLowerCase();
-
-    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.tags.push(event.option.viewValue);
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
   }
 
-   ngOnInit() {
-    this.allTags.push({name: "FirstTag", id: 5, color: "primary", projectTags:[]});
-    this.allTags.push({name: "SecondTag", id: 5, color: "blue", projectTags:[]});
-    this.allTags.push({name: "ThirdTag", id: 5, color: "accent", projectTags:[]});
-    this.allTags.push({name: "ourthTag", id: 5, color: "green", projectTags:[]});
-    this.allTags.push({name: "FifthTag", id: 5, color: "accen", projectTags:[]});
-    this.allTags.push({name: "SixthTag", id: 5, color: "primary", projectTags:[]});
-    this.allTags.push({name: "SeventhTag", id: 5, color: "white", projectTags:[]});
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
   }
 
 }
