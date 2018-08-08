@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -23,32 +24,25 @@ namespace Polyglot.DataAccess
 
         public async Task<string> UploadFileAsync(byte[] buffer,FileType type,string extension)
         {
-            await _cloudBlobContainer.CreateAsync();
-
             await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
 
-            string fileName = Enum.GetName(typeof(FileType), type).ToLower() +
-                              "/" +
-                              Guid.NewGuid() + 
-                              extension;
+            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + extension;
 
             CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(fileName);
             await blob.UploadFromByteArrayAsync(buffer, 0, buffer.Length);
+
             return blob.Uri.ToString();
         }
 
         public async Task<string> UploadFileAsync(Stream source, FileType type, string extension)
         {
-            await _cloudBlobContainer.CreateAsync();
-
             await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
 
-            string fileName = Enum.GetName(typeof(FileType), type).ToLower() +
-                                                     "/" +
-                                                     Guid.NewGuid() +
-                                                     extension;
+            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + extension;
+
             CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(fileName);
             await blob.UploadFromStreamAsync(source);
+
             return blob.Uri.ToString();
         }
 
@@ -56,8 +50,15 @@ namespace Polyglot.DataAccess
         {
             var path = new Uri(url);
             var client = _storageAccount.CreateCloudBlobClient();
-            var blob = await client.GetBlobReferenceFromServerAsync(path);
-            await blob.DeleteIfExistsAsync();
+            ICloudBlob blob = null;
+            try
+            {
+                blob = await client.GetBlobReferenceFromServerAsync(path);
+            }
+            catch (Exception)
+            {
+                throw new Exception("No such file");
+            }
         }
 
         public async Task<List<string>> GetFilesAsync()
@@ -71,7 +72,18 @@ namespace Polyglot.DataAccess
                 blobContinuationToken = res.ContinuationToken;
                 foreach (IListBlobItem item in res.Results)
                 {
-                    result.Add(item.Uri.ToString());
+                    if (item is CloudBlobDirectory)
+                    {
+                        var dir = await ((CloudBlobDirectory)item).ListBlobsSegmentedAsync(null);
+                        foreach (var nested in dir.Results)
+                        {
+                            result.Add(nested.Uri.ToString());
+                        }
+                    }
+                    else
+                    {
+                        result.Add(item.Uri.ToString());
+                    }
                 }
             }
             while (blobContinuationToken != null);
@@ -83,18 +95,15 @@ namespace Polyglot.DataAccess
         {
             List<string> result = new List<string>();
 
-            BlobContinuationToken blobContinuationToken = null;
-            do
+            var segments = await _cloudBlobContainer.ListBlobsSegmentedAsync(null, null);
+            var dir = segments.Results.FirstOrDefault(x => x is CloudBlobDirectory && x.Uri.ToString().Contains(DirectoryName(type)))
+                as CloudBlobDirectory;
+            var dirItems = await dir.ListBlobsSegmentedAsync(null);
+
+            foreach (IListBlobItem item in dirItems.Results)
             {
-                var res = await _cloudBlobContainer.ListBlobsSegmentedAsync(null, blobContinuationToken);
-                blobContinuationToken = res.ContinuationToken;
-                foreach (IListBlobItem item in res.Results)
-                {
-                    if(item.Uri.ToString().Contains(Enum.GetName(typeof(FileType), type).ToLower()))
-                        result.Add(item.Uri.ToString());
-                }
+                result.Add(item.Uri.ToString());
             }
-            while (blobContinuationToken != null);
 
             return result;
         }
@@ -107,22 +116,8 @@ namespace Polyglot.DataAccess
             Screenshot
         }
 
-        //private string GetDirectory(FileType type)
-        //{
-        //    switch (type)
-        //    {
-        //        case FileType.Text:
-        //            return "text";
-        //        case FileType.Photo:
-        //            return "photo";
-        //        case FileType.ProjectImg:
-        //            return "projectimg";
-        //        case FileType.Screenshot:
-        //            return "screenshot";
-        //    }
-        //    return " ";
-        //} 
-
+        private string DirectoryName(FileType type) => Enum.GetName(typeof(FileType), type).ToLower();
+        
         private async Task SetPublicContainerPermissionsAsync(CloudBlobContainer container)
         {
             BlobContainerPermissions permissions = new BlobContainerPermissions
