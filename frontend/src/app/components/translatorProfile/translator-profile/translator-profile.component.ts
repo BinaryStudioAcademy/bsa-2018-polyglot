@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { CropperComponent } from '../../cropper/cropper.component';
+import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.component';
 
 @Component({
   selector: 'app-translator-profile',

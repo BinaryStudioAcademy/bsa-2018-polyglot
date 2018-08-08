@@ -41,7 +41,7 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
 import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
 import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
-import { CropperComponent } from './components/cropper/cropper.component';
+import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 
 
 @NgModule({
@@ -83,7 +83,7 @@ import { CropperComponent } from './components/cropper/cropper.component';
     ngfModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent],
   providers: [DataService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
