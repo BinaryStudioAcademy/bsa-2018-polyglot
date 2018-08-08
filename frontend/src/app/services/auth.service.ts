@@ -16,8 +16,6 @@ export class AuthService {
   @SessionStorage() isLogged: boolean;
 
   constructor(private _firebaseAuth: AngularFireAuth, private router: Router) {
-    console.log(this.token);
-    console.log(this.isLogged);
     this.user = _firebaseAuth.authState;
     this.user.subscribe(
       (user) => {
@@ -31,8 +29,8 @@ export class AuthService {
     );
    }
 
-  getCurrentToken() : Observable<string>{
-    return from(Promise.resolve(this.token));
+  getCurrentToken() : string{
+    return this.token;
   }
 
   signInWithGoogle() {
