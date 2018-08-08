@@ -49,8 +49,10 @@ namespace Polyglot
                     });
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             // automapper
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
@@ -110,8 +112,17 @@ namespace Polyglot
             {
                 app.UseDeveloperExceptionPage();
             }
+
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+                context.Database.EnsureCreated();
+            }
+
             app.UseCors("AllowAll");
             /*
+
             app.UseCors(builder => builder
                 .WithOrigins("http://localhost:4200")
                 .AllowAnyOrigin()
