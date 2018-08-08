@@ -1,8 +1,16 @@
 
-<mat-list role="list" style="width: 60%;" class="px-3">
-  <mat-list-item role="listitem">English</mat-list-item>
-  <mat-list-item role="listitem">French</mat-list-item>
-
+<mat-list role="list" style="width: 60%;"с>
+  <mat-list-item role="listitem" style="margin-bottom: 20px;">
+    <mat-card style="width: 100%;padding: 0;height: 80px;">
+        <button style="float:right; margin: 5px; ">Update</button>
+        <div style="display: inline-block;background-color:gainsboro;height: 100%;width: 25%;margin-right: 5%">
+            English
+        </div>
+        <div style="display: inline-block;height: 100%;max-width: 70%;">
+            Translation text
+        </div>
+    </mat-card>
+  </mat-list-item>
 </mat-list>
 
 <mat-divider [vertical]="true" style="margin-right: 20px;"></mat-divider>

@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   {
     path: 'dashboard',
-    canActivate: [LandingGuard],
+    //canActivate: [LandingGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
