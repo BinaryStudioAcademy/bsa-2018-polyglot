@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
-
-import { Translator } from '../../models/translator';
-import { UserProfile } from '../../models/user-profile';
-import { Rating } from '../../models/rating';
+import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import { ErrorStateMatcher} from '@angular/material/core';
+import { Translator } from '../../../models/translator';
+import { UserProfile } from '../../../models/user-profile';
+import { Rating } from '../../../models/rating';
 
 const translators: Translator[] = 
 [
@@ -151,8 +152,13 @@ const translators: Translator[] =
 export class TeamComponent implements OnInit {
 
   id: number = 88;
+  emailToSearch: string;
   displayedColumns: string[] = ['id', 'email', 'rights', 'options' ];
   dataSource = new MatTableDataSource(translators);
+
+  emailFormControl = new FormControl('', [
+    Validators.email,
+  ]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -161,6 +167,9 @@ export class TeamComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+
+
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
