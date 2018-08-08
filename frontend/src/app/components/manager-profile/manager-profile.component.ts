@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { CropperComponent } from '../cropper/cropper.component';
 
 @Component({
   selector: 'app-manager-profile',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./manager-profile.component.sass']
 })
 export class ManagerProfileComponent implements OnInit {
-
+  
+  constructor(
+    public dialog: MatDialog
+  ) {
+  }
   ngOnInit(): void {
     this.Manager = { Name : " Sasha Pushkin",
-     Avatar : "http://static-29.sinclairstoryline.com/resources/media/2d9080f1-46ec-47b0-3874-d5190c1b02e7-2d9080f146ec47b03874d5190c1b02e7rendition_1_scottthuman5x7bluegradient.jpg?1519078303490",
+     Avatar : "https://i.imgur.com/6blJ0sz.jpg", // changed due to CORS policy issues
      Birth : "25.05.2122",
      RegistrationDate : "12.12.1222",
      Country : "Ukraine",
@@ -29,6 +35,13 @@ export class ManagerProfileComponent implements OnInit {
      ]
      
   }
+
+  editPhoto(){
+    this.dialog.open(CropperComponent, {
+      data: {imageUrl: this.Manager.Avatar}
+    });
+  }
+
 Manager : Manager
 Projects : Project[]
 }

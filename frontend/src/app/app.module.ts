@@ -40,7 +40,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
-
+import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
+import { CropperComponent } from './components/cropper/cropper.component';
 
 
 @NgModule({
@@ -63,7 +64,9 @@ import { ManagerProfileComponent } from './components/manager-profile/manager-pr
     FooterComponent,
     NewProjectComponent,
     ManagerComponent,
-    ManagerProfileComponent
+    ManagerProfileComponent,
+    ImageCropperComponent,
+    CropperComponent
   ],
   imports: [
     BrowserModule,
