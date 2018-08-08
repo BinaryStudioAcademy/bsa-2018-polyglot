@@ -6,14 +6,11 @@ branches:
   - master
   - develop
 notifications:
-    slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
-before_install:
-  - sudo apt-get install ncftp
+  slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
 before_script:
 - cd frontend
 - npm install
 script:
 - npx ng build --prod
-after_success:
-  - cd dist/polyglot
-  - ncftpput -R -v -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_SERVER_HOST $FTP_PATH ./
+after_success:  
+- find dist/polyglot -name '*' -type f -exec curl -u $FTP_USERNAME:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://$FTP_SERVER_HOST \;
