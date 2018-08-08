@@ -44,6 +44,7 @@ import { WebStorageModule } from 'ngx-store';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material';
 import { TeamComponent } from './components/teams/team/team.component';
+import { SearchComponent } from './components/search/search.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { TeamComponent } from './components/teams/team/team.component';
     NewProjectComponent,
     ManagerComponent,
     ManagerProfileComponent,
-    TeamComponent
+    TeamComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
