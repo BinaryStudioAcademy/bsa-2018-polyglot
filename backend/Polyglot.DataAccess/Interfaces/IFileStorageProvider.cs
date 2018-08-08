@@ -9,7 +9,8 @@ namespace Polyglot.DataAccess.Interfaces
         Task<string> UploadFileAsync(Stream sorce,FileStorageProvider.FileType type,string extension);
         Task<string> UploadFileAsync(byte[] buffer, FileStorageProvider.FileType type, string extension);
         Task DeleteFileAsync(string url);
-        Task<List<string>> GetFilesAsync();   
+        Task<List<string>> GetFilesAsync();
+        Task<List<string>> GetDirectoryFilesAsync(FileStorageProvider.FileType type);
     }
 
 }

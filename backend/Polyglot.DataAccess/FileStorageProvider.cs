@@ -26,7 +26,7 @@ namespace Polyglot.DataAccess
         {
             await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
 
-            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + extension;
+            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + "." + extension;
 
             CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(fileName);
             await blob.UploadFromByteArrayAsync(buffer, 0, buffer.Length);
@@ -38,7 +38,7 @@ namespace Polyglot.DataAccess
         {
             await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
 
-            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + extension;
+            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + "." + extension;
 
             CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(fileName);
             await blob.UploadFromStreamAsync(source);
@@ -65,28 +65,22 @@ namespace Polyglot.DataAccess
         {
             List<string> result = new List<string>();
 
-            BlobContinuationToken blobContinuationToken = null;
-            do
+            var res = await _cloudBlobContainer.ListBlobsSegmentedAsync(null, null);
+            foreach (IListBlobItem item in res.Results)
             {
-                var res = await _cloudBlobContainer.ListBlobsSegmentedAsync(null, blobContinuationToken);
-                blobContinuationToken = res.ContinuationToken;
-                foreach (IListBlobItem item in res.Results)
+                if (item is CloudBlobDirectory)
                 {
-                    if (item is CloudBlobDirectory)
+                    var dir = await ((CloudBlobDirectory)item).ListBlobsSegmentedAsync(null);
+                    foreach (var nested in dir.Results)
                     {
-                        var dir = await ((CloudBlobDirectory)item).ListBlobsSegmentedAsync(null);
-                        foreach (var nested in dir.Results)
-                        {
-                            result.Add(nested.Uri.ToString());
-                        }
-                    }
-                    else
-                    {
-                        result.Add(item.Uri.ToString());
+                        result.Add(nested.Uri.ToString());
                     }
                 }
-            }
-            while (blobContinuationToken != null);
+                else
+                {
+                    result.Add(item.Uri.ToString());
+                }
+             }
 
             return result;
         }
@@ -98,6 +92,10 @@ namespace Polyglot.DataAccess
             var segments = await _cloudBlobContainer.ListBlobsSegmentedAsync(null, null);
             var dir = segments.Results.FirstOrDefault(x => x is CloudBlobDirectory && x.Uri.ToString().Contains(DirectoryName(type)))
                 as CloudBlobDirectory;
+
+            if (dir == null)
+                throw new Exception("No such directory");
+
             var dirItems = await dir.ListBlobsSegmentedAsync(null);
 
             foreach (IListBlobItem item in dirItems.Results)
