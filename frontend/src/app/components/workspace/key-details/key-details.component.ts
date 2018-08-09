@@ -12,7 +12,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   private routeSub: Subscription;
   private keyDetails: any; // DATA FROM NoSQL! Need some typing here :)
-  protected translationsDataSource: MatTableDataSource<any>; // Should be KeyDetails type
+  public translationsDataSource: MatTableDataSource<any>; // Should be KeyDetails type
   public IsEdit : boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
