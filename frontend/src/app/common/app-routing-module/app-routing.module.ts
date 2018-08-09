@@ -36,6 +36,7 @@ const routes: Routes = [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
+      { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'newproject', component: NewProjectComponent },
       { path: 'strings', component: NoFoundComponent },

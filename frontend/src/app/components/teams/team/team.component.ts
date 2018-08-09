@@ -8,6 +8,7 @@ import { Sort} from '@angular/material';
 import { Teammate } from '../../../models/teammate';
 import { SearchService } from '../../../services/search.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class TeamComponent implements OnInit {
 
-  @Input() id: number = 88;
+  @Input() id: number;
   teammates: Teammate[];
   emailToSearch: string;
   displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
@@ -32,7 +33,9 @@ export class TeamComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
 
-  constructor(private searchService: SearchService) {
+  constructor(private searchService: SearchService, private activatedRoute: ActivatedRoute) {
+    this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    console.log(this.id);
     this.getTranslators();
   }
 
