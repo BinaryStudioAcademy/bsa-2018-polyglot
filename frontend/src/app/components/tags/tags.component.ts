@@ -61,6 +61,7 @@ export class TagsComponent  {
 
     if (index >= 0) {
       this.tags.splice(index, 1);
+      this.updateTags();
     }
   }
 
