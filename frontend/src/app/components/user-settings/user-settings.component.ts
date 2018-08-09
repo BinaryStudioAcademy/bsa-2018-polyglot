@@ -16,6 +16,9 @@ export class UserSettingsComponent implements OnInit {
 
   manager: UserProfile;
   profileForm: FormGroup;
+  minDate = new Date(1903, 2, 1);
+  maxDate = new Date();
+
 
   
   constructor(private router: ActivatedRoute, private fb: FormBuilder, private  dialog: MatDialog,) {
@@ -28,8 +31,8 @@ export class UserSettingsComponent implements OnInit {
      firstName: "Sasha",
      lastName : "Pushkin",
      avatarUrl : "https://cdn.riastatic.com/photos/ria/dom_news_logo/20/2072/207230/207230m.jpg?v=1422268257", // changed due to CORS policy issues
-     birthDate : new Date("25/05/2122"),
-     registrationDate : new Date("12.12.1222"),
+     birthDate : new Date("25/05/2002"),
+     registrationDate : new Date("12.12.2017"),
      country : "Ukraine",
      city : "Kyiv",
      region : "Dniorivskiy",
