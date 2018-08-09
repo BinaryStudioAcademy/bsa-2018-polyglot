@@ -28,7 +28,7 @@ export class LoginDialogComponent implements OnInit {
   async onLoginFormSubmit(user: IUserLogin, form) {
     if (form.valid) {
       await this.authService.signInRegular(user.email, user.password).catch(
-        (error) => this.firebaseError = error.message
+        (error) => this.firebaseError = this.handleFirebaseErrors(error)
       );
       if(this.authService.isLoggedIn()){
         this.dialogRef.close();
@@ -54,4 +54,17 @@ export class LoginDialogComponent implements OnInit {
     }
   }
 
+  private handleFirebaseErrors(error) {
+    var result;
+    switch(error.code) {
+      case 'auth/wrong-password': 
+      case 'auth/user-not-found':
+        result = 'Wrong email or password';
+        break;
+      default: 
+        result = error.message;
+        break;
+    }
+    return result;
+  }
 }
