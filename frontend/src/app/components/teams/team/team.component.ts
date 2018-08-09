@@ -242,9 +242,6 @@ export class TeamComponent implements OnInit {
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
-    if(id == 7){
-      debugger;
-    }
     let targetTranslator = this.translators.find(t => t.id === id);
     if(!targetTranslator)
       return false;
@@ -269,9 +266,8 @@ export class TeamComponent implements OnInit {
   addRightToTranslator(id: number, rightName: string) {
     
   }
-  method(e, id) : boolean{
-    debugger;
-    console.log(e.target.checked + "  id = " + id);
-    return true;
+  checboxHandler(e, id){
+    console.log("id: " + id, "event: ");
+    console.log(e);
   }
 }
