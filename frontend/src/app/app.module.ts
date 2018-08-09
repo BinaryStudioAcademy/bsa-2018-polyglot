@@ -82,7 +82,6 @@ import { WebStorageModule } from 'ngx-store';
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
     MatChipsModule,
     ngfModule,
     WebStorageModule,
