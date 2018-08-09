@@ -3,15 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  firebase: {
-    apiKey: "AIzaSyDgXd8_8yIRLd5G5KWHmH60NlRl_qY6vGU",
-    authDomain: "polyglot-dbc9a.firebaseapp.com",
-    databaseURL: "https://polyglot-dbc9a.firebaseio.com",
-    projectId: "polyglot-dbc9a",
-    storageBucket: "polyglot-dbc9a.appspot.com",
-    messagingSenderId: "366581495425"
- }
+    production: false,
+    firebase: {
+        apiKey: "AIzaSyDgXd8_8yIRLd5G5KWHmH60NlRl_qY6vGU",
+        authDomain: "polyglot-dbc9a.firebaseapp.com",
+        databaseURL: "https://polyglot-dbc9a.firebaseio.com",
+        projectId: "polyglot-dbc9a",
+        storageBucket: "polyglot-dbc9a.appspot.com",
+        messagingSenderId: "366581495425"
+    },
+    apiUrl: 'http://localhost:58828'
 };
 
 
