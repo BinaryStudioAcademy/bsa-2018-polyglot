@@ -42,10 +42,12 @@ import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
 import { WebStorageModule } from 'ngx-store';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material';
+import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
+import {MatSortModule} from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchService } from './services/search.service';
+
 
 @NgModule({
   declarations: [
@@ -86,7 +88,9 @@ import { SearchService } from './services/search.service';
     ngfModule,
     WebStorageModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent],
