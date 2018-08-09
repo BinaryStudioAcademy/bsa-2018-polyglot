@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.component';
 
 @Component({
   selector: 'app-translator-profile',
@@ -6,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./translator-profile.component.sass']
 })
 export class TranslatorProfileComponent implements OnInit{
+
+  constructor(
+    public dialog: MatDialog
+  ) {
+  }
+
   ngOnInit(): void {
     this.Translator = { Name : " Sasha Pushkin",
-     Avatar : "http://static-29.sinclairstoryline.com/resources/media/2d9080f1-46ec-47b0-3874-d5190c1b02e7-2d9080f146ec47b03874d5190c1b02e7rendition_1_scottthuman5x7bluegradient.jpg?1519078303490",
+     Avatar : "https://i.imgur.com/LzRiWVA.jpg",
      Birth : "25.05.2122",
      RegistrationDate : "12.12.1222",
      Country : "Ukraine",
@@ -36,6 +44,13 @@ export class TranslatorProfileComponent implements OnInit{
      ]
      
   }
+
+  editPhoto(){
+    this.dialog.open(CropperComponent, {
+      data: {imageUrl: this.Translator.Avatar}
+    });
+  }
+
 Translator : Translator
 Comments : Comment[]
 Languages : Language []
