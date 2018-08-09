@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient} from '@angular/common/http';
-import { Translator } from '../models/Translator';
 import { Teammate } from '../models/teammate';
 
 @Injectable({
