@@ -1,0 +1,68 @@
+<div class="form-container">
+<h2>Create new project</h2>
+<form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
+    <mat-form-field class="field-full-width">
+        <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
+        <mat-error class="errors" *ngIf="name.invalid && (name.dirty || name.touched)">
+            <div *ngIf="name.errors.required">
+                Name is required. 
+            </div>
+            <div *ngIf="name.errors.minlength">
+                Name must be at least 4 characters long. 
+            </div>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width">
+        <textarea class="description-text-area" matInput placeholder="Enter description" formControlName="description" 
+        maxlength="500"></textarea>
+        <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
+    </mat-form-field>
+
+    <div class="field-choose-wraper">
+        <mat-form-field class="mat-select-wraper">
+            <mat-select class="mat-select" placeholder="Technology" formControlName="technology" required>
+                <mat-option *ngFor="let technology of values()" [value]="technology">
+                        {{technology}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="technology.invalid && (technology.dirty || technology.touched)">
+                    <div *ngIf="technology.errors.required">
+                        Technology is required.
+                    </div>
+            </mat-error>
+        </mat-form-field>
+        
+         <mat-form-field class="mat-select-wraper">
+            <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage" required>
+                <mat-option *ngFor="let language of languages" [value]="language">
+                    {{language.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="technology.invalid && (technology.dirty || technology.touched)">
+                    <div *ngIf="technology.errors.required">
+                        Main language is required.
+                    </div>
+            </mat-error>
+          </mat-form-field>
+    </div>  
+
+    
+    <div class="saveButton">
+        <button mat-button  [disabled]="projectForm.invalid">Create</button>
+    </div>
+    </form>
+<div class="example-container">
+<!-- 
+        +name: string;
+        +description: string;
+        +technology: string;
+        imageUrl: string;
+        +createdOn: Date;
+        +manager: Manager;
+        +mainLanguage: Language;
+        teams: Array<Team>;
+        translations: Array<Translation>;
+        projectLanguageses: Array<ProjectLanguage>;
+        projectGlossaries: Array<ProjectGlossary>;
+        projectTags: Array<ProjectTag>; -->

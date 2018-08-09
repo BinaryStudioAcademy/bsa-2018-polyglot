@@ -1,24 +1,37 @@
-<div class="container" fxLayout="wrap row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center" fxLayoutAlign.sm="center stretch">
-  <div fxFlex="25%" *ngFor="let card of cards">
+  <form class="search-form">
+  
+    <mat-form-field class="search-full-width">
+  
+      <input type="search" matInput placeholder="Search">
+      <button mat-raised-button color="primary" matSuffix>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  
+  </form>
+
+
+<div class="container" fxLayout="wrap row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="space-evenly" fxLayoutAlign.sm="center stretch">
+  <div fxFlex="30%" *ngFor="let card of cards">
     <mat-card class="example-card">
       <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{card.text}}</mat-card-title>
-        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+        <div mat-card-avatar class="example-header-image" ></div>
+        <mat-card-title>{{card.name}}</mat-card-title>
+        <mat-card-subtitle>{{card.technology}}</mat-card-subtitle>
       </mat-card-header>
-      <img mat-card-image src="/assets/images/project_banner.png" alt="Photo of a project">
-      <mat-card-content>
-
-      </mat-card-content>
+      <img mat-card-image src={{card.imageUrl}} alt="Photo of a project">
+      <mat-card-content>{{card.description}}</mat-card-content>
       <mat-card-actions class="card-buttons">
-        <button mat-button [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-        <button mat-button>DETAILS</button>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+        <div fxFlex></div>
+        <button mat-raised-button color="primary">DETAILS</button>
       </mat-card-actions>
-      <mat-progress-bar mode="determinate" value={{card.progress}}></mat-progress-bar>
-      <span class="progress-span">{{card.progress}}% translated </span>
+<!--       <mat-progress-bar mode="determinate" value={{card.progress}}></mat-progress-bar>
+      <span class="progress-span">{{card.progress}}% translated </span> -->
     </mat-card>
   </div>
-  <button mat-fab color="primary" class="button-add">
-    <mat-icon aria-label="Add button">add</mat-icon>
+
+  <button routerLink="../newproject" mat-fab color="primary" class="button-add">
+    <mat-icon  aria-label="Add button">add</mat-icon>
   </button>
 </div>

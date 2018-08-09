@@ -7,6 +7,7 @@ import { Translation } from "./translation";
 import { Team } from "./team";
 
 export interface Project {
+<<<<<<< HEAD
     Id: number;
     Name: string;
     Description: string;
@@ -20,4 +21,19 @@ export interface Project {
     ProjectLanguageses: ProjectLanguage[];
     ProjectGlossaries: ProjectGlossary[];
     ProjectTags: ProjectTag[];
+=======
+    id?: number;
+    name: string;
+    description?: string;
+    technology: string;
+    imageUrl?: string;
+    createdOn?: Date;
+    manager?: Manager;
+    mainLanguage?: Language;
+    teams?: Array<Team>;
+    translations?: Array<Translation>;
+    projectLanguageses?: Array<ProjectLanguage>;
+    projectGlossaries?: Array<ProjectGlossary>;
+    projectTags?: Array<ProjectTag>;
+>>>>>>> 8251e889947afb0da4b5330e7ee01f0f076f0b59
 }

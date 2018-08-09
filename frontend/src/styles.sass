@@ -1,4 +1,4 @@
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css"
+@import "~@angular/material/prebuilt-themes/indigo-pink.css"
 @import "common-styles/all"
 
 $fixed-footer-height: 65px
@@ -7,7 +7,10 @@ $fixed-toolbar-height: 64px // This value was taken from material default toolba
 body
   font-family: Roboto, Arial, sans-serif
   margin: 0
+  min-height: 100%
 
+html
+  min-height: 100%
 
 // ------------------------------Start------------------------------
 // We need this styles for nice workspace view.
@@ -48,4 +51,8 @@ app-footer
 
 // ------------------------------End------------------------------
 
+/* Use class 'no-hover-effect' to remove hover effect from buttons
+.no-hover-effect
+  &.mat-fab .mat-button-focus-overlay, &.mat-button .mat-button-focus-overlay
+    background-color: transparent
 

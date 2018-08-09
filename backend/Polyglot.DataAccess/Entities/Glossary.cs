@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Glossary
+    public class Glossary : Entity
     {
-        public int Id { get; set; }
         public string TermText { get; set; }
         public string ExplanationText { get; set; }
         public string OriginLanguage { get; set; }

@@ -4,6 +4,10 @@ import { CommonModule } from '@angular/common';
 import { LayoutModule } from '@angular/cdk/layout';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MdePopoverModule } from '@material-extended/mde';
 import {
   MatToolbarModule,
   MatButtonModule,
@@ -30,7 +34,10 @@ import {
 
 
 } from '@angular/material';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -57,8 +64,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
-    MatChipsModule
-
+    MatChipsModule,
+    FormsModule, 
+    ReactiveFormsModule, 
+    MdePopoverModule,
+    BrowserAnimationsModule
   ],
   exports: [
     LayoutModule,
@@ -85,7 +95,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FlexLayoutModule,
     MatChipsModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+
+    MdePopoverModule,
+    BrowserAnimationsModule
   ]
 })
 export class AppMaterialModule { }

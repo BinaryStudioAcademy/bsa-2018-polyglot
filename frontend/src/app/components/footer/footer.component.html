@@ -4,9 +4,9 @@
   <h2>© Polyglot App 2018.</h2>
 
   <a mat-button routerLink="/about-us">About us</a>
-  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
   <a mat-button routerLink="/contact">Contacts</a>  
-  <a mat-button>Settings</a>  
+  <a mat-button *ngIf="isLoggedIn()">Settings</a>  
   <a mat-button>Help & Feedback</a>
 
   <span class='spacer'></span>

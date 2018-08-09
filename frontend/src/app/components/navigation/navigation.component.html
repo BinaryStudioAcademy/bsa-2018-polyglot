@@ -1,44 +1,77 @@
-<mat-toolbar>
-  <div fxShow="true" fxHide.gt-sm="true">
-    <button mat-icon-button (click)="sidenav.toggle()">
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+  <mat-toolbar class="example-toolbar">
+
+
+    <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-  </div>
 
-  <a mat-button class="companyName" routerLink="/">
-    <span>Polyglot</span>
-  </a>
-  <span class="example-spacer"></span>
-  <div fxShow="true" fxHide.lt-md="true">
-    <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-    <a mat-button routerLink="/dashboard">Dashboard</a>
-    <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
-    <a mat-button (click)="onLoginClick()">Login</a>
-    <a mat-button (click)="onSignUpClick()">SignUp</a>
-    <span class="toolbar-spacer"></span>
 
-  </div>
+    <a mat-button class="companyName" routerLink="/">
+      <span>Polyglot</span>
+    </a>
 
-</mat-toolbar>
-<mat-divider class="navigation-divider"></mat-divider>
-<mat-sidenav-container class="example-container">
+    <span class="example-spacer"></span>
+    <div fxShow="true" fxHide.lt-md="true">
+      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
+      <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
+      <button mat-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
+        <img src="/assets/images/user-ava.png" class="profile-small-image">
+      </button>
 
-  <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
-    <div fxLayout="column">
-      <a mat-button routerLink="/about-us">
-        <mat-icon mat-list-icon>home</mat-icon> About us</a>
-      <a mat-button routerLink="Dashboard">
-        <mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
-      <a mat-button routerLink="/contact">
-        <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
-      <mat-divider></mat-divider>
-      <a mat-button>
-        <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
-      <a mat-button>
-        <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+      <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="28">
+        <mat-card class="profile-card">
+          <mat-card-header>
+            <mat-card-title class="profile-card-main">
+              <img src="/assets/images/user-ava.png" class="profile-big-image">
+              <div style="margin-left: 30px;">
+                <h4>Sasha Pushkin</h4>
+                <mat-card-subtitle>test@example.com</mat-card-subtitle>
+                <p>
+                  <i>Manager</i>
+                </p>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <hr>
+          <mat-card-content class="profile-card-navigation">
+            <a mat-button color="primary" class="profile-card-navigation-button" routerLink="/profile">Profile</a>
+            <a mat-button color="primary" class="profile-card-navigation-button">Settings</a>
+            <a mat-button color="warn" (click)="onLogoutClick()" class="profile-card-navigation-button">Logout</a>
+          </mat-card-content>
+        </mat-card>
+      </mde-popover>
+
+
+      <span class="toolbar-spacer"></span>
+
     </div>
-  </mat-sidenav>
+  </mat-toolbar>
 
-  <router-outlet></router-outlet>
+  <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <div fxLayout="column">
 
-</mat-sidenav-container>
+        <a mat-button routerLinkActive="active" routerLink="/about-us">
+          <mat-icon mat-list-icon>home</mat-icon> About us</a>
+        <a mat-button routerLinkActive="active" routerLink="/dashboard">
+          <mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
+        <a mat-button routerLinkActive="active" routerLink="/contact">
+          <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
+        <mat-divider></mat-divider>
+        <a mat-button routerLinkActive="active">
+          <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+        <a mat-button routerLinkActive="active">
+          <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+
+
+      </div>
+    </mat-sidenav>
+
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-container>
+</div>
