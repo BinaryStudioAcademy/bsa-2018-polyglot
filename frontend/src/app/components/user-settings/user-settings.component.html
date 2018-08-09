@@ -1,49 +1,58 @@
 <div class="form-container">
     <h2>Edit profile</h2>
+    <button class="edit-button" mat-flat-button color="primary" (click)="editPhoto()">Edit photo</button> 
     <form [formGroup]="profileForm"   (submit)="saveChanges(profileForm.value)" > 
-
-        <mat-form-field class="field-full-width">
-            <input matInput placeholder="Enter first name" formControlName="firstName" required>
-            <mat-error class="errors" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
-                <div *ngIf="firstName.errors.required">
-                    First name is required. 
+        <div class="field-wrapper">   
+                <div class="avatar">
+                    <img src="{{manager.avatarUrl}}" alt="avatar">
                 </div>
-            </mat-error>
-        </mat-form-field>  
+                <div class="fullname-fields">    
+                            <mat-form-field  class="name-field">
+                                    <input matInput placeholder="Enter first name" formControlName="firstName" required>
+                                    <mat-error class="errors" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                                        <div *ngIf="firstName.errors && firstName.errors.required">
+                                            First name is required. 
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>  
+                        
+                                <mat-form-field class="name-field">
+                                    <input matInput placeholder="Enter last name" formControlName="lastName" required>
+                                    <mat-error class="errors" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                                        <div *ngIf="lastName.errors && lastName.errors.required">
+                                            Last name is required. 
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>   
+                                <mat-form-field class="name-field">
+                                        <input matInput placeholder="Country" formControlName="country">
+                                </mat-form-field> 
+                            
+                                <mat-form-field class="name-field">
+                                        <input matInput placeholder="City" formControlName="city">
+                                </mat-form-field>
+                                    
+                                <mat-form-field class="name-field">
+                                        <input matInput placeholder="Region" formControlName="region">
+                                </mat-form-field>
 
-        <mat-form-field class="field-full-width">
-            <input matInput placeholder="Enter last name" formControlName="lastName" required>
-            <mat-error class="errors" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
-                <div *ngIf="lastName.errors.required">
-                    Last name is required. 
-                </div>
-            </mat-error>
-        </mat-form-field>  
-
+                </div>           
+        </div>
+        
         <div class="field-wrapper">
             <mat-form-field class="date-birth-field">
-                <input matInput [matDatepicker]="picker" placeholder="Birth date" formControlName="birthDate">
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Birth date" formControlName="birthDate">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
     
             <mat-form-field class="phone-field">
-                <input  matInput placeholder="Phone" formControlName="phone" >
+                <input  matInput placeholder="Phone" formControlName="phone" pattern="\+?[0-9-]*">
+                <mat-error *ngIf="phone.errors && phone.errors.pattern">
+                    Phone is
+                    <strong>not valid</strong>
+                  </mat-error>
             </mat-form-field>    
-        </div>
-
-        <div class="field-wrapper">
-            <mat-form-field class="country-city-region">
-                <input matInput placeholder="Country" formControlName="country">
-            </mat-form-field> 
-    
-            <mat-form-field class="country-city-region">
-                <input matInput placeholder="City" formControlName="city">
-            </mat-form-field>
-            
-            <mat-form-field class="country-city-region">
-                <input matInput placeholder="Region" formControlName="region">
-            </mat-form-field>
         </div>
 
         

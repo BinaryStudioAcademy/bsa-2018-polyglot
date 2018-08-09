@@ -2,8 +2,7 @@
 <h2>Create new project</h2>
 <form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
     <mat-form-field class="field-full-width">
-        <input matInput placeholder="Enter name" formControlName="name" required minlength="4"
-        pattern="[a-zA-Z ]*">
+        <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
         <mat-error class="errors" *ngIf="name.invalid && (name.dirty || name.touched)">
             <div *ngIf="name.errors.required">
                 Name is required. 
@@ -11,20 +10,12 @@
             <div *ngIf="name.errors.minlength">
                 Name must be at least 4 characters long. 
             </div>
-            <div *ngIf="name.errors.pattern">
-                Name must contain only Latin characters. 
-            </div>
         </mat-error>
     </mat-form-field>
 
     <mat-form-field class="field-full-width">
-        <textarea class="description-text-area" matInput placeholder="Enter description" formControlName="description" pattern="[a-zA-Z ]*"
+        <textarea class="description-text-area" matInput placeholder="Enter description" formControlName="description" 
         maxlength="500"></textarea>
-        <mat-error *ngIf="description.invalid && (description.dirty || description.touched)">
-            <div *ngIf="description.errors.pattern">
-                Description must contain only Latin characters
-            </div>
-        </mat-error>
         <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
     </mat-form-field>
 

@@ -28,6 +28,10 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
+  MatChipsModule,
+  MatPaginatorModule
+
+
 
 } from '@angular/material';
 
@@ -59,11 +63,10 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    
     FlexLayoutModule,
+    MatChipsModule,
     FormsModule, 
     ReactiveFormsModule, 
-
     MdePopoverModule,
     BrowserAnimationsModule
   ],
@@ -89,8 +92,10 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     MatFormFieldModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    
     FlexLayoutModule,
+    MatChipsModule,
+    MatPaginatorModule,
+    MatTableModule,
     FormsModule,
     ReactiveFormsModule,
 

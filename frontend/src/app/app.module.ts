@@ -5,11 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
-
 
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
@@ -38,6 +37,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { KeyComponent } from './components/workspace/key/key.component';
+import { KeyDetailsComponent } from './components/workspace/key-details/key-details.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
@@ -45,6 +47,11 @@ import { TagsComponent } from './components/tags/tags.component';
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
+import { MatSortModule } from '@angular/material/sort';
+import { TeamComponent } from './components/teams/team/team.component';
+import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
 
@@ -66,12 +73,18 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
+    FooterComponent,
+    WorkspaceComponent,
+    KeyComponent,
+    KeyDetailsComponent,
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
-    ManagerProfileComponent,
     TagsComponent,
     NewProjectComponent,
+    ManagerProfileComponent,
+    TeamComponent,
+    SearchComponent,
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective
@@ -91,7 +104,12 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     MatChipsModule,
     ngfModule,
     WebStorageModule,
-    ImageCropperModule
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    ImageCropperModule,
+    MatCheckboxModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],

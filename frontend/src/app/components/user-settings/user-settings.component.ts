@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserProfile } from '../../models/user-profile';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-user-settings',
@@ -14,9 +16,12 @@ export class UserSettingsComponent implements OnInit {
 
   manager: UserProfile;
   profileForm: FormGroup;
+  minDate = new Date(1903, 2, 1);
+  maxDate = new Date();
+
 
   
-  constructor(private router: ActivatedRoute, private fb: FormBuilder,) {
+  constructor(private router: ActivatedRoute, private fb: FormBuilder, private  dialog: MatDialog,) {
     //GET Id here
     //console.log(router.snapshot.params.id);
    }
@@ -25,9 +30,9 @@ export class UserSettingsComponent implements OnInit {
     this.manager = {
      firstName: "Sasha",
      lastName : "Pushkin",
-     avatarUrl : "https://i.imgur.com/6blJ0sz.jpg", // changed due to CORS policy issues
-     birthDate : new Date("25/05/2122"),
-     registrationDate : new Date("12.12.1222"),
+     avatarUrl : "https://cdn.riastatic.com/photos/ria/dom_news_logo/20/2072/207230/207230m.jpg?v=1422268257", // changed due to CORS policy issues
+     birthDate : new Date("25/05/2002"),
+     registrationDate : new Date("12.12.2017"),
      country : "Ukraine",
      city : "Kyiv",
      region : "Dniorivskiy",
@@ -42,7 +47,7 @@ export class UserSettingsComponent implements OnInit {
     this.profileForm = this.fb.group({
       firstName:[this.manager.firstName, [Validators.required]], 
       lastName: [this.manager.lastName, [Validators.required]],
-      birthDate : [this.manager.birthDate, [Validators.required]],
+      birthDate : [this.manager.birthDate],
       country : [this.manager.country],
       city : [this.manager.city],
       region : [this.manager.region],
@@ -95,5 +100,10 @@ export class UserSettingsComponent implements OnInit {
     return this.profileForm.get('phone');
   }
 
+  editPhoto() {
+    this.dialog.open(CropperComponent, {
+      data: {imageUrl: this.manager.avatarUrl}
+    });
+  }
 
 }

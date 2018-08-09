@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { SessionStorage } from "ngx-store";
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HttpService {
 
-    private url: string = "http://localhost:58828";
+    private url: string = environment.apiUrl;
 
     @SessionStorage() private _token: string;
     public set token(v : string) {
