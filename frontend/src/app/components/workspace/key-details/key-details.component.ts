@@ -13,6 +13,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
   private keyDetails: any; // DATA FROM NoSQL! Need some typing here :)
   protected translationsDataSource: MatTableDataSource<any>; // Should be KeyDetails type
+  private IsEdit : boolean
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -22,6 +23,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.keyDetails = {};
+    
+    this.IsEdit = false;
 
     this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
     this.translationsDataSource.paginator = this.paginator;
@@ -41,6 +44,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+  }
+
+  toggle(){
+    console.log("test");
+    if(this.IsEdit){
+      this.IsEdit = false;
+    }else{
+      this.IsEdit = true;
+    }
   }
 
 }
