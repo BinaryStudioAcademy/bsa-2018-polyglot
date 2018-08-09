@@ -20,7 +20,7 @@ export class TeamComponent implements OnInit {
   @Input() id: number = 88;
   teammates: Teammate[];
   emailToSearch: string;
-  displayedColumns: string[] = ['status', 'name', 'email', 'rights', 'options' ];
+  displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
   dataSource: MatTableDataSource<Teammate>;
   emailFormControl = new FormControl('', [
     Validators.email,
