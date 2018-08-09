@@ -70,9 +70,9 @@
   </mat-form-field>
 
   <mat-form-field>
-    <mat-select placeholder="Select your role">
-      <mat-option value="option">Manager</mat-option>
-      <mat-option value="option">Translator</mat-option>
+    <mat-select placeholder="Select your role" [value]="selectedOption">
+      <mat-option value="translator">Translator</mat-option>
+      <mat-option value="manager">Manager</mat-option>
     </mat-select>
   </mat-form-field>
 

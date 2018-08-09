@@ -12,6 +12,7 @@ export class SignupDialogComponent implements OnInit {
 
   public user: IUserSignUp;
   public firebaseError: string;
+  private selectedOption : string
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
@@ -25,6 +26,8 @@ export class SignupDialogComponent implements OnInit {
       repeatPass: '',
       fullname: ''
     };
+
+    this.selectedOption = "translator";
   }
 
   async onSignUpFormSubmit(user: IUserSignUp, form) {
