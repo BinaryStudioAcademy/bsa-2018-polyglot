@@ -39,7 +39,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
-import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
+import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
 
@@ -64,7 +64,6 @@ import { WebStorageModule } from 'ngx-store';
     FooterComponent,
     NewProjectComponent,
     ManagerProfileComponent,
-    ImageCropperComponent,
     CropperComponent
   ],
   imports: [
@@ -80,7 +79,8 @@ import { WebStorageModule } from 'ngx-store';
     AngularFireAuthModule,
     AppRoutingModule,
     ngfModule,
-    WebStorageModule
+    WebStorageModule,
+    ImageCropperModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent],
