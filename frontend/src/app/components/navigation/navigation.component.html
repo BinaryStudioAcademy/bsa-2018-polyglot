@@ -7,15 +7,16 @@
       <mat-icon>menu</mat-icon>
     </button>
 
+
     <a mat-button class="companyName" routerLink="/">
       <span>Polyglot</span>
     </a>
 
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-sm="true">
-      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button routerLink="/about-us" routerLinkActive="active" >About us</a>
       <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
-      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active" >Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
       <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
