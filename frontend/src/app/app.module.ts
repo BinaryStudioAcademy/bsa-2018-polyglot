@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { MatChipsModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
@@ -89,7 +89,7 @@ import { WebStorageModule } from 'ngx-store';
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  providers: [HttpService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 

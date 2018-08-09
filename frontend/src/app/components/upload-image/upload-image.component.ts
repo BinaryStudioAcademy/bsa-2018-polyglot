@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { DataService, RequestMethod } from '../../services/data.service';
+import { HttpService, RequestMethod } from '../../services/http.service';
 import { ngfModule, ngf } from "angular-file"
 
 @Component({
@@ -13,7 +13,7 @@ export class UploadImageComponent implements OnInit {
 
   validDrag;
   invalidDrag;
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: HttpService) { }
 
   ngOnInit() {
   }
