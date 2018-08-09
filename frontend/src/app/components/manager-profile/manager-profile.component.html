@@ -8,19 +8,14 @@
       <img src="{{manager.avatarUrl}}" alt="avatar" (click)="editPhoto()">
   </div>
   <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
-  <div fxFlex="50%">
-    <div class="user-name">{{manager.lastName}} {{manager.firstName}}</div>
-    <a mat-button class="crete-project-button" routerLink="./settings">
-      <i class="material-icons">settings</i>
-    </a>
-    <mat-card-subtitle>Registration date : <span> {{manager.registrationDate}}</span>
-     </mat-card-subtitle>
-  </div>
-  <div class="user-rating" fxFlex="50%">
-      <mat-card-subtitle>Rating <span>7.8/10
-          <i class="material-icons" style="color: orange ;">star</i>
-         </span>
-       </mat-card-subtitle>
+  <div class="main-info-wrapper">
+        <div class="user-name">{{manager.lastName}} {{manager.firstName}}</div>
+        <a mat-button class="crete-project-button" routerLink="./settings">
+          Settings<i class="material-icons">settings</i>
+        </a>
+        <p class="rating-star">Rating 7.8/10
+            <i class="material-icons" style="color: orange ;">star</i>
+        </p>
   </div>
   </div>
   </div>
@@ -58,7 +53,7 @@
       <mat-card>
           <h2>Personal detail</h2>
           <hr>
-          <mat-card-subtitle>Birth : <span> {{manager.birthDate}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Birth : <span> {{manager.birthDate | date:'mediumDate'}}</span></mat-card-subtitle>
           <mat-card-title>Location</mat-card-title><hr>    
           <mat-card-subtitle>Country : <span> {{manager.country}}</span></mat-card-subtitle>
           <mat-card-subtitle>City : <span> {{manager.city}}</span></mat-card-subtitle>
