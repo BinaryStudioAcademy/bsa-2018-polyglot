@@ -53,6 +53,21 @@
     </mat-error>
   </mat-form-field>
 
+  <mat-form-field>
+    <input id="repeatPassword" name="repeatPassword" type="password"
+    appConfirmEqualValidator="password"
+    [(ngModel)]="user.repeatPass"
+    required matInput placeholder="Confirm password" 
+    #repeatPassword="ngModel">
+
+    <mat-error *ngIf="repeatPassword.errors && repeatPassword.errors.required">
+      Confirm your password
+    </mat-error> 
+    <mat-error *ngIf="repeatPassword.errors && repeatPassword.errors?.NotEqual && !repeatPassword.errors.required">
+        Password missmatch
+    </mat-error>
+  </mat-form-field>
+
   <mat-error *ngIf="firebaseError">
     {{firebaseError}}
   </mat-error>
