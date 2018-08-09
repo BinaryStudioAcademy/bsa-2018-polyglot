@@ -5,10 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { MatChipsModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
-
 
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
@@ -37,11 +37,19 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { KeyComponent } from './components/workspace/key/key.component';
+import { KeyDetailsComponent } from './components/workspace/key-details/key-details.component';
+import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component'
-import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
+import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { TagsComponent } from './components/tags/tags.component';
+import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+
 
 
 @NgModule({
@@ -57,15 +65,23 @@ import { WebStorageModule } from 'ngx-store';
     DashboardComponent,
     NoFoundComponent,
     AppComponent,
-
+    NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
+    FooterComponent,
+    WorkspaceComponent,
+    KeyComponent,
+    KeyDetailsComponent,
     UploadImageComponent,
     FooterComponent,
-    NewProjectComponent,
+    StringDialogComponent,
     ManagerProfileComponent,
-    ImageCropperComponent,
-    CropperComponent
+    TagsComponent,
+    NewProjectComponent,
+    CropperComponent,
+    UserSettingsComponent,
+    ConfirmEqualValidatorDirective
+
   ],
   imports: [
     BrowserModule,
@@ -78,13 +94,14 @@ import { WebStorageModule } from 'ngx-store';
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
+    MatChipsModule,
     ngfModule,
-    WebStorageModule
+    WebStorageModule,
+    ImageCropperModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
+  providers: [HttpService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 

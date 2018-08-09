@@ -9,8 +9,11 @@
   </div>
   <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
   <div fxFlex="50%">
-    <div class="user-name">{{Manager.Name}}</div>
-    <mat-card-subtitle>Registration date : <span> {{Manager.RegistrationDate}}</span>
+    <div class="user-name">{{manager.lastName}} {{manager.firstName}}</div>
+    <a mat-button class="crete-project-button" routerLink="./settings/{{manager.id}}">
+      <i class="material-icons">settings</i>
+    </a>
+    <mat-card-subtitle>Registration date : <span> {{manager.registrationDate}}</span>
      </mat-card-subtitle>
   </div>
   <div class="user-rating" fxFlex="50%">
@@ -31,17 +34,17 @@
           <div class="item" fxFlex>
               <div>
                 <div class="project-button-wrapper">
-                    <h2 class="title"> Projects</h2>
+                    <h2 class="title">Projects</h2>
                     <a mat-button class="crete-project-button" routerLink="./newproject">Create new</a>
                 </div>
                 
                 <hr>
                 <div class="project-list">
                 <br>
-                <div *ngFor="let p of Projects">
+                <div *ngFor="let p of projects">
                         <mat-card-header>
-                          <mat-card-title>{{p.Name}}</mat-card-title>
-                          <mat-card-subtitle>{{p.Technology}}</mat-card-subtitle>
+                          <mat-card-title>{{p.name}}</mat-card-title>
+                          <mat-card-subtitle>{{p.technology}}</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
                         </mat-card-content>
@@ -55,15 +58,15 @@
       <mat-card>
           <h2>Personal detail</h2>
           <hr>
-          <mat-card-subtitle>Birth : <span> {{Manager.Birth}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Birth : <span> {{manager.birthDate}}</span></mat-card-subtitle>
           <mat-card-title>Location</mat-card-title><hr>    
-          <mat-card-subtitle>Country : <span> {{Manager.Country}}</span></mat-card-subtitle>
-          <mat-card-subtitle>City : <span> {{Manager.City}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Region : <span> {{Manager.Region}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Address : <span> {{Manager.Address}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Postal code : <span> {{Manager.PostalCode}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Country : <span> {{manager.country}}</span></mat-card-subtitle>
+          <mat-card-subtitle>City : <span> {{manager.city}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Region : <span> {{manager.region}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Address : <span> {{manager.address}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Postal code : <span> {{manager.postalCode}}</span></mat-card-subtitle>
           <mat-card-title>Contacts</mat-card-title><hr>
-          <mat-card-subtitle>Phone : <span> {{Manager.Phone}}</span></mat-card-subtitle>
+          <mat-card-subtitle>Phone : <span> {{manager.phone}}</span></mat-card-subtitle>
           </mat-card>
    </div>
   </div>

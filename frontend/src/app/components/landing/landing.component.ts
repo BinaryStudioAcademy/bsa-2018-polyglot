@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { HttpService } from '../../services/http.service';
 import { UserService } from '../../services/user.service';
 
 import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';

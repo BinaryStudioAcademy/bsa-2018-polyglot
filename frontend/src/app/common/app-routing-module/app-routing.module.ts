@@ -12,11 +12,14 @@ import { LandingComponent } from '../../components/landing/landing.component';
 import { AuthGuard } from '../../services/guards/auth-guard.service';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 import { ContactComponent } from '../../components/contact/contact.component';
+import { WorkspaceComponent } from '../../components/workspace/workspace.component';
+import { KeyDetailsComponent } from '../../components/workspace/key-details/key-details.component';
 import { TranslatorProfileComponent } from '../../components/translatorProfile/translator-profile/translator-profile.component';
 
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
 import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
 import { LandingGuard } from '../../services/guards/landing-guard.service';
+import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
@@ -24,6 +27,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'profile', component: ManagerProfileComponent},
   { path: 'profile/newproject', component: NewProjectComponent },
+  { path: 'profile/settings/:id', component: UserSettingsComponent },
 
   {
     path: 'dashboard',
@@ -36,6 +40,16 @@ const routes: Routes = [
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'newproject', component: NewProjectComponent },
       { path: 'strings', component: NoFoundComponent },
+    ]
+  },
+  {
+    path: 'workspace/:projectId',
+    component: WorkspaceComponent,
+    children: [
+      {
+        path: 'key/:keyId',
+        component: KeyDetailsComponent
+      }
     ]
   },
   { path: 'translator', component: TranslatorProfileComponent },
