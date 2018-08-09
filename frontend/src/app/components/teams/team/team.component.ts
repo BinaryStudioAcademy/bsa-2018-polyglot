@@ -1,197 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatTable } from '@angular/material';
 import { ErrorStateMatcher} from '@angular/material/core';
 import { Observable, of } from 'rxjs';
 import { Sort} from '@angular/material';
-import { Translator } from '../../../models/translator';
-import { UserProfile } from '../../../models/user-profile';
-import { Rating } from '../../../models/rating';
+import { Teammate } from '../../../models/teammate';
 import { SearchService } from '../../../services/search.service';
 import { SelectionModel } from '@angular/cdk/collections';
 
-const mockTranslators: Translator[] = 
-[
-  {
-      id: 1,
-      userProfile: {
-        id: 1,
-        firstName: 'Vasilij',
-        lastName: 'Polietilen',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 2,
-      userProfile: {
-        id: 1,
-        firstName: 'Grigorij',
-        lastName: 'Butylka',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 3,
-      userProfile: {
-        id: 1,
-        firstName: 'Alexej',
-        lastName: 'Chibo',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 4,
-      userProfile: {
-        id: 1,
-        firstName: 'Andrej',
-        lastName: 'Mers',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 5,
-      userProfile: {
-        id: 1,
-        firstName: 'Viktor',
-        lastName: 'Rozembaum',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 6,
-      userProfile: {
-        id: 1,
-        firstName: 'Alexander',
-        lastName: 'Denisov',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
-      id: 7,
-      userProfile: {
-        id: 1,
-        firstName: 'Viktor',
-        lastName: 'Boroda',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: [{
-        id: 1,
-        teamId: 1,
-        team: null,
-        translatorId: 6,
-        translator: null,
-        translatorRights: null
-      },
-      {
-        id: 2,
-        teamId: 1,
-        team: null,
-        translatorId: 5,
-        translator: null,
-        translatorRights: null
-      },
-      {
-        id: 3,
-        teamId: 1,
-        team: null,
-        translatorId: 7,
-        translator: null,
-        translatorRights: [
-          {
-            teamTranslatorId: 3,
-            teamTranslator: null,
-            rightId: 1,
-            right: {
-              id: 1,
-              definition: "key",
-              translatorRights: null
-            }
-          },
-          {
-            teamTranslatorId: 3,
-            teamTranslator: null,
-            rightId: 2,
-            right: {
-              id: 2,
-              definition: "lanGuAge-add",
-              translatorRights: null
-            }
-          }
-        ]
-      }]
-  }
-  
-];
 
 @Component({
   selector: 'app-team',
@@ -200,11 +17,11 @@ const mockTranslators: Translator[] =
 })
 export class TeamComponent implements OnInit {
 
-  id: number = 88;
-  translators: Translator[] = mockTranslators;
+  @Input() id: number = 88;
+  teammates: Teammate[];
   emailToSearch: string;
-  displayedColumns: string[] = ['name', 'email', 'rights', 'options' ];
-  dataSource = new MatTableDataSource(this.translators);
+  displayedColumns: string[] = ['status', 'name', 'email', 'rights', 'options' ];
+  dataSource: MatTableDataSource<Teammate>;
   emailFormControl = new FormControl('', [
     Validators.email,
   ]);
@@ -216,6 +33,14 @@ export class TeamComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
 
   constructor(private searchService: SearchService) {
+    //debugger;
+    this.searchService.GetTranslatorsByTeam(this.id)
+        .subscribe((data: Teammate[]) => {
+          //debugger;
+          this.teammates = data;
+          this.dataSource = new MatTableDataSource(this.teammates);
+          console.log(this.teammates);
+        })
   }
 
   ngOnInit() {
@@ -232,42 +57,41 @@ export class TeamComponent implements OnInit {
   }
 
   searchTranslators() {
-    this.searchService.FindTranslatorsByEmail("")
-        .subscribe((data: Translator[]) => {
-          this.translators = data.concat(this.translators);
-          this.dataSource = new MatTableDataSource(this.translators);
+    this.searchService.FindTranslatorsByEmail(this.emailToSearch)
+        .subscribe((data: Teammate[]) => {
+          this.teammates = data.concat(this.teammates);
+          this.dataSource = new MatTableDataSource(this.teammates);
           this.dataSource.paginator = this.paginator;
           this.paginator.pageIndex = 0;
         });
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
-    let targetTranslator = this.translators.find(t => t.id === id);
-    if(!targetTranslator)
+    //debugger;
+    let teammate = this.teammates.find(t => t.id === id);
+    if(!teammate)
       return false;
-    
-      if(targetTranslator.teamTranslators == null){
-        return false;
-      }
-      else{
-        let team = targetTranslator
-        .teamTranslators
-        .find(t => t.translatorId === id);
-        if(team == null){
-          return false;
-        }
-        else{
-          return team.translatorRights
-        .find(r => r.right.definition.trim().toLowerCase() === rightName.trim().toLowerCase()) != null;
-        }
-      } 
+      
+      try{
+        return teammate.rights
+          .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+          != null;
+
+      } catch(error) {
+        console.log(error.message);
+    }
+      return false;
   }
 
-  addRightToTranslator(id: number, rightName: string) {
-    
-  }
-  checboxHandler(e, id){
-    console.log("id: " + id, "event: ");
-    console.log(e);
+  changeTranslatorRight(e, id){
+    debugger;
+    if(e.target.checked)
+      {
+        // add right
+      }
+    else
+      {
+        //remove right
+      }
   }
 }

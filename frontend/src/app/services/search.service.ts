@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient} from '@angular/common/http';
 import { Translator } from '../models/Translator';
+import { Teammate } from '../models/teammate';
 
 @Injectable({
   providedIn: 'root'
@@ -11,141 +12,226 @@ export class SearchService {
 
   constructor() { }
 
-  FindTranslatorsByEmail(email: string) : Observable<Translator[]>{
-    
-    return of([{
+  GetTranslatorsByTeam(teamId: number) : Observable<Teammate[]>{
+    // собираем translator + email + rights
+    return of([
+    {
       id: 1,
-      userProfile: {
-        id: 1,
-        firstName: 's_Vasilij',
-        lastName: 's_Polietilen',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'William Pool',
+      email: 'w.pool@gmail.com',
+      rights: [{
+                id: 1,
+                definition: "key",
+                translatorRights: undefined
+              },
+              {
+                id: 2,
+                definition: "lanGuAge-add  ",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    {
       id: 2,
-      userProfile: {
-        id: 1,
-        firstName: 's_Grigorij',
-        lastName: 's_Butylka',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'Alex Komarov',
+      email: 'komarow.alex@gmail.com',
+      rights: [
+              {
+                id: 2,
+                definition: "lanGuAge-add  ",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    {
       id: 3,
-      userProfile: {
-        id: 1,
-        firstName: 's_Alexej',
-        lastName: 's_Chibo',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'Vasia Kakojto',
+      email: 'koko.vs@gmail.com',
+      rights: [{
+                id: 1,
+                definition: "Language-select",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    {
       id: 4,
-      userProfile: {
-        id: 1,
-        firstName: 's_Andrej',
-        lastName: 's_Mers',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'Grisha Kolesnik',
+      email: 'kes.grisha3@gmail.com',
+      rights: undefined,
+      teamId: 88
+    },
+    {
       id: 5,
-      userProfile: {
-        id: 1,
-        firstName: 's_Viktor',
-        lastName: 's_Rozembaum',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'Grigorij Boroda',
+      email: 'grg.boroda@gmail.com',
+      rights: [{
+                id: 1,
+                definition: "Language-select",
+                translatorRights: undefined
+              },
+              {
+                id: 2,
+                definition: "lanGuAge-add  ",
+                translatorRights: undefined
+              },
+              {
+                id: 3,
+                definition: "key",
+                translatorRights: undefined
+              }],
+      teamId: 21
+    },
+    {
       id: 6,
-      userProfile: {
-        id: 1,
-        firstName: 's_Alexander',
-        lastName: 's_Denisov',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
-      },
-      rating: null,
-      teamTranslators: null
-  },
-  {
+      fullName: 'Unknown Men',
+      email: 'unknown.mm231@gmail.com',
+      rights: [
+              {
+                id: 3,
+                definition: "key",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    ,
+    {
       id: 7,
-      userProfile: {
-        id: 1,
-        firstName: 's_Viktor',
-        lastName: 's_Boroda',
-        birthDate: new Date(1992, 1,1),
-        registrationDate: new Date(),
-        country: 'Ukraine',
-        city: 'Kiev',
-        region: '',
-        postalCode: '',
-        address: '',
-        phone: '',
-        avatarUrl: ''
+      fullName: 'Alesha Greben',
+      email: 'greben.alesha@gmail.com',
+      rights: undefined,
+      teamId: 88
+    },
+    {
+      id: 8,
+      fullName: 'Misha Mavashy',
+      email: 'mavashy@gmail.com',
+      rights: [{
+                id: 1,
+                definition: "key",
+                translatorRights: undefined
+              },
+              {
+                id: 2,
+                definition: "lanGuAge-add  ",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    {
+      id: 9,
+      fullName: 'Viktor Piwo',
+      email: 'piwo.ddd@gmail.com',
+      rights: [{
+                id: 1,
+                definition: "Language-select",
+                translatorRights: undefined
+              }],
+      teamId: 88
+    },
+    {
+      id: 10,
+      fullName: 'Vasia Shamsia',
+      email: 'vasi1234@gmail.com',
+      rights: undefined,
+      teamId:88
+    },
+    {
+      id: 11,
+      fullName: 'Kateria Tarakanowa',
+      email: 'katia.ss3@gmail.com',
+      rights: undefined,
+      teamId: 88
+    }
+  ].filter(m => m.teamId == teamId));
+  }
+
+
+  FindTranslatorsByEmail(email: string) : Observable<Teammate[]>{
+    
+    return of([
+      {
+        id: 144,
+        fullName: 'Petr Brzeczyszsczykiewicz',
+        email: 'searchTest@gmail.com',
+        rights: [{
+                  id: 1,
+                  definition: "key",
+                  translatorRights: undefined
+                },
+                {
+                  id: 2,
+                  definition: "lanGuAge-add  ",
+                  translatorRights: undefined
+                },
+                {
+                  id: 4,
+                  definition: "lanGuAge-select",
+                  translatorRights: undefined
+                }],
+        teamId: 82
       },
-      rating: null,
-      teamTranslators: null
-  }]);
+      {
+        id: 22,
+        fullName: 'Grigorij Boroda',
+        email: 'searchTest2@gmail.com',
+        rights: [{
+                  id: 1,
+                  definition: "Language-select",
+                  translatorRights: undefined
+                },
+                {
+                  id: 2,
+                  definition: "lanGuAge-add  ",
+                  translatorRights: undefined
+                }],
+        teamId: 12
+      },
+      {
+        id: 42,
+        fullName: 'Vika Vitulskaja',
+        email: 'searchTest3@gmail.com',
+        rights: [{
+                  id: 1,
+                  definition: "key",
+                  translatorRights: undefined
+                },
+                {
+                  id: 2,
+                  definition: "lanGuAge-select  ",
+                  translatorRights: undefined
+                }],
+        teamId: 345
+      },
+      {
+        id: 43,
+        fullName: 'Don Jonh',
+        email: 'searchTest4@gmail.com',
+        rights: [
+                {
+                  id: 2,
+                  definition: "lanGuAge-add  ",
+                  translatorRights: undefined
+                }],
+        teamId: 34
+      },
+      {
+        id: 44,
+        fullName: 'Jon Don',
+        email: 'searchTest4@gmail.com',
+        rights: [{
+                  id: 1,
+                  definition: "key",
+                  translatorRights: undefined
+                },
+                {
+                  id: 2,
+                  definition: "lanGuAge-add  ",
+                  translatorRights: undefined
+                }],
+        teamId: 34
+      }].filter(m => m.email == email));
   }
 
 }
+
