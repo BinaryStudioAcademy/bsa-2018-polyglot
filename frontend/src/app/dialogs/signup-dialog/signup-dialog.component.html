@@ -53,6 +53,15 @@
     </mat-error>
   </mat-form-field>
 
+
+  <mat-form-field>
+    <mat-select placeholder="Select your role">
+      <mat-option value="option">Manager</mat-option>
+      <mat-option value="option">Translator</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
   <mat-error *ngIf="firebaseError">
     {{firebaseError}}
   </mat-error>
