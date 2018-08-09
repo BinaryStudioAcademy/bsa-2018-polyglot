@@ -35,7 +35,6 @@ export class TeamComponent implements OnInit {
 
   constructor(private searchService: SearchService, private activatedRoute: ActivatedRoute) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    console.log(this.id);
     this.getTranslators();
   }
 
@@ -45,7 +44,6 @@ export class TeamComponent implements OnInit {
         .subscribe((data: Teammate[]) => {
           this.teammates = data;
           this.dataSource = new MatTableDataSource(this.teammates);
-          console.log(this.teammates);
         })
   }
 
