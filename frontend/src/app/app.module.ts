@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { MatChipsModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
@@ -84,7 +84,6 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
     MatChipsModule,
     ngfModule,
     WebStorageModule,
@@ -92,7 +91,7 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  providers: [HttpService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 
