@@ -45,6 +45,7 @@ import { TagsComponent } from './components/tags/tags.component'
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { WebStorageModule } from 'ngx-store';
     ManagerProfileComponent,
     TagsComponent,
     NewProjectComponent,
-    CropperComponent
+    CropperComponent,
+    UserSettingsComponent
   ],
   imports: [
     BrowserModule,
