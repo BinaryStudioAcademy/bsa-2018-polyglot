@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,12 @@ namespace Polyglot.DataAccess.NoSQL_Repository
     {
         protected abstract IMongoCollection<TEntity> Collection { get; }
 
-        public async Task Add(TEntity item)
+        public async Task<TEntity> CreateAsync(TEntity item)
         {
             try
             {
                 await Collection.InsertOneAsync(item);
+                return item;
             }
             catch (Exception ex)
             {
@@ -25,7 +27,7 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<List<TEntity>> GetAllAsync()
         {
             try
             {
@@ -38,7 +40,7 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public async Task<TEntity> GetById(int id)
+        public async Task<TEntity> GetAsync(int id)
         {
             try
             {
@@ -54,24 +56,7 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public async Task<bool> RemoveAll()
-        {
-            try
-            {
-                DeleteResult actionResult
-                    = await Collection.DeleteManyAsync(new BsonDocument());
-
-                return actionResult.IsAcknowledged
-                    && actionResult.DeletedCount > 0;
-            }
-            catch (Exception ex)
-            {
-                // log or manage the exception
-                throw ex;
-            }
-        }
-
-        public async Task<bool> RemoveById(int id)
+        public async Task<TEntity> DeleteAsync(int id)
         {
             try
             {
@@ -79,8 +64,7 @@ namespace Polyglot.DataAccess.NoSQL_Repository
                     = await Collection.DeleteOneAsync(
                         Builders<TEntity>.Filter.Eq("Id", id));
 
-                return actionResult.IsAcknowledged
-                    && actionResult.DeletedCount > 0;
+                return null;
             }
             catch (Exception ex)
             {
@@ -89,12 +73,19 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public async Task<bool> Update(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
-            ReplaceOneResult updateResult = await Collection
-                .ReplaceOneAsync(filter: g => g.Id == entity.Id, replacement: entity);
-            return updateResult.IsAcknowledged
-            && updateResult.ModifiedCount > 0;
+            try
+            {
+                var updateResult =  Collection
+                    .ReplaceOne<TEntity>(filter: g => g.Id == entity.Id, replacement: entity);
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
         }
     }
 }

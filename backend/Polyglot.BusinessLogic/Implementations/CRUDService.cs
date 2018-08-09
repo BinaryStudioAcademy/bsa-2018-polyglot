@@ -1,7 +1,6 @@
 ﻿using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,24 +34,36 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<T> PostAsync(T entity)
         {
-            repository.CreateAsync(entity);
-            await uow.SaveAsync();
-            return entity ?? null;
+            await repository.CreateAsync(entity);
+            if (uow != null)
+            {
+                await uow.SaveAsync();
+                return entity ?? null;
+            }
+            return null;
         }
 
         public async Task<T> PutAsync(int identifier, T entity)
         {
             entity.Id = identifier;
             repository.Update(entity);
-            await uow.SaveAsync();
-            return entity ?? null;
+            if (uow != null)
+            {
+                await uow.SaveAsync();
+                return entity ?? null;
+            }
+            return null;
         }
 
         public async Task<bool> TryDeleteAsync(int identifier)
         {
-            repository.DeleteAsync(identifier);
-            await uow.SaveAsync();
-            return true;
+            await repository.DeleteAsync(identifier);
+            if (uow != null)
+            {
+                await uow.SaveAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

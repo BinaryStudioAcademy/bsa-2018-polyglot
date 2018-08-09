@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 })
 export class DataService {
 
-  private url: string= "http://localhost:58828/api";
+  private url: string= "http://localhost:58828";
 
   constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
