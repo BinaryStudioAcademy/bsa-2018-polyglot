@@ -72,15 +72,14 @@ export class TeamComponent implements OnInit {
     if(!teammate)
       return false;
       
-      try{
-        return teammate.rights
-          .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
-          != null;
-
-      } catch(error) {
-        console.log(error.message);
-    }
-      return false;
+    
+      if(teammate.rights == null){
+        return false;
+      }
+      return teammate.rights
+        .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+        != null;
+      
   }
 
   changeTranslatorRight(e, id){
