@@ -12,7 +12,7 @@ export class SignupDialogComponent implements OnInit {
 
   public user: IUserSignUp;
   public firebaseError: string;
-  private selectedOption : string
+  public selectedOption : string
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
