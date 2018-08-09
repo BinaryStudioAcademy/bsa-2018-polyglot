@@ -1,4 +1,4 @@
-<div class="d-flex flex-column" style="width: 39%">
+<div class="d-flex flex-column" style="width: 54%">
   <table mat-table [dataSource]="translationsDataSource" class="mat-elevation-z0 translations-list">
     <ng-container matColumnDef="language">
       <td mat-cell *matCellDef="let translation"> {{translation.language}} </td>
@@ -6,17 +6,25 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="translatedValue">
-      <td mat-cell *matCellDef="let translation"> {{translation.translatedValue}} </td>
+      <td style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation"> {{translation.translatedValue}}</td>
     </ng-container>
+    
+    <ng-container matColumnDef="updateBtn">
+        <td mat-cell *matCellDef="let updateBtn" style="float:right;padding-top:10px;padding-right:10px">
+          <div style="float:right;padding-top:0;padding-right:0">
+              <button style="border-radius: 50% ;height: 20px;width: 20px; padding:0;background-color: white;border : 1px solid gray" ><i class="material-icons">create</i></button>
+          </div>
+        </td>
+      </ng-container>
 
-    <tr mat-row *matRowDef="let row; columns: ['language', 'translatedValue'];" class="cursor-pointer"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['language', 'translatedValue','updateBtn'];" class="cursor-pointer"></tr>
   </table>
   <mat-paginator [pageSize]='10' Buttons></mat-paginator>
 </div>
 
 <mat-divider [vertical]="true" style="margin-right: 20px;width:1%"></mat-divider>
 
-<mat-tab-group flex style="width:60%">
+<mat-tab-group flex style="width:45%">
   <mat-tab label="History"> History </mat-tab>
   <mat-tab label="Details"> Details </mat-tab>
   <mat-tab label="Comments"> Comments </mat-tab>
