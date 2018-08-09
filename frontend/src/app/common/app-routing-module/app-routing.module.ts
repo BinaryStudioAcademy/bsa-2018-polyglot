@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ProjectsComponent } from '../../components/projects/projects.component';
 import { TeamsComponent } from '../../components/teams/teams.component';
+import { TeamComponent } from '../../components/teams/team/team.component';
 import { GlossariesComponent } from '../../components/glossaries/glossaries.component';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { NoFoundComponent } from '../../components/no-found/no-found.component';
@@ -26,7 +27,7 @@ const routes: Routes = [
 
   {
     path: 'dashboard',
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
@@ -34,6 +35,7 @@ const routes: Routes = [
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'strings', component: NoFoundComponent },
+      { path: 'abc', component: TeamComponent }
     ]
   },
   { path: 'translator', component: TranslatorProfileComponent },
