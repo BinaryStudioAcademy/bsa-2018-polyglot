@@ -51,6 +51,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchService } from './services/search.service';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
