@@ -46,6 +46,8 @@ import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+
 
 
 @NgModule({
@@ -71,7 +73,9 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
     TagsComponent,
     NewProjectComponent,
     CropperComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    ConfirmEqualValidatorDirective
+
   ],
   imports: [
     BrowserModule,
