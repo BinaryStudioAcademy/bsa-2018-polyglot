@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { MatChipsModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
@@ -45,7 +45,9 @@ import { TagsComponent } from './components/tags/tags.component'
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+
 
 
 @NgModule({
@@ -71,7 +73,9 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     TagsComponent,
     NewProjectComponent,
     CropperComponent,
+    UserSettingsComponent,
     ConfirmEqualValidatorDirective
+
   ],
   imports: [
     BrowserModule,
@@ -84,7 +88,6 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
     MatChipsModule,
     ngfModule,
     WebStorageModule,
@@ -92,7 +95,7 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  providers: [HttpService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 

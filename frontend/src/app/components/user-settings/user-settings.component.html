@@ -1,0 +1,65 @@
+<div class="form-container">
+    <h2>Edit profile</h2>
+    <form [formGroup]="profileForm"   (submit)="saveChanges(profileForm.value)" > 
+
+        <mat-form-field class="field-full-width">
+            <input matInput placeholder="Enter first name" formControlName="firstName" required>
+            <mat-error class="errors" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                <div *ngIf="firstName.errors.required">
+                    First name is required. 
+                </div>
+            </mat-error>
+        </mat-form-field>  
+
+        <mat-form-field class="field-full-width">
+            <input matInput placeholder="Enter last name" formControlName="lastName" required>
+            <mat-error class="errors" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                <div *ngIf="lastName.errors.required">
+                    Last name is required. 
+                </div>
+            </mat-error>
+        </mat-form-field>  
+
+        <div class="field-wrapper">
+            <mat-form-field class="date-birth-field">
+                <input matInput [matDatepicker]="picker" placeholder="Birth date" formControlName="birthDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+    
+            <mat-form-field class="phone-field">
+                <input  matInput placeholder="Phone" formControlName="phone" >
+            </mat-form-field>    
+        </div>
+
+        <div class="field-wrapper">
+            <mat-form-field class="country-city-region">
+                <input matInput placeholder="Country" formControlName="country">
+            </mat-form-field> 
+    
+            <mat-form-field class="country-city-region">
+                <input matInput placeholder="City" formControlName="city">
+            </mat-form-field>
+            
+            <mat-form-field class="country-city-region">
+                <input matInput placeholder="Region" formControlName="region">
+            </mat-form-field>
+        </div>
+
+        
+        <div class="field-wrapper">
+            <mat-form-field class="address-field">
+                <input matInput placeholder="Address" formControlName="address">
+            </mat-form-field>
+    
+            <mat-form-field class="post-code-field">
+                <input matInput placeholder="Postal code" formControlName="postalCode" >
+            </mat-form-field>
+        </div>
+       
+             
+        <div class="saveButton">
+            <button mat-button  [disabled]="profileForm.invalid">Create</button>
+        </div>
+        </form>
+    <div class="example-container">

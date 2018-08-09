@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, RequestMethod } from './data.service';
+import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
 import { Language } from '../models/language';
 
@@ -8,7 +8,7 @@ import { Language } from '../models/language';
 })
 export class LanguageService {
   api: string;
-  constructor(private dataService: DataService) { 
+  constructor(private dataService: HttpService) { 
     this.api = "languages";
   }
 

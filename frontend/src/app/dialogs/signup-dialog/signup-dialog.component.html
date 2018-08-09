@@ -53,7 +53,7 @@
       Password <strong>cannot</strong> be more than 30 characters long
     </mat-error>
   </mat-form-field>
-
+  
   <mat-form-field>
     <input id="repeatPassword" name="repeatPassword" type="password"
     appConfirmEqualValidator="password"
@@ -68,6 +68,17 @@
         Password missmatch
     </mat-error>
   </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Select your role">
+      <mat-option value="option">Manager</mat-option>
+      <mat-option value="option">Translator</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  
+
 
   <mat-error *ngIf="firebaseError">
     {{firebaseError}}
