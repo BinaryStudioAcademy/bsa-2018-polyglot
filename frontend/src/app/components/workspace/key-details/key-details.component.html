@@ -1,20 +1,20 @@
-<div class="d-flex flex-column" style="width: 54%">
+<div class="d-flex flex-column" style="width: 59%">
   <table mat-table [dataSource]="translationsDataSource" class="mat-elevation-z0 translations-list">
     <ng-container matColumnDef="language">
-      <td mat-cell *matCellDef="let translation"> {{translation.language}} </td>
+      <td style="width:15% ; padding: 10px; text-align: center" mat-cell *matCellDef="let translation"> {{translation.language}} </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="translatedValue">
       <!-- <td [hidden]="true" disabled style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation"> {{translation.translatedValue}}</td> -->
-      <td [hidden]="false" style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation">
+      <td style="width:75% ; padding: 10px" mat-cell *matCellDef="let translation">
         <div *ngIf=!isEdit> {{translation.translatedValue}}
           </div>
           <div *ngIf=isEdit>
               <mat-form-field  style="width: 80%" class="example-full-width">
                   <textarea   matInput placeholder="Edit" value={{translation.translatedValue}}></textarea>
                 </mat-form-field>
-          </div>
+              </div>
         </td>
     </ng-container>
     
@@ -33,7 +33,7 @@
 
 <mat-divider [vertical]="true" style="margin-right: 20px;width:1%"></mat-divider>
 
-<mat-tab-group flex style="width:45%">
+<mat-tab-group flex style="width:40%">
   <mat-tab label="History"> History </mat-tab>
   <mat-tab label="Details"> Details </mat-tab>
   <mat-tab label="Comments"> Comments </mat-tab>
