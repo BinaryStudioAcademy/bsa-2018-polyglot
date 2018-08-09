@@ -47,7 +47,7 @@ import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
-import {MatSortModule} from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchService } from './services/search.service';
@@ -71,13 +71,11 @@ import { SearchService } from './services/search.service';
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
-    ManagerProfileComponent,
     TagsComponent,
     NewProjectComponent,
-    ManagerComponent,
     ManagerProfileComponent,
     TeamComponent,
-    SearchComponent
+    SearchComponent,
     CropperComponent
 
   ],
@@ -99,8 +97,7 @@ import { SearchService } from './services/search.service';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
-    
+    MatProgressSpinnerModule,
     ImageCropperModule
     
   ],
