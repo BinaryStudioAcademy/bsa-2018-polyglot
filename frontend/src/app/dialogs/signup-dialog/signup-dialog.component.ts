@@ -22,6 +22,7 @@ export class SignupDialogComponent implements OnInit {
     this.user = {
       email: '',
       password: '',
+      repeatPass: '',
       fullname: ''
     };
   }

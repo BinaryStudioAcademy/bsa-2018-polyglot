@@ -18,6 +18,7 @@ import { TranslatorProfileComponent } from '../../components/translatorProfile/t
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
 import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
 import { LandingGuard } from '../../services/guards/landing-guard.service';
+import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'profile', component: ManagerProfileComponent},
   { path: 'profile/newproject', component: NewProjectComponent },
+  { path: 'profile/settings/:id', component: UserSettingsComponent },
 
   {
     path: 'dashboard',

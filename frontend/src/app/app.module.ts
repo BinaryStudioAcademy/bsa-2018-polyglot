@@ -50,7 +50,10 @@ import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material
 import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
-import { SearchService } from './services/search.service';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+
+
 
 @NgModule({
   declarations: [
@@ -76,7 +79,9 @@ import { SearchService } from './services/search.service';
     ManagerProfileComponent,
     TeamComponent,
     SearchComponent,
-    CropperComponent
+    CropperComponent,
+    UserSettingsComponent,
+    ConfirmEqualValidatorDirective
 
   ],
   imports: [
@@ -90,7 +95,6 @@ import { SearchService } from './services/search.service';
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
     MatChipsModule,
     ngfModule,
     WebStorageModule,
