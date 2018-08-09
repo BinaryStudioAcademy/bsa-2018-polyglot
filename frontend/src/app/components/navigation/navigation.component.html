@@ -14,7 +14,7 @@
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
       <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
