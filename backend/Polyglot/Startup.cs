@@ -60,7 +60,7 @@ namespace Polyglot
            
 
             services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
-                        options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                        options.ConnectionString = Configuration.GetSection("MongoConnection:MongoConnectionString").Value;
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
             services.AddTransient<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
