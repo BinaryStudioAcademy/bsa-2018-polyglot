@@ -9,8 +9,9 @@
       <!-- <td [hidden]="true" disabled style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation"> {{translation.translatedValue}}</td> -->
       <td [hidden]="false" style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation">
         <div>
-          <mat-form-field style="width: 80%" class="example-full-width">
-            <textarea disabled matTextareaAutosize style="height: auto" matInput placeholder="Edit" [value]="translation.translatedValue"></textarea>
+          <mat-form-field style="width: 80%">
+            <textarea class="translation-text" matTextareaAutosize style="height: auto" matInput placeholder="Edit"
+              [value]="translation.translatedValue"></textarea>
           </mat-form-field>
         </div>
       </td>
