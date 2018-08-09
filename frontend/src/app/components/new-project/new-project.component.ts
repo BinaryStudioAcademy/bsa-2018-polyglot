@@ -24,43 +24,22 @@ export class NewProjectComponent implements OnInit {
   
   ngOnInit() {
     this.createProjectForm();
-    this.languages = [
-    {
-      code: 'en',
-      id: undefined,
-      name: 'English'
-    },
-    {
-      code: 'fr',
-      id: undefined,
-      name: 'French'
-    },{
-      code: 'pl',
-      id: undefined,
-      name: 'Polish'
-    }, ];
 
-    //if table with languages have values, it will uncommoment
-    // this.languageService.getAll()
-    //   .subscribe(
-    //   (d)=> {
-    //     this.languages = d;
-    //     this.createProjectForm();
-    //     console.log(d);
-    //   },
-    //   err => {
-    //     console.log('err', err);
-    //   }
-    // );  
+    this.languageService.getAll()
+      .subscribe(
+      (d)=> {
+        this.languages = d;
+        this.createProjectForm();
+      },
+      err => {
+        console.log('err', err);
+      }
+    );  
   }
 
   project: Project;
   projectForm: FormGroup;
   languages: Array<Language>;
-  
-  // public errorMessages = {
-  //   name: 'This field is required'
-  // };
 
   createProjectForm(): void {
     
