@@ -169,7 +169,7 @@ export class SearchService {
                   definition: "lanGuAge-select",
                   translatorRights: undefined
                 }],
-        teamId: 88
+        teamId: 82
       },
       {
         id: 22,
