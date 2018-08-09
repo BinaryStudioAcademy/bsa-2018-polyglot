@@ -44,8 +44,8 @@ namespace Polyglot
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+          /*  string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));*/
 
 
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
@@ -64,7 +64,7 @@ namespace Polyglot
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
             services.AddTransient<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddTransient<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
+            services.AddScoped<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
 
@@ -111,6 +111,7 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<TranslatorLanguage, int>), typeof(CRUDService<TranslatorLanguage>));
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));
             services.AddScoped(typeof(ICRUDService<UserProfile, int>), typeof(CRUDService<UserProfile>));
+            services.AddScoped(typeof(ICRUDService<ComplexString, int>), typeof(CRUDService<ComplexString>));
             // ======================================================================================================
 
         }
@@ -124,11 +125,11 @@ namespace Polyglot
             }
 
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+           /* using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
                 context.Database.EnsureCreated();
-            }
+            }*/
 
             app.UseCors("AllowAll");
             /*

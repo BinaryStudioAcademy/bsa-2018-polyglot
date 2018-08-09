@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Polyglot.DataAccess.Entities;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Polyglot.DataAccess.NoSQL_Models
 {
-    public class ComplexString : IEntity
+    public class ComplexString : Entity
     {
 		public string Key { get; set; }
 		public int ProjectId { get; set; }

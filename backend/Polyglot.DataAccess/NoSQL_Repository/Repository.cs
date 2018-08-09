@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Polyglot.DataAccess.NoSQL_Repository
 {
     public abstract class Repository<TEntity> : IRepository<TEntity>
-        where TEntity : IEntity
+        where TEntity : Entity
     {
         protected abstract IMongoCollection<TEntity> Collection { get; }
 
