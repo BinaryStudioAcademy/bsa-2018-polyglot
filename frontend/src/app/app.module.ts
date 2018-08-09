@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { MatChipsModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
@@ -29,7 +30,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
+import { AuthGuard } from './services/guards/auth-guard.service';
 import { UploadImageComponent } from './components/upload-image/upload-image.component';
 import { ngfModule } from 'angular-file';
 import { LandingComponent } from './components/landing/landing.component';
@@ -37,9 +38,12 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
-import { ManagerComponent } from './components/manager/manager.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
+import { TagsComponent } from './components/tags/tags.component'
+import { ImageCropperModule } from "ngx-img-cropper";
+import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
@@ -47,7 +51,6 @@ import {MatSortModule} from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchService } from './services/search.service';
-
 
 @NgModule({
   declarations: [
@@ -62,16 +65,21 @@ import { SearchService } from './services/search.service';
     DashboardComponent,
     NoFoundComponent,
     AppComponent,
-
+    NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
     UploadImageComponent,
     FooterComponent,
+    StringDialogComponent,
+    ManagerProfileComponent,
+    TagsComponent,
     NewProjectComponent,
     ManagerComponent,
     ManagerProfileComponent,
     TeamComponent,
     SearchComponent
+    CropperComponent
+
   ],
   imports: [
     BrowserModule,
@@ -85,6 +93,7 @@ import { SearchService } from './services/search.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AppRoutingModule,
+    MatChipsModule,
     ngfModule,
     WebStorageModule,
     MatTableModule,
@@ -92,9 +101,11 @@ import { SearchService } from './services/search.service';
     MatSortModule,
     MatProgressSpinnerModule
     
+    ImageCropperModule
+    
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard, SearchService],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
+  providers: [HttpService, AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 
 

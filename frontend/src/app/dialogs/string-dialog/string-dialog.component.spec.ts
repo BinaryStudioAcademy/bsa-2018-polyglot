@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManagerComponent } from './manager.component';
+import { StringDialogComponent } from './string-dialog.component';
 
-describe('ManagerComponent', () => {
-  let component: ManagerComponent;
-  let fixture: ComponentFixture<ManagerComponent>;
+describe('StringDialogComponent', () => {
+  let component: StringDialogComponent;
+  let fixture: ComponentFixture<StringDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManagerComponent ]
+      declarations: [ StringDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManagerComponent);
+    fixture = TestBed.createComponent(StringDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
