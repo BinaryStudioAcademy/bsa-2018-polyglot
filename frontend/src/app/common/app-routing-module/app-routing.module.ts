@@ -37,11 +37,6 @@ const routes: Routes = [
     component: WorkspaceComponent,
     children: [
       {
-        path: '',
-        redirectTo: 'key/',
-        pathMatch: 'full'
-      },
-      {
         path: 'key/:keyId',
         component: KeyDetailsComponent
       }

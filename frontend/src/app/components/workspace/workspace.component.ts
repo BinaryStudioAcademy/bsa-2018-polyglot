@@ -63,6 +63,22 @@ let MOCK_KEYS = [
     id: 3,
     name: 'CONFIRM',
     originalValue: 'confirm'
+  },
+  {
+    id: 4,
+    name: 'HELLO',
+    originalValue: 'hello',
+    tags: ['it', 'header', 'app', 'workspace', 'lection1']
+  },
+  {
+    id: 5,
+    name: 'CANCEL',
+    originalValue: 'cancel'
+  },
+  {
+    id: 6,
+    name: 'CONFIRM',
+    originalValue: 'confirm'
   }
 ];
 
