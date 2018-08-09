@@ -22,7 +22,7 @@
       <img mat-card-image src={{card.imageUrl}} alt="Photo of a project">
       <mat-card-content>{{card.description}}</mat-card-content>
       <mat-card-actions class="card-buttons">
-        <button mat-raised-button color="primary">WORKSPACE</button>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
         <div fxFlex></div>
         <button mat-raised-button color="primary">DETAILS</button>
       </mat-card-actions>

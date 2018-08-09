@@ -11,7 +11,6 @@ import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 
-
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
@@ -38,6 +37,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { KeyComponent } from './components/workspace/key/key.component';
+import { KeyDetailsComponent } from './components/workspace/key-details/key-details.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
@@ -71,6 +73,10 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
+    FooterComponent,
+    WorkspaceComponent,
+    KeyComponent,
+    KeyDetailsComponent,
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,

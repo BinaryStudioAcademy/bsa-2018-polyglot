@@ -1,4 +1,8 @@
 <div>
   <img-cropper #cropper [image]="imageData" [settings]="cropperSettings"></img-cropper><br>
-  <button mat-raised-button color="primary" (click) = "uploadImage()">Upload</button>
 </div>
+<div class="file-upload">
+  <input type="file" (change)="fileChangeListener($event)">
+  <span>Choose photo</span>
+</div>
+<button class=btn (click)="uploadImage()">Upload</button>
