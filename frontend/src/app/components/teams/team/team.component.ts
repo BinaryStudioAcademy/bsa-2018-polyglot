@@ -33,10 +33,13 @@ export class TeamComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
 
   constructor(private searchService: SearchService) {
-    //debugger;
+    this.getTranslators();
+  }
+
+  getTranslators(){
+    this.teammates = [];
     this.searchService.GetTranslatorsByTeam(this.id)
         .subscribe((data: Teammate[]) => {
-          //debugger;
           this.teammates = data;
           this.dataSource = new MatTableDataSource(this.teammates);
           console.log(this.teammates);
@@ -57,6 +60,7 @@ export class TeamComponent implements OnInit {
   }
 
   searchTranslators() {
+    this.getTranslators();
     this.searchService.FindTranslatorsByEmail(this.emailToSearch)
         .subscribe((data: Teammate[]) => {
           this.teammates = data.concat(this.teammates);
@@ -67,7 +71,6 @@ export class TeamComponent implements OnInit {
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
-    //debugger;
     let teammate = this.teammates.find(t => t.id === id);
     if(!teammate)
       return false;
