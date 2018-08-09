@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'profile', component: ManagerProfileComponent},
   { path: 'profile/newproject', component: NewProjectComponent },
-  { path: 'profile/settings/:id', component: UserSettingsComponent },
+  { path: 'profile/settings', component: UserSettingsComponent },
 
   {
     path: 'dashboard',
