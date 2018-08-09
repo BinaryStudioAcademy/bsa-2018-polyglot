@@ -1,12 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import { MatTable } from '@angular/material';
 import { ErrorStateMatcher} from '@angular/material/core';
+import { Observable, of } from 'rxjs';
+import { Sort} from '@angular/material';
 import { Translator } from '../../../models/translator';
 import { UserProfile } from '../../../models/user-profile';
 import { Rating } from '../../../models/rating';
+import { SearchService } from '../../../services/search.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
-const translators: Translator[] = 
+const mockTranslators: Translator[] = 
 [
   {
       id: 1,
@@ -139,7 +144,51 @@ const translators: Translator[] =
         avatarUrl: ''
       },
       rating: null,
-      teamTranslators: null
+      teamTranslators: [{
+        id: 1,
+        teamId: 1,
+        team: null,
+        translatorId: 6,
+        translator: null,
+        translatorRights: null
+      },
+      {
+        id: 2,
+        teamId: 1,
+        team: null,
+        translatorId: 5,
+        translator: null,
+        translatorRights: null
+      },
+      {
+        id: 3,
+        teamId: 1,
+        team: null,
+        translatorId: 7,
+        translator: null,
+        translatorRights: [
+          {
+            teamTranslatorId: 3,
+            teamTranslator: null,
+            rightId: 1,
+            right: {
+              id: 1,
+              definition: "key",
+              translatorRights: null
+            }
+          },
+          {
+            teamTranslatorId: 3,
+            teamTranslator: null,
+            rightId: 2,
+            right: {
+              id: 2,
+              definition: "lanGuAge-add  ",
+              translatorRights: null
+            }
+          }
+        ]
+      }]
   }
   
 ];
@@ -152,29 +201,35 @@ const translators: Translator[] =
 export class TeamComponent implements OnInit {
 
   id: number = 88;
+  translators: Translator[] = mockTranslators;
   emailToSearch: string;
-  displayedColumns: string[] = ['id', 'email', 'rights', 'options' ];
-  dataSource = new MatTableDataSource(translators);
-
+  displayedColumns: string[] = ['name', 'email', 'rights', 'options' ];
+  dataSource = new MatTableDataSource(this.translators);
   emailFormControl = new FormControl('', [
     Validators.email,
   ]);
+  searchResultRecieved: boolean = false;
+  ckb: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<any>;
 
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  constructor(private searchService: SearchService) {
   }
 
-
-
-
+  ngOnInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+  ngAfterViewInit() {
+    // If the user changes the sort order, reset back to the first page.
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  }
+  
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   
-
 }
