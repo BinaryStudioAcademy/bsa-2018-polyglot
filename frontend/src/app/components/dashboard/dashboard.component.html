@@ -1,12 +1,11 @@
-<app-navigation></app-navigation>
-<nav mat-tab-nav-bar aria-label="navigation links">
-    <a mat-tab-link
-        *ngFor="let routeLink of routeLinks; let i = index"
-         [routerLink]="routeLink.link"
-         [active]="activeLinkIndex === i"
-         (click)="activeLinkIndex = i">
-         {{routeLink.label}}
-     </a>
-</nav>
-
-<router-outlet></router-outlet>
+<div class="container">
+    <nav mat-tab-nav-bar aria-label="navigation links" class="nav-tabs">
+        <a mat-tab-link *ngFor="let routeLink of routeLinks" [routerLink]="routeLink.link" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+            {{routeLink.label}}
+        </a>
+    </nav>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

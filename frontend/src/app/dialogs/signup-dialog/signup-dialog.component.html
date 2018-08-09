@@ -1,34 +1,64 @@
-<form (submit)="onSignUpFormSubmit(user)" class="d-flex flex-column px-3" action="javascript:void(0)">
+<form (submit)="onSignUpFormSubmit(user, form)" class="d-flex flex-column px-3" action="javascript:void(0)" #form="ngForm">
 
   <h4 class="text-center">Sign Up</h4>
   <mat-form-field class="">
     <input id="fullname" name="fullname" type="text" [(ngModel)]="user.fullname" required matInput placeholder="Your Fullname"
-      #fullname="ngModel" autocomplete="yes">
+      #fullname="ngModel" autocomplete="on" maxlength="50">
     <mat-error *ngIf="fullname.errors && fullname.errors.required">
       Fullname is
       <strong>required</strong>
+    </mat-error>
+
+    <mat-error *ngIf="fullname.errors && fullname.errors.maxlength">
+      Fullname <strong>cannot</strong> be more than 50 characters long
     </mat-error>
   </mat-form-field>
 
   <mat-form-field class="">
     <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
-      #email="ngModel" autocomplete="yes">
+      #email="ngModel" autocomplete="on" 
+      pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+      maxlength="25">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>
+    </mat-error>
+
+    <mat-error *ngIf="email.errors && email.errors.pattern">
+      Email is
+      <strong>not valid</strong>
+    </mat-error>
+
+    <mat-error *ngIf="email.errors && email.errors.maxlength">
+      Email <strong>cannot</strong> be more than 25 characters long
     </mat-error>
   </mat-form-field>
 
   <mat-form-field class="">
     <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
-      #password="ngModel" autocomplete="yes">
+      #password="ngModel"
+      minlength="6"
+      maxlength="30">
     <mat-error *ngIf="password.errors && password.errors.required">
       Password is
       <strong>required</strong>
     </mat-error>
+
+    <mat-error *ngIf="password.errors && password.errors.minlength">
+      Password <strong>must be</strong> at least 6 characters long
+    </mat-error>
+
+    <mat-error *ngIf="password.errors && password.errors.maxlength">
+      Password <strong>cannot</strong> be more than 30 characters long
+    </mat-error>
   </mat-form-field>
 
-  <button mat-button type="submit">Sign Up!</button>
+  <mat-error *ngIf="firebaseError">
+    {{firebaseError}}
+  </mat-error>
 
-  <button mat-button type="button" (click)="onGoogleClick()">Sign up using Google</button>
+  <button class="simplebtn" mat-button type="submit">Sign Up!</button>
+
+  <button class="socialbtn" mat-button type="button" (click)="onGoogleClick()"><img class="btnlogo" src="/assets/images/googlelogo.png" alt="G" height="30">Sign Up using Google</button>
+  <button class="socialbtn" mat-button type="button" (click)="onFacebookClick()"><img class="btnlogo" src="/assets/images/facebooklogo.png" alt="F" height="30">Sign Up using Facebook</button>
 </form>

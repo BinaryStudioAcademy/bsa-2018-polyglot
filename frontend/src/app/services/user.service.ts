@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, RequestMethod } from './data.service';
+import { HttpService, RequestMethod } from './http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,7 @@ import { DataService, RequestMethod } from './data.service';
 export class UserService {
 
   private endpoint: string = "users";
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: HttpService) { }
 
    getAll(){
     return this.dataService.sendRequest(RequestMethod.Get, this.endpoint);

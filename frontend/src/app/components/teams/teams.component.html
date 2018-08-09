@@ -1,3 +1,37 @@
-<p>
-  teams works!
-</p>
+<form class="search-form">
+
+  <mat-form-field class="search-full-width">
+
+    <input type="search" matInput placeholder="Search">
+    <button mat-raised-button color="primary" matSuffix>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+</form>
+<div class="container" fxLayout="wrap row" fxLayout.xs="column" fxLayoutAlign="space-evenly" fxLayoutAlign.xs="center">
+  <div fxFlex="30%"  *ngFor="let team of teams">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{team.text}}</mat-card-title>
+        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="https://orig00.deviantart.net/a647/f/2014/039/e/c/batman_arkham_trilogy_batman_s_team_by_tfprime1114-d75nfiy.jpg"
+        alt="Photo of a team">
+      <mat-card-content>
+        These teams are Business Development, Communities, Digital & Brand and Journal, Events, and Projects.
+      </mat-card-content>
+      <mat-card-actions class="card-buttons">
+        <button mat-raised-button color="primary">WORKSPACE</button>
+        <div fxFlex></div>
+        <button mat-raised-button color="primary">DETAILS</button>
+      </mat-card-actions>
+      <mat-progress-bar mode="determinate" value={{team.rating}}></mat-progress-bar>
+      <span class="progress-span">{{team.rating}} experience </span>
+    </mat-card>
+  </div>
+  <button mat-fab color="primary" class="button-add">
+    <mat-icon aria-label="Add button">add</mat-icon>
+  </button>
+</div>
