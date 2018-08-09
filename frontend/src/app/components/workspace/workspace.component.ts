@@ -97,10 +97,10 @@ let MOCK_PROJECT = (id: number): Project => ({
   },
   teams: [],
   translations: [
-    { Id: 1, TanslationKey: 'Hello' },
-    { Id: 2, TanslationKey: 'Cancel' },
-    { Id: 3, TanslationKey: 'Confirm' },
-    { Id: 4, TanslationKey: 'Delete' }
+    { id: 1, tanslationKey: 'Hello' },
+    { id: 2, tanslationKey: 'Cancel' },
+    { id: 3, tanslationKey: 'Confirm' },
+    { id: 4, tanslationKey: 'Delete' }
   ],
   projectLanguageses: [],
   projectGlossaries: [],

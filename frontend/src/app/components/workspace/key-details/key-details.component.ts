@@ -60,7 +60,7 @@ const MOCK_KEY_DETAILS = {
   translations: [
     {
       language: 'en',
-      translatedValue: 'Since the table optimizes for performance, it will not automatically check for changes to the data array. Instead, when objects are added, removed, or moved on the data array, you can trigger an update to the table',
+      translatedValue: 'Hello',
       userId: 2,
       createdOn: new Date(2018, 1, 1),
       history: [
