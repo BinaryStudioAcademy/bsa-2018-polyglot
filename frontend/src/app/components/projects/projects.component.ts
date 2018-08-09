@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Project } from '../../models/project';
+import { ProjectService } from '../../services/project.service';
 
 
-export interface Project {
-
-  text: string;
-  progress: number;
-}
 
 @Component({
   selector: 'app-projects',
@@ -14,19 +11,13 @@ export interface Project {
 })
 export class ProjectsComponent implements OnInit {
 
-  cards: Project[] = [
-    { text: 'Batman', progress: 40 },
-    { text: 'Superman', progress: 30 },
-    { text: 'Angular', progress: 29 },
-    { text: 'Justice', progress: 85 },
-    { text: 'Valkiriya', progress: 100 }
 
-  ];
-
-
-  constructor() { }
+  constructor(private projectService: ProjectService) { }
+  
+  cards : Project[];
 
   ngOnInit() {
+	this.projectService.getAll().subscribe(pr => this.cards = pr);
   }
 
 }
