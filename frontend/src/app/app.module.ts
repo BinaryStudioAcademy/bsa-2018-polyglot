@@ -41,7 +41,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
-import { TagsComponent } from './components/tags/tags.component'
+import { TagsComponent } from './components/tags/tags.component';
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
