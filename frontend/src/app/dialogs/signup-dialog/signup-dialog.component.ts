@@ -28,16 +28,13 @@ export class SignupDialogComponent implements OnInit {
   }
 
   async onSignUpFormSubmit(user: IUserSignUp, form) {
-    console.log('outside');
     if (form.valid) {
-      console.log('inside');
-      /*
       await this.authService.signUpRegular(user.email, user.password, user.fullname).catch(
         (error) => this.firebaseError = error.message
       );
       if(this.authService.isLoggedIn()){
         this.dialogRef.close();
-      }*/
+      }
     }
   }
 

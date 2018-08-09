@@ -38,7 +38,8 @@
     <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
       #password="ngModel"
       minlength="6"
-      maxlength="30">
+      maxlength="30"
+      (input)="repeatPassword.control.updateValueAndValidity()">
     <mat-error *ngIf="password.errors && password.errors.required">
       Password is
       <strong>required</strong>
