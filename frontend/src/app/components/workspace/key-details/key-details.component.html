@@ -8,7 +8,10 @@
     <ng-container matColumnDef="translatedValue">
       <!-- <td [hidden]="true" disabled style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation"> {{translation.translatedValue}}</td> -->
       <td [hidden]="false" style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation">
-        <div>
+        <div style="width: 90%">
+            {{translation.translatedValue}}
+        </div>
+        <div [hidden]="true">
           <mat-form-field style="width: 80%">
             <textarea class="translation-text" matTextareaAutosize style="height: auto" matInput placeholder="Edit"
               [value]="translation.translatedValue"></textarea>
@@ -32,9 +35,9 @@
   <mat-paginator [pageSize]='10' Buttons></mat-paginator>
 </mat-card>
 
-<mat-card class="m-1 p-1 px-0 grow-1 translations-details">
-  <mat-tab-group flex>
-    <mat-tab label="History"> History </mat-tab>
+<mat-card class="my-1 ml-1 p-1 px-0 grow-1 translations-details" >
+  <mat-tab-group flex style="padding: 0; ">
+    <mat-tab label="History" style="padding: 0; "> History </mat-tab>
     <mat-tab label="Details"> Details </mat-tab>
     <mat-tab label="Comments"> Comments </mat-tab>
     <mat-tab label="Optional Translation"> Optional Translation </mat-tab>
