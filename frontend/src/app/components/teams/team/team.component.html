@@ -40,10 +40,10 @@
   <ng-container matColumnDef="rights">
       <th mat-header-cell *matHeaderCellDef > Rights </th>
       <td  mat-cell *matCellDef="let element">
-          <div *ngIf="element.teamId === id" class="center">
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-add')" (change)="method($event, element.id)"> Add new language</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'key')" (change)="method($event, element.id)"> Add new key</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-select')" (change)="method($event, element.id)"> Select new language</mat-checkbox>
+          <div *ngIf="element.teamId === id" id="right-checkboxes">
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-add')" (change)="changeTranslatorRight($event, element.id)"> Add new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'key')" (change)="changeTranslatorRight($event, element.id)"> Add new key</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-select')" (change)="changeTranslatorRight($event, element.id)"> Select new language</mat-checkbox>
             </div>
       </td>
   </ng-container>

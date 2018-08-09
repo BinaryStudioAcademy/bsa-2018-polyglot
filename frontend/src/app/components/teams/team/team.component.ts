@@ -83,8 +83,7 @@ export class TeamComponent implements OnInit {
   }
 
   changeTranslatorRight(e, id){
-    debugger;
-    if(e.target.checked)
+    if(e.checked)
       {
         // add right
       }
