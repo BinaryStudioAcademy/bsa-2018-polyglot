@@ -1,4 +1,3 @@
-
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar class="example-toolbar">
 
@@ -13,14 +12,40 @@
     </a>
 
     <span class="example-spacer"></span>
-    <div fxShow="true" fxHide.lt-sm="true">
-      <a mat-button routerLink="/about-us" routerLinkActive="active" >About us</a>
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a mat-button routerLink="/contact" routerLinkActive="active" >Contact</a>
+    <div fxShow="true" fxHide.lt-md="true">
+      <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
-      <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()" routerLinkActive="active">Logout </a>
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/profile" routerLinkActive="active">Profile</a>
+      <button mat-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
+        <img src="/assets/images/user-ava.png" class="profile-small-image">
+      </button>
+
+      <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="28">
+        <mat-card class="profile-card">
+          <mat-card-header>
+            <mat-card-title class="profile-card-main">
+              <img src="/assets/images/user-ava.png" class="profile-big-image">
+              <div style="margin-left: 30px;">
+                <h4>Sasha Pushkin</h4>
+                <mat-card-subtitle>test@example.com</mat-card-subtitle>
+                <p>
+                  <i>Manager</i>
+                </p>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <hr>
+          <mat-card-content class="profile-card-navigation">
+            <a mat-button color="primary" class="profile-card-navigation-button" routerLink="/profile">Profile</a>
+            <a mat-button color="primary" class="profile-card-navigation-button">Settings</a>
+            <a mat-button color="warn" (click)="onLogoutClick()" class="profile-card-navigation-button">Logout</a>
+          </mat-card-content>
+        </mat-card>
+      </mde-popover>
+
+
       <span class="toolbar-spacer"></span>
 
     </div>
