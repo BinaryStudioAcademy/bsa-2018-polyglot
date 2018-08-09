@@ -60,11 +60,9 @@ export class TeamComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  searchTranslators($event) {
-    let email: string = $event;
-    console.log(email);
+  searchTranslators() {
     this.getTranslators();
-    this.searchService.FindTranslatorsByEmail(email)
+    this.searchService.FindTranslatorsByEmail(this.emailToSearch)
         .subscribe((data: Teammate[]) => {
           this.teammates = data.concat(this.teammates);
           this.dataSource = new MatTableDataSource(this.teammates);
