@@ -183,7 +183,7 @@ const mockTranslators: Translator[] =
             rightId: 2,
             right: {
               id: 2,
-              definition: "lanGuAge-add  ",
+              definition: "lanGuAge-add",
               translatorRights: null
             }
           }
@@ -242,23 +242,28 @@ export class TeamComponent implements OnInit {
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
-    debugger;
+    if(id == 7){
+      debugger;
+    }
     let targetTranslator = this.translators.find(t => t.id === id);
     if(!targetTranslator)
       return false;
     
-      try{
-        return targetTranslator
+      if(targetTranslator.teamTranslators == null){
+        return false;
+      }
+      else{
+        let team = targetTranslator
         .teamTranslators
-        .find(t => t.translatorId === id)
-        .translatorRights
-        .find(r => r.right.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
-        != null;
-
-      } catch(error) {
-        console.log(error.message);
-    }
-      return false;
+        .find(t => t.translatorId === id);
+        if(team == null){
+          return false;
+        }
+        else{
+          return team.translatorRights
+        .find(r => r.right.definition.trim().toLowerCase() === rightName.trim().toLowerCase()) != null;
+        }
+      } 
   }
 
   addRightToTranslator(id: number, rightName: string) {

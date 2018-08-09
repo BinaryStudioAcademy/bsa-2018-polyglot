@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -98,7 +98,8 @@ import { SearchService } from './services/search.service';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatCheckboxModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
