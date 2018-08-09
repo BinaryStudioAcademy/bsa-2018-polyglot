@@ -44,8 +44,8 @@ namespace Polyglot
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-          /*  string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));*/
+            string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
 
 
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
@@ -125,11 +125,11 @@ namespace Polyglot
             }
 
 
-           /* using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
                 context.Database.EnsureCreated();
-            }*/
+            }
 
             app.UseCors("AllowAll");
             /*
