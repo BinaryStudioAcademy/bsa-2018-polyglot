@@ -11,7 +11,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FilesController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Polyglot.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/Files
+        // GET: Files
         [HttpGet]
         public async Task<IActionResult> GetAllFiles()
         {
@@ -33,7 +33,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<FileDTO>>(projects));
         }
 
-        // GET: api/Files/5
+        // GET: Files/5
         [HttpGet("{id}", Name = "GetFile")]
         public async Task<IActionResult> GetFile(int id)
         {
@@ -42,7 +42,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<FileDTO>(project));
         }
 
-        // POST: api/Files
+        // POST: Files
         public async Task<IActionResult> AddFile([FromBody]FileDTO project)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
                 mapper.Map<FileDTO>(entity));
         }
 
-        // PUT: api/Files/5
+        // PUT: Files/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyFile(int id, [FromBody]FileDTO project)
         {
@@ -66,7 +66,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<FileDTO>(entity));
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {

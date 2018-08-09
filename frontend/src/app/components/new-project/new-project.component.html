@@ -1,30 +1,58 @@
 <div class="form-container">
 <h2>Create new project</h2>
 <form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
-    <mat-form-field class="project-full-width">
-        <input matInput placeholder="Enter name" formControlName="name" required>
-        <!-- <mat-error *ngIf="name.required">{{getErrorMessage()}}</mat-error> -->
-
+    <mat-form-field class="field-full-width">
+        <input matInput placeholder="Enter name" formControlName="name" required minlength="4"
+        pattern="[a-zA-Z ]*">
+        <mat-error class="errors" *ngIf="name.invalid && (name.dirty || name.touched)">
+            <div *ngIf="name.errors.required">
+                Name is required. 
+            </div>
+            <div *ngIf="name.errors.minlength">
+                Name must be at least 4 characters long. 
+            </div>
+            <div *ngIf="name.errors.pattern">
+                Name must contain only Latin characters. 
+            </div>
+        </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="project-full-width">
-        <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
+    <mat-form-field class="field-full-width">
+        <textarea class="description-text-area" matInput placeholder="Enter description" formControlName="description" pattern="[a-zA-Z ]*"
+        maxlength="500"></textarea>
+        <mat-error *ngIf="description.invalid && (description.dirty || description.touched)">
+            <div *ngIf="description.errors.pattern">
+                Description must contain only Latin characters
+            </div>
+        </mat-error>
+        <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
     </mat-form-field>
 
     <div class="field-choose-wraper">
         <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Choose technology" formControlName="technology">
-                <mat-option value="JS">JS</mat-option>
-                <mat-option value = "Angular">Angular</mat-option> 
+            <mat-select class="mat-select" placeholder="Technology" formControlName="technology" required>
+                <mat-option *ngFor="let technology of values()" [value]="technology">
+                        {{technology}}
+                </mat-option>
             </mat-select>
+            <mat-error *ngIf="technology.invalid && (technology.dirty || technology.touched)">
+                    <div *ngIf="technology.errors.required">
+                        Technology is required.
+                    </div>
+            </mat-error>
         </mat-form-field>
         
          <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Choose main language" formControlName="mainLanguage">
+            <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage" required>
                 <mat-option *ngFor="let language of languages" [value]="language">
                     {{language.name}}
                 </mat-option>
             </mat-select>
+            <mat-error *ngIf="technology.invalid && (technology.dirty || technology.touched)">
+                    <div *ngIf="technology.errors.required">
+                        Main language is required.
+                    </div>
+            </mat-error>
           </mat-form-field>
     </div>  
 

@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.Repositories;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
+//using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot
 {
@@ -53,12 +47,29 @@ namespace Polyglot
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
 
+
+            services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
+                new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
+
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             // automapper
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             //  uow
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
+           
+
+            services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
+                        options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                        options.Database = Configuration.GetSection("MongoConnection:Database").Value;
+            });
+            services.AddTransient<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
+            services.AddTransient<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IMongoDataContext, MongoDataContext>();
+
+          
+          
 #warning костыль
             //repo
             services.AddScoped(typeof(IRepository<File>), typeof(Repository<File>));
@@ -75,7 +86,7 @@ namespace Polyglot
             services.AddScoped(typeof(IRepository<Tag>), typeof(Repository<Tag>));
             services.AddScoped(typeof(IRepository<Team>), typeof(Repository<Team>));
             services.AddScoped(typeof(IRepository<TeamTranslator>), typeof(Repository<TeamTranslator>));
-            services.AddScoped(typeof(IRepository<Translation>), typeof(Repository<Translation>));
+            services.AddScoped(typeof(IRepository<DataAccess.Entities.Translation>), typeof(Repository<DataAccess.Entities.Translation>));
             services.AddScoped(typeof(IRepository<Translator>), typeof(Repository<Translator>));
             services.AddScoped(typeof(IRepository<TranslatorLanguage>), typeof(Repository<TranslatorLanguage>));
             services.AddScoped(typeof(IRepository<TranslatorRight>), typeof(Repository<TranslatorRight>));
@@ -95,13 +106,12 @@ namespace Polyglot
             services.AddScoped(typeof(ICRUDService<Tag, int>), typeof(CRUDService<Tag>));
             services.AddScoped(typeof(ICRUDService<Team, int>), typeof(CRUDService<Team>));
             services.AddScoped(typeof(ICRUDService<TeamTranslator, int>), typeof(CRUDService<TeamTranslator>));
-            services.AddScoped(typeof(ICRUDService<Translation, int>), typeof(CRUDService<Translation>));
+            services.AddScoped(typeof(ICRUDService<DataAccess.Entities.Translation, int>), typeof(CRUDService<DataAccess.Entities.Translation>));
             services.AddScoped(typeof(ICRUDService<Translator, int>), typeof(CRUDService<Translator>));
             services.AddScoped(typeof(ICRUDService<TranslatorLanguage, int>), typeof(CRUDService<TranslatorLanguage>));
             services.AddScoped(typeof(ICRUDService<TranslatorRight, int>), typeof(CRUDService<TranslatorRight>));
             services.AddScoped(typeof(ICRUDService<UserProfile, int>), typeof(CRUDService<UserProfile>));
             // ======================================================================================================
-
 
         }
 

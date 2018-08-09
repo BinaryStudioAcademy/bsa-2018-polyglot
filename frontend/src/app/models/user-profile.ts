@@ -1,6 +1,6 @@
 export interface UserProfile {
-    id: number;
-    firstName: string;
+    id?: number;
+    firstName?: string;
     lastName: string;
     birthDate: Date;
     registrationDate: Date;
