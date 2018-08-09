@@ -231,5 +231,42 @@ export class TeamComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  
+  searchTranslators() {
+    this.searchService.FindTranslatorsByEmail("")
+        .subscribe((data: Translator[]) => {
+          this.translators = data.concat(this.translators);
+          this.dataSource = new MatTableDataSource(this.translators);
+          this.dataSource.paginator = this.paginator;
+          this.paginator.pageIndex = 0;
+        });
+  }
+
+  checkTranslatorRight(id: number, rightName: string) : boolean{
+    debugger;
+    let targetTranslator = this.translators.find(t => t.id === id);
+    if(!targetTranslator)
+      return false;
+    
+      try{
+        return targetTranslator
+        .teamTranslators
+        .find(t => t.translatorId === id)
+        .translatorRights
+        .find(r => r.right.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+        != null;
+
+      } catch(error) {
+        console.log(error.message);
+    }
+      return false;
+  }
+
+  addRightToTranslator(id: number, rightName: string) {
+    
+  }
+  method(e, id) : boolean{
+    debugger;
+    console.log(e.target.checked + "  id = " + id);
+    return true;
+  }
 }
