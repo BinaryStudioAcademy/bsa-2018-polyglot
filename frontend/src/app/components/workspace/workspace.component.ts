@@ -83,26 +83,26 @@ let MOCK_KEYS = [
 ];
 
 let MOCK_PROJECT = (id: number): Project => ({
-  Id: id,
-  Name: 'Binary Studio Academy Project',
-  Description: 'Academy for young and motivated studens! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magnam distinctio repudiandae quas fugit ad quaerat impedit ipsum!  Rem quo, impedit eum adipisci, molestiae cum omnis vitae nisi minima tenetur itaque!',
-  Technology: 'AngularJS, Node.js',
-  ImageUrl: 'https://d3ot0t2g92r1ra.cloudfront.net/img/logo@3x_optimized.svg',
-  CreatedOn: new Date(),
-  Manager: <any>{
+  id : id,
+  name: 'Binary Studio Academy Project',
+  description: 'Academy for young and motivated studens! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magnam distinctio repudiandae quas fugit ad quaerat impedit ipsum!  Rem quo, impedit eum adipisci, molestiae cum omnis vitae nisi minima tenetur itaque!',
+  technology: 'AngularJS, Node.js',
+  imageUrl: 'https://d3ot0t2g92r1ra.cloudfront.net/img/logo@3x_optimized.svg',
+  createdOn: new Date(),
+  manager: <any>{
 
   },
-  MainLanguage: <any>{
+  mainLanguage: <any>{
 
   },
-  Teams: [],
-  Translations: [
+  teams: [],
+  translations: [
     { Id: 1, TanslationKey: 'Hello' },
     { Id: 2, TanslationKey: 'Cancel' },
     { Id: 3, TanslationKey: 'Confirm' },
     { Id: 4, TanslationKey: 'Delete' }
   ],
-  ProjectLanguageses: [],
-  ProjectGlossaries: [],
-  ProjectTags: []
+  projectLanguageses: [],
+  projectGlossaries: [],
+  projectTags: []
 });
