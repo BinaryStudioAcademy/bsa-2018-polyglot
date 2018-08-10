@@ -60,6 +60,7 @@ namespace Polyglot.Controllers
             return projectsStrings == null ? NotFound("No projects found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projectsStrings));
         }
+
         // POST: Projects
         public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
         {

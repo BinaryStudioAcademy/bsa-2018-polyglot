@@ -24,12 +24,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
 
-    private dataProvider: ProjectService
-  ) {
-   }
-
+    private dataProvider: ProjectService,
     private dialog: MatDialog
-  ) { }
+   ) { }
 
 
   ngOnInit() {
@@ -42,7 +39,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       
     debugger;
       this.dataProvider.getProjectStrings(params.projectId)
-      .subscribe((data: any) => this.keys = data);
+      .subscribe((data: any) => {
+        if(data)
+        {
+          this.onSelect(data[0]);
+          this.keys = data;
+        }
+      });
     });
   }
 
