@@ -52,7 +52,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
+import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
 
 
@@ -86,7 +89,10 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
-    ConfirmEqualValidatorDirective
+    ConfirmEqualValidatorDirective,
+    ProjectDetailsComponent,
+    ProjectMessageComponent
+
 
   ],
   imports: [
@@ -108,11 +114,15 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     MatSortModule,
     MatProgressSpinnerModule,
     ImageCropperModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [HttpService, AuthService, AuthGuard],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
+  providers: [HttpService, AuthService, AuthGuard,
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService],
+
   bootstrap: [AppComponent]
 
 
