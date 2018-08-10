@@ -7,6 +7,6 @@ namespace Polyglot.DataAccess.NoSQL_Repository
 {
     public interface IComplexStringRepository : IRepository<ComplexString>
     {
-        Task<IEnumerable<ComplexString>> GetAllByProjectId(int projectId);
+        Task<IEnumerable<ComplexString>> GetAllByProjectIdAsync(int projectId);
     }
 }
