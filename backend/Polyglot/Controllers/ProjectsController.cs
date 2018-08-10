@@ -9,6 +9,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.NoSQL_Models;
 
 namespace Polyglot.Controllers
 {
@@ -51,6 +52,15 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<ProjectDTO>(project));
 			
 		}
+
+        // Get: Projects/5/complexString
+        [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
+        public async Task<IActionResult> GetProjectStrings(int id)
+        {
+            var projectsStrings = await projectService.GetProjectStringsAsync(id);
+            return projectsStrings == null ? NotFound("No projects found!") as IActionResult
+                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projectsStrings));
+        }
 
         // POST: Projects
         public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)

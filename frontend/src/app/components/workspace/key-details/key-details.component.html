@@ -4,12 +4,13 @@
 			<td style="width:15% ; padding: 10px; text-align: center" mat-cell *matCellDef="let translation"> {{translation.language}} </td>
 		</ng-container>
 
+
 		<!-- Name Column -->
 		<ng-container matColumnDef="translatedValue">
 			<!-- <td [hidden]="true" disabled style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation"> {{translation.translatedValue}}</td> -->
 			<td [hidden]="false" style="width:80% ; padding: 10px" mat-cell *matCellDef="let translation">
 				<div style="width: 90%">
-					{{translation.translatedValue}}
+					{{translation.translationValue}}
 				</div>
 				<div [hidden]="true">
 					<mat-form-field style="width: 80%">
@@ -19,6 +20,7 @@
 				</div>
 			</td>
 		</ng-container>
+
 
 		<ng-container matColumnDef="updateBtn">
 			<td mat-cell *matCellDef="let updateBtn">
