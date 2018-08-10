@@ -46,18 +46,17 @@ namespace Polyglot
 
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
             services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
-
+            services.AddScoped(typeof(DbContext), typeof(DataContext));
 
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
                 new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
-            // automapper
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
-            //  uow
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(ICRUDService<,>), typeof(CRUDService<,>));
 
-           
 
             services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
                         options.ConnectionString = Configuration.GetSection("MongoConnection:MongoConnectionString").Value;
@@ -67,8 +66,7 @@ namespace Polyglot
             services.AddScoped<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ICRUDService<,>), typeof(CRUDService<>));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,10 +11,10 @@ namespace Polyglot.DataAccess.Repositories
 {
 	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 	{
-		protected DataContext context;
+		protected DbContext context;
 		protected DbSet<TEntity> DbSet;
 
-		public Repository(DataContext c)
+		public Repository(DbContext c)
 		{
 			this.context = c;
 			DbSet = context.Set<TEntity>();
