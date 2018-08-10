@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
+import { MatDialog } from '../../../../node_modules/@angular/material';
+import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
 
 
 
@@ -12,12 +14,20 @@ import { ProjectService } from '../../services/project.service';
 export class ProjectsComponent implements OnInit {
 
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
   
   cards : Project[];
 
   ngOnInit() {
-	this.projectService.getAll().subscribe(pr => this.cards = pr);
+  this.projectService.getAll().subscribe(pr => this.cards = pr);
+  if(this.cards == null){
+    setTimeout(() => this.openDialog())
+    }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ProjectMessageComponent, {
+    });
   }
 
 }
