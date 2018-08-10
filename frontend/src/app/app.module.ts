@@ -53,6 +53,7 @@ import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
+import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
@@ -89,7 +90,9 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
-    ProjectDetailsComponent
+    ProjectDetailsComponent,
+    ProjectMessageComponent
+
 
   ],
   imports: [
@@ -115,8 +118,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService],
