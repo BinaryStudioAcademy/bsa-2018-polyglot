@@ -4,6 +4,7 @@ using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Polyglot.DataAccess.NoSQL_Repository
@@ -86,6 +87,21 @@ namespace Polyglot.DataAccess.NoSQL_Repository
                 // log or manage the exception
                 throw ex;
             }
+        }
+
+        public Task<IEnumerable<TEntity>> GetAllIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            throw new NotImplementedException();
         }
     }
 }
