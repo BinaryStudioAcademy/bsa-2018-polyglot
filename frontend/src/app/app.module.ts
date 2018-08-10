@@ -18,7 +18,6 @@ import { GlossariesComponent } from './components/glossaries/glossaries.componen
 import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
-import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
@@ -115,9 +114,11 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [HttpService, AuthService, UserService, AuthGuard,
+
+  providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService],
+
   bootstrap: [AppComponent]
 
 
