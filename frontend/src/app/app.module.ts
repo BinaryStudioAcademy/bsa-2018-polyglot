@@ -55,6 +55,7 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
 import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
 
 
@@ -89,7 +90,9 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
+    ProjectDetailsComponent,
     ProjectMessageComponent
+
 
   ],
   imports: [
