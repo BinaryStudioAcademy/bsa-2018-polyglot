@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
+// to delete manager and user
+import { Manager } from '../../models/manager';
+import { UserProfile } from '../../models/user-profile';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 
@@ -13,11 +17,30 @@ export class ProjectsComponent implements OnInit {
 
 
   constructor(private projectService: ProjectService) { }
-  
-  cards : Project[];
+
+  cards: Project[];
+
+  user: UserProfile = {
+    id: 1,
+    firstName: 'Bill',
+    lastName: 'Gates',
+    birthDate: null,
+    registrationDate: null,
+    country: 'string',
+    city: 'string',
+    region: 'string',
+    postalCode: 'string',
+    address: 'string',
+    phone: 'string',
+    avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
+  };
+  manager: Manager = {
+    id:  1,
+    userProfile: this.user
+  };
 
   ngOnInit() {
-	this.projectService.getAll().subscribe(pr => this.cards = pr);
-  }
+  this.projectService.getAll().subscribe(pr => this.cards = pr);
 
+  }
 }
