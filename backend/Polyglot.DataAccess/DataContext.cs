@@ -23,7 +23,7 @@ namespace Polyglot.DataAccess
         public DbSet<Right> Rights { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<ComplexString> Translations { get; set; }
+        public DbSet<ComplexString> ComplexStrings { get; set; }
         public DbSet<Translator> Translators { get; set; }
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }

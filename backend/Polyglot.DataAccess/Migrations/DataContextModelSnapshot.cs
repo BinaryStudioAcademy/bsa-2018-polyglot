@@ -33,7 +33,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Translations");
+                    b.ToTable("ComplexStrings");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.File", b =>

@@ -10,7 +10,7 @@ using Polyglot.DataAccess;
 namespace Polyglot.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180810122619_RenameTranslatationToComplexString")]
+    [Migration("20180810124428_RenameTranslatationToComplexString")]
     partial class RenameTranslatationToComplexString
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Translations");
+                    b.ToTable("ComplexStrings");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.File", b =>
