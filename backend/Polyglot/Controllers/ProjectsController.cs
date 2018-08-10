@@ -45,7 +45,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
-            var project = await service.FindByIncludeAsync(p => p.Id == id, false, p => p.Manager, p => p.MainLanguage);
+            var project = await service.FindByIncludeAsync(p => p.Id == id, false, p => p.Manager.UserProfile, p => p.MainLanguage);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<ProjectDTO>(project));
 			
