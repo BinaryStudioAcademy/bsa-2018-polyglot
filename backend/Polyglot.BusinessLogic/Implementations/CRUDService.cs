@@ -32,7 +32,7 @@ namespace Polyglot.BusinessLogic.Implementations
         
         public async Task<IEnumerable<T>> GetListIncludingAsync(bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await repository.GetAllIncludingAsync() ?? null;
+            return await repository.GetAllIncludingAsync(isCached, includeProperties) ?? null;
         }
 
         public async Task<T> GetOneAsync(int identifier)
