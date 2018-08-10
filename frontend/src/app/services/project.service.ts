@@ -32,4 +32,8 @@ export class ProjectService {
   delete(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
+
+  getProjectStrings(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', undefined, undefined);
+  }
 }
