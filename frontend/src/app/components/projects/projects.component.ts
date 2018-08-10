@@ -20,7 +20,7 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit() {
   this.projectService.getAll().subscribe(pr => this.cards = pr);
-  if(this.cards == null){
+  if(this.cards.length == 0){
     setTimeout(() => this.openDialog())
     }
   }
