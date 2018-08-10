@@ -17,8 +17,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   public project: Project;
   public keys: any[];
   public searchQuery: string;
-
-  private selectedKey: any;
+  public selectedKey: any;
+  
   private routeSub: Subscription;
 
   constructor(
