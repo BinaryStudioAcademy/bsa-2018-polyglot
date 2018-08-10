@@ -47,13 +47,7 @@ const routes: Routes = [
   },
   {
     path: 'workspace/:projectId',
-    component: WorkspaceComponent,
-    children: [
-      {
-        path: 'key/:keyId',
-        component: KeyDetailsComponent
-      }
-    ]
+    component: WorkspaceComponent
   },
   { path: 'translator', component: TranslatorProfileComponent },
   { path: '404', component: NoFoundComponent },
