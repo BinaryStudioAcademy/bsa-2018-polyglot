@@ -42,6 +42,7 @@ export class NewProjectComponent implements OnInit {
   project: Project;
   projectForm: FormGroup;
   languages: Array<Language>;
+  projectImage: File;
 
   createProjectForm(): void {
     
@@ -53,19 +54,22 @@ export class NewProjectComponent implements OnInit {
       });
   }
 
+
+  receiveImage($event){
+    this.projectImage = $event;
+  }
+
   saveChanges(project: Project): void{
     project.createdOn = new Date(Date.now()); 
     //Save current manager
     this.projectService.create(project)
     .subscribe(
       (d)=> {
-        console.log(d);
         this.router.navigate(['../']);
         this.snotifyService.success("Project created", "Success!");
       },
       err => {
-        this.snotifyService.error("Project doesn`t created", "Error!");
-        console.log('err', err);
+        this.snotifyService.error("Project wasn`t created", "Error!");
         
       }
     );
