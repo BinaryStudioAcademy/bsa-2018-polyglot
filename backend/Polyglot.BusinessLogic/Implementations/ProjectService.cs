@@ -3,21 +3,26 @@ using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
     public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
 	{
-		private IRepository<ComplexString> repository;
+		private IComplexStringRepository complexStringsProvider;
+        private IUnitOfWork uow;
         
-		public ProjectService(IRepository<ComplexString> rep)
+		public ProjectService(IComplexStringRepository rep, IUnitOfWork uow)
 		{
-			this.repository = rep;
+			this.complexStringsProvider = rep;
+            this.uow = uow;
 		}
         
 
@@ -85,9 +90,24 @@ namespace Polyglot.BusinessLogic.Implementations
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
-                await repository.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await complexStringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }			
 
 		}
-	}
+
+        public Task<IEnumerable<Project>> GetAllProjectsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<ComplexString>> GetAllStringsAsync()
+        {
+            return (await complexStringsProvider.GetAllAsync()).AsEnumerable();
+        }
+
+        public async Task<IEnumerable<ComplexString>> GetProjectStringsAsync(int id)
+        {
+            return await complexStringsProvider.GetAllByProjectIdAsync(id);
+        }
+    }
 }
