@@ -52,7 +52,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
+import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
 
 
 
@@ -86,7 +87,8 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
-    ConfirmEqualValidatorDirective
+    ConfirmEqualValidatorDirective,
+    ProjectMessageComponent
 
   ],
   imports: [
@@ -111,7 +113,7 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     MatCheckboxModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
   providers: [HttpService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 
