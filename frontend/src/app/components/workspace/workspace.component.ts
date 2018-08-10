@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-workspace',
@@ -14,11 +15,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   public keys: any[];
   public searchQuery: string;
 
+  private selectedKey: any;
   private routeSub: Subscription;
 
   constructor(
-    private activatedRoute: ActivatedRoute
-  ) { }
+    private activatedRoute: ActivatedRoute,
+    private dataProvider: ProjectService
+  ) {
+   }
 
   ngOnInit() {
     this.searchQuery = '';
@@ -29,7 +33,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       console.log(params.projectId);
 
       this.project = MOCK_PROJECT(params.projectId);
-      this.keys = MOCK_KEYS;
+      
+    debugger;
+      this.dataProvider.getProjectStrings(params.projectId)
+      .subscribe((data: any) => this.keys = data);
     });
   }
 
@@ -39,6 +46,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   onAddNewStringClick() {
 
+  }
+
+  onSelect(key: any){
+    debugger;
+    console.log(key);
+    this.selectedKey = key;
   }
 
   ngOnDestroy() {
