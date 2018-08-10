@@ -79,20 +79,18 @@ export class TagsComponent  {
     return this.allTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  private _isInList(tag: string){
-    const index = this.tags.findIndex(t => t.name == tag);
-
-    if (index >= 0) {
-      return true;
-    }
-    return false;
-  }
 
   private _unique(){
     for(let i = 0; i < this.tags.length;i++){
         for(let j = i;j<this.tags.length;j++){
-          if((this.tags[i].name == this.tags[j].name) && i != j){
+          if((this.tags[i].name.toLowerCase() == this.tags[j].name.toLowerCase()) && i != j){
             this.tags.splice(i, 1);
+          }
+        }
+        for(let k = 0; k < this.allTags.length; k++){
+          debugger;
+          if( this.allTags[k].name.toLowerCase() == this.tags[i].name.toLowerCase()){
+            this.allTags.splice(k, 1);
           }
         }
     }
