@@ -32,7 +32,7 @@ namespace Polyglot.BusinessLogic.Implementations
         
         public async Task<IEnumerable<T>> GetListIncludingAsync(bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await repository.GetAllIncludingAsync(isCached, includeProperties) ?? null;
+            return await repository.GetAllAsync() ?? null;
         }
 
         public async Task<T> GetOneAsync(int identifier)
@@ -42,12 +42,12 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate, bool isCached = false)
         {
-            return await repository.FindByAsync(predicate, isCached);
+            return await repository.GetByAsync(predicate);
         }
 
         public async Task<IEnumerable<T>> FindByIncludeAsync(Expression<Func<T, bool>> predicate, bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await repository.FindByIncludeAsync(predicate, isCached, includeProperties);
+            return await repository.GetByAsync(predicate);
         }
 
         public async Task<T> PostAsync(T entity)
