@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IString } from '../../models/string';
-import { UploadImageComponent } from '../../components/upload-image/upload-image.component';
 import { Tag } from '../../models/tag';
+import {MAT_DIALOG_DATA} from '@angular/material';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-string-dialog',
@@ -12,6 +13,8 @@ export class StringDialogComponent implements OnInit {
 
   public str: IString;
   public image: File;
+
+  public projectId: number;
 
   receiveImage($event){
     this.image = $event;
@@ -34,7 +37,7 @@ export class StringDialogComponent implements OnInit {
     return tags;
   }
 
-  constructor() { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
 
 
   ngOnInit() {
@@ -43,8 +46,10 @@ export class StringDialogComponent implements OnInit {
       base: '',
       description: '',
       tags: [],
+      projectId: this.data.projectId
     };
     this.image = undefined;
+    console.log(this.str);
   }
 
   onSubmit() {
