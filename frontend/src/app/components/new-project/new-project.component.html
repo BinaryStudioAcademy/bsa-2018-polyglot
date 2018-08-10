@@ -19,7 +19,10 @@
         <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
     </mat-form-field>
 
-    <div class="field-choose-wraper">
+    <mat-grid-list cols="2">
+        <mat-grid-tile>
+        <div class="select-fields-container field-full-width">
+
         <mat-form-field class="mat-select-wraper">
             <mat-select class="mat-select" placeholder="Technology" formControlName="technology" required>
                 <mat-option *ngFor="let technology of values()" [value]="technology">
@@ -32,7 +35,6 @@
                     </div>
             </mat-error>
         </mat-form-field>
-        
          <mat-form-field class="mat-select-wraper">
             <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage" required>
                 <mat-option *ngFor="let language of languages" [value]="language">
@@ -45,12 +47,17 @@
                     </div>
             </mat-error>
           </mat-form-field>
-    </div>  
+          <div class="saveButton">
+                <button mat-button  [disabled]="projectForm.invalid">Create</button>
+            </div>
+        </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
+        </mat-grid-tile>
+        </mat-grid-list>  
 
     
-    <div class="saveButton">
-        <button mat-button  [disabled]="projectForm.invalid">Create</button>
-    </div>
     </form>
     <ng-snotify></ng-snotify>
 <!--<div class="example-container">-->
