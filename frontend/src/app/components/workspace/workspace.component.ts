@@ -29,8 +29,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ....
 
-      console.log(params.projectId);
-
       this.project = MOCK_PROJECT(params.projectId);
       this.keys = MOCK_KEYS;
     });
