@@ -5,30 +5,33 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ComplexStringsController : ControllerBase
     {
         private IMapper mapper;
         private IComplexStringRepository dataProvider;
+        private IProjectService service;
 
-        public ComplexStringsController(IComplexStringRepository dataProvider, IMapper mapper)
+        public ComplexStringsController(IComplexStringRepository dataProvider,IProjectService service, IMapper mapper)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
+            this.service = service;
         }
 
         // GET: ComplexStrings
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
-            var complexStrings = await dataProvider.GetAllAsync();
+            var complexStrings = await service.GetAllStringsAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
         }
