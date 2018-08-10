@@ -6,6 +6,7 @@ import { TypeTechnology } from '../../models/type-technology.enum';
 import { ProjectService } from '../../services/project.service';
 import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 
 @Component({
   selector: 'app-new-project',
@@ -17,7 +18,8 @@ export class NewProjectComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private projectService: ProjectService,
     private languageService: LanguageService, 
-    private router: Router) {
+    private router: Router,
+    private snotifyService: SnotifyService) {
 
   }
 
@@ -59,12 +61,17 @@ export class NewProjectComponent implements OnInit {
       (d)=> {
         console.log(d);
         this.router.navigate(['../']);
+        this.snotifyService.success("Project created", "Success!");
       },
       err => {
+        this.snotifyService.error("Project doesn`t created", "Error!");
         console.log('err', err);
+        
       }
     );
   }
+
+
 
   values() {
     return Object.keys(TypeTechnology).filter(
