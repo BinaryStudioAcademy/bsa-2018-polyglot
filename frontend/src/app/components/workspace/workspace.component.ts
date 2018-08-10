@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
+import { MatDialog } from '@angular/material';
+import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 
 @Component({
   selector: 'app-workspace',
@@ -17,7 +19,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
 
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -25,8 +28,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ....
-
-      console.log(params.projectId);
 
       this.project = MOCK_PROJECT(params.projectId);
       this.keys = MOCK_KEYS;
@@ -38,7 +39,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onAddNewStringClick() {
-
+    this.dialog.open(StringDialogComponent, {
+      data: {
+        projectId: this.project.id
+      }
+      });
   }
 
   ngOnDestroy() {
