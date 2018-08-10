@@ -39,10 +39,12 @@ export class TagsComponent  {
   }
 
   updateTags(){
+    this._unique();
     this.tagsEvent.emit(this.tags);
   }
 
   add(event: MatChipInputEvent): void {
+
     const input = event.input;
     const value = event.value;
 
@@ -75,6 +77,23 @@ export class TagsComponent  {
     const filterValue = value.toLowerCase();
 
     return this.allTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+
+  private _unique(){
+    for(let i = 0; i < this.tags.length;i++){
+        for(let j = i;j<this.tags.length;j++){
+          if((this.tags[i].name.toLowerCase() == this.tags[j].name.toLowerCase()) && i != j){
+            this.tags.splice(i, 1);
+          }
+        }
+        for(let k = 0; k < this.allTags.length; k++){
+          debugger;
+          if( this.allTags[k].name.toLowerCase() == this.tags[i].name.toLowerCase()){
+            this.allTags.splice(k, 1);
+          }
+        }
+    }
   }
 
 }
