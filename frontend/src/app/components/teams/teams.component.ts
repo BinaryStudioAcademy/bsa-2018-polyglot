@@ -4,6 +4,7 @@ export interface Team {
 
   text: string;
   rating: number;
+  translators: string[];
 }
 
 @Component({
@@ -12,14 +13,13 @@ export interface Team {
   styleUrls: ['./teams.component.sass']
 })
 export class TeamsComponent implements OnInit {
-  
+
   teams: Team[] = [
-    { text: 'Team1', rating: 40 },
-    { text: 'Team2', rating: 30 },
-    { text: 'Team3', rating: 29 },
-    { text: 'Team4', rating: 85 },
-    { text: 'Team5', rating: 100 },
-  
+    { text: 'Team1', rating: 40, translators: ['https://bit.ly/2KKdyuV', 'https://bit.ly/2tIuZEL'] },
+    { text: 'Team2', rating: 30, translators: ['https://bit.ly/2tIuZEL', 'https://bit.ly/2tIuZEL'] },
+    { text: 'Team3', rating: 29, translators: ['https://bit.ly/2tIuZEL', 'https://bit.ly/2KKdyuV'] },
+    { text: 'Team4', rating: 85, translators: ['https://bit.ly/2KKdyuV', 'https://bit.ly/2KKdyuV'] },
+    { text: 'Team5', rating: 100, translators: ['https://bit.ly/2tIuZEL', 'https://bit.ly/2KKdyuV'] },
   ];
 
   constructor() { }

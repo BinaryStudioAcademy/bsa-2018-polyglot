@@ -1,6 +1,12 @@
 
+
 .container
   margin-top: 30px
+  margin-bottom: 30px
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+  grid-gap: 25px
+  justify-items: center
 
 .search-form 
   min-width: 150px
@@ -13,15 +19,25 @@
 .search-full-width 
   width: 100%
 
-
-.example-card 
-  max-width: 300px
+.example-card  
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
-  margin: 10px
+  margin: 0
+  min-width: 250px;
+  max-width: 1fr;
+  display: grid
+  grid-template-rows: 25% auto 50px
  
-.example-header-image 
-  background-image: url('https://atmanco.com/wp-content/uploads/2016/05/exceptional-team.png')
-  background-size: cover
+.manager-img
+  height: 60px
+  width: 60px
+
+.card-title
+  font-size: 23px
+  margin: 0
+  margin-bottom: 10px
+
+.card-subtitle
+  font-size: 15px
 
 .button-add
  position: fixed
@@ -31,21 +47,53 @@
  height: 72px
 
 .card-buttons
-  button
-    width: 120px
-    margin: 20px 
   margin: 0
-  padding: 0  
+  padding: 0
+  justify-self: center
+  button
+    margin: 0
+    margin: 10px auto
+    padding: 0px 10px
+    height: 35px;
+    justify-self: center
 
-.progress-span
-  display: block
-  margin-top: 10px
-  text-align: center 
+
 
 .mat-raised-button
   padding: 0
 
+.title
+  display: grid
+  grid-template-columns: minmax(170px, 1fr)
+
+mat-card-title
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
 
 
+mat-card-header
+  margin-bottom: 10px
+  grid-row-start: 1
+  grid-row-end: 2
+
+
+.team-img
+  height: 60px
+  width: 60px
+
+
+.img-container
+  grid-row-start: 2
+  grid-row-end: 3
+  display: grid
+  grid-template-columns: repeat(auto-fill, 60px)
+  grid-gap: 10px
+  justify-content: center
+  margin-top: 10px
+
+.mat-card-actions 
+  grid-row-start: 3
+  grid-row-end: 4
 
 
