@@ -26,13 +26,13 @@ const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'profile', component: ManagerProfileComponent},
-  { path: 'profile/newproject', component: NewProjectComponent },
-  { path: 'profile/settings', component: UserSettingsComponent },
+  { path: 'profile', canActivate: [AuthGuard], component: ManagerProfileComponent},
+  { path: 'profile/newproject', canActivate: [AuthGuard], component: NewProjectComponent },
+  { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
 
   {
     path: 'dashboard',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
@@ -47,6 +47,7 @@ const routes: Routes = [
   },
   {
     path: 'workspace/:projectId',
+    canActivate: [AuthGuard],
     component: WorkspaceComponent,
     children: [
       {
@@ -55,7 +56,7 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'translator', component: TranslatorProfileComponent },
+  { path: 'translator', canActivate: [AuthGuard], component: TranslatorProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
