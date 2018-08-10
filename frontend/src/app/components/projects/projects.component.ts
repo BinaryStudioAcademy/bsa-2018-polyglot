@@ -19,10 +19,11 @@ export class ProjectsComponent implements OnInit {
   cards : Project[];
 
   ngOnInit() {
-  this.projectService.getAll().subscribe(pr => this.cards = pr);
-  if(this.cards.length == 0){
-    setTimeout(() => this.openDialog())
-    }
+  this.projectService.getAll().subscribe(pr => {this.cards = pr;
+    if(this.cards.length === 0){
+      setTimeout(() => this.openDialog())
+      }
+  });
   }
 
   openDialog(): void {
