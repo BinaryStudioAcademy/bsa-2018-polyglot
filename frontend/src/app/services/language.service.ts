@@ -12,11 +12,11 @@ export class LanguageService {
     this.api = "languages";
   }
 
-  getAll() : Observable<any> {
+  getAll() : Observable<Language[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  getById(id: number) : Observable<any> {
+  getById(id: number) : Observable<Language> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 

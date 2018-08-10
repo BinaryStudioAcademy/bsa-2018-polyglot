@@ -23,7 +23,7 @@
             <div class="select-fields-container field-full-width">
                 <mat-form-field class="mat-select-wraper">
                     <mat-select class="mat-select" placeholder="Technology" formControlName="technology" required>
-                    <mat-option *ngFor="let technology of values()" [value]="technology">
+                    <mat-option *ngFor="let technology of getAllTechnologies()" [value]="technology">
                         {{technology}}
                         </mat-option>
                     </mat-select>
@@ -34,13 +34,13 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="mat-select-wraper">
-                    <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage">
-                       <mat-option *ngFor="let language of languages" [value]="language">
+                    <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage" required>
+                       <mat-option *ngFor="let language of getAllLanguages()" [value]="mainLanguage">
                             {{language.name}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="technology.invalid && (technology.dirty || technology.touched)">
-                        <div *ngIf="technology.errors.required">
+                    <mat-error *ngIf="mainLanguage.invalid && (mainLanguage.dirty || mainLanguage.touched)">
+                        <div *ngIf="mainLanguage.errors.required">
                             Main language is required.
                         </div>
                     </mat-error>

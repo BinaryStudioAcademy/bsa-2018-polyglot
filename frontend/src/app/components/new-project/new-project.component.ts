@@ -77,10 +77,21 @@ export class NewProjectComponent implements OnInit {
 
 
 
-  values() {
+  getAllTechnologies() {
     return Object.keys(TypeTechnology).filter(
       (type) => isNaN(<any>type) && type !== 'values'
     );
+  }
+
+  getAllLanguages(): Language[]{ 
+    let languages: Language[] = [
+      {id: 1, name: "lang1", code: "code1"},
+      {id: 2, name: "lang2", code: "code2"},
+      {id: 3, name: "lang3", code: "code3"},
+      {id: 4, name: "lang4", code: "code4"},
+      {id: 5, name: "lang5", code: "code5"}
+    ]
+    return languages;
   }
 
   get name() {
