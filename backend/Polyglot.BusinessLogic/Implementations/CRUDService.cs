@@ -1,7 +1,9 @@
 ﻿using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Implementations
@@ -27,9 +29,25 @@ namespace Polyglot.BusinessLogic.Implementations
             return await repository.GetAllAsync() ?? null;
         }
 
+        
+        public async Task<IEnumerable<T>> GetListIncludingAsync(bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
+        {
+            return await repository.GetAllIncludingAsync(isCached, includeProperties) ?? null;
+        }
+
         public async Task<T> GetOneAsync(int identifier)
         {
             return await repository.GetAsync(identifier) ?? null;
+        }
+
+        public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate, bool isCached = false)
+        {
+            return await repository.FindByAsync(predicate, isCached);
+        }
+
+        public async Task<IEnumerable<T>> FindByIncludeAsync(Expression<Func<T, bool>> predicate, bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
+        {
+            return await repository.FindByIncludeAsync(predicate, isCached, includeProperties);
         }
 
         public async Task<T> PostAsync(T entity)

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -18,7 +18,6 @@ import { GlossariesComponent } from './components/glossaries/glossaries.componen
 import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
-import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
@@ -47,6 +46,11 @@ import { TagsComponent } from './components/tags/tags.component';
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
+import { MatSortModule } from '@angular/material/sort';
+import { TeamComponent } from './components/teams/team/team.component';
+import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
 
@@ -75,9 +79,11 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
-    ManagerProfileComponent,
     TagsComponent,
     NewProjectComponent,
+    ManagerProfileComponent,
+    TeamComponent,
+    SearchComponent,
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective
@@ -97,11 +103,16 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     MatChipsModule,
     ngfModule,
     WebStorageModule,
-    ImageCropperModule
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    ImageCropperModule,
+    MatCheckboxModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [HttpService, AuthService, UserService, AuthGuard],
+  providers: [HttpService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 
 

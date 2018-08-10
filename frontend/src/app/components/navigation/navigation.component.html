@@ -14,15 +14,15 @@
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
       <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
+      <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
-      <button mat-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
+      <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
         <img src="/assets/images/user-ava.png" class="profile-small-image">
       </button>
 
-      <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="28">
+      <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
         <mat-card class="profile-card">
           <mat-card-header>
             <mat-card-title class="profile-card-main">

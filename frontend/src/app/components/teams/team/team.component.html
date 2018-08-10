@@ -1,0 +1,67 @@
+<h2>Team {{id}}</h2>
+<div class="container team-details_menu">
+  <mat-form-field class="search-full-width team-details_search">
+    <input type="search" matInput placeholder="Search" [(ngModel)]="emailToSearch" [formControl]="emailFormControl">
+    <mat-error *ngIf="emailFormControl.hasError('email')">
+            Please enter a valid email address
+    </mat-error>
+    <button class="btn search" mat-raised-button color="primary" matSuffix (click)="searchTranslators()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+  <div class = "top-buttons">
+  <a mat-raised-button routerLink="." class="top-button">Add new translator</a>
+  <a mat-raised-button routerLink="." class="top-button">Invite new user</a>
+</div>
+</div>
+
+<mat-form-field class="team-details_filter">
+    <input matInput (keyup)="applyFilter($event.target.value)"  placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+
+ <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let element"> 
+        <button *ngIf="element.teamId != id" mat-icon-button color="green">
+                <mat-icon aria-label="">person_add</mat-icon>
+        </button>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="fullName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.fullName}} </td>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+    <td mat-cell *matCellDef="let element">{{element.email}} </td>
+  </ng-container>
+  <ng-container matColumnDef="rights">
+      <th mat-header-cell *matHeaderCellDef > Rights </th>
+      <td  mat-cell *matCellDef="let element">
+          <div *ngIf="element.teamId === id" id="right-checkboxes">
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-add')" (change)="changeTranslatorRight($event, element.id)"> Add new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'key')" (change)="changeTranslatorRight($event, element.id)"> Add new key</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-select')" (change)="changeTranslatorRight($event, element.id)"> Select new language</mat-checkbox>
+            </div>
+      </td>
+  </ng-container>
+  <ng-container matColumnDef="options" class="icons-container">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let element">
+          <div class="button-row">
+              <button mat-icon-button color="primary" id="first-icon">
+                  <mat-icon aria-label="">settings</mat-icon>
+              </button>
+          </div>
+      </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
