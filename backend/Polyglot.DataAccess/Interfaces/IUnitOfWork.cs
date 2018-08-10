@@ -17,7 +17,7 @@ namespace Polyglot.DataAccess.Interfaces
 		IRepository<Right> RightRepository { get; }
 		IRepository<Tag> TagRepository { get; }
 		IRepository<Team> TeamRepository { get; }
-		IRepository<Translation> TranslationRepository { get; }
+		IRepository<ComplexString> ComplexStringRepository { get; }
 		IRepository<Translator> TranslatorRepository { get; }
 		IRepository<UserProfile> UserProfileRepository { get; }
 

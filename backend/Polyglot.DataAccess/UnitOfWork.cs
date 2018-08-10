@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Repositories;
 using Polyglot.DataAccess.Entities;
@@ -19,7 +16,7 @@ namespace Polyglot.DataAccess
 		private IRepository<Right> _rightRepository;
 		private IRepository<Tag> _tagRepository;
 		private IRepository<Team> _teamRepository;
-		private IRepository<Translation> _translationRepository;
+		private IRepository<ComplexString> _complexStringRepository;
 		private IRepository<Translator> _translatorRepository;
 		private IRepository<UserProfile> _userProfileRepository;
 
@@ -132,14 +129,14 @@ namespace Polyglot.DataAccess
 			}
 		}
 
-		public IRepository<Translation> TranslationRepository
+		public IRepository<ComplexString> ComplexStringRepository
 		{
 			get
 			{
-				if (_translationRepository == null)
-					_translationRepository = new Repository<Translation>(_context);
+				if (_complexStringRepository == null)
+				    _complexStringRepository = new Repository<ComplexString>(_context);
 
-				return _translationRepository;
+				return _complexStringRepository;
 			}
 		}
 

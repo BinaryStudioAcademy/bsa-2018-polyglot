@@ -1,20 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
 using System.Threading.Tasks;
+using AutoMapper;
+using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.NoSQL_Models;
+using Translation = Polyglot.DataAccess.Entities.ComplexString;
 
 namespace Polyglot.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("[controller]")]
     [ApiController]
     public class ComplexStringsController : ControllerBase
     {
-        private readonly ICRUDService<ComplexString, int> _service;
+        private readonly IComplexStringService _service;
+        private readonly IMapper _mapper;
 
 
-        public ComplexStringsController(ICRUDService<ComplexString, int> service)
+        public ComplexStringsController(IComplexStringService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -34,12 +41,13 @@ namespace Polyglot.Controllers
 
         // POST api/complexStrings - creates a new complexString
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] ComplexString newComplexString)
+        public async Task<IActionResult> PostAsync([FromBody] ComplexStringDTO newComplexString)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await _service.PostAsync(newComplexString);
+            var entity = await _service.PostAsync(_mapper.Map<Polyglot.DataAccess.NoSQL_Models.ComplexString>(newComplexString));
+
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                entity);
@@ -53,7 +61,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await _service.PutAsync(updateComplexString.Id,updateComplexString);
+            var entity = await _service.PutAsync(updateComplexString.Id, updateComplexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                entity);

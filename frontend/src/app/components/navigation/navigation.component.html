@@ -19,6 +19,8 @@
       <a mat-button *ngIf="!isLoggedIn()" (click)="onSignUpClick()">SignUp</a>
       <a mat-button *ngIf="isLoggedIn()" (click)="onLogoutClick()">Logout</a>
       <a mat-button *ngIf="isLoggedIn()" routerLink="/profile">Profile</a>
+      <a mat-button (click)="onNewStrClick()">NewString</a>
+
       <span class="toolbar-spacer"></span>
      
     </div>
