@@ -54,6 +54,7 @@ import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
 import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 
 
 
@@ -110,11 +111,15 @@ import { ProjectMessageComponent } from './dialogs/project-message/project-messa
     MatSortModule,
     MatProgressSpinnerModule,
     ImageCropperModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SnotifyModule
     
   ],
   entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
-  providers: [HttpService, AuthService, AuthGuard],
+  providers: [HttpService, AuthService, AuthGuard,
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService],
+
   bootstrap: [AppComponent]
 
 
