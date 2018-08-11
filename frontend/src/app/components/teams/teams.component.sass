@@ -8,6 +8,8 @@
   grid-gap: 25px
   justify-items: center
 
+
+
 .search-form 
   min-width: 150px
   max-width: 500px
@@ -22,11 +24,9 @@
 .example-card  
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
   margin: 0
-  min-width: 250px;
-  max-width: 1fr;
   display: grid
-  grid-template-rows: 25% auto 50px
- 
+  grid-template-rows: 70px auto 50px
+
 .manager-img
   height: 60px
   width: 60px
@@ -83,21 +83,26 @@ mat-card-header
   width: 60px
 
 
+.temp
+  display: grid
+  grid-row-start: 2
+  grid-row-end: 3
+  grid-template-columns: repeat(auto-fill, 70px)
+  grid-gap: 10px
+  justify-content: center
 
 
 .img-container
-  grid-row-start: 2
-  grid-row-end: 3
-  display: grid
-  grid-template-columns: repeat(auto-fill, 60px)
-  grid-gap: 10px
-  justify-content: center
   margin-top: 10px
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-around  
   img
     border-radius: 50px
+
+
+
 
 .mat-card-actions 
   grid-row-start: 3
   grid-row-end: 4
-
-
