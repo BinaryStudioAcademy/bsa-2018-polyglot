@@ -3,4 +3,5 @@ export interface IString {
     base: string;
     description: string;
     tags: string[];
+    projectId: number;
 }

@@ -9,6 +9,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.NoSQL_Models;
 
 namespace Polyglot.Controllers
 {
@@ -18,10 +19,11 @@ namespace Polyglot.Controllers
     public class ProjectsController : ControllerBase
     {
 		 private readonly IMapper mapper;
-		 private readonly ICRUDService<Project, int> service;
+		 private readonly ICRUDService<Project> service;
 		private IProjectService projectService;
+        
 
-        public ProjectsController(IProjectService projectService, ICRUDService<Project, int> service, IMapper mapper)
+        public ProjectsController(IProjectService projectService, ICRUDService<Project> service, IMapper mapper)
         {
 			
             this.service = service;
@@ -35,21 +37,30 @@ namespace Polyglot.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
-        {			
-            var projects = await service.GetListAsync();
+        {
+            var projects = await service.GetListIncludingAsync(false, p => p.Manager.UserProfile, p => p.MainLanguage);
             return projects == null ? NotFound("No projects found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));			
+                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));
         }
 
         // GET: Projects/5
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
-        {	
-            var project = await service.GetOneAsync(id);
+        {
+            var project = await service.FindByIncludeAsync(p => p.Id == id, false, p => p.Manager.UserProfile, p => p.MainLanguage);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<ProjectDTO>(project));
 			
 		}
+
+        // Get: Projects/5/complexString
+        [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
+        public async Task<IActionResult> GetProjectStrings(int id)
+        {
+            var projectsStrings = await projectService.GetProjectStringsAsync(id);
+            return projectsStrings == null ? NotFound("No projects found!") as IActionResult
+                : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projectsStrings));
+        }
 
         // POST: Projects
         public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)

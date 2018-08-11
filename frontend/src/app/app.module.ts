@@ -18,7 +18,6 @@ import { GlossariesComponent } from './components/glossaries/glossaries.componen
 import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
-import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
@@ -53,7 +52,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { TeamComponent } from './components/teams/team/team.component';
 import { SearchComponent } from './components/search/search.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts'
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
+import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
 
 
@@ -87,7 +89,10 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
-    ConfirmEqualValidatorDirective
+    ConfirmEqualValidatorDirective,
+    ProjectDetailsComponent,
+    ProjectMessageComponent
+
 
   ],
   imports: [
@@ -109,11 +114,15 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
     MatSortModule,
     MatProgressSpinnerModule,
     ImageCropperModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [HttpService, AuthService, UserService, AuthGuard],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
+  providers: [HttpService, AuthService, AuthGuard,
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService],
+
   bootstrap: [AppComponent]
 
 

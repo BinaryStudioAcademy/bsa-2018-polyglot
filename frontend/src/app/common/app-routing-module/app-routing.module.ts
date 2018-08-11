@@ -21,18 +21,19 @@ import { NewProjectComponent } from '../../components/new-project/new-project.co
 import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
 import { LandingGuard } from '../../services/guards/landing-guard.service';
 import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
+import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'profile', component: ManagerProfileComponent},
-  { path: 'profile/newproject', component: NewProjectComponent },
-  { path: 'profile/settings', component: UserSettingsComponent },
+  { path: 'profile', canActivate: [AuthGuard], component: ManagerProfileComponent},
+  { path: 'profile/newproject', canActivate: [AuthGuard], component: NewProjectComponent },
+  { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
 
   {
     path: 'dashboard',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
@@ -41,21 +42,25 @@ const routes: Routes = [
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'newproject', component: NewProjectComponent },
+      { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
       { path: 'strings', component: NoFoundComponent },
       { path: 'abc', component: TeamComponent }
     ]
   },
   {
     path: 'workspace/:projectId',
+
+    canActivate: [AuthGuard],
     component: WorkspaceComponent,
     children: [
       {
-        path: 'key/:keyId',
-        component: KeyDetailsComponent
+        path: '',
+        redirectTo : "key/1",
+        pathMatch : "full"
       }
     ]
   },
-  { path: 'translator', component: TranslatorProfileComponent },
+  { path: 'translator', canActivate: [AuthGuard], component: TranslatorProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

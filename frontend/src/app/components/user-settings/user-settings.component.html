@@ -1,10 +1,9 @@
 <div class="form-container">
     <h2>Edit profile</h2>
-    <button class="edit-button" mat-flat-button color="primary" (click)="editPhoto()">Edit photo</button> 
     <form [formGroup]="profileForm"   (submit)="saveChanges(profileForm.value)" > 
         <div class="field-wrapper">   
                 <div class="avatar">
-                    <img src="{{manager.avatarUrl}}" alt="avatar">
+                    <img src="{{manager.avatarUrl}}" alt="avatar"  (click)="editPhoto()">
                 </div>
                 <div class="fullname-fields">    
                             <mat-form-field  class="name-field">
@@ -68,7 +67,7 @@
        
              
         <div class="saveButton">
-            <button mat-button  [disabled]="profileForm.invalid">Create</button>
+            <button mat-button  [disabled]="profileForm.invalid">Save</button>
         </div>
         </form>
     <div class="example-container">

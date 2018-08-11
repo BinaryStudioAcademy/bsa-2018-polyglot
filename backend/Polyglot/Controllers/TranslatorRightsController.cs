@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class TranslatorRightsController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<TranslatorRight, int> service;
+        private readonly ICRUDService<TranslatorRight> service;
 
-        public TranslatorRightsController(ICRUDService<TranslatorRight, int> service, IMapper mapper)
+        public TranslatorRightsController(ICRUDService<TranslatorRight> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;

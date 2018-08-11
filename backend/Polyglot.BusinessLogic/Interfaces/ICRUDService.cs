@@ -1,17 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ICRUDService<TEntity, TIdentifier> where TEntity : class
+    public interface ICRUDService<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetListAsync();
 
-        Task<TEntity> GetOneAsync(TIdentifier identifier);
+        Task<IEnumerable<TEntity>> GetListIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
 
-        Task<TEntity> PutAsync(TIdentifier identifier, TEntity entity);
+        Task<TEntity> GetOneAsync(int identifier);
 
-        Task<bool> TryDeleteAsync(TIdentifier identifier);
+        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false);
+
+        Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
+
+        Task<TEntity> PutAsync(int identifier, TEntity entity);
+
+        Task<bool> TryDeleteAsync(int identifier);
 
         Task<TEntity> PostAsync(TEntity entity);
     }
