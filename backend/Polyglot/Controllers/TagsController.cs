@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using AutoMapper;
 
 namespace Polyglot.Controllers
 {
@@ -15,31 +10,29 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Tag, int> service;
+        private readonly ICRUDService service;
 
-        public TagsController(ICRUDService<Tag, int> service, IMapper mapper)
+        public TagsController(ICRUDService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Tags
         [HttpGet]
         public async Task<IActionResult> GetAllTags()
         {
-            var projects = await service.GetListAsync();
+            var projects = await service.GetListAsync<Tag, TagDTO>();
             return projects == null ? NotFound("No tags found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<TagDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Tags/5
         [HttpGet("{id}", Name = "GetTag")]
         public async Task<IActionResult> GetTag(int id)
         {
-            var project = await service.GetOneAsync(id);
+            var project = await service.GetOneAsync<Tag, TagDTO>(id);
             return project == null ? NotFound($"Tag with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<TagDTO>(project));
+                : Ok(project);
         }
 
         // POST: Tags
@@ -48,10 +41,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Tag>(project));
+            var entity = await service.PostAsync<Tag, TagDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<TagDTO>(entity));
+                entity);
         }
 
         // PUT: Tags/5
@@ -61,16 +54,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Tag>(project));
+            var entity = await service.PutAsync<Tag, TagDTO>(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<TagDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(int id)
         {
-            var success = await service.TryDeleteAsync(id);
+            var success = await service.TryDeleteAsync<Tag>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

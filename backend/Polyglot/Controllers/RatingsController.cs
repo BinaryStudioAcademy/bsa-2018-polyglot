@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -15,31 +10,29 @@ namespace Polyglot.Controllers
     [ApiController]
     public class RatingsController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Rating, int> service;
+        private readonly ICRUDService service;
 
-        public RatingsController(ICRUDService<Rating, int> service, IMapper mapper)
+        public RatingsController(ICRUDService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Ratings
         [HttpGet]
         public async Task<IActionResult> GetAllRatings()
         {
-            var projects = await service.GetListAsync();
+            var projects = await service.GetListAsync<Rating, RatingDTO>();
             return projects == null ? NotFound("No ratings found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<RatingDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Ratings/5
         [HttpGet("{id}", Name = "GetRating")]
         public async Task<IActionResult> GetRating(int id)
         {
-            var project = await service.GetOneAsync(id);
+            var project = await service.GetOneAsync<Rating, RatingDTO>(id);
             return project == null ? NotFound($"Rating with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<RatingDTO>(project));
+                : Ok(project);
         }
 
         // POST: Ratings
@@ -48,10 +41,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Rating>(project));
+            var entity = await service.PostAsync<Rating, RatingDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<RatingDTO>(entity));
+                entity);
         }
 
         // PUT: Ratings/5
@@ -61,16 +54,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Rating>(project));
+            var entity = await service.PutAsync<Rating, RatingDTO>(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<RatingDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRating(int id)
         {
-            var success = await service.TryDeleteAsync(id);
+            var success = await service.TryDeleteAsync<Rating>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

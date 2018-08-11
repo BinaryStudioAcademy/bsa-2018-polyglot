@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.NoSQL_Models;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ICRUDService<TEntity, TIdentifier> where TEntity : class
+    public interface ICRUDService
     {
-        Task<IEnumerable<TEntity>> GetListAsync();
+        Task<IEnumerable<TEntityDTO>> GetListAsync<TEntity, TEntityDTO>()
+            where TEntity : Entity, new()
+            where TEntityDTO : class, new();
 
-        Task<IEnumerable<TEntity>> GetListIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<TEntityDTO> GetOneAsync<TEntity, TEntityDTO>(int identifier)
+            where TEntity : Entity, new()
+            where TEntityDTO : class, new();
+        
+        Task<TEntityDTO> PutAsync<TEntity, TEntityDTO>(TEntityDTO entity)
+            where TEntity : Entity, new()
+            where TEntityDTO : class, new();
 
-        Task<TEntity> GetOneAsync(TIdentifier identifier);
+        Task<bool> TryDeleteAsync<TEntity>(int identifier)
+            where TEntity : Entity, new();
 
-        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false);
-
-        Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
-
-        Task<TEntity> PutAsync(TIdentifier identifier, TEntity entity);
-
-        Task<bool> TryDeleteAsync(TIdentifier identifier);
-
-        Task<TEntity> PostAsync(TEntity entity);
+        Task<TEntityDTO> PostAsync<TEntity, TEntityDTO>(TEntityDTO entity)
+            where TEntity : Entity, new()
+            where TEntityDTO : class, new();
     }
 }

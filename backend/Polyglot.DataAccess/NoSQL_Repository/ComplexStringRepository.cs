@@ -18,12 +18,14 @@ namespace Polyglot.DataAccess.NoSQL_Repository
 
         protected override IMongoCollection<ComplexString> Collection => _dataContext.ComplexStrings;
 
-        public async Task<IEnumerable<ComplexString>> GetAllByProjectId(int projectId)
+        public async Task<IEnumerable<ComplexString>> GetAllByProjectIdAsync(int projectId)
         {
             try
             {
-                return await Collection
-                                .Find(x => x.ProjectId == projectId).ToListAsync();
+                return await (await Collection
+                                .FindAsync(x => x.ProjectId == projectId)
+                                )
+                                .ToListAsync();
             }
             catch (Exception ex)
             {

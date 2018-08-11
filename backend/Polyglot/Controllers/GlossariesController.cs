@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -15,31 +10,29 @@ namespace Polyglot.Controllers
     [ApiController]
     public class GlossariesController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Glossary, int> service;
+        private readonly ICRUDService service;
 
-        public GlossariesController(ICRUDService<Glossary, int> service, IMapper mapper)
+        public GlossariesController(ICRUDService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Glossarys
         [HttpGet]
         public async Task<IActionResult> GetAllGlossarys()
         {
-            var projects = await service.GetListAsync();
+            var projects = await service.GetListAsync<Glossary, GlossaryDTO>();
             return projects == null ? NotFound("No glossaries found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<GlossaryDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Glossarys/5
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
         {
-            var project = await service.GetOneAsync(id);
+            var project = await service.GetOneAsync<Glossary, GlossaryDTO>(id);
             return project == null ? NotFound($"Glossary with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<GlossaryDTO>(project));
+                : Ok(project);
         }
 
         // POST: Glossarys
@@ -48,10 +41,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Glossary>(project));
+            var entity = await service.PostAsync<Glossary, GlossaryDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<GlossaryDTO>(entity));
+                entity);
         }
 
         // PUT: Glossarys/5
@@ -61,16 +54,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Glossary>(project));
+            var entity = await service.PutAsync<Glossary, GlossaryDTO>(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<GlossaryDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGlossary(int id)
         {
-            var success = await service.TryDeleteAsync(id);
+            var success = await service.TryDeleteAsync<Glossary>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

@@ -17,7 +17,7 @@ export class NavigationComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
-
+  
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
