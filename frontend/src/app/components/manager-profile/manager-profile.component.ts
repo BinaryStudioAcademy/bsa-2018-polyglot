@@ -4,6 +4,7 @@ import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component
 import { Project } from '../../models/project';
 import { UserProfile } from '../../models/user-profile';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-manager-profile',
@@ -12,9 +13,18 @@ import { Router } from '@angular/router';
 })
 export class ManagerProfileComponent implements OnInit {
   
-  constructor(
-    public dialog: MatDialog, private router: Router
-  ) {
+  fullName : string;
+  constructor(public dialog: MatDialog, private router: Router, userService: UserService) {
+    debugger
+    userService.get().subscribe(
+      (d)=> {
+        this.fullName = d;
+        console.log(d);
+      },
+      err => {
+        console.log('err', err);
+      }
+    );
   }
   ngOnInit(): void {
     this.manager = { 

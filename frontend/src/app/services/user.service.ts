@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private endpoint: string = "users";
+  private endpoint: string = "userprofiles/user";
   constructor(private dataService: HttpService) { }
 
-   getAll(){
+   get(): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.endpoint);
    }
 
