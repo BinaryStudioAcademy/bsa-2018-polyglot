@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.DataAccess;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
@@ -12,9 +15,12 @@ namespace Polyglot.Controllers
     {
         private readonly ICRUDService service;
 
-        public UserProfilesController(ICRUDService service)
+        public UserProfilesController(ICRUDService service, DbContext ctx)
         {
-            this.service = service;
+            //this.service = service;
+#warning some hell shit
+            var uow = new UnitOfWork(ctx);
+            this.service = new CRUDService(uow, Polyglot.Common.Mapping.AutoMapper.GetDefaultMapper());
         }
         // GET: UserProfiles
         [HttpGet]
