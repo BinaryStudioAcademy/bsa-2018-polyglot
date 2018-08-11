@@ -18,10 +18,11 @@ namespace Polyglot.Controllers
     public class ProjectsController : ControllerBase
     {
 		 private readonly IMapper mapper;
-		 private readonly ICRUDService<Project, int> service;
+		 private readonly ICRUDService<Project> service;
 		private IProjectService projectService;
+        
 
-        public ProjectsController(IProjectService projectService, ICRUDService<Project, int> service, IMapper mapper)
+        public ProjectsController(IProjectService projectService, ICRUDService<Project> service, IMapper mapper)
         {
 			
             this.service = service;
@@ -36,7 +37,6 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-
             var projects = await service.GetListIncludingAsync(false, p => p.Manager.UserProfile, p => p.MainLanguage);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));

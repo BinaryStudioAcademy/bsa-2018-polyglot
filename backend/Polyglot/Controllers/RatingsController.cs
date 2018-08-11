@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class RatingsController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<Rating, int> service;
+        private readonly ICRUDService<Rating> service;
 
-        public RatingsController(ICRUDService<Rating, int> service, IMapper mapper)
+        public RatingsController(ICRUDService<Rating> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;
