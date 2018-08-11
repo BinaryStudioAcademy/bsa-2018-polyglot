@@ -29,6 +29,14 @@ namespace Polyglot.DataAccess
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            
+        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProjectGlossary>()
@@ -106,7 +114,10 @@ namespace Polyglot.DataAccess
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
             
-            modelBuilder.Seed();
+            modelBuilder.ProjectSeed();
+            modelBuilder.LanguageSeed();
+            modelBuilder.TagSeed();
+
         }
     }
 }

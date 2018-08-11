@@ -10,7 +10,10 @@ namespace Polyglot.DataAccess.Entities
         public string Technology { get; set; }
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
+
+        
         public Manager Manager { get; set; }
+        
         public Language MainLanguage { get; set; }
 
         public List<Team> Teams { get; set; }
