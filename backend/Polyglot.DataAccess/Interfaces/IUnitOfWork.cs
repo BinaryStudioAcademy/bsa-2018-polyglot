@@ -5,8 +5,7 @@ namespace Polyglot.DataAccess.Interfaces
 {
     public interface IUnitOfWork
     {
-        IRepository<T> GetRepository<R, T>()
-            where R : IRepository<T>
+        IRepository<T> GetRepository<T>()
             where T : Entity, new();
 
 

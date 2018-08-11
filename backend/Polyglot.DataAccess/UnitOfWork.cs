@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.Repositories;
 
 namespace Polyglot.DataAccess
 {
@@ -16,10 +17,10 @@ namespace Polyglot.DataAccess
 		{
 			context = c;
             repositories = new Dictionary<Type, object>();
-		}
 
-        public IRepository<T> GetRepository<R, T>() 
-            where R : IRepository<T>
+        }
+
+        public IRepository<T> GetRepository<T>() 
             where T : Entity, new()
         {
             var targetType = typeof(T);
@@ -29,7 +30,7 @@ namespace Polyglot.DataAccess
             }
             else
             {
-                var repoInstance =  (IRepository<T>)Activator.CreateInstance(typeof(R), context);
+                var repoInstance = new Repository<T>(context);
                 repositories.Add(targetType, repoInstance);
                 return repoInstance;
             }
