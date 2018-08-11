@@ -55,7 +55,7 @@ namespace Polyglot
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ICRUDService<>), typeof(CRUDService<>));
+            services.AddScoped(typeof(ICRUDService), typeof(CRUDService));
 
 
             services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{

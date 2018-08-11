@@ -1,89 +1,94 @@
-﻿using Polyglot.BusinessLogic.Interfaces;
+﻿using AutoMapper;
+using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.Repositories;
-using System;
+using Polyglot.DataAccess.NoSQL_Models;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
-    /// <summary>
-    /// TEMP CLASS NOT FOR RELEASE !!!!!!!!!!!!111111111111111111
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-#warning костыль
-    public class CRUDService<T> : ICRUDService<T> where T : Entity, new()
+    public class CRUDService : ICRUDService
     {
-        private readonly IRepository<T> repository;
         private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
-        public CRUDService(IRepository<T> repository, IUnitOfWork uow)
+        public CRUDService(IUnitOfWork uow, IMapper mapper)
         {
-            this.repository = repository;
+            this.mapper = mapper;
             this.uow = uow;
         }
 
-        public async Task<IEnumerable<T>> GetListAsync()
+        public async Task<IEnumerable<TEntityDTO>> GetListAsync<TEntity, TEntityDTO>()
+            where TEntity : Entity, new()
+            where TEntityDTO : IEntity, new()
         {
-            return await repository.GetAllAsync() ?? null;
-        }
-
-        
-        public async Task<IEnumerable<T>> GetListIncludingAsync(bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
-        {
-            return await uow.GetRepository<T>().GetAllIncludingAsync(isCached, includeProperties);
-               // repository.GetAllIncludingAsync(isCached, includeProperties) ?? null;
-        }
-
-        public async Task<T> GetOneAsync(int identifier)
-        {
-            return await repository.GetAsync(identifier) ?? null;
-        }
-
-        public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate, bool isCached = false)
-        {
-            return await repository.FindByAsync(predicate, isCached);
-        }
-
-        public async Task<IEnumerable<T>> FindByIncludeAsync(Expression<Func<T, bool>> predicate, bool isCached = false, params Expression<Func<T, object>>[] includeProperties)
-        {
-            return await repository.FindByIncludeAsync(predicate, isCached, includeProperties);
-        }
-
-        public async Task<T> PostAsync(T entity)
-        {
-            await repository.CreateAsync(entity);
             if (uow != null)
             {
-                await uow.SaveAsync();
-                return entity ?? null;
+                var targets = await uow.GetRepository<TEntity>().GetAllAsync();
+                return mapper.Map<IEnumerable<TEntityDTO>>(targets);
+            }
+            else
+                return null;
+        }
+
+        public async Task<TEntityDTO> GetOneAsync<TEntity, TEntityDTO>(int identifier)
+            where TEntity : Entity, new()
+            where TEntityDTO : IEntity, new()
+        {
+            if (uow != null)
+            {
+                var target =  await uow.GetRepository<TEntity>().GetAsync(identifier);
+                if (target != null)
+                    return mapper.Map<TEntityDTO>(target);
             }
             return null;
         }
 
-        public async Task<T> PutAsync(int identifier, T entity)
+        public async Task<TEntityDTO> PutAsync<TEntity, TEntityDTO>(int identifier, TEntityDTO entity)
+            where TEntity : Entity, new()
+            where TEntityDTO : IEntity, new()
         {
-            entity.Id = identifier;
-            repository.Update(entity);
             if (uow != null)
             {
-                await uow.SaveAsync();
-                return entity ?? null;
+                entity.Id = identifier;
+                var target = uow.GetRepository<TEntity>().Update(mapper.Map<TEntity>(entity));
+                if(target != null)
+                {
+                    await uow.SaveAsync();
+                    return mapper.Map<TEntityDTO>(target);
+                }
             }
             return null;
         }
 
-        public async Task<bool> TryDeleteAsync(int identifier)
+        public async Task<bool> TryDeleteAsync<TEntity>(int identifier) where TEntity : Entity, new()
         {
-            await repository.DeleteAsync(identifier);
             if (uow != null)
             {
+                await uow.GetRepository<TEntity>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
             }
-            return false;
+            else
+                return false;
+        }
+
+        public async Task<TEntityDTO> PostAsync<TEntity, TEntityDTO>(TEntityDTO entity)
+            where TEntity : Entity, new()
+            where TEntityDTO : IEntity, new()
+        {
+            if (uow != null)
+            {
+                var target = await uow.GetRepository<TEntity>()
+                    .CreateAsync(mapper.Map<TEntity>(entity));
+                if(target != null)
+                {
+                    await uow.SaveAsync();
+                    return mapper.Map<TEntityDTO>(target);
+                }
+            }
+            return null;
         }
     }
 }
