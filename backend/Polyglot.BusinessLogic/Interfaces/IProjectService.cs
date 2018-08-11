@@ -1,32 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Http;
-using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IProjectService // : ICRUDService<ProjectDTO,int>
+    public interface IProjectService
     {
         
 
         
         Task FileParseDictionary(IFormFile file);
 
-        #region Project
+        #region Projects
 
-        Task<IEnumerable<Project>> GetAllProjectsAsync();
+        Task<ProjectDTO> GetProjectAsync(int id);
 
+        Task<IEnumerable<ProjectDTO>> GetAllProjectsAsync();
+
+        Task<ProjectDTO> AddProjectAsync(ProjectDTO project);
+
+        Task<ProjectDTO> ModifyProjectAsync(ProjectDTO project);
+
+        Task<bool> TryDeleteProjectAsync(int id);
         #endregion
 
         #region ComplexString
 
-        Task<IEnumerable<ComplexString>> GetProjectStringsAsync(int id);
+        Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);
 
-        Task<IEnumerable<ComplexString>> GetAllStringsAsync();
+        Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync();
 
         #endregion
     }

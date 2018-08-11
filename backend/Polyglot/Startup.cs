@@ -63,7 +63,7 @@ namespace Polyglot
             });
             services.AddScoped<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddScoped<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddTransient<IProjectService, ProjectService>();
+            services.AddScoped<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
 
         }

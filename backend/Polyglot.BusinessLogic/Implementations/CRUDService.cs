@@ -10,8 +10,8 @@ namespace Polyglot.BusinessLogic.Implementations
 {
     public class CRUDService : ICRUDService
     {
-        private readonly IUnitOfWork uow;
-        private readonly IMapper mapper;
+        protected readonly IUnitOfWork uow;
+        protected readonly IMapper mapper;
 
         public CRUDService(IUnitOfWork uow, IMapper mapper)
         {
