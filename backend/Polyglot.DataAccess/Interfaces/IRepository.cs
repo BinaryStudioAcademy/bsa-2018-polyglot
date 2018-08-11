@@ -8,20 +8,20 @@ namespace Polyglot.DataAccess.Interfaces
 {
     public interface IRepository <TEntity> where TEntity : class
     {
-		Task<TEntity> GetAsync(int id);
-
-		Task<List<TEntity>> GetAllAsync();
-
-		Task<TEntity> DeleteAsync(int id);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
         Task<TEntity> CreateAsync(TEntity entity);
 
+        Task<TEntity> DeleteAsync(int id);
+
+        Task<List<TEntity>> GetAllAsync();
+
+        Task<TEntity> GetAsync(int id);
+
+        Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
+
         TEntity Update(TEntity entity);
-
-        Task<IEnumerable<TEntity>> GetAllIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
-
-        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false);
-
-        Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
     }
 }

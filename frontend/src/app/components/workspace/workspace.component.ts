@@ -37,7 +37,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
       this.project = MOCK_PROJECT(params.projectId);
       
-    debugger;
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
         if(data)
@@ -47,6 +46,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
         }
       });
     });
+    if(this.keys == undefined ){
+    this.keys = [{name : 'No strings',originalValue : ''}]}
   }
 
   onAdvanceSearchClick() {
