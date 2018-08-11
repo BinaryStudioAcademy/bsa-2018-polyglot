@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Seeds;
 
 namespace Polyglot.DataAccess
 {
@@ -104,6 +105,8 @@ namespace Polyglot.DataAccess
                 .HasOne(tr => tr.TeamTranslator)
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
+            
+            modelBuilder.Seed();
         }
     }
 }
