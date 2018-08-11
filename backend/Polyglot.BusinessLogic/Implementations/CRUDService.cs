@@ -21,7 +21,7 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<IEnumerable<TEntityDTO>> GetListAsync<TEntity, TEntityDTO>()
             where TEntity : Entity, new()
-            where TEntityDTO : IEntity, new()
+            where TEntityDTO : class, new()
         {
             if (uow != null)
             {
@@ -34,7 +34,7 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<TEntityDTO> GetOneAsync<TEntity, TEntityDTO>(int identifier)
             where TEntity : Entity, new()
-            where TEntityDTO : IEntity, new()
+            where TEntityDTO : class, new()
         {
             if (uow != null)
             {
@@ -45,13 +45,12 @@ namespace Polyglot.BusinessLogic.Implementations
             return null;
         }
 
-        public async Task<TEntityDTO> PutAsync<TEntity, TEntityDTO>(int identifier, TEntityDTO entity)
+        public async Task<TEntityDTO> PutAsync<TEntity, TEntityDTO>(TEntityDTO entity)
             where TEntity : Entity, new()
-            where TEntityDTO : IEntity, new()
+            where TEntityDTO : class, new()
         {
             if (uow != null)
             {
-                entity.Id = identifier;
                 var target = uow.GetRepository<TEntity>().Update(mapper.Map<TEntity>(entity));
                 if(target != null)
                 {
@@ -76,7 +75,7 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<TEntityDTO> PostAsync<TEntity, TEntityDTO>(TEntityDTO entity)
             where TEntity : Entity, new()
-            where TEntityDTO : IEntity, new()
+            where TEntityDTO : class, new()
         {
             if (uow != null)
             {
