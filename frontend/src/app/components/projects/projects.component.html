@@ -10,29 +10,32 @@
   
   </form>
 
-
-<div class="container" fxLayout="wrap row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="space-evenly" fxLayoutAlign.sm="center stretch">
-  <div fxFlex="30%" *ngFor="let card of cards">
-    <mat-card class="example-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image" ></div>
-        <mat-card-title>{{card.name}}</mat-card-title>
-        <mat-card-subtitle>{{card.technology}}</mat-card-subtitle>
+<div class="container" >  
+    <mat-card class="example-card" *ngFor="let card of cards">
+      <mat-card-header>        
+        <img mat-card-avatar class="manager-img" src="{{manager.userProfile.avatarUrl}}">
+        <div class="title">
+          <mat-card-title class="card-title">{{card.name}}</mat-card-title>
+          <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
+      </div>
       </mat-card-header>
-      <!-- <img mat-card-image src={{card.imageUrl}} alt="Photo of a project"> -->
-      <img mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
-      <mat-card-content>{{card.description}}</mat-card-content>
+      <img class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project">
+      <div class="description">
+        <mat-card-content *ngIf="card.description !== null">             
+            {{card.description}}        
+        </mat-card-content>
+      </div>
+      <mat-card-content *ngIf="card.description == null">            
+          No description
+      </mat-card-content>
       <mat-card-actions class="card-buttons">
-        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-        <div fxFlex></div>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
         <button mat-raised-button color="primary" routerLink="/dashboard/project/details">DETAILS</button>
       </mat-card-actions>
-<!--       <mat-progress-bar mode="determinate" value={{card.progress}}></mat-progress-bar>
-      <span class="progress-span">{{card.progress}}% translated </span> -->
     </mat-card>
-  </div>
+  
+</div>  
 
-  <button routerLink="../newproject" mat-fab color="primary" class="button-add">
-    <mat-icon  aria-label="Add button">add</mat-icon>
-  </button>
-</div>
+<button routerLink="../newproject" mat-fab color="primary" class="button-add">
+  <mat-icon  aria-label="Add button">add</mat-icon>
+</button>
