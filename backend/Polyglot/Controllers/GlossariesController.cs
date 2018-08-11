@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class GlossariesController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<Glossary, int> service;
+        private readonly ICRUDService<Glossary> service;
 
-        public GlossariesController(ICRUDService<Glossary, int> service, IMapper mapper)
+        public GlossariesController(ICRUDService<Glossary> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;
