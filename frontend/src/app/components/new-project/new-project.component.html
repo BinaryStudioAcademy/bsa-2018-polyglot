@@ -1,6 +1,6 @@
 <div class="form-container">
 <h2>Create new project</h2>
-<form [formGroup]="projectForm"   (submit)="saveChanges(projectForm.value)" > 
+<form [formGroup]="projectForm" > 
     <mat-form-field class="field-full-width">
         <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
         <mat-error class="errors" *ngIf="name.invalid && (name.dirty || name.touched)">
@@ -35,8 +35,8 @@
                 </mat-form-field>
                 <mat-form-field class="mat-select-wraper">
                     <mat-select class="mat-select" placeholder="Main language" formControlName="mainLanguage" required>
-                       <mat-option *ngFor="let language of getAllLanguages()" [value]="mainLanguage">
-                            {{language.name}}
+                       <mat-option *ngFor="let mainLanguage of languages" [value]="mainLanguage">
+                            {{mainLanguage.name}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="mainLanguage.invalid && (mainLanguage.dirty || mainLanguage.touched)">
@@ -46,7 +46,7 @@
                     </mat-error>
                 </mat-form-field>
                 <div class="saveButton">
-                    <button mat-button  [disabled]="projectForm.invalid">Create</button>
+                    <button mat-button color="primary"  (click)="saveChanges(projectForm.value)" [disabled]="projectForm.invalid">Create</button>
                 </div>
             </div>
         </mat-grid-tile>

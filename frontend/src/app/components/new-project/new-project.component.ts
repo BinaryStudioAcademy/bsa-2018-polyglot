@@ -7,6 +7,7 @@ import { ProjectService } from '../../services/project.service';
 import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-project',
@@ -25,13 +26,10 @@ export class NewProjectComponent implements OnInit {
 
   
   ngOnInit() {
-    this.createProjectForm();
-
     this.languageService.getAll()
       .subscribe(
-      (d)=> {
-        this.languages = d;
-        this.createProjectForm();
+      (d: Language[])=> {
+        this.languages = d.map(x => Object.assign({}, x));
       },
       err => {
         console.log('err', err);
@@ -39,37 +37,44 @@ export class NewProjectComponent implements OnInit {
     );  
   }
 
-  project: Project;
-  projectForm: FormGroup;
-  languages: Array<Language>;
-  projectImage: File;
-
-  createProjectForm(): void {
-    
-      this.projectForm = this.fb.group({
-        name: [ '', [Validators.required, Validators.minLength(4)]],
-        description: [ '', [Validators.maxLength(500)]],
-        technology: [ '', [Validators.required]],
-        mainLanguage: [ '', [Validators.required]],
-      });
-  }
-
-
   receiveImage($event){
-    this.projectImage = $event;
+      this.projectImage = $event[0];
   }
+
+  projectImage: File;
+  project: Project;
+  projectForm: FormGroup = this.fb.group({
+    name: [ '', [Validators.required, Validators.minLength(4)]],
+    description: [ '', [Validators.maxLength(500)]],
+    technology: [ '', [Validators.required]],
+    mainLanguage: [ '', [Validators.required]],
+  });
+  languages: Language[];
+
+
 
   saveChanges(project: Project): void{
-    project.createdOn = new Date(Date.now()); 
+    console.log(this.projectImage);
+    if(this.projectImage){
+      project.imageUrl = this.projectImage.name;
+    }
+    project.createdOn = new Date(Date.now());
+
+   /* let projectToSend: any = Object.assign({}, project);
+    projectToSend.mainLanguage = project.mainLanguage.name;*/
+    console.log(project);
+    project.mainLanguage.id = undefined;
     //Save current manager
     this.projectService.create(project)
     .subscribe(
       (d)=> {
+        console.log(d);
         this.router.navigate(['../']);
         this.snotifyService.success("Project created", "Success!");
       },
       err => {
         this.snotifyService.error("Project wasn`t created", "Error!");
+        console.log('err', err);
         
       }
     );
@@ -83,16 +88,10 @@ export class NewProjectComponent implements OnInit {
     );
   }
 
-  getAllLanguages(): Language[]{ 
-    let languages: Language[] = [
-      {id: 1, name: "lang1", code: "code1"},
-      {id: 2, name: "lang2", code: "code2"},
-      {id: 3, name: "lang3", code: "code3"},
-      {id: 4, name: "lang4", code: "code4"},
-      {id: 5, name: "lang5", code: "code5"}
-    ]
-    return languages;
+  getLanguages(){
+    return this.languages.map(l => l.name);
   }
+
 
   get name() {
     return this.projectForm.get('name');
