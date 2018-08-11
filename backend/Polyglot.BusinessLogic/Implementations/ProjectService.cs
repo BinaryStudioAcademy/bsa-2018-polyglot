@@ -103,8 +103,12 @@ namespace Polyglot.BusinessLogic.Implementations
         {
             if (uow != null)
             {
-                var project = await uow.GetRepository<Project>()
-                .FindByIncludeAsync(p => p.Id == id, false, p => p.Manager.UserProfile, p => p.MainLanguage);
+                var project = (await uow.GetRepository<Project>()
+                    .Include(p => p.Manager.UserProfile)
+                    .Include(p => p.MainLanguage)
+                    .GetByAsync(p => p.Id == id)
+                    )
+                    .FirstOrDefault();
                 if (project != null)
                     return mapper.Map<ProjectDTO>(project);
             }
@@ -116,7 +120,9 @@ namespace Polyglot.BusinessLogic.Implementations
             if (uow != null)
             {
                 var projects = await uow.GetRepository<Project>()
-                .GetAllIncludingAsync(false, p => p.Manager.UserProfile, p => p.MainLanguage);
+                    .Include(p => p.Manager.UserProfile)
+                    .Include(p => p.MainLanguage)
+                    .GetAllAsync();
                 return mapper.Map<IEnumerable<ProjectDTO>>(projects);
             }
             else
