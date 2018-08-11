@@ -19,13 +19,15 @@
           <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
       </div>
       </mat-card-header>
-      <img class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project">
-      <div class="description">
-        <mat-card-content *ngIf="card.description !== null">             
+      <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='https://www.projectsmart.co.uk/img/project.png'">
+      <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="https://www.projectsmart.co.uk/img/project.png" alt="Photo of a project">
+      
+        <div class="description">
+        <mat-card-content *ngIf="card.description !== null && card.description!=='' ">             
             {{card.description}}        
         </mat-card-content>
       </div>
-      <mat-card-content *ngIf="card.description == null">            
+      <mat-card-content *ngIf="card.description == null || card.description=='' ">            
           No description
       </mat-card-content>
       <mat-card-actions class="card-buttons">

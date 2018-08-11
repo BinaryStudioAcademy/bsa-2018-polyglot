@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class ProjectHistoriesController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<ProjectHistory, int> service;
+        private readonly ICRUDService<ProjectHistory> service;
 
-        public ProjectHistoriesController(ICRUDService<ProjectHistory, int> service, IMapper mapper)
+        public ProjectHistoriesController(ICRUDService<ProjectHistory> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;

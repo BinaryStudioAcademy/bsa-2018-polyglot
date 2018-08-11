@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class FilesController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<File, int> service;
+        private readonly ICRUDService<File> service;
 
-        public FilesController(ICRUDService<File, int> service, IMapper mapper)
+        public FilesController(ICRUDService<File> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;

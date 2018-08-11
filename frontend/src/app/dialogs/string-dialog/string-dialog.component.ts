@@ -17,7 +17,7 @@ export class StringDialogComponent implements OnInit {
   public projectId: number;
 
   receiveImage($event){
-    this.image = $event;
+    this.image = $event[0];
   }
 
   receiveTags($event){
