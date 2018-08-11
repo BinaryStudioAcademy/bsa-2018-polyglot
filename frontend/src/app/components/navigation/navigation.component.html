@@ -2,7 +2,7 @@
   <mat-toolbar class="example-toolbar">
 
 
-    <button mat-icon-button (click)="snav.toggle()">
+    <button mat-icon-button (click)="snav.toggle()" *ngIf="isLoggedIn()">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -71,7 +71,10 @@
       </div>
     </mat-sidenav>
 
-    <router-outlet></router-outlet>
+    <div (click)="snav.close()">
+      <router-outlet></router-outlet>
+    </div>
+    
 
   </mat-sidenav-container>
 </div>
