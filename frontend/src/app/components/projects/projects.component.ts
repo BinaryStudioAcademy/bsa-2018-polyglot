@@ -50,6 +50,7 @@ export class ProjectsComponent implements OnInit {
     if(this.cards.length === 0){
       setTimeout(() => this.openDialog())
       }
+      console.log(this.cards);
   });
   }
 
