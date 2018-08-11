@@ -18,6 +18,7 @@ namespace Polyglot.Common.Mapping
                 #region SQL
 
                 cfg.CreateMap<FileDTO, File>()
+                   .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                    .ForMember(p => p.Link, opt => opt.MapFrom(po => po.Link))
                    .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
                    .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
@@ -30,6 +31,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.UploadedBy, opt => opt.MapFrom(pt => pt.UploadedBy));
 
                 cfg.CreateMap<GlossaryDTO, Glossary>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                    .ForMember(p => p.ExplanationText, opt => opt.MapFrom(po => po.ExplanationText))
                    .ForMember(p => p.OriginLanguage, opt => opt.MapFrom(po => po.OriginLanguage))
                    .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(po => po.ProjectGlossaries))
@@ -42,6 +44,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TermText, opt => opt.MapFrom(pt => pt.TermText));
 
                 cfg.CreateMap<LanguageDTO, Language>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                    .ForMember(p => p.Code, opt => opt.MapFrom(po => po.Code))
                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
                 cfg.CreateMap<Language, LanguageDTO>()
@@ -50,12 +53,14 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Name, opt => opt.MapFrom(pt => pt.Name));
 
                 cfg.CreateMap<ManagerDTO, Manager>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                    .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile));
                 cfg.CreateMap<Manager, ManagerDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile));
 
                 cfg.CreateMap<ProjectDTO, Project>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
                     .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
                     .ForMember(p => p.ImageUrl, opt => opt.MapFrom(po => po.ImageUrl))
@@ -84,6 +89,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Translations, opt => opt.MapFrom(pt => pt.Translations));
 
                 cfg.CreateMap<ProjectGlossaryDTO, ProjectGlossary>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Glossary, opt => opt.MapFrom(po => po.Glossary))
                     .ForMember(p => p.GlossaryId, opt => opt.MapFrom(po => po.GlossaryId))
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
@@ -96,6 +102,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.ProjectId, opt => opt.MapFrom(pt => pt.ProjectId));
 
                 cfg.CreateMap<ProjectHistoryDTO, ProjectHistory>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.ActionType, opt => opt.MapFrom(po => po.ActionType))
                     .ForMember(p => p.Actor, opt => opt.MapFrom(po => po.Actor))
                     .ForMember(p => p.OriginValue, opt => opt.MapFrom(po => po.OriginValue))
@@ -112,6 +119,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Time, opt => opt.MapFrom(pt => pt.Time));
 
                 cfg.CreateMap<ProjectLanguageDTO, ProjectLanguage>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
                     .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
@@ -124,6 +132,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.ProjectId, opt => opt.MapFrom(pt => pt.ProjectId));
 
                 cfg.CreateMap<ProjectTagDTO, ProjectTag>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Tag, opt => opt.MapFrom(po => po.Tag))
                     .ForMember(p => p.TagId, opt => opt.MapFrom(po => po.TagId))
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
@@ -136,6 +145,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.ProjectId, opt => opt.MapFrom(pt => pt.ProjectId));
 
                 cfg.CreateMap<RatingDTO, Rating>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Comment, opt => opt.MapFrom(po => po.Comment))
                     .ForMember(p => p.CreatedAt, opt => opt.MapFrom(po => po.CreatedAt))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(po => po.CreatedBy))
@@ -148,6 +158,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Rate, opt => opt.MapFrom(pt => pt.Rate));
 
                 cfg.CreateMap<RightDTO, Right>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Definition, opt => opt.MapFrom(po => po.Definition))
                     .ForMember(p => p.TranslatorRights, opt => opt.MapFrom(po => po.TranslatorRights));
                 cfg.CreateMap<Right, RightDTO>()
@@ -156,6 +167,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TranslatorRights, opt => opt.MapFrom(pt => pt.TranslatorRights));
 
                 cfg.CreateMap<TagDTO, Tag>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Color, opt => opt.MapFrom(po => po.Color))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.ProjectTags, opt => opt.MapFrom(po => po.ProjectTags));
@@ -166,12 +178,14 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.ProjectTags, opt => opt.MapFrom(pt => pt.ProjectTags));
 
                 cfg.CreateMap<TeamDTO, Team>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(po => po.TeamTranslators));
                 cfg.CreateMap<Team, TeamDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(pt => pt.TeamTranslators));
 
                 cfg.CreateMap<TeamTranslatorDTO, TeamTranslator>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Team, opt => opt.MapFrom(po => po.Team))
                     .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
                     .ForMember(p => p.Translator, opt => opt.MapFrom(po => po.Translator))
@@ -186,12 +200,14 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TranslatorRights, opt => opt.MapFrom(pt => pt.TranslatorRights));
 
                 cfg.CreateMap<Polyglot.Common.DTOs.TranslationDTO, Polyglot.DataAccess.Entities.Translation>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
                 cfg.CreateMap<Polyglot.DataAccess.Entities.Translation, Polyglot.Common.DTOs.TranslationDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
 
                 cfg.CreateMap<TranslatorDTO, Translator>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Ratings, opt => opt.MapFrom(po => po.Ratings))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(po => po.TeamTranslators))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile));
@@ -202,6 +218,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile));
 
                 cfg.CreateMap<TranslatorLanguageDTO, TranslatorLanguage>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
                     .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
                     .ForMember(p => p.Proficiency, opt => opt.MapFrom(po => po.Proficiency))
@@ -216,6 +233,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TranslatorId, opt => opt.MapFrom(pt => pt.TranslatorId));
 
                 cfg.CreateMap<TranslatorRightDTO, TranslatorRight>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Right, opt => opt.MapFrom(po => po.Right))
                     .ForMember(p => p.RightId, opt => opt.MapFrom(po => po.RightId))
                     .ForMember(p => p.TeamTranslator, opt => opt.MapFrom(po => po.TeamTranslator))
@@ -228,6 +246,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TeamTranslatorId, opt => opt.MapFrom(pt => pt.TeamTranslatorId));
 
                 cfg.CreateMap<UserProfileDTO, UserProfile>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Address, opt => opt.MapFrom(po => po.Address))
                     .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl))
                     .ForMember(p => p.BirthDate, opt => opt.MapFrom(po => po.BirthDate))
@@ -276,7 +295,8 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId));
 
 				cfg.CreateMap<ComplexStringDTO, ComplexString>()
-				  .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))
+                  .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                  .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))
 				  .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
 				  .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
 				  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
