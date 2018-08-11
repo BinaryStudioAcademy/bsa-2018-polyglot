@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
@@ -26,68 +25,62 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            return null;
-            //var projects = await service.GetListIncludingAsync(false, p => p.Manager.UserProfile, p => p.MainLanguage);
-            //return projects == null ? NotFound("No projects found!") as IActionResult
-            //    : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projects));
+            var projects = await service.GetAllProjectsAsync();
+            return projects == null ? NotFound("No projects found!") as IActionResult
+                : Ok(projects);
         }
 
         // GET: Projects/5
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
-            return null;
-            //var project = await service.FindByIncludeAsync(p => p.Id == id, false, p => p.Manager.UserProfile, p => p.MainLanguage);
-            //return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
-            //    : Ok(mapper.Map<ProjectDTO>(project));
-			
-		}
+            var project = await service.GetProjectAsync(id);
+            return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
+                : Ok(project);
+
+        }
 
         // Get: Projects/5/complexString
         [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
         public async Task<IActionResult> GetProjectStrings(int id)
         {
-            return null;
-            //var projectsStrings = await service.GetProjectStringsAsync(id);
-            //return projectsStrings == null ? NotFound("No projects found!") as IActionResult
-            //    : Ok(mapper.Map<IEnumerable<ProjectDTO>>(projectsStrings));
+            var projectsStrings = await service.GetProjectStringsAsync(id);
+            return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+                : Ok(projectsStrings);
         }
 
         // POST: Projects
         public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
         {
-            return null;
-            //if (!ModelState.IsValid)
-            //    return BadRequest() as IActionResult;
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
 
-            //var entity = await service.PostAsync(mapper.Map<Project>(project));
-            //return entity == null ? StatusCode(409) as IActionResult
-            //    : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-            //    mapper.Map<ProjectDTO>(entity));
-			
-		}
+            var entity = await service.AddProjectAsync(project);
+            return entity == null ? StatusCode(409) as IActionResult
+                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
+                entity);
+
+        }
 
         // PUT: Projects/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
         {
-            return null;
-            //if (!ModelState.IsValid)
-            //    return BadRequest() as IActionResult;
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
 
-            //var entity = await service.PutAsync(id, mapper.Map<Project>(project));
-            //return entity == null ? StatusCode(304) as IActionResult
-            //    : Ok(mapper.Map<ProjectDTO>(entity));
-		}
+            var entity = await service.ModifyProjectAsync(project);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
-            return null;
-            //var success = await service.TryDeleteAsync(id);
-            //return success ? Ok() : StatusCode(304) as IActionResult;			
-		}
+            var success = await service.TryDeleteProjectAsync(id);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
 		
 		[HttpPost]
 		[Route("dictionary")]
