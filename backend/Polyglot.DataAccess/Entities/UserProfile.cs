@@ -15,6 +15,9 @@ namespace Polyglot.DataAccess.Entities
         public string Address { get; set; }
         public string Phone { get; set; }
         public string AvatarUrl { get; set; }
+
+        //Temp field
+        public string FirebaseId { get; set; }
     }
 }
 
