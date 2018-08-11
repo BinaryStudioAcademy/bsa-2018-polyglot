@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class ProjectTagsController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<ProjectTag, int> service;
+        private readonly ICRUDService<ProjectTag> service;
 
-        public ProjectTagsController(ICRUDService<ProjectTag, int> service, IMapper mapper)
+        public ProjectTagsController(ICRUDService<ProjectTag> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;

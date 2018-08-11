@@ -16,9 +16,9 @@ namespace Polyglot.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ICRUDService<Team, int> service;
+        private readonly ICRUDService<Team> service;
 
-        public TeamsController(ICRUDService<Team, int> service, IMapper mapper)
+        public TeamsController(ICRUDService<Team> service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;
