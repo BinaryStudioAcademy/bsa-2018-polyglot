@@ -114,10 +114,10 @@ namespace Polyglot.DataAccess
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
             
-            modelBuilder.LanguageSeed();
-            modelBuilder.ProjectSeed();
+           
+            modelBuilder.Seed();
             
-            //modelBuilder.TagSeed();
+            
 
         }
     }
