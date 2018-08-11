@@ -9,7 +9,6 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.Repositories;
