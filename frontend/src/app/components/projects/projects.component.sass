@@ -3,7 +3,7 @@
   margin-top: 30px
   margin-bottom: 30px
   display: grid
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+  grid-template-columns: repeat(auto-fill, minmax(250px, 0.5fr))
   grid-gap: 15px
   justify-content: center
 
@@ -76,19 +76,23 @@ mat-card-title
   text-overflow: ellipsis
 
 .img-container 
- height: 200px
- width: 282px
+ height: 230px
+ max-height: 100%
+ width: 328px
+ max-width: 100%
  overflow: hidden
  text-align: center
  display: table-cell
  vertical-align: middle
+ padding: 0px
+ margin: 0px
  
 
 .img-container img 
   height: auto
-  max-height: 200px
+  max-height: 100%
   width: auto
-  max-width: 282px
+  max-width: 100%
 
 
 .spinner
