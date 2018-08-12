@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.MongoModels;
+using Polyglot.DataAccess.MongoRepository;
 
 namespace Polyglot.Controllers
 {
@@ -16,11 +14,11 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ComplexStringsController : ControllerBase
     {
-        private IMapper mapper;
-        private IComplexStringService dataProvider;
-        private IProjectService service;
+        private readonly IMapper mapper;
+        private readonly IComplexStringService dataProvider;
+        private readonly IProjectService service;
 
-        public ComplexStringsController(IComplexStringService dataProvider,IProjectService service, IMapper mapper)
+        public ComplexStringsController(IComplexStringService dataProvider, IProjectService service, IMapper mapper)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
@@ -32,9 +30,9 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> AddComplexString([FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-            var entity = await dataProvider.PostAsync(complexString);
+            var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 mapper.Map<ComplexStringDTO>(entity));
@@ -45,11 +43,11 @@ namespace Polyglot.Controllers
         public IActionResult ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
             complexString.Id = id;
 
-            var entity = dataProvider.PutAsync(complexString);
+            var entity = dataProvider.ModifyComplexString(complexString);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(mapper.Map<ComplexStringDTO>(entity));
         }
@@ -58,8 +56,8 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComplexString(int id)
         {
-            var success = await dataProvider.TryDeleteAsync(id);
-            return success == null ? Ok() : StatusCode(304) as IActionResult;
+            var success = await dataProvider.DeleteComplexString(id);
+            return success == null ? Ok() : StatusCode(304);
         }
     }
 }

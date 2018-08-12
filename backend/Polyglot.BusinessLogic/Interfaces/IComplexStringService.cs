@@ -1,14 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.DataAccess.MongoModels;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IComplexStringService
     {
-        Task<ComplexStringDTO> PutAsync(ComplexStringDTO entity);
-        Task<bool> TryDeleteAsync(int id);
-        Task<ComplexStringDTO> PostAsync(ComplexStringDTO entity);
+        Task<IEnumerable<ComplexStringDTO>> GetListAsync();
+
+        Task<ComplexStringDTO> GetComplexString(int identifier);
+        
+        Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity);
+
+        Task<bool> DeleteComplexString(int identifier);
+
+        Task<ComplexStringDTO> AddComplexString(ComplexStringDTO entity);
     }
 }

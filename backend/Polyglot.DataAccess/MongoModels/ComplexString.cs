@@ -1,7 +1,7 @@
-﻿using Polyglot.DataAccess.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Polyglot.DataAccess.Entities;
 
-namespace Polyglot.DataAccess.NoSQL_Models
+namespace Polyglot.DataAccess.MongoModels
 {
     public class ComplexString : Entity
     {

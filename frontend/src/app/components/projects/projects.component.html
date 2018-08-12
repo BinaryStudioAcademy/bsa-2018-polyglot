@@ -9,8 +9,10 @@
     </mat-form-field>
   
   </form>
-
-<div class="container" >  
+  <div *ngIf="IsLoad" class="spinner">
+      <mat-spinner></mat-spinner> 
+      </div> 
+<div class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>        
         <img mat-card-avatar class="manager-img" src="{{manager.userProfile.avatarUrl}}">
@@ -32,7 +34,7 @@
       </mat-card-content>
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
-        <button mat-raised-button color="primary" routerLink="/dashboard/project/details">DETAILS</button>
+        <button mat-raised-button color="primary" routerLink="/project/details">DETAILS</button>
       </mat-card-actions>
     </mat-card>
   

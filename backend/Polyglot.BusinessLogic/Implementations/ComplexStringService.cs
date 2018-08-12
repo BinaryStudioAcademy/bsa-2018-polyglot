@@ -1,33 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml.Xsl;
 using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
-using ComplexString = Polyglot.DataAccess.NoSQL_Models.ComplexString;
+using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.SqlRepository;
+using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 
 namespace Polyglot.BusinessLogic.Implementations
 {
     public class ComplexStringService : IComplexStringService
     {
-        private readonly IComplexStringRepository _mongoRepository;
+        private readonly IMongoRepository<ComplexString> _mongoRepository;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public ComplexStringService(IComplexStringRepository mongoRepository, IUnitOfWork uow, IMapper mapper)
+        public ComplexStringService(IMongoRepository<ComplexString> mongoRepository, IUnitOfWork uow, IMapper mapper)
         {
             _mongoRepository = mongoRepository;
             _uow = uow;
             _mapper = mapper;
         }
 
-        public async Task<ComplexStringDTO> PostAsync(ComplexStringDTO entity)
+        public async Task<ComplexStringDTO> AddComplexString(ComplexStringDTO entity)
         {
             var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
             {
@@ -40,12 +37,22 @@ namespace Polyglot.BusinessLogic.Implementations
             return null;
         }
 
-        public Task<ComplexStringDTO> PutAsync(ComplexStringDTO entity)
+        public Task<IEnumerable<ComplexStringDTO>> GetListAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> TryDeleteAsync(int id)
+        public Task<ComplexStringDTO> GetComplexString(int identifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteComplexString(int id)
         {
             throw new NotImplementedException();
         }

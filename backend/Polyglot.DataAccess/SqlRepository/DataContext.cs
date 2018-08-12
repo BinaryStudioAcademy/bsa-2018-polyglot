@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Polyglot.DataAccess.Entities;
 
-namespace Polyglot.DataAccess
+namespace Polyglot.DataAccess.SqlRepository
 {
     public class DataContext : DbContext
     {

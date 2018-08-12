@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Interfaces;
 
-namespace Polyglot.DataAccess.Interfaces
+namespace Polyglot.DataAccess.SqlRepository
 {
     public interface IUnitOfWork
     {
