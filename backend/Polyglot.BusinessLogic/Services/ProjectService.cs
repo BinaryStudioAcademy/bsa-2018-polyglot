@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.DataAccess.MongoModels;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -10,41 +10,42 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.MongoRepository;
 using AutoMapper;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
     public class ProjectService : CRUDService, IProjectService
-	{
-        IComplexStringRepository stringsProvider;
-		public ProjectService(IUnitOfWork uow, IMapper mapper, IComplexStringRepository rep)
-            :base(uow, mapper)
-		{
+    {
+        IRepository<ComplexString> stringsProvider;
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IRepository<ComplexString> rep)
+            : base(uow, mapper)
+        {
             this.stringsProvider = rep;
-		}
-        
-
-		public async Task FileParseDictionary(IFormFile file)
-		{			
-				Dictionary<string, string> dictionary = new Dictionary<string, string>();
-				string str = String.Empty;
+        }
 
 
-				switch (file.ContentType)
-				{
+        public async Task FileParseDictionary(IFormFile file)
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            string str = String.Empty;
 
 
-				case "application/json":
-						
-					using (var reader = new StreamReader(file.OpenReadStream()))
-					{
-						str = await reader.ReadToEndAsync();
-					}
-					dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
-					break;
+            switch (file.ContentType)
+            {
+
+
+                case "application/json":
+
+                    using (var reader = new StreamReader(file.OpenReadStream()))
+                    {
+                        str = await reader.ReadToEndAsync();
+                    }
+                    dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
+                    break;
 
                 /*
 
@@ -68,34 +69,34 @@ namespace Polyglot.BusinessLogic.Implementations
                 case "application/xml":
                 case "application/octet-stream":
 
-					using (var reader = new StreamReader(file.OpenReadStream()))
-					{
-						str = await reader.ReadToEndAsync();
-					}
-					XDocument doc = XDocument.Parse(str);					
-					
-					foreach (XElement data in doc.Element("root").Elements("data"))
-					{
-						dictionary[data.Attribute("name").Value] = data.Element("value").Value;
-					}
+                    using (var reader = new StreamReader(file.OpenReadStream()))
+                    {
+                        str = await reader.ReadToEndAsync();
+                    }
+                    XDocument doc = XDocument.Parse(str);
+
+                    foreach (XElement data in doc.Element("root").Elements("data"))
+                    {
+                        dictionary[data.Attribute("name").Value] = data.Element("value").Value;
+                    }
 
 
-					break;
+                    break;
 
-				default:
-						throw new NotImplementedException();
-				}
+                default:
+                    throw new NotImplementedException();
+            }
 
-				foreach(var i in dictionary)
-				{
-					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
+            foreach (var i in dictionary)
+            {
+                ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
                 await stringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
-            }			
+            }
 
-		}
-        
+        }
+
         #region ComplexStrings
 
         public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
@@ -106,7 +107,7 @@ namespace Polyglot.BusinessLogic.Implementations
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id)
         {
-            var strings = await stringsProvider.GetAllByProjectIdAsync(id);
+            var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
 

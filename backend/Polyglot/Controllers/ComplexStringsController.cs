@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.MongoModels;
 
 namespace Polyglot.Controllers
 {
@@ -17,10 +14,10 @@ namespace Polyglot.Controllers
     public class ComplexStringsController : ControllerBase
     {
         private IMapper mapper;
-        private IComplexStringRepository dataProvider;
+        private IRepository<ComplexString> dataProvider;
         private IProjectService service;
-
-        public ComplexStringsController(IComplexStringRepository dataProvider,IProjectService service, IMapper mapper)
+        //TODO: change IRepository<ComplexString> to IComplexStringService
+        public ComplexStringsController(IRepository<ComplexString> dataProvider, IProjectService service, IMapper mapper)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
