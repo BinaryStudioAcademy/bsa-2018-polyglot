@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.BusinessLogic.Implementations
 {

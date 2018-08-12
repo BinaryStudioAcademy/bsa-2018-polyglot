@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Polyglot.DataAccess.NoSQL_Models
+namespace Polyglot.DataAccess.MongoModels
 {
     public class AdditionalTranslation
     {

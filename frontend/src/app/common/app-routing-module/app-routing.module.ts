@@ -41,12 +41,11 @@ const routes: Routes = [
       { path: 'teams', component: TeamsComponent },
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
-      { path: 'newproject', component: NewProjectComponent },
-      { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
       { path: 'strings', component: NoFoundComponent },
       { path: 'abc', component: TeamComponent }
     ]
   },
+  { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
   {
     path: 'workspace/:projectId',
 

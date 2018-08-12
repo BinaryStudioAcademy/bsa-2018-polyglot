@@ -9,8 +9,10 @@
     </mat-form-field>
   
   </form>
-
-<div class="container" >  
+  <div *ngIf="IsLoad" class="spinner">
+      <mat-spinner></mat-spinner> 
+      </div> 
+<div class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>        
         <img mat-card-avatar class="manager-img" src="{{manager.userProfile.avatarUrl}}">
@@ -19,11 +21,10 @@
           <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
         </div>
       </mat-card-header>
-      <!-- <img mat-card-image src={{card.imageUrl}} alt="Photo of a project"> -->
-      <mat-card-content>{{card.description}}
-        <button mat-raised-button color="primary" (click)="delete(card.id)">DELETE</button>
-        <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='https://www.projectsmart.co.uk/img/project.png'">
-        <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="https://www.projectsmart.co.uk/img/project.png" alt="Photo of a project">
+      <div class="img-container">
+      <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
+      <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
+      </div>
       
         <div class="description">
           <mat-card-content *ngIf="card.description !== null && card.description!=='' ">             
@@ -36,11 +37,11 @@
       </mat-card-content>
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
-        <button mat-raised-button color="primary" routerLink="/dashboard/project/details">DETAILS</button>
+        <button mat-raised-button color="primary" routerLink="/project/details">DETAILS</button>
       </mat-card-actions>
     </mat-card>
 </div>  
 
-<button routerLink="../newproject" mat-fab color="primary" class="button-add">
+<button routerLink="/profile/newproject" mat-fab color="primary" class="button-add">
   <mat-icon  aria-label="Add button">add</mat-icon>
 </button>

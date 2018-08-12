@@ -1,4 +1,4 @@
-﻿namespace Polyglot.DataAccess.NoSQL_Models
+﻿namespace Polyglot.DataAccess.MongoModels
 {
     public abstract class IEntity
     {
