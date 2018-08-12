@@ -10,16 +10,10 @@ namespace Polyglot.DataAccess.Entities
         public string Technology { get; set; }
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
-<<<<<<< HEAD
 
-        
-        public Manager Manager { get; set; }
-        
-        public Language MainLanguage { get; set; }
-=======
         public virtual Manager Manager { get; set; }
         public virtual Language MainLanguage { get; set; }
->>>>>>> dbac67e3adca20756d2953a827ae95c1798ce172
+
 
         public virtual ICollection<Team> Teams { get; set; }
         public virtual ICollection<Translation> Translations { get; set; }

@@ -26,11 +26,9 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-<<<<<<< HEAD
-            var projects = await service.GetListIncludingAsync();
-=======
+
             var projects = await service.GetListAsync<Project, ProjectDTO>();
->>>>>>> dbac67e3adca20756d2953a827ae95c1798ce172
+
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -39,11 +37,9 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
-<<<<<<< HEAD
-            var project = await service.FindByIncludeAsync(p => p.Id == id, false);
-=======
+
             var project = await service.GetOneAsync<Project, ProjectDTO>(id);
->>>>>>> dbac67e3adca20756d2953a827ae95c1798ce172
+
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
 
