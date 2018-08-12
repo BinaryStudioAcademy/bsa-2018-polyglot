@@ -56,6 +56,7 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
 import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
 
 
 
@@ -91,8 +92,8 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
     ProjectDetailsComponent,
-    ProjectMessageComponent
-
+    ProjectMessageComponent,
+    ForgotPasswordDialogComponent
 
   ],
   imports: [
@@ -118,7 +119,14 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
+  entryComponents: [
+    LoginDialogComponent, 
+    SignupDialogComponent, 
+    CropperComponent, 
+    StringDialogComponent,
+    ProjectMessageComponent, 
+    ForgotPasswordDialogComponent
+  ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService],
