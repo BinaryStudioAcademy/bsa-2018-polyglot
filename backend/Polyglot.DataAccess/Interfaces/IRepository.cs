@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Polyglot.DataAccess.Interfaces
 {
-    public interface IRepository <TEntity> where TEntity : class
+    public interface IBaseRepository <TEntity> where TEntity : class
     {
      //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
@@ -18,10 +17,8 @@ namespace Polyglot.DataAccess.Interfaces
 
         Task<TEntity> GetAsync(int id);
 
-        Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
 
        // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
-
-        TEntity Update(TEntity entity);
     }
 }

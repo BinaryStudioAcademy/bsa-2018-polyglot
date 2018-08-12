@@ -1,18 +1,32 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.DataAccess.MongoModels;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Polyglot.DataAccess.NoSQL_Repository
+namespace Polyglot.DataAccess.MongoRepository
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity>
-        where TEntity : IEntity
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity: IEntity
     {
-        protected abstract IMongoCollection<TEntity> Collection { get; }
+        string _collectionName;
+
+        protected IMongoCollection<TEntity> Collection =>
+            _dataContext.MongoDatabase.GetCollection<TEntity>(CollectionName);
+
+        private readonly IMongoDataContext _dataContext;
+
+        public string CollectionName
+        {
+            get => _collectionName ?? typeof(TEntity).Name;
+            set => _collectionName = value;
+        }
+
+        public MongoRepository(IMongoDataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
         public async Task<TEntity> CreateAsync(TEntity item)
         {
@@ -32,7 +46,21 @@ namespace Polyglot.DataAccess.NoSQL_Repository
         {
             try
             {
-                return await Collection.FindAsync<TEntity>(new BsonDocument()).Result.ToListAsync();
+                var result = await Collection.FindAsync<TEntity>(new BsonDocument());
+                return await result.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            try
+            {
+                var result = await Collection.FindAsync<TEntity>(filter);
+                return await result.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -41,6 +69,8 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
+
+
         public async Task<TEntity> GetAsync(int id)
         {
             try
@@ -48,7 +78,7 @@ namespace Polyglot.DataAccess.NoSQL_Repository
                 var cursor = await Collection
                                 .Find(x => x.Id == id)
                                 .FirstOrDefaultAsync();
-                return (TEntity)cursor;
+                return cursor;
             }
             catch (Exception ex)
             {
@@ -74,12 +104,12 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public TEntity Update(TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
             try
             {
-                var updateResult =  Collection
-                    .ReplaceOne<TEntity>(filter: g => g.Id == entity.Id, replacement: entity);
+                var updateResult = await Collection
+                    .ReplaceOneAsync<TEntity>(filter: g => g.Id == entity.Id, replacement: entity);
                 return entity;
             }
             catch (Exception ex)
@@ -87,21 +117,6 @@ namespace Polyglot.DataAccess.NoSQL_Repository
                 // log or manage the exception
                 throw ex;
             }
-        }
-
-        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IRepository<TEntity> Include(Expression<Func<TEntity, object>> include)
-        {
-            throw new NotImplementedException();
         }
     }
 }

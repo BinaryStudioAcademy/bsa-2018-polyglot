@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Polyglot.DataAccess.Interfaces;
 
-namespace Polyglot.DataAccess
+namespace Polyglot.DataAccess.FileRepository
 {
     public class FileStorageProvider : IFileStorageProvider
     {
@@ -106,14 +106,6 @@ namespace Polyglot.DataAccess
             return result;
         }
 
-        public enum FileType
-        {
-            Text,
-            Photo,
-            ProjectImg,
-            Screenshot
-        }
-
         private string DirectoryName(FileType type) => Enum.GetName(typeof(FileType), type).ToLower();
         
         private async Task SetPublicContainerPermissionsAsync(CloudBlobContainer container)
@@ -124,5 +116,13 @@ namespace Polyglot.DataAccess
             };
             await container.SetPermissionsAsync(permissions);
         }
+    }
+
+    public enum FileType
+    {
+        Text,
+        Photo,
+        ProjectImg,
+        Screenshot
     }
 }

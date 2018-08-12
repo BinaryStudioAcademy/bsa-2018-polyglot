@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
+import { SnotifyService } from 'ng-snotify';
 
 @Component({
   selector: 'app-login-dialog',
@@ -15,7 +16,8 @@ export class LoginDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
-    private authService : AuthService
+    private authService : AuthService,
+    private snotify: SnotifyService
   ) { }
 
   ngOnInit() {
@@ -27,7 +29,24 @@ export class LoginDialogComponent implements OnInit {
 
   async onLoginFormSubmit(user: IUserLogin, form) {
     if (form.valid) {
-      await this.authService.signInRegular(user.email, user.password).catch(
+      await this.authService.signInRegular(user.email, user.password).then(
+        () => {
+          if(!this.authService.getCurrentUser().emailVerified) {
+              // email confirmation
+            this.authService.sendEmailVerification();
+            this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+              timeout: 10000,
+              showProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false        
+            });
+            this.authService.logout();
+            throw {message: 'You need to confirm your email address in order to use our service'};
+          } else {
+            // if not exist in db - send post request and navigate to settings
+          }
+        }
+      ).catch(
         (error) => this.firebaseError = this.handleFirebaseErrors(error)
       );
       if(this.authService.isLoggedIn()){
@@ -37,7 +56,11 @@ export class LoginDialogComponent implements OnInit {
   }
 
   async onGoogleClick() {
-    await this.authService.signInWithGoogle().catch(
+    await this.authService.signInWithGoogle().then(
+      () => {
+        // if not exist in db - show error
+      }
+    ).catch(
       (error) => this.firebaseError = error.message
     );
     if(this.authService.isLoggedIn()){
@@ -46,7 +69,11 @@ export class LoginDialogComponent implements OnInit {
   }
 
   async onFacebookClick() {
-    await this.authService.signInWithFacebook().catch(
+    await this.authService.signInWithFacebook().then(
+      () => {
+        // if not exist in db - show error
+      }
+    ).catch(
       (error) => this.firebaseError = error.message
     );
     if(this.authService.isLoggedIn()){

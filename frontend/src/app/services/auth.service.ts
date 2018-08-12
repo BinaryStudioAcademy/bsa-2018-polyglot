@@ -97,4 +97,8 @@ export class AuthService {
             this._firebaseAuth.auth.currentUser.sendEmailVerification();
         }
     }
+
+    getCurrentUser() {
+        return this._firebaseAuth.auth.currentUser;
+    }
 }

@@ -1,13 +1,12 @@
-﻿using Newtonsoft.Json;
-using Polyglot.BusinessLogic.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace Polyglot.BusinessLogic.Implementations.HttpServices
+namespace Polyglot.Core.HttpServices
 {
     public class HttpService<TEntity, TIdentifyer> : IHttpService<TEntity, TIdentifyer>, IDisposable where TEntity : class
     {
