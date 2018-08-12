@@ -26,10 +26,10 @@
     </div>
   </mat-card>
 
-  <div class="d-flex">
+  <div class="d-flex" style="height:100vh">
     <mat-card class="keys-list d-flex my-1">
       <mat-nav-list class="keys-list__nav">
-        <a mat-list-item  *ngFor="let key of keys">
+        <a mat-list-item *ngFor="let key of keys">
           <div [class.selected]="key === selectedKey"
           (click)="onSelect(key)">
             <app-workspace-key [key]="key"></app-workspace-key>
@@ -39,6 +39,6 @@
       </mat-nav-list>
     </mat-card>
 
-    <app-workspace-key-details [keyDetails] = "selectedKey"></app-workspace-key-details>
+    <app-workspace-key-details [keyDetails] = "selectedKey" style="width: 100%"></app-workspace-key-details>
   </div>
 </section>

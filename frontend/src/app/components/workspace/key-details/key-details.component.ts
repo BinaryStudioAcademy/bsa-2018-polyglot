@@ -21,10 +21,10 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataProvider: ProjectService
-  ) { debugger;}
+  ) { }
 
   ngOnChanges(){
-    debugger;
+
 
     if(this.keyDetails){
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);

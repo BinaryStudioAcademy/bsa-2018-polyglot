@@ -26,7 +26,7 @@ namespace Polyglot.DataAccess
         {
             await SetPublicContainerPermissionsAsync(_cloudBlobContainer);
 
-            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + "." + extension;
+            string fileName = DirectoryName(type) + "/" + Guid.NewGuid() + extension;
 
             CloudBlockBlob blob = _cloudBlobContainer.GetBlockBlobReference(fileName);
             await blob.UploadFromByteArrayAsync(buffer, 0, buffer.Length);
