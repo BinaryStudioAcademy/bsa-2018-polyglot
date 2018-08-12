@@ -6,7 +6,7 @@ namespace Polyglot.DataAccess.Entities
     {
         public string Link { get; set; }
         public DateTime CreatedOn { get; set; }
-        public UserProfile UploadedBy { get; set; }
-        public Project Project { get; set; }
+        public virtual UserProfile UploadedBy { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

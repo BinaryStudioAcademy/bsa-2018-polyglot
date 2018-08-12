@@ -89,17 +89,17 @@ namespace Polyglot.DataAccess.NoSQL_Repository
             }
         }
 
-        public Task<IEnumerable<TEntity>> GetAllIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false)
+        public Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        public IRepository<TEntity> Include(Expression<Func<TEntity, object>> include)
         {
             throw new NotImplementedException();
         }

@@ -9,7 +9,6 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.Repositories;
@@ -42,10 +41,18 @@ namespace Polyglot
                         .AllowCredentials();
                     });
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(
+                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
 
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+            services.AddDbContext<DataContext>(options =>
+                {
+                    options.UseLazyLoadingProxies();
+                    options.UseSqlServer(connectionStr);
+                });
             services.AddScoped(typeof(DbContext), typeof(DataContext));
 
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
@@ -55,7 +62,7 @@ namespace Polyglot
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ICRUDService<>), typeof(CRUDService<>));
+            services.AddScoped(typeof(ICRUDService), typeof(CRUDService));
 
 
             services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
@@ -64,7 +71,7 @@ namespace Polyglot
             });
             services.AddScoped<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
             services.AddScoped<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddTransient<IProjectService, ProjectService>();
+            services.AddScoped<IProjectService, ProjectService>();
             services.AddTransient<IMongoDataContext, MongoDataContext>();
 
         }

@@ -33,7 +33,7 @@ export class HttpService {
         body: any = {}) {
 
         let headers;
-        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "image") {
+        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "FilesStorage") {
             headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': this.token });
         } else {
             headers = new HttpHeaders({ 'Authorization': this.token });
