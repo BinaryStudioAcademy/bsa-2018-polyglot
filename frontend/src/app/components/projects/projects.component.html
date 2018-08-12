@@ -17,19 +17,20 @@
         <div class="title">
           <mat-card-title class="card-title">{{card.name}}</mat-card-title>
           <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
-      </div>
+        </div>
       </mat-card-header>
       <!-- <img mat-card-image src={{card.imageUrl}} alt="Photo of a project"> -->
       <mat-card-content>{{card.description}}
         <button mat-raised-button color="primary" (click)="delete(card.id)">DELETE</button>
-      <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='https://www.projectsmart.co.uk/img/project.png'">
-      <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="https://www.projectsmart.co.uk/img/project.png" alt="Photo of a project">
+        <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='https://www.projectsmart.co.uk/img/project.png'">
+        <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="https://www.projectsmart.co.uk/img/project.png" alt="Photo of a project">
       
         <div class="description">
-        <mat-card-content *ngIf="card.description !== null && card.description!=='' ">             
+          <mat-card-content *ngIf="card.description !== null && card.description!=='' ">             
             {{card.description}}        
-        </mat-card-content>
-      </div>
+          </mat-card-content>
+        </div>
+      </mat-card-content>
       <mat-card-content *ngIf="card.description == null || card.description=='' ">            
           No description
       </mat-card-content>
@@ -38,7 +39,6 @@
         <button mat-raised-button color="primary" routerLink="/dashboard/project/details">DETAILS</button>
       </mat-card-actions>
     </mat-card>
-  
 </div>  
 
 <button routerLink="../newproject" mat-fab color="primary" class="button-add">
