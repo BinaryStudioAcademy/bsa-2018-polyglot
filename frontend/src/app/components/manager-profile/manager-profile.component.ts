@@ -4,6 +4,7 @@ import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component
 import { Project } from '../../models/project';
 import { UserProfile } from '../../models/user-profile';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-manager-profile',
@@ -12,24 +13,32 @@ import { Router } from '@angular/router';
 })
 export class ManagerProfileComponent implements OnInit {
   
+  fullName : string;
+  manager : UserProfile
+  projects : Project[]
+
   constructor(
-    public dialog: MatDialog, private router: Router
-  ) {
+    public dialog: MatDialog, 
+    private router: Router, 
+    private userService: UserService) {
   }
+  
+
   ngOnInit(): void {
-    this.manager = { 
-     id: 1,
-     firstName: "Sasha",
-     lastName : "Pushkin",
-     avatarUrl : "https://cdn.riastatic.com/photos/ria/dom_news_logo/20/2072/207230/207230m.jpg?v=1422268257", // changed due to CORS policy issues
-     birthDate : new Date("12.12.1990"),
-     registrationDate : new Date("12.12.1990"),
-     country : "Ukraine",
-     city : "Kyiv",
-     region : "Dniorivskiy",
-     address : "Dniprovskaya Street",
-     postalCode : "02150",
-     phone : "+380-95-654-33-24"}
+    this.manager = this.userService.getCurrrentUser();
+    // this.manager = { 
+    //  id: 1,
+    //  firstName: "",
+    //  lastName : "",
+    //  avatarUrl : "", // changed due to CORS policy issues
+    //  birthDate : new Date("12.12.1990"),
+    //  registrationDate : new Date("12.12.1990"),
+    //  country : "Ukraine",
+    //  city : "Kyiv",
+    //  region : "Dniorivskiy",
+    //  address : "Dniprovskaya Street",
+    //  postalCode : "02150",
+    //  phone : "+380-95-654-33-24"}
 
      this.projects = [
         { name : "Translation", technology : "Machine"},
@@ -48,8 +57,7 @@ export class ManagerProfileComponent implements OnInit {
     });
   }
 
-    manager : UserProfile
-    projects : Project[]
+
 
     
 }
