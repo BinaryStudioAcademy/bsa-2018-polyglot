@@ -40,7 +40,8 @@
         
         <div class="field-wrapper">
             <mat-form-field class="date-birth-field">
-                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Birth date" formControlName="birthDate">
+                <!--BUG HERE DATE BIRTH 01/01/01 formControlName="birthDate" -->
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Birth date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
