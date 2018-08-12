@@ -8,7 +8,7 @@ namespace Polyglot.DataAccess.Interfaces
 {
     public interface IRepository <TEntity> where TEntity : class
     {
-        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
+     //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
         Task<TEntity> CreateAsync(TEntity entity);
 
@@ -20,7 +20,7 @@ namespace Polyglot.DataAccess.Interfaces
 
         Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate);
 
-        Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
+       // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
 
         TEntity Update(TEntity entity);
     }

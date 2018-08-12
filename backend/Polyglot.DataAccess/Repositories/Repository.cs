@@ -45,12 +45,14 @@ namespace Polyglot.DataAccess.Repositories
 
         public async Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await ApplyIncludes().Where(predicate).ToListAsync();
+            return await DbSet.Where(predicate).ToListAsync();
+          //  return await ApplyIncludes().Where(predicate).ToListAsync();
         }
 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            return await ApplyIncludes().ToListAsync();
+            return await DbSet.ToListAsync();
+          //  return await ApplyIncludes().ToListAsync();
         }
 
         public TEntity Update(TEntity entity)
@@ -58,20 +60,20 @@ namespace Polyglot.DataAccess.Repositories
 			return DbSet.Update(entity).Entity;			
 		}
 
-        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where) 
-            => 
-            ApplyIncludes().AnyAsync(where);
+        //public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where) 
+        //    => 
+        //    ApplyIncludes().AnyAsync(where);
 
-        public IRepository<TEntity> Include(Expression<Func<TEntity, object>> include)
-        {
-            includeExpressions.Add(include);
-            return this;
-        }
+        //public IRepository<TEntity> Include(Expression<Func<TEntity, object>> include)
+        //{
+        //    includeExpressions.Add(include);
+        //    return this;
+        //}
 
-        protected IQueryable<TEntity> ApplyIncludes()
-            => 
-            includeExpressions
-                .Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(DbSet, (current, expression) => current.Include(expression));
+        //protected IQueryable<TEntity> ApplyIncludes()
+        //    => 
+        //    includeExpressions
+        //        .Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>(DbSet, (current, expression) => current.Include(expression));
 
     }
 }
