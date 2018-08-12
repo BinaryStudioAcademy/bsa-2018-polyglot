@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, RequestMethod } from './data.service';
+import { HttpService, RequestMethod } from './http.service';
 import { IString } from '../models/string';
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 export class ComplexStringService {
   api: string;
-  constructor(private dataService: DataService) { 
+  constructor(private dataService: HttpService) { 
     this.api = "api/complexstrings";
   }
 

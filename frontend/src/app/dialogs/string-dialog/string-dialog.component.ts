@@ -47,7 +47,6 @@ export class StringDialogComponent implements OnInit {
       id: 7,
       key: '',
       base: '',
-      projectId: 0,
       description: '',
       tags: [],
       projectId: this.data.projectId

@@ -3,7 +3,6 @@ export interface IString {
     key: string;
     base: string;
     description: string;
-    projectId:number;
     tags: string[];
     projectId: number;
 }
