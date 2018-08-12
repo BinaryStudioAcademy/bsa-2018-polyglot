@@ -1,8 +1,21 @@
 .container
     display: grid
-    grid-template-columns: 40% 60%
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+    align-items: center
+    justify-items: center
+
 
 .contact
+    vertical-align: middle
+    margin: 0 auto
+    max-height: 500px
 
 .map
-    background: url(/src/assets/images/map.png)
+    background-image: url(/src/assets/images/map.png)
+    background-size: contain
+    background-repeat: no-repeat
+
+img
+    display: block
+    max-width: 100%
+    height: auto
