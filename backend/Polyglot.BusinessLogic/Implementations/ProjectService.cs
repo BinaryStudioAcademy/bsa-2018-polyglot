@@ -11,18 +11,19 @@ using System.Xml.Linq;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.NoSQL_Repository;
+using AutoMapper;
+using Polyglot.Common.DTOs;
+using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Implementations
 {
-    public class ProjectService : IProjectService // , CRUDService<ProjectDTO, int>
+    public class ProjectService : CRUDService, IProjectService
 	{
-		private IComplexStringRepository complexStringsProvider;
-        private IUnitOfWork uow;
-        
-		public ProjectService(IComplexStringRepository rep, IUnitOfWork uow)
+        IComplexStringRepository stringsProvider;
+		public ProjectService(IUnitOfWork uow, IMapper mapper, IComplexStringRepository rep)
+            :base(uow, mapper)
 		{
-			this.complexStringsProvider = rep;
-            this.uow = uow;
+            this.stringsProvider = rep;
 		}
         
 
@@ -90,24 +91,25 @@ namespace Polyglot.BusinessLogic.Implementations
 					ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
-                await complexStringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await stringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }			
 
 		}
+        
+        #region ComplexStrings
 
-        public Task<IEnumerable<Project>> GetAllProjectsAsync()
+        public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
         {
-            throw new NotImplementedException();
+            var strings = (await stringsProvider.GetAllAsync()).AsEnumerable();
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
 
-        public async Task<IEnumerable<ComplexString>> GetAllStringsAsync()
+        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id)
         {
-            return (await complexStringsProvider.GetAllAsync()).AsEnumerable();
+            var strings = await stringsProvider.GetAllByProjectIdAsync(id);
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
 
-        public async Task<IEnumerable<ComplexString>> GetProjectStringsAsync(int id)
-        {
-            return await complexStringsProvider.GetAllByProjectIdAsync(id);
-        }
+        #endregion
     }
 }

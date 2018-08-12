@@ -24,6 +24,8 @@ export class ProjectsComponent implements OnInit {
   
   cards : Project[];
 
+  IsLoad : boolean = true;
+
   user: UserProfile = {
     id: 1,
     firstName: 'Bill',
@@ -44,10 +46,12 @@ export class ProjectsComponent implements OnInit {
   };
 
   ngOnInit() {
+  
   this.projectService.getAll().subscribe(pr => {this.cards = pr;
     if(this.cards.length === 0){
       setTimeout(() => this.openDialog())
       }
+      this.IsLoad = false;
       console.log(this.cards);
   });
   }

@@ -9,12 +9,20 @@
     </mat-form-field>
   
   </form>
+<<<<<<< HEAD
 
   <mat-spinner *ngIf="resourcesLoaded === false"></mat-spinner>
 
 
 <div class="container" >  
    <mat-card class="example-card" *ngFor="let card of cards">
+=======
+  <div *ngIf="IsLoad" class="spinner">
+      <mat-spinner></mat-spinner> 
+      </div> 
+<div class="container"> 
+    <mat-card class="example-card" *ngFor="let card of cards">
+>>>>>>> dbac67e3adca20756d2953a827ae95c1798ce172
       <mat-card-header>        
         <img mat-card-avatar class="manager-img" src="{{manager.userProfile.avatarUrl}}">
         <div class="title">
@@ -35,12 +43,12 @@
       </mat-card-content>
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
-        <button mat-raised-button color="primary" routerLink="/dashboard/project/details">DETAILS</button>
+        <button mat-raised-button color="primary" routerLink="/project/details">DETAILS</button>
       </mat-card-actions>
     </mat-card>
   
 </div>  
 
-<button routerLink="../newproject" mat-fab color="primary" class="button-add">
+<button routerLink="/profile/newproject" mat-fab color="primary" class="button-add">
   <mat-icon  aria-label="Add button">add</mat-icon>
 </button>
