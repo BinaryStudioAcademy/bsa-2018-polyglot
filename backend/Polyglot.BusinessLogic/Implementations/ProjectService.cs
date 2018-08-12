@@ -95,60 +95,7 @@ namespace Polyglot.BusinessLogic.Implementations
             }			
 
 		}
-
-        #region Projects
-
-
-        public async Task<ProjectDTO> GetProjectAsync(int id)
-        {
-            if (uow != null)
-            {
-                var project = (await uow.GetRepository<Project>()
-                    .Include(p => p.Manager.UserProfile)
-                    .Include(p => p.MainLanguage)
-                    .GetByAsync(p => p.Id == id)
-                    )
-                    .FirstOrDefault();
-                if (project != null)
-                    return mapper.Map<ProjectDTO>(project);
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<ProjectDTO>> GetAllProjectsAsync()
-        {
-            if (uow != null)
-            {
-                var projects = await uow.GetRepository<Project>()
-                    .Include(p => p.Manager.UserProfile)
-                    .Include(p => p.MainLanguage)
-                    .GetAllAsync();
-                return mapper.Map<IEnumerable<ProjectDTO>>(projects);
-            }
-            else
-                return null;
-        }
         
-
-        public async Task<ProjectDTO> AddProjectAsync(ProjectDTO project)
-        {
-            return await PostAsync<Project, ProjectDTO>(project) ?? null;
-        }
-
-        public async Task<ProjectDTO> ModifyProjectAsync(ProjectDTO project)
-        {
-            return await PutAsync<Project, ProjectDTO>(project) ?? null;
-        }
-
-        public async Task<bool> TryDeleteProjectAsync(int id)
-        {
-            return await TryDeleteAsync<Project>(id);
-        }
-
-
-        #endregion
-
-
         #region ComplexStrings
 
         public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
