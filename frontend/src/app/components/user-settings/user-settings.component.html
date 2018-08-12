@@ -54,9 +54,7 @@
 
             <mat-form-field class="post-code-field">
                 <input matInput placeholder="Postal code" formControlName="postalCode" >
-            </mat-form-field>
-        </div>          
-            <div class="saveButton">
-                <button mat-button  [disabled]="profileForm.invalid">Save</button>
+            </mat-form-field>       
+            <button mat-button class ="save-button"  [disabled]="profileForm.invalid">Save</button>
             </div>
         </form>
