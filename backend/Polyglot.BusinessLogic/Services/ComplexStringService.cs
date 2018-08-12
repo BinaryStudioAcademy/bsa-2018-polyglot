@@ -5,15 +5,16 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
+using Polyglot.DataAccess.MongoRepository;
 
 namespace Polyglot.BusinessLogic.Services
 {
     public class ComplexStringService : IComplexStringService
     {
-        private readonly IRepository<ComplexString> _repository;
+        private readonly IMongoRepository<ComplexString> _repository;
         private readonly IMapper _mapper;
 
-        public ComplexStringService(IRepository<ComplexString> repository, IMapper mapper)
+        public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -31,7 +32,10 @@ namespace Polyglot.BusinessLogic.Services
 
             var target = await _repository.GetAsync(identifier);
             if (target != null)
+            {
                 return _mapper.Map<ComplexStringDTO>(target);
+            }
+
             return null;
 
         }
@@ -39,7 +43,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
 
-            var target = _repository.Update(_mapper.Map<ComplexString>(entity));
+            var target = await _repository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
             {
                 return _mapper.Map<ComplexStringDTO>(target);

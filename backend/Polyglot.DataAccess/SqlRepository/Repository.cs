@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-	public class Repository<TEntity> :  IRepository<TEntity> where TEntity : class
+	public class Repository<TEntity> :  IRepository<TEntity> where TEntity : Entity
 	{
 		protected DbContext context;
 		protected DbSet<TEntity> DbSet;
