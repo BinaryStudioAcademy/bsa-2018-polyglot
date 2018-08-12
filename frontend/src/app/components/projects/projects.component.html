@@ -21,8 +21,10 @@
           <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
       </div>
       </mat-card-header>
-      <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='https://www.projectsmart.co.uk/img/project.png'">
-      <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="https://www.projectsmart.co.uk/img/project.png" alt="Photo of a project">
+      <div class="img-container">
+      <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
+      <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
+      </div>
       
         <div class="description">
         <mat-card-content *ngIf="card.description !== null && card.description!=='' ">             
