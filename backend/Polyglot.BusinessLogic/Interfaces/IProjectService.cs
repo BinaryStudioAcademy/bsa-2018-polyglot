@@ -6,26 +6,14 @@ using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IProjectService
+    public interface IProjectService : ICRUDService
     {
         
 
         
         Task FileParseDictionary(IFormFile file);
 
-        #region Projects
-
-        Task<ProjectDTO> GetProjectAsync(int id);
-
-        Task<IEnumerable<ProjectDTO>> GetAllProjectsAsync();
-
-        Task<ProjectDTO> AddProjectAsync(ProjectDTO project);
-
-        Task<ProjectDTO> ModifyProjectAsync(ProjectDTO project);
-
-        Task<bool> TryDeleteProjectAsync(int id);
-        #endregion
-
+       
         #region ComplexString
 
         Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);

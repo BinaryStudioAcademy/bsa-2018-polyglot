@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
@@ -25,7 +26,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await service.GetAllProjectsAsync();
+            var projects = await service.GetListAsync<Project, ProjectDTO>();
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -34,7 +35,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
-            var project = await service.GetProjectAsync(id);
+            var project = await service.GetOneAsync<Project, ProjectDTO>(id);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
 
@@ -55,7 +56,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.AddProjectAsync(project);
+            var entity = await service.PostAsync<Project, ProjectDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -69,7 +70,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.ModifyProjectAsync(project);
+            var entity = await service.PutAsync<Project, ProjectDTO>(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -78,7 +79,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
-            var success = await service.TryDeleteProjectAsync(id);
+            var success = await service.TryDeleteAsync<Project>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
 		

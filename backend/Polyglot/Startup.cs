@@ -41,10 +41,18 @@ namespace Polyglot
                         .AllowCredentials();
                     });
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(
+                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
 
             string connectionStr = Configuration.GetConnectionString("PolyglotDatabase");
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionStr));
+            services.AddDbContext<DataContext>(options =>
+                {
+                    options.UseLazyLoadingProxies();
+                    options.UseSqlServer(connectionStr);
+                });
             services.AddScoped(typeof(DbContext), typeof(DataContext));
 
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
