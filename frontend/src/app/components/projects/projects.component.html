@@ -9,8 +9,8 @@
     </mat-form-field>
   
   </form>
-  <div *ngIf="IsLoad" style="max-width:100px;margin-left:0 auto;margin-right:0 auto; height: 100vh;">
-      <mat-spinner style="position: absolute;z-index: 1;max-width:100px;margin-left: auto;margin-right: auto; "></mat-spinner> 
+  <div *ngIf="IsLoad" class="spinner">
+      <mat-spinner></mat-spinner> 
       </div> 
 <div class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
