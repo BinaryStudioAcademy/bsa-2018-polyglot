@@ -21,7 +21,9 @@
       </mat-card-header>
       <!-- <img mat-card-image src={{card.imageUrl}} alt="Photo of a project"> -->
       <img mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
-      <mat-card-content>{{card.description}}</mat-card-content>
+      <mat-card-content>{{card.description}}
+        <button mat-raised-button color="primary" (click)="delete(card.id)">DELETE</button>
+      </mat-card-content>
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
         <div fxFlex></div>

@@ -12,11 +12,10 @@ import { ProjectMessageComponent } from '../../dialogs/project-message/project-m
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit {
-
+  public cards: Project[];
 
   constructor(private projectService: ProjectService,public dialog: MatDialog) { }
   
-  cards : Project[];
 
   ngOnInit() {
   this.projectService.getAll().subscribe(pr => {this.cards = pr;
@@ -31,4 +30,8 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  delete(id: number): void{
+    this.projectService.delete(id);
+    console.log("deleted")
+   }
 }
