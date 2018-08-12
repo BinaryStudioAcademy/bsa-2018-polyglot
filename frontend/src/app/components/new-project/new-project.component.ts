@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { Project } from '../../models/project';
 import { Language } from '../../models/language';
 import { TypeTechnology } from '../../models/type-technology.enum';
@@ -8,6 +8,7 @@ import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { debounce } from 'rxjs/operators';
+import { FileStorageService } from '../../services/file-storage.service';
 
 @Component({
   selector: 'app-new-project',
@@ -20,7 +21,8 @@ export class NewProjectComponent implements OnInit {
   constructor(private fb: FormBuilder, private projectService: ProjectService,
     private languageService: LanguageService, 
     private router: Router,
-    private snotifyService: SnotifyService) {
+    private snotifyService: SnotifyService,
+    private fileStorageService: FileStorageService) {
 
   }
 
@@ -54,14 +56,18 @@ export class NewProjectComponent implements OnInit {
 
 
   saveChanges(project: Project): void{
-    console.log(this.projectImage);
     if(this.projectImage){
-      project.imageUrl = this.projectImage.name;
+      let fm = new FormData();
+      fm.append("file", this.projectImage, this.projectImage.name);
+      this.fileStorageService.uploadFile(fm).subscribe(data =>{
+         this.project.imageUrl = data
+
+        });
     }
     project.createdOn = new Date(Date.now());
 
-   /* let projectToSend: any = Object.assign({}, project);
-    projectToSend.mainLanguage = project.mainLanguage.name;*/
+
+
     console.log(project);
     project.mainLanguage.id = undefined;
     //Save current manager

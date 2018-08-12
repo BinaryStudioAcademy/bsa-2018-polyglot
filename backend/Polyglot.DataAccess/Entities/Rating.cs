@@ -6,7 +6,7 @@ namespace Polyglot.DataAccess.Entities
     {
         public double Rate { get; set; }
         public string Comment { get; set; }
-        public UserProfile CreatedBy { get; set; }
+        public virtual UserProfile CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
