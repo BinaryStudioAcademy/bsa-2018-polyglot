@@ -3,6 +3,7 @@ import { IUserSignUp } from '../../models/user-signup';
 import { AuthService } from '../../services/auth.service';
 import { MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -18,7 +19,8 @@ export class SignupDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
     private authService : AuthService,
-    private router: Router
+    private router: Router,
+    private snotify: SnotifyService
   ) { }
 
   ngOnInit() {
@@ -35,7 +37,22 @@ export class SignupDialogComponent implements OnInit {
   async onSignUpFormSubmit(user: IUserSignUp, form) {
     if (form.valid) {
       await this.authService.signUpRegular(user.email, user.password, user.fullname).then(
-        () => this.router.navigate(['/profile/settings'])
+        // () => this.router.navigate(['/profile/settings'])
+        () => {
+          // email confirmation
+          this.authService.sendEmailVerification();
+          this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+            timeout: 10000,
+            showProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false        
+          });
+          this.authService.logout();
+          setTimeout(
+            () => this.dialogRef.close(), 
+            10000
+          );
+        }
       ).catch(
         (error) => this.firebaseError = error.message
       );
@@ -47,6 +64,7 @@ export class SignupDialogComponent implements OnInit {
 
   async onGoogleClick() {
     await this.authService.signInWithGoogle().then(
+      // if exist in db - show error
       () => this.router.navigate(['/profile/settings'])
     ).catch(
       (error) => this.firebaseError = error.message
@@ -58,6 +76,7 @@ export class SignupDialogComponent implements OnInit {
 
   async onFacebookClick() {
     await this.authService.signInWithFacebook().then(
+      // if exist in db - show error
       () => this.router.navigate(['/profile/settings'])
     ).catch(
       (error) => this.firebaseError = error.message
