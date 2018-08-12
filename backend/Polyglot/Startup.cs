@@ -69,7 +69,7 @@ namespace Polyglot
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
 
-            services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddScoped<IMongoDataContext, MongoDataContext>();
 
             BusinessLogicModule.ConfigureServices(services);

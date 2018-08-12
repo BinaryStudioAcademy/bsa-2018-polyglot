@@ -1,37 +1,36 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.DataAccess.MongoModels;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.MongoRepository;
 using AutoMapper;
-using Polyglot.Common.DTOs;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Polyglot.BusinessLogic.Implementations;
+using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.MongoModels;
+using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 
-namespace Polyglot.BusinessLogic.Implementations
+namespace Polyglot.BusinessLogic.Services
 {
     public class ProjectService : CRUDService, IProjectService
     {
-        IRepository<ComplexString> stringsProvider;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, IRepository<ComplexString> rep)
+        private readonly IMongoRepository<ComplexString> stringsProvider;
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<ComplexString> rep)
             : base(uow, mapper)
         {
-            this.stringsProvider = rep;
+            stringsProvider = rep;
         }
 
 
         public async Task FileParseDictionary(IFormFile file)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            string str = String.Empty;
+            string str;
 
 
             switch (file.ContentType)
@@ -75,7 +74,7 @@ namespace Polyglot.BusinessLogic.Implementations
                     }
                     XDocument doc = XDocument.Parse(str);
 
-                    foreach (XElement data in doc.Element("root").Elements("data"))
+                    foreach (XElement data in doc.Element("root")?.Elements("data"))
                     {
                         dictionary[data.Attribute("name").Value] = data.Element("value").Value;
                     }
