@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IString } from '../../models/string';
 import { Tag } from '../../models/tag';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material';
 import { Inject } from '@angular/core';
 import { ComplexStringService } from '../../services/complex-string.service';
+import { MatDialogRef } from '@angular/material';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 
 @Component({
   selector: 'app-string-dialog',
@@ -18,7 +20,7 @@ export class StringDialogComponent implements OnInit {
 
   public projectId: number;
 
-  receiveImage($event){
+  receiveImage($event) {
     this.image = $event[0];
   }
 
@@ -39,12 +41,16 @@ export class StringDialogComponent implements OnInit {
     return tags;
   }
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private complexStringService: ComplexStringService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private complexStringService: ComplexStringService,
+    public dialogRef: MatDialogRef<StringDialogComponent>,
+    private snotifyService: SnotifyService) { }
 
 
   ngOnInit() {
     this.str = {
-      id: 7,
+      id: 0,
       key: '',
       base: '',
       description: '',
@@ -60,9 +66,13 @@ export class StringDialogComponent implements OnInit {
       .subscribe(
         (d) => {
           console.log(d);
+          this.snotifyService.success("ComplexString created", "Success!");
+          this.dialogRef.close();         
         },
         err => {
           console.log('err', err);
+          this.snotifyService.success("ComplexString wasn`t created", "Error!");
+          this.dialogRef.close();     
         });
   }
 }
