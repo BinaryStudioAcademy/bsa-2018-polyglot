@@ -38,7 +38,8 @@
     <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
       #password="ngModel"
       minlength="6"
-      maxlength="30">
+      maxlength="30"
+      (input)="repeatPassword.control.updateValueAndValidity()">
     <mat-error *ngIf="password.errors && password.errors.required">
       Password is
       <strong>required</strong>
@@ -52,6 +53,32 @@
       Password <strong>cannot</strong> be more than 30 characters long
     </mat-error>
   </mat-form-field>
+  
+  <mat-form-field>
+    <input id="repeatPassword" name="repeatPassword" type="password"
+    appConfirmEqualValidator="password"
+    [(ngModel)]="user.repeatPass"
+    required matInput placeholder="Confirm password" 
+    #repeatPassword="ngModel">
+
+    <mat-error *ngIf="repeatPassword.errors && repeatPassword.errors.required">
+      Confirm your password
+    </mat-error> 
+    <mat-error *ngIf="repeatPassword.errors && repeatPassword.errors?.NotEqual && !repeatPassword.errors.required">
+        Password missmatch
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Select your role" [value]="selectedOption">
+      <mat-option value="translator">Translator</mat-option>
+      <mat-option value="manager">Manager</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  
+
 
   <mat-error *ngIf="firebaseError">
     {{firebaseError}}

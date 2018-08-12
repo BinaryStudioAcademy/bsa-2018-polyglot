@@ -5,11 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 
-import { DataService } from './services/data.service';
+import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
-
 
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
@@ -19,7 +18,6 @@ import { GlossariesComponent } from './components/glossaries/glossaries.componen
 import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
-import { UserService } from './services/user.service';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './dialogs/signup-dialog/signup-dialog.component';
 import { AppComponent } from './app.component';
@@ -38,13 +36,27 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { KeyComponent } from './components/workspace/key/key.component';
+import { KeyDetailsComponent } from './components/workspace/key-details/key-details.component';
 import { StringDialogComponent } from './dialogs/string-dialog/string-dialog.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ManagerProfileComponent } from './components/manager-profile/manager-profile.component';
-import { TagsComponent } from './components/tags/tags.component'
+import { TagsComponent } from './components/tags/tags.component';
 import { ImageCropperModule } from "ngx-img-cropper";
 import { CropperComponent } from './dialogs/cropper-dialog/cropper.component';
 import { WebStorageModule } from 'ngx-store';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule , MatProgressSpinnerModule,} from '@angular/material';
+import { MatSortModule } from '@angular/material/sort';
+import { TeamComponent } from './components/teams/team/team.component';
+import { SearchComponent } from './components/search/search.component';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-validator.directive.ts';
+import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+
 
 
 @NgModule({
@@ -63,13 +75,25 @@ import { WebStorageModule } from 'ngx-store';
     NewProjectComponent,
     AboutUsComponent,
     ContactComponent,
+    FooterComponent,
+    WorkspaceComponent,
+    KeyComponent,
+    KeyDetailsComponent,
     UploadImageComponent,
     FooterComponent,
     StringDialogComponent,
-    ManagerProfileComponent,
     TagsComponent,
     NewProjectComponent,
-    CropperComponent
+    ManagerProfileComponent,
+    TeamComponent,
+    SearchComponent,
+    CropperComponent,
+    UserSettingsComponent,
+    ConfirmEqualValidatorDirective,
+    ProjectDetailsComponent,
+    ProjectMessageComponent
+
+
   ],
   imports: [
     BrowserModule,
@@ -82,15 +106,23 @@ import { WebStorageModule } from 'ngx-store';
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AppRoutingModule,
     MatChipsModule,
     ngfModule,
     WebStorageModule,
-    ImageCropperModule
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    ImageCropperModule,
+    MatCheckboxModule,
+    SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent],
-  providers: [DataService, AuthService, UserService, AuthGuard],
+  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
+  providers: [HttpService, AuthService, AuthGuard,
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService],
+
   bootstrap: [AppComponent]
 
 

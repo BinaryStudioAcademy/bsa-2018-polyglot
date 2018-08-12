@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ComplexStringService {
   api: string;
   constructor(private dataService: DataService) { 
-    this.api = "complexstrings";
+    this.api = "api/complexstrings";
   }
 
   getAll() : Observable<any> {

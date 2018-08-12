@@ -22,15 +22,13 @@
        border-radius: 50%
        width: 150px
        height: 150px
-    button
-       width: 100px
-       height: 40px
-       margin-top: 55px
-       margin-left: 5px
+       cursor: pointer
 .user-name
     display: inline
     font-weight: bold
     font-size: 40px
+    margin-bottom: 10px;
+    
 .social
     display: none
     float : right
@@ -40,7 +38,7 @@ span
     overflow-y: scroll
     height: 295px
 .title
-    margin-top: 0
+    margin: 0
 ::-webkit-scrollbar 
     width: 5px
 ::-webkit-scrollbar-track 
@@ -52,8 +50,28 @@ span
 .project-button-wrapper
     display: flex
     justify-content: space-between
+    align-items: center
     
 .crete-project-button 
     height: 40px
-    background-color: #3f51b5
-    color: white
+    width: 40px 
+
+.main-info-wrapper 
+    display: flex
+    flex-direction: column;
+
+.crete-project-button
+    padding: 0;
+    background-color: #3f51b5;
+    font-size: 20px;
+    height: 35px;
+    width: 125px;
+    color: white;
+    font-weight: 400;
+
+.crete-project-button i
+    padding-left: 4px;
+
+.rating-star
+    display: flex;
+    align-items: center;

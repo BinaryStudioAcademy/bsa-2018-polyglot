@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace Polyglot.DataAccess.Repositories
 {
@@ -47,5 +49,42 @@ namespace Polyglot.DataAccess.Repositories
 		{
 			return DbSet.Update(entity).Entity;			
 		}
-	}
+
+        public async Task<IEnumerable<TEntity>> GetAllIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            return await AllInclude(isCached, includeProperties)
+                .ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false)
+        {
+            IQueryable<TEntity> queryable; 
+
+            if (isCached)
+            {
+                queryable = DbSet.AsTracking();
+            }
+            else
+            {
+                queryable = DbSet.AsNoTracking();
+            }
+
+            return await queryable.Where(predicate).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            return await AllInclude(isCached, includeProperties)
+                .Where(predicate)
+                .ToListAsync();
+        }
+
+        protected IQueryable<TEntity> AllInclude(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> queryable = isCached ? DbSet.AsTracking() : DbSet.AsNoTracking();
+            return includeProperties
+                .Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
+        }
+    }
 }

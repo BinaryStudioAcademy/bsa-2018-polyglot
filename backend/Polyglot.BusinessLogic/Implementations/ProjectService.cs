@@ -40,27 +40,27 @@ namespace Polyglot.BusinessLogic.Implementations
 					dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
 					break;
 
-					/*
-					case "text/xml":
+                /*
 
 
-						using (var reader = new StreamReader(file.OpenReadStream()))
-						{
-							str = reader.ReadToEnd();
-						}
-						XmlDocument doc = new XmlDocument();
-						doc.LoadXml(str);						
-						XmlElement root = doc.DocumentElement;
-						XmlNodeList childnodes = root.SelectNodes("*");
-						foreach (XmlNode n in childnodes)
-						{							
-							dictionary[n.Name] = n.InnerXml;
-						}
-						break;
-						*/
-					
 
-				case "application/octet-stream":
+                    using (var reader = new StreamReader(file.OpenReadStream()))
+                    {
+                        str = reader.ReadToEnd();
+                    }
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(str);						
+                    XmlElement root = doc.DocumentElement;
+                    XmlNodeList childnodes = root.SelectNodes("*");
+                    foreach (XmlNode n in childnodes)
+                    {							
+                        dictionary[n.Name] = n.InnerXml;
+                    }
+                    break;
+                    */
+
+                case "application/xml":
+                case "application/octet-stream":
 
 					using (var reader = new StreamReader(file.OpenReadStream()))
 					{

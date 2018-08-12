@@ -1,16 +1,17 @@
-.d-flex
-  display: flex !important
-
 .d-flex 
   display: flex !important
+
+  @media screen and (max-width:$tablet)
+    flex-direction: column !important
 
 .d-inline-flex 
   display: inline-flex !important
 
-
 .flex-row 
   flex-direction: row !important
 
+  @media screen and (max-width:$tablet)
+    flex-direction: column !important
 
 .flex-column 
   flex-direction: column !important
@@ -53,3 +54,10 @@
 
 .align-self-start 
   align-self: start !important
+
+.justify-self-end
+  justify-self: flex-end !important
+
+.flex-wrap
+  flex-wrap: wrap !important
+  

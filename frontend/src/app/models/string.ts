@@ -5,4 +5,5 @@ export interface IString {
     description: string;
     projectId:number;
     tags: string[];
+    projectId: number;
 }

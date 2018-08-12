@@ -10,7 +10,7 @@ using Translation = Polyglot.DataAccess.Entities.ComplexString;
 namespace Polyglot.Controllers
 {
     [Produces("application/json")]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ComplexStringsController : ControllerBase
     {
