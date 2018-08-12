@@ -61,7 +61,7 @@ export class StringDialogComponent implements OnInit {
     console.log(this.str);
   }
 
-  onSubmit(str: IString): void {
+  onSubmit(){
     this.complexStringService.create(this.str)
       .subscribe(
         (d) => {
