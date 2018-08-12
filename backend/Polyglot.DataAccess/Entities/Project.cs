@@ -10,14 +10,14 @@ namespace Polyglot.DataAccess.Entities
         public string Technology { get; set; }
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
-        public Manager Manager { get; set; }
-        public Language MainLanguage { get; set; }
+        public virtual Manager Manager { get; set; }
+        public virtual Language MainLanguage { get; set; }
 
-        public List<Team> Teams { get; set; }
-        public List<ComplexString> Translations { get; set; }
-        public List<ProjectLanguage> ProjectLanguageses { get; set; }
-        public List<ProjectGlossary> ProjectGlossaries { get; set; }
-        public List<ProjectTag> ProjectTags { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
+        public virtual ICollection<ComplexString> Translations { get; set; }
+        public virtual ICollection<ProjectLanguage> ProjectLanguageses { get; set; }
+        public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
+        public virtual ICollection<ProjectTag> ProjectTags { get; set; }
 
         public Project()
         {

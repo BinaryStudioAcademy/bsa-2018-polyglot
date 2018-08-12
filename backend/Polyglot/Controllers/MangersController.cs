@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -15,31 +10,29 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ManagersController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Manager, int> service;
+        private readonly ICRUDService service;
 
-        public ManagersController(ICRUDService<Manager, int> service, IMapper mapper)
+        public ManagersController(ICRUDService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Managers
         [HttpGet]
         public async Task<IActionResult> GetAllManagers()
         {
-            var projects = await service.GetListAsync();
-            return projects == null ? NotFound("No managers found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<ManagerDTO>>(projects));
+            var managers = await service.GetListAsync<Manager, ManagerDTO>();
+            return managers == null ? NotFound("No managers found!") as IActionResult
+                : Ok(managers);
         }
 
         // GET: Managers/5
         [HttpGet("{id}", Name = "GetManager")]
         public async Task<IActionResult> GetManager(int id)
         {
-            var project = await service.GetOneAsync(id);
-            return project == null ? NotFound($"Manager with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<ManagerDTO>(project));
+            var manager = await service.GetOneAsync<Manager, ManagerDTO>(id);
+            return manager == null ? NotFound($"Manager with id = {id} not found!") as IActionResult
+                : Ok(manager);
         }
 
         // POST: Managers
@@ -48,10 +41,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Manager>(project));
+            var entity = await service.PostAsync<Manager, ManagerDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ManagerDTO>(entity));
+                entity);
         }
 
         // PUT: Managers/5
@@ -61,16 +54,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Manager>(project));
+            var entity = await service.PutAsync<Manager, ManagerDTO>(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<ManagerDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteManager(int id)
         {
-            var success = await service.TryDeleteAsync(id);
+            var success = await service.TryDeleteAsync<Manager>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

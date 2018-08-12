@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 export interface Team {
 
-  text: string;
-  rating: number;
+  i: number;
 }
 
 @Component({
@@ -12,14 +11,13 @@ export interface Team {
   styleUrls: ['./teams.component.sass']
 })
 export class TeamsComponent implements OnInit {
-  
+
   teams: Team[] = [
-    { text: 'Team1', rating: 40 },
-    { text: 'Team2', rating: 30 },
-    { text: 'Team3', rating: 29 },
-    { text: 'Team4', rating: 85 },
-    { text: 'Team5', rating: 100 },
-  
+   {i: 1},
+   {i: 2},
+   {i: 3},
+   {i: 4},
+   {i: 5},
   ];
 
   constructor() { }

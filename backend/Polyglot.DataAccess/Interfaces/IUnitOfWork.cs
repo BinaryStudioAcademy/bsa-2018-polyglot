@@ -1,29 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.Interfaces
 {
     public interface IUnitOfWork
     {
-		IRepository<File> FileRepository { get; }
-		IRepository<Glossary> GlossaryRepository { get; }
-		IRepository<Language> LanguageRepository { get; }
-		IRepository<Manager> ManagerRepository { get; }
-		IRepository<Project> ProjectRepository { get; }
-		IRepository<Rating> RatingRepository { get; }
-		IRepository<Right> RightRepository { get; }
-		IRepository<Tag> TagRepository { get; }
-		IRepository<Team> TeamRepository { get; }
-		IRepository<ComplexString> ComplexStringRepository { get; }
-		IRepository<Translator> TranslatorRepository { get; }
-		IRepository<UserProfile> UserProfileRepository { get; }
+        IRepository<T> GetRepository<T>()
+            where T : Entity, new();
 
-		IRepository<ProjectHistory> ProjectHistoryRepository { get; }
-		IRepository<TranslatorLanguage> TranslatorLanguageRepository { get; }
 
-		Task<int> SaveAsync();
+        Task<int> SaveAsync();
 	}
 }

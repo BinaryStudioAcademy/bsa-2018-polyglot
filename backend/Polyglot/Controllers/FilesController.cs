@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -15,31 +11,29 @@ namespace Polyglot.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<File, int> service;
+        private readonly ICRUDService service;
 
-        public FilesController(ICRUDService<File, int> service, IMapper mapper)
+        public FilesController(ICRUDService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Files
         [HttpGet]
         public async Task<IActionResult> GetAllFiles()
         {
-            var projects = await service.GetListAsync();
+            var projects = await service.GetListAsync<File, FileDTO>();
             return projects == null ? NotFound("No files found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<FileDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Files/5
         [HttpGet("{id}", Name = "GetFile")]
         public async Task<IActionResult> GetFile(int id)
         {
-            var project = await service.GetOneAsync(id);
+            var project = await service.GetOneAsync<File, FileDTO>(id);
             return project == null ? NotFound($"File with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<FileDTO>(project));
+                : Ok(project);
         }
 
         // POST: Files
@@ -48,10 +42,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<File>(project));
+            var entity = await service.PostAsync<File, FileDTO>(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<FileDTO>(entity));
+                entity);
         }
 
         // PUT: Files/5
@@ -61,16 +55,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<File>(project));
+            var entity = await service.PutAsync<File, FileDTO>( project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<FileDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {
-            var success = await service.TryDeleteAsync(id);
+            var success = await service.TryDeleteAsync<File>(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

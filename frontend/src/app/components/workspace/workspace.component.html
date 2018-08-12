@@ -26,16 +26,19 @@
     </div>
   </mat-card>
 
-  <div class="d-flex">
+  <div class="d-flex" style="height:100vh">
     <mat-card class="keys-list d-flex my-1">
       <mat-nav-list class="keys-list__nav">
-        <a mat-list-item [routerLink]="['key', key.id]" routerLinkActive="active" *ngFor="let key of keys">
-          <app-workspace-key [key]="key"></app-workspace-key>
+        <a mat-list-item *ngFor="let key of keys">
+          <div [class.selected]="key === selectedKey"
+          (click)="onSelect(key)">
+            <app-workspace-key [key]="key"></app-workspace-key>
+          </div>
           <mat-divider></mat-divider>
         </a>
       </mat-nav-list>
     </mat-card>
 
-    <router-outlet></router-outlet>
+    <app-workspace-key-details [keyDetails] = "selectedKey" style="width: 100%"></app-workspace-key-details>
   </div>
 </section>

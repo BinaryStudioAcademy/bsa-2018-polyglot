@@ -9,7 +9,7 @@ import { ngfModule, ngf } from "angular-file"
 })
 export class UploadImageComponent implements OnInit {
   @Output() fileEvent = new EventEmitter<File>();
-  fileToUpload: File = new File(["empty"], "empty");
+  fileToUpload: File;
 
   validDrag;
   invalidDrag;
@@ -20,8 +20,8 @@ export class UploadImageComponent implements OnInit {
 
 
 
-  sendImage(){
-    this.fileEvent.emit(this.fileToUpload);
+  sendImage($event){
+    this.fileEvent.emit($event);
   }
 
 }

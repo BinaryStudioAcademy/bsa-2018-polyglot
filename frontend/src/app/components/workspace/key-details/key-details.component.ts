@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { ProjectService } from '../../../services/project.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -10,43 +11,48 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 })
 export class KeyDetailsComponent implements OnInit, OnDestroy {
 
-  private routeSub: Subscription;
-  private keyDetails: any; // DATA FROM NoSQL! Need some typing here :)
-  public translationsDataSource: MatTableDataSource<any>; // Should be KeyDetails type
+  //private routeSub: Subscription;
+  @Input()  public keyDetails: any; 
+  public translationsDataSource: MatTableDataSource<any>; 
   public IsEdit : boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dataProvider: ProjectService
   ) { }
 
+  ngOnChanges(){
+
+
+    if(this.keyDetails){
+      this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
+      this.translationsDataSource.paginator = this.paginator;
+
+     // this.routeSub = this.activatedRoute.params.subscribe((params) => {
+     //   this.updateTable();
+     //   console.log(params.keyId);
+     // });
+    }
+  }
+
   ngOnInit() {
-    this.keyDetails = {};
-
-    this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-    this.translationsDataSource.paginator = this.paginator;
-
-    this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      //making api call using service service.get(params.keyId); ....
-
-      this.keyDetails = MOCK_KEY_DETAILS;
-      this.updateTable();
-      console.log(params.keyId);
-    });
+    
   }
 
   updateTable() {
+  //  console.log(this.keyDetails);
     this.translationsDataSource.data = this.keyDetails.translations;
   }
 
   ngOnDestroy() {
-    this.routeSub.unsubscribe();
+    //this.routeSub.unsubscribe();
   }
 
   toggle(){
     this.IsEdit = !this.IsEdit;
-    console.log(this.IsEdit);
+  //  console.log(this.IsEdit);
   }
 
 }

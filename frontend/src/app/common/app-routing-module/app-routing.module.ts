@@ -41,7 +41,6 @@ const routes: Routes = [
       { path: 'teams', component: TeamsComponent },
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
-      { path: 'newproject', component: NewProjectComponent },
       { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
       { path: 'strings', component: NoFoundComponent },
       { path: 'abc', component: TeamComponent }
@@ -49,6 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'workspace/:projectId',
+
     canActivate: [AuthGuard],
     component: WorkspaceComponent,
     children: [
@@ -56,10 +56,6 @@ const routes: Routes = [
         path: '',
         redirectTo : "key/1",
         pathMatch : "full"
-      },
-      {
-        path: 'key/:keyId',
-        component: KeyDetailsComponent
       }
     ]
   },

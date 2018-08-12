@@ -1,65 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Xsl;
+using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.NoSQL_Models;
 using Polyglot.DataAccess.NoSQL_Repository;
+using ComplexString = Polyglot.DataAccess.NoSQL_Models.ComplexString;
 
 
 namespace Polyglot.BusinessLogic.Implementations
 {
     public class ComplexStringService : IComplexStringService
     {
-        private IRepository<ComplexString> _mongoRepository;
-        private IRepository<Polyglot.DataAccess.Entities.ComplexString> _sqlRepository;
+        private readonly IComplexStringRepository _mongoRepository;
         private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        public ComplexStringService(IRepository<Polyglot.DataAccess.Entities.ComplexString> sqlRepository, IRepository<ComplexString> mongoRepository, IUnitOfWork uow)
+        public ComplexStringService(IComplexStringRepository mongoRepository, IUnitOfWork uow, IMapper mapper)
         {
-            _sqlRepository = sqlRepository;
             _mongoRepository = mongoRepository;
             _uow = uow;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<ComplexString>> GetListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<ComplexString>> GetListByProjectId(int projectId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ComplexString> GetOneAsync(int identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ComplexString> PostAsync(ComplexString entity)
+        public async Task<ComplexStringDTO> PostAsync(ComplexStringDTO entity)
         {
             var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
             {
                 TranslationKey = entity.Key
             };
-            var savedEntity= await _sqlRepository.CreateAsync(sqlComplexString);
+            var savedEntity = await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+            await _uow.SaveAsync();
             entity.Id = savedEntity.Id;
-            await _mongoRepository.CreateAsync(entity);
-            if ( _uow!= null)
-            {
-                await _uow.SaveAsync();
-                return entity ?? null;
-            }
+            await _mongoRepository.CreateAsync(_mapper.Map<ComplexStringDTO, ComplexString>(entity));
             return null;
         }
 
-        public Task<ComplexString> PutAsync(int identifier, ComplexString entity)
+        public Task<ComplexStringDTO> PutAsync(ComplexStringDTO entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> TryDeleteAsync(int identifier)
+        public Task<bool> TryDeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
