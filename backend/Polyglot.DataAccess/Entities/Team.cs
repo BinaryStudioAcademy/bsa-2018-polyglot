@@ -4,7 +4,7 @@ namespace Polyglot.DataAccess.Entities
 {
     public class Team : Entity
     {
-        public List<TeamTranslator> TeamTranslators { get; set; }
+        public virtual ICollection<TeamTranslator> TeamTranslators { get; set; }
 
         public Team()
         {
