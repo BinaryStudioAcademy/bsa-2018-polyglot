@@ -4,13 +4,13 @@ namespace Polyglot.DataAccess.Entities
 {
     public class TeamTranslator : Entity
     {
-        public int TeamId { get; set; }
-        public Team Team { get; set; }
+        public int? TeamId { get; set; }
+        public virtual Team Team { get; set; }
 
-        public int TranslatorId { get; set; }
-        public Translator Translator { get; set; }
+        public int? TranslatorId { get; set; }
+        public virtual Translator Translator { get; set; }
 
-        public List<TranslatorRight> TranslatorRights { get; set; }
+        public virtual ICollection<TranslatorRight> TranslatorRights { get; set; }
 
         public TeamTranslator()
         {

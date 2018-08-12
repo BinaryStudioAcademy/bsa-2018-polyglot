@@ -19,12 +19,13 @@ import { forEach } from '@angular/router/src/utils/collection';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit {
-
+  public cards: Project[];
 
 
   constructor(private projectService: ProjectService,public dialog: MatDialog) { }
   
-  cards : Project[];
+
+  IsLoad : boolean = true;
 
   user: UserProfile = {
     id: 1,
@@ -46,10 +47,12 @@ export class ProjectsComponent implements OnInit {
   };
 
   ngOnInit() {
+  
   this.projectService.getAll().subscribe(pr => {this.cards = pr;
     if(this.cards.length === 0){
       setTimeout(() => this.openDialog())
       }
+      this.IsLoad = false;
       console.log(this.cards);
   });
   }
@@ -59,6 +62,11 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  delete(id: number): void{
+    this.projectService.delete(id);
+    console.log("deleted")
+   }
+}
 
-  }
+  
 

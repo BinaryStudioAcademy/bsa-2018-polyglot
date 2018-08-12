@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.NoSQL_Models;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {

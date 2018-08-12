@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Polyglot.DataAccess.Interfaces
 {
-    public interface IRepository <TEntity> where TEntity : class
+    public interface IBaseRepository <TEntity> where TEntity : class
     {
-		Task<TEntity> GetAsync(int id);
-
-		Task<List<TEntity>> GetAllAsync();
-
-		Task<TEntity> DeleteAsync(int id);
+     //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
         Task<TEntity> CreateAsync(TEntity entity);
 
-        TEntity Update(TEntity entity);
+        Task<TEntity> DeleteAsync(int id);
 
-        Task<IEnumerable<TEntity>> GetAllIncludingAsync(bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<List<TEntity>> GetAllAsync();
 
-        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false);
+        Task<TEntity> GetAsync(int id);
 
-        Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, bool isCached = false, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
+
+       // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
     }
 }

@@ -69,6 +69,7 @@ export class NavigationComponent implements OnDestroy {
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
+  
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
