@@ -4,7 +4,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 
@@ -16,20 +15,18 @@ namespace Polyglot.Controllers
     {
         private readonly IMapper mapper;
         private readonly IMongoRepository<ComplexString> dataProvider;
-        private readonly IProjectService service;
         //TODO: change IRepository<ComplexString> to IComplexStringService
-        public ComplexStringsController(IMongoRepository<ComplexString> dataProvider, IProjectService service, IMapper mapper)
+        public ComplexStringsController(IMongoRepository<ComplexString> dataProvider, IMapper mapper)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
-            this.service = service;
         }
 
         // GET: ComplexStrings
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
-            var complexStrings = await service.GetAllStringsAsync();
+            var complexStrings = await dataProvider.GetAllAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
         }
