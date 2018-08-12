@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material';
 import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
+import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -17,7 +18,8 @@ export class LoginDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
-    private snotify: SnotifyService
+    private snotify: SnotifyService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -79,6 +81,11 @@ export class LoginDialogComponent implements OnInit {
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }
+  }
+
+  onForgotPasswordClick() {
+    this.dialogRef.close();
+    this.dialog.open(ForgotPasswordDialogComponent);
   }
 
   private handleFirebaseErrors(error) {
