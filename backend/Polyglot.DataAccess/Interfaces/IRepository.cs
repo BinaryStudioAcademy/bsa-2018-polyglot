@@ -18,7 +18,7 @@ namespace Polyglot.DataAccess.Interfaces
 
         Task<TEntity> GetAsync(int id);
 
-        Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
 
        // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
 

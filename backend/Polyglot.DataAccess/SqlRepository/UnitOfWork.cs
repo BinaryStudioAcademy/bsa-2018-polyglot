@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
-using Polyglot.DataAccess.Repositories;
 
-namespace Polyglot.DataAccess
+namespace Polyglot.DataAccess.SqlRepository
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {

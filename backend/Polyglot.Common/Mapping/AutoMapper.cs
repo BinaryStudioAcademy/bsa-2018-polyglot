@@ -5,7 +5,7 @@ using AutoMapper;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.NoSQL_Models;
+using Polyglot.DataAccess.MongoModels;
 
 namespace Polyglot.Common.Mapping
 {
@@ -316,14 +316,14 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
                   .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations));
 
-                cfg.CreateMap<Polyglot.Common.DTOs.NoSQL.TranslationDTO, Polyglot.DataAccess.NoSQL_Models.Translation>()
+                cfg.CreateMap<Polyglot.Common.DTOs.NoSQL.TranslationDTO, Polyglot.DataAccess.MongoModels.Translation>()
                   .ForMember(p => p.History, opt => opt.MapFrom(po => po.History))
                   .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
                   .ForMember(p => p.OptionalTranslations, opt => opt.MapFrom(po => po.OptionalTranslations))
                   .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
                   .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
-                cfg.CreateMap<Polyglot.DataAccess.NoSQL_Models.Translation, Polyglot.Common.DTOs.NoSQL.TranslationDTO>()
+                cfg.CreateMap<Polyglot.DataAccess.MongoModels.Translation, Polyglot.Common.DTOs.NoSQL.TranslationDTO>()
                   .ForMember(p => p.History, opt => opt.MapFrom(pt => pt.History))
                   .ForMember(p => p.Language, opt => opt.MapFrom(pt => pt.Language))
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))

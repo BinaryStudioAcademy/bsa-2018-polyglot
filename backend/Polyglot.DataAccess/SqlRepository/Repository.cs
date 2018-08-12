@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Polyglot.DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.Interfaces;
 
-namespace Polyglot.DataAccess.Repositories
+namespace Polyglot.DataAccess.SqlRepository
 {
 	public class Repository<TEntity> :  IRepository<TEntity> where TEntity : class
 	{
@@ -43,7 +42,7 @@ namespace Polyglot.DataAccess.Repositories
             return await DbSet.FindAsync(id);
         }
 
-        public async Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await DbSet.Where(predicate).ToListAsync();
           //  return await ApplyIncludes().Where(predicate).ToListAsync();

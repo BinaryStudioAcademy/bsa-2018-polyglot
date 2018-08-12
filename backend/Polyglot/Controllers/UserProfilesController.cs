@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.Controllers
 {

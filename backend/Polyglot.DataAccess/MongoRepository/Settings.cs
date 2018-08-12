@@ -1,4 +1,4 @@
-﻿namespace Polyglot.DataAccess.NoSQL_Repository
+﻿namespace Polyglot.DataAccess.MongoRepository
 {
     public class Settings
     {
