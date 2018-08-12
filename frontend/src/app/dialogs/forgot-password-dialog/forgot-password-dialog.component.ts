@@ -22,17 +22,19 @@ export class ForgotPasswordDialogComponent implements OnInit {
     this.userEmail = '';
   }
 
-  onResetPasswordFormSubmit() {
-    this.authService.sendResetPasswordConfirmation(this.userEmail);
-    this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
-      timeout: 10000,
-      showProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: false        
-    });
-    setTimeout(
-      () => this.dialogRef.close(), 
-      10000
-    );
+  onResetPasswordFormSubmit(form) {
+    if (form.valid) {
+      this.authService.sendResetPasswordConfirmation(this.userEmail);
+      this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
+        timeout: 10000,
+        showProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false        
+      });
+      setTimeout(
+        () => this.dialogRef.close(), 
+        10000
+      );
+    }
   }
 }
