@@ -36,17 +36,27 @@ export class NavigationComponent implements OnDestroy {
 
   ngOnInit(): void {
     debugger
-    if (!this.userService.getCurrrentUser()) {
-      this.userService.getUser().subscribe(
-        (d: UserProfile)=> {
-          this.userService.saveUser(d);   
-          this.manager = d;
-        },
-        err => {
-          console.log('err', err);
-        }
-      );
+    if ( this.authService.isLoggedIn()){
+      if (!this.userService.getCurrrentUser()) {
+        this.userService.getUser().subscribe(
+          (d: UserProfile)=> {
+            this.userService.saveUser(d);   
+            this.manager = d;
+          },
+          err => {
+            console.log('err', err);
+          }
+        );
+     }
     }
+    else {
+        this.manager = { 
+          fullName: "",
+          avatarUrl: "",
+          lastName: "" 
+        }
+    }
+
   }
 
 
