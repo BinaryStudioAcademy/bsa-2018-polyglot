@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material';
 import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
+import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -17,7 +18,8 @@ export class LoginDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
-    private snotify: SnotifyService
+    private snotify: SnotifyService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -33,12 +35,27 @@ export class LoginDialogComponent implements OnInit {
         () => {
           if(!this.authService.getCurrentUser().emailVerified) {
               // email confirmation
-            this.authService.sendEmailVerification();
-            this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
-              timeout: 10000,
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+              timeout: 15000,
               showProgressBar: true,
               closeOnClick: false,
-              pauseOnHover: false        
+              pauseOnHover: false,
+              buttons: [
+                {text: "Resend", action: async () => {
+                  // resend confirmation to user
+                  await this.authService.signInRegular(user.email, user.password);
+                  this.authService.sendEmailVerification();
+                  this.authService.logout();
+                  this.snotify.clear();
+                  this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+                    timeout: 15000,
+                    showProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: false
+                  });
+                }}
+              ]        
             });
             this.authService.logout();
             throw {message: 'You need to confirm your email address in order to use our service'};
@@ -79,6 +96,11 @@ export class LoginDialogComponent implements OnInit {
     if(this.authService.isLoggedIn()){
       this.dialogRef.close();
     }
+  }
+
+  onForgotPasswordClick() {
+    this.dialogRef.close();
+    this.dialog.open(ForgotPasswordDialogComponent);
   }
 
   private handleFirebaseErrors(error) {

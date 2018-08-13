@@ -1,3 +1,5 @@
+<!-- <p> {{ manager | json}} </p> -->
+
 <div class="container">
   <div class="item" 
   fxLayout
@@ -9,7 +11,7 @@
   </div>
   <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
   <div class="main-info-wrapper">
-        <div class="user-name">{{manager.lastName}} {{manager.firstName}}</div>
+        <div class="user-name">{{manager.fullName}}</div>
         <a mat-button class="crete-project-button" routerLink="./settings">
           Settings<i class="material-icons">settings</i>
         </a>
@@ -53,7 +55,8 @@
       <mat-card>
           <h2>Personal detail</h2>
           <hr>
-          <mat-card-subtitle>Birth : <span> {{manager.birthDate | date:'mediumDate'}}</span></mat-card-subtitle>
+          <!-- BUG HERE DataBirth 1/01/01   {{manager.birthDate | date:'mediumDate'}}-->
+          <mat-card-subtitle>Birth : <span></span></mat-card-subtitle>
           <mat-card-title>Location</mat-card-title><hr>    
           <mat-card-subtitle>Country : <span> {{manager.country}}</span></mat-card-subtitle>
           <mat-card-subtitle>City : <span> {{manager.city}}</span></mat-card-subtitle>

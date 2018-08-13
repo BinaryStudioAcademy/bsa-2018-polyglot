@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.MongoModels;
+using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.Common.Mapping
 {
@@ -201,10 +199,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TranslatorId, opt => opt.MapFrom(pt => pt.TranslatorId))
                     .ForMember(p => p.TranslatorRights, opt => opt.MapFrom(pt => pt.TranslatorRights));
 
-                cfg.CreateMap<Polyglot.Common.DTOs.TranslationDTO, Polyglot.DataAccess.Entities.Translation>()
-                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                cfg.CreateMap<Polyglot.Common.DTOs.TranslationDTO, Polyglot.DataAccess.Entities.ComplexString>()
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
-                cfg.CreateMap<Polyglot.DataAccess.Entities.Translation, Polyglot.Common.DTOs.TranslationDTO>()
+                cfg.CreateMap<Polyglot.DataAccess.Entities.ComplexString, Polyglot.Common.DTOs.TranslationDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
 

@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;

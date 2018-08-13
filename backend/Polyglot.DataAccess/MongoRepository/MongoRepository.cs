@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoRepository
 {
-    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity: IEntity
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity: Entity
     {
         string _collectionName;
 

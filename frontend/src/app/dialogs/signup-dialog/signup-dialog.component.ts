@@ -14,7 +14,8 @@ export class SignupDialogComponent implements OnInit {
 
   public user: IUserSignUp;
   public firebaseError: string;
-  public selectedOption : string
+  public selectedOption : string;
+  private IsNotificationSend: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
@@ -32,6 +33,8 @@ export class SignupDialogComponent implements OnInit {
     };
 
     this.selectedOption = "translator";
+
+    this.IsNotificationSend = false;
   }
 
   async onSignUpFormSubmit(user: IUserSignUp, form) {
@@ -40,18 +43,30 @@ export class SignupDialogComponent implements OnInit {
         // () => this.router.navigate(['/profile/settings'])
         () => {
           // email confirmation
-          this.authService.sendEmailVerification();
-          this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
-            timeout: 10000,
-            showProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false        
-          });
-          this.authService.logout();
-          setTimeout(
-            () => this.dialogRef.close(), 
-            10000
-          );
+          if (!this.IsNotificationSend) {
+            this.authService.sendEmailVerification();
+            this.snotify.clear();
+            this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+              timeout: 10000,
+              showProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false        
+            });
+            this.authService.logout();
+            setTimeout(
+              () => this.dialogRef.close(), 
+              10000
+            );
+            this.IsNotificationSend = true;
+          } else {
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+              timeout: 10000,
+              showProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false        
+            });
+          }
         }
       ).catch(
         (error) => this.firebaseError = error.message
