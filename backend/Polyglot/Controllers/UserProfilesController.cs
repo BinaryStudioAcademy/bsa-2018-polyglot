@@ -13,20 +13,20 @@ namespace Polyglot.Controllers
     [ApiController]
     public class UserProfilesController : ControllerBase
     {
-        private readonly ICRUDService service;
+        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
 
-        public UserProfilesController(ICRUDService service, DbContext ctx)
+        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service, DbContext ctx)
         {
             //this.service = service;
 #warning some hell shit
             var uow = new UnitOfWork(ctx);
-            this.service = new CRUDService(uow, Polyglot.Common.Mapping.AutoMapper.GetDefaultMapper());
+            this.service = new CRUDService<UserProfile, UserProfileDTO>(uow, Polyglot.Common.Mapping.AutoMapper.GetDefaultMapper());
         }
         // GET: UserProfiles
         [HttpGet]
         public async Task<IActionResult> GetAllUserProfiles()
         {
-            var projects = await service.GetListAsync<UserProfile, UserProfileDTO>();
+            var projects = await service.GetListAsync();
             return projects == null ? NotFound("No user profiles found!") as IActionResult
                 : Ok(projects);
         }
@@ -35,7 +35,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetUserProfile")]
         public async Task<IActionResult> GetUserProfile(int id)
         {
-            var project = await service.GetOneAsync<UserProfile, UserProfileDTO>(id);
+            var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"User profile with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
@@ -46,7 +46,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync<UserProfile, UserProfileDTO>(project);
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -59,7 +59,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync<UserProfile, UserProfileDTO>(project);
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -68,7 +68,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserProfile(int id)
         {
-            var success = await service.TryDeleteAsync<UserProfile>(id);
+            var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }
