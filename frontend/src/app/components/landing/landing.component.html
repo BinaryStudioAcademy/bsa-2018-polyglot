@@ -1,4 +1,4 @@
-<div class="padding bg-image" style="height:calc(100vh - 130px);"
+<div class="padding bg-image landing-height"
 fxLayout="column" fxLayoutAlign="center stretch">
     <mat-grid-list cols="1" rowHeight="100px">
         <mat-grid-tile >
@@ -11,7 +11,7 @@ fxLayout="column" fxLayoutAlign="center stretch">
             <button class="btn-singup" mat-flat-button color="primary" (click)="onSignUpClick()">sign up for free</button> 
         </mat-grid-tile>
         <mat-grid-tile >
-            <button class="btn-demo" mat-flat-button color="accent">or request a demo</button>
+            <button class="btn-demo" mat-flat-button color="accent" (click)="onLoginClick()">or login if you already have an account</button>
         </mat-grid-tile> 
     </mat-grid-list>
 </div>
