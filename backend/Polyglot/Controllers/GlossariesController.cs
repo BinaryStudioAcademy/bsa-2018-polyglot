@@ -10,9 +10,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class GlossariesController : ControllerBase
     {
-        private readonly ICRUDService service;
+        private readonly ICRUDService<Glossary, GlossaryDTO> service;
 
-        public GlossariesController(ICRUDService service)
+        public GlossariesController(ICRUDService<Glossary, GlossaryDTO> service)
         {
             this.service = service;
         }
@@ -21,7 +21,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllGlossarys()
         {
-            var projects = await service.GetListAsync<Glossary, GlossaryDTO>();
+            var projects = await service.GetListAsync();
             return projects == null ? NotFound("No glossaries found!") as IActionResult
                 : Ok(projects);
         }
@@ -30,7 +30,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
         {
-            var project = await service.GetOneAsync<Glossary, GlossaryDTO>(id);
+            var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Glossary with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
@@ -41,7 +41,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync<Glossary, GlossaryDTO>(project);
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync<Glossary, GlossaryDTO>(project);
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -63,7 +63,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGlossary(int id)
         {
-            var success = await service.TryDeleteAsync<Glossary>(id);
+            var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

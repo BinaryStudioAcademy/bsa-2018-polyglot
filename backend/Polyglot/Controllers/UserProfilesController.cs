@@ -24,9 +24,10 @@ namespace Polyglot.Controllers
     public class UserProfilesController : ControllerBase
     {
 
-        private readonly ICRUDService service;
 
-        public UserProfilesController(ICRUDService service)
+        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
+        
+        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
         {
             this.service = service;
         }
@@ -35,9 +36,11 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var entities = await service.GetListAsync<UserProfile, UserProfileDTO>();
-            return entities == null ? NotFound("No entitys found!") as IActionResult
+
+            var entities = await service.GetListAsync();
+            return entities == null ? NotFound("No user profiles found!") as IActionResult
                 : Ok(entities);
+
         }
 
         public class LowercaseContractResolver : DefaultContractResolver
@@ -65,7 +68,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id)
         {
-            var entity = await service.GetOneAsync<Translator, TranslatorDTO>(id);
+            var entity = await service.GetOneAsync(id);
             return entity == null ? NotFound($"Translator with id = {id} not found!") as IActionResult
                 : Ok(entity);
         }
