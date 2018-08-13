@@ -62,7 +62,7 @@ namespace Polyglot
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            services.AddTransient(typeof(ICRUDService), typeof(CRUDService));
+            services.AddTransient(typeof(ICRUDService<,>), typeof(CRUDService<,>));
 
 
             services.Configure<Settings>(options =>{
