@@ -100,19 +100,19 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
-
+		
 		public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
 		{			
 			var ent = mapper.Map<Project>(entity);
-			ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
-
+			// ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
+			ent.MainLanguage = null;
 
 			var target = await uow.GetRepository<Project>().CreateAsync(ent);
 			await uow.SaveAsync();
 
 			return mapper.Map<ProjectDTO>(target);			
 		}
-
+		
 
 		#region ComplexStrings
 
