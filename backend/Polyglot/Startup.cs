@@ -13,6 +13,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.Seeds;
 using Polyglot.DataAccess.SqlRepository;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
 
@@ -71,6 +72,9 @@ namespace Polyglot
             });
 
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            
+            services.AddScoped<MongoDataContext>();
+            
             services.AddScoped<IMongoDataContext, MongoDataContext>();
 
             BusinessLogicModule.ConfigureServices(services);
@@ -90,6 +94,14 @@ namespace Polyglot
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
                 context.Database.EnsureCreated();
+                               
+            }
+
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<MongoDataContext>();
+                MongoDbSeedsInitializer.MongoSeedAsync(context);
             }
 
             app.UseCors("AllowAll");
@@ -99,7 +111,11 @@ namespace Polyglot
             //app.UseCustomizedIdentity();
 
             app.UseMvc();
+
+
+
             
+
         }
     }
 }

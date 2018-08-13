@@ -251,7 +251,6 @@ namespace Polyglot.DataAccess.Seeds
 
            );
 
-
             modelBuilder.Entity<TranslatorRight>().HasData(
                         new { Id = 1, RightId = 1, TeamTranslatorId = 1 },
                         new { Id = 2, RightId = 2, TeamTranslatorId = 1 },
@@ -267,8 +266,7 @@ namespace Polyglot.DataAccess.Seeds
                         new { Id = 12, RightId = 1, TeamTranslatorId = 4 }
 
                        );
-
-
+            
             modelBuilder.Entity<Rating>().HasData(
             new { Id = 1, Rate = 80.0, TranslatorId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
             new { Id = 2, Rate = 100.0, TranslatorId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
@@ -280,10 +278,37 @@ namespace Polyglot.DataAccess.Seeds
             new { Id = 8, Rate = 100.0, TranslatorId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
             new { Id = 9, Rate = 50.0, TranslatorId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
             new { Id = 10, Rate = 90.0, TranslatorId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
+            
+           );
+
+            modelBuilder.Entity<Glossary>().HasData(
+            new Glossary { Id = 1, TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
+            new Glossary { Id = 2, TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
+            new Glossary { Id = 3, TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
+            new Glossary { Id = 4, TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
+            new Glossary { Id = 5, TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
+            new Glossary { Id = 6, TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
+            new Glossary { Id = 7, TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
+            new Glossary { Id = 8, TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
+            new Glossary { Id = 9, TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
+            new Glossary { Id = 10, TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
+ 
+           );
+            
+            modelBuilder.Entity<ProjectGlossary>().HasData(
+                new { Id = 1, ProjectId = 1, GlossaryId = 1 },
+                new { Id = 2, ProjectId = 1, GlossaryId = 2 },
+                new { Id = 3, ProjectId = 2, GlossaryId = 3 },
+                new { Id = 4, ProjectId = 2, GlossaryId = 4 },
+                new { Id = 5, ProjectId = 3, GlossaryId = 5 },
+                new { Id = 6, ProjectId = 3, GlossaryId = 6 },
+                new { Id = 7, ProjectId = 4, GlossaryId = 7 },
+                new { Id = 8, ProjectId = 4, GlossaryId = 8 },
+                new { Id = 9, ProjectId = 5, GlossaryId = 9 },
+                new { Id = 10, ProjectId = 5, GlossaryId = 10 }
 
 
            );
-
 
         }
     }
