@@ -66,8 +66,11 @@ span
     font-size: 20px;
     height: 35px;
     width: 125px;
+    min-width: 120px;
     color: white;
     font-weight: 400;
+    margin-left: 5px; 
+    margin-top: 5px;
 
 .crete-project-button i
     padding-left: 4px;
@@ -75,3 +78,10 @@ span
 .rating-star
     display: flex;
     align-items: center;
+
+
+@media screen and (min-width: 600px) and (max-width: 1115px)
+    .project-button-wrapper
+        display: inline-block;
+        margin-left: 0px;
+  

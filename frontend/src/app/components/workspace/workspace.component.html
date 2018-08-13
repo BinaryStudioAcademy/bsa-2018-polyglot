@@ -26,7 +26,7 @@
     </div>
   </mat-card>
 
-  <div class="d-flex" style="height:100vh">
+  <div class="d-flex" style="height:calc(100vh - 267px)">
     <mat-card class="keys-list d-flex my-1">
       <mat-nav-list class="keys-list__nav">
         <a mat-list-item *ngFor="let key of keys">
@@ -41,4 +41,5 @@
 
     <app-workspace-key-details [keyDetails] = "selectedKey" style="width: 100%"></app-workspace-key-details>
   </div>
+  <ng-snotify></ng-snotify>
 </section>

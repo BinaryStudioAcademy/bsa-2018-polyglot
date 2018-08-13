@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.DataAccess;
+using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.Repositories;
+using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.SqlRepository;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
-//using Polyglot.DataAccess.NoSQL_Repository;
 
 namespace Polyglot
 {
@@ -61,20 +62,20 @@ namespace Polyglot
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ICRUDService), typeof(CRUDService));
+            services.AddTransient(typeof(ICRUDService), typeof(CRUDService));
 
 
-            services.Configure<Polyglot.DataAccess.NoSQL_Repository.Settings>(options =>{
+            services.Configure<Settings>(options =>{
                         options.ConnectionString = Configuration.GetSection("MongoConnection:MongoConnectionString").Value;
                         options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
-            services.AddScoped<Polyglot.DataAccess.NoSQL_Repository.IComplexStringRepository, Polyglot.DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddScoped<IRepository<ComplexString>, DataAccess.NoSQL_Repository.ComplexStringRepository>();
-            services.AddScoped<IProjectService, ProjectService>();
-            services.AddTransient<IMongoDataContext, MongoDataContext>();
 
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            services.AddScoped<IMongoDataContext, MongoDataContext>();
+
+            BusinessLogicModule.ConfigureServices(services);
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -92,18 +93,24 @@ namespace Polyglot
             }
 
             app.UseCors("AllowAll");
-            /*
 
-            app.UseCors(builder => builder
-                .WithOrigins("http://localhost:4200")
-                .AllowAnyOrigin()
-                .AllowCredentials()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-            */
             app.UseAuthentication();
 
+            //app.UseCustomizedIdentity();
+
             app.UseMvc();
+            
         }
     }
 }
+
+
+/*
+
+app.UseCors(builder => builder
+    .WithOrigins("http://localhost:4200")
+    .AllowAnyOrigin()
+    .AllowCredentials()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+*/

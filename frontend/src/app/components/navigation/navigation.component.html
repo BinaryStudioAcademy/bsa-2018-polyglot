@@ -19,17 +19,17 @@
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
       <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
-        <img src="/assets/images/user-ava.png" class="profile-small-image">
+        <img src="{{manager.avatarUrl}}" class="profile-small-image">
       </button>
 
       <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
         <mat-card class="profile-card">
           <mat-card-header>
             <mat-card-title class="profile-card-main">
-              <img src="/assets/images/user-ava.png" class="profile-big-image">
+              <img src="{{manager.avatarUrl}}" class="profile-big-image">
               <div style="margin-left: 30px;">
-                <h4>Sasha Pushkin</h4>
-                <mat-card-subtitle>test@example.com</mat-card-subtitle>
+                <h4>{{manager.fullName}}</h4>
+                <!-- <mat-card-subtitle>{{manager.email}}</mat-card-subtitle> -->
                 <p>
                   <i>Manager</i>
                 </p>

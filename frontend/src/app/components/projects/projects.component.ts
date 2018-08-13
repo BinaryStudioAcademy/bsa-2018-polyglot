@@ -19,10 +19,11 @@ import { forEach } from '@angular/router/src/utils/collection';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit {
+  public cards: Project[];
+
 
   constructor(private projectService: ProjectService,public dialog: MatDialog) { }
   
-  cards : Project[];
 
   IsLoad : boolean = true;
 
@@ -61,6 +62,11 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  delete(id: number): void{
+    this.projectService.delete(id);
+    console.log("deleted")
+   }
+}
 
-  }
+  
 

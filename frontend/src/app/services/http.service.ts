@@ -38,6 +38,7 @@ export class HttpService {
         } else {
             headers = new HttpHeaders({ 'Authorization': this.token });
         }
+        headers.append('Access-Control-Allow-Origin', '*');
 
         let request: Observable<any>;
 

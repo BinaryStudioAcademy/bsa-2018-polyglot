@@ -1,6 +1,6 @@
-<h4 class="mb-1">{{ key.name }}</h4>
+<h4 class="mb-1">{{ key.key }}</h4>
 <p class="d-flex flex-wrap align-items-center mt-1">
-  {{key.originalValue}}
+  {{key.base}}
 
   <mat-chip-list class="mt-1">
     <mat-chip style="height: 20px;" color="accent" *ngFor="let tag of key.tags">{{tag}}</mat-chip>

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.NoSQL_Models;
-using Polyglot.DataAccess.NoSQL_Repository;
+using Polyglot.DataAccess.MongoModels;
+using Polyglot.DataAccess.MongoRepository;
 
 namespace Polyglot.Controllers
 {
@@ -16,22 +13,20 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ComplexStringsController : ControllerBase
     {
-        private IMapper mapper;
-        private IComplexStringRepository dataProvider;
-        private IProjectService service;
+        private readonly IMapper mapper;
+        private readonly IComplexStringService dataProvider;
 
-        public ComplexStringsController(IComplexStringRepository dataProvider,IProjectService service, IMapper mapper)
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
-            this.service = service;
         }
 
         // GET: ComplexStrings
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
-            var complexStrings = await service.GetAllStringsAsync();
+            var complexStrings = await dataProvider.GetListAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
         }
@@ -40,18 +35,19 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetcomplexStringComplexString")]
         public async Task<IActionResult> GetcomplexStringComplexString(int id)
         {
-            var complexString = await dataProvider.GetAsync(id);
+            var complexString = await dataProvider.GetComplexString(id);
             return complexString == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<ComplexStringDTO>(complexString));
         }
 
         // POST: ComplexStrings
+        [HttpPost]
         public async Task<IActionResult> AddComplexString([FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-            var entity = await dataProvider.CreateAsync(mapper.Map<ComplexString>(complexString));
+            var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 mapper.Map<ComplexStringDTO>(entity));
@@ -62,12 +58,11 @@ namespace Polyglot.Controllers
         public IActionResult ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-            var cs = mapper.Map<ComplexString>(complexString);
-            cs.Id = id;
+            complexString.Id = id;
 
-            var entity = dataProvider.Update(cs);
+            var entity = dataProvider.ModifyComplexString(complexString);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(mapper.Map<ComplexStringDTO>(entity));
         }
@@ -76,8 +71,8 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComplexString(int id)
         {
-            var success = await dataProvider.DeleteAsync(id);
-            return success == null ? Ok() : StatusCode(304) as IActionResult;
+            var success = await dataProvider.DeleteComplexString(id);
+            return success == null ? Ok() : StatusCode(304);
         }
     }
 }
