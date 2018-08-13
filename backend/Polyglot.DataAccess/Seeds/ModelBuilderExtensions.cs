@@ -119,11 +119,11 @@ namespace Polyglot.DataAccess.Seeds
                 );
 
             modelBuilder.Entity<Language>().HasData(
-                new Language { Id = 1, Name = "English", Code = "en"},
-                new Language { Id = 2, Name = "Ukrainian", Code = "uk"},
-                new Language { Id = 3, Name = "German", Code = "de"},
-                new Language { Id = 4, Name = "Spanish", Code = "es"},
-                new Language { Id = 5, Name = "Italian", Code = "it"}
+                new Language { Id = 1, Name = "English", Code = "en" },
+                new Language { Id = 2, Name = "Ukrainian", Code = "uk" },
+                new Language { Id = 3, Name = "German", Code = "de" },
+                new Language { Id = 4, Name = "Spanish", Code = "es" },
+                new Language { Id = 5, Name = "Italian", Code = "it" }
                 );
 
 
@@ -192,7 +192,7 @@ namespace Polyglot.DataAccess.Seeds
                 new { Id = 9, ProjectId = 5, TagId = 7 },
                 new { Id = 10, ProjectId = 5, TagId = 8 }
                 );
-            
+
 
             modelBuilder.Entity<ProjectLanguage>().HasData(
               new { Id = 1, ProjectId = 1, LanguageId = 1 },
@@ -206,7 +206,7 @@ namespace Polyglot.DataAccess.Seeds
               new { Id = 9, ProjectId = 5, LanguageId = 1 },
               new { Id = 10, ProjectId = 5, LanguageId = 3 }
               );
-                        
+
             modelBuilder.Entity<TranslatorLanguage>().HasData(
              new { Id = 1, TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
              new { Id = 2, TranslatorId = 1, LanguageId = 2, Proficiency = "Medium" },
@@ -224,7 +224,7 @@ namespace Polyglot.DataAccess.Seeds
              new Right { Id = 1, Definition = "Add new language" },
              new Right { Id = 2, Definition = "Add new key" },
              new Right { Id = 3, Definition = "Add new team member" },
-             new Right { Id = 4, Definition = "Select new language" }, 
+             new Right { Id = 4, Definition = "Select new language" },
              new Right { Id = 5, Definition = "Delete key" }
             );
 
@@ -235,21 +235,21 @@ namespace Polyglot.DataAccess.Seeds
              new { Id = 4, ProjectId = 1 },
              new { Id = 5, ProjectId = 4 }
             );
-                       
 
-          modelBuilder.Entity<TeamTranslator>().HasData(
-          new { Id = 1, TeamId = 1 ,TranslatorId = 1 },
-          new { Id = 2, TeamId = 1, TranslatorId = 2 },
-          new { Id = 3, TeamId = 1, TranslatorId = 1 },
-          new { Id = 4, TeamId = 1, TranslatorId = 3 },
-          new { Id = 5, TeamId = 1, TranslatorId = 2 },
-          new { Id = 6, TeamId = 1, TranslatorId = 4 },
-          new { Id = 7, TeamId = 1, TranslatorId = 3 },
-          new { Id = 8, TeamId = 1, TranslatorId = 2 },
-          new { Id = 9, TeamId = 1, TranslatorId = 1 },
-          new { Id = 10, TeamId = 1, TranslatorId = 5}
-          
-         );
+
+            modelBuilder.Entity<TeamTranslator>().HasData(
+            new { Id = 1, TeamId = 1, TranslatorId = 1 },
+            new { Id = 2, TeamId = 1, TranslatorId = 2 },
+            new { Id = 3, TeamId = 1, TranslatorId = 1 },
+            new { Id = 4, TeamId = 1, TranslatorId = 3 },
+            new { Id = 5, TeamId = 1, TranslatorId = 2 },
+            new { Id = 6, TeamId = 1, TranslatorId = 4 },
+            new { Id = 7, TeamId = 1, TranslatorId = 3 },
+            new { Id = 8, TeamId = 1, TranslatorId = 2 },
+            new { Id = 9, TeamId = 1, TranslatorId = 1 },
+            new { Id = 10, TeamId = 1, TranslatorId = 5 }
+
+           );
 
 
             modelBuilder.Entity<TranslatorRight>().HasData(
@@ -265,8 +265,24 @@ namespace Polyglot.DataAccess.Seeds
                         new { Id = 10, RightId = 5, TeamTranslatorId = 4 },
                         new { Id = 11, RightId = 2, TeamTranslatorId = 4 },
                         new { Id = 12, RightId = 1, TeamTranslatorId = 4 }
-                                               
+
                        );
+
+
+            modelBuilder.Entity<Rating>().HasData(
+            new { Id = 1, Rate = 80.0, TranslatorId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 2, Rate = 100.0, TranslatorId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 3, Rate = 50.0, TranslatorId = 2, Comment = "not bad", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 4, Rate = 80.0, TranslatorId = 2, Comment = "good job!", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 5, Rate = 100.0, TranslatorId = 3, Comment = "awsome!", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 6, Rate = 60.0, TranslatorId = 4, Comment = "not bad", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 7, Rate = 80.0, TranslatorId = 4, Comment = "good job!", CreatedById = 4, CreatedAt = DateTime.Now },
+            new { Id = 8, Rate = 100.0, TranslatorId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 9, Rate = 50.0, TranslatorId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 10, Rate = 90.0, TranslatorId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
+
+
+           );
 
 
         }
