@@ -55,16 +55,24 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onAddNewStringClick() {
-    this.dialog.open(StringDialogComponent, {
+    let dialogRef = this.dialog.open(StringDialogComponent, {
       data: {
         projectId: this.project.id
       }
+      });
+      dialogRef.componentInstance.onAddString.subscribe((result) => {
+        if(result)
+          this.keys.push(result);
+      })
+      dialogRef.afterClosed().subscribe(()=>{
+        dialogRef.componentInstance.onAddString.unsubscribe();
       });
   }
 
   onSelect(key: any){
     debugger;
     console.log(key);
+    
     this.selectedKey = key;
   }
 
@@ -73,41 +81,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
 }
-
-let MOCK_KEYS = [
-  {
-    id: 1,
-    name: 'HELLO',
-    originalValue: 'hello',
-    tags: ['it', 'header', 'app', 'workspace', 'lection1']
-  },
-  {
-    id: 2,
-    name: 'CANCEL',
-    originalValue: 'cancel'
-  },
-  {
-    id: 3,
-    name: 'CONFIRM',
-    originalValue: 'confirm'
-  },
-  {
-    id: 4,
-    name: 'HELLO',
-    originalValue: 'hello',
-    tags: ['it', 'header', 'app', 'workspace', 'lection1']
-  },
-  {
-    id: 5,
-    name: 'CANCEL',
-    originalValue: 'cancel'
-  },
-  {
-    id: 6,
-    name: 'CONFIRM',
-    originalValue: 'confirm'
-  }
-];
 
 let MOCK_PROJECT = (id: number): Project => ({
   id : id,
