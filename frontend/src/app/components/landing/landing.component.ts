@@ -28,4 +28,8 @@ export class LandingComponent implements OnInit {
   onSignUpClick() {
     this.dialog.open(SignupDialogComponent);
   }
+
+  onLoginClick() {
+    this.dialog.open(LoginDialogComponent);
+  }
 }
