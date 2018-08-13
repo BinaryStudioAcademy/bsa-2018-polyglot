@@ -52,9 +52,7 @@ export class NewProjectComponent implements OnInit {
     mainLanguage: [ '', [Validators.required]],
   });
   languages: Language[];
-
-
-
+  
   saveChanges(project: Project): void{
     if(this.projectImage){
       let fm = new FormData();
@@ -76,7 +74,10 @@ export class NewProjectComponent implements OnInit {
       (d)=> {
         console.log(d);
         this.router.navigate(['../']);
-        this.snotifyService.success("Project created", "Success!");
+        setTimeout(() => {
+          this.snotifyService.success("Project created", "Success!");
+        }, 100);
+        
       },
       err => {
         this.snotifyService.error("Project wasn`t created", "Error!");
