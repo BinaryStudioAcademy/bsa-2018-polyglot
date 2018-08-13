@@ -20,10 +20,13 @@
                     </div>
                 </mat-error>
             </mat-form-field>   
-            <mat-form-field class="">
-                    <input matInput placeholder="Country" formControlName="country">
-            </mat-form-field> 
-        
+            <mat-form-field class="date-birth-field">
+                <!--BUG HERE DATE BIRTH 01/01/01 formControlName="birthDate" -->
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Date of birth">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
             <mat-form-field class="">
                     <input matInput placeholder="City" formControlName="city">
             </mat-form-field>
@@ -32,13 +35,7 @@
                     <input matInput placeholder="Region" formControlName="region">
             </mat-form-field>
         
-            
-            <mat-form-field class="date-birth-field">
-                <!--BUG HERE DATE BIRTH 01/01/01 formControlName="birthDate" -->
-                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Birth date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+        
 
             <mat-form-field class="phone-field">
                 <input  matInput placeholder="Phone" formControlName="phone" pattern="\+?[0-9-]*">
@@ -48,6 +45,10 @@
                     </mat-error>
             </mat-form-field>    
 
+            <mat-form-field class="">
+                <input matInput placeholder="Country" formControlName="country">
+            </mat-form-field> 
+    
         
             <mat-form-field class="address-field">
                 <input matInput placeholder="Address" formControlName="address">
@@ -55,7 +56,9 @@
 
             <mat-form-field class="post-code-field">
                 <input matInput placeholder="Postal code" formControlName="postalCode" >
-            </mat-form-field>       
-            <button mat-button class ="save-button"  [disabled]="profileForm.invalid">Save</button>
+            </mat-form-field> 
+            <div class="button-container">
+                <button mat-button class ="save-button"  [disabled]="profileForm.invalid">Save</button>
+            </div>
             </div>
         </form>
