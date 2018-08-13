@@ -21,8 +21,8 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
-        private readonly IMongoRepository<ComplexString> stringsProvider;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<ComplexString> rep)
+        private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -90,10 +90,10 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var i in dictionary)
             {
-                ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
+				DataAccess.MongoModels.ComplexString temp = new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
-                await stringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value });
             }
 
         }

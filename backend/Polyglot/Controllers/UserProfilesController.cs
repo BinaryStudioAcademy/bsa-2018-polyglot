@@ -39,7 +39,7 @@ namespace Polyglot.Controllers
 
             var entities = await service.GetListAsync();
             return entities == null ? NotFound("No user profiles found!") as IActionResult
-                : Ok(projects);
+                : Ok(entities);
 
         }
 
