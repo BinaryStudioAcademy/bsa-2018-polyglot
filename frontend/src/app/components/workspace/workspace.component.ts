@@ -55,10 +55,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onAddNewStringClick() {
-    this.dialog.open(StringDialogComponent, {
+    let dialogRef = this.dialog.open(StringDialogComponent, {
       data: {
         projectId: this.project.id
       }
+      });
+      dialogRef.componentInstance.onAddString.subscribe((result) => {
+        if(result)
+          this.keys.push(result);
+      })
+      dialogRef.afterClosed().subscribe(()=>{
+        dialogRef.componentInstance.onAddString.unsubscribe();
       });
   }
 

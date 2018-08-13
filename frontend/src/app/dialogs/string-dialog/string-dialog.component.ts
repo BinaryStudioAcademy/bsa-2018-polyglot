@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { IString } from '../../models/string';
 import { Tag } from '../../models/tag';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -6,6 +6,7 @@ import { Inject } from '@angular/core';
 import { ComplexStringService } from '../../services/complex-string.service';
 import { MatDialogRef } from '@angular/material';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-string-dialog',
@@ -15,6 +16,7 @@ import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify'
 
 export class StringDialogComponent implements OnInit {
 
+  @Output() onAddString = new EventEmitter<IString>(true);
   public str: IString;
   public image: File;
 
@@ -65,9 +67,18 @@ export class StringDialogComponent implements OnInit {
     this.complexStringService.create(this.str)
       .subscribe(
         (d) => {
-          console.log(d);
-          this.snotifyService.success("ComplexString created", "Success!");
-          this.dialogRef.close();         
+          if(d)
+          {
+            this.onAddString.emit(d);
+            this.snotifyService.success("ComplexString created", "Success!");
+            this.dialogRef.close();     
+          }
+          else
+          {
+            this.snotifyService.success("ComplexString wasn`t created", "Error!");
+            this.dialogRef.close();   
+          }
+              
         },
         err => {
           console.log('err', err);
