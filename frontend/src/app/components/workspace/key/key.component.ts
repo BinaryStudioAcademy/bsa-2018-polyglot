@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class KeyComponent implements OnInit {
 
-  @Input() public key: any; // for now only. when i dont understand schema
+  @Input() public key: any;
 
   constructor() { }
 
