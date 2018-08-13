@@ -15,9 +15,12 @@ using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
+
 namespace Polyglot.BusinessLogic.Services
 {
-    public class ProjectService : CRUDService, IProjectService
+    public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<ComplexString> stringsProvider;
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<ComplexString> rep)
