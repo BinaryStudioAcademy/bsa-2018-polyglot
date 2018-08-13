@@ -69,7 +69,7 @@ export class NewProjectComponent implements OnInit {
 
 
     console.log(project);
-    project.mainLanguage.id = undefined;
+    // project.mainLanguage.id = undefined;
     //Save current manager
     this.projectService.create(project)
     .subscribe(

@@ -68,7 +68,7 @@ namespace Polyglot.BusinessLogic.Implementations
                 return false;
         }
 
-        public async Task<TEntityDTO> PostAsync(TEntityDTO entity)
+        public virtual async Task<TEntityDTO> PostAsync(TEntityDTO entity)
         {
             if (uow != null)
             {
