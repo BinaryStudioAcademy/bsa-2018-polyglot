@@ -35,6 +35,7 @@ namespace Polyglot.Controllers
                 : Ok(project);
         }
 
+        [HttpPost]
         // POST: Languages
         public async Task<IActionResult> AddLanguage([FromBody]LanguageDTO project)
         {
