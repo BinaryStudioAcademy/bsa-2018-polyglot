@@ -72,6 +72,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   onSelect(key: any){
     debugger;
     console.log(key);
+    
     this.selectedKey = key;
   }
 
