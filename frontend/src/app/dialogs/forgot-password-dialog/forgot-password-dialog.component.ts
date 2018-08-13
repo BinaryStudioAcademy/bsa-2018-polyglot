@@ -11,6 +11,7 @@ import { SnotifyService } from 'ng-snotify';
 export class ForgotPasswordDialogComponent implements OnInit {
 
   userEmail: string;
+  isEmailSend: boolean;
 
   constructor(
     private authService: AuthService, 
@@ -20,21 +21,54 @@ export class ForgotPasswordDialogComponent implements OnInit {
 
   ngOnInit() {
     this.userEmail = '';
+    this.isEmailSend = false;
   }
 
   onResetPasswordFormSubmit(form) {
     if (form.valid) {
-      this.authService.sendResetPasswordConfirmation(this.userEmail);
-      this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
-        timeout: 10000,
-        showProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false        
-      });
-      setTimeout(
-        () => this.dialogRef.close(), 
-        10000
-      );
+      if (!this.isEmailSend) {
+        this.authService.sendResetPasswordConfirmation(this.userEmail);
+        this.isEmailSend = true;
+        this.snotify.clear();
+        this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
+          timeout: 15000,
+          showProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false        
+        });
+        setTimeout(
+          () => this.dialogRef.close(), 
+          15000
+        );
+      } else {
+        this.snotify.clear();
+        this.snotify.warning(`Email confirmation was already send to ${this.userEmail}. Check your email`, {
+          timeout: 15000,
+          showProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          buttons: [
+            {text: 'Resend', action: () => {
+              this.authService.sendResetPasswordConfirmation(this.userEmail);
+              this.snotify.clear();
+              this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
+                timeout: 15000,
+                showProgressBar: true,
+                closeOnClick: false,
+                pauseOnHover: false        
+              });
+              setTimeout(
+                () => this.dialogRef.close(), 
+                15000
+              );
+            }}
+          ]    
+        });
+        setTimeout(
+          () => this.dialogRef.close(), 
+          15000
+        );
+      }
     }
   }
 }

@@ -35,12 +35,27 @@ export class LoginDialogComponent implements OnInit {
         () => {
           if(!this.authService.getCurrentUser().emailVerified) {
               // email confirmation
-            this.authService.sendEmailVerification();
-            this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
-              timeout: 10000,
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+              timeout: 15000,
               showProgressBar: true,
               closeOnClick: false,
-              pauseOnHover: false        
+              pauseOnHover: false,
+              buttons: [
+                {text: "Resend", action: async () => {
+                  // resend confirmation to user
+                  await this.authService.signInRegular(user.email, user.password);
+                  this.authService.sendEmailVerification();
+                  this.authService.logout();
+                  this.snotify.clear();
+                  this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+                    timeout: 15000,
+                    showProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: false
+                  });
+                }}
+              ]        
             });
             this.authService.logout();
             throw {message: 'You need to confirm your email address in order to use our service'};
