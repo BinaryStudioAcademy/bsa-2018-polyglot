@@ -29,7 +29,7 @@ namespace Polyglot.Controllers
         }
 
         // GET: managers/:id/teams
-        [HttpGet("{id}", Name = "GetManagerTeams")]
+        [HttpGet("{id}/teams", Name = "GetManagerTeams")]
         public async Task<IActionResult> GetAllManagerTeams(int id)
         {
             var teams = await teamService.GetManagerTeams(id);

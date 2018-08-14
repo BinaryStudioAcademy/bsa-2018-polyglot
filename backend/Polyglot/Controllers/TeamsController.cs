@@ -11,9 +11,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TeamsController : ControllerBase
     {
-        private readonly ICRUDService<Team, TeamDTO> service;
+        private readonly ITeamService service;
 
-        public TeamsController(ICRUDService<Team, TeamDTO> service, IMapper mapper)
+        public TeamsController(ITeamService service, IMapper mapper)
         {
             this.service = service;
         }

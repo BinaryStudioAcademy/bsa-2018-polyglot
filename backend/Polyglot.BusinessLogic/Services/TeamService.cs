@@ -19,15 +19,14 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+
+
         public async Task<IEnumerable<TeamDTO>> GetManagerTeams(int managerId)
         {
             var manager = await uow.GetRepository<Manager>().GetAsync(managerId);
             if(manager != null)
             {
-                var teams = (await uow.GetRepository<Project>()
-                    .GetAllAsync(p => p.Manager.Id == managerId)
-                    )
-                    .SelectMany(p => p.Teams);
+                var teams = manager.Projects?.SelectMany(p => p.Teams);
 
                 if (teams != null)
                     return mapper.Map<IEnumerable<TeamDTO>>(teams);
