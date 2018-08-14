@@ -14,6 +14,7 @@ export class LoginDialogComponent implements OnInit {
 
   public user: IUserLogin;
   public firebaseError: string;
+  hide = true;
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
