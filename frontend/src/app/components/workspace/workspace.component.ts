@@ -84,6 +84,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     });
   }
 
+  receiveId($event) {
+    debugger;
+    let temp = this.keys.findIndex( x => x.id === $event);
+    this.keys.splice(temp, 1);
+  }
+
 }
 
  

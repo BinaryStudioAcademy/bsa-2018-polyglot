@@ -5,7 +5,7 @@ using Polyglot.DataAccess.SqlRepository;
 using Polyglot.DataAccess.Entities;
 using Polyglot.Common.DTOs;
 
-namespace Polyglot.BusinessLogic.Implementations
+namespace Polyglot.BusinessLogic.Services
 {
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
