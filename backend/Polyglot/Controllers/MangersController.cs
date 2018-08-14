@@ -11,10 +11,12 @@ namespace Polyglot.Controllers
     public class ManagersController : ControllerBase
     {
         private readonly ICRUDService<Manager, ManagerDTO> service;
+        private readonly ITeamService teamService;
 
-        public ManagersController(ICRUDService<Manager, ManagerDTO> service)
+        public ManagersController(ICRUDService<Manager, ManagerDTO> service, ITeamService teamService)
         {
             this.service = service;
+            this.teamService = teamService;
         }
 
         // GET: Managers
@@ -24,6 +26,15 @@ namespace Polyglot.Controllers
             var managers = await service.GetListAsync();
             return managers == null ? NotFound("No managers found!") as IActionResult
                 : Ok(managers);
+        }
+
+        // GET: managers/:id/teams
+        [HttpGet("{id}", Name = "GetManagerTeams")]
+        public async Task<IActionResult> GetAllManagerTeams(int id)
+        {
+            var teams = await teamService.GetManagerTeams(id);
+            return teams == null ? NotFound("No teams found!") as IActionResult
+                : Ok(teams);
         }
 
         // GET: Managers/5
