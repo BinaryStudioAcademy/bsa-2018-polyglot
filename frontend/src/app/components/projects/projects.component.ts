@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
 
@@ -9,6 +9,7 @@ import { ProjectMessageComponent } from '../../dialogs/project-message/project-m
 import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
 import { forEach } from '@angular/router/src/utils/collection';
+import { NavigationStart, Router, NavigationEnd } from '../../../../node_modules/@angular/router';
 
 
 
@@ -18,14 +19,16 @@ import { forEach } from '@angular/router/src/utils/collection';
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.sass']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
 
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
+  constructor(private projectService: ProjectService,public dialog: MatDialog,private router : Router) { }
   
 
   IsLoad : boolean = true;
+  OnPage : boolean
+  private routeSub:any;
 
   user: UserProfile = {
     id: 1,
@@ -47,14 +50,17 @@ export class ProjectsComponent implements OnInit {
   };
 
   ngOnInit() {
-  
+  this.OnPage = true;
   this.projectService.getAll().subscribe(pr => {this.cards = pr;
-    if(this.cards.length === 0){
-      setTimeout(() => this.openDialog())
+    if(this.cards.length === 0 && this.OnPage === true){
+     setTimeout(() => this.openDialog())
       }
       this.IsLoad = false;
-      console.log(this.cards);
   });
+  }
+
+  ngOnDestroy(){
+    this.OnPage = false;
   }
 
   openDialog(): void {
