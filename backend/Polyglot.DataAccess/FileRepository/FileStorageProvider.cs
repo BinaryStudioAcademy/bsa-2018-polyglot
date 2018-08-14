@@ -110,6 +110,7 @@ namespace Polyglot.DataAccess.FileRepository
         
         private async Task SetPublicContainerPermissionsAsync(CloudBlobContainer container)
         {
+            await container.CreateIfNotExistsAsync();
             BlobContainerPermissions permissions = new BlobContainerPermissions
             {
                 PublicAccess = BlobContainerPublicAccessType.Blob

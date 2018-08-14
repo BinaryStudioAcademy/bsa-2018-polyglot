@@ -1,9 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.FileRepository;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.Controllers
 {
@@ -13,11 +19,12 @@ namespace Polyglot.Controllers
     public class ProjectsController : ControllerBase
     {
 		private IProjectService service;
-        
 
-        public ProjectsController(IProjectService projectService)
+        public IFileStorageProvider fileStorageProvider;
+        public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
         {
 			this.service =  projectService;
+            fileStorageProvider = provider;
         }
 
 
@@ -51,16 +58,32 @@ namespace Polyglot.Controllers
         }
 
         // POST: Projects
-        public async Task<IActionResult> AddProject([FromBody]ProjectDTO project)
+        [HttpPost]
+        public async Task<IActionResult> AddProject()
         {
-            if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
 
+            Request.Form.TryGetValue("project", out StringValues res);
+
+            ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
+
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile file = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    await file.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
+
+                project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+            }
             var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
-
+            
         }
 
         // PUT: Projects/5
