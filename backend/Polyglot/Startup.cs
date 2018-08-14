@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;

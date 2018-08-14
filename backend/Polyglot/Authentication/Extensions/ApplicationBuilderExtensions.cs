@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.DataAccess.Entities;
 using System;
 using System.Security.Claims;
