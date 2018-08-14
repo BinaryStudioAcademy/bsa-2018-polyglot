@@ -27,12 +27,19 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   ngOnChanges(){
 
 
-    if(this.keyDetails){
+    if(this.keyDetails && this.keyDetails.translations){
+      debugger;
       this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-     // this.paginator.pageSize = this.pageSize;     ERROR 
-      this.translationsDataSource.paginator = this.paginator;
+      
+      if(this.IsPagenationNeeded){
+        this.paginator.pageSize = this.pageSize;
+        this.translationsDataSource.paginator = this.paginator;
+      }
+
     }
+    else
+      this.IsPagenationNeeded = false;
   }
 
   ngOnInit() {
