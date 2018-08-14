@@ -1,4 +1,4 @@
-<h4 class="mb-1">{{ key.key }}</h4>
+<h4 class="mb-1">{{ key.key }} <i (click)="onDeleteString(); $event.stopPropagation();" class="material-icons">clear</i></h4>
 <p class="text-justify d-flex flex-wrap align-items-center mt-1">
   {{key.base}}
 
