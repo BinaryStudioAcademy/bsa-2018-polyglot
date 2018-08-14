@@ -34,10 +34,9 @@
 
 		<tr mat-row *matRowDef="let row; columns: ['language', 'translatedValue','updateBtn'];" class="cursor-pointer"></tr>
 	</table>
-	<mat-paginator *ngIf="IsPagenationNeeded" Buttons style="position: absolute;bottom: 0;right:0;"></mat-paginator>
 </mat-card>
 
-<mat-card class="my-1 ml-1 p-1 px-0 grow-1 translations-details" >
+<mat-card class="my-1 ml-1 px-1 grow-1 translations-details" >
 	<mat-tab-group flex>
 		<mat-tab label="History" > 
 			<ng-template mat-tab-label >
