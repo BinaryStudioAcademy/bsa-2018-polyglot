@@ -53,13 +53,10 @@ export class ProjectsComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
   this.OnPage = true;
-<<<<<<< HEAD
+
   this.projectService.getAll().subscribe(pr => 
     {
       this.cards = pr;
-=======
-  this.projectService.getAll().subscribe(pr => {this.cards = pr;
->>>>>>> develop
     if(this.cards.length === 0 && this.OnPage === true){
      setTimeout(() => this.openDialog())
       }
