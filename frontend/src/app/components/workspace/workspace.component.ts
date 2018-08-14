@@ -5,6 +5,7 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
+import { IString } from '../../models/string';
 
 
 @Component({
