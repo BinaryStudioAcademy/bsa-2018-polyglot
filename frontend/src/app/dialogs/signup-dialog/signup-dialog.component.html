@@ -18,7 +18,7 @@
     <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
       #email="ngModel" autocomplete="on" 
       pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-      maxlength="25">
+      maxlength="50">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>
