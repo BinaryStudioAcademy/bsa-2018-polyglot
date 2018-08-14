@@ -23,53 +23,21 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Polyglot.Authentication.Extensions
 {
-
-    //public class Test : AuthorizeAttribute
-    //{
-
-    //}
-
-    // [Authorize]
-    //public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
-    //{
-    //    //app.UseWhen(context => context.Request.Headers.ContainsKey("Authorization"), appBuilder =>
-    //    //{
-    //    //}
-    //    //app.UseAuthentication();
-
-    //    app.UseWhen(
-    //        context => context.Request.Path.StartsWithSegments(""),
-    //        a => a.Use(async (context, next) =>
-    //        {
-    //            //context.User.Claims.ToArray().Count() == 0;
-    //            //UserNataliHelper.FullName = context.User.Claims.ToArray()[0].Value; ;
-
-    //            //context.User.GetName() don`t work here, but work in controllers
-    //            if (context.User.GetName() != null)
-    //            {
-    //                UserNataliHelper.FullName = context.User.GetName();
-    //            }
-    //            else
-    //            {
-    //                UserNataliHelper.FullName = "unknown";
-    //            }
-    //            await context.Response.WriteAsync("Hi");
-    //            await next();
-    //        }));
-    //    return app;
-    //}
-
     public static class ApplicationBuilderExtensions
     {
         [Authorize]
         public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
         {
+            //app.UseWhen(context => context.Request.Headers.ContainsKey("Authorization"), appBuilder =>
+            //    //{
+            //    //}
             app.UseWhen(
             context => context.Request.Path.StartsWithSegments(""),
             a => a.Use(async (context, next) =>
             {
                 UserIdentityService service = new UserIdentityService();
-                service.GetCurrentUser(context);
+                service.SaveDate(context);
+                await next();
             }));
             return app;
         }

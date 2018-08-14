@@ -263,7 +263,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(pt => pt.AvatarUrl))
                     .ForMember(p => p.BirthDate, opt => opt.MapFrom(pt => pt.BirthDate))
                     .ForMember(p => p.City, opt => opt.MapFrom(pt => pt.City))
-                    .ForMember(p => p.Country, opt => opt.MapFrom(pt => pt.FullName))
+                    .ForMember(p => p.Country, opt => opt.MapFrom(pt => pt.Country))
                     .ForMember(p => p.Phone, opt => opt.MapFrom(pt => pt.Phone))
                     .ForMember(p => p.PostalCode, opt => opt.MapFrom(pt => pt.PostalCode))
                     .ForMember(p => p.Region, opt => opt.MapFrom(pt => pt.Region))

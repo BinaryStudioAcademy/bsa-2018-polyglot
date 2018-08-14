@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Authentication.Extensions;
+using Polyglot.Common.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,26 @@ namespace Polyglot.Authentication
     [Authorize]
     public class UserIdentityService
     {
-        public static string Name { get; set; }
+        private static UserProfileDTO User { get; set; }
 
-        public static string Uid { get; set; }
-
-        HttpContext httpContext;
-
-        public void GetCurrentUser(HttpContext httpContext)
+        public UserIdentityService()
         {
-            Name = httpContext.User.GetName();
-            Uid = httpContext.User.GetUid();
+            User = new UserProfileDTO();
+        }
+
+        public void SaveDate(HttpContext httpContext)
+        {
+            if (httpContext.User.GetUid() != null)
+            {
+                User.FullName = httpContext.User.GetName();
+                User.Uid = httpContext.User.GetUid();
+                User.AvatarUrl = httpContext.User.GetProfilePicture();
+            }
+        }
+
+        public static UserProfileDTO GetCurrentUser()
+        {
+            return User;
         }
     }
 }
