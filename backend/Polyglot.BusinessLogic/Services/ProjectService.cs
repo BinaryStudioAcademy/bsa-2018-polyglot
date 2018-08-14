@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoModels;
@@ -27,7 +26,6 @@ namespace Polyglot.BusinessLogic.Services
         {
             stringsProvider = rep;
         }
-
 
         public async Task FileParseDictionary(IFormFile file)
         {
