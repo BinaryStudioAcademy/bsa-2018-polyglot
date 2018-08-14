@@ -1,9 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.FileRepository;
+using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 
@@ -16,10 +23,12 @@ namespace Polyglot.Controllers
         private readonly IMapper mapper;
         private readonly IComplexStringService dataProvider;
 
-        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper)
+        public IFileStorageProvider fileStorageProvider;
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
+            fileStorageProvider = provider;
         }
 
         // GET: ComplexStrings
@@ -42,15 +51,29 @@ namespace Polyglot.Controllers
 
         // POST: ComplexStrings
         [HttpPost]
-        public async Task<IActionResult> AddComplexString([FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult> AddComplexString()
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            IFormFile file = Request.Form.Files[0];
+            Request.Form.TryGetValue("str", out StringValues res);
+
+            ComplexStringDTO complexString = JsonConvert.DeserializeObject<ComplexStringDTO>(res);
+
+            byte[] byteArr;
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                await file.CopyToAsync(ms);
+                byteArr = ms.ToArray();
+            }
+
+            return Ok(await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName)));
+            /*
+            complexString.PictureLink = 
 
             var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ComplexStringDTO>(entity));
+                mapper.Map<ComplexStringDTO>(entity)); */
         }
 
         // PUT: ComplexStrings/5
