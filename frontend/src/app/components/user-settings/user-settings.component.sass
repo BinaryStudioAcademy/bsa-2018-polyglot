@@ -1,34 +1,44 @@
 @import "../../../common-styles/styleForForm.sass";
 
 .form-container
+    width: 60%
     margin-top: 20px
+    text-align: center
 
 img:hover
     cursor: pointer
 
+.name-field
+    width: 43%
+
+
 mat-form-field
-    min-width: 30%
-    margin: 10px
+    width: 35%
+    margin: 15px
 
 
 
-.save-button 
-    width: 100%
+.button-container
     text-align: center
-    margin-bottom: 30px
 
 
 img
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
     border-radius: 50%
-    width: 180px
+    width: 150px
     float: left
     height: auto
-    margin: 10px 40px 40px 40px
+    margin: 10px 40px 10px 40px
+
 button
     width: 100px
     height: 40px
     margin-top: 15px
+
+@media only screen and (min-width: 1000px) 
+    .post-code-field
+        width: 15%
+    
 
 
 

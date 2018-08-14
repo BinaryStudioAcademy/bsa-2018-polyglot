@@ -36,6 +36,11 @@ namespace Polyglot.DataAccess.SqlRepository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.MainLanguage)
+                .WithMany(l => l.Projects)
+                .HasForeignKey(p => p.MainLanguageId);
+
             modelBuilder.Entity<ProjectGlossary>()
                 .HasKey(pg => new { pg.GlossaryId, pg.ProjectId });
 
