@@ -4,6 +4,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.MongoModels;
 using System.Collections.Generic;
+using System.Linq;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.Common.Mapping
@@ -250,9 +251,11 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.TeamTranslator, opt => opt.MapFrom(pt => pt.TeamTranslator))
                     .ForMember(p => p.TeamTranslatorId, opt => opt.MapFrom(pt => pt.TeamTranslatorId));
 
-                //cfg.CreateMap<Team, TeamPrevDTO>()
-                //    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                //    .ForMember(p => p.Persons, opt => opt.MapFrom(po => po.TeamTranslators.));
+                cfg.CreateMap<Team, TeamPrevDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
+                        po.TeamTranslators
+                        .Select(t => t.Translator.UserProfile)));
 
                 cfg.CreateMap<UserProfile, UserProfilePrevDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
