@@ -8,7 +8,6 @@ import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { debounce } from 'rxjs/operators';
-import { FileStorageService } from '../../services/file-storage.service';
 
 @Component({
   selector: 'app-new-project',
@@ -21,8 +20,7 @@ export class NewProjectComponent implements OnInit {
   constructor(private fb: FormBuilder, private projectService: ProjectService,
     private languageService: LanguageService, 
     private router: Router,
-    private snotifyService: SnotifyService,
-    private fileStorageService: FileStorageService) {
+    private snotifyService: SnotifyService,) {
 
   }
 
