@@ -21,8 +21,8 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(iString: IString) : Observable<IString> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', iString);
+  create(data: FormData) : Observable<IString> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data);
   }
 
   update(iString: IString, id: number) : Observable<IString> {
