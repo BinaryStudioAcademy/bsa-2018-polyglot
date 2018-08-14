@@ -9,9 +9,8 @@ import { ComplexStringService } from '../../../services/complex-string.service';
 export class KeyComponent implements OnInit {
 
   @Input() public key: any;
-  /*
   @Output() idEvent = new EventEmitter<number>();
-  */
+
   constructor(private dataProvider: ComplexStringService) { }
 
   ngOnInit() {
@@ -20,9 +19,7 @@ export class KeyComponent implements OnInit {
   onDeleteString() {
     this.dataProvider.delete(this.key.id)
     .subscribe(() => {});
-    /*
     this.idEvent.emit(this.key.id);
-    */
   }
 
 }
