@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ITeamService : ICRUDService<Team, TeamDTO>
+    public interface IManagerService : ICRUDService<Manager, ManagerDTO>
     {
         Task<IEnumerable<TeamDTO>> GetManagerTeams(int managerId);
 
+        Task<IEnumerable<ProjectDTO>> GetManagerProjects(int managerId);
     }
 }

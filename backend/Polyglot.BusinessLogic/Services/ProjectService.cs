@@ -27,7 +27,6 @@ namespace Polyglot.BusinessLogic.Services
             stringsProvider = rep;
         }
 
-
         public async Task FileParseDictionary(IFormFile file)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
