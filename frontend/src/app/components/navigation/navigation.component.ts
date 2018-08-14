@@ -35,7 +35,6 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    debugger
     if ( this.authService.isLoggedIn()){
       if (!this.userService.getCurrrentUser()) {
         this.userService.getUser().subscribe(
