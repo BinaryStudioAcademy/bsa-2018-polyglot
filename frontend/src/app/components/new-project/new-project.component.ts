@@ -8,7 +8,6 @@ import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { debounce } from 'rxjs/operators';
-import { FileStorageService } from '../../services/file-storage.service';
 
 @Component({
   selector: 'app-new-project',
@@ -21,8 +20,7 @@ export class NewProjectComponent implements OnInit {
   constructor(private fb: FormBuilder, private projectService: ProjectService,
     private languageService: LanguageService, 
     private router: Router,
-    private snotifyService: SnotifyService,
-    private fileStorageService: FileStorageService) {
+    private snotifyService: SnotifyService,) {
 
   }
 
@@ -54,22 +52,15 @@ export class NewProjectComponent implements OnInit {
   languages: Language[];
   
   saveChanges(project: Project): void{
-    if(this.projectImage){
-      let fm = new FormData();
-      fm.append("file", this.projectImage, this.projectImage.name);
-      this.fileStorageService.uploadFile(fm).subscribe(data =>{
-         this.project.imageUrl = data
-
-        });
-    }
     project.createdOn = new Date(Date.now());
+    let formData = new FormData();
+    if(this.projectImage)
+      formData.append("image", this.projectImage);
 
+      console.log(project);
+    formData.append("project", JSON.stringify(project));
 
-
-    console.log(project);
-    // project.mainLanguage.id = undefined;
-    //Save current manager
-    this.projectService.create(project)
+    this.projectService.create(formData)
     .subscribe(
       (d)=> {
         console.log(d);
