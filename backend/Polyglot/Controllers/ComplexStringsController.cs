@@ -72,7 +72,7 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> DeleteComplexString(int id)
         {
             var success = await dataProvider.DeleteComplexString(id);
-            return success == null ? Ok() : StatusCode(304);
+            return success ? Ok() : StatusCode(304);
         }
     }
 }

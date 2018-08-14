@@ -17,7 +17,6 @@ using Newtonsoft.Json;
 using System.IO;
 using Polyglot.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Authorization;
 

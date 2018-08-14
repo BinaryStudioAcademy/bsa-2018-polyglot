@@ -10,6 +10,7 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
