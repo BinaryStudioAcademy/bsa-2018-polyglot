@@ -62,27 +62,27 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> AddProject()
         {
 
-                Request.Form.TryGetValue("project", out StringValues res);
+            Request.Form.TryGetValue("project", out StringValues res);
 
-                ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
+            ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
 
-                if (Request.Form.Files.Count != 0)
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile file = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
                 {
-                    IFormFile file = Request.Form.Files[0];
-                    byte[] byteArr;
-                    using (var ms = new MemoryStream())
-                    {
-                        file.CopyTo(ms);
-                        await file.CopyToAsync(ms);
-                        byteArr = ms.ToArray();
-                    }
-
-                    project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+                    file.CopyTo(ms);
+                    await file.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
                 }
-                var entity = await service.PostAsync(project);
-                return entity == null ? StatusCode(409) as IActionResult
-                    : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                    entity);
+
+                project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+            }
+            var entity = await service.PostAsync(project);
+            return entity == null ? StatusCode(409) as IActionResult
+                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
+                entity);
             
         }
 

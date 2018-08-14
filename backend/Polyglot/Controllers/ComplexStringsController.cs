@@ -53,27 +53,26 @@ namespace Polyglot.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComplexString()
         {
-            IFormFile file = Request.Form.Files[0];
             Request.Form.TryGetValue("str", out StringValues res);
-
             ComplexStringDTO complexString = JsonConvert.DeserializeObject<ComplexStringDTO>(res);
-
-            byte[] byteArr;
-            using (var ms = new MemoryStream())
+            if (Request.Form.Files.Count != 0)
             {
-                file.CopyTo(ms);
-                await file.CopyToAsync(ms);
-                byteArr = ms.ToArray();
+                IFormFile file = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    await file.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
+
+
+                complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
-
-            return Ok(await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName)));
-            /*
-            complexString.PictureLink = 
-
             var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ComplexStringDTO>(entity)); */
+                mapper.Map<ComplexStringDTO>(entity)); 
         }
 
         // PUT: ComplexStrings/5
