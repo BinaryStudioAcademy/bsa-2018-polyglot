@@ -73,7 +73,8 @@ namespace Polyglot.BusinessLogic.Services
         {
             var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
             {
-                TranslationKey = entity.Key
+                TranslationKey = entity.Key,
+                ProjectId = entity.ProjectId
             };
             var savedEntity = await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
             await _uow.SaveAsync();
