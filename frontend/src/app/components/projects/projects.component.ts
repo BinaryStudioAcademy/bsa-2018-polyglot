@@ -8,8 +8,6 @@ import { ProjectMessageComponent } from '../../dialogs/project-message/project-m
 // to delete manager and user
 import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
-import { forEach } from '@angular/router/src/utils/collection';
-import { NavigationStart, Router, NavigationEnd } from '../../../../node_modules/@angular/router';
 
 
 
@@ -23,12 +21,12 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
 
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog,private router : Router) { }
+  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
   
 
   IsLoad : boolean = true;
   OnPage : boolean
-  private routeSub:any;
+
 
   user: UserProfile = {
     id: 1,
