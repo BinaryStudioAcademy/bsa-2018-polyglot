@@ -52,11 +52,14 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<ManagerDTO, Manager>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                   .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile));
+                    .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile))
+#warning нужны ли проекты?
+                    .ForMember(p => p.Projects, opt => opt.Ignore());
+
                 cfg.CreateMap<Manager, ManagerDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile));
-
+                    .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile))
+                    .ForMember(p => p.Projects, opt => opt.Ignore());
 				cfg.CreateMap<ProjectDTO, Project>()
 					.ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
 					.ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
@@ -208,12 +211,13 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<TranslatorDTO, Translator>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Ratings, opt => opt.MapFrom(po => po.Ratings))
+#warning нужны ли TeamTranslators?
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(po => po.TeamTranslators))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile));
                 cfg.CreateMap<Translator, TranslatorDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.Ratings, opt => opt.MapFrom(pt => pt.Ratings))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(pt => pt.TeamTranslators))
+                    .ForMember(p => p.TeamTranslators, opt => opt.Ignore())
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile));
 
                 cfg.CreateMap<TranslatorLanguageDTO, TranslatorLanguage>()
