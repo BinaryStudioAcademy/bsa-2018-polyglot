@@ -32,7 +32,7 @@
         <a mat-list-item *ngFor="let key of keys">
           <div [class.selected]="key === selectedKey"
           (click)="onSelect(key)">
-            <app-workspace-key [key]="key"></app-workspace-key>
+            <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
           </div>
           <mat-divider></mat-divider>
         </a>
