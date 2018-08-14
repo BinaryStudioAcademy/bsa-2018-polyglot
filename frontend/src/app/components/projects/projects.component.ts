@@ -23,7 +23,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
 
 
   constructor(
-    private managerService: ManagerService, 
+    //private managerService: ManagerService, 
     private projectService: ProjectService,
     public dialog: MatDialog) { }
   
@@ -53,7 +53,9 @@ export class ProjectsComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
   this.OnPage = true;
-  this.managerService.getManagerProjects(this.manager.id).subscribe(pr => {this.cards = pr;
+  this.projectService.getAll().subscribe(pr => 
+    {
+      this.cards = pr;
     if(this.cards.length === 0 && this.OnPage === true){
      setTimeout(() => this.openDialog())
       }
