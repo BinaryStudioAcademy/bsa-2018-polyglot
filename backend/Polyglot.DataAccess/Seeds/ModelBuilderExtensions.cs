@@ -152,10 +152,10 @@ namespace Polyglot.DataAccess.Seeds
             {
                 Id = 3,
                 ManagerId = 2,
-                Name = "Operation Finale",
-                Description = "Operation Finale is an upcoming American historical drama film directed by Chris Weitz and written by Matthew Orton.",
+                Name = "Operation Valkyrie",
+                Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
                 CreatedOn = DateTime.Now,
-                ImageUrl = "https://upload.wikimedia.org/wikipedia/en/7/75/Operation_Finale.png",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
                 MainLanguageId = 1
             },
             new
@@ -309,6 +309,19 @@ namespace Polyglot.DataAccess.Seeds
 
 
            );
+
+
+            modelBuilder.Entity<ComplexString>().HasData(
+               new { Id = 1, ProjectId = 3, TranslationKey = "title" },
+               new { Id = 2, ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
+               new { Id = 3, ProjectId = 4, TranslationKey = "Perspectives" },
+               new { Id = 4, ProjectId = 1, TranslationKey = "Production" },
+               new { Id = 5, ProjectId = 2, TranslationKey = "article" }
+            
+
+
+
+          );
 
         }
     }

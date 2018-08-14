@@ -22,7 +22,7 @@ namespace Polyglot.DataAccess.Seeds
                 new ComplexString {
                     Id = 1,
                     Key="title",
-                    ProjectId = 1,
+                    ProjectId = 3,
                     Language="English",
                     OriginalValue = "Operation Valkyrie",
                     Description ="file title",
@@ -150,7 +150,7 @@ namespace Polyglot.DataAccess.Seeds
                 new ComplexString {
                     Id = 3,
                     Key="Perspectives",
-                    ProjectId = 5,
+                    ProjectId = 4,
                     Language="English",
                     OriginalValue = "With .NET Core 3 the framework will get support for development of Desktop, Artificial Intelligence/Machine Learning and IoT apps.",
                     Description =".NET Core 3.0 announced",
@@ -284,7 +284,7 @@ namespace Polyglot.DataAccess.Seeds
                 new ComplexString {
                     Id = 5,
                     Key="article",
-                    ProjectId = 1,
+                    ProjectId = 2,
                     Language="English",
                     OriginalValue = "The geopolitical disposition of Europe in 1941, immediately before the start of Operation Barbarossa. The grey area represents Nazi Germany, its allies, and countries under its firm control " +
                                     "In August 1939, Germany and the Soviet Union signed a non-aggression pact in Moscow known as the Molotov–Ribbentrop Pact",
