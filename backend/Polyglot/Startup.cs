@@ -10,6 +10,8 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
@@ -78,13 +80,12 @@ namespace Polyglot
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICRUDService<UserProfile, UserProfileDTO> service)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -96,7 +97,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            app.UseCustomizedIdentity();
+            app.UseCustomizedIdentity(service);
 
             app.UseMvc();
             

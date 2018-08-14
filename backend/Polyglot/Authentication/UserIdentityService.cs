@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Authentication.Extensions;
+using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Implementations;
+
 using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +22,22 @@ namespace Polyglot.Authentication
         {
             User = new UserProfileDTO();
         }
-
-        public void SaveDate(HttpContext httpContext)
+        
+        public async Task SaveDate(ICRUDService<UserProfile, UserProfileDTO> service, HttpContext httpContext)
         {
             if (httpContext.User.GetUid() != null)
             {
                 User.FullName = httpContext.User.GetName();
                 User.Uid = httpContext.User.GetUid();
                 User.AvatarUrl = httpContext.User.GetProfilePicture();
+
+                IEnumerable<UserProfileDTO> users = await service.GetListAsync();
+                UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == User.Uid);
+
+                if (userInDB == null)
+                {
+                    userInDB = await service.PostAsync(User);
+                }
             }
         }
 

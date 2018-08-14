@@ -26,7 +26,7 @@ namespace Polyglot.Authentication.Extensions
     public static class ApplicationBuilderExtensions
     {
         [Authorize]
-        public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
+        public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app, ICRUDService<UserProfile, UserProfileDTO> service)
         {
             //app.UseWhen(context => context.Request.Headers.ContainsKey("Authorization"), appBuilder =>
             //    //{
@@ -35,8 +35,8 @@ namespace Polyglot.Authentication.Extensions
             context => context.Request.Path.StartsWithSegments(""),
             a => a.Use(async (context, next) =>
             {
-                UserIdentityService service = new UserIdentityService();
-                service.SaveDate(context);
+                UserIdentityService identityService = new UserIdentityService();
+                await identityService.SaveDate(service, context);
                 await next();
             }));
             return app;
