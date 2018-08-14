@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface Team {
-
-  i: number;
-}
+import { ManagerService } from "../../services/manager.service";
+import { Team } from '../../models';
 
 @Component({
   selector: 'app-teams',
@@ -12,17 +9,23 @@ export interface Team {
 })
 export class TeamsComponent implements OnInit {
 
-  teams: Team[] = [
-   {i: 1},
-   {i: 2},
-   {i: 3},
-   {i: 4},
-   {i: 5},
-  ];
+  IsLoad : boolean = true;
+  managerId: number = 1;
+  teams: Team[];
 
-  constructor() { }
+  constructor(private managerService: ManagerService) { }
 
   ngOnInit() {
+    this.getAllTeams(this.managerId);
+  }
+
+  getAllTeams(id: number){
+    this.managerService.getManagerTeams(id)
+      .subscribe(teams => {
+        debugger;
+        this.teams = teams;
+        this.IsLoad = false;
+      })
   }
 
 }
