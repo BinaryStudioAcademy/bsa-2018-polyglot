@@ -9,7 +9,15 @@ import { from, Observable } from 'rxjs';
 })
 export class AuthService {
 
-    constructor(private _firebaseAuth: AngularFireAuth) { }
+    private isLogged: boolean;
+
+    constructor(private _firebaseAuth: AngularFireAuth) { 
+        var currentUser;
+        this.getCurrentUser().subscribe(
+            (user) => currentUser = user
+        );       
+        this.isLogged = currentUser != undefined;
+    }
 
     signInWithGoogle() {
         if (!this.isLoggedIn()) {
@@ -39,11 +47,7 @@ export class AuthService {
     }
 
     isLoggedIn(): boolean {
-        var currentUser;
-        this._firebaseAuth.authState.subscribe(
-            (user) => currentUser = user
-        );
-        return currentUser != undefined;
+        return this.isLogged;
     }
 
     logout() {
