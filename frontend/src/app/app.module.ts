@@ -57,7 +57,7 @@ import { ProjectMessageComponent } from './dialogs/project-message/project-messa
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
-
+import { KeyDetailComponent } from './components/workspace/key-details/key-detail/key-detail.component';
 
 
 @NgModule({
@@ -93,7 +93,8 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     ConfirmEqualValidatorDirective,
     ProjectDetailsComponent,
     ProjectMessageComponent,
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    KeyDetailComponent
 
   ],
   imports: [

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
+import { IString } from '../../../models/string';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -27,10 +28,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
 
     if(this.keyDetails){
-      debugger;
       this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-      this.paginator.pageSize = this.pageSize;
+     // this.paginator.pageSize = this.pageSize;     ERROR 
       this.translationsDataSource.paginator = this.paginator;
     }
   }
