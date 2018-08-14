@@ -13,7 +13,7 @@ namespace Polyglot.DataAccess.Seeds
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
                 Id = 1,
-                Uid = "777",
+                Uid = "TP59AlOHjXUQxedsqzG93PMYeTA3",
                 FullName = "John Lennon",
                 BirthDate = DateTime.Parse("21.01.1996"),
                 RegistrationDate = DateTime.Now,
@@ -29,7 +29,7 @@ namespace Polyglot.DataAccess.Seeds
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
                 Id = 2,
-                Uid = "888",
+                Uid = "Booik2DM64TX30VedRa0BY7AKZg1",
                 FullName = "Petro Mazepa",
                 BirthDate = DateTime.Parse("21.01.1986"),
                 RegistrationDate = DateTime.Now,
@@ -45,7 +45,7 @@ namespace Polyglot.DataAccess.Seeds
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
                 Id = 3,
-                Uid = "88546",
+                Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
                 FullName = "Vasya Mykolaiychuk",
                 BirthDate = DateTime.Parse("21.01.1999"),
                 RegistrationDate = DateTime.Now,
@@ -61,7 +61,7 @@ namespace Polyglot.DataAccess.Seeds
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
                 Id = 4,
-                Uid = "34324",
+                Uid = "bbgYGo9545Xcy84FUjmpHzYnESk2",
                 FullName = "Johan Nesbartl",
                 BirthDate = DateTime.Parse("21.01.1993"),
                 RegistrationDate = DateTime.Now,
@@ -77,7 +77,7 @@ namespace Polyglot.DataAccess.Seeds
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
                 Id = 5,
-                Uid = "34324",
+                Uid = "HwMZdk6yMzUgK9wZsVIzzkCQURI2",
                 FullName = "Lele Pots",
                 BirthDate = DateTime.Parse("21.01.1993"),
                 RegistrationDate = DateTime.Now,
