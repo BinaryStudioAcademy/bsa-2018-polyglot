@@ -12,9 +12,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TeamsController : ControllerBase
     {
-        private readonly ICRUDService<Team, TeamDTO> service;
+        private readonly ITeamService service;
 
-        public TeamsController(ICRUDService<Team, TeamDTO> service, IMapper mapper)
+        public TeamsController(ITeamService service, IMapper mapper)
         {
             this.service = service;
         }
@@ -23,35 +23,9 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-            var a = new List<TeamPrevDTO>()
-            {
-                new TeamPrevDTO()
-                {
-                    Id = 1,
-                    Persons = new System.Collections.Generic.List<UserProfilePrevDTO>()
-                    {
-                        new UserProfilePrevDTO()
-                        {
-                            Id = 1,
-                            AvatarUrl = "http://pics.wikireality.ru/upload/thumb/f/f4/82f2426f2971.jpg/300px-82f2426f2971.jpg"
-                        },
-                        new UserProfilePrevDTO()
-                        {
-                            Id = 2,
-                            AvatarUrl = "https://img.pravda.com/images/doc/2/0/20883bd-putin2.jpg"
-                        },
-                        new UserProfilePrevDTO()
-                        {
-                            Id = 3,
-                            AvatarUrl = "https://i.ytimg.com/vi/Q5Qy_3PeaCY/maxresdefault.jpg"
-                        }
-                    }
-                }
-            };
-            return Ok(a);
-            //var teams = await service.GetListAsync();
-            //return teams == null ? NotFound("No teams found!") as IActionResult
-            //    : Ok(teams);
+            var teams = await service.GetAllTeamsPrevs();
+            return teams == null ? NotFound("No teams found!") as IActionResult
+                : Ok(teams);
         }
 
         // GET: Teams/5
