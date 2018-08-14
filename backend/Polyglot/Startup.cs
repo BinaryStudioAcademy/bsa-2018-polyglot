@@ -93,8 +93,9 @@ namespace Polyglot
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-                context.Database.EnsureCreated();
-                               
+                context.Database.Migrate();
+                serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
+
             }
 
 

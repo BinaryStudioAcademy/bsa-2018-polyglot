@@ -8,19 +8,21 @@ namespace Polyglot.DataAccess.SqlRepository
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
         }
-
+        
         public DbSet<File> Files { get; set; }
         public DbSet<Glossary> Glossaries { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectHistory> ProjectHistories { get; set; }
+        public DbSet<ProjectLanguage> ProjectLanguage { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Right> Rights { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<ProjectTag> ProjectTag { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamTranslator> TeamTranslator { get; set; }
         public DbSet<ComplexString> ComplexStrings { get; set; }
         public DbSet<Translator> Translators { get; set; }
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
@@ -116,8 +118,8 @@ namespace Polyglot.DataAccess.SqlRepository
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
             
-           
-            modelBuilder.Seed();
+            //new feature in EF Core 2.1
+            //modelBuilder.Seed();
             
             
 
