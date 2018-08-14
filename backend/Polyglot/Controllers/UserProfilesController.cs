@@ -14,6 +14,7 @@ using Polyglot.Authentication.Extensions;
 using System.Security.Claims;
 using System.Threading;
 using Newtonsoft.Json.Serialization;
+using Polyglot.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -23,8 +24,6 @@ namespace Polyglot.Controllers
 
     public class UserProfilesController : ControllerBase
     {
-
-
         private readonly ICRUDService<UserProfile, UserProfileDTO> service;
         
         public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
@@ -56,7 +55,8 @@ namespace Polyglot.Controllers
         public string GetUser()
         {
             UserProfileDTO user = new UserProfileDTO();
-            user.FullName = HttpContext.User.GetName();
+
+            user.FullName = UserIdentityService.Name;
             user.AvatarUrl = HttpContext.User.GetProfilePicture();
 
             var settings = new JsonSerializerSettings();
