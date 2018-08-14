@@ -4,6 +4,7 @@ import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
 import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -20,7 +21,8 @@ export class LoginDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
     private snotify: SnotifyService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private appState: AppStateService
   ) { }
 
   ngOnInit() {
@@ -34,10 +36,10 @@ export class LoginDialogComponent implements OnInit {
     if (form.valid) {
       await this.authService.signInRegular(user.email, user.password).then(
         () => {
-          if(!this.authService.getCurrentUser().emailVerified) {
+          if(!this.appState.currentFirebaseUser.emailVerified) {
               // email confirmation
             this.snotify.clear();
-            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+            this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
               timeout: 15000,
               showProgressBar: true,
               closeOnClick: false,
@@ -49,7 +51,7 @@ export class LoginDialogComponent implements OnInit {
                   this.authService.sendEmailVerification();
                   this.authService.logout();
                   this.snotify.clear();
-                  this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+                  this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
                     timeout: 15000,
                     showProgressBar: true,
                     closeOnClick: false,

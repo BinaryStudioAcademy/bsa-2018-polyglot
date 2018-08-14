@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { SessionStorage } from "ngx-store";
 import { environment } from '../../environments/environment';
+import { AppStateService } from './app-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,18 +14,20 @@ export class HttpService {
 
     private url: string = environment.apiUrl;
 
-    @SessionStorage() private _token: string;
+    private _token: string;
+
     public set token(v : string) {
         this._token = v;
     }
     
-
     public get token(): string {
         return `Bearer ${this._token}`;
     }
 
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient, private appState: AppStateService) { 
+        this._token = appState.currentFirebaseToken;
+    }
 
     sendRequest(
         type: RequestMethod,

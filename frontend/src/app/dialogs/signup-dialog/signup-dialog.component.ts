@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -21,7 +22,8 @@ export class SignupDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SignupDialogComponent>,
     private authService : AuthService,
     private router: Router,
-    private snotify: SnotifyService
+    private snotify: SnotifyService,
+    private appState: AppStateService
   ) { }
 
   ngOnInit() {
@@ -39,14 +41,14 @@ export class SignupDialogComponent implements OnInit {
 
   async onSignUpFormSubmit(user: IUserSignUp, form) {
     if (form.valid) {
-      await this.authService.signUpRegular(user.email, user.password, user.fullname).then(
+      await this.authService.signUpRegular(user.email, user.password).then(
         // () => this.router.navigate(['/profile/settings'])
         () => {
           // email confirmation
           if (!this.IsNotificationSend) {
             this.authService.sendEmailVerification();
             this.snotify.clear();
-            this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
+            this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
               timeout: 10000,
               showProgressBar: true,
               closeOnClick: false,
@@ -60,7 +62,7 @@ export class SignupDialogComponent implements OnInit {
             this.IsNotificationSend = true;
           } else {
             this.snotify.clear();
-            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+            this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
               timeout: 10000,
               showProgressBar: true,
               closeOnClick: false,
