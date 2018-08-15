@@ -9,11 +9,11 @@
       [(invalidDrag)]="invalidDrag"
       [class.invalid-drag] = "validDrag===false"
       [class.valid-drag]   = "validDrag"
-      class="drop"
       (filesChange) = "lastFileAt=ConfirmFile($event)">
-        <span *ngIf="!fileToUpload">Select File</span>
-        <span *ngIf="fileToUpload">{{fileToUpload.name}}</span>
+        <p *ngIf="!fileToUpload">Select File</p>
+        <p *ngIf="fileToUpload">{{fileToUpload.name}}</p>
     </div>  
   </form>
   <button mat-raised-button color="primary" [disabled]="!fileToUpload" (click)="Upload()" >Upload</button>
 </div>
+<ng-snotify></ng-snotify>

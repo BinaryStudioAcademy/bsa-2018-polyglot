@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpService, RequestMethod } from '../../services/http.service';
 import { ngfModule, ngf } from 'angular-file';
 import { ProjectService } from '../../services/project.service';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 
 @Component({
   selector: 'app-upload-file',
@@ -18,7 +19,7 @@ export class UploadFileComponent implements OnInit {
   invalidDrag;
 
 
-  constructor(private service: ProjectService) {
+  constructor(private service: ProjectService, private snotifyService: SnotifyService) {
     this.formData = new FormData();
    }
 
@@ -36,7 +37,14 @@ export class UploadFileComponent implements OnInit {
     this.formData.append("file", this.fileToUpload);
     let projectId = 1;
     this.service.postFile(projectId, this.formData)
-    .subscribe(() => {});
+    .subscribe(
+      (d) => { 
+          this.snotifyService.success("File Uploaded", "Success!");
+        },
+        err => {
+          this.snotifyService.error("File wasn`t uploaded", "Error!");
+        }
+      );
   }
 
 }
