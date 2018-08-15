@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { UserProfile } from '../models';
+import { BehaviorSubject } from '../../../node_modules/rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,42 +9,52 @@ import { UserProfile } from '../models';
 export class AppStateService {
   
   // Firebase user
-  public currentFirebaseUser: firebase.User;
+  private currentFirebaseUserSubject: BehaviorSubject<firebase.User> = new BehaviorSubject<firebase.User>(null);
+
+  public get currentFirebaseUser(): firebase.User {
+    return this.currentFirebaseUserSubject.value; 
+  }
+
+  public set currentFirebaseUser(v: firebase.User) {
+    this.currentFirebaseUserSubject.next(v);
+  }
 
   // Database user
   public currentDatabaseUser: UserProfile;
 
   // Firebase token
-  public currentFirebaseToken: string;
+  private currentFirebaseTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  public get currentFirebaseToken(): string {
+    return this.currentFirebaseTokenSubject.value; 
+  }
+
+  public set currentFirebaseToken(v: string) {
+    this.currentFirebaseTokenSubject.next(v);
+  }
 
   // Login status
-  public isLoggedIn: boolean;
+  private LoginStatusSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public get LoginStatus(): boolean {
+    return this.LoginStatusSubject.value; 
+  }
+
+  public set LoginStatus(v: boolean) {
+    this.LoginStatusSubject.next(v);
+  }
 
 
-  constructor(private authService: AuthService) { 
+  constructor() {
+  }
 
-    this.authService.getCurrentUser().subscribe(
-      (user) => {
-        if (user) {
-          this.currentFirebaseUser = user;
-        } else {
-          this.currentFirebaseUser = null;
-        }
-      }
-    );
+  updateState(user: firebase.User, token: string, loginStatus: boolean) {
+    this.currentFirebaseUser = user;
+    this.currentFirebaseToken = token;
+    this.LoginStatus = loginStatus;
 
-    this.authService.getCurrentToken().subscribe(
-      (token) => {
-        if (token) {
-          this.currentFirebaseToken = token;
-        } else {
-          this.currentFirebaseToken = null;
-        }
-      }
-    );
-
-    this.authService.getCurrentUser().subscribe(
-      (user) => this.isLoggedIn = user != undefined && user != null
-    );
+    //localStorage
+    localStorage.setItem('currentFirebaseToken', this.currentFirebaseToken);
+    localStorage.setItem('LoginStatus', `${this.LoginStatus}`);
   }
 }

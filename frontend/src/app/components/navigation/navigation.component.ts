@@ -8,6 +8,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { UserService } from '../../services/user.service';
 import { UserProfile } from '../../models';
 import { map } from 'rxjs/operators';
+import { AppStateService } from '../../services/app-state.service';
 
 
 @Component({
@@ -27,7 +28,8 @@ export class NavigationComponent implements OnDestroy {
     media: MediaMatcher,
     public dialog: MatDialog,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private appState: AppStateService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -73,7 +75,9 @@ export class NavigationComponent implements OnDestroy {
   }
 
   onLogoutClick() {
-    this.authService.logout();
+    this.authService.logout().subscribe(
+      () => this.appState.updateState(null, '', false)
+    );
   }
 
   isLoggedIn() {

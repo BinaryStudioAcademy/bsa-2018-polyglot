@@ -32,73 +32,103 @@ export class LoginDialogComponent implements OnInit {
     };
   }
 
-  async onLoginFormSubmit(user: IUserLogin, form) {
+  onLoginFormSubmit(user: IUserLogin, form) {
     if (form.valid) {
-      await this.authService.signInRegular(user.email, user.password).then(
-        () => {
-          if(!this.appState.currentFirebaseUser.emailVerified) {
-              // email confirmation
-            this.snotify.clear();
-            this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
-              timeout: 15000,
-              showProgressBar: true,
-              closeOnClick: false,
-              pauseOnHover: false,
-              buttons: [
-                {text: "Resend", action: async () => {
-                  // resend confirmation to user
-                  await this.authService.signInRegular(user.email, user.password);
-                  this.authService.sendEmailVerification();
-                  this.authService.logout();
-                  this.snotify.clear();
-                  this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
-                    timeout: 15000,
-                    showProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: false
-                  });
-                }}
-              ]        
-            });
-            this.authService.logout();
-            throw {message: 'You need to confirm your email address in order to use our service'};
-          } else {
-            // if not exist in db - send post request and navigate to settings
+      this.authService.signInRegular(user.email, user.password).subscribe(
+        async (userCred) => {
+          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
+
+          if(this.authService.isLoggedIn()){
+            this.dialogRef.close();
           }
+        }, 
+        (err) => {
+          this.firebaseError = this.handleFirebaseErrors(err);
         }
-      ).catch(
-        (error) => this.firebaseError = this.handleFirebaseErrors(error)
       );
-      if(this.authService.isLoggedIn()){
-        this.dialogRef.close();
-      }
+      // .then(
+      //   () => {
+      //     if(!this.appState.currentFirebaseUser.emailVerified) {
+      //         // email confirmation
+      //       this.snotify.clear();
+      //       this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
+      //         timeout: 15000,
+      //         showProgressBar: true,
+      //         closeOnClick: false,
+      //         pauseOnHover: false,
+      //         buttons: [
+      //           {text: "Resend", action: async () => {
+      //             // resend confirmation to user
+      //             await this.authService.signInRegular(user.email, user.password);
+      //             this.authService.sendEmailVerification();
+      //             this.authService.logout();
+      //             this.snotify.clear();
+      //             this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
+      //               timeout: 15000,
+      //               showProgressBar: true,
+      //               closeOnClick: false,
+      //               pauseOnHover: false
+      //             });
+      //           }}
+      //         ]        
+      //       });
+      //       this.authService.logout();
+      //       throw {message: 'You need to confirm your email address in order to use our service'};
+      //     } else {
+      //       // if not exist in db - send post request and navigate to settings
+      //     }
+      //   }
+      // )
+      // .catch(
+      //   (error) => this.firebaseError = this.handleFirebaseErrors(error)
+      // );
     }
   }
 
-  async onGoogleClick() {
-    await this.authService.signInWithGoogle().then(
-      () => {
-        // if not exist in db - show error
+  onGoogleClick() {
+    this.authService.signInWithGoogle().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.authService.isLoggedIn()){
+          this.dialogRef.close();
+        }
+      }, 
+      (err) => {
+        this.firebaseError = this.handleFirebaseErrors(err);
       }
-    ).catch(
-      (error) => this.firebaseError = error.message
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
+    // .then(
+    //   () => {
+    //     // if not exist in db - show error
+    //   }
+    // )
+    // .catch(
+    //   (error) => this.firebaseError = error.message
+    // );  
   }
 
-  async onFacebookClick() {
-    await this.authService.signInWithFacebook().then(
-      () => {
-        // if not exist in db - show error
+  onFacebookClick() {
+    this.authService.signInWithFacebook().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.authService.isLoggedIn()){
+          this.dialogRef.close();
+        }
+      }, 
+      (err) => {
+        this.firebaseError = this.handleFirebaseErrors(err);
       }
-    ).catch(
-      (error) => this.firebaseError = error.message
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
+    // .then(
+    //   () => {
+    //     // if not exist in db - show error
+    //   }
+    // )
+    // .catch(
+    //   (error) => this.firebaseError = error.message
+    // );
   }
 
   onForgotPasswordClick() {

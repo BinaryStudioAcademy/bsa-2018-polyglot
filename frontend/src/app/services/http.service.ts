@@ -14,19 +14,18 @@ export class HttpService {
 
     private url: string = environment.apiUrl;
 
-    private _token: string;
+    // private _token: string;
 
-    public set token(v : string) {
-        this._token = v;
-    }
+    // public set token(v : string) {
+    //     this._token = v;
+    // }
     
     public get token(): string {
-        return `Bearer ${this._token}`;
+        return `Bearer ${this.appState.currentFirebaseToken}`;
     }
 
 
     constructor(private httpClient: HttpClient, private appState: AppStateService) { 
-        this._token = appState.currentFirebaseToken;
     }
 
     sendRequest(

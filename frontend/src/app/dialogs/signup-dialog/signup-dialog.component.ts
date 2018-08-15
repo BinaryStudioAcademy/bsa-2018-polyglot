@@ -39,68 +39,90 @@ export class SignupDialogComponent implements OnInit {
     this.IsNotificationSend = false;
   }
 
-  async onSignUpFormSubmit(user: IUserSignUp, form) {
+  onSignUpFormSubmit(user: IUserSignUp, form) {
     if (form.valid) {
-      await this.authService.signUpRegular(user.email, user.password).then(
-        // () => this.router.navigate(['/profile/settings'])
-        () => {
-          // email confirmation
-          if (!this.IsNotificationSend) {
-            this.authService.sendEmailVerification();
-            this.snotify.clear();
-            this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
-              timeout: 10000,
-              showProgressBar: true,
-              closeOnClick: false,
-              pauseOnHover: false        
-            });
-            this.authService.logout();
-            setTimeout(
-              () => this.dialogRef.close(), 
-              10000
-            );
-            this.IsNotificationSend = true;
-          } else {
-            this.snotify.clear();
-            this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
-              timeout: 10000,
-              showProgressBar: true,
-              closeOnClick: false,
-              pauseOnHover: false        
-            });
+      this.authService.signUpRegular(user.email, user.password).subscribe(
+        async (userCred) => {
+          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+          if(this.authService.isLoggedIn()){
+            this.dialogRef.close();
           }
+        }, 
+        (err) => {
+          this.firebaseError = err.message;
         }
-      ).catch(
-        (error) => this.firebaseError = error.message
       );
-      if(this.authService.isLoggedIn()){
-        this.dialogRef.close();
+      // .then(
+      //   // () => this.router.navigate(['/profile/settings'])
+      //   () => {
+      //     // email confirmation
+      //     if (!this.IsNotificationSend) {
+      //       this.authService.sendEmailVerification();
+      //       this.snotify.clear();
+      //       this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
+      //         timeout: 10000,
+      //         showProgressBar: true,
+      //         closeOnClick: false,
+      //         pauseOnHover: false        
+      //       });
+      //       this.authService.logout();
+      //       setTimeout(
+      //         () => this.dialogRef.close(), 
+      //         10000
+      //       );
+      //       this.IsNotificationSend = true;
+      //     } else {
+      //       this.snotify.clear();
+      //       this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
+      //         timeout: 10000,
+      //         showProgressBar: true,
+      //         closeOnClick: false,
+      //         pauseOnHover: false        
+      //       });
+      //     }
+      //   }
+      // )
+    }
+  }
+
+  onGoogleClick() {
+    this.authService.signInWithGoogle().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.authService.isLoggedIn()){
+            this.dialogRef.close();
+        }
+      }, 
+      (err) => {
+        this.firebaseError = err.message;
       }
-    }
+    );
+    // .then(
+    //   // if exist in db - show error
+    //   () => this.router.navigate(['/profile/settings'])
+    // )
   }
 
-  async onGoogleClick() {
-    await this.authService.signInWithGoogle().then(
-      // if exist in db - show error
-      () => this.router.navigate(['/profile/settings'])
-    ).catch(
-      (error) => this.firebaseError = error.message
-    );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
-  }
+  onFacebookClick() {
+    this.authService.signInWithFacebook().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-  async onFacebookClick() {
-    await this.authService.signInWithFacebook().then(
-      // if exist in db - show error
-      () => this.router.navigate(['/profile/settings'])
-    ).catch(
-      (error) => this.firebaseError = error.message
+        if(this.authService.isLoggedIn()){
+          this.dialogRef.close();
+        }
+      }, 
+      (err) => {
+        this.firebaseError = err.message;
+      }
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
+    // .then(
+    //   // if exist in db - show error
+    //   () => this.router.navigate(['/profile/settings'])
+    // )
+    
   }
 
 }
