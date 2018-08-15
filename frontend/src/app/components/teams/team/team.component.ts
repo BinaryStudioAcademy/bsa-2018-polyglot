@@ -53,13 +53,13 @@ export class TeamComponent implements OnInit {
   }
 
   ngOnInit() {
-    debugger;
+    
     this.dataSource.paginator = this.paginator;
    // this.checkPaginatorNecessity();
   }
 
   ngOnChanges(){
-    debugger;
+    
     this.dataSource.paginator = this.paginator;
   //  this.checkPaginatorNecessity();
   }

@@ -15,6 +15,7 @@ export class UserService {
   constructor(private dataService: HttpService) { }
 
   getCurrrentUser(){
+    
     return this.user;
   }
 

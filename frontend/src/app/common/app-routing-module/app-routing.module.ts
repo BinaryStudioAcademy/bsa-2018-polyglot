@@ -22,6 +22,8 @@ import { ManagerProfileComponent } from '../../components/manager-profile/manage
 import { LandingGuard } from '../../services/guards/landing-guard.service';
 import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
 import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
+import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
+
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
@@ -29,6 +31,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'profile', canActivate: [AuthGuard], component: ManagerProfileComponent},
   { path: 'profile/newproject', canActivate: [AuthGuard], component: NewProjectComponent },
+  { path: 'profile/newteam', canActivate: [AuthGuard], component: NewTeamComponent },
   { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
 
   {

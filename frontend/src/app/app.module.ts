@@ -59,6 +59,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
     TabDetailComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    NewTeamComponent
 
   ],
   imports: [
