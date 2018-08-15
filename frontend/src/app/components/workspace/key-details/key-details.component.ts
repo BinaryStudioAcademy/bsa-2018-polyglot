@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
+import { ComplexStringService } from '../../../services/complex-string.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -11,18 +12,21 @@ import { IString } from '../../../models/string';
 })
 export class KeyDetailsComponent implements OnInit, OnDestroy {
 
-  @Input()  public keyDetails: any; 
+  public keyDetails: any; 
   public translationsDataSource: MatTableDataSource<any>; 
   public IsEdit : boolean = false;
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
+  public Id : string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private dataProvider: ProjectService
-  ) { }
+    private route: ActivatedRoute,
+    private dataProvider: ComplexStringService
+  ) { 
+    this.Id = this.route.snapshot.queryParamMap.get('keyid');
+  }
 
   ngOnChanges(){
 
@@ -42,7 +46,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    
+     this.route.params.subscribe(value =>
+     {
+      this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+        this.keyDetails = data;
+      });
+     });
   }
 
   updateTable() {
