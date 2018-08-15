@@ -2,13 +2,10 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatTable } from '@angular/material';
-import { ErrorStateMatcher} from '@angular/material/core';
-import { Observable, of } from 'rxjs';
-import { Sort} from '@angular/material';
 import { Teammate } from '../../../models/teammate';
+import { TeamService } from '../../../services/teams.service';
 import { SearchService } from '../../../services/search.service';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,35 +19,51 @@ export class TeamComponent implements OnInit {
   teammates: Teammate[];
   emailToSearch: string;
   displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
-  dataSource: MatTableDataSource<Teammate>;
+  dataSource: MatTableDataSource<Teammate> = new MatTableDataSource();
   emailFormControl = new FormControl('', [
     Validators.email,
   ]);
   searchResultRecieved: boolean = false;
   ckb: boolean = false;
+  public IsPagenationNeeded: boolean = true;
+  public pageSize: number  = 5;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
 
-  constructor(private searchService: SearchService, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private teamService: TeamService, 
+    private searchService: SearchService,
+    private activatedRoute: ActivatedRoute) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.getTranslators();
+    
   }
 
   getTranslators(){
     this.teammates = [];
-    this.searchService.GetTranslatorsByTeam(this.id)
+    this.teamService.getAllTeammates(this.id)
         .subscribe((data: Teammate[]) => {
           this.teammates = data;
           this.dataSource = new MatTableDataSource(this.teammates);
+          this.dataSource.sort = this.sort;
+          this.ngOnChanges();
         })
   }
 
   ngOnInit() {
-    this.dataSource.sort = this.sort;
+    debugger;
     this.dataSource.paginator = this.paginator;
+   // this.checkPaginatorNecessity();
   }
+
+  ngOnChanges(){
+    debugger;
+    this.dataSource.paginator = this.paginator;
+  //  this.checkPaginatorNecessity();
+  }
+
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -72,6 +85,9 @@ export class TeamComponent implements OnInit {
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
+    if(!this.teammates)
+      return false;
+
     let teammate = this.teammates.find(t => t.id === id);
     if(!teammate)
       return false;
@@ -95,5 +111,17 @@ export class TeamComponent implements OnInit {
       {
         //remove right
       }
+  }
+
+  checkPaginatorNecessity(){
+    if(this.teammates){
+      this.IsPagenationNeeded = this.teammates.length > this.pageSize;
+
+      if(this.IsPagenationNeeded){
+        this.paginator.pageSize = this.pageSize;
+      }
+    }
+    else
+      this.IsPagenationNeeded = false;
   }
 }
