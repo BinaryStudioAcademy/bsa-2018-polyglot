@@ -325,7 +325,7 @@ namespace Polyglot.DataAccess.Seeds
 
         }
         public static void EnsureSeeded(this DataContext context)
-        {
+        {            
             if (!context.UserProfiles.Any())
             {
                 var users = new List<UserProfile> {
@@ -473,36 +473,62 @@ namespace Polyglot.DataAccess.Seeds
 
             if (!context.Teams.Any())
             {
-                var rights = new List<Team> {
-                     new Team {  },
-                     new Team {  },
-                     new Team {  },
-                     new Team {  },
-                     new Team {  }
-                    };
-                context.AddRange(rights);
+                var teams = new List<Team> {
+                     new Team { 
+                         TeamTranslators = new List<TeamTranslator> { 
+                            new TeamTranslator { 
+                                TranslatorId = 1, 
+                                TeamId = 1, 
+                                TranslatorRights = new List<TranslatorRight> { 
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                } 
+                            },
+                            new TeamTranslator {
+                                TranslatorId = 2,
+                                TeamId = 1,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+
+
+                         } 
+                     },
+                     new Team {
+                         TeamTranslators = new List<TeamTranslator> {
+                            new TeamTranslator {
+                                TranslatorId = 4,
+                                TeamId = 1,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+                            new TeamTranslator {
+                                TranslatorId = 5,
+                                TeamId = 1,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+
+
+                         }
+                     }
+
+
+                };
+                context.AddRange(teams);
                 context.SaveChanges();
             }
-            
-            if (!context.TeamTranslator.Any())
-            {
-                var rights = new List<TeamTranslator> {
-                    new TeamTranslator { TeamId = 1, TranslatorId = 1 },
-                    new TeamTranslator { TeamId = 1, TranslatorId = 2 },
-                    new TeamTranslator { TeamId = 2, TranslatorId = 3 },
-                    new TeamTranslator { TeamId = 2, TranslatorId = 4 },
-                    new TeamTranslator { TeamId = 3, TranslatorId = 4 },
-                    new TeamTranslator { TeamId = 3, TranslatorId = 5 },
-                    new TeamTranslator { TeamId = 4, TranslatorId = 2 },
-                    new TeamTranslator { TeamId = 4, TranslatorId = 3 },
-                    new TeamTranslator { TeamId = 5, TranslatorId = 5 },
-                    new TeamTranslator { TeamId = 5, TranslatorId = 1 },
-               
-                    };
-                context.AddRange(rights);
-                context.SaveChanges();
-            }
-            
+                              
             if (!context.Projects.Any())
             {
                 var projects = new List<Project> {
@@ -516,51 +542,60 @@ namespace Polyglot.DataAccess.Seeds
                     MainLanguageId = 1,
                     Teams = { 
                             context.Teams.FirstOrDefault(team => team.Id == 1),
-                            context.Teams.FirstOrDefault(team => team.Id == 2),
-                            }
+                            context.Teams.FirstOrDefault(team => team.Id == 2)
+                    },
+                    ProjectTags = new List<ProjectTag>
+                    {
+                        new ProjectTag { 
+                            TagId = 1 , 
+                            ProjectId = 1 },
+                        new ProjectTag { 
+                            TagId = 2 , 
+                            ProjectId = 1 },
+                    }
                     
                     
                 },
-                    new Project
-                 {
+            //        new Project
+            //     {
 
-                     Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
-                     Name = "Operation Barbarossa",
-                     Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
-                     CreatedOn = DateTime.Now,
-                     ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                     MainLanguageId = 1
-                 },
-                    new Project
-            {
+            //         Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
+            //         Name = "Operation Barbarossa",
+            //         Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
+            //         CreatedOn = DateTime.Now,
+            //         ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
+            //         MainLanguageId = 1
+            //     },
+            //        new Project
+            //{
 
-                Manager = context.Managers.FirstOrDefault(m => m.Id == 2),
-                Name = "Operation Valkyrie",
-                Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
-                CreatedOn = DateTime.Now,
-                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-                MainLanguageId = 1
-            },
-                    new Project
-            {
+            //    Manager = context.Managers.FirstOrDefault(m => m.Id == 2),
+            //    Name = "Operation Valkyrie",
+            //    Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
+            //    CreatedOn = DateTime.Now,
+            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
+            //    MainLanguageId = 1
+            //},
+            //        new Project
+            //{
 
-                Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
-                Name = "Angular",
-                Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
-                CreatedOn = DateTime.Now,
-                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-                MainLanguageId = 1
-            },
-                    new Project
-            {
+            //    Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+            //    Name = "Angular",
+            //    Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
+            //    CreatedOn = DateTime.Now,
+            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
+            //    MainLanguageId = 1
+            //},
+            //        new Project
+            //{
 
-                 Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
-                 Name = "ASP.NET Core",
-                 Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
-                 CreatedOn = DateTime.Now,
-                 ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                 MainLanguageId = 1
-            }
+            //     Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+            //     Name = "ASP.NET Core",
+            //     Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
+            //     CreatedOn = DateTime.Now,
+            //     ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
+            //     MainLanguageId = 1
+            //}
                                         };
                 context.AddRange(projects);
                 context.SaveChanges();
@@ -586,43 +621,43 @@ namespace Polyglot.DataAccess.Seeds
             }
 
 
-            if (!context.ProjectTag.Any())
-            {
-                var projectTags = new List<ProjectTag> {
-                    new ProjectTag { ProjectId = 1, TagId = 1 },
-                    new ProjectTag { ProjectId = 1, TagId = 2 },
-                    new ProjectTag { ProjectId = 2, TagId = 2 },
-                    new ProjectTag { ProjectId = 2, TagId = 4 },
-                    new ProjectTag { ProjectId = 3, TagId = 5 },
-                    new ProjectTag { ProjectId = 3, TagId = 6 },
-                    new ProjectTag { ProjectId = 4, TagId = 3 },
-                    new ProjectTag { ProjectId = 4, TagId = 4 },
-                    new ProjectTag { ProjectId = 5, TagId = 7 },
-                    new ProjectTag { ProjectId = 5, TagId = 8 }
-                };
+            //if (!context.ProjectTag.Any())
+            //{
+            //    var projectTags = new List<ProjectTag> {
+            //        new ProjectTag { ProjectId = 1, TagId = 1 },
+            //        new ProjectTag { ProjectId = 1, TagId = 2 },
+            //        new ProjectTag { ProjectId = 2, TagId = 2 },
+            //        new ProjectTag { ProjectId = 2, TagId = 4 },
+            //        new ProjectTag { ProjectId = 3, TagId = 5 },
+            //        new ProjectTag { ProjectId = 3, TagId = 6 },
+            //        new ProjectTag { ProjectId = 4, TagId = 3 },
+            //        new ProjectTag { ProjectId = 4, TagId = 4 },
+            //        new ProjectTag { ProjectId = 5, TagId = 7 },
+            //        new ProjectTag { ProjectId = 5, TagId = 8 }
+            //    };
 
-                context.AddRange(projectTags);
-                context.SaveChanges();
-            }
+            //    context.AddRange(projectTags);
+            //    context.SaveChanges();
+            //}
             
-            if (!context.ProjectLanguage.Any())
-            {
-                var projectTags = new List<ProjectLanguage> {
-                    new ProjectLanguage { ProjectId = 1, LanguageId = 1 },
-                    new ProjectLanguage { ProjectId = 1, LanguageId = 2 },
-                    new ProjectLanguage { ProjectId = 2, LanguageId = 1},
-                    new ProjectLanguage { ProjectId = 2, LanguageId = 3 },
-                    new ProjectLanguage { ProjectId = 3, LanguageId = 1 },
-                    new ProjectLanguage { ProjectId = 3, LanguageId = 4 },
-                    new ProjectLanguage { ProjectId = 4, LanguageId = 1 },
-                    new ProjectLanguage { ProjectId = 4, LanguageId = 5 },
-                    new ProjectLanguage { ProjectId = 5, LanguageId = 1 },
-                    new ProjectLanguage { ProjectId = 5, LanguageId = 3 }
-                };
+            //if (!context.ProjectLanguage.Any())
+            //{
+            //    var projectTags = new List<ProjectLanguage> {
+            //        new ProjectLanguage { ProjectId = 1, LanguageId = 1 },
+            //        new ProjectLanguage { ProjectId = 1, LanguageId = 2 },
+            //        new ProjectLanguage { ProjectId = 2, LanguageId = 1},
+            //        new ProjectLanguage { ProjectId = 2, LanguageId = 3 },
+            //        new ProjectLanguage { ProjectId = 3, LanguageId = 1 },
+            //        new ProjectLanguage { ProjectId = 3, LanguageId = 4 },
+            //        new ProjectLanguage { ProjectId = 4, LanguageId = 1 },
+            //        new ProjectLanguage { ProjectId = 4, LanguageId = 5 },
+            //        new ProjectLanguage { ProjectId = 5, LanguageId = 1 },
+            //        new ProjectLanguage { ProjectId = 5, LanguageId = 3 }
+            //    };
 
-                context.AddRange(projectTags);
-                context.SaveChanges();
-            }
+            //    context.AddRange(projectTags);
+            //    context.SaveChanges();
+            //}
 
             
 
