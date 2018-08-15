@@ -2,15 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.BusinessLogic.Implementations;
-
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.Authentication
 {

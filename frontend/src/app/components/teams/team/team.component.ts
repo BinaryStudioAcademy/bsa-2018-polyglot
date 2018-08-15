@@ -26,7 +26,7 @@ export class TeamComponent implements OnInit {
   searchResultRecieved: boolean = false;
   ckb: boolean = false;
   public IsPagenationNeeded: boolean = true;
-  public pageSize: number  = 2;
+  public pageSize: number  = 5;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -55,13 +55,13 @@ export class TeamComponent implements OnInit {
   ngOnInit() {
     debugger;
     this.dataSource.paginator = this.paginator;
-    this.checkPaginatorNecessity();
+   // this.checkPaginatorNecessity();
   }
 
   ngOnChanges(){
     debugger;
     this.dataSource.paginator = this.paginator;
-    this.checkPaginatorNecessity();
+  //  this.checkPaginatorNecessity();
   }
 
   ngAfterViewInit() {
