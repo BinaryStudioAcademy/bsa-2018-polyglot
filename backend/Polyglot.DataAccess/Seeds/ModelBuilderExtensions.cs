@@ -324,6 +324,7 @@ namespace Polyglot.DataAccess.Seeds
                );
 
         }
+        
         public static void EnsureSeeded(this DataContext context)
         {            
             if (!context.UserProfiles.Any())
@@ -470,6 +471,26 @@ namespace Polyglot.DataAccess.Seeds
                 context.AddRange(managers);
                 context.SaveChanges();
             }
+            
+            //if (!context.Tags.Any())
+            //{
+            //    var Tags = new List<Tag> {
+            //        new Tag {  Color = "Apple", Name = "csharp" },
+            //        new Tag {  Color = "Aqua", Name = "asp-net-core" },
+            //        new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
+            //        new Tag {  Color = "Awesome", Name = "angular" },
+            //        new Tag {  Color = "Azure", Name = "binary-studio" },
+            //        new Tag { Color = "Bittersweet", Name = "bsa18" },
+            //        new Tag {  Color = "Blue bell", Name = "firebase" },
+            //        new Tag {  Color = "Capri", Name = "www" },
+            //        new Tag {  Color = "Cameo pink", Name = "seeds" },
+            //        new Tag { Color = "Blue-gray", Name = "mock" }
+            //    };
+
+            //    context.AddRange(Tags);
+            //    context.SaveChanges();
+            //}
+            
 
             if (!context.Teams.Any())
             {
@@ -528,7 +549,8 @@ namespace Polyglot.DataAccess.Seeds
                 context.AddRange(teams);
                 context.SaveChanges();
             }
-                              
+             
+            
             if (!context.Projects.Any())
             {
                 var projects = new List<Project> {
@@ -544,15 +566,7 @@ namespace Polyglot.DataAccess.Seeds
                             context.Teams.FirstOrDefault(team => team.Id == 1),
                             context.Teams.FirstOrDefault(team => team.Id == 2)
                     },
-                    ProjectTags = new List<ProjectTag>
-                    {
-                        new ProjectTag { 
-                            TagId = 1 , 
-                            ProjectId = 1 },
-                        new ProjectTag { 
-                            TagId = 2 , 
-                            ProjectId = 1 },
-                    }
+                    
                     
                     
                 },
@@ -597,28 +611,29 @@ namespace Polyglot.DataAccess.Seeds
             //     MainLanguageId = 1
             //}
                                         };
-                context.AddRange(projects);
-                context.SaveChanges();
-            }
 
-            if (!context.Tags.Any())
-            {
-                var projectTags = new List<Tag> {
+                var tags = new List<Tag> {
                     new Tag {  Color = "Apple", Name = "csharp" },
                     new Tag {  Color = "Aqua", Name = "asp-net-core" },
                     new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
                     new Tag {  Color = "Awesome", Name = "angular" },
                     new Tag {  Color = "Azure", Name = "binary-studio" },
-                    new Tag { Color = "Bittersweet", Name = "bsa18" },
+                    new Tag {  Color = "Bittersweet", Name = "bsa18" },
                     new Tag {  Color = "Blue bell", Name = "firebase" },
                     new Tag {  Color = "Capri", Name = "www" },
                     new Tag {  Color = "Cameo pink", Name = "seeds" },
-                    new Tag { Color = "Blue-gray", Name = "mock" }
+                    new Tag {  Color = "Blue-gray", Name = "mock" }
                 };
+                
+                context.AddRange(
+                new ProjectTag { Tag = tags[0], Project = projects[0] },
+                new ProjectTag { Tag = tags[1], Project = projects[0] },
+                new ProjectTag { Tag = tags[2], Project = projects[0] });
+                context.AddRange(projects);
 
-                context.AddRange(projectTags);
                 context.SaveChanges();
             }
+
 
 
             //if (!context.ProjectTag.Any())
@@ -639,7 +654,7 @@ namespace Polyglot.DataAccess.Seeds
             //    context.AddRange(projectTags);
             //    context.SaveChanges();
             //}
-            
+
             //if (!context.ProjectLanguage.Any())
             //{
             //    var projectTags = new List<ProjectLanguage> {
@@ -658,26 +673,6 @@ namespace Polyglot.DataAccess.Seeds
             //    context.AddRange(projectTags);
             //    context.SaveChanges();
             //}
-
-            
-
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
     }
