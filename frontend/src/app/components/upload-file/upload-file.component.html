@@ -9,7 +9,7 @@
       [(invalidDrag)]="invalidDrag"
       [class.invalid-drag] = "validDrag===false"
       [class.valid-drag]   = "validDrag"
-      (filesChange) = "lastFileAt=ConfirmFile($event)">
+      (filesChange) = "ConfirmFile($event)">
         <p *ngIf="!fileToUpload">Select File</p>
         <p *ngIf="fileToUpload">{{fileToUpload.name}}</p>
     </div>  
