@@ -3,15 +3,13 @@ using System.Threading.Tasks;
 using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IProjectService : ICRUDService
+    public interface IProjectService : ICRUDService<Project,ProjectDTO>
     {
-        
-
-        
-        Task FileParseDictionary(IFormFile file);
+        Task FileParseDictionary(int id, IFormFile file);
 
        
         #region ComplexString

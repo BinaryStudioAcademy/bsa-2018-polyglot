@@ -21,7 +21,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(project: Project) : Observable<Project> {
+  create(project: FormData) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
   }
 
@@ -35,5 +35,9 @@ export class ProjectService {
 
   getProjectStrings(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', undefined, undefined);
+  }
+
+  postFile(id: number, file: FormData) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
   }
 }

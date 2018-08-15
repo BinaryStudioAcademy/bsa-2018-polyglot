@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -14,13 +15,21 @@ export class SignupDialogComponent implements OnInit {
 
   public user: IUserSignUp;
   public firebaseError: string;
-  public selectedOption : string
+  public selectedOption : string;
+  private IsNotificationSend: boolean;
+  private notificationConfig = {
+    timeout: 10000,
+    showProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: false        
+  }
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
     private authService : AuthService,
     private router: Router,
-    private snotify: SnotifyService
+    private snotify: SnotifyService,
+    private appState: AppStateService
   ) { }
 
   ngOnInit() {
@@ -32,58 +41,69 @@ export class SignupDialogComponent implements OnInit {
     };
 
     this.selectedOption = "translator";
+
+    this.IsNotificationSend = false;
   }
 
-  async onSignUpFormSubmit(user: IUserSignUp, form) {
+  onSignUpFormSubmit(user: IUserSignUp, form) {
     if (form.valid) {
-      await this.authService.signUpRegular(user.email, user.password, user.fullname).then(
-        // () => this.router.navigate(['/profile/settings'])
-        () => {
-          // email confirmation
+      this.authService.signUpRegular(user.email, user.password).subscribe(
+        (userCred) => {
           this.authService.sendEmailVerification();
-          this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
-            timeout: 10000,
-            showProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false        
-          });
-          this.authService.logout();
+          this.snotify.clear();
+          this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);  
+          this.IsNotificationSend = true;   
           setTimeout(
             () => this.dialogRef.close(), 
             10000
           );
+        }, 
+        (err) => {
+          if (err.code === 'auth/email-already-in-use') {
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${this.user.email}. Check your email.`, this.notificationConfig);
+          }
+          this.firebaseError = err.message;
         }
-      ).catch(
-        (error) => this.firebaseError = error.message
       );
-      if(this.authService.isLoggedIn()){
-        this.dialogRef.close();
+      // not sure that it is logging out 
+      this.authService.logout();
+    }
+  }
+
+  onGoogleClick() {
+    this.authService.signInWithGoogle().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.appState.LoginStatus){
+            this.dialogRef.close();
+        }
+
+        //if exist in db - show error
+        this.router.navigate(['/profile/settings']);
+      }, 
+      (err) => {
+        this.firebaseError = err.message;
       }
-    }
-  }
-
-  async onGoogleClick() {
-    await this.authService.signInWithGoogle().then(
-      // if exist in db - show error
-      () => this.router.navigate(['/profile/settings'])
-    ).catch(
-      (error) => this.firebaseError = error.message
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
   }
 
-  async onFacebookClick() {
-    await this.authService.signInWithFacebook().then(
-      // if exist in db - show error
-      () => this.router.navigate(['/profile/settings'])
-    ).catch(
-      (error) => this.firebaseError = error.message
-    );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
-  }
+  onFacebookClick() {
+    this.authService.signInWithFacebook().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
+        if(this.appState.LoginStatus){
+          this.dialogRef.close();
+        }
+
+        //if exist in db - show error
+        this.router.navigate(['/profile/settings']);
+      }, 
+      (err) => {
+        this.firebaseError = err.message;
+      }
+    );  
+  }
 }

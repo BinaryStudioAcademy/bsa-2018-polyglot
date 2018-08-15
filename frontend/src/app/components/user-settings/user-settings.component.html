@@ -1,60 +1,71 @@
+<h2>
+    Edit profile</h2>
+<form [formGroup]="profileForm" fxLayout="row" fxLayoutWrap (submit)="saveChanges(profileForm.value)">
+    <div class="form-container">
+            <div class="name-field">
+                <img src="{{manager.avatarUrl}}" alt="avatar" (click)="editPhoto()">
+            </div>
 
-    <h2>Edit profile</h2>
-    <form [formGroup]="profileForm"  fxLayout="row" fxLayoutWrap  (submit)="saveChanges(profileForm.value)" > 
-        <div class="form-container">
-        <img src="{{manager.avatarUrl}}" alt="avatar"  (click)="editPhoto()">
-        <mat-form-field  class="name-field">
+        <div class="line-block margin-top-20px">
+            <mat-form-field class="name-field form-input float-left">
                 <input matInput placeholder="Enter first name" formControlName="firstName" required>
                 <mat-error class="errors" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
                     <div *ngIf="firstName.errors && firstName.errors.required">
-                        First name is required. 
+                        First name is required.
                     </div>
                 </mat-error>
-            </mat-form-field>  
+            </mat-form-field>
 
-            <mat-form-field class="name-field">
+            <mat-form-field class="name-field form-input left-margin-3">
                 <input matInput placeholder="Enter last name" formControlName="lastName" required>
                 <mat-error class="errors" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
                     <div *ngIf="lastName.errors && lastName.errors.required">
-                        Last name is required. 
+                        Last name is required.
                     </div>
                 </mat-error>
-            </mat-form-field>   
-            <mat-form-field class="">
-                    <input matInput placeholder="Country" formControlName="country">
-            </mat-form-field> 
-        
-            <mat-form-field class="">
-                    <input matInput placeholder="City" formControlName="city">
             </mat-form-field>
-                
-            <mat-form-field class="">
-                    <input matInput placeholder="Region" formControlName="region">
-            </mat-form-field>
-        
-            
-            <mat-form-field class="date-birth-field">
-                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Birth date" formControlName="birthDate">
+            <mat-form-field class="form-input float-left">
+                <!--BUG HERE DATE BIRTH 01/01/01 formControlName="birthDate" -->
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Date of birth">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
-            <mat-form-field class="phone-field">
-                <input  matInput placeholder="Phone" formControlName="phone" pattern="\+?[0-9-]*">
+            <mat-form-field class="form-input left-margin-3">
+                <input matInput placeholder="Phone" formControlName="phone" pattern="\+?[0-9-]*">
                 <mat-error *ngIf="phone.errors && phone.errors.pattern">
                     Phone is
                     <strong>not valid</strong>
-                    </mat-error>
-            </mat-form-field>    
+                </mat-error>
+            </mat-form-field>
 
-        
-            <mat-form-field class="address-field">
+            <mat-form-field class="form-input float-left">
+                <input matInput placeholder="Country" formControlName="country">
+            </mat-form-field>
+
+            <mat-form-field class="form-input left-margin-3">
+                <input matInput placeholder="Region" formControlName="region">
+            </mat-form-field>
+
+            <mat-form-field class="form-input float-left">
+                <input matInput placeholder="City" formControlName="city">
+            </mat-form-field>
+            <mat-form-field class="form-input left-margin-3">
+                <input matInput placeholder="Postal code" formControlName="postalCode">
+            </mat-form-field>
+        </div>
+
+
+        <div class="line-block">
+            <mat-form-field class="address-field float-left">
                 <input matInput placeholder="Address" formControlName="address">
             </mat-form-field>
 
-            <mat-form-field class="post-code-field">
-                <input matInput placeholder="Postal code" formControlName="postalCode" >
-            </mat-form-field>       
-            <button mat-button class ="save-button"  [disabled]="profileForm.invalid">Save</button>
+            <div class="button-container">
+                <button mat-flat-button class="save-button mx-1" [disabled]="profileForm.invalid">Save</button>
             </div>
-        </form>
+        </div>
+
+
+    </div>
+</form>

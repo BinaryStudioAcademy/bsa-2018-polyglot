@@ -10,27 +10,47 @@ namespace Polyglot.Controllers
     [ApiController]
     public class ManagersController : ControllerBase
     {
-        private readonly ICRUDService service;
+        private readonly ICRUDService<Manager, ManagerDTO> service;
+        private readonly IManagerService teamService;
 
-        public ManagersController(ICRUDService service)
+        public ManagersController(ICRUDService<Manager, ManagerDTO> service, IManagerService teamService)
         {
             this.service = service;
+            this.teamService = teamService;
         }
 
         // GET: Managers
         [HttpGet]
         public async Task<IActionResult> GetAllManagers()
         {
-            var managers = await service.GetListAsync<Manager, ManagerDTO>();
+            var managers = await service.GetListAsync();
             return managers == null ? NotFound("No managers found!") as IActionResult
                 : Ok(managers);
+        }
+
+        // GET: managers/:id/teams
+        [HttpGet("{id}/teams", Name = "GetManagerTeams")]
+        public async Task<IActionResult> GetAllManagerTeams(int id)
+        {
+            var teams = await teamService.GetManagerTeams(id);
+            return teams == null ? NotFound("No teams found!") as IActionResult
+                : Ok(teams);
+        }
+
+        // GET: managers/:id/projects
+        [HttpGet("{id}/projects", Name = "GetManagerProjects")]
+        public async Task<IActionResult> GetAllManagerProjects(int id)
+        {
+            var projects = await teamService.GetManagerProjects(id);
+            return projects == null ? NotFound("No projects found!") as IActionResult
+                : Ok(projects);
         }
 
         // GET: Managers/5
         [HttpGet("{id}", Name = "GetManager")]
         public async Task<IActionResult> GetManager(int id)
         {
-            var manager = await service.GetOneAsync<Manager, ManagerDTO>(id);
+            var manager = await service.GetOneAsync(id);
             return manager == null ? NotFound($"Manager with id = {id} not found!") as IActionResult
                 : Ok(manager);
         }
@@ -41,7 +61,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync<Manager, ManagerDTO>(project);
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -54,7 +74,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync<Manager, ManagerDTO>(project);
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -63,7 +83,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteManager(int id)
         {
-            var success = await service.TryDeleteAsync<Manager>(id);
+            var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

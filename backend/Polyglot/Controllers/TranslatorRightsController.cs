@@ -10,9 +10,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TranslatorRightsController : ControllerBase
     {
-        private readonly ICRUDService service;
+        private readonly ICRUDService<TranslatorRight, TranslatorRightDTO> service;
 
-        public TranslatorRightsController(ICRUDService service)
+        public TranslatorRightsController(ICRUDService<TranslatorRight, TranslatorRightDTO> service)
         {
             this.service = service;
         }
@@ -21,7 +21,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTranslatorRights()
         {
-            var projects = await service.GetListAsync<TranslatorRight, TranslatorRightDTO>();
+            var projects = await service.GetListAsync();
             return projects == null ? NotFound("No translator rights found!") as IActionResult
                 : Ok(projects);
         }
@@ -30,7 +30,7 @@ namespace Polyglot.Controllers
         [HttpGet("{id}", Name = "GetTranslatorRight")]
         public async Task<IActionResult> GetTranslatorRight(int id)
         {
-            var project = await service.GetOneAsync<TranslatorRight, TranslatorRightDTO>(id);
+            var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"TranslatorRight with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
@@ -41,7 +41,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync<TranslatorRight, TranslatorRightDTO>(project);
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -54,7 +54,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync<TranslatorRight, TranslatorRightDTO>(project);
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -63,7 +63,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTranslatorRight(int id)
         {
-            var success = await service.TryDeleteAsync<TranslatorRight>(id);
+            var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

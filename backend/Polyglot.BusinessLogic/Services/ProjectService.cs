@@ -7,27 +7,30 @@ using System.Xml.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
+
 namespace Polyglot.BusinessLogic.Services
 {
-    public class ProjectService : CRUDService, IProjectService
+    public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
-        private readonly IMongoRepository<ComplexString> stringsProvider;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<ComplexString> rep)
+        private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+		private IUnitOfWork uow;
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
             : base(uow, mapper)
         {
             stringsProvider = rep;
+			this.uow = uow;
+
         }
 
-
-        public async Task FileParseDictionary(IFormFile file)
+        public async Task FileParseDictionary(int id, IFormFile file)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             string str;
@@ -87,18 +90,37 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             foreach (var i in dictionary)
-            {
-                ComplexString temp = new ComplexString() { Key = i.Key, OriginalValue = i.Value };
-
-                // repository isn`t working now
-                await stringsProvider.CreateAsync(new ComplexString() { Key = i.Key, OriginalValue = i.Value });
+            {			
+				var sqlComplexString = new DataAccess.Entities.ComplexString()
+				{
+					TranslationKey = i.Key,
+					ProjectId = id,
+				};
+				var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+				await uow.SaveAsync();				
+				await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Id = savedEntity.Id, Key = i.Key, OriginalValue = i.Value, ProjectId = id });
             }
 
         }
 
-        #region ComplexStrings
 
-        public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
+		
+		public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
+		{			
+			var ent = mapper.Map<Project>(entity);
+			// ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
+			ent.MainLanguage = null;
+
+			var target = await uow.GetRepository<Project>().CreateAsync(ent);
+			await uow.SaveAsync();
+
+			return mapper.Map<ProjectDTO>(target);			
+		}
+		
+
+		#region ComplexStrings
+
+		public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
         {
             var strings = (await stringsProvider.GetAllAsync()).AsEnumerable();
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);

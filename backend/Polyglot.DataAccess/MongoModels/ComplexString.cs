@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoModels
 {
-    public class ComplexString : IEntity
+    public class ComplexString : Entity
     {
 		public string Key { get; set; }
 		public int ProjectId { get; set; }

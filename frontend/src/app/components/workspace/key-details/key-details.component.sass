@@ -1,18 +1,22 @@
 \:host
   display: flex
 
-// .translations-list
-//   width: 100%
+  .mat-paginator
+    width: 100%
 
 .material-icons 
   font-size: 12px
 
 .key-details
+  height: calc(100vh - 347px)
   overflow: auto
   width: 70%
 
 .translations-details
-  overflow: auto
+  padding-top: 0!important
+  padding-bottom: 48px!important
+  height: calc(100vh - 347px)
+  overflow: hidden
   width: 35%
 
 .translations-list
@@ -38,3 +42,14 @@
 
 .icon-size
   font-size: 30px
+
+/deep/.mat-tab-body
+  height: 50vh!important
+  ::-webkit-scrollbar 
+    width: 5px
+  ::-webkit-scrollbar-track 
+    background: #f1f1f1
+  ::-webkit-scrollbar-thumb 
+    background: #888
+  ::-webkit-scrollbar-thumb:hover 
+    background: #555

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
+import { ManagerService } from '../../services/manager.service';
 import { ProjectService } from '../../services/project.service';
 
 import { MatDialog } from '../../../../node_modules/@angular/material';
@@ -8,7 +9,6 @@ import { ProjectMessageComponent } from '../../dialogs/project-message/project-m
 // to delete manager and user
 import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
-import { forEach } from '@angular/router/src/utils/collection';
 
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 
@@ -18,16 +18,20 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.sass']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
 
 
-  constructor(private projectService: ProjectService,
+  constructor(
+    //private managerService: ManagerService, 
+    private projectService: ProjectService,
     public dialog: MatDialog,
-    private snotifyService: SnotifyService,) { }
+    private snotifyService: SnotifyService) { }
   
 
   IsLoad : boolean = true;
+  OnPage : boolean
+
 
   user: UserProfile = {
     id: 1,
@@ -49,14 +53,20 @@ export class ProjectsComponent implements OnInit {
   };
 
   ngOnInit() {
-  
-  this.projectService.getAll().subscribe(pr => {this.cards = pr;
-    if(this.cards.length === 0){
-      setTimeout(() => this.openDialog())
+  this.OnPage = true;
+
+  this.projectService.getAll().subscribe(pr => 
+    {
+      this.cards = pr;
+    if(this.cards.length === 0 && this.OnPage === true){
+     setTimeout(() => this.openDialog())
       }
       this.IsLoad = false;
-      console.log(this.cards);
   });
+  }
+
+  ngOnDestroy(){
+    this.OnPage = false;
   }
 
   openDialog(): void {

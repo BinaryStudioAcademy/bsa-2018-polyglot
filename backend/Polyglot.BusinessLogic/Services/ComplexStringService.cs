@@ -6,16 +6,19 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.BusinessLogic.Services
 {
     public class ComplexStringService : IComplexStringService
     {
         private readonly IMongoRepository<ComplexString> _repository;
+        private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper)
+        public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow)
         {
+            _uow = uow;
             _repository = repository;
             _mapper = mapper;
         }
@@ -42,7 +45,12 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
-
+             var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
+            {
+                TranslationKey = entity.Key
+            };
+            await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+            await _uow.SaveAsync();
             var target = await _repository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
             {
@@ -54,7 +62,8 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> DeleteComplexString(int identifier)
         {
-
+            await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().DeleteAsync(identifier);
+            await _uow.SaveAsync();
             await _repository.DeleteAsync(identifier);
 
             return true;
@@ -62,7 +71,14 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ComplexStringDTO> AddComplexString(ComplexStringDTO entity)
         {
-
+            var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
+            {
+                TranslationKey = entity.Key,
+                ProjectId = entity.ProjectId
+            };
+            var savedEntity = await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+            await _uow.SaveAsync();
+            entity.Id = savedEntity.Id;
             var target = await _repository
                 .CreateAsync(_mapper.Map<ComplexString>(entity));
             if (target != null)

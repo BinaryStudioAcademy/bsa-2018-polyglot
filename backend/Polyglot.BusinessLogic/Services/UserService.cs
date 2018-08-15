@@ -2,9 +2,12 @@
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.SqlRepository;
 
-namespace Polyglot.BusinessLogic.Implementations
+using Polyglot.DataAccess.Entities;
+using Polyglot.Common.DTOs;
+
+namespace Polyglot.BusinessLogic.Services
 {
-    public class UserService : CRUDService, IUserService
+    public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)

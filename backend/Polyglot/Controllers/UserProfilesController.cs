@@ -1,74 +1,82 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Polyglot.BusinessLogic.Implementations;
+using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.SqlRepository;
+using Polyglot.Authentication.Extensions;
+using System.Security.Claims;
+using System.Threading;
+using Newtonsoft.Json.Serialization;
+using Polyglot.Authentication;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
+
     public class UserProfilesController : ControllerBase
     {
-        private readonly ICRUDService service;
-
-        public UserProfilesController(ICRUDService service, DbContext ctx)
+        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
+        
+        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
         {
-            //this.service = service;
-#warning some hell shit
-            var uow = new UnitOfWork(ctx);
-            this.service = new CRUDService(uow, Polyglot.Common.Mapping.AutoMapper.GetDefaultMapper());
+            this.service = service;
         }
+
         // GET: UserProfiles
         [HttpGet]
-        public async Task<IActionResult> GetAllUserProfiles()
+        public async Task<IActionResult> Get()
         {
-            var projects = await service.GetListAsync<UserProfile, UserProfileDTO>();
-            return projects == null ? NotFound("No user profiles found!") as IActionResult
-                : Ok(projects);
+
+            var entities = await service.GetListAsync();
+            return entities == null ? NotFound("No user profiles found!") as IActionResult
+                : Ok(entities);
+
+        }
+
+        // GET: UserProfiles
+        [HttpGet("user")]
+        public async Task<IActionResult> GetUser()
+        {
+            UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            return user == null ? NotFound($"User not found!") as IActionResult
+               : Ok(user);
         }
 
         // GET: UserProfiles/5
-        [HttpGet("{id}", Name = "GetUserProfile")]
-        public async Task<IActionResult> GetUserProfile(int id)
+        [HttpGet("{id}", Name = "Get")]
+        public async Task<IActionResult> Get(int id)
         {
-            var project = await service.GetOneAsync<UserProfile, UserProfileDTO>(id);
-            return project == null ? NotFound($"User profile with id = {id} not found!") as IActionResult
-                : Ok(project);
-        }
-
-        // POST: UserProfiles
-        public async Task<IActionResult> AddUserProfile([FromBody]UserProfileDTO project)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
-
-            var entity = await service.PostAsync<UserProfile, UserProfileDTO>(project);
-            return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                entity);
+            var entity = await service.GetOneAsync(id);
+            return entity == null ? NotFound($"Translator with id = {id} not found!") as IActionResult
+                : Ok(entity);
         }
 
         // PUT: UserProfiles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyUserProfile(int id, [FromBody]UserProfileDTO project)
+        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync<UserProfile, UserProfileDTO>(project);
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
 
-        // DELETE: ApiWithActions/5
+        // DELETE: UserProfiles/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserProfile(int id)
+        public async Task<IActionResult> DeleteTranslatorRight(int id)
         {
-            var success = await service.TryDeleteAsync<UserProfile>(id);
+            var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
     }

@@ -15,7 +15,7 @@ import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { GlossariesComponent } from './components/glossaries/glossaries.component';
-import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
+import { AppRoutingModule } from './common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
@@ -56,7 +56,10 @@ import { ConfirmEqualValidatorDirective } from './directives/confirm-equal-valid
 import { ProjectMessageComponent } from './dialogs/project-message/project-message.component'
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
-
+import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
+import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 
 
 @NgModule({
@@ -91,9 +94,11 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
     ProjectDetailsComponent,
-    ProjectMessageComponent
-
-
+    ProjectMessageComponent,
+    ForgotPasswordDialogComponent,
+    UploadFileComponent,
+    TabDetailComponent,
+    ImgDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -118,7 +123,15 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
     SnotifyModule
     
   ],
-  entryComponents: [LoginDialogComponent, SignupDialogComponent, CropperComponent, StringDialogComponent,ProjectMessageComponent],
+  entryComponents: [
+    LoginDialogComponent, 
+    SignupDialogComponent, 
+    CropperComponent, 
+    StringDialogComponent,
+    ProjectMessageComponent, 
+    ForgotPasswordDialogComponent,
+    ImgDialogComponent
+  ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService],

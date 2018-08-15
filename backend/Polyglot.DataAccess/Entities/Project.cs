@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Polyglot.DataAccess.Entities
 {
@@ -11,10 +12,15 @@ namespace Polyglot.DataAccess.Entities
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
         public virtual Manager Manager { get; set; }
+
+
+		[ForeignKey("MainLanguageId")]
         public virtual Language MainLanguage { get; set; }
 
+		public int? MainLanguageId { get; set; }
+
         public virtual ICollection<Team> Teams { get; set; }
-        public virtual ICollection<Translation> Translations { get; set; }
+        public virtual ICollection<ComplexString> Translations { get; set; }
         public virtual ICollection<ProjectLanguage> ProjectLanguageses { get; set; }
         public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
         public virtual ICollection<ProjectTag> ProjectTags { get; set; }
@@ -22,7 +28,7 @@ namespace Polyglot.DataAccess.Entities
         public Project()
         {
             Teams = new List<Team>();
-            Translations = new List<Translation>();
+            Translations = new List<ComplexString>();
             ProjectLanguageses = new List<ProjectLanguage>();
             ProjectGlossaries = new List<ProjectGlossary>();
             ProjectTags = new List<ProjectTag>();
