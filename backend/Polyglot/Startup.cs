@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
@@ -84,7 +86,6 @@ namespace Polyglot
             {
                 app.UseDeveloperExceptionPage();
             }
-
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
