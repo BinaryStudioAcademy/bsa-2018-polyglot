@@ -1,0 +1,18 @@
+<div class="container">
+    <button mat-flat-button color="primary">Select new language</button>
+
+    <ul class="lang-list">
+
+        <li class="lang-item" *ngFor="let l of langs">
+            <mat-card>
+              <span class="lang">{{l.Lang}}</span> 
+              <mat-progress-bar class="lang-progress" mode="determinate" value="{{l.Progress}}"></mat-progress-bar>
+              <button mat-icon-button>
+                  <mat-icon aria-label="">delete_sweep</mat-icon>
+              </button>
+            </mat-card>
+        </li>
+    </ul>
+
+    <mat-spinner *ngIf="false"></mat-spinner>
+</div>
