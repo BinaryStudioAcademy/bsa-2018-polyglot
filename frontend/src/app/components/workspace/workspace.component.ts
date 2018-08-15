@@ -46,10 +46,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           let keyId = this.keys[0].id
           this.router.navigate(['workspace/'+params.projectId+'/key', keyId]);
         }
-        else{
-          if(this.keys.length == 0 )
-            this.keys = [{name : 'No strings',originalValue : ''}]
-        }
       });
     });
   }
