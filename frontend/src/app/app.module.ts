@@ -57,6 +57,7 @@ import { ProjectMessageComponent } from './dialogs/project-message/project-messa
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 
@@ -95,9 +96,9 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     ProjectDetailsComponent,
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
+    UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent
-
   ],
   imports: [
     BrowserModule,
