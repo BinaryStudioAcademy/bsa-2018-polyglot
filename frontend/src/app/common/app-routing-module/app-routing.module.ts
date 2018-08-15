@@ -45,7 +45,7 @@ const routes: Routes = [
       { path: 'abc', component: TeamComponent }
     ]
   },
-  { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
+  { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
   {
     path: 'workspace/:projectId',
 
