@@ -32,14 +32,14 @@
         <a mat-list-item *ngFor="let key of keys">
           <div [class.selected]="key === selectedKey"
           (click)="onSelect(key)">
-            <app-workspace-key [key]="key"></app-workspace-key>
+            <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
           </div>
           <mat-divider></mat-divider>
         </a>
       </mat-nav-list>
     </mat-card>
 
-    <app-workspace-key-details [keyDetails] = "selectedKey" style="width: 100%"></app-workspace-key-details>
+    <app-workspace-key-details [(keyDetails)] = "selectedKey" style="width: 100%"></app-workspace-key-details>
   </div>
   <ng-snotify></ng-snotify>
 </section>

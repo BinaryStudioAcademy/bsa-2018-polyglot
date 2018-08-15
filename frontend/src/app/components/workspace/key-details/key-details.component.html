@@ -39,14 +39,15 @@
 
 <mat-card class="my-1 ml-1 p-1 px-0 grow-1 translations-details" >
 	<mat-tab-group flex>
-		<mat-tab label="History" > 
-			<ng-template mat-tab-label >
-				<mat-icon class="icon-size" matTooltip="History" matTooltipPosition="above" >history</mat-icon>
-			</ng-template>
-		</mat-tab>
 		<mat-tab label="Detail"> 
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Detail" matTooltipPosition="above">details</mat-icon>
+			</ng-template>
+			<app-key-detail [(keyDetails)] = "keyDetails"></app-key-detail>
+		</mat-tab>
+		<mat-tab label="History" > 
+			<ng-template mat-tab-label >
+				<mat-icon class="icon-size" matTooltip="History" matTooltipPosition="above" >history</mat-icon>
 			</ng-template>
 		</mat-tab>
 		<mat-tab label="Comment"> 

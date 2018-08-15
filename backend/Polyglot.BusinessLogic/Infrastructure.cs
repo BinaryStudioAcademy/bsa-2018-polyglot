@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Services;
 
@@ -16,6 +15,8 @@ namespace Polyglot.BusinessLogic
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IComplexStringService, Services.ComplexStringService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IManagerService, ManagerService>();
+            services.AddTransient<ITeamService, TeamsService>();
         }
     }
 }

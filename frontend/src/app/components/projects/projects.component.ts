@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
+import { ManagerService } from '../../services/manager.service';
 import { ProjectService } from '../../services/project.service';
 
 import { MatDialog } from '../../../../node_modules/@angular/material';
@@ -21,7 +22,10 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
 
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
+  constructor(
+    //private managerService: ManagerService, 
+    private projectService: ProjectService,
+    public dialog: MatDialog) { }
   
 
   IsLoad : boolean = true;
@@ -49,7 +53,10 @@ export class ProjectsComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
   this.OnPage = true;
-  this.projectService.getAll().subscribe(pr => {this.cards = pr;
+
+  this.projectService.getAll().subscribe(pr => 
+    {
+      this.cards = pr;
     if(this.cards.length === 0 && this.OnPage === true){
      setTimeout(() => this.openDialog())
       }
