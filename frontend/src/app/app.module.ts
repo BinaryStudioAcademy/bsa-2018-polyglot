@@ -10,6 +10,7 @@ import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
+import { AgmCoreModule } from '@agm/core';
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -119,8 +120,10 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     MatProgressSpinnerModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
-    
+    SnotifyModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAmQNQvw2kjUJOki-B8BusPTiiTuQHAXKQ'
+    })
   ],
   entryComponents: [
     LoginDialogComponent, 
