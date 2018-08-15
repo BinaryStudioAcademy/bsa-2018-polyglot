@@ -2,13 +2,10 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatTable } from '@angular/material';
-import { ErrorStateMatcher} from '@angular/material/core';
-import { Observable, of } from 'rxjs';
-import { Sort} from '@angular/material';
 import { Teammate } from '../../../models/teammate';
+import { TeamService } from '../../../services/teams.service';
 import { SearchService } from '../../../services/search.service';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -33,14 +30,17 @@ export class TeamComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
 
-  constructor(private searchService: SearchService, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private teamService: TeamService, 
+    private searchService: SearchService,
+    private activatedRoute: ActivatedRoute) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.getTranslators();
   }
 
   getTranslators(){
     this.teammates = [];
-    this.searchService.GetTranslatorsByTeam(this.id)
+    this.teamService.getAllTeammates(this.id)
         .subscribe((data: Teammate[]) => {
           this.teammates = data;
           this.dataSource = new MatTableDataSource(this.teammates);
@@ -48,8 +48,8 @@ export class TeamComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+   // this.dataSource.sort = this.sort;
+   // this.dataSource.paginator = this.paginator;
   }
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
@@ -72,6 +72,9 @@ export class TeamComponent implements OnInit {
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
+    if(!this.teammates)
+      return false;
+    debugger;
     let teammate = this.teammates.find(t => t.id === id);
     if(!teammate)
       return false;
