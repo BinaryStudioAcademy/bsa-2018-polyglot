@@ -58,6 +58,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
 import { KeyDetailComponent } from './components/workspace/key-details/key-detail/key-detail.component';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import { KeyDetailComponent } from './components/workspace/key-details/key-detai
     ProjectDetailsComponent,
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
-    KeyDetailComponent
+    KeyDetailComponent,
+    UploadFileComponent
 
   ],
   imports: [
