@@ -8,5 +8,7 @@ namespace Polyglot.BusinessLogic.Interfaces
     public interface ITeamService : ICRUDService<Team, TeamDTO>
     {
         Task<IEnumerable<TeamPrevDTO>> GetAllTeamsPrevs();
+
+        Task<IEnumerable<TeammateDTO>> GetTeammates(int teamId);
     }
 }
