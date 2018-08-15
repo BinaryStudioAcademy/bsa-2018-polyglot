@@ -36,8 +36,4 @@ export class ProjectService {
   getProjectStrings(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', undefined, undefined);
   }
-
-  getProjectStingDetail(id : number,keyId : number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', keyId, undefined);
-  }
 }
