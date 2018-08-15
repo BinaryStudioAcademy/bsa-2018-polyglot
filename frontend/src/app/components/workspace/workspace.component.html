@@ -26,7 +26,12 @@
     </div>
   </mat-card>
 
-  <div class="d-flex" style="height:calc(100vh - 267px)">
+  <div class="mt-1 mb-1" *ngIf="isEmpty">
+      <mat-card class="no-string-div">
+      <p>No strings</p>
+      </mat-card>
+  </div>
+  <div class="d-flex workspace-height" *ngIf="!isEmpty">
     <mat-card class="keys-list d-flex my-1 p-0">
       <mat-nav-list class="keys-list__nav">
         <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
@@ -38,11 +43,9 @@
         </a>
       </mat-nav-list>
     </mat-card>
-
-    <div style="width: 100%;">
+    <div style="width: 100%;" *ngIf="!isEmpty">
     <router-outlet></router-outlet>
   </div>
-    <!--- <app-workspace-key-details [(keyDetails)] = "selectedKey" style="width: 100%"></app-workspace-key-details> -->
   </div>
   <ng-snotify></ng-snotify>
 </section>
