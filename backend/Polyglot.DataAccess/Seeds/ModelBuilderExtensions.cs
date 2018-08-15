@@ -485,7 +485,7 @@ namespace Polyglot.DataAccess.Seeds
                         } 
                    },
                    new Translator {
-                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4),
+                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 2),
                         Ratings = {
                            context.Ratings.FirstOrDefault(r => r.Id == 3),
                             context.Ratings.FirstOrDefault(r => r.Id == 4)
@@ -603,7 +603,7 @@ namespace Polyglot.DataAccess.Seeds
                          TeamTranslators = new List<TeamTranslator> {
                             new TeamTranslator {
                                 TranslatorId = 4,
-                                TeamId = 1,
+                                TeamId = 2,
                                 TranslatorRights = new List<TranslatorRight> {
                                 new TranslatorRight { RightId = 1 },
                                 new TranslatorRight { RightId = 2 },
@@ -612,7 +612,7 @@ namespace Polyglot.DataAccess.Seeds
                             },
                             new TeamTranslator {
                                 TranslatorId = 5,
-                                TeamId = 1,
+                                TeamId = 2,
                                 TranslatorRights = new List<TranslatorRight> {
                                 new TranslatorRight { RightId = 1 },
                                 new TranslatorRight { RightId = 2 },
@@ -622,7 +622,80 @@ namespace Polyglot.DataAccess.Seeds
 
 
                          }
-                     }
+                     },
+                      new Team {
+                         TeamTranslators = new List<TeamTranslator> {
+                            new TeamTranslator {
+                                TranslatorId = 5,
+                                TeamId = 3,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+                            new TeamTranslator {
+                                TranslatorId = 1,
+                                TeamId = 3,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+
+
+                         }
+                     },
+                       new Team {
+                         TeamTranslators = new List<TeamTranslator> {
+                            new TeamTranslator {
+                                TranslatorId = 3,
+                                TeamId = 4,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+                            new TeamTranslator {
+                                TranslatorId = 5,
+                                TeamId = 4,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+
+
+                         }
+                     },
+                        new Team {
+                         TeamTranslators = new List<TeamTranslator> {
+                            new TeamTranslator {
+                                TranslatorId = 3,
+                                TeamId = 5,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+                            new TeamTranslator {
+                                TranslatorId = 2,
+                                TeamId = 5,
+                                TranslatorRights = new List<TranslatorRight> {
+                                new TranslatorRight { RightId = 1 },
+                                new TranslatorRight { RightId = 2 },
+                                new TranslatorRight { RightId = 3 }
+                                }
+                            },
+
+
+                         }
+                     },
+                        
 
 
                 };
