@@ -5,6 +5,7 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
+import { IString } from '../../models/string';
 
 
 @Component({
@@ -23,7 +24,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-
     private dataProvider: ProjectService,
     private dialog: MatDialog
    ) { }
@@ -33,9 +33,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
 
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      //making api call using service service.get(params.projectId); ....
-
-      this.project = MOCK_PROJECT(params.projectId);
+      //making api call using service service.get(params.projectId); ..
+      this.getProjById(params.projectId);
       
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
@@ -63,6 +62,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           this.keys.push(result);
+          this.selectedKey = result;
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();
@@ -70,9 +70,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onSelect(key: any){
-    debugger;
-    console.log(key);
-    
     this.selectedKey = key;
   }
 
@@ -80,8 +77,27 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
+  getProjById(id: number){
+    this.dataProvider.getById(id).subscribe(proj =>{
+      this.project = proj;
+    });
+  }
+
+  receiveId($event) {
+    debugger;
+    let temp = this.keys.findIndex( x => x.id === $event);
+    if(this.selectedKey.id == this.keys[temp].id)
+      this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
+
+    this.keys.splice(temp, 1);
+
+  }
+
 }
 
+ 
+
+/*
 let MOCK_PROJECT = (id: number): Project => ({
   id : id,
   name: 'Binary Studio Academy Project',
@@ -105,4 +121,4 @@ let MOCK_PROJECT = (id: number): Project => ({
   projectLanguageses: [],
   projectGlossaries: [],
   projectTags: []
-});
+});*/

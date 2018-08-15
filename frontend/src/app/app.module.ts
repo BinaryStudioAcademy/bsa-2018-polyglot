@@ -15,7 +15,7 @@ import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { GlossariesComponent } from './components/glossaries/glossaries.component';
-import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
+import { AppRoutingModule } from './common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
@@ -57,7 +57,8 @@ import { ProjectMessageComponent } from './dialogs/project-message/project-messa
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
-
+import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
+import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 
 
 @NgModule({
@@ -93,7 +94,9 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     ConfirmEqualValidatorDirective,
     ProjectDetailsComponent,
     ProjectMessageComponent,
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    TabDetailComponent,
+    ImgDialogComponent
 
   ],
   imports: [
@@ -125,7 +128,8 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    ImgDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

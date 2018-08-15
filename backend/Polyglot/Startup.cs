@@ -8,8 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
@@ -85,7 +87,6 @@ namespace Polyglot
                 app.UseDeveloperExceptionPage();
             }
 
-
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
@@ -96,7 +97,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            //app.UseCustomizedIdentity();
+            app.UseCustomizedIdentity();
 
             app.UseMvc();
             

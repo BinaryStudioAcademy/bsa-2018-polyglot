@@ -35,7 +35,8 @@ export class HttpService {
         body: any = {}) {
 
         let headers;
-        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "FilesStorage") {
+        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "projects"
+                                                                        && endpoint != "complexstrings") {
             headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': this.token });
         } else {
             headers = new HttpHeaders({ 'Authorization': this.token });

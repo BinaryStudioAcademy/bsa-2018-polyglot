@@ -11,7 +11,7 @@
   </form>
   <div *ngIf="IsLoad" class="spinner">
       <mat-spinner></mat-spinner> 
-      </div> 
+  </div> 
 <div class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>        
@@ -36,7 +36,7 @@
       </div>  
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
-        <button mat-raised-button color="primary" routerLink="/project/details">DETAILS</button>
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </mat-card-actions>
     </mat-card>
 </div>  

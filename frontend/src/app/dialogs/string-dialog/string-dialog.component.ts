@@ -7,6 +7,7 @@ import { ComplexStringService } from '../../services/complex-string.service';
 import { MatDialogRef } from '@angular/material';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 import { EventEmitter } from '@angular/core';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'app-string-dialog',
@@ -60,11 +61,15 @@ export class StringDialogComponent implements OnInit {
       projectId: this.data.projectId
     };
     this.image = undefined;
-    console.log(this.str);
   }
 
   onSubmit(){
-    this.complexStringService.create(this.str)
+
+    let formData = new FormData();
+    if(this.image)
+      formData.append("image", this.image);
+    formData.append("str", JSON.stringify(this.str));
+    this.complexStringService.create(formData)
       .subscribe(
         (d) => {
           if(d)

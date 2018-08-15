@@ -21,7 +21,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(project: Project) : Observable<Project> {
+  create(project: FormData) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
   }
 
