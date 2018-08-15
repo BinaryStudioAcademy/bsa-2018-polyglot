@@ -35,8 +35,10 @@
       Password <strong>cannot</strong> be more than 30 characters long
     </mat-error>
   </mat-form-field>
-
-  <a style="margin-left: 250px; " (click)="onForgotPasswordClick()" mat-button color="primary">Forgot password?</a>
+<div class="forgot-box">
+    <a  class="forgot-password" (click)="onForgotPasswordClick()"  color="primary">Forgot password?</a>
+</div>
+  
   <br>
 
   <mat-error *ngIf="firebaseError" style="align-self: center; margin-bottom: 20px;">
