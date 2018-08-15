@@ -50,12 +50,7 @@ const routes: Routes = [
     path: 'workspace/:projectId',
     canActivate: [AuthGuard],
     component: WorkspaceComponent,
-    children: [
-      {
-        path: '',
-        redirectTo : "key/1",
-        pathMatch : "full"
-      },{
+    children: [{
         path: 'key/:keyId',
         component : KeyDetailsComponent
       }

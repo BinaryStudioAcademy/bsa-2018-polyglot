@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
@@ -24,6 +24,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router : Router,
     private dataProvider: ProjectService,
     private dialog: MatDialog
    ) { }
@@ -42,11 +43,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
         {
           this.onSelect(data[0]);
           this.keys = data;
+          let keyId = this.keys[0].id
+          this.router.navigate(['workspace/'+params.projectId+'/key', keyId]);
+        }
+        else{
+          if(this.keys.length == 0 )
+            this.keys = [{name : 'No strings',originalValue : ''}]
         }
       });
     });
-    if(this.keys == undefined ){
-    this.keys = [{name : 'No strings',originalValue : ''}]}
   }
 
   onAdvanceSearchClick() {
