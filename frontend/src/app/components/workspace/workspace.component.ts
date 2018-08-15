@@ -62,6 +62,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           this.keys.push(result);
+          this.selectedKey = result;
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();
@@ -87,7 +88,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   receiveId($event) {
     debugger;
     let temp = this.keys.findIndex( x => x.id === $event);
+    if(this.selectedKey.id == this.keys[temp].id)
+      this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
+
     this.keys.splice(temp, 1);
+
   }
 
 }
