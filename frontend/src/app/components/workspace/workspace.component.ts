@@ -74,7 +74,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSelect($event, key: any){
+  onSelect(key: any){
     this.selectedKey = key;
   }
 
