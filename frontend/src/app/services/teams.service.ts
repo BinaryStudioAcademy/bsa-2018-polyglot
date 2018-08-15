@@ -24,7 +24,6 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, teamId)
                 .pipe(map<Teammate[], any>(data => {
                   return data.map(function(teammate: any) {
-                    debugger;
                     return {
                       id: teammate.id,
                       fullName: teammate.fullName,
