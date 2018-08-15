@@ -46,6 +46,9 @@ export class AppStateService {
 
 
   constructor() {
+    // getting from localStorage
+    this.currentFirebaseToken = localStorage.getItem('currentFirebaseToken');
+    this.LoginStatus = localStorage.getItem('LoginStatus') === 'true';
   }
 
   updateState(user: firebase.User, token: string, loginStatus: boolean) {

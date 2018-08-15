@@ -16,6 +16,12 @@ export class LoginDialogComponent implements OnInit {
   public user: IUserLogin;
   public firebaseError: string;
   hide = true;
+  notificationConfig = {
+    timeout: 15000,
+    showProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: false
+  }
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
@@ -36,49 +42,36 @@ export class LoginDialogComponent implements OnInit {
     if (form.valid) {
       this.authService.signInRegular(user.email, user.password).subscribe(
         async (userCred) => {
-          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
+          if (userCred.user.emailVerified) {
+            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
 
-          if(this.authService.isLoggedIn()){
-            this.dialogRef.close();
+            if(this.appState.LoginStatus){
+              this.dialogRef.close();
+            }          
+          } else {
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
+              timeout: 15000,
+              showProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false,
+              buttons: [
+                {text: 'Resend', action: () => {
+                  userCred.user.sendEmailVerification();
+                  this.authService.logout();
+                  this.snotify.clear();
+                  this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);
+                }}
+              ]
+            }
+            );
+            this.firebaseError = 'You need to confirm your email address in order to use our service';
           }
         }, 
         (err) => {
           this.firebaseError = this.handleFirebaseErrors(err);
         }
       );
-      // .then(
-      //   () => {
-      //     if(!this.appState.currentFirebaseUser.emailVerified) {
-      //         // email confirmation
-      //       this.snotify.clear();
-      //       this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
-      //         timeout: 15000,
-      //         showProgressBar: true,
-      //         closeOnClick: false,
-      //         pauseOnHover: false,
-      //         buttons: [
-      //           {text: "Resend", action: async () => {
-      //             // resend confirmation to user
-      //             await this.authService.signInRegular(user.email, user.password);
-      //             this.authService.sendEmailVerification();
-      //             this.authService.logout();
-      //             this.snotify.clear();
-      //             this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
-      //               timeout: 15000,
-      //               showProgressBar: true,
-      //               closeOnClick: false,
-      //               pauseOnHover: false
-      //             });
-      //           }}
-      //         ]        
-      //       });
-      //       this.authService.logout();
-      //       throw {message: 'You need to confirm your email address in order to use our service'};
-      //     } else {
-      //       // if not exist in db - send post request and navigate to settings
-      //     }
-      //   }
-      // )
     }
   }
 
@@ -87,19 +80,16 @@ export class LoginDialogComponent implements OnInit {
       async (userCred) => {
         this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.authService.isLoggedIn()){
+        if(this.appState.LoginStatus) {
           this.dialogRef.close();
         }
+
+        // if not exist in db - show error
       }, 
       (err) => {
         this.firebaseError = this.handleFirebaseErrors(err);
       }
     );
-    // .then(
-    //   () => {
-    //     // if not exist in db - show error
-    //   }
-    // ) 
   }
 
   onFacebookClick() {
@@ -107,19 +97,16 @@ export class LoginDialogComponent implements OnInit {
       async (userCred) => {
         this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.authService.isLoggedIn()){
+        if(this.appState.LoginStatus) {
           this.dialogRef.close();
         }
+
+        // if not exist in db - show error
       }, 
       (err) => {
         this.firebaseError = this.handleFirebaseErrors(err);
       }
     );
-    // .then(
-    //   () => {
-    //     // if not exist in db - show error
-    //   }
-    // )
   }
 
   onForgotPasswordClick() {

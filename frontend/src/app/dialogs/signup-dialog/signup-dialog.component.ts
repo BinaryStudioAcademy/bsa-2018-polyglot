@@ -17,6 +17,12 @@ export class SignupDialogComponent implements OnInit {
   public firebaseError: string;
   public selectedOption : string;
   private IsNotificationSend: boolean;
+  private notificationConfig = {
+    timeout: 10000,
+    showProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: false        
+  }
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
@@ -42,47 +48,26 @@ export class SignupDialogComponent implements OnInit {
   onSignUpFormSubmit(user: IUserSignUp, form) {
     if (form.valid) {
       this.authService.signUpRegular(user.email, user.password).subscribe(
-        async (userCred) => {
-          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-
-          if(this.authService.isLoggedIn()){
-            this.dialogRef.close();
-          }
+        (userCred) => {
+          this.authService.sendEmailVerification();
+          this.snotify.clear();
+          this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);  
+          this.IsNotificationSend = true;   
+          setTimeout(
+            () => this.dialogRef.close(), 
+            10000
+          );
         }, 
         (err) => {
+          if (err.code === 'auth/email-already-in-use') {
+            this.snotify.clear();
+            this.snotify.warning(`Email confirmation was already send to ${this.user.email}. Check your email.`, this.notificationConfig);
+          }
           this.firebaseError = err.message;
         }
       );
-      // .then(
-      //   // () => this.router.navigate(['/profile/settings'])
-      //   () => {
-      //     // email confirmation
-      //     if (!this.IsNotificationSend) {
-      //       this.authService.sendEmailVerification();
-      //       this.snotify.clear();
-      //       this.snotify.info(`Email confirmation was send to ${this.appState.currentFirebaseUser.email}`, {
-      //         timeout: 10000,
-      //         showProgressBar: true,
-      //         closeOnClick: false,
-      //         pauseOnHover: false        
-      //       });
-      //       this.authService.logout();
-      //       setTimeout(
-      //         () => this.dialogRef.close(), 
-      //         10000
-      //       );
-      //       this.IsNotificationSend = true;
-      //     } else {
-      //       this.snotify.clear();
-      //       this.snotify.warning(`Email confirmation was already send to ${this.appState.currentFirebaseUser.email}. Check your email.`, {
-      //         timeout: 10000,
-      //         showProgressBar: true,
-      //         closeOnClick: false,
-      //         pauseOnHover: false        
-      //       });
-      //     }
-      //   }
-      // )
+      // not sure that it is logging out 
+      this.authService.logout();
     }
   }
 
@@ -91,18 +76,17 @@ export class SignupDialogComponent implements OnInit {
       async (userCred) => {
         this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.authService.isLoggedIn()){
+        if(this.appState.LoginStatus){
             this.dialogRef.close();
         }
+
+        //if exist in db - show error
+        this.router.navigate(['/profile/settings']);
       }, 
       (err) => {
         this.firebaseError = err.message;
       }
     );
-    // .then(
-    //   // if exist in db - show error
-    //   () => this.router.navigate(['/profile/settings'])
-    // )
   }
 
   onFacebookClick() {
@@ -110,19 +94,16 @@ export class SignupDialogComponent implements OnInit {
       async (userCred) => {
         this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.authService.isLoggedIn()){
+        if(this.appState.LoginStatus){
           this.dialogRef.close();
         }
+
+        //if exist in db - show error
+        this.router.navigate(['/profile/settings']);
       }, 
       (err) => {
         this.firebaseError = err.message;
       }
-    );
-    // .then(
-    //   // if exist in db - show error
-    //   () => this.router.navigate(['/profile/settings'])
-    // )
-    
+    );  
   }
-
 }
