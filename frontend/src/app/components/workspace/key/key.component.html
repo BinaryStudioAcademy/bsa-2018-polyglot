@@ -1,4 +1,8 @@
 <div class="common">
+    <button mat-button [matMenuTriggerFor]="menu"><mat-icon aria-label="">more_horiz</mat-icon></button>
+    <mat-menu #menu="matMenu">
+      <button (click)="onDeleteString()" mat-menu-item>Delete</button>
+    </mat-menu>
   <div class="container">
     <h4 class="mb-1">{{ key.key }}</h4>
   </div>
