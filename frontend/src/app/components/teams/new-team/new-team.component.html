@@ -1,32 +1,37 @@
 <div class="form-container">
   <h2>Create new team</h2>
-  <form [formGroup]="teamForm" > 
-      <mat-form-field class="field-full-width">
-          <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
-         
-  </mat-form-field>
-  <mat-form-field class="field-full-width">
-      <textarea class="description-text-area" matInput placeholder="Enter description" formControlName="description" 
-          maxlength="500"></textarea>
-   
-      </mat-form-field>
-  
-      <mat-grid-list cols="2">
-          <mat-grid-tile>
-              <div class="select-fields-container field-full-width">
-                  <mat-form-field class="mat-select-wraper">
-             
-                  </mat-form-field>
-                  <mat-form-field class="mat-select-wraper">
-             
-                  </mat-form-field>
-                  <div class="saveButton">
-                      <button mat-button color="primary"  (click)="saveChanges(teamForm.value)" [disabled]="teamForm.invalid">Create</button>
-                  </div>
-              </div>
-          </mat-grid-tile>
-          <mat-grid-tile>
-              <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
-          </mat-grid-tile>
-          </mat-grid-list>  
-      </form>
+  <form [formGroup]="teamForm">
+    <mat-form-field class="field-full-width">
+      <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
+    </mat-form-field>
+    <mat-form-field class="field-full-width">
+      <textarea class="description-text-area" matInput placeholder="Enter description" maxlength="500"></textarea>
+    </mat-form-field>
+
+    <mat-grid-list cols="2">
+      <mat-grid-tile>
+        <div class="select-fields-container field-full-width">
+          <mat-form-field class="mat-select-wraper">
+            <mat-select class="mat-select" placeholder="Translator1"  >
+              <mat-option  >
+               
+              </mat-option>
+          </mat-select>
+          </mat-form-field>
+          <mat-form-field class="mat-select-wraper">
+            <mat-select class="mat-select" placeholder="Translator2"  >
+              <mat-option  >
+                
+              </mat-option>
+          </mat-select>
+          </mat-form-field>
+          <div class="saveButton">
+            <button mat-button color="primary" (click)="saveChanges(teamForm.value)" [disabled]="teamForm.invalid">Create</button>
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-upload-image (fileEvent)="receiveImage($event)"></app-upload-image>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
