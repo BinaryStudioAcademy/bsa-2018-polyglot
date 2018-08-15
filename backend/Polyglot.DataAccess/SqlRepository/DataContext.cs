@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Seeds;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
@@ -24,6 +25,14 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<Translator> Translators { get; set; }
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            
+        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +115,12 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasOne(tr => tr.TeamTranslator)
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
+            
+            //new feature in EF Core 2.1
+            //modelBuilder.Seed();
+            
+            
+
         }
     }
 }

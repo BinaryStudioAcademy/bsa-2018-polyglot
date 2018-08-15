@@ -42,39 +42,13 @@ namespace Polyglot.Controllers
 
         }
 
-        public class LowercaseContractResolver : DefaultContractResolver
-        {
-            protected override string ResolvePropertyName(string propertyName)
-            {
-                return propertyName.ToLower();
-            }
-        }
-
         // GET: UserProfiles
         [HttpGet("user")]
-        public string GetUser()
+        public async Task<IActionResult> GetUser()
         {
             UserProfileDTO user = UserIdentityService.GetCurrentUser();
-            var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return JsonConvert.SerializeObject(user, Formatting.Indented, settings);
-
-            //SAVE user in DB just uncomment and switch
-            //string =>  async Task<IActionResult> 
-            //UserProfileDTO user = UserIdentityService.GetCurrentUser();
-            //IEnumerable<UserProfileDTO> users = await service.GetListAsync();
-            //UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == user.Uid);
-
-            //if (userInDB == null)
-            //{
-            //    userInDB = await service.PostAsync(user);
-            //}
-
-            //var settings = new JsonSerializerSettings();
-            //settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
-            //return userInDB == null ? NotFound("No projects found!") as IActionResult
-            //    : Ok(userInDB);
+            return user == null ? NotFound($"User not found!") as IActionResult
+               : Ok(user);
         }
 
         // GET: UserProfiles/5

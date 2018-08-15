@@ -62,6 +62,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile))
                     .ForMember(p => p.Projects, opt => opt.Ignore());
+
 				cfg.CreateMap<ProjectDTO, Project>()
 					.ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
 					.ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
@@ -110,7 +111,7 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<ProjectHistoryDTO, ProjectHistory>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.ActionType, opt => opt.MapFrom(po => po.ActionType))
-                    .ForMember(p => p.Actor, opt => opt.MapFrom(po => po.Actor))
+                    .ForMember(p => p.Author, opt => opt.MapFrom(po => po.Actor))
                     .ForMember(p => p.OriginValue, opt => opt.MapFrom(po => po.OriginValue))
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
                     .ForMember(p => p.TableName, opt => opt.MapFrom(po => po.TableName))
@@ -118,7 +119,7 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<ProjectHistory, ProjectHistoryDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.ActionType, opt => opt.MapFrom(pt => pt.ActionType))
-                    .ForMember(p => p.Actor, opt => opt.MapFrom(pt => pt.Actor))
+                    .ForMember(p => p.Actor, opt => opt.MapFrom(pt => pt.Author))
                     .ForMember(p => p.OriginValue, opt => opt.MapFrom(pt => pt.OriginValue))
                     .ForMember(p => p.Project, opt => opt.MapFrom(pt => pt.Project))
                     .ForMember(p => p.TableName, opt => opt.MapFrom(pt => pt.TableName))
@@ -170,7 +171,7 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<Right, RightDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.Definition, opt => opt.MapFrom(pt => pt.Definition))
-                    .ForMember(p => p.TranslatorRights, opt => opt.MapFrom(pt => pt.TranslatorRights));
+                    .ForMember(p => p.TranslatorRights, opt => opt.Ignore());
 
                 cfg.CreateMap<TagDTO, Tag>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
@@ -256,6 +257,14 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
                         po.TeamTranslators
                         .Select(t => t.Translator.UserProfile)));
+
+                cfg.CreateMap<TeamTranslator, TeammateDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Translator.Id))
+                    .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.Translator.UserProfile.FullName))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
+#warning примапить email
+                    .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
+                    .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
 
                 cfg.CreateMap<UserProfile, UserProfilePrevDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

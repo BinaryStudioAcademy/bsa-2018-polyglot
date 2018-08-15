@@ -29,11 +29,11 @@ namespace Polyglot.Controllers
         }
 
         // GET: Teams/5
-        [HttpGet("{id}", Name = "GetTeam")]
-        public async Task<IActionResult> GetTeam(int id)
+        [HttpGet("{id}", Name = "GetTeammates")]
+        public async Task<IActionResult> GetTeammates(int id)
         {
-            var team = await service.GetOneAsync(id);
-            return team == null ? NotFound($"Team with id = {id} not found!") as IActionResult
+            var team = await service.GetTeammates(id);
+            return team == null ? NotFound($"No teammates found for team with id = {id}!") as IActionResult
                 : Ok(team);
         }
 

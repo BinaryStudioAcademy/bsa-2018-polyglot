@@ -8,6 +8,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { UserService } from '../../services/user.service';
 import { UserProfile } from '../../models';
 import { map } from 'rxjs/operators';
+import { AppStateService } from '../../services/app-state.service';
+import { Router } from '../../../../node_modules/@angular/router';
 
 
 @Component({
@@ -27,7 +29,9 @@ export class NavigationComponent implements OnDestroy {
     media: MediaMatcher,
     public dialog: MatDialog,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private appState: AppStateService,
+    private router: Router
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -35,7 +39,7 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    if ( this.authService.isLoggedIn()){
+    if (this.appState.LoginStatus){
       if (!this.userService.getCurrrentUser()) {
         this.userService.getUser().subscribe(
           (d: UserProfile)=> {
@@ -73,10 +77,12 @@ export class NavigationComponent implements OnDestroy {
 
   onLogoutClick() {
     this.authService.logout();
+    this.appState.updateState(null, '', false);
+    this.router.navigate(['/']);
   }
 
   isLoggedIn() {
-    return this.authService.isLoggedIn();
+    return this.appState.LoginStatus;
   }
   
   ngOnDestroy(): void {

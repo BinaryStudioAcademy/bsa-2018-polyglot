@@ -33,8 +33,8 @@ namespace Polyglot.Authentication.Extensions
             context => context.Request.Path.StartsWithSegments(""),
             a => a.Use(async (context, next) =>
             {
-                UserIdentityService service = new UserIdentityService();
-                service.SaveDate(context);
+                UserIdentityService identityService = new UserIdentityService();
+                await identityService.SaveDate(context);
                 await next();
             }));
             return app;

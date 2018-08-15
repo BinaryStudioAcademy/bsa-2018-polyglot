@@ -26,5 +26,13 @@ namespace Polyglot.BusinessLogic.Services
 
             return null;
         }
+
+        public async Task<IEnumerable<TeammateDTO>> GetTeammates(int teamId)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            if (team != null)
+                return mapper.Map<IEnumerable<TeammateDTO>>(team?.TeamTranslators);
+            return null;
+        }
     }
 }

@@ -36,7 +36,7 @@
       </div>  
       <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
-        <button mat-raised-button color="primary" routerLink="/project/details">DETAILS</button>
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </mat-card-actions>
     </mat-card>
 </div>  

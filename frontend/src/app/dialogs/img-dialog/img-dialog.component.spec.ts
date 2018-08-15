@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KeyDetailComponent } from './key-detail.component';
+import { ImgDialogComponent } from './img-dialog.component';
 
-describe('KeyDetailComponent', () => {
-  let component: KeyDetailComponent;
-  let fixture: ComponentFixture<KeyDetailComponent>;
+describe('ImgDialogComponent', () => {
+  let component: ImgDialogComponent;
+  let fixture: ComponentFixture<ImgDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ KeyDetailComponent ]
+      declarations: [ ImgDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(KeyDetailComponent);
+    fixture = TestBed.createComponent(ImgDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
