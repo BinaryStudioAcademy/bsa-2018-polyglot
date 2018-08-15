@@ -7,6 +7,7 @@ using Polyglot.DataAccess.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.Authentication
 {
