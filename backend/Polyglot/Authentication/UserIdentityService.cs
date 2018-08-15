@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.BusinessLogic.Implementations;
 
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
