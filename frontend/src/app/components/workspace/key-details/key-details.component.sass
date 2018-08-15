@@ -15,7 +15,8 @@
 .translations-details
   padding-top: 0!important
   padding-bottom: 48px!important
-  overflow: auto
+  height: calc(100vh - 347px)
+  overflow: hidden
   width: 35%
 
 .translations-list
@@ -41,3 +42,14 @@
 
 .icon-size
   font-size: 30px
+
+/deep/.mat-tab-body
+  height: 50vh!important
+  ::-webkit-scrollbar 
+    width: 5px
+  ::-webkit-scrollbar-track 
+    background: #f1f1f1
+  ::-webkit-scrollbar-thumb 
+    background: #888
+  ::-webkit-scrollbar-thumb:hover 
+    background: #555
