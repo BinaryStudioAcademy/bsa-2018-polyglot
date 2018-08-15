@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
-import { Project } from '../models/project';
+import { Team, Project } from '../models';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectService {
+export class ManagerService {
 
   api: string;
   constructor(private dataService: HttpService) { 
-    this.api = "projects";
+    this.api = "managers";
   }
 
   getAll() : Observable<any> {
@@ -21,19 +21,23 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(project: FormData) : Observable<Project> {
+  create(project: Team) : Observable<Team> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
   }
 
-  update(project: Project, id: number) : Observable<Project> {
+  update(project: Team, id: number) : Observable<Team> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, project);
   }
 
-  delete(id: number) : Observable<Project> {
+  delete(id: number) : Observable<Team> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 
-  getProjectStrings(id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', undefined, undefined);
+  getManagerTeams(id: number): Observable<Team[]> {
+      return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams', undefined, undefined);
   }
+
+  getManagerProjects(id: number): Observable<Project[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/projects', undefined, undefined);
+}
 }

@@ -8,8 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
@@ -109,7 +109,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            //app.UseCustomizedIdentity();
+            app.UseCustomizedIdentity();
 
             app.UseMvc();
 
