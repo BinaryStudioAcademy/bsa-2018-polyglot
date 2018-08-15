@@ -10,7 +10,7 @@ import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
 import { forEach } from '@angular/router/src/utils/collection';
 
-
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 
 
 @Component({
@@ -22,7 +22,9 @@ export class ProjectsComponent implements OnInit {
   public cards: Project[];
 
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
+  constructor(private projectService: ProjectService,
+    public dialog: MatDialog,
+    private snotifyService: SnotifyService,) { }
   
 
   IsLoad : boolean = true;
@@ -63,7 +65,22 @@ export class ProjectsComponent implements OnInit {
   }
 
   delete(id: number): void{
-    this.projectService.delete(id);
+    this.projectService.delete(id)
+    .subscribe(
+    //.subscribe( value => console.log(value));
+      (response => {
+        let projectToDelete = this.cards.find(pr => pr.id == id);
+        let projectToDeleteIndex = this.cards.indexOf(projectToDelete);
+        this.cards.splice(projectToDeleteIndex, 1);
+        this.snotifyService.success("Project deleted", "Success!");
+      }),
+      err => {
+        this.snotifyService.error("Project wasn`t deleted", "Error!");
+        console.log('err', err);
+        
+      }
+    );
+    console.log(id)
     console.log("deleted")
    }
 }
