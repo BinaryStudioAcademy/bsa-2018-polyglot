@@ -27,7 +27,7 @@ namespace Polyglot.BusinessLogic.Services
             stringsProvider = rep;
         }
 
-        public async Task FileParseDictionary(IFormFile file)
+        public async Task FileParseDictionary(int id, IFormFile file)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             string str;
@@ -88,10 +88,10 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var i in dictionary)
             {
-				DataAccess.MongoModels.ComplexString temp = new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value };
+				// DataAccess.MongoModels.ComplexString temp = new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value };
 
                 // repository isn`t working now
-                await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value });
+                await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value, ProjectId = id });
             }
 
         }
