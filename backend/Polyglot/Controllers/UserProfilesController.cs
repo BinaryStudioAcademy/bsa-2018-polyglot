@@ -14,6 +14,7 @@ using Polyglot.Authentication.Extensions;
 using System.Security.Claims;
 using System.Threading;
 using Newtonsoft.Json.Serialization;
+using Polyglot.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -23,8 +24,6 @@ namespace Polyglot.Controllers
 
     public class UserProfilesController : ControllerBase
     {
-
-
         private readonly ICRUDService<UserProfile, UserProfileDTO> service;
         
         public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
@@ -32,7 +31,7 @@ namespace Polyglot.Controllers
             this.service = service;
         }
 
-        // GET: Users
+        // GET: UserProfiles
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -51,20 +50,34 @@ namespace Polyglot.Controllers
             }
         }
 
-        // GET: Users
+        // GET: UserProfiles
         [HttpGet("user")]
         public string GetUser()
         {
-            UserProfileDTO user = new UserProfileDTO();
-            user.FullName = HttpContext.User.GetName();
-            user.AvatarUrl = HttpContext.User.GetProfilePicture();
-
+            UserProfileDTO user = UserIdentityService.GetCurrentUser();
             var settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             return JsonConvert.SerializeObject(user, Formatting.Indented, settings);
+
+            //SAVE user in DB just uncomment and switch
+            //string =>  async Task<IActionResult> 
+            //UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            //IEnumerable<UserProfileDTO> users = await service.GetListAsync();
+            //UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == user.Uid);
+
+            //if (userInDB == null)
+            //{
+            //    userInDB = await service.PostAsync(user);
+            //}
+
+            //var settings = new JsonSerializerSettings();
+            //settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            //return userInDB == null ? NotFound("No projects found!") as IActionResult
+            //    : Ok(userInDB);
         }
 
-        // GET: Users/5
+        // GET: UserProfiles/5
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id)
         {
@@ -73,37 +86,24 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-        // POST: Users
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] UserProfile value)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest() as IActionResult;
+        // PUT: UserProfiles/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
 
-        //    var entity = await service.PostAsync(mapper.Map<UserProfile>(value));
-        //    return entity == null ? StatusCode(409) as IActionResult
-        //        : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-        //        mapper.Map<UserProfileDTO>(entity));
-        //}
+            var entity = await service.PutAsync(project);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
 
-        //// PUT: Users/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put(int id, [FromBody] UserProfile value)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest() as IActionResult;
-
-        //    var entity = await service.PutAsync(id, mapper.Map<UserProfile>(value));
-        //    return entity == null ? StatusCode(304) as IActionResult
-        //        : Ok(mapper.Map<UserProfileDTO>(entity));
-        //}
-
-        //// DELETE: ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var success = await service.TryDeleteAsync(id);
-        //    return success ? Ok() : StatusCode(304) as IActionResult;
-        //}
+        // DELETE: UserProfiles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTranslatorRight(int id)
+        {
+            var success = await service.TryDeleteAsync(id);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
     }
 }

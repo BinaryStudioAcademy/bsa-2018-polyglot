@@ -4,6 +4,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace Polyglot.Controllers
 {
@@ -11,9 +12,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TeamsController : ControllerBase
     {
-        private readonly ICRUDService<Team, TeamDTO> service;
+        private readonly ITeamService service;
 
-        public TeamsController(ICRUDService<Team, TeamDTO> service, IMapper mapper)
+        public TeamsController(ITeamService service, IMapper mapper)
         {
             this.service = service;
         }
@@ -22,27 +23,27 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-            var projects = await service.GetListAsync();
-            return projects == null ? NotFound("No teams found!") as IActionResult
-                : Ok(projects);
+            var teams = await service.GetAllTeamsPrevs();
+            return teams == null ? NotFound("No teams found!") as IActionResult
+                : Ok(teams);
         }
 
         // GET: Teams/5
         [HttpGet("{id}", Name = "GetTeam")]
         public async Task<IActionResult> GetTeam(int id)
         {
-            var project = await service.GetOneAsync(id);
-            return project == null ? NotFound($"Team with id = {id} not found!") as IActionResult
-                : Ok(project);
+            var team = await service.GetOneAsync(id);
+            return team == null ? NotFound($"Team with id = {id} not found!") as IActionResult
+                : Ok(team);
         }
 
         // POST: Teams
-        public async Task<IActionResult> AddTeam([FromBody]TeamDTO project)
+        public async Task<IActionResult> AddTeam([FromBody]TeamDTO team)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(project);
+            var entity = await service.PostAsync(team);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -50,12 +51,12 @@ namespace Polyglot.Controllers
 
         // PUT: Teams/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyTeam(int id, [FromBody]TeamDTO project)
+        public async Task<IActionResult> ModifyTeam(int id, [FromBody]TeamDTO team)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(project);
+            var entity = await service.PutAsync(team);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

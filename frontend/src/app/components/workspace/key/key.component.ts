@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ComplexStringService } from '../../../services/complex-string.service';
 
 @Component({
   selector: 'app-workspace-key',
@@ -8,10 +9,17 @@ import { Component, OnInit, Input } from '@angular/core';
 export class KeyComponent implements OnInit {
 
   @Input() public key: any;
+  @Output() idEvent = new EventEmitter<number>();
 
-  constructor() { }
+  constructor(private dataProvider: ComplexStringService) { }
 
   ngOnInit() {
+  }
+
+  onDeleteString() {
+    this.dataProvider.delete(this.key.id)
+    .subscribe(() => {});
+    this.idEvent.emit(this.key.id);
   }
 
 }

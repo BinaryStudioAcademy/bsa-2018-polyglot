@@ -59,7 +59,7 @@ namespace Polyglot.Controllers
 
         // POST: Projects
         [HttpPost]
-        public async Task<IActionResult> AddProject()
+        public async Task<IActionResult> AddProject( IFormFile formFile)
         {
 
             Request.Form.TryGetValue("project", out StringValues res);
