@@ -79,9 +79,6 @@ export class LoginDialogComponent implements OnInit {
       //     }
       //   }
       // )
-      // .catch(
-      //   (error) => this.firebaseError = this.handleFirebaseErrors(error)
-      // );
     }
   }
 
@@ -102,10 +99,7 @@ export class LoginDialogComponent implements OnInit {
     //   () => {
     //     // if not exist in db - show error
     //   }
-    // )
-    // .catch(
-    //   (error) => this.firebaseError = error.message
-    // );  
+    // ) 
   }
 
   onFacebookClick() {
@@ -126,9 +120,6 @@ export class LoginDialogComponent implements OnInit {
     //     // if not exist in db - show error
     //   }
     // )
-    // .catch(
-    //   (error) => this.firebaseError = error.message
-    // );
   }
 
   onForgotPasswordClick() {
