@@ -80,7 +80,7 @@ namespace Polyglot
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICRUDService<UserProfile, UserProfileDTO> service)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -97,7 +97,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            app.UseCustomizedIdentity(service);
+            app.UseCustomizedIdentity();
 
             app.UseMvc();
             

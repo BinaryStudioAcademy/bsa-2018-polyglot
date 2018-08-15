@@ -42,22 +42,13 @@ namespace Polyglot.Controllers
 
         }
 
-        //public class LowercaseContractResolver : DefaultContractResolver
-        //{
-        //    protected override string ResolvePropertyName(string propertyName)
-        //    {
-        //        return propertyName.ToLower();
-        //    }
-        //}
-
         // GET: UserProfiles
         [HttpGet("user")]
-        public string GetUser()
+        public async Task<IActionResult> GetUser()
         {
             UserProfileDTO user = UserIdentityService.GetCurrentUser();
-            //var settings = new JsonSerializerSettings();
-            //settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return JsonConvert.SerializeObject(user, Formatting.Indented);
+            return user == null ? NotFound($"User not found!") as IActionResult
+               : Ok(user);
         }
 
         // GET: UserProfiles/5

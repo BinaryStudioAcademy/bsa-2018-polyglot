@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.Authentication
 {
@@ -22,22 +23,27 @@ namespace Polyglot.Authentication
         {
             User = new UserProfileDTO();
         }
-        
-        public async Task SaveDate(ICRUDService<UserProfile, UserProfileDTO> service, HttpContext httpContext)
+
+        public async Task SaveDate(HttpContext httpContext)
         {
             if (httpContext.User.GetUid() != null)
             {
                 User.FullName = httpContext.User.GetName();
                 User.Uid = httpContext.User.GetUid();
                 User.AvatarUrl = httpContext.User.GetProfilePicture();
-
+                ICRUDService<UserProfile, UserProfileDTO> service = (ICRUDService<UserProfile, UserProfileDTO>)httpContext.RequestServices.GetService(typeof(ICRUDService<UserProfile, UserProfileDTO>));
                 IEnumerable<UserProfileDTO> users = await service.GetListAsync();
                 UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == User.Uid);
 
                 if (userInDB == null)
                 {
                     userInDB = await service.PostAsync(User);
+                    UserIdentityService.User = userInDB;
                 }
+            }
+            else
+            {
+                User = new UserProfileDTO();
             }
         }
 
