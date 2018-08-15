@@ -32,7 +32,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
 
     if(this.keyDetails && this.keyDetails.translations){
-      debugger;
       this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
       

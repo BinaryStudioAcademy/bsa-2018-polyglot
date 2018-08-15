@@ -58,6 +58,7 @@ import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
+import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import { TabDetailComponent } from './components/workspace/key-details/tab-detai
     ProjectDetailsComponent,
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
-    TabDetailComponent
+    TabDetailComponent,
+    ImgDialogComponent
 
   ],
   imports: [
@@ -126,7 +128,8 @@ import { TabDetailComponent } from './components/workspace/key-details/tab-detai
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    ImgDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
