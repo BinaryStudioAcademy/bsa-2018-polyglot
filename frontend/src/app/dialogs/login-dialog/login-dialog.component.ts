@@ -4,6 +4,7 @@ import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
 import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -15,12 +16,19 @@ export class LoginDialogComponent implements OnInit {
   public user: IUserLogin;
   public firebaseError: string;
   hide = true;
+  notificationConfig = {
+    timeout: 15000,
+    showProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: false
+  }
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
     private snotify: SnotifyService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private appState: AppStateService
   ) { }
 
   ngOnInit() {
@@ -30,73 +38,75 @@ export class LoginDialogComponent implements OnInit {
     };
   }
 
-  async onLoginFormSubmit(user: IUserLogin, form) {
+  onLoginFormSubmit(user: IUserLogin, form) {
     if (form.valid) {
-      await this.authService.signInRegular(user.email, user.password).then(
-        () => {
-          if(!this.authService.getCurrentUser().emailVerified) {
-              // email confirmation
+      this.authService.signInRegular(user.email, user.password).subscribe(
+        async (userCred) => {
+          if (userCred.user.emailVerified) {
+            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
+
+            if(this.appState.LoginStatus){
+              this.dialogRef.close();
+            }          
+          } else {
             this.snotify.clear();
-            this.snotify.warning(`Email confirmation was already send to ${this.authService.getCurrentUser().email}. Check your email.`, {
+            this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
               timeout: 15000,
               showProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
               buttons: [
-                {text: "Resend", action: async () => {
-                  // resend confirmation to user
-                  await this.authService.signInRegular(user.email, user.password);
-                  this.authService.sendEmailVerification();
+                {text: 'Resend', action: () => {
+                  userCred.user.sendEmailVerification();
                   this.authService.logout();
                   this.snotify.clear();
-                  this.snotify.info(`Email confirmation was send to ${this.authService.getCurrentUser().email}`, {
-                    timeout: 15000,
-                    showProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: false
-                  });
+                  this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);
                 }}
-              ]        
-            });
-            this.authService.logout();
-            throw {message: 'You need to confirm your email address in order to use our service'};
-          } else {
-            // if not exist in db - send post request and navigate to settings
+              ]
+            }
+            );
+            this.firebaseError = 'You need to confirm your email address in order to use our service';
           }
+        }, 
+        (err) => {
+          this.firebaseError = this.handleFirebaseErrors(err);
         }
-      ).catch(
-        (error) => this.firebaseError = this.handleFirebaseErrors(error)
       );
-      if(this.authService.isLoggedIn()){
-        this.dialogRef.close();
-      }
     }
   }
 
-  async onGoogleClick() {
-    await this.authService.signInWithGoogle().then(
-      () => {
+  onGoogleClick() {
+    this.authService.signInWithGoogle().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.appState.LoginStatus) {
+          this.dialogRef.close();
+        }
+
         // if not exist in db - show error
+      }, 
+      (err) => {
+        this.firebaseError = this.handleFirebaseErrors(err);
       }
-    ).catch(
-      (error) => this.firebaseError = error.message
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
   }
 
-  async onFacebookClick() {
-    await this.authService.signInWithFacebook().then(
-      () => {
+  onFacebookClick() {
+    this.authService.signInWithFacebook().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        if(this.appState.LoginStatus) {
+          this.dialogRef.close();
+        }
+
         // if not exist in db - show error
+      }, 
+      (err) => {
+        this.firebaseError = this.handleFirebaseErrors(err);
       }
-    ).catch(
-      (error) => this.firebaseError = error.message
     );
-    if(this.authService.isLoggedIn()){
-      this.dialogRef.close();
-    }
   }
 
   onForgotPasswordClick() {

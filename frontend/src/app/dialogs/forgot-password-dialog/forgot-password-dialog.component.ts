@@ -12,6 +12,12 @@ export class ForgotPasswordDialogComponent implements OnInit {
 
   userEmail: string;
   isEmailSend: boolean;
+  notoficationConfig = {
+    timeout: 15000,
+    showProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: false        
+  }
 
   constructor(
     private authService: AuthService, 
@@ -30,12 +36,7 @@ export class ForgotPasswordDialogComponent implements OnInit {
         this.authService.sendResetPasswordConfirmation(this.userEmail);
         this.isEmailSend = true;
         this.snotify.clear();
-        this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
-          timeout: 15000,
-          showProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: false        
-        });
+        this.snotify.info(`Email confirmation was send to ${this.userEmail}`, this.notoficationConfig);
         setTimeout(
           () => this.dialogRef.close(), 
           15000
@@ -51,12 +52,7 @@ export class ForgotPasswordDialogComponent implements OnInit {
             {text: 'Resend', action: () => {
               this.authService.sendResetPasswordConfirmation(this.userEmail);
               this.snotify.clear();
-              this.snotify.info(`Email confirmation was send to ${this.userEmail}`, {
-                timeout: 15000,
-                showProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: false        
-              });
+              this.snotify.info(`Email confirmation was send to ${this.userEmail}`, this.notoficationConfig);
               setTimeout(
                 () => this.dialogRef.close(), 
                 15000
