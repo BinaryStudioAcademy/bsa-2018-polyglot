@@ -17,8 +17,6 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectHistory> ProjectHistories { get; set; }
-        public DbSet<ProjectLanguage> ProjectLanguages { get; set; }
-        public DbSet<ProjectTag> ProjectTags { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Right> Rights { get; set; }
         public DbSet<Tag> Tags { get; set; }

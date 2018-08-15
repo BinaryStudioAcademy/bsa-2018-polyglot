@@ -324,15 +324,14 @@ namespace Polyglot.DataAccess.Seeds
                );
 
         }
-        
+
         public static void EnsureSeeded(this DataContext context)
-        {            
+        {
             if (!context.UserProfiles.Any())
             {
                 var users = new List<UserProfile> {
                     new UserProfile
                     {
-
                         Uid = "TP59AlOHjXUQxedsqzG93PMYeTA3",
                         FullName = "John Lennon",
                         BirthDate = DateTime.Parse("21.01.1996"),
@@ -364,7 +363,7 @@ namespace Polyglot.DataAccess.Seeds
                 },
                     new UserProfile
             {
-                
+
                 Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
                 FullName = "Vasya Mykolaiychuk",
                 BirthDate = DateTime.Parse("21.01.1999"),
@@ -442,69 +441,150 @@ namespace Polyglot.DataAccess.Seeds
                 context.SaveChanges();
             }
 
+            if (!context.Ratings.Any())
+            {
+                var ratings = new List<Rating> {
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+                    };
+                context.AddRange(ratings);
+                context.SaveChanges();
+            }
+
             if (!context.Managers.Any())
             {
                 var managers = new List<Manager> {
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },  
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },  
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 2) },  
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3) },  
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5) }  
-                   
+                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },
+                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },
+                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 2) },
+                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3) },
+                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5) }
+
                     };
 
                 context.AddRange(managers);
                 context.SaveChanges();
             }
-            
+
             if (!context.Translators.Any())
             {
-                var managers = new List<Translator> {
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4) },
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4) },
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5) },
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3) }
+                var translators = new List<Translator> {
+                   new Translator { 
+                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4),  
+                        Ratings = {  
+                            context.Ratings.FirstOrDefault(r => r.Id == 1),
+                            context.Ratings.FirstOrDefault(r => r.Id == 2)
+                        } 
+                   },
+                   new Translator {
+                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4),
+                        Ratings = {
+                           context.Ratings.FirstOrDefault(r => r.Id == 3),
+                            context.Ratings.FirstOrDefault(r => r.Id == 4)
+                        }},
+                   new Translator {
+                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1),
+                        Ratings = {
+                           context.Ratings.FirstOrDefault(r => r.Id == 5),
+                            context.Ratings.FirstOrDefault(r => r.Id == 6)
+                        } },
+                   new Translator {
+                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5),
+                        Ratings = {
+                           context.Ratings.FirstOrDefault(r => r.Id == 7),
+                            context.Ratings.FirstOrDefault(r => r.Id == 8)
+                        }},
+                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3),
+                        Ratings = {
+                           context.Ratings.FirstOrDefault(r => r.Id == 9),
+                            context.Ratings.FirstOrDefault(r => r.Id == 10)
+                        }}
 
                     };
-
-                context.AddRange(managers);
+                
+                context.AddRange(translators);
                 context.SaveChanges();
             }
             
-            //if (!context.Tags.Any())
-            //{
-            //    var Tags = new List<Tag> {
-            //        new Tag {  Color = "Apple", Name = "csharp" },
-            //        new Tag {  Color = "Aqua", Name = "asp-net-core" },
-            //        new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
-            //        new Tag {  Color = "Awesome", Name = "angular" },
-            //        new Tag {  Color = "Azure", Name = "binary-studio" },
-            //        new Tag { Color = "Bittersweet", Name = "bsa18" },
-            //        new Tag {  Color = "Blue bell", Name = "firebase" },
-            //        new Tag {  Color = "Capri", Name = "www" },
-            //        new Tag {  Color = "Cameo pink", Name = "seeds" },
-            //        new Tag { Color = "Blue-gray", Name = "mock" }
-            //    };
+            if (!context.TranslatorLanguages.Any())
+            {
+                var translatorLanguages = new List<TranslatorLanguage> {
+                     new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
+                     new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = "Medium" },
+                     new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = "Expert" },
+                     new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = "Beginner" },
+                     new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = "Medium" },
+                     new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = "Expert" },
+                     new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = "Medium" },
+                     new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = "Beginner" },
+                     new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = "Expert" },
+                     new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = "Medium" }
+                    };
 
-            //    context.AddRange(Tags);
-            //    context.SaveChanges();
-            //}
+                context.AddRange(translatorLanguages);
+                context.SaveChanges();
+            }
+
+            if (!context.Glossaries.Any())
+            {
+                var glossaries = new List<Glossary> {
+                        new Glossary { TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
+                        new Glossary { TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
+                        new Glossary { TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
+                        new Glossary { TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
+                        new Glossary { TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
+                        new Glossary { TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
+                        new Glossary { TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
+                        new Glossary { TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
+                        new Glossary { TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
+                        new Glossary { TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
+
+                };
+
+                context.AddRange(glossaries);
+                context.SaveChanges();
+            }
+
+            if (!context.Tags.Any())
+            {
+                var tags = new List<Tag> {
+                    new Tag {  Color = "Apple", Name = "csharp" },
+                    new Tag {  Color = "Aqua", Name = "asp-net-core" },
+                    new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
+                    new Tag {  Color = "Awesome", Name = "angular" },
+                    new Tag {  Color = "Azure", Name = "binary-studio" },
+                    new Tag { Color = "Bittersweet", Name = "bsa18" },
+                    new Tag {  Color = "Blue bell", Name = "firebase" },
+                    new Tag {  Color = "Capri", Name = "www" },
+                    new Tag {  Color = "Cameo pink", Name = "seeds" },
+                    new Tag { Color = "Blue-gray", Name = "mock" }
+                };
+
+                context.AddRange(tags);
+                context.SaveChanges();
+            }
             
-
             if (!context.Teams.Any())
             {
                 var teams = new List<Team> {
-                     new Team { 
-                         TeamTranslators = new List<TeamTranslator> { 
-                            new TeamTranslator { 
-                                TranslatorId = 1, 
-                                TeamId = 1, 
-                                TranslatorRights = new List<TranslatorRight> { 
+                     new Team {
+                         TeamTranslators = new List<TeamTranslator> {
+                            new TeamTranslator {
+                                TranslatorId = 1,
+                                TeamId = 1,
+                                TranslatorRights = new List<TranslatorRight> {
                                 new TranslatorRight { RightId = 1 },
                                 new TranslatorRight { RightId = 2 },
                                 new TranslatorRight { RightId = 3 }
-                                } 
+                                }
                             },
                             new TeamTranslator {
                                 TranslatorId = 2,
@@ -517,7 +597,7 @@ namespace Polyglot.DataAccess.Seeds
                             },
 
 
-                         } 
+                         }
                      },
                      new Team {
                          TeamTranslators = new List<TeamTranslator> {
@@ -549,7 +629,6 @@ namespace Polyglot.DataAccess.Seeds
                 context.AddRange(teams);
                 context.SaveChanges();
             }
-             
             
             if (!context.Projects.Any())
             {
@@ -560,119 +639,92 @@ namespace Polyglot.DataAccess.Seeds
                     Name = "Operation Red Sea",
                     Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
                     CreatedOn = DateTime.Now,
+                    Technology ="films",
                     ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                    MainLanguageId = 1,
                     Teams = { 
-                            context.Teams.FirstOrDefault(team => team.Id == 1),
+                            context.Teams.FirstOrDefault(team => team.Id == 1), 
                             context.Teams.FirstOrDefault(team => team.Id == 2)
                     },
+                    ProjectTags = {
+                            new ProjectTag { TagId = 1, ProjectId = 1 },
+                            new ProjectTag { TagId = 2, ProjectId = 1 },
+                            new ProjectTag { TagId = 3, ProjectId = 1 },
+                    },
+                    ProjectLanguageses = { 
+                            new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
+                            new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
+                    },
+                    ProjectGlossaries = {
+                            new ProjectGlossary { GlossaryId = 1, ProjectId = 1 },
+                            new ProjectGlossary { GlossaryId = 2, ProjectId = 1 },
+                    },
+                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
+                    },
                     
-                    
-                    
-                },
-            //        new Project
-            //     {
+                    new Project
+                 {
 
-            //         Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
-            //         Name = "Operation Barbarossa",
-            //         Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
-            //         CreatedOn = DateTime.Now,
-            //         ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-            //         MainLanguageId = 1
-            //     },
-            //        new Project
-            //{
+                     Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
+                     Name = "Operation Barbarossa",
+                     Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
+                     CreatedOn = DateTime.Now,
+                     Technology ="history",
+                     ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
+                     MainLanguageId = 1
+                 },
+                    new Project
+            {
 
-            //    Manager = context.Managers.FirstOrDefault(m => m.Id == 2),
-            //    Name = "Operation Valkyrie",
-            //    Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
-            //    CreatedOn = DateTime.Now,
-            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-            //    MainLanguageId = 1
-            //},
-            //        new Project
-            //{
+                Manager = context.Managers.FirstOrDefault(m => m.Id == 2),
+                Name = "Operation Valkyrie",
+                Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
+                CreatedOn = DateTime.Now,
+                Technology ="history",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
+                MainLanguageId = 1
+            },
+                    new Project
+            {
 
-            //    Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
-            //    Name = "Angular",
-            //    Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
-            //    CreatedOn = DateTime.Now,
-            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-            //    MainLanguageId = 1
-            //},
-            //        new Project
-            //{
+                Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+                Name = "Angular",
+                Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
+                CreatedOn = DateTime.Now,
+                Technology ="web",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
+                MainLanguageId = 1
+            },
+                    new Project
+            {
 
-            //     Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
-            //     Name = "ASP.NET Core",
-            //     Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
-            //     CreatedOn = DateTime.Now,
-            //     ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-            //     MainLanguageId = 1
-            //}
-                                        };
-
-                var tags = new List<Tag> {
-                    new Tag {  Color = "Apple", Name = "csharp" },
-                    new Tag {  Color = "Aqua", Name = "asp-net-core" },
-                    new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
-                    new Tag {  Color = "Awesome", Name = "angular" },
-                    new Tag {  Color = "Azure", Name = "binary-studio" },
-                    new Tag {  Color = "Bittersweet", Name = "bsa18" },
-                    new Tag {  Color = "Blue bell", Name = "firebase" },
-                    new Tag {  Color = "Capri", Name = "www" },
-                    new Tag {  Color = "Cameo pink", Name = "seeds" },
-                    new Tag {  Color = "Blue-gray", Name = "mock" }
-                };
-                
-                context.AddRange(
-                new ProjectTag { Tag = tags[0], Project = projects[0] },
-                new ProjectTag { Tag = tags[1], Project = projects[0] },
-                new ProjectTag { Tag = tags[2], Project = projects[0] });
+                 Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+                 Name = "ASP.NET Core",
+                 Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
+                 CreatedOn = DateTime.Now,
+                 Technology ="programming",
+                 ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
+                 MainLanguageId = 1
+            }
+            };
+                            
                 context.AddRange(projects);
-
                 context.SaveChanges();
             }
 
+            if (!context.ComplexStrings.Any())
+            {
+               var complexStrings = new List<ComplexString> {
+               new ComplexString { ProjectId = 3, TranslationKey = "title" },
+               new ComplexString { ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
+               new ComplexString { ProjectId = 4, TranslationKey = "Perspectives" },
+               new ComplexString { ProjectId = 1, TranslationKey = "Production" },
+               new ComplexString { ProjectId = 2, TranslationKey = "article" }
+                };
 
+                context.AddRange(complexStrings);
+                context.SaveChanges();
+            }
 
-            //if (!context.ProjectTag.Any())
-            //{
-            //    var projectTags = new List<ProjectTag> {
-            //        new ProjectTag { ProjectId = 1, TagId = 1 },
-            //        new ProjectTag { ProjectId = 1, TagId = 2 },
-            //        new ProjectTag { ProjectId = 2, TagId = 2 },
-            //        new ProjectTag { ProjectId = 2, TagId = 4 },
-            //        new ProjectTag { ProjectId = 3, TagId = 5 },
-            //        new ProjectTag { ProjectId = 3, TagId = 6 },
-            //        new ProjectTag { ProjectId = 4, TagId = 3 },
-            //        new ProjectTag { ProjectId = 4, TagId = 4 },
-            //        new ProjectTag { ProjectId = 5, TagId = 7 },
-            //        new ProjectTag { ProjectId = 5, TagId = 8 }
-            //    };
-
-            //    context.AddRange(projectTags);
-            //    context.SaveChanges();
-            //}
-
-            //if (!context.ProjectLanguage.Any())
-            //{
-            //    var projectTags = new List<ProjectLanguage> {
-            //        new ProjectLanguage { ProjectId = 1, LanguageId = 1 },
-            //        new ProjectLanguage { ProjectId = 1, LanguageId = 2 },
-            //        new ProjectLanguage { ProjectId = 2, LanguageId = 1},
-            //        new ProjectLanguage { ProjectId = 2, LanguageId = 3 },
-            //        new ProjectLanguage { ProjectId = 3, LanguageId = 1 },
-            //        new ProjectLanguage { ProjectId = 3, LanguageId = 4 },
-            //        new ProjectLanguage { ProjectId = 4, LanguageId = 1 },
-            //        new ProjectLanguage { ProjectId = 4, LanguageId = 5 },
-            //        new ProjectLanguage { ProjectId = 5, LanguageId = 1 },
-            //        new ProjectLanguage { ProjectId = 5, LanguageId = 3 }
-            //    };
-
-            //    context.AddRange(projectTags);
-            //    context.SaveChanges();
-            //}
 
         }
     }

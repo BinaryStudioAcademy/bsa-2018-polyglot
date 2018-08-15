@@ -13,6 +13,7 @@ namespace Polyglot.DataAccess.Entities
         public Translator()
         {
             TeamTranslators = new List<TeamTranslator>();
+            Ratings = new List<Rating>();
         }
     }
 }
