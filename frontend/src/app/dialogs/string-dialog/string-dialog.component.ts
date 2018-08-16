@@ -58,7 +58,10 @@ export class StringDialogComponent implements OnInit {
       base: '',
       description: '',
       tags: [],
-      projectId: this.data.projectId
+      projectId: this.data.projectId,
+      translations: [],
+      comments: []
+      
     };
     this.image = undefined;
   }
