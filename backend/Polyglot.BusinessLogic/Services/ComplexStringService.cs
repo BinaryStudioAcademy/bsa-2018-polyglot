@@ -43,6 +43,30 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<IEnumerable<TranslationDTO>> GetStringTranslationsAsync(int identifier)
+        {
+            var target = await _repository.GetAsync(identifier);
+            if (target != null)
+            {
+                return _mapper.Map<IEnumerable<TranslationDTO>>(target.Translations);
+            }
+
+            return null;
+        }
+
+        public async Task<ComplexStringDTO> SetStringTranslations(int identifier, IEnumerable<TranslationDTO> translations)
+        {
+            var target = await _repository.GetAsync(identifier);
+            if (target != null)
+            {
+                target.Translations = _mapper.Map<List<Translation>>(translations);
+                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                return _mapper.Map<ComplexStringDTO>(result);
+            }
+            return null;
+
+        }
+
         public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
              var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
