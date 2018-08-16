@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.DataAccess.SqlRepository;
 
-namespace Polyglot.BusinessLogic.Implementations
+namespace Polyglot.BusinessLogic.Services
 {
     public class CRUDService<TEntity, TEntityDTO> : ICRUDService<TEntity, TEntityDTO>
 		where TEntity : Entity, new()

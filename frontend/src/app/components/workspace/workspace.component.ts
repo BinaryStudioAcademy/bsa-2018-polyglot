@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
@@ -12,48 +12,48 @@ import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.sass']
 })
-export class WorkspaceComponent implements OnInit, OnDestroy {
+export class WorkspaceComponent implements OnInit, OnDestroy{
 
   public project: Project;
   public keys: any[];
   public searchQuery: string;
   public selectedKey: any;
+  public isEmpty
+  public currentPath;
   
   private routeSub: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-
+    private router : Router,
     private dataProvider: ProjectService,
     private dialog: MatDialog
-   ) { }
-
+   ) {}
 
   ngOnInit() {
     this.searchQuery = '';
 
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      //making api call using service service.get(params.projectId); ....
-
-      this.project = MOCK_PROJECT(params.projectId);
-      
+      //making api call using service service.get(params.projectId); ..
+      this.getProjById(params.projectId);
+      this.currentPath = 'workspace/'+ params.projectId +'/key'; 
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
         if(data)
         {
           this.onSelect(data[0]);
           this.keys = data;
+          this.isEmpty = this.keys.length == 0 ? true : false;
+          let keyId = this.keys[0].id;
+          this.router.navigate([this.currentPath, keyId]);
         }
       });
     });
-    if(this.keys == undefined ){
-    this.keys = [{name : 'No strings',originalValue : ''}]}
   }
-
   onAdvanceSearchClick() {
 
-  }
-
+  } 
+   
   onAddNewStringClick() {
     let dialogRef = this.dialog.open(StringDialogComponent, {
       data: {
@@ -63,6 +63,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           this.keys.push(result);
+          this.selectedKey = result;
+          let keyId = this.keys[0].id;   
+          this.router.navigate([this.currentPath, keyId]);
+          this.isEmpty = false;
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();
@@ -70,9 +74,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onSelect(key: any){
-    debugger;
-    console.log(key);
-    
     this.selectedKey = key;
   }
 
@@ -80,8 +81,27 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
+  getProjById(id: number){
+    this.dataProvider.getById(id).subscribe(proj =>{
+      this.project = proj;
+    });
+  }
+
+  receiveId($event) {
+    debugger;
+    let temp = this.keys.findIndex( x => x.id === $event);
+    if(this.selectedKey.id == this.keys[temp].id)
+      this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
+
+    this.keys.splice(temp, 1);
+
+  }
+
 }
 
+ 
+
+/*
 let MOCK_PROJECT = (id: number): Project => ({
   id : id,
   name: 'Binary Studio Academy Project',
@@ -105,4 +125,4 @@ let MOCK_PROJECT = (id: number): Project => ({
   projectLanguageses: [],
   projectGlossaries: [],
   projectTags: []
-});
+});*/

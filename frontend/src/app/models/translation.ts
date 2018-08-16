@@ -1,7 +1,13 @@
+import { AdditionalTranslation } from "./additionalTranslation";
+
 export interface Translation {
-    Language : string;
-    tanslationValue: string;
-    UserId : number;
-    CreatedOn : Date;
-    
+
+  userId: number;
+  translationValue: string;
+  language: string;
+  createdOn: Date;
+
+  history: AdditionalTranslation[];
+  optionalTranslations: AdditionalTranslation[]
+
 }

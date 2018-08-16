@@ -9,10 +9,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IProjectService : ICRUDService<Project,ProjectDTO>
     {
-        
-
-        
-        Task FileParseDictionary(IFormFile file);
+        Task FileParseDictionary(int id, IFormFile file);
 
        
         #region ComplexString

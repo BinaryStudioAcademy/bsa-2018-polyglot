@@ -59,7 +59,7 @@ namespace Polyglot.Controllers
 
         // POST: Projects
         [HttpPost]
-        public async Task<IActionResult> AddProject()
+        public async Task<IActionResult> AddProject( IFormFile formFile)
         {
 
             Request.Form.TryGetValue("project", out StringValues res);
@@ -107,10 +107,10 @@ namespace Polyglot.Controllers
         }
 		
 		[HttpPost]
-		[Route("dictionary")]
-		public async Task<IActionResult> AddFileDictionary(IFormFile files)
+		[Route("{id}/dictionary")]
+		public async Task<IActionResult> AddFileDictionary(int id, IFormFile files)
 		{
-			await service.FileParseDictionary(Request.Form.Files[0]);
+			await service.FileParseDictionary(id, Request.Form.Files[0]);
 			return Ok();
 		}
 	}

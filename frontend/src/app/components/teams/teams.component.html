@@ -10,7 +10,9 @@
 
 </form>
 
-
+<div *ngIf="IsLoad" class="spinner">
+  <mat-spinner></mat-spinner> 
+</div> 
 <div class="container">
  
       <mat-card class="example-card" *ngFor="let t of teams; let i = index">
@@ -18,26 +20,21 @@
               <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
             
               <div class="title">
-                  <mat-card-title class="card-title">Team {{i+1}}</mat-card-title>
+                  <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
                   <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
               </div>
           </mat-card-header>
           
           
           <div mat-card-image >
-            <div class="img-container">                  
-              <img *ngIf="i!==0" height="60" src="http://www.iconhot.com/icon/png/glossy/512/user-male-3.png">
-              <img height="60" src="http://www.iconhot.com/icon/png/glossy/512/user-male-3.png">
-              <img height="60" src="https://s-media-cache-ak0.pinimg.com/originals/7c/8d/a0/7c8da0119bbdb96812d736b64bc19e75.png">
-              <img *ngIf="i!==2 && i!==1"  height="60" src="http://www.iconhot.com/icon/png/glossy/512/user-male-3.png">
-              <img *ngIf="i!==3 && i!==1" height="60" src="https://s-media-cache-ak0.pinimg.com/originals/7c/8d/a0/7c8da0119bbdb96812d736b64bc19e75.png">
-              <img *ngIf="i!==2 && i!==1" height="60" src="http://www.iconhot.com/icon/png/glossy/512/user-male-3.png">
+            <div  class="img-container">                  
+              <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}">
             </div>
           </div>  
         
       
           <mat-card-actions class="card-buttons">        
-            <button mat-raised-button color="primary" routerLink="/dashboard/teams/88">DETAILS</button>
+            <button mat-raised-button color="primary" routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
           </mat-card-actions>      
         </mat-card>  
 </div>

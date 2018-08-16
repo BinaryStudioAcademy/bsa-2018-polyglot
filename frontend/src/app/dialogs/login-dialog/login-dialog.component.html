@@ -5,7 +5,7 @@
     <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
       #email="ngModel" autocomplete="on"
       pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-      maxlength="25">
+      maxlength="50">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>
@@ -35,8 +35,10 @@
       Password <strong>cannot</strong> be more than 30 characters long
     </mat-error>
   </mat-form-field>
-
-  <a style="margin-left: 250px; " (click)="onForgotPasswordClick()" mat-button color="primary">Forgot password?</a>
+<div class="forgot-box">
+    <a  class="forgot-password" (click)="onForgotPasswordClick()"  color="primary">Forgot password?</a>
+</div>
+  
   <br>
 
   <mat-error *ngIf="firebaseError" style="align-self: center; margin-bottom: 20px;">

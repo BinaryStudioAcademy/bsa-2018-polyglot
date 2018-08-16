@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoModels;
@@ -22,14 +21,16 @@ namespace Polyglot.BusinessLogic.Services
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+		private IUnitOfWork uow;
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
             : base(uow, mapper)
         {
             stringsProvider = rep;
+			this.uow = uow;
+
         }
 
-
-        public async Task FileParseDictionary(IFormFile file)
+        public async Task FileParseDictionary(int id, IFormFile file)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             string str;
@@ -89,11 +90,15 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             foreach (var i in dictionary)
-            {
-				DataAccess.MongoModels.ComplexString temp = new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value };
-
-                // repository isn`t working now
-                await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Key = i.Key, OriginalValue = i.Value });
+            {			
+				var sqlComplexString = new DataAccess.Entities.ComplexString()
+				{
+					TranslationKey = i.Key,
+					ProjectId = id,
+				};
+				var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+				await uow.SaveAsync();				
+				await stringsProvider.CreateAsync(new DataAccess.MongoModels.ComplexString() { Id = savedEntity.Id, Key = i.Key, OriginalValue = i.Value, ProjectId = id });
             }
 
         }
