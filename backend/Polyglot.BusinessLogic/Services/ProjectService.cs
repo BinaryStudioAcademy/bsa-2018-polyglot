@@ -134,18 +134,24 @@ namespace Polyglot.BusinessLogic.Services
                     IEnumerable<Translation> langTranslations = null;
                     int? progress = 0;
                     int? translatedCount = 0;
+                    int percentUnit = 0;
 
                     for (int i = 0; i < dtos.Count; i++)
                     {
 #warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
 
                         langTranslations = translations
-                            ?.Where(t => t.Language.ToLower() == dtos[i].Name.ToLower());
+                            ?.Where(t => String.Equals(t.Language.Trim().ToLower(), dtos[i].Name.Trim().ToLower()));
+
+                        if (langTranslations.Count() < 1)
+                            continue;
+
+                        percentUnit = (int)(100 / langTranslations.Count());
 
                         translatedCount = langTranslations?
                             .Where(t => !String.IsNullOrWhiteSpace(t.TranslationValue))
                             ?.Count();
-                        progress = langTranslations?.Count() - (translatedCount.HasValue ? translatedCount.Value : 0);
+                        progress = (translatedCount.HasValue ? translatedCount.Value : 0) * percentUnit;
 
                         dtos[i].TranslationsCount = translatedCount.HasValue ? translatedCount.Value : 0;
                         dtos[i].Progress =  progress.HasValue ? progress.Value : 0;
