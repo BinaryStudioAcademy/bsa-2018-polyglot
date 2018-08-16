@@ -2,7 +2,7 @@
     <div class="select-lang-container">
         <button mat-flat-button color="primary" (click)= "selectNew()">Select new language</button>
         <div *ngIf="IsLangLoad" class="spinner-small">
-            <mat-spinner></mat-spinner> 
+            <mat-spinner [diameter]="25"></mat-spinner> 
         </div> 
     </div>
 

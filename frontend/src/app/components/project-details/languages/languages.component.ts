@@ -50,12 +50,12 @@ export class LanguagesComponent implements OnInit {
       dialogRef.componentInstance.onSelect.subscribe((data) => {
         if(data)
         {
-          debugger;
           data.forEach(language => {
+          this.IsLoad = true;
             this.projectService.addLanguageToProject(this.projectId, language.id)
               .subscribe((project) => {
-                debugger;
                 this.langs.push(language);
+                this.IsLoad = false;
               })
           });
         }
