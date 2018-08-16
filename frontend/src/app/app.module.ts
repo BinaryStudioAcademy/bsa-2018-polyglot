@@ -66,6 +66,7 @@ import { DeleteProjectLanguageComponent } from './dialogs/delete-project-languag
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 
 
 
@@ -106,6 +107,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
+    ProjectEditComponent,
     LanguagesComponent,
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,

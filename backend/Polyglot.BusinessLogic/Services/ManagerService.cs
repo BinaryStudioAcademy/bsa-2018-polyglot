@@ -19,32 +19,30 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        //public async Task<IEnumerable<TeamDTO>> GetManagerTeams(int managerId)
+        //{
+        //    var manager = await uow.GetRepository<Manager>()
+        //        .GetAsync(managerId);
 
+        //    if(manager != null)
+        //    {
+        //        var teams = manager.Projects
+        //            ?.SelectMany(p => p.Teams);
 
-        public async Task<IEnumerable<TeamDTO>> GetManagerTeams(int managerId)
-        {
-            var manager = await uow.GetRepository<Manager>()
-                .GetAsync(managerId);
+        //        if (teams != null)
+        //            return mapper.Map<IEnumerable<TeamDTO>>(teams);
+        //    }
+        //      return null;
+        //}
 
-            if(manager != null)
-            {
-                var teams = manager.Projects
-                    ?.SelectMany(p => p.Teams);
+        //public async Task<IEnumerable<ProjectDTO>> GetManagerProjects(int managerId)
+        //{
+        //    var projects = await uow.GetRepository<Project>()
+        //        .GetAllAsync(p => p.Manager.Id == managerId);
 
-                if (teams != null)
-                    return mapper.Map<IEnumerable<TeamDTO>>(teams);
-            }
-              return null;
-        }
-
-        public async Task<IEnumerable<ProjectDTO>> GetManagerProjects(int managerId)
-        {
-            var projects = await uow.GetRepository<Project>()
-                .GetAllAsync(p => p.Manager.Id == managerId);
-
-            if (projects != null)
-                return mapper.Map<IEnumerable<ProjectDTO>>(projects);
-            return null;
-        }
+        //    if (projects != null)
+        //        return mapper.Map<IEnumerable<ProjectDTO>>(projects);
+        //    return null;
+        //}
     }
 }

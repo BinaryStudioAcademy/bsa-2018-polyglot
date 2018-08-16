@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Polyglot.Authentication;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
@@ -33,7 +34,11 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await service.GetListAsync();
+
+            var userId = UserIdentityService.GetCurrentUser();
+            if (userId.Id == 0)
+                return Ok();
+            var projects = await service.GetListAsync(userId.Id);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -109,7 +114,7 @@ namespace Polyglot.Controllers
 
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
-            var entity = await service.PostAsync(project);
+            var entity = await service.PostAsync(project, UserIdentityService.GetCurrentUser().Id);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -118,10 +123,26 @@ namespace Polyglot.Controllers
 
         // PUT: Projects/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
+        public async Task<IActionResult> ModifyProject(int id, IFormFile formFile)
         {
-            if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+			Request.Form.TryGetValue("project", out StringValues res);
+
+			ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
+			project.Id = id;
+
+			if (Request.Form.Files.Count != 0)
+			{
+				IFormFile file = Request.Form.Files[0];
+				byte[] byteArr;
+				using (var ms = new MemoryStream())
+				{
+					file.CopyTo(ms);
+					await file.CopyToAsync(ms);
+					byteArr = ms.ToArray();
+				}
+
+				project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+			}
 
             var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult

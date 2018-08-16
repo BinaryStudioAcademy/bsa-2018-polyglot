@@ -11,6 +11,10 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         Task FileParseDictionary(int id, IFormFile file);
 
+        Task<IEnumerable<ProjectDTO>> GetListAsync(int userId);
+
+        Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
+        
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
 
         Task<ProjectDTO> AddLanguageToProject(int projectId, int languageId);
