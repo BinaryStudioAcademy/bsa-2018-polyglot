@@ -13,6 +13,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ProjectDTO>> GetListAsync(int userId);
 
+        Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
+
         #region ComplexString
 
         Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);

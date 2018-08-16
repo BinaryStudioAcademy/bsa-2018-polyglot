@@ -122,6 +122,14 @@ namespace Polyglot.BusinessLogic.Services
 			return mapper.Map<ProjectDTO>(target);			
 		}
 
+        public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            var managerDTO = mapper.Map<ManagerDTO>(manager.FirstOrDefault());
+            entity.Manager = managerDTO;
+            return await PostAsync(entity);
+        }
+
         private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
         {
             var result = await uow.GetRepository<T>().GetAllAsync(predicate);
