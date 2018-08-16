@@ -19,20 +19,17 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
-  public cards: Project[];
-
-
+  
   constructor(
     //private managerService: ManagerService, 
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { }
   
-
+  public cards: Project[];
   IsLoad : boolean = true;
-  OnPage : boolean
-
-
+  OnPage : boolean;
+  
   user: UserProfile = {
     id: 1,
     firstName: 'Bill',
@@ -73,27 +70,4 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     const dialogRef = this.dialog.open(ProjectMessageComponent, {
     });
   }
-
-  delete(id: number): void{
-    this.projectService.delete(id)
-    .subscribe(
-    //.subscribe( value => console.log(value));
-      (response => {
-        let projectToDelete = this.cards.find(pr => pr.id == id);
-        let projectToDeleteIndex = this.cards.indexOf(projectToDelete);
-        this.cards.splice(projectToDeleteIndex, 1);
-        this.snotifyService.success("Project deleted", "Success!");
-      }),
-      err => {
-        this.snotifyService.error("Project wasn`t deleted", "Error!");
-        console.log('err', err);
-        
-      }
-    );
-    console.log(id)
-    console.log("deleted")
-   }
 }
-
-  
-

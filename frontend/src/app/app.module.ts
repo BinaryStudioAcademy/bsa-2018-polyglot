@@ -60,6 +60,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     ForgotPasswordDialogComponent,
     UploadFileComponent,
     TabDetailComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -130,7 +132,8 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     StringDialogComponent,
     ProjectMessageComponent, 
     ForgotPasswordDialogComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    ConfirmDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
