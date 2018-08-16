@@ -1,6 +1,14 @@
 <div class="container">
-    <button mat-flat-button color="primary">Select new language</button>
+    <div class="select-lang-container">
+        <button mat-flat-button color="primary" (click)= "selectNew()">Select new language</button>
+        <div *ngIf="IsLangLoad" class="spinner-small">
+            <mat-spinner></mat-spinner> 
+        </div> 
+    </div>
 
+    <div *ngIf="IsLoad" class="spinner">
+        <mat-spinner></mat-spinner> 
+      </div> 
     <ul class="lang-list">
 
         <li class="lang-item" *ngFor="let l of langs">
@@ -15,5 +23,4 @@
     </ul>
     
     <ng-snotify></ng-snotify>
-    <mat-spinner *ngIf="false"></mat-spinner>
 </div>

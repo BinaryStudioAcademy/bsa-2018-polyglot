@@ -1,0 +1,19 @@
+<div class="container">
+  <div>
+    <h2>Available languages</h2>
+    <ul>
+      <li *ngFor="let l of langs">
+          <mat-card>
+              <mat-checkbox>
+                  {{l.name}}
+              </mat-checkbox>
+          </mat-card>
+          
+      </li>
+    </ul>
+  </div>
+  <div class="p-1 mt-2">
+      <button style="float: left" mat-raised-button color="primary" (click)="select()" mat-button>Ok</button>
+      <button style="float: right" mat-raised-button color="warn" (click)="close()">Cancel</button>
+  </div>
+</div>

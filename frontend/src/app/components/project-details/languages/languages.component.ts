@@ -4,6 +4,7 @@ import { LanguageService } from '../../../services/language.service';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { DeleteProjectLanguageComponent } from '../../../dialogs/delete-project-language/delete-project-language.component';
 import { MatDialog } from '../../../../../node_modules/@angular/material';
+import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-language/select-project-language.component';
 
 @Component({
   selector: 'app-languages',
@@ -14,6 +15,8 @@ export class LanguagesComponent implements OnInit {
 
   @Input() projectId: number;
   public langs;
+  public IsLoad: boolean = true;
+  public IsLangLoad: boolean = false;
 
   constructor(
     private projectService: ProjectService, 
@@ -25,12 +28,24 @@ export class LanguagesComponent implements OnInit {
   ngOnInit() {
     this.projectService.getProjectLanguages(this.projectId)
         .subscribe(langs => {
+          this.IsLoad = false;
           this.langs = langs;
         })
   }
 
   selectNew(){
+    this.IsLangLoad = true;
+    this.langService.getAll()
+    .subscribe(langs =>{
+      this.IsLangLoad = false;
+      let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
+        data: {
+          langs: langs
+        }
+      })
 
+    })
+    
   }
 
   onAddNewString(){

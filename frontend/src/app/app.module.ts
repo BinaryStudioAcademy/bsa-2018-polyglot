@@ -135,6 +135,7 @@ import { SelectProjectLanguageComponent } from './dialogs/select-project-languag
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
+    SelectProjectLanguageComponent,
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent
