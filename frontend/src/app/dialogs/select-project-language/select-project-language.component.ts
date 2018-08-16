@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, Output } from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular/material';
+import {MatDialog, MatDialogConfig} from "@angular/material";
 
 @Component({
   selector: 'app-select-project-language',
@@ -8,44 +9,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular
 })
 export class SelectProjectLanguageComponent implements OnInit {
 
-  langs = [
-    {
-      name: "Turkish"
-    },
-    {
-      name: "Albanian"
-    },
-    {
-      name: "Armenian"
-    },
-    {
-      name: "Greek"
-    },
-    {
-      name: "Polish"
-    },
-    {
-      name: "Romanian"
-    },
-    {
-      name: "Turkish"
-    },
-    {
-      name: "Albanian"
-    },
-    {
-      name: "Armenian"
-    },
-    {
-      name: "Greek"
-    },
-    {
-      name: "Polish"
-    },
-    {
-      name: "Romanian"
-    }
-  ]
+  selectedLangsIds: Array<number> = new Array<number>();
+  @Output() onSelect = new EventEmitter<Array<number>>(true);
+  langs = [];
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<SelectProjectLanguageComponent>
@@ -57,10 +24,20 @@ export class SelectProjectLanguageComponent implements OnInit {
   ngOnInit() {
   }
 
-  select(){
-
+  submit(){
+    this.onSelect.emit(this.selectedLangsIds);
   }
 
+  change($event, id: number){
+    debugger;
+    let inArray = this.selectedLangsIds.includes(id);
+
+    if($event.checked && !inArray)
+      this.selectedLangsIds.push(id);
+    else if(!$event.checked && inArray){
+      this.selectedLangsIds = this.selectedLangsIds.filter(i => i != id);
+    }
+  }
   
   close(){
     this.dialogRef.close();

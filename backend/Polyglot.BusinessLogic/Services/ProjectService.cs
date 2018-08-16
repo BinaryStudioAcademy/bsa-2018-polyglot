@@ -146,6 +146,33 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
+        public async Task<ProjectDTO> AddLanguageToProject(int projectId, int languageId)
+        {
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            var language = await uow.GetRepository<Language>().GetAsync(languageId);
+
+            if(project != null)
+            {
+                var languageExistInProject = project.ProjectLanguageses
+                    .Select(pl => pl.Language)
+                    .Where(l => l.Id == languageId)
+                    .FirstOrDefault() != null;
+
+                if (!languageExistInProject)
+                {
+                    project.ProjectLanguageses.Add(new ProjectLanguage()
+                    {
+                        Language = language
+                    });
+
+                    uow.GetRepository<Project>().Update(project);
+                    await uow.SaveAsync();
+                    return mapper.Map<ProjectDTO>(project);
+                }
+            }
+            return null;
+        }
+
         public async Task<bool> TryRemoveProjectLanguage(int projectId, int languageId)
         {
             var project = await uow.GetRepository<Project>().GetAsync(projectId);

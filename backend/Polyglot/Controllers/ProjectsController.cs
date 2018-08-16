@@ -58,6 +58,18 @@ namespace Polyglot.Controllers
 
         }
 
+        // PUT: Projects/:id/languages/:id
+        [HttpPut("{projectId}/languages/{languageId}")]
+        public async Task<IActionResult> AddLanguageToProject(int projectId, int langugaeId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.AddLanguageToProject(projectId, langugaeId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
         //DELETE: projects/:id/languages/:id
         [HttpDelete("{projId}/languages/{langId}", Name ="DeleteProjectLanguage")]
         public async Task<IActionResult> DeleteProjectLanguage(int projId, int langId)

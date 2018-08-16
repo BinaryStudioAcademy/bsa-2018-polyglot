@@ -45,6 +45,10 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
   }
 
+  addLanguageToProject(projectId: number, languageId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
+  }
+
   deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
     return of([]);
     //return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);

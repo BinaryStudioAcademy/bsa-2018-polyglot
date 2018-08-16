@@ -42,7 +42,27 @@ export class LanguagesComponent implements OnInit {
         data: {
           langs: langs
         }
-      })
+      });
+
+      dialogRef.componentInstance.onSelect.subscribe((data) => {
+        if(data)
+        {
+          data.forEach(languageId => {
+            this.projectService.addLanguageToProject(this.projectId, languageId)
+              .subscribe((language) =>{
+                this.langs.push(language);
+              })
+          });
+        }
+        else
+        {
+          this.snotifyService.error(data.message, "Error!");
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(()=>{
+        dialogRef.componentInstance.onSelect.unsubscribe();
+      });
 
     })
     

@@ -13,6 +13,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
 
+        Task<ProjectDTO> AddLanguageToProject(int projectId, int languageId);
+
         Task<bool> TryRemoveProjectLanguage(int projectId, int languageId);
 
         #region ComplexString
