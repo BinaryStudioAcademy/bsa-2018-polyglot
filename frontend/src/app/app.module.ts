@@ -61,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 
 
@@ -101,6 +102,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
+    ConfirmDialogComponent,
     TabCommentsComponent
   ],
   imports: [
@@ -135,7 +137,8 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     StringDialogComponent,
     ProjectMessageComponent, 
     ForgotPasswordDialogComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    ConfirmDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
