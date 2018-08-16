@@ -24,54 +24,62 @@ export class NewTeamComponent implements OnInit {
 
   constructor(private translatorService: TranslatorService,
     private snotifyService: SnotifyService, ) {
-      
-    
+        
         
   }
 
   ngOnInit() {
     this.getAllTranslators();
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.filterPredicate = (data, filter) => {
-      let valid = false;
-
-      const transformedFilter = filter.trim().toLowerCase();
-
-      Object.keys(data).map(key => {
-        if (
-          key === 'details' &&
-          (data.details.name.toLowerCase().includes(transformedFilter) ||
-          ('' + data.details.weight).toLowerCase().includes(transformedFilter))
-        ) {
-          valid = true;
-        } else {
-          if (('' + data[key]).toLowerCase().includes(transformedFilter)) {
-            valid = true;
-          }
-        }
-      });
-
-      return valid;
-    }
-  
   }
 
   getAllTranslators(){
      this.translatorService.getAll()
       .subscribe(translators => {
         this.translators = translators;
+        debugger;
         this.dataSource = new MatTableDataSource(this.translators);
+        this.dataSource.filterPredicate = (data, filter: string)  => {
+          const accumulator = (currentTerm, key) => {
+            return key === 'userProfile' ? currentTerm + data.userProfile.fullName : currentTerm + data[key];
+          };
+          const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+          // Transform the filter by converting it to lowercase and removing whitespace.
+          const transformedFilter = filter.trim().toLowerCase();
+          return dataStr.indexOf(transformedFilter) !== -1;
+        };
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
         debugger;
         this.IsLoad = false;
       })
   }
-
   
+  getRating(id:string){
+    var rating = 0;
+    for(let i = 0; i < this.translators[id].ratings.count(); i++) {
+      rating += this.translators[id].rating[i].rate
+    }
+    return rating/this.translators[id].ratings.count();
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
+
+
+  }
+  nestedFilterCheck(search, data, key) {
+    if (typeof data[key] === 'object') {
+      for (const k in data[key]) {
+        if (data[key][k] !== null) {
+          search = this.nestedFilterCheck(search, data[key], k);
+        }
+      }
+    } else {
+      search += data[key];
+    }
+    return search;
   }
 }
 
