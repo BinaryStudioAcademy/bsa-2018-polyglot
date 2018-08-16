@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Project } from '../models/project';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,7 @@ export class ProjectService {
   }
 
   deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
+    return of([]);
+    //return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
   }
 }

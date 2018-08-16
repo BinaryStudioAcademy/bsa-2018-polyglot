@@ -61,6 +61,8 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 import { LanguagesComponent } from './components/project-details/languages/languages.component';
+import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
+import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
 
 
 @NgModule({
@@ -100,7 +102,9 @@ import { LanguagesComponent } from './components/project-details/languages/langu
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
-    LanguagesComponent
+    LanguagesComponent,
+    DeleteProjectLanguageComponent,
+    SelectProjectLanguageComponent
   ],
   imports: [
     BrowserModule,
@@ -131,6 +135,7 @@ import { LanguagesComponent } from './components/project-details/languages/langu
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
+    DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent
   ],

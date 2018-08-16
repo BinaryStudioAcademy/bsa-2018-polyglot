@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ProjectService } from '../../../services/project.service';
 import { LanguageService } from '../../../services/language.service';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { DeleteProjectLanguageComponent } from '../../../dialogs/delete-project-language/delete-project-language.component';
+import { MatDialog } from '../../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-languages',
@@ -16,7 +18,9 @@ export class LanguagesComponent implements OnInit {
   constructor(
     private projectService: ProjectService, 
     private langService: LanguageService,
-    private snotifyService: SnotifyService) { }
+    private snotifyService: SnotifyService,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.projectService.getProjectLanguages(this.projectId)
@@ -48,8 +52,39 @@ export class LanguagesComponent implements OnInit {
   //    });
   }
 
+
   onDeleteLanguage(languageId: number){
-    debugger;
+    if(this.langs.filter(l => l.id === languageId)[0].translationsCount > 0)
+      {
+        const dialogRef = this.dialog.open(DeleteProjectLanguageComponent, {
+          data: {
+            languageName: this.langs.filter(l => l.id === languageId)[0].name,
+            translationsCount: this.langs.filter(l => l.id === languageId)[0].translationsCount
+          }
+        });
+
+        dialogRef.componentInstance.onConfirmDelete.subscribe((data) => {
+          if(data && data.state)
+          {
+            this.snotifyService.info(data.message, "Deletion confirmed.");
+            this.deleteLanguage(languageId)
+          }
+          else
+          {
+            this.snotifyService.error(data.message, "Error!");
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(()=>{
+          dialogRef.componentInstance.onConfirmDelete.unsubscribe();
+        });
+      }
+    else{
+      this.deleteLanguage(languageId);
+    }
+  }
+
+  deleteLanguage(languageId: number){
     this.projectService.deleteProjectLanguage(this.projectId, languageId)
     .subscribe(() => {
 

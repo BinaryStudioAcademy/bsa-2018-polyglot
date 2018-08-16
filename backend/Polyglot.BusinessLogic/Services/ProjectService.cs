@@ -137,7 +137,7 @@ namespace Polyglot.BusinessLogic.Services
                             ?.Count();
                         progress = langTranslations?.Count() - (translatedCount.HasValue ? translatedCount.Value : 0);
 
-                        dtos[i].TranslationsCount = i * 25; // translatedCount.HasValue ? translatedCount.Value : 0;
+                        dtos[i].TranslationsCount = i * 123; // translatedCount.HasValue ? translatedCount.Value : 0;
                         dtos[i].Progress = i * 25;// progress.HasValue ? progress.Value : 0;
 
                     }
