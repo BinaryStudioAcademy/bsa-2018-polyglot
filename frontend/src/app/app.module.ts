@@ -10,6 +10,7 @@ import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
+import { AgmCoreModule } from '@agm/core';
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -61,6 +62,7 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 
 
 @NgModule({
@@ -100,7 +102,8 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TabCommentsComponent
   ],
   imports: [
     BrowserModule,
@@ -122,8 +125,10 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     MatProgressSpinnerModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
-    
+    SnotifyModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
+    })
   ],
   entryComponents: [
     LoginDialogComponent, 

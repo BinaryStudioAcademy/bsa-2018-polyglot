@@ -6,11 +6,11 @@ namespace Polyglot.Common.DTOs
     {
         public int Id { get; set; }
         public string Definition { get; set; }
-        public List<TranslatorRightDTO> TranslatorRights { get; set; }
+        public List<RightDTO> TranslatorRights { get; set; }
 
         public RightDTO()
         {
-            TranslatorRights = new List<TranslatorRightDTO>();
+            TranslatorRights = new List<RightDTO>();
         }
     }
 }

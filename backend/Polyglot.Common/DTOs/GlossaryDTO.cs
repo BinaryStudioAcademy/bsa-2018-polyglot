@@ -9,11 +9,11 @@ namespace Polyglot.Common.DTOs
         public string ExplanationText { get; set; }
         public string OriginLanguage { get; set; }
         
-        public List<ProjectGlossaryDTO> ProjectGlossaries { get; set; }
+        public List<GlossaryDTO> ProjectGlossaries { get; set; }
 
         public GlossaryDTO()
         {
-            ProjectGlossaries = new List<ProjectGlossaryDTO>();
+            ProjectGlossaries = new List<GlossaryDTO>();
         }
     }
 }
