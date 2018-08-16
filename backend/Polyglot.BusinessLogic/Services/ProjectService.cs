@@ -104,8 +104,11 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) => 
-            mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.UserProfile.Id == userId));
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
+        }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
 		{			
