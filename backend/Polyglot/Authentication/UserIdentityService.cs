@@ -37,6 +37,10 @@ namespace Polyglot.Authentication
                     userInDB = await service.PostAsync(User);
                     UserIdentityService.User = userInDB;
                 }
+                else
+                {
+                    User = userInDB;
+                }
             }
             else
             {
