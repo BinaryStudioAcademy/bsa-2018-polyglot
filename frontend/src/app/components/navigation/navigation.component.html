@@ -16,7 +16,7 @@
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
       <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
-        <img src="{{manager?.avatarUrl}}" class="profile-small-image">
+        <img *ngIf="manager.avatarUrl != ''" src="{{manager?.avatarUrl}}" class="profile-small-image">
       </button>
 
       <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
