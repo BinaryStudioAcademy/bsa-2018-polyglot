@@ -50,7 +50,9 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<Language, LanguageDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.Code, opt => opt.MapFrom(pt => pt.Code))
-                    .ForMember(p => p.Name, opt => opt.MapFrom(pt => pt.Name));
+                    .ForMember(p => p.Name, opt => opt.MapFrom(pt => pt.Name))
+                    .ForMember(p => p.Progress, opt => opt.Ignore())
+                    .ForMember(p => p.TranslationsCount, opt => opt.Ignore());
 
                 cfg.CreateMap<ManagerDTO, Manager>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

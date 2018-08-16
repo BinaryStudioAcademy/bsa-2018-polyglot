@@ -22,7 +22,9 @@ namespace Polyglot.BusinessLogic.Services
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		private IUnitOfWork uow;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
+        public ProjectService(IUnitOfWork uow, IMapper mapper, 
+            IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
+            IMongoRepository<D)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -105,20 +107,27 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
-            var proj = await uow.GetRepository<Project>().GetAsync(id);
-            if (proj != null && proj.ProjectLanguageses.Count > 0)
-            {
-                var langs = proj.ProjectLanguageses
-                    ?.Select(p => p.Language);
-                return mapper.Map<IEnumerable<LanguageDTO>>(langs);
-            }
+            //var proj = await uow.GetRepository<Project>().GetAsync(id);
+            //if (proj != null && proj.ProjectLanguageses.Count > 0)
+            //{
+            //    var langs = proj.ProjectLanguageses
+            //        ?.Select(p => p.Language);
+            //    return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src,dest) =>
+            //    {
+            //        foreach (var dto in dest)
+            //        {
+            //            dto.Progress = proj.Translations.Where(t => t.)
+            //        }
+            //    });
+            //}
             return null;
         }
 
         public async Task<bool> TryRemoveProjectLanguage(int projectId, int languageId)
         {
             var project = await uow.GetRepository<Project>().GetAsync(projectId);
-            if(project != null)
+            
+            if (project != null)
             {
                 var targetProdLang = project.ProjectLanguageses
                     .Where(pl => pl.LanguageId == languageId)
@@ -144,6 +153,10 @@ namespace Polyglot.BusinessLogic.Services
 			return mapper.Map<ProjectDTO>(target);			
 		}
 		
+        public async Task<IEnumerable<TranslationDTO>> GetAllTranslations()
+        {
+
+        }
 
 		#region ComplexStrings
 
