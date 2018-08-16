@@ -733,7 +733,6 @@ namespace Polyglot.DataAccess.Seeds
                     },
                     MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
                     },
-                    
                     new Project
                  {
 
@@ -743,7 +742,24 @@ namespace Polyglot.DataAccess.Seeds
                      CreatedOn = DateTime.Now,
                      Technology ="history",
                      ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                     MainLanguageId = 1
+                     Teams = {
+                            context.Teams.FirstOrDefault(team => team.Id == 1),
+                            context.Teams.FirstOrDefault(team => team.Id == 2)
+                    },
+                    ProjectTags = {
+                            new ProjectTag { TagId = 1, ProjectId = 2 },
+                            new ProjectTag { TagId = 2, ProjectId = 2 },
+                            new ProjectTag { TagId = 3, ProjectId = 2 },
+                    },
+                    ProjectLanguageses = {
+                            new ProjectLanguage { LanguageId = 1, ProjectId = 2 },
+                            new ProjectLanguage { LanguageId = 2, ProjectId = 2 },
+                    },
+                    ProjectGlossaries = {
+                            new ProjectGlossary { GlossaryId = 4, ProjectId = 2 },
+                            new ProjectGlossary { GlossaryId = 3, ProjectId = 2 },
+                    },
+                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
                  },
                     new Project
             {
@@ -754,7 +770,24 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="history",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-                MainLanguageId = 1
+                Teams = {
+                            context.Teams.FirstOrDefault(team => team.Id == 3),
+                            context.Teams.FirstOrDefault(team => team.Id == 4)
+                    },
+                    ProjectTags = {
+                            new ProjectTag { TagId = 1, ProjectId = 3 },
+                            new ProjectTag { TagId = 2, ProjectId = 3 },
+                            new ProjectTag { TagId = 3, ProjectId = 3 },
+                    },
+                    ProjectLanguageses = {
+                            new ProjectLanguage { LanguageId = 1, ProjectId = 3 },
+                            new ProjectLanguage { LanguageId = 2, ProjectId = 3 },
+                    },
+                    ProjectGlossaries = {
+                            new ProjectGlossary { GlossaryId = 6, ProjectId = 3 },
+                            new ProjectGlossary { GlossaryId = 5, ProjectId = 3 },
+                    },
+                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
             },
                     new Project
             {
@@ -765,7 +798,24 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="web",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-                MainLanguageId = 1
+                Teams = {
+                            context.Teams.FirstOrDefault(team => team.Id == 5),
+                            
+                    },
+                    ProjectTags = {
+                            
+                            new ProjectTag { TagId = 7, ProjectId = 4 },
+                            new ProjectTag { TagId = 8, ProjectId = 4 },
+                    },
+                    ProjectLanguageses = {
+                            new ProjectLanguage { LanguageId = 1, ProjectId = 4 },
+                            new ProjectLanguage { LanguageId = 2, ProjectId = 4 },
+                    },
+                    ProjectGlossaries = {
+                            new ProjectGlossary { GlossaryId = 8, ProjectId = 4 },
+                            new ProjectGlossary { GlossaryId = 7, ProjectId = 4 },
+                    },
+                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
             },
                     new Project
             {
@@ -776,7 +826,24 @@ namespace Polyglot.DataAccess.Seeds
                  CreatedOn = DateTime.Now,
                  Technology ="programming",
                  ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                 MainLanguageId = 1
+                 Teams = {
+                            context.Teams.FirstOrDefault(team => team.Id == 2)
+                            
+                    },
+                    ProjectTags = {
+                            
+                            new ProjectTag { TagId = 9, ProjectId = 5 },
+                            new ProjectTag { TagId = 10, ProjectId = 5 },
+                    },
+                    ProjectLanguageses = {
+                            new ProjectLanguage { LanguageId = 1, ProjectId = 5 },
+                            new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
+                    },
+                    ProjectGlossaries = {
+                            new ProjectGlossary { GlossaryId = 10, ProjectId = 5 },
+                            new ProjectGlossary { GlossaryId = 9, ProjectId = 5 },
+                    },
+                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
             }
             };
                             
