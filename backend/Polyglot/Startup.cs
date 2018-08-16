@@ -99,10 +99,10 @@ namespace Polyglot
             //    MongoDbSeedsInitializer.MongoSeedAsync(context);
             //}
 
-            if (env.IsDevelopment())
-            {
-                app.UseCors("AllowAll");
-            }
+            // if (env.IsDevelopment())
+            // {
+            app.UseCors("AllowAll");
+            // }
 
             app.UseAuthentication();
 
