@@ -61,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     ForgotPasswordDialogComponent,
     UploadFileComponent,
     TabDetailComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    TabCommentsComponent
   ],
   imports: [
     BrowserModule,
