@@ -15,24 +15,29 @@ import { UserService } from '../../services/user.service';
 
 export class UserSettingsComponent implements OnInit {
 
-  manager: UserProfile;
+  private manager: UserProfile;
   profileForm: FormGroup;
   minDate = new Date(1903, 2, 1);
   maxDate = new Date();
 
   
-  constructor(private router: ActivatedRoute, private fb: FormBuilder, private  dialog: MatDialog,
-              private userService: UserService) {
+  constructor(
+    private router: ActivatedRoute, 
+    private fb: FormBuilder, 
+    private  dialog: MatDialog,
+    private userService: UserService
+  ) {
     //GET Id here
     //console.log(router.snapshot.params.id);
    }
 
   ngOnInit() {
-    
     this.manager = this.userService.getCurrrentUser();
-    var arrayOfStrings = this.manager.fullName.split(' ');
-    this.manager.firstName = arrayOfStrings[0];
-    this.manager.lastName = arrayOfStrings[1];
+    if (this.manager.fullName != undefined) {
+      var arrayOfStrings = this.manager.fullName.split(' ');
+      this.manager.firstName = arrayOfStrings[0];
+      this.manager.lastName = arrayOfStrings[1];
+    }
 
     // this.manager = {
     //  firstName: "Sasha",
@@ -61,7 +66,7 @@ export class UserSettingsComponent implements OnInit {
       address : [this.manager.address],
       postalCode : [this.manager.postalCode],
       phone : [this.manager.phone],
-      avatarUrl : [this.manager.avatarUrl],
+      avatarUrl : [this.manager.avatarUrl]
 
     });
   }
