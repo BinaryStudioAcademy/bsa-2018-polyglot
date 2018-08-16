@@ -39,20 +39,36 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    this.updateCurrentUser();
+    if (this.appState.LoginStatus){
+      if (!this.userService.getCurrrentUser()) {
+        this.userService.getUser().subscribe(
+          (d: UserProfile)=> {
+            this.userService.saveUser(d);   
+            this.manager = d;
+          },
+          err => {
+            console.log('err', err);
+          }
+        );
+     }
+    }
+    else {
+        this.manager = { 
+          fullName: "",
+          avatarUrl: "",
+          lastName: "" 
+        }
+    }
+
   }
 
 
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
-      () => this.updateCurrentUser()
-    );
+    this.dialog.open(LoginDialogComponent);
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent).afterClosed().subscribe(
-      () => this.updateCurrentUser()
-    );
+    this.dialog.open(SignupDialogComponent);
   }
 
   onNewStrClick() {
@@ -74,27 +90,7 @@ export class NavigationComponent implements OnDestroy {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  private updateCurrentUser() {
-    if (this.appState.LoginStatus){
-      if (!this.userService.getCurrrentUser()) {
-        this.userService.getUser().subscribe(
-          (d: UserProfile)=> {
-            this.userService.saveUser(d);   
-            this.manager = d;
-          },
-          err => {
-            console.log('err', err);
-          }
-        );
-      }
-    } else {
-      this.manager = { 
-        fullName: "",
-        avatarUrl: "",
-        lastName: "" 
-      }
-    }
-  }
+
 
   
 }
