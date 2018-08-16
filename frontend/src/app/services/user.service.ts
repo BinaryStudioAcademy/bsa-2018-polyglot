@@ -19,7 +19,7 @@ export class UserService {
   }
 
   getAndSave() {
-    this.dataService.sendRequest(RequestMethod.Get, this.endpoint).subscribe(
+    this.getUser().subscribe(
       (d)=> {
         this.saveUser(d);
       },

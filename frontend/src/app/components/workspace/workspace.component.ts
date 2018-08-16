@@ -5,6 +5,8 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -27,9 +29,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
     private activatedRoute: ActivatedRoute,
     private router : Router,
     private dataProvider: ProjectService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private projectService: ProjectService,
+    private snotifyService: SnotifyService
    ) {}
 
+   description: string = "Are you sure you want to remove the project?";
+   btnOkText: string = "Delete";
+   btnCancelText: string = "Cancel";
+   answer: boolean;
+ 
   ngOnInit() {
     this.searchQuery = '';
 
@@ -41,11 +50,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       .subscribe((data: any) => {
         if(data)
         {
+          debugger;
           this.onSelect(data[0]);
           this.keys = data;
           this.isEmpty = this.keys.length == 0 ? true : false;
-          let keyId = this.keys[0].id;
-          this.router.navigate([this.currentPath, keyId]);
+          let keyId: number;
+          if(!this.isEmpty) {
+            keyId = this.keys[0].id;
+            this.router.navigate([this.currentPath, keyId]);
+          }
         }
       });
     });
@@ -88,15 +101,33 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
 
   receiveId($event) {
-    debugger;
     let temp = this.keys.findIndex( x => x.id === $event);
     if(this.selectedKey.id == this.keys[temp].id)
       this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
 
     this.keys.splice(temp, 1);
-
   }
 
+  delete(id: number): void{
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {description: this.description, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (dialogRef.componentInstance.data.answer){
+        this.projectService.delete(id)
+        .subscribe(
+          (response => {
+            this.snotifyService.success("Project was deleted", "Success!");
+            setTimeout(() => (this.router.navigate(['../'])), 3000);
+          }),
+          err => {
+            this.snotifyService.error("Project wasn`t deleted", "Error!");
+          });
+        }
+      }
+    );
+  }
 }
 
  
