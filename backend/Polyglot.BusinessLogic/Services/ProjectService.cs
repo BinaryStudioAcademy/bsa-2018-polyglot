@@ -23,7 +23,10 @@ namespace Polyglot.BusinessLogic.Services
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		private IUnitOfWork uow;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
+        public ProjectService(IUnitOfWork uow, IMapper mapper, 
+            IMongoRepository<DataAccess.MongoModels.ComplexString> rep
+           // IMongoRepository<D
+                )
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -108,6 +111,91 @@ namespace Polyglot.BusinessLogic.Services
         {
             var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
             return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
+        }
+
+        public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(id);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses
+                    ?.Select(p => p.Language);
+                
+                var translations = (await stringsProvider.GetAllAsync(x => x.ProjectId == id)
+                    )
+                    ?.SelectMany(cs => cs.Translations);
+
+                return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>
+                {
+                    var dtos = dest.ToList();
+                    IEnumerable<Translation> langTranslations = null;
+                    int? progress = 0;
+                    int? translatedCount = 0;
+
+                    for (int i = 0; i < dtos.Count; i++)
+                    {
+#warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
+
+                        langTranslations = translations
+                            ?.Where(t => t.Language.ToLower() == dtos[i].Name.ToLower());
+
+                        translatedCount = langTranslations?
+                            .Where(t => !String.IsNullOrWhiteSpace(t.TranslationValue))
+                            ?.Count();
+                        progress = langTranslations?.Count() - (translatedCount.HasValue ? translatedCount.Value : 0);
+
+                        dtos[i].TranslationsCount = translatedCount.HasValue ? translatedCount.Value : 0;
+                        dtos[i].Progress =  progress.HasValue ? progress.Value : 0;
+
+                    }
+                }));
+            }
+            return null;
+        }
+
+        public async Task<ProjectDTO> AddLanguageToProject(int projectId, int languageId)
+        {
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            var language = await uow.GetRepository<Language>().GetAsync(languageId);
+
+            if(project != null)
+            {
+                var languageExistInProject = project.ProjectLanguageses
+                    .Select(pl => pl.Language)
+                    .Where(l => l.Id == languageId)
+                    .FirstOrDefault() != null;
+
+                if (!languageExistInProject)
+                {
+                    project.ProjectLanguageses.Add(new ProjectLanguage()
+                    {
+                        Language = language
+                    });
+
+                    uow.GetRepository<Project>().Update(project);
+                    await uow.SaveAsync();
+                    return mapper.Map<ProjectDTO>(project);
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> TryRemoveProjectLanguage(int projectId, int languageId)
+        {
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            
+            if (project != null)
+            {
+                var targetProdLang = project.ProjectLanguageses
+                    .Where(pl => pl.LanguageId == languageId)
+                    .FirstOrDefault();
+
+                if (targetProdLang != null)
+                    if (project.ProjectLanguageses.Remove(targetProdLang))
+                        if (uow.GetRepository<Project>().Update(project) != null)
+                            return await uow.SaveAsync() > 0;
+            }
+            return false;
         }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
