@@ -123,10 +123,26 @@ namespace Polyglot.Controllers
 
         // PUT: Projects/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyProject(int id, [FromBody]ProjectDTO project)
+        public async Task<IActionResult> ModifyProject(int id, IFormFile formFile)
         {
-            if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+			Request.Form.TryGetValue("project", out StringValues res);
+
+			ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
+			project.Id = id;
+
+			if (Request.Form.Files.Count != 0)
+			{
+				IFormFile file = Request.Form.Files[0];
+				byte[] byteArr;
+				using (var ms = new MemoryStream())
+				{
+					file.CopyTo(ms);
+					await file.CopyToAsync(ms);
+					byteArr = ms.ToArray();
+				}
+
+				project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+			}
 
             var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
