@@ -23,8 +23,9 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		private IUnitOfWork uow;
         public ProjectService(IUnitOfWork uow, IMapper mapper, 
-            IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-            IMongoRepository<D)
+            IMongoRepository<DataAccess.MongoModels.ComplexString> rep
+           // IMongoRepository<D
+                )
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -107,19 +108,41 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
-            //var proj = await uow.GetRepository<Project>().GetAsync(id);
-            //if (proj != null && proj.ProjectLanguageses.Count > 0)
-            //{
-            //    var langs = proj.ProjectLanguageses
-            //        ?.Select(p => p.Language);
-            //    return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src,dest) =>
-            //    {
-            //        foreach (var dto in dest)
-            //        {
-            //            dto.Progress = proj.Translations.Where(t => t.)
-            //        }
-            //    });
-            //}
+            var proj = await uow.GetRepository<Project>().GetAsync(id);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses
+                    ?.Select(p => p.Language);
+                
+                var translations = (await stringsProvider.GetAllAsync(x => x.ProjectId == id)
+                    )
+                    ?.SelectMany(cs => cs.Translations);
+
+                return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>
+                {
+                    var dtos = dest.ToList();
+                    IEnumerable<Translation> langTranslations = null;
+                    int? progress = 0;
+                    int? translatedCount = 0;
+
+                    for (int i = 0; i < dtos.Count; i++)
+                    {
+#warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
+
+                        langTranslations = translations
+                            ?.Where(t => t.Language.ToLower() == dtos[i].Name.ToLower());
+
+                        translatedCount = langTranslations?
+                            .Where(t => !String.IsNullOrWhiteSpace(t.TranslationValue))
+                            ?.Count();
+                        progress = langTranslations?.Count() - (translatedCount.HasValue ? translatedCount.Value : 0);
+
+                        dtos[i].TranslationsCount = i * 25; // translatedCount.HasValue ? translatedCount.Value : 0;
+                        dtos[i].Progress = i * 25;// progress.HasValue ? progress.Value : 0;
+
+                    }
+                }));
+            }
             return null;
         }
 
@@ -153,11 +176,6 @@ namespace Polyglot.BusinessLogic.Services
 			return mapper.Map<ProjectDTO>(target);			
 		}
 		
-        public async Task<IEnumerable<TranslationDTO>> GetAllTranslations()
-        {
-
-        }
-
 		#region ComplexStrings
 
 		public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
