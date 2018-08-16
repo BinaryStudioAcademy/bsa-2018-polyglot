@@ -24,6 +24,7 @@ export class NewTeamComponent implements OnInit {
 
   constructor(private translatorService: TranslatorService,
     private snotifyService: SnotifyService, ) {
+      
     
         
   }
@@ -32,7 +33,27 @@ export class NewTeamComponent implements OnInit {
     this.getAllTranslators();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    
+    this.dataSource.filterPredicate = (data, filter) => {
+      let valid = false;
+
+      const transformedFilter = filter.trim().toLowerCase();
+
+      Object.keys(data).map(key => {
+        if (
+          key === 'details' &&
+          (data.details.name.toLowerCase().includes(transformedFilter) ||
+          ('' + data.details.weight).toLowerCase().includes(transformedFilter))
+        ) {
+          valid = true;
+        } else {
+          if (('' + data[key]).toLowerCase().includes(transformedFilter)) {
+            valid = true;
+          }
+        }
+      });
+
+      return valid;
+    }
   
   }
 
