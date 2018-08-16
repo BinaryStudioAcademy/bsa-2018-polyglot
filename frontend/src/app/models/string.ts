@@ -1,3 +1,5 @@
+import { Translation } from "./translation";
+
 export interface IString {
     id: number;
     key: string;
@@ -5,4 +7,5 @@ export interface IString {
     description: string;
     tags: string[];
     projectId: number;
+    translations: Translation[];
 }

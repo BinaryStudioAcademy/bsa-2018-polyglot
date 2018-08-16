@@ -1,4 +1,7 @@
 export interface Translation {
-    id: number;
-    tanslationKey: string;
+    Language : string;
+    tanslationValue: string;
+    UserId : number;
+    CreatedOn : Date;
+    
 }
