@@ -15,7 +15,7 @@ import { UserService } from '../../services/user.service';
 
 export class UserSettingsComponent implements OnInit {
 
-  private manager: UserProfile;
+  manager: UserProfile;
   profileForm: FormGroup;
   minDate = new Date(1903, 2, 1);
   maxDate = new Date();
