@@ -8,5 +8,16 @@ import { Observable } from 'rxjs';
 })
 export class TranslationsService {
 
-  constructor() { }
+  api: string;
+  constructor(private dataService: HttpService) { 
+    this.api = "ComplexStrings";
+  }
+
+  getStringTranslations(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translationss', undefined, undefined);
+  }
+
+  updateStringTranslations(translations: Translation[], id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translationss', undefined, translations);
+  }
 }
