@@ -11,7 +11,6 @@ import { Teammate } from '../models/teammate';
 export class TeamService {
 
   private team: Team;
-
   
   private api: string = "teams";
   constructor(private dataService: HttpService) { }

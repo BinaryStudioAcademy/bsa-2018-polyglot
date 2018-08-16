@@ -12,7 +12,7 @@ export const environment = {
         storageBucket: "polyglot-dbc9a.appspot.com",
         messagingSenderId: "366581495425"
     },
-    apiUrl: 'http://localhost:58828'
+    apiUrl: 'http://polyglotbsa.azurewebsites.net/api'
 };
 
 

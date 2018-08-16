@@ -15,7 +15,8 @@
       <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
-      <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
+      <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect"
+        *ngIf="isLoggedIn()">
         <img src="{{manager?.avatarUrl}}" class="profile-small-image">
       </button>
 
@@ -23,7 +24,7 @@
         <mat-card class="profile-card">
           <mat-card-header>
             <mat-card-title class="profile-card-main">
-              <img  src="{{manager?.avatarUrl}}" class="profile-big-image">
+              <img src="{{manager?.avatarUrl}}" class="profile-big-image">
               <div style="margin-left: 30px;">
                 <h4>{{manager?.fullName}}</h4>
                 <!-- <mat-card-subtitle>{{manager.email}}</mat-card-subtitle> -->
@@ -51,7 +52,8 @@
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <div fxLayout="column">
-        <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
+        <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button"
+          *ngIf="isLoggedIn() && mobileQuery.matches">
           <img src="{{manager?.avatarUrl}}" class="profile-small-image">
         </button>
         <a mat-button routerLinkActive="active" routerLink="/about-us">
@@ -65,15 +67,10 @@
           <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
         <a mat-button routerLinkActive="active">
           <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
-
-
       </div>
     </mat-sidenav>
-
     <div (click)="snav.close()">
       <router-outlet></router-outlet>
     </div>
-    
-
   </mat-sidenav-container>
 </div>

@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '../../../../../node_modules/@angular/forms';
-import { ProjectService } from '../../../services/project.service';
-import { LanguageService } from '../../../services/language.service';
-import { Router } from '../../../../../node_modules/@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SnotifyService } from '../../../../../node_modules/ng-snotify';
-import { Language, Project, Team } from '../../../models';
-import { TypeTechnology } from '../../../models/type-technology.enum';
-import { TeamService } from '../../../services/teams.service';
+import { Translator } from '../../../models';
+import { TranslatorService } from '../../../services/translator.service';
+import { MatTableDataSource, MatSort, MatPaginator  } from '@angular/material';
+
 
 @Component({
   selector: 'app-new-team',
@@ -15,32 +12,52 @@ import { TeamService } from '../../../services/teams.service';
 })
 export class NewTeamComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private teamService: TeamService,
-    private router: Router,
-    private snotifyService: SnotifyService,) {
+  IsLoad: boolean = true;
+  managerId: number = 1;
+  translators: any;
+  displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
+  dataSource: MatTableDataSource<any>;
+  
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private translatorService: TranslatorService,
+    private snotifyService: SnotifyService, ) {
+    
+        
   }
 
   ngOnInit() {
-   
-  }
-
-  receiveImage($event){
-      this.teamImage = $event[0];
-  }
-
-  teamImage: File;
-  team: Team;
-  teamForm: FormGroup = this.fb.group({
-    name: [ '', [Validators.required, Validators.minLength(4)]],
-     
+    this.getAllTranslators();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     
-  });
- 
-
-  get name() {
-    return this.teamForm.get('name');
+  
   }
 
+  getAllTranslators(){
+     this.translatorService.getAll()
+      .subscribe(translators => {
+        this.translators = translators;
+        this.dataSource = new MatTableDataSource(this.translators);
+        debugger;
+        this.IsLoad = false;
+      })
+  }
 
+  
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
 }
+
+
+
+
+
+
+
+

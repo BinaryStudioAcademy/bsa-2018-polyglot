@@ -1,37 +1,56 @@
-<div class="form-container">
-  <h2>Create new team</h2>
-  <form [formGroup]="teamForm">
-    <mat-form-field class="field-full-width">
-      <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
-    </mat-form-field>
-    <mat-form-field class="field-full-width">
-      <textarea class="description-text-area" matInput placeholder="Enter description" maxlength="500"></textarea>
-    </mat-form-field>
-
-    <mat-grid-list cols="2">
-      <mat-grid-tile>
-        <div class="select-fields-container field-full-width">
-          <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Translator1"  >
-              <mat-option  >
-               
-              </mat-option>
-          </mat-select>
-          </mat-form-field>
-          <mat-form-field class="mat-select-wraper">
-            <mat-select class="mat-select" placeholder="Translator2"  >
-              <mat-option  >
-                
-              </mat-option>
-          </mat-select>
-          </mat-form-field>
-          <div class="saveButton">
-            <button mat-button color="primary" (click)="saveChanges(teamForm.value)" [disabled]="teamForm.invalid">Create</button>
-          </div>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <app-upload-image (fileEvent)="receiveImage($event)"></app-upload-image>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </form>
+<div class="newteam-container">
+  <h2 class="title">Create new Team</h2>
+    
+  <div *ngIf="IsLoad" class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="container">
+   
+    <div class="example-header">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div>
+    
+    <div class="example-container mat-elevation-z8">
+    
+      <mat-table [dataSource]="dataSource" matSort>
+    
+        
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+          <mat-cell *matCellDef="let row"> <img mat-card-avatar class="manager-img" src="{{row.userProfile.avatarUrl}}"> </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="rating">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
+          <mat-cell *matCellDef="let row"> 60% </mat-cell>
+        </ng-container>
+    
+    
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.userProfile.fullName}} </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="language">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Language </mat-header-cell>
+          <mat-cell *matCellDef="let row" [style.color]="row.color"> English </mat-cell>
+        </ng-container>
+       
+        <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+            <mat-cell *matCellDef="let row"> 
+              <button mat-raised-button color="primary" >Add to Team</button></mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+    
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </div>
+  <ng-snotify></ng-snotify>
+</div>

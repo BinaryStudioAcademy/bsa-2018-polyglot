@@ -60,6 +60,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     NewProjectComponent,
     ManagerProfileComponent,
     TeamComponent,
+    NewTeamComponent,
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,

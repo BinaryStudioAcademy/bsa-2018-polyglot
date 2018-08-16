@@ -1,22 +1,49 @@
-@import "../../../../common-styles/styleForForm.sass";
 
-.form-container
-  max-width: 700px
 
-.field-choose-wraper
-  margin: 0 40px
+.newteam-container
+  display: grid
+  grid-template-columns: 40px auto 50px 
+  grid-template-rows: 10% 25% auto 30px
+  max-width: 1200px
+  margin-left: auto
+  margin-right: auto
+  margin-top: 30px
+  padding: 10px
 
-.description-text-area
-  height: 54px
+.container
+  grid-column-start: 2
+  grid-column-end: 3
+  grid-row-start: row1-start
+  grid-row-end: 3
+  display: grid
+  grid-template-columns: 100%
+  grid-gap: 25px
+  justify-items: center
+ 
 
-mat-form-field
-  display: inline
+.title
+  grid-column: 2
+ 
+.spinner
+  max-width: 100px
+  margin: 0 auto
+  padding-top: calc((55vh - 270px))
+  height: calc(100vh - 270px)
+  
+.example-container 
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 
-.mat-select
+.example-header 
+  width: 100%;
+  
+.mat-form-field 
+  font-size: 20px
   width: 100%
 
-.select-fields-container
-  width: 100%
-
+.mat-table 
+  overflow: auto
+  max-height: 500px
 
 
