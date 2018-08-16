@@ -18,7 +18,7 @@ namespace Polyglot.DataAccess.Seeds
                     Id = 1,
                     Uid = "TP59AlOHjXUQxedsqzG93PMYeTA3",
                     FullName = "John Lennon",
-                    BirthDate = DateTime.Parse("21.01.1996"),
+                    BirthDate = new DateTime(1991,9,31),
                     RegistrationDate = DateTime.Now,
                     Country = "USA",
                     City = "New York",
@@ -34,7 +34,7 @@ namespace Polyglot.DataAccess.Seeds
                 Id = 2,
                 Uid = "Booik2DM64TX30VedRa0BY7AKZg1",
                 FullName = "Petro Mazepa",
-                BirthDate = DateTime.Parse("21.01.1986"),
+                BirthDate = new DateTime(1992, 9, 12),
                 RegistrationDate = DateTime.Now,
                 Country = "Ukraine",
                 City = "Kyiv",
@@ -50,7 +50,7 @@ namespace Polyglot.DataAccess.Seeds
                 Id = 3,
                 Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
                 FullName = "Vasya Mykolaiychuk",
-                BirthDate = DateTime.Parse("21.01.1999"),
+                BirthDate = new DateTime(1991, 9, 25),
                 RegistrationDate = DateTime.Now,
                 Country = "Ukraine",
                 City = "Striy",
@@ -66,7 +66,7 @@ namespace Polyglot.DataAccess.Seeds
                 Id = 4,
                 Uid = "bbgYGo9545Xcy84FUjmpHzYnESk2",
                 FullName = "Johan Nesbartl",
-                BirthDate = DateTime.Parse("21.01.1993"),
+                BirthDate = new DateTime(1991, 9, 25),
                 RegistrationDate = DateTime.Now,
                 Country = "USA",
                 City = "Maiami",
@@ -82,7 +82,7 @@ namespace Polyglot.DataAccess.Seeds
                 Id = 5,
                 Uid = "HwMZdk6yMzUgK9wZsVIzzkCQURI2",
                 FullName = "Lele Pots",
-                BirthDate = DateTime.Parse("21.01.1993"),
+                BirthDate = new DateTime(1991, 9, 25),
                 RegistrationDate = DateTime.Now,
                 Country = "USA",
                 City = "Maiami",
@@ -334,7 +334,7 @@ namespace Polyglot.DataAccess.Seeds
                     {
                         Uid = "TP59AlOHjXUQxedsqzG93PMYeTA3",
                         FullName = "John Lennon",
-                        BirthDate = DateTime.Parse("21.01.1996"),
+                        BirthDate = new DateTime(1991,9,25),
                         RegistrationDate = DateTime.Now,
                         Country = "USA",
                         City = "New York",
@@ -348,33 +348,33 @@ namespace Polyglot.DataAccess.Seeds
                     new UserProfile
                     {
 
-                        Uid = "Booik2DM64TX30VedRa0BY7AKZg1",
-                        FullName = "Petro Mazepa",
-                        BirthDate = DateTime.Parse("21.01.1986"),
-                        RegistrationDate = DateTime.Now,
-                        Country = "Ukraine",
-                        City = "Kyiv",
-                        Address = "Holosiivskiy avenu, 100",
-                        Region = "Kyiv",
-                        AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
-                        PostalCode = "43022",
-                        Phone = "38-095-746-4726"
+                    Uid = "Booik2DM64TX30VedRa0BY7AKZg1",
+                    FullName = "Petro Mazepa",
+                    BirthDate = new DateTime(1995,9,23),
+                    RegistrationDate = DateTime.Now,
+                    Country = "Ukraine",
+                    City = "Kyiv",
+                    Address = "Holosiivskiy avenu, 100",
+                    Region = "Kyiv",
+                    AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
+                    PostalCode = "43022",
+                    Phone = "38-095-746-4726"
 
                     },
                     new UserProfile
                     {
 
-                        Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
-                        FullName = "Vasya Mykolaiychuk",
-                        BirthDate = DateTime.Parse("21.01.1999"),
-                        RegistrationDate = DateTime.Now,
-                        Country = "Ukraine",
-                        City = "Striy",
-                        Address = "Mazepy avenue, 67",
-                        Region = "Lviv",
-                        AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
-                        PostalCode = "43022",
-                        Phone = "38-095-746-4726"
+                Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
+                FullName = "Vasya Mykolaiychuk",
+                BirthDate = new DateTime(1990,10,11),
+                RegistrationDate = DateTime.Now,
+                Country = "Ukraine",
+                City = "Striy",
+                Address = "Mazepy avenue, 67",
+                Region = "Lviv",
+                AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
+                PostalCode = "43022",
+                Phone = "38-095-746-4726"
 
                     },
                     new UserProfile
@@ -382,7 +382,7 @@ namespace Polyglot.DataAccess.Seeds
 
                     Uid = "bbgYGo9545Xcy84FUjmpHzYnESk2",
                     FullName = "Johan Nesbartl",
-                    BirthDate = DateTime.Parse("21.01.1993"),
+                    BirthDate = new DateTime(1989,10,11),
                     RegistrationDate = DateTime.Now,
                     Country = "USA",
                     City = "Maiami",
@@ -398,7 +398,7 @@ namespace Polyglot.DataAccess.Seeds
 
                     Uid = "HwMZdk6yMzUgK9wZsVIzzkCQURI2",
                     FullName = "Lele Pots",
-                    BirthDate = DateTime.Parse("21.01.1993"),
+                    BirthDate = new DateTime(1990,8,13),
                     RegistrationDate = DateTime.Now,
                     Country = "USA",
                     City = "Maiami",
