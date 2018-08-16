@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AutoMapper;
@@ -106,6 +107,12 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
+        }
+
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(id);
@@ -202,10 +209,24 @@ namespace Polyglot.BusinessLogic.Services
 
 			return mapper.Map<ProjectDTO>(target);			
 		}
-		
-		#region ComplexStrings
 
-		public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
+        public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            var managerDTO = mapper.Map<ManagerDTO>(manager.FirstOrDefault());
+            entity.Manager = managerDTO;
+            return await PostAsync(entity);
+        }
+
+        private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
+        {
+            var result = await uow.GetRepository<T>().GetAllAsync(predicate);
+            return result;
+        }
+
+        #region ComplexStrings
+
+        public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
         {
             var strings = (await stringsProvider.GetAllAsync()).AsEnumerable();
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);

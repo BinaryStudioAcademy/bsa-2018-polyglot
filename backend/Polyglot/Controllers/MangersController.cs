@@ -29,22 +29,22 @@ namespace Polyglot.Controllers
         }
 
         // GET: managers/:id/teams
-        [HttpGet("{id}/teams", Name = "GetManagerTeams")]
-        public async Task<IActionResult> GetAllManagerTeams(int id)
-        {
-            var teams = await teamService.GetManagerTeams(id);
-            return teams == null ? NotFound("No teams found!") as IActionResult
-                : Ok(teams);
-        }
+        //[HttpGet("{id}/teams", Name = "GetManagerTeams")]
+        //public async Task<IActionResult> GetAllManagerTeams(int id)
+        //{
+        //    var teams = await teamService.GetManagerTeams(id);
+        //    return teams == null ? NotFound("No teams found!") as IActionResult
+        //        : Ok(teams);
+        //}
 
-        // GET: managers/:id/projects
-        [HttpGet("{id}/projects", Name = "GetManagerProjects")]
-        public async Task<IActionResult> GetAllManagerProjects(int id)
-        {
-            var projects = await teamService.GetManagerProjects(id);
-            return projects == null ? NotFound("No projects found!") as IActionResult
-                : Ok(projects);
-        }
+        //// GET: managers/:id/projects
+        //[HttpGet("{id}/projects", Name = "GetManagerProjects")]
+        //public async Task<IActionResult> GetAllManagerProjects(int id)
+        //{
+        //    var projects = await teamService.GetManagerProjects(id);
+        //    return projects == null ? NotFound("No projects found!") as IActionResult
+        //        : Ok(projects);
+        //}
 
         // GET: Managers/5
         [HttpGet("{id}", Name = "GetManager")]
