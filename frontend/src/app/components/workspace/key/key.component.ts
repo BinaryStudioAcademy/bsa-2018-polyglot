@@ -13,6 +13,7 @@ export class KeyComponent implements OnInit {
   @Input() public key: any;
   @Output() idEvent = new EventEmitter<number>();
 
+
   constructor(private dataProvider: ComplexStringService,
               public dialog: MatDialog) { }
 

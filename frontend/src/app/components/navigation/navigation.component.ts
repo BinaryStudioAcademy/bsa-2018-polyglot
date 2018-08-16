@@ -78,6 +78,7 @@ export class NavigationComponent implements OnDestroy {
   onLogoutClick() {
     this.authService.logout();
     this.appState.updateState(null, '', false);
+    this.userService.removeCurrentUser();
     this.router.navigate(['/']);
   }
 

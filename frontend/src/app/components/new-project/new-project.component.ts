@@ -38,6 +38,7 @@ export class NewProjectComponent implements OnInit {
 
   receiveImage($event){
       this.projectImage = $event[0];
+      $event.pop();
   }
 
   projectImage: File;
