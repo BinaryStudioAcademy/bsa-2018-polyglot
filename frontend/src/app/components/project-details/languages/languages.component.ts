@@ -14,7 +14,7 @@ import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-
 export class LanguagesComponent implements OnInit {
 
   @Input() projectId: number;
-  public langs;
+  public langs = [];
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
 
@@ -30,7 +30,10 @@ export class LanguagesComponent implements OnInit {
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
-        })
+        },
+        err => {
+          this.IsLoad = false;
+        });
   }
 
   selectNew(){
@@ -47,9 +50,11 @@ export class LanguagesComponent implements OnInit {
       dialogRef.componentInstance.onSelect.subscribe((data) => {
         if(data)
         {
-          data.forEach(languageId => {
-            this.projectService.addLanguageToProject(this.projectId, languageId)
-              .subscribe((language) =>{
+          debugger;
+          data.forEach(language => {
+            this.projectService.addLanguageToProject(this.projectId, language.id)
+              .subscribe((project) => {
+                debugger;
                 this.langs.push(language);
               })
           });
@@ -67,26 +72,6 @@ export class LanguagesComponent implements OnInit {
     })
     
   }
-
-  onAddNewString(){
-  //  let dialogRef = this.dialog.open(StringDialogComponent, {
-  //    data: {
-    //    projectId: this.project.id
-  //    }
-  //    });
-  //    dialogRef.componentInstance.onAddString.subscribe((result) => {
-  //      if(result)
-    //      this.keys.push(result);
-    //      this.selectedKey = result;
-    //      let keyId = this.keys[0].id;   
-    //      this.router.navigate([this.currentPath, keyId]);
-    //      this.isEmpty = false;
-  //    })
-  //    dialogRef.afterClosed().subscribe(()=>{
-  //      dialogRef.componentInstance.onAddString.unsubscribe();
-  //    });
-  }
-
 
   onDeleteLanguage(languageId: number){
     if(this.langs.filter(l => l.id === languageId)[0].translationsCount > 0)

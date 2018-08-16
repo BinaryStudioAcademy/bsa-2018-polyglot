@@ -50,7 +50,6 @@ export class ProjectService {
   }
 
   deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
-    return of([]);
-    //return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
   }
 }

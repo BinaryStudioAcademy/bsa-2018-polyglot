@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -126,7 +126,8 @@ import { SelectProjectLanguageComponent } from './dialogs/select-project-languag
     MatProgressSpinnerModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
+    SnotifyModule,
+    MatDialogModule
     
   ],
   entryComponents: [

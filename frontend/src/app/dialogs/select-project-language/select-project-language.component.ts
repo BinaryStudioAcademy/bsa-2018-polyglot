@@ -9,8 +9,8 @@ import {MatDialog, MatDialogConfig} from "@angular/material";
 })
 export class SelectProjectLanguageComponent implements OnInit {
 
-  selectedLangsIds: Array<number> = new Array<number>();
-  @Output() onSelect = new EventEmitter<Array<number>>(true);
+  selectedLangs = [];
+  @Output() onSelect = new EventEmitter<any>(true);
   langs = [];
 
   constructor(
@@ -25,17 +25,19 @@ export class SelectProjectLanguageComponent implements OnInit {
   }
 
   submit(){
-    this.onSelect.emit(this.selectedLangsIds);
+    debugger;
+    this.onSelect.emit(this.selectedLangs);
+    this.dialogRef.close();
   }
 
-  change($event, id: number){
-    debugger;
-    let inArray = this.selectedLangsIds.includes(id);
+  change($event, lang){
+
+    let inArray = this.selectedLangs.find(l => l.id === lang.id)
 
     if($event.checked && !inArray)
-      this.selectedLangsIds.push(id);
+      this.selectedLangs.push(lang);
     else if(!$event.checked && inArray){
-      this.selectedLangsIds = this.selectedLangsIds.filter(i => i != id);
+      this.selectedLangs = this.selectedLangs.filter(l => l.id != lang.id);
     }
   }
   
