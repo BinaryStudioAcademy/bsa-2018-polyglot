@@ -41,11 +41,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       .subscribe((data: any) => {
         if(data)
         {
+          debugger;
           this.onSelect(data[0]);
           this.keys = data;
           this.isEmpty = this.keys.length == 0 ? true : false;
-          let keyId = this.keys[0].id;
-          this.router.navigate([this.currentPath, keyId]);
+          let keyId: number;
+          if(!this.isEmpty) {
+            keyId = this.keys[0].id;
+            this.router.navigate([this.currentPath, keyId]);
+          }
         }
       });
     });
