@@ -1,20 +1,17 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
-using Polyglot.DataAccess.MongoModels;
+﻿using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Polyglot.DataAccess.Seeds
 {
     public class MongoDbSeedsInitializer
     {
 
-        public static void MongoSeedAsync(MongoDataContext context)
+        public static void MongoSeedAsync(IMongoDataContext context)
         {
-            if (context.ComplexStrings.CountDocuments(FilterDefinition<ComplexString>.Empty) == 0)
+            var repository = new MongoRepository<ComplexString>(context);
+            if (repository.CountDocuments() == 0)
             
             {
                 var complexStrings = new List<ComplexString>
@@ -357,13 +354,9 @@ namespace Polyglot.DataAccess.Seeds
                 }
 
             };
-                context.ComplexStrings.InsertMany(complexStrings);
+                repository.InsertMany(complexStrings);
 
             }
-
-          
-
-
         }
     }
 }

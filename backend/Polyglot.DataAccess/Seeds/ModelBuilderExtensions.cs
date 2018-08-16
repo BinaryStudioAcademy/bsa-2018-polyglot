@@ -346,7 +346,7 @@ namespace Polyglot.DataAccess.Seeds
 
                     },
                     new UserProfile
-                {
+                    {
 
                     Uid = "Booik2DM64TX30VedRa0BY7AKZg1",
                     FullName = "Petro Mazepa",
@@ -360,9 +360,9 @@ namespace Polyglot.DataAccess.Seeds
                     PostalCode = "43022",
                     Phone = "38-095-746-4726"
 
-                },
+                    },
                     new UserProfile
-            {
+                    {
 
                 Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
                 FullName = "Vasya Mykolaiychuk",
@@ -376,7 +376,7 @@ namespace Polyglot.DataAccess.Seeds
                 PostalCode = "43022",
                 Phone = "38-095-746-4726"
 
-            },
+                    },
                     new UserProfile
                 {
 
@@ -443,17 +443,18 @@ namespace Polyglot.DataAccess.Seeds
 
             if (!context.Ratings.Any())
             {
+                var users = context.UserProfiles.ToList();
                 var ratings = new List<Rating> {
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = context.UserProfiles.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
                     };
                 context.AddRange(ratings);
                 context.SaveChanges();
@@ -461,12 +462,13 @@ namespace Polyglot.DataAccess.Seeds
 
             if (!context.Managers.Any())
             {
+                var users = context.UserProfiles.ToList();
                 var managers = new List<Manager> {
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1) },
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 2) },
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3) },
-                   new Manager{ UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5) }
+                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 1) },
+                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 1) },
+                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 2) },
+                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 3) },
+                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 5) }
 
                     };
 
@@ -476,44 +478,50 @@ namespace Polyglot.DataAccess.Seeds
 
             if (!context.Translators.Any())
             {
+                var users = context.UserProfiles.ToList();
+                var ratings = context.Ratings.ToList();
                 var translators = new List<Translator> {
-                   new Translator { 
-                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4),  
-                        Ratings = {  
-                            context.Ratings.FirstOrDefault(r => r.Id == 1),
-                            context.Ratings.FirstOrDefault(r => r.Id == 2)
-                        } 
+                   new Translator {
+                        UserProfile = users.FirstOrDefault(u => u.Id == 4),
+                        Ratings = {
+                            ratings.FirstOrDefault(r => r.Id == 1),
+                            ratings.FirstOrDefault(r => r.Id == 2)
+                        }
                    },
                    new Translator {
-                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 4),
+                        UserProfile = users.FirstOrDefault(u => u.Id == 4),
                         Ratings = {
-                           context.Ratings.FirstOrDefault(r => r.Id == 3),
-                            context.Ratings.FirstOrDefault(r => r.Id == 4)
-                        }},
+                           ratings.FirstOrDefault(r => r.Id == 3),
+                            ratings.FirstOrDefault(r => r.Id == 4)
+                        }
+                        },
                    new Translator {
-                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 1),
+                        UserProfile = users.FirstOrDefault(u => u.Id == 1),
                         Ratings = {
-                           context.Ratings.FirstOrDefault(r => r.Id == 5),
-                            context.Ratings.FirstOrDefault(r => r.Id == 6)
-                        } },
+                           ratings.FirstOrDefault(r => r.Id == 5),
+                            ratings.FirstOrDefault(r => r.Id == 6)
+                        }
+                        },
                    new Translator {
-                        UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 5),
+                        UserProfile = users.FirstOrDefault(u => u.Id == 5),
                         Ratings = {
-                           context.Ratings.FirstOrDefault(r => r.Id == 7),
-                            context.Ratings.FirstOrDefault(r => r.Id == 8)
-                        }},
-                   new Translator { UserProfile = context.UserProfiles.FirstOrDefault(u => u.Id == 3),
+                           ratings.FirstOrDefault(r => r.Id == 7),
+                            ratings.FirstOrDefault(r => r.Id == 8)
+                        }
+                        },
+                   new Translator { UserProfile = users.FirstOrDefault(u => u.Id == 3),
                         Ratings = {
-                           context.Ratings.FirstOrDefault(r => r.Id == 9),
-                            context.Ratings.FirstOrDefault(r => r.Id == 10)
-                        }}
+                           ratings.FirstOrDefault(r => r.Id == 9),
+                            ratings.FirstOrDefault(r => r.Id == 10)
+                        }
+                        }
 
                     };
-                
+
                 context.AddRange(translators);
                 context.SaveChanges();
             }
-            
+
             if (!context.TranslatorLanguages.Any())
             {
                 var translatorLanguages = new List<TranslatorLanguage> {
@@ -571,7 +579,7 @@ namespace Polyglot.DataAccess.Seeds
                 context.AddRange(tags);
                 context.SaveChanges();
             }
-            
+
             if (!context.Teams.Any())
             {
                 var teams = new List<Team> {
@@ -629,20 +637,21 @@ namespace Polyglot.DataAccess.Seeds
                 context.AddRange(teams);
                 context.SaveChanges();
             }
-            
+
             if (!context.Projects.Any())
             {
+                var managers = context.Managers.ToList();
                 var projects = new List<Project> {
                     new Project
                 {
-                    Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
+                    Manager = managers.FirstOrDefault(m => m.Id == 1),
                     Name = "Operation Red Sea",
                     Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
                     CreatedOn = DateTime.Now,
                     Technology ="films",
                     ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                    Teams = { 
-                            context.Teams.FirstOrDefault(team => team.Id == 1), 
+                    Teams = {
+                            context.Teams.FirstOrDefault(team => team.Id == 1),
                             context.Teams.FirstOrDefault(team => team.Id == 2)
                     },
                     ProjectTags = {
@@ -650,7 +659,7 @@ namespace Polyglot.DataAccess.Seeds
                             new ProjectTag { TagId = 2, ProjectId = 1 },
                             new ProjectTag { TagId = 3, ProjectId = 1 },
                     },
-                    ProjectLanguageses = { 
+                    ProjectLanguageses = {
                             new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
                             new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
                     },
@@ -660,11 +669,11 @@ namespace Polyglot.DataAccess.Seeds
                     },
                     MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
                     },
-                    
+
                     new Project
                  {
 
-                     Manager = context.Managers.FirstOrDefault(m => m.Id == 1),
+                     Manager = managers.FirstOrDefault(m => m.Id == 1),
                      Name = "Operation Barbarossa",
                      Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
                      CreatedOn = DateTime.Now,
@@ -675,7 +684,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                Manager = context.Managers.FirstOrDefault(m => m.Id == 2),
+                Manager = managers.FirstOrDefault(m => m.Id == 2),
                 Name = "Operation Valkyrie",
                 Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
                 CreatedOn = DateTime.Now,
@@ -686,7 +695,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+                Manager = managers.FirstOrDefault(m => m.Id == 4),
                 Name = "Angular",
                 Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
                 CreatedOn = DateTime.Now,
@@ -697,7 +706,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                 Manager = context.Managers.FirstOrDefault(m => m.Id == 4),
+                 Manager = managers.FirstOrDefault(m => m.Id == 4),
                  Name = "ASP.NET Core",
                  Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
                  CreatedOn = DateTime.Now,
@@ -706,19 +715,19 @@ namespace Polyglot.DataAccess.Seeds
                  MainLanguageId = 1
             }
             };
-                            
+
                 context.AddRange(projects);
                 context.SaveChanges();
             }
 
             if (!context.ComplexStrings.Any())
             {
-               var complexStrings = new List<ComplexString> {
-               new ComplexString { ProjectId = 3, TranslationKey = "title" },
-               new ComplexString { ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
-               new ComplexString { ProjectId = 4, TranslationKey = "Perspectives" },
-               new ComplexString { ProjectId = 1, TranslationKey = "Production" },
-               new ComplexString { ProjectId = 2, TranslationKey = "article" }
+                var complexStrings = new List<ComplexString> {
+                    new ComplexString { ProjectId = 3, TranslationKey = "title" },
+                    new ComplexString { ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
+                    new ComplexString { ProjectId = 4, TranslationKey = "Perspectives" },
+                    new ComplexString { ProjectId = 1, TranslationKey = "Production" },
+                    new ComplexString { ProjectId = 2, TranslationKey = "article" }
                 };
 
                 context.AddRange(complexStrings);
