@@ -48,6 +48,11 @@ export class ProjectEditComponent implements OnInit {
       });
   }
 
+  receiveImage($event){
+    this.projectImage = $event[0];
+    $event.pop();
+}
+
   saveChanges(project: Project): void {
     debugger;
     project.createdOn = new Date(Date.now());
@@ -58,9 +63,12 @@ export class ProjectEditComponent implements OnInit {
       console.log(project);
     formData.set("project", JSON.stringify(project));
 
+    this.routeSub = this.activatedRoute.params.subscribe((params) => {
+      this.id = params.projectId;
+      
+});
 
-
-    this.projectService.update(formData, 1)
+    this.projectService.update(formData, this.id)
     .subscribe(
       (d)=> {
         console.log(d);
@@ -81,13 +89,6 @@ export class ProjectEditComponent implements OnInit {
     return Object.keys(TypeTechnology).filter(
       (type) => isNaN(<any>type) && type !== 'values'
     );
-  }
-
-  getProjById(id: number) {
-    debugger;
-    this.projectService.getById(id).subscribe(proj => {
-      this.project = proj;
-    });
   }
 
   getLanguages() {

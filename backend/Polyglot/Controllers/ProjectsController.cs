@@ -93,6 +93,7 @@ namespace Polyglot.Controllers
 			Request.Form.TryGetValue("project", out StringValues res);
 
 			ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
+			project.Id = id;
 
 			if (Request.Form.Files.Count != 0)
 			{
