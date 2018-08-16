@@ -29,7 +29,7 @@ export class LanguagesComponent implements OnInit {
 
   }
 
-  addNewString(){
+  onAddNewString(){
   //  let dialogRef = this.dialog.open(StringDialogComponent, {
   //    data: {
     //    projectId: this.project.id
@@ -48,11 +48,12 @@ export class LanguagesComponent implements OnInit {
   //    });
   }
 
-  onDeleteLanguage(id: number){
-    this.langService.delete(id)
+  onDeleteLanguage(languageId: number){
+    debugger;
+    this.projectService.deleteProjectLanguage(this.projectId, languageId)
     .subscribe(() => {
 
-      this.langs = this.langs.filter(l => l.id != id);
+      this.langs = this.langs.filter(l => l.id != languageId);
       setTimeout(() => {
         this.snotifyService.success("Language removed", "Success!");
       }, 100);

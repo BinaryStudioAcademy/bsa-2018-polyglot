@@ -58,6 +58,14 @@ namespace Polyglot.Controllers
 
         }
 
+        //DELETE: projects/:id/languages/:id
+        [HttpDelete("{projId}/languages/{langId}", Name ="DeleteProjectLanguage")]
+        public async Task<IActionResult> DeleteProjectLanguage(int projId, int langId)
+        {
+            var success = await service.TryRemoveProjectLanguage(projId, langId);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
         // Get: Projects/5/complexString
         [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
         public async Task<IActionResult> GetProjectStrings(int id)

@@ -115,6 +115,22 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
+        public async Task<bool> TryRemoveProjectLanguage(int projectId, int languageId)
+        {
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            if(project != null)
+            {
+                var targetProdLang = project.ProjectLanguageses
+                    .Where(pl => pl.LanguageId == languageId)
+                    .FirstOrDefault();
+
+                if (targetProdLang != null)
+                    if (project.ProjectLanguageses.Remove(targetProdLang))
+                        if (uow.GetRepository<Project>().Update(project) != null)
+                            return await uow.SaveAsync() > 0;
+            }
+            return false;
+        }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
 		{			
