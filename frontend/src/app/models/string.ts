@@ -7,7 +7,7 @@ export interface IString {
     base: string;
     description: string;
     tags: string[];
-    translations: Translation[];
     comments: Comment[];
     projectId: number;
+    translations: Translation[];
 }

@@ -19,7 +19,7 @@ export class UserService {
   }
 
   getAndSave() {
-    this.dataService.sendRequest(RequestMethod.Get, this.endpoint).subscribe(
+    this.getUser().subscribe(
       (d)=> {
         this.saveUser(d);
       },
@@ -29,7 +29,17 @@ export class UserService {
     );
   }
 
+  // use this when logout
+  removeCurrentUser() {
+    this.user = undefined;
+  }
+
   saveUser(userProfile: any) {
+    if (userProfile.avatarUrl == undefined) {
+      userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
+    }
+    // can add more default values
+    
     this.user = userProfile;
   }
 

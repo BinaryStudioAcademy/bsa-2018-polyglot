@@ -10,6 +10,7 @@ import { MatChipsModule, MatCheckboxModule } from '@angular/material';
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
+import { AgmCoreModule } from '@agm/core';
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -60,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 
 
 @NgModule({
@@ -98,7 +100,8 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     ForgotPasswordDialogComponent,
     UploadFileComponent,
     TabDetailComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    TabCommentsComponent
   ],
   imports: [
     BrowserModule,
@@ -120,8 +123,10 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     MatProgressSpinnerModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
-    
+    SnotifyModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
+    })
   ],
   entryComponents: [
     LoginDialogComponent, 
