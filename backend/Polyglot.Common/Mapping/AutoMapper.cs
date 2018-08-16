@@ -235,11 +235,11 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<CommentDTO, Comment>()
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
                   .ForMember(p => p.Text, opt => opt.MapFrom(po => po.Text))
-                  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
+                  .ForMember(p => p.User, opt => opt.MapFrom(po => po.User));
                 cfg.CreateMap<Comment, CommentDTO>()
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))
                   .ForMember(p => p.Text, opt => opt.MapFrom(pt => pt.Text))
-                  .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId));
+                  .ForMember(p => p.User, opt => opt.MapFrom(pt => pt.User));
 
 				cfg.CreateMap<ComplexStringDTO, ComplexString>()
                   .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

@@ -1,5 +1,7 @@
+import { User } from "./user";
+
 export interface Comment {
-    userId: number;
+    user: User;
     text: string;
     createdOn: Date;
 }

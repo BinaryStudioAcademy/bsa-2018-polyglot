@@ -67,7 +67,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 4,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -76,7 +76,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "WW2", "title", "test" }
 
@@ -130,7 +130,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                      /*  new Comment {
                             UserId = 5,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -139,7 +139,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "angular", "scope", "component" }
 
@@ -197,7 +197,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 5,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -206,7 +206,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "net core", "announce", "framework" }
 
@@ -264,7 +264,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                      /*  new Comment {
                             UserId = 3,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -273,7 +273,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "crew", "film", "marocco" }
 
@@ -338,7 +338,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 1,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -347,7 +347,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 4,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "germany", "ussr", "ww2" }
 
