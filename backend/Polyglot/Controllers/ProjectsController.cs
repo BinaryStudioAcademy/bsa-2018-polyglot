@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Polyglot.Authentication;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
@@ -33,7 +34,8 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await service.GetListAsync();
+            var userId = UserIdentityService.GetCurrentUser().Id;
+            var projects = await service.GetListAsync(userId);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }

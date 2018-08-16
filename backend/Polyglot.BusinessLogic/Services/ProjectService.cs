@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AutoMapper;
@@ -103,9 +104,10 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) => 
+            mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.UserProfile.Id == userId));
 
-		
-		public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
+        public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
 		{			
 			var ent = mapper.Map<Project>(entity);
 			// ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
@@ -116,11 +118,16 @@ namespace Polyglot.BusinessLogic.Services
 
 			return mapper.Map<ProjectDTO>(target);			
 		}
-		
 
-		#region ComplexStrings
+        private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
+        {
+            var result = await uow.GetRepository<T>().GetAllAsync(predicate);
+            return result;
+        }
 
-		public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
+        #region ComplexStrings
+
+        public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
         {
             var strings = (await stringsProvider.GetAllAsync()).AsEnumerable();
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
