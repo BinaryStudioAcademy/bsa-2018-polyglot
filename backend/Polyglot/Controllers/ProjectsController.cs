@@ -48,6 +48,16 @@ namespace Polyglot.Controllers
 
         }
 
+        // GET: Projects/5/languages
+        [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
+        public async Task<IActionResult> GetProjectLangs(int id)
+        {
+            var project = await service.GetProjectLanguages(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
+
+        }
+
         // Get: Projects/5/complexString
         [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
         public async Task<IActionResult> GetProjectStrings(int id)

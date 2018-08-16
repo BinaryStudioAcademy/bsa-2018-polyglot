@@ -11,7 +11,8 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         Task FileParseDictionary(int id, IFormFile file);
 
-       
+        Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
+
         #region ComplexString
 
         Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);

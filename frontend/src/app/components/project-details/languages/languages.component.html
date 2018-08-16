@@ -5,14 +5,15 @@
 
         <li class="lang-item" *ngFor="let l of langs">
             <mat-card>
-              <span class="lang">{{l.Lang}}</span> 
-              <mat-progress-bar class="lang-progress" mode="determinate" value="{{l.Progress}}"></mat-progress-bar>
-              <button mat-icon-button>
+              <span class="lang">{{l.name}}</span> 
+              <mat-progress-bar class="lang-progress" mode="determinate" value="78"></mat-progress-bar>
+              <button (click)="onDeleteLanguage(l.id)" mat-icon-button>
                   <mat-icon aria-label="">delete_sweep</mat-icon>
               </button>
             </mat-card>
         </li>
     </ul>
-
+    
+    <ng-snotify></ng-snotify>
     <mat-spinner *ngIf="false"></mat-spinner>
 </div>

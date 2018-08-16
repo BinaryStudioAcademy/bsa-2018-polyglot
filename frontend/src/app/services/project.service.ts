@@ -40,4 +40,8 @@ export class ProjectService {
   postFile(id: number, file: FormData) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
   }
+
+  getProjectLanguages(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/' + 'languages', undefined, undefined);
+  }
 }

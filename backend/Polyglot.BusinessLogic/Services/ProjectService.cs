@@ -103,9 +103,20 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(id);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses
+                    ?.Select(p => p.Language);
+                return mapper.Map<IEnumerable<LanguageDTO>>(langs);
+            }
+            return null;
+        }
 
-		
-		public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
+
+        public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
 		{			
 			var ent = mapper.Map<Project>(entity);
 			// ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
