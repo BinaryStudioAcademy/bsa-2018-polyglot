@@ -25,7 +25,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="file title",
                     PictureLink="http://www.lib.cam.ac.uk/files/stauffenberg-bendler.jpg",
                     Translations = new List<Translation> {
-                        new Translation { Language = "Ukranian", 
+                        new Translation {
+                        Id = Guid.NewGuid(),
+                        Language = "Ukranian", 
                         TranslationValue ="Операція Валькірія", 
                         CreatedOn = DateTime.Now, 
                         UserId = 1,
@@ -45,7 +47,8 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "German", 
                             TranslationValue ="Unternehmen Walküre", 
                             CreatedOn = DateTime.Now, UserId = 2,
@@ -90,7 +93,8 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="Technology difference",
                     PictureLink="https://qph.fs.quoracdn.net/main-qimg-06a25d4b46bae22b0d583e6e4ee3472b",
                     Translations = new List<Translation> {
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "Ukranian", 
                             TranslationValue ="Angular не має поняття області видимості або контроллера, замість цього він використовує ієрархію компонентів як основну архітектурну характеристику", 
                             CreatedOn = DateTime.Now, 
@@ -111,7 +115,7 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { Language = "Italian", TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
+                        new Translation {   Id = Guid.NewGuid(),Language = "Italian", TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
                         History = new List<AdditionalTranslation> {
                             new AdditionalTranslation {
                                 UserId = 2,
@@ -153,7 +157,8 @@ namespace Polyglot.DataAccess.Seeds
                     Description =".NET Core 3.0 announced",
                     PictureLink="https://pbs.twimg.com/media/DcsAmkxXcAIl_en.jpg",
                     Translations = new List<Translation> {
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "Ukranian", 
                             TranslationValue ="З виходом .NET Core 3 фреймворк отримає підтримку для розробки програм для робочого столу, штучного інтелекту / машинного навчання та інтернету речей.", 
                             CreatedOn = DateTime.Now, 
@@ -174,7 +179,8 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "French", 
                             TranslationValue ="Avec Core 3, le framework prendra en charge le développement d'applications de bureau, d'intelligence artificielle / d'apprentissage automatique et d'IoT", 
                             CreatedOn = DateTime.Now, 
@@ -220,7 +226,8 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="Features of the release of the film",
                     PictureLink="https://ichef.bbci.co.uk/news/660/media/images/82107000/jpg/_82107031_chinesenavyreut.jpg",
                     Translations = new List<Translation> {
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "Chinese", 
                             TranslationValue ="主要攝影於2017年2月中旬在摩洛哥開始，僱用了400名摩洛哥人和300名中國人作為技術人員組的一部分", 
                             CreatedOn = DateTime.Now, 
@@ -241,7 +248,8 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "Spanich", 
                             TranslationValue ="La fotografía principal comenzó a mediados de febrero de 2017 en Marruecos y empleó a 400 marroquíes y 300 chinos como parte del grupo técnico de tripulación.", 
                             CreatedOn = DateTime.Now, 
@@ -288,7 +296,8 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="German-Soviet relations of 1939–40",
                     PictureLink="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tweede_wereldoorlog_inval_in_Polen_1939.png/800px-Tweede_wereldoorlog_inval_in_Polen_1939.png",
                     Translations = new List<Translation> {
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "German", 
                             TranslationValue ="Die geopolitische Disposition Europas 1941, unmittelbar vor Beginn der Operation Barbarossa. Die Grauzone repräsentiert Nazi-Deutschland, seine Verbündeten und die von ihm kontrollierten Länder. " +
                                             "Im August 1939 unterzeichneten Deutschland und die Sowjetunion in Moskau einen Nichtangriffspakt, der Molotov-Ribbentrop-Pakt", 
@@ -312,7 +321,8 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
+                        new Translation {
+                            Id = Guid.NewGuid(),
                             Language = "Ukranian", 
                             TranslationValue ="Геополітичне розташування Європи в 1941 році, безпосередньо перед початком операції Барбаросса. Сірий район представляє нацистську Німеччину, її союзників та країни, що знаходяться під його жорстким контролем. " +
                                                 "У серпні 1939 р. Німеччина та Радянський Союз підписали пакт про ненапад, який в Москві називають пакт Молотова-Ріббентропа", 
