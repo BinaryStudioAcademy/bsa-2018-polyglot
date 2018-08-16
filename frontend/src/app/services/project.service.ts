@@ -36,4 +36,8 @@ export class ProjectService {
   getProjectStrings(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings', undefined, undefined);
   }
+
+  postFile(id: number, file: FormData) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
+  }
 }

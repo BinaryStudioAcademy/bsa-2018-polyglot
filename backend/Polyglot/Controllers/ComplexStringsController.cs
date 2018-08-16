@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -35,18 +36,40 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
+            
             var complexStrings = await dataProvider.GetListAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
         }
 
         // GET: ComplexStrings/5
-        [HttpGet("{id}", Name = "GetcomplexStringComplexString")]
-        public async Task<IActionResult> GetcomplexStringComplexString(int id)
+        [HttpGet("{id}", Name = "GetComplexString")]
+        public async Task<IActionResult> GetComplexString(int id)
         {
             var complexString = await dataProvider.GetComplexString(id);
             return complexString == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<ComplexStringDTO>(complexString));
+        }
+
+        // GET: ComplexStrings/5/translations
+        [HttpGet("{id}/translations", Name = "GetComplexStringTranslations")]
+        public async Task<IActionResult> GetComplexStringTranslations(int id)
+        {
+            var translation = await dataProvider.GetStringTranslationsAsync(id);
+            return translation == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
+                : Ok(mapper.Map<IEnumerable<TranslationDTO>>(translation));
+        }
+
+        // PUT: ComplexStrings/5/translations
+        [HttpPut("{id}/translations")]
+        public async Task<IActionResult> SetStringTranslations(int id, [FromBody]IEnumerable<TranslationDTO> translations)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.SetStringTranslations(id, translations);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
 
         // POST: ComplexStrings
