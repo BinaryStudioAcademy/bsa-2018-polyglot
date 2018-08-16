@@ -122,7 +122,7 @@ import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
     MatCheckboxModule,
     SnotifyModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAmQNQvw2kjUJOki-B8BusPTiiTuQHAXKQ'
+      apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     })
   ],
   entryComponents: [
