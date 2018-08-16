@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone, OnChanges, SimpleChanges, Input } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { Project } from '../../models/project';
 import { Language } from '../../models/language';
@@ -16,11 +16,11 @@ import { Subscription } from 'rxjs'
   templateUrl: './project-edit.component.html',
   styleUrls: ['./project-edit.component.sass']
 })
-export class ProjectEditComponent implements OnInit {
+export class ProjectEditComponent implements OnInit, OnChanges {
 
   private routeSub: Subscription;
   projectImage: File;
-  project: Project;
+  @Input() project: Project;
   projectForm: FormGroup = this.fb.group({
     name: [ '', [Validators.required, Validators.minLength(4)]],
     description: [ '', [Validators.maxLength(500)]],
@@ -38,14 +38,33 @@ export class ProjectEditComponent implements OnInit {
               private activatedRoute: ActivatedRoute) {  }
 
   ngOnInit() {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    debugger;
     this.languageService.getAll()
       .subscribe(
       (d: Language[]) => {
         this.languages = d.map(x => Object.assign({}, x));
+        debugger;
+
+        let l = this.languages.find(x => x.id == this.project.mainLanguage.id);
+
+        let i = this.languages.indexOf(l);
+
+        this.projectForm.setValue({
+          name: this.project.name,
+          description: this.project.description,
+          technology: this.project.technology,
+          mainLanguage: this.languages[i]
+        });
+        debugger;
       },
       err => {
         console.log('err', err);
       });
+   
   }
 
   receiveImage($event){
@@ -55,7 +74,7 @@ export class ProjectEditComponent implements OnInit {
 
   saveChanges(project: Project): void {
     debugger;
-    project.createdOn = new Date(Date.now());
+    // project.createdOn = new Date(Date.now());
     let formData = new FormData();
     if(this.projectImage)
       formData.set("image", this.projectImage);
