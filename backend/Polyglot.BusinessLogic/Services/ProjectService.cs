@@ -129,13 +129,21 @@ namespace Polyglot.BusinessLogic.Services
 
 			Project target = await uow.GetRepository<Project>().GetAsync(entity.Id);
 
-			if(target.ImageUrl != null)
-				await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+
+
+			if (target.ImageUrl != null && source.ImageUrl != null)
+			{
+				await fileStorageProvider.DeleteFileAsync(target.ImageUrl);				
+			}
+			if(source.ImageUrl != null)
+			{
+				target.ImageUrl = source.ImageUrl;
+			}
+
 
 			target.Name = source.Name;
 			target.Description = source.Description;
 			target.Technology = source.Technology;
-			target.ImageUrl = source.ImageUrl;
 
 			target.MainLanguage = null;
 			target.MainLanguageId = source.MainLanguageId;
