@@ -108,7 +108,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     ImgDialogComponent,
     LanguagesComponent,
     DeleteProjectLanguageComponent,
-    SelectProjectLanguageComponent
+    SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent
   ],
@@ -133,7 +133,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     ImageCropperModule,
     MatCheckboxModule,
     SnotifyModule,
-    MatDialogModule
+    MatDialogModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     })
