@@ -62,6 +62,7 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 
 
 @NgModule({
@@ -101,7 +102,8 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    ProjectEditComponent
   ],
   imports: [
     BrowserModule,

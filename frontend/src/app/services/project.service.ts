@@ -17,7 +17,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  getById(id: number) : Observable<any> {
+  getById(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
@@ -25,7 +25,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
   }
 
-  update(project: Project, id: number) : Observable<Project> {
+  update(project: FormData, id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, project);
   }
 
