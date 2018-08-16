@@ -1,0 +1,13 @@
+<div>
+  <div>
+    <h2>Are you sure? {{translationsCount}} translations will be removed!</h2>
+    <p>To delete language with all translations in project type the language name '{{languageName}}'</p>
+    <mat-form-field>
+      <textarea #langName matInput [(ngModel)]="inputLangName" placeholder="{{languageName}}" ng-trim="true"></textarea>
+    </mat-form-field>
+  </div>
+  <div class="p-1 mt-2">
+      <button style="float: left" mat-raised-button color="primary" (click)="confirm()" mat-button>Confirm</button>
+      <button style="float: right" mat-raised-button color="warn" (click)="close()">Cancel</button>
+  </div>
+</div>
