@@ -1,16 +1,35 @@
 <mat-card class="key-details my-1 px-0 grow-1 mr-0 ml-1">
 	<div *ngIf="keyDetails.translations">
-		<div *ngFor="let t of keyDetails.translations" class="comments-container">
-			<mat-card class="comment-card">
-				<div class="language">
-					<p>{{t.language}}</p>
-				</div>
-				<div class="translation">
-					<p>{{t.translationValue}}</p>
-				</div>
-			</mat-card>
+		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
+				<mat-accordion class="example-headers-align">
+						<mat-expansion-panel [expanded]="expandedArray[i]" (opened)="setStep(i)" hideToggle>
+						  <mat-expansion-panel-header class="header-translation" *ngIf = "!expandedArray[i]" >
+								  <mat-panel-title>
+									  <p>{{t.language}}</p>
+								  </mat-panel-title>
+								  <mat-panel-description>
+								  <p >{{t.translationValue}}</p>
+								  </mat-panel-description>
+							</mat-expansion-panel-header>
+					  
+						   <div >
+								<mat-form-field class="textarea-translation">
+										<mat-label class="language-label">{{t.language}}</mat-label>
+										<textarea matInput
+												[(ngModel)]="t.translationValue"
+												  cdkTextareaAutosize
+													  cdkAutosizeMinRows="2"
+													  cdkAutosizeMaxRows="10"></textarea>
+								</mat-form-field>
+								<div class="button-translation">
+									<button mat-raised-button color="primary"  (click)="onSave()">Save</button>
+									<button mat-raised-button color="warn"  (click)="onClose(i)">Close</button>
+								</div>
+								
+						  </div>
+						</mat-expansion-panel>
+				</mat-accordion>
 		</div>
-
 	</div>
 </mat-card>
 
