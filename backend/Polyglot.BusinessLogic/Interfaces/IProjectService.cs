@@ -17,7 +17,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         #region Teams
 
-        Task<TeamPrevDTO> GetProjectTeam(int id);
+        Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
 
         Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 

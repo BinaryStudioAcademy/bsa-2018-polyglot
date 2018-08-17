@@ -24,7 +24,6 @@ namespace Polyglot.BusinessLogic.Services
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
-		private IUnitOfWork uow;
 		public IFileStorageProvider fileStorageProvider;
 
 		public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
@@ -32,7 +31,6 @@ namespace Polyglot.BusinessLogic.Services
             : base(uow, mapper)
         {
             stringsProvider = rep;
-			this.uow = uow;
 			this.fileStorageProvider = provider;
 
         }
@@ -118,13 +116,16 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Teams
 
-        public async Task<TeamPrevDTO> GetProjectTeam(int id)
+        public async Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId)
         {
             var project = await uow.GetRepository<Project>()
-                    .GetAsync(id);
+                    .GetAsync(projectId);
 
-            var team = project?.Teams?.FirstOrDefault();
-            return team != null ? mapper.Map<TeamPrevDTO>(team) : null;
+            if (project == null)
+                return null;
+
+            var teams = project.Teams;
+            return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
         }
 
         public async Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds)

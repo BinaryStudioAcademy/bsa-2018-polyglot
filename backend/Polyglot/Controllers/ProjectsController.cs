@@ -50,10 +50,10 @@ namespace Polyglot.Controllers
         }
 
         // GET: Projects/:id?teams
-        [HttpGet("{id}/teams", Name = "GetProjectTeam")]
-        public async Task<IActionResult> GetProjectTeam(int id)
+        [HttpGet("{id}/teams", Name = "GetProjectTeams")]
+        public async Task<IActionResult> GetProjectTeams(int id)
         {
-            var project = await service.GetProjectTeam(id);
+            var project = await service.GetProjectTeams(id);
             return project == null ? NotFound($"Project with id = {id} has got no assigned team!") as IActionResult
                 : Ok(project);
 
