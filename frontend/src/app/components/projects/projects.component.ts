@@ -42,6 +42,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     phone: 'string',
     avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
   };
+  manager: UserProfile =  this.user;
 
   ngOnInit() {
   this.OnPage = true;
