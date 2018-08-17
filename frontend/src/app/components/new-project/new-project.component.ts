@@ -20,7 +20,7 @@ export class NewProjectComponent implements OnInit {
   constructor(private fb: FormBuilder, private projectService: ProjectService,
     private languageService: LanguageService, 
     private router: Router,
-    private snotifyService: SnotifyService,) {
+    private snotifyService: SnotifyService) {
 
   }
 
