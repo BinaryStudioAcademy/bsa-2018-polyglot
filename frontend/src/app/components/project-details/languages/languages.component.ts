@@ -50,18 +50,29 @@ export class LanguagesComponent implements OnInit {
       dialogRef.componentInstance.onSelect.subscribe((data) => {
         if(data)
         {
-          data.forEach(language => {
           this.IsLoad = true;
-            this.projectService.addLanguageToProject(this.projectId, language.id)
+            this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
-                this.langs.push(language);
-                this.IsLoad = false;
+                /////////////////////////////////////////
+                if(project){
+                  this.langs.push(data);
+                  this.IsLoad = false;
+                }
+                else
+                {
+                  this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
+                }
+                
+              },
+              err => {
+                this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
+                console.log('err', err);
+                
               })
-          });
         }
         else
         {
-          this.snotifyService.error(data.message, "Error!");
+          this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
         }
       });
 
