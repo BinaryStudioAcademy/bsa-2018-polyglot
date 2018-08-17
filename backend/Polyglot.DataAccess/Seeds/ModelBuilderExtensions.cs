@@ -16,15 +16,15 @@ namespace Polyglot.DataAccess.Seeds
                 new UserProfile
                 {
                     Id = 1,
-                    Uid = "TP59AlOHjXUQxedsqzG93PMYeTA3",
-                    FullName = "John Lennon",
+                    Uid = "QqEx8KOLDZOYbKEiUxz18vkjKc22",
+                    FullName = "Zhukov Mikhail",
                     BirthDate = new DateTime(1991,9,31),
                     RegistrationDate = DateTime.Now,
                     Country = "USA",
                     City = "New York",
                     Address = "570 Lexington Avenue",
                     Region = "New York",
-                    AvatarUrl = "https://www.songhall.org/images/uploads/exhibits/John_Lennon.jpg",
+                    AvatarUrl = "",
                     PostalCode = "10022",
                     Phone = "1-800-746-4726"
 

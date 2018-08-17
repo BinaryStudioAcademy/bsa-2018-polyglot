@@ -66,8 +66,9 @@ import { DeleteProjectLanguageComponent } from './dialogs/delete-project-languag
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
-
-
+import { ProjectTeamComponent } from './components/project-details/project-team/project-team.component';
+import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
+import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,9 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    ProjectTeamComponent,
+    TeamAssignComponent
   ],
   imports: [
     BrowserModule,
@@ -134,6 +137,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
     MatCheckboxModule,
     SnotifyModule,
     MatDialogModule,
+    NgxSmoothDnDModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     })

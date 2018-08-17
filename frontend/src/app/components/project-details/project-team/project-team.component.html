@@ -1,0 +1,31 @@
+<p>
+  project-team works!
+</p>
+
+
+<mat-sidenav-container class="example-container">
+    <mat-sidenav #sidenav mode="side">
+      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+      <div class="simple-page">
+          <smooth-dnd-container (drop)="onDrop($event)">            
+            <smooth-dnd-draggable *ngFor="let item of items">
+              <div class="draggable-item">
+                {{item.data}}
+              </div>
+            </smooth-dnd-draggable>
+          </smooth-dnd-container>
+      </div>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+      <p>
+          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
+          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg  
+          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
+          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg   
+          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
+          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg         regre g r
+        </p>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
