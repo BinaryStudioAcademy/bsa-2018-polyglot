@@ -6,18 +6,19 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TranslationsService {
 
+export class TranslationsService {
+  
   api: string;
   constructor(private dataService: HttpService) { 
     this.api = "ComplexStrings";
   }
 
   getStringTranslations(id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translationss', undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translations', undefined, undefined);
   }
 
   updateStringTranslations(translations: Translation[], id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translationss', undefined, translations);
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translations);
   }
 }
