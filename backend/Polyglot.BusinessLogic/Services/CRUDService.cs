@@ -56,7 +56,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<bool> TryDeleteAsync(int identifier)
+        public virtual async Task<bool> TryDeleteAsync(int identifier)
 		{
             if (uow != null)
             {
