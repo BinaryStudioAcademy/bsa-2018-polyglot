@@ -41,6 +41,14 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
   }
 
+  getProjectTeam(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams', undefined, undefined);
+  }
+
+  assignTeamToProject(projectId: number, teamId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/teams/' + teamId, undefined, undefined);
+  }
+
   getProjectLanguages(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
   }
