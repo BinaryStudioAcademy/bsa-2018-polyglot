@@ -21,7 +21,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 
-        Task<bool> DismissProjectTeam(int projectId, int teamId);
+        Task<bool> TryDismissProjectTeam(int projectId, int teamId);
 
         #endregion Teams
 

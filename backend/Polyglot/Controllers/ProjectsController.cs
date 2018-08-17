@@ -75,7 +75,7 @@ namespace Polyglot.Controllers
         [HttpDelete("{projId}/teams/{teamId}", Name = "DismissProjectTeam")]
         public async Task<IActionResult> DismissProjectTeam(int projId, int teamId)
         {
-            var success = await service.DismissProjectTeam(projId, teamId);
+            var success = await service.TryDismissProjectTeam(projId, teamId);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
 

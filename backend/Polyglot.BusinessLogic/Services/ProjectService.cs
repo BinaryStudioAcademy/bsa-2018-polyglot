@@ -139,13 +139,15 @@ namespace Polyglot.BusinessLogic.Services
             if (project == null)
                 return null;
 
+            var teamIdsToAdd = teamIds.Except(project.Teams.Select(t => t.Id));
+
             Team currentTeam;
-            foreach (var id in teamIds)
+            foreach (var id in teamIdsToAdd)
             {
+                
                 currentTeam = await uow.GetRepository<Team>()
                 .GetAsync(id);
-                if (currentTeam != null && !project.Teams.Contains(currentTeam))
-                    project.Teams.Add(currentTeam);
+                project.Teams.Add(currentTeam);
             }
 
             project = uow.GetRepository<Project>()
@@ -155,23 +157,21 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<bool> DismissProjectTeam(int projectId, int teamId)
+        public async Task<bool> TryDismissProjectTeam(int projectId, int teamId)
         {
             var project = await uow.GetRepository<Project>()
                 .GetAsync(projectId);
 
             if (project == null)
                 return false;
-
-            var team = await uow.GetRepository<Team>()
-               .GetAsync(teamId);
-
-            if (team == null)
-                return false;
-
+            
             if (project.Teams?.Count() > 0)
             {
-                project.Teams.Remove(team);
+                var targetTeam = project.Teams.FirstOrDefault(t => t.Id == teamId);
+                if (targetTeam == null)
+                    return false;
+
+                project.Teams.Remove(targetTeam);
                 project = uow.GetRepository<Project>()
                     .Update(project);
                 return await uow.SaveAsync() > 0 && project != null;
