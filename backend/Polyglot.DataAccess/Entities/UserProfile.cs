@@ -42,7 +42,7 @@ namespace Polyglot.DataAccess.Entities
             Projects = new List<Project>();
         }
 
-        public enum Role { Translator, Manager }
+        public enum Role { Manager, Translator }
 
     }
 }

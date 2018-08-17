@@ -159,7 +159,7 @@ namespace Polyglot.DataAccess.Seeds
                 new
                 {
                     Id = 1,
-                    ManagerId = 1,
+                    UserProfileId = 1,
                     Name = "Operation Red Sea",
                     Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
                     CreatedOn = DateTime.Now,
@@ -169,7 +169,7 @@ namespace Polyglot.DataAccess.Seeds
                  new
                  {
                      Id = 2,
-                     ManagerId = 1,
+                     UserProfileId = 2,
                      Name = "Operation Barbarossa",
                      Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
                      CreatedOn = DateTime.Now,
@@ -179,7 +179,7 @@ namespace Polyglot.DataAccess.Seeds
             new
             {
                 Id = 3,
-                ManagerId = 2,
+                UserProfileId = 3,
                 Name = "Operation Valkyrie",
                 Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
                 CreatedOn = DateTime.Now,
@@ -189,7 +189,7 @@ namespace Polyglot.DataAccess.Seeds
             new
             {
                 Id = 4,
-                ManagerId = 4,
+                UserProfileId = 4,
                 Name = "Angular",
                 Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
                 CreatedOn = DateTime.Now,
@@ -199,7 +199,7 @@ namespace Polyglot.DataAccess.Seeds
              new
              {
                  Id = 5,
-                 ManagerId = 4,
+                 UserProfileId = 5,
                  Name = "ASP.NET Core",
                  Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
                  CreatedOn = DateTime.Now,
@@ -367,7 +367,8 @@ namespace Polyglot.DataAccess.Seeds
                         Region = "New York",
                         AvatarUrl = "https://www.songhall.org/images/uploads/exhibits/John_Lennon.jpg",
                         PostalCode = "10022",
-                        Phone = "1-800-746-4726"
+                        Phone = "1-800-746-4726",
+                        UserRole = UserProfile.Role.Manager
 
                     },
                     new UserProfile
@@ -383,23 +384,25 @@ namespace Polyglot.DataAccess.Seeds
                     Region = "Kyiv",
                     AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
                     PostalCode = "43022",
-                    Phone = "38-095-746-4726"
+                    Phone = "38-095-746-4726",
+                    UserRole = UserProfile.Role.Manager
 
                     },
                     new UserProfile
                     {
 
-                Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
-                FullName = "Vasya Mykolaiychuk",
-                BirthDate = new DateTime(1990,10,11),
-                RegistrationDate = DateTime.Now,
-                Country = "Ukraine",
-                City = "Striy",
-                Address = "Mazepy avenue, 67",
-                Region = "Lviv",
-                AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
-                PostalCode = "43022",
-                Phone = "38-095-746-4726"
+                    Uid = "5hdyMOGgPRZ3CREAYAGTAG815ZO2",
+                    FullName = "Vasya Mykolaiychuk",
+                    BirthDate = new DateTime(1990,10,11),
+                    RegistrationDate = DateTime.Now,
+                    Country = "Ukraine",
+                    City = "Striy",
+                    Address = "Mazepy avenue, 67",
+                    Region = "Lviv",
+                    AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
+                    PostalCode = "43022",
+                    Phone = "38-095-746-4726",
+                    UserRole = UserProfile.Role.Manager
 
                     },
                     new UserProfile
@@ -415,8 +418,8 @@ namespace Polyglot.DataAccess.Seeds
                     Region = "Florida",
                     AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
                     PostalCode = "63022",
-                    Phone = "12-795-746-4726"
-
+                    Phone = "12-795-746-4726",
+                    UserRole = UserProfile.Role.Manager
                 },
                     new UserProfile
                 {
@@ -431,9 +434,25 @@ namespace Polyglot.DataAccess.Seeds
                     Region = "Florida",
                     AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                     PostalCode = "63022",
-                    Phone = "12-795-746-4726"
+                    Phone = "12-795-746-4726",
+                    UserRole = UserProfile.Role.Manager
+                },
+                    new UserProfile
+                    {
 
-                }
+                        Uid = "nuovtLkpIVapFYvzWvraVrkliox1",
+                        FullName = "Transaltor",
+                        BirthDate = new DateTime(1990,8,13),
+                        RegistrationDate = DateTime.Now,
+                        Country = "USA",
+                        City = "Maiami",
+                        Address = "3275 NW 24th Street Rd",
+                        Region = "Florida",
+                        AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
+                        PostalCode = "63022",
+                        Phone = "12-795-746-4726",
+                        UserRole = UserProfile.Role.Translator
+                    }
                     };
 
                 context.AddRange(users);
