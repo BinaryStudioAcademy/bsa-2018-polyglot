@@ -109,11 +109,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   onSave(t: Translation){
     this.route.params.subscribe(value =>
     {
+      debugger
         if(t.id) {
           this.dataProvider.editStringTranslation(t, value.keyId)
             .subscribe(
             (d: Translation[])=> {
-              console.log(d);
+              console.log(this.keyDetails.translations);
             },
             err => {
               console.log('err', err);
@@ -121,9 +122,16 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
-          //this.dataProvider.
+          this.dataProvider.createStringTranslation(t, value.keyId)
+            .subscribe(
+              (d: Translation)=> {
+                console.log(this.keyDetails.translations);
+              },
+              err => {
+                console.log('err', err);
+              }
+            ); 
         }
-    //console.log(this.keyDetails.translations);
     });
   }
   
