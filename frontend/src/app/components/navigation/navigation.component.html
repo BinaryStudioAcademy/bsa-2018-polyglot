@@ -2,7 +2,7 @@
   <mat-toolbar class="example-toolbar">
 
 
-    <button mat-icon-button (click)="snav.toggle()" *ngIf="isLoggedIn()">
+    <button mat-icon-button fxHide fxShow.lt-md="true" (click)="snav.toggle()" *ngIf="isLoggedIn()">
       <mat-icon>menu</mat-icon>
     </button>
 

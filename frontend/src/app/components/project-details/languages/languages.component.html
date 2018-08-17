@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="select-lang-container">
+        <button mat-flat-button color="primary" (click)= "selectNew()">Select new language</button>
+        <div *ngIf="IsLangLoad" class="spinner-small">
+            <mat-spinner [diameter]="25"></mat-spinner> 
+        </div> 
+    </div>
+
+    <div *ngIf="IsLoad" class="spinner">
+        <mat-spinner></mat-spinner> 
+      </div> 
+      <h2 *ngIf="langs.length == 0" class="no-languages">There is no languages yet.</h2>
+    <ul class="lang-list">
+
+        <li class="lang-item" *ngFor="let l of langs">
+            <mat-card>
+              <span class="lang">{{l.name}}</span> 
+              <mat-progress-bar class="lang-progress" mode="determinate" value="{{l.progress}}"></mat-progress-bar>
+              <button (click)="onDeleteLanguage(l.id)" mat-icon-button>
+                  <mat-icon aria-label="">delete_sweep</mat-icon>
+              </button>
+            </mat-card>
+        </li>
+    </ul>
+    
+    <ng-snotify></ng-snotify>
+</div>
