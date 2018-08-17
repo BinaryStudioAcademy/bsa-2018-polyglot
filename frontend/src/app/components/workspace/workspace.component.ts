@@ -106,6 +106,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
 
     this.keys.splice(temp, 1);
+    
+    this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
 
   delete(id: number): void{
