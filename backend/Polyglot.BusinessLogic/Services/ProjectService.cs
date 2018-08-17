@@ -140,8 +140,8 @@ namespace Polyglot.BusinessLogic.Services
                     {
 #warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
 
-                        langTranslations = translations
-                            ?.Where(t => String.Equals(t.Language.Trim().ToLower(), dtos[i].Name.Trim().ToLower()));
+                        //langTranslations = translations
+                        //    ?.Where(t => String.Equals(t.Language.Trim().ToLower(), dtos[i].Name.Trim().ToLower()));
 
                         if (langTranslations.Count() < 1)
                             continue;
