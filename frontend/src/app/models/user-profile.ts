@@ -14,11 +14,8 @@ export interface UserProfile {
     phone?: string;
     avatarUrl?: string;
     fullName?: string;
-
-
-    ratings: Array<Rating>;
-    teamTranslators: Array<TeamTranslator>;
-
-    userRole : Role;
+    ratings?: Array<Rating>;
+    teamTranslators?: Array<TeamTranslator>;
+    userRole? : Role;
 }
 enum Role { Manager , Translator};
