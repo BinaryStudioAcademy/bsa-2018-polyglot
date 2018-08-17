@@ -92,13 +92,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
 
   receiveId($event) {
-    debugger;
     let temp = this.keys.findIndex( x => x.id === $event);
     if(this.selectedKey.id == this.keys[temp].id)
       this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
 
     this.keys.splice(temp, 1);
-
+    
+    this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
 
 }
