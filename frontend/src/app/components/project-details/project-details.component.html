@@ -1,8 +1,10 @@
 <div class="content" *ngIf="project">
 	
-	<h2>{{project.name}}</h2>
+	<div class="d-flex align-items-center py-0 px-1 justify-space-between">
+		<h2>{{project.name}}</h2>
+		<button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/workspace', project.id]">Workspace</button>
 	
-
+	</div>
 
 	<mat-tab-group>
 		<mat-tab label="Overview">
