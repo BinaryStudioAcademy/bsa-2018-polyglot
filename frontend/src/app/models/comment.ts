@@ -1,7 +1,7 @@
-import { User } from "./user";
+import { UserProfile } from ".";
 
 export interface Comment {
-    user: User;
+    user: UserProfile;
     text: string;
     createdOn: Date;
 }

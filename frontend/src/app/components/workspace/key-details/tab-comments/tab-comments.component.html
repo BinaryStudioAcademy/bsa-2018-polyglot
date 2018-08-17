@@ -10,7 +10,10 @@
 </form>
 <div  *ngFor="let com of keyDetails.comments" class="comments-container">
     <mat-card  class="comment-card">
-        <h5>{{com.user.fullName}}</h5>
+        <div class="author-info">
+            <img class="comment-avatar" (click)="onImageClick(com.user.avatarUrl)" src="{{com.user.avatarUrl}}">
+            <strong class="comment-author">{{com.user.fullName}}</strong>
+        </div>
         <div class ="text">{{com.text}}</div>
         <div class="date"><i>{{com.createdOn | date:'short'}}</i></div>
     </mat-card>

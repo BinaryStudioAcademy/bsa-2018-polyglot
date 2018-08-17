@@ -4,6 +4,7 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -18,6 +19,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
   public Id : string;
+  expandedArray = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -26,7 +28,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private dataProvider: ComplexStringService
   ) { 
     this.Id = this.route.snapshot.queryParamMap.get('keyid');
+    this.expandedArray  
   }
+
 
   ngOnChanges(){
 
@@ -45,19 +49,34 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
       this.IsPagenationNeeded = false;
   }
 
+  step = 0;
+
+  setStep(index: number) {
+    this.expandedArray[index] = true;
+  }
+
+
   ngOnInit() {
      this.route.params.subscribe(value =>
      {
       this.dataProvider.getById(value.keyId).subscribe((data: any) => {
         this.keyDetails = data;
+        const temp = this.keyDetails.translations.length;
+        for (var i = 0; i < temp; i++) {
+          this.expandedArray.push(false);
+        }
       });
      });
   }
 
-  updateTable() {
-    this.translationsDataSource.data = this.keyDetails.translations;
+  onSave(){
+    debugger
+    console.log(this.keyDetails.translations);
   }
-
+  
+  onClose(index: number) {
+    this.expandedArray[index] = false;
+  }
   ngOnDestroy() {
   }
 

@@ -123,27 +123,26 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var langs = proj.ProjectLanguageses
                     ?.Select(p => p.Language);
-                
+
+               
                 var translations = (await stringsProvider.GetAllAsync(x => x.ProjectId == id)
                     )
-                    ?.SelectMany(cs => cs.Translations);
+                    ?.SelectMany(css => css.Translations).ToList();
 
                 return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>
                 {
                     var dtos = dest.ToList();
-                    IEnumerable<Translation> langTranslations = null;
+                    List<Translation> langTranslations = null;
                     int? progress = 0;
                     int? translatedCount = 0;
                     int percentUnit = 0;
 
                     for (int i = 0; i < dtos.Count; i++)
                     {
-#warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
-
                         langTranslations = translations
-                            ?.Where(t => String.Equals(t.Language.Trim().ToLower(), dtos[i].Name.Trim().ToLower()));
+                            ?.Where(t => t.LanguageId == dtos[i].Id).ToList();
 
-                        if (langTranslations.Count() < 1)
+                        if (langTranslations?.Count() < 1)
                             continue;
 
                         percentUnit = (int)(100 / langTranslations.Count());
