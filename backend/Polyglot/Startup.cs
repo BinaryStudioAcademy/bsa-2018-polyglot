@@ -93,11 +93,11 @@ namespace Polyglot
                 serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
             }
 
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-            //    MongoDbSeedsInitializer.MongoSeedAsync(context);
-            //}
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+                MongoDbSeedsInitializer.MongoSeedAsync(context);
+            }
 
             // if (env.IsDevelopment())
             // {
