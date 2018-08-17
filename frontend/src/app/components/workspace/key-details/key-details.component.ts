@@ -7,6 +7,7 @@ import { ComplexStringService } from '../../../services/complex-string.service';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Translation } from '../../../models';
 import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -25,18 +26,16 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(
-    private route: ActivatedRoute,
-    private dataProvider: ComplexStringService
-  ) { 
+  constructor(    private route: ActivatedRoute,
+    private dataProvider: ComplexStringService,
+    private languageService: LanguageService) 
+  { 
     this.Id = this.route.snapshot.queryParamMap.get('keyid');
     this.expandedArray  
   }
 
 
   ngOnChanges(){
-
-
     if(this.keyDetails && this.keyDetails.translations){
       this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
@@ -74,7 +73,16 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   onSave(t: Translation){
     this.route.params.subscribe(value =>
       {
-    this.dataProvider.updateStringTranslation(t,value.keyId);
+        debugger
+        this.dataProvider.editStringTranslation(t, value.keyId)
+          .subscribe(
+          (d: Translation[])=> {
+            console.log(d);
+          },
+          err => {
+            console.log('err', err);
+          }
+        ); 
     console.log(this.keyDetails.translations);
       });
   }
