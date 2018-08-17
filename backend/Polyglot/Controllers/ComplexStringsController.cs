@@ -61,12 +61,12 @@ namespace Polyglot.Controllers
 
         // PUT: ComplexStrings/5/translations
         [HttpPost("{id}/translations")]
-        public async Task<IActionResult> SetStringTranslations(int id, [FromBody]IEnumerable<TranslationDTO> translations)
+        public async Task<IActionResult> SetStringTranslation(int id, [FromBody]TranslationDTO translation)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.SetStringTranslations(id, translations);
+            var entity = await dataProvider.SetStringTranslation(id, translation);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
