@@ -14,7 +14,7 @@ import { TeamAssignComponent } from '../../../dialogs/team-assign/team-assign.co
 export class ProjectTeamComponent implements OnInit {
 
   @Input() projectId: number;
-  assignedTeam: any;
+  public assignedTeams: Array<any> = [];
   public IsLoad: boolean = true;
   public IsTeamAssigned: boolean = false;
   public IsTeamsLoading: boolean = false;
@@ -27,19 +27,24 @@ export class ProjectTeamComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.projectService.getProjectTeam(this.projectId)
-        .subscribe(assignedTeam => {
-          if(assignedTeam)
+   // debugger;
+    this.projectService.getProjectTeams(this.projectId)
+        .subscribe(assignedTeams => {
+         // debugger;
+          if(assignedTeams && assignedTeams.length > 0)
             {
-              this.assignedTeam = assignedTeam;
+              this.assignedTeams = assignedTeams;
               this.IsTeamAssigned = true;
             }else
             {
-              /// FIRE THE ASSIGN TEAM DIALOG
+              this.assignedTeams = [];
+              this.IsTeamAssigned = false;
+              ///TODO: FIRE THE ASSIGN TEAM DIALOG
             }
           this.IsLoad = false;
         },
         err => {
+          this.snotifyService.error("An error occurred while loading teams assigned to this project, please try again later", "Error!");
           this.IsLoad = false;
         });
   }
@@ -47,29 +52,70 @@ export class ProjectTeamComponent implements OnInit {
   assignTeam(){
     this.IsTeamsLoading = true;
 
-    debugger;
+   // debugger;
     this.teamsService.getAll()
       .subscribe(teams => {
-
+      //  debugger;
         if(!teams || teams.length < 1){
           this.snotifyService.error("No teams found!", "Error!");
           this.IsTeamsLoading = false;
           return;
         }
 
-        debugger;
+     //   debugger;
+        const thisTeams = this.assignedTeams;
+        let avaibleTeams = teams.filter(function(team) {
+          let t = thisTeams.find(t => t.id === team.id);
+          if(t)
+            return team.id !== t.id;
+          return true;
+        })
+
         this.IsTeamsLoading = false;
+
+        if(!avaibleTeams || avaibleTeams.length < 1)
+        {
+          this.snotifyService.error("No more teams avaible to assign!", "Error!");
+          this.IsLoad = false;
+          return;
+        }        
         let dialogRef = this.dialog.open(TeamAssignComponent, {
+          hasBackdrop: true,
+          width: "90%",
         data: {
-          teams: teams
-        }
+          teams: avaibleTeams
+        },
       });
 
-      dialogRef.componentInstance.onAssign.subscribe((selectedTeam) => {
+      dialogRef.componentInstance.onAssign.subscribe((selectedTeams : Array<any>) => {
+        this.IsLoad = true;
         debugger;
-        if(selectedTeam)
+        if(selectedTeams && selectedTeams.length > 0)
         {
-          
+          this.projectService.assignTeamsToProject(this.projectId, selectedTeams.map(t => t.id))
+            .subscribe(responce => {
+              ///TODO: fire a progress notification//////////////////////////////////////////////////////////////
+              debugger;
+              if(responce)
+              {
+                Array.prototype.push.apply(this.assignedTeams, selectedTeams.filter(function(team) {
+                  let t = thisTeams.find(t => t.id === team.id);
+                  if(t)
+                    return team.id !== t.id;
+                  return true;
+                }));
+                this.IsTeamAssigned = true;
+                this.IsLoad = false;
+                this.snotifyService.success("Teams successfully assigned!", "Success!");
+              }
+            },
+          err => {
+            debugger;
+            this.IsTeamAssigned = false;
+            this.IsLoad = false;
+            this.snotifyService.error(err, "Error!");
+            console.log('err', err);
+          });
         }
         else
         {
@@ -84,11 +130,21 @@ export class ProjectTeamComponent implements OnInit {
     },
     err => {
       debugger;
-      this.IsTeamsLoading = false;
-      this.snotifyService.error("Shit happens (TODO: get the error message)", "Error!");
+      this.snotifyService.error("An error occurred while loading teams, please try again later", "Error!");
       console.log('err', err);
       
     });
     
   }
+
+  dismissTeam(id: number){
+    this.projectService.dismissProjectTeam(this.projectId, id)
+      .subscribe(responce => {
+        this.snotifyService.success("Team " + id + " succesfully dismissed!", "Success!");
+        this.assignedTeams = this.assignedTeams.filter(t => t.id !== id);
+        if(!this.assignedTeams || this.assignedTeams.length < 1)
+          this.IsTeamAssigned = false;
+      })
+  }
+
 }
