@@ -26,7 +26,8 @@ namespace Polyglot.DataAccess.Seeds
                     Region = "New York",
                     AvatarUrl = "https://www.songhall.org/images/uploads/exhibits/John_Lennon.jpg",
                     PostalCode = "10022",
-                    Phone = "1-800-746-4726"
+                    Phone = "1-800-746-4726",
+                    Role = UserProfile.Role.Manager
 
                 });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -640,11 +641,11 @@ namespace Polyglot.DataAccess.Seeds
 
             if (!context.Projects.Any())
             {
-                var managers = context.Managers.ToList();
+                var managers = context.UserProfiles.ToList();
                 var projects = new List<Project> {
                     new Project
                 {
-                    Manager = managers.FirstOrDefault(m => m.Id == 1),
+                    UserProfile = managers.FirstOrDefault(m => m.Id == 1),
                     Name = "Operation Red Sea",
                     Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
                     CreatedOn = DateTime.Now,
@@ -673,7 +674,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
                  {
 
-                     Manager = managers.FirstOrDefault(m => m.Id == 1),
+                     UserProfile = managers.FirstOrDefault(m => m.Id == 1),
                      Name = "Operation Barbarossa",
                      Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
                      CreatedOn = DateTime.Now,
@@ -684,7 +685,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                Manager = managers.FirstOrDefault(m => m.Id == 2),
+                UserProfile = managers.FirstOrDefault(m => m.Id == 2),
                 Name = "Operation Valkyrie",
                 Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
                 CreatedOn = DateTime.Now,
@@ -695,7 +696,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                Manager = managers.FirstOrDefault(m => m.Id == 4),
+                UserProfile = managers.FirstOrDefault(m => m.Id == 3),
                 Name = "Angular",
                 Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
                 CreatedOn = DateTime.Now,
@@ -706,7 +707,7 @@ namespace Polyglot.DataAccess.Seeds
                     new Project
             {
 
-                 Manager = managers.FirstOrDefault(m => m.Id == 4),
+                 UserProfile = managers.FirstOrDefault(m => m.Id == 4),
                  Name = "ASP.NET Core",
                  Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
                  CreatedOn = DateTime.Now,

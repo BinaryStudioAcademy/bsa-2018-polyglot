@@ -27,7 +27,7 @@ namespace Polyglot.DataAccess.Entities
 
         public string AvatarUrl { get; set; }
 
-        public enum Role { Translator , Manager }
+        public Role UserRole { get; set; }
 
         public virtual ICollection<Rating> Ratings { get; set; }
 
@@ -41,6 +41,8 @@ namespace Polyglot.DataAccess.Entities
             Ratings = new List<Rating>();
             Projects = new List<Project>();
         }
+
+        public enum Role { Translator, Manager }
 
     }
 }
