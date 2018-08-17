@@ -51,7 +51,7 @@
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <div fxLayout="column">
-        <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
+        <button mat-mini-fab  mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
           <img src="{{manager?.avatarUrl}}" class="profile-small-image">
         </button>
         <a mat-button routerLinkActive="active" routerLink="/about-us">
@@ -61,10 +61,18 @@
         <a mat-button routerLinkActive="active" routerLink="/contact">
           <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
         <mat-divider></mat-divider>
-        <a mat-button routerLinkActive="active">
+        
+        <a mat-button routerLinkActive="active" routerLink="/profile/settings">
           <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+        <a mat-button routerLinkActive="active" routerLink="/profile">
+          <mat-icon mat-list-icon>account_box</mat-icon> Profile</a>
         <a mat-button routerLinkActive="active">
           <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+        <mat-divider></mat-divider>
+        
+          
+        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick()">
+            <mat-icon mat-list-icon>block</mat-icon> Logout</a>
 
 
       </div>

@@ -318,12 +318,32 @@ namespace Polyglot.BusinessLogic.Services
             target = uow.GetRepository<Project>().Update(target);
             await uow.SaveAsync();
 
+
             return target != null ? mapper.Map<ProjectDTO>(target) : null;
         }
 
-        #endregion Project overrides
 
-        public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
+		public override async Task<bool> TryDeleteAsync(int identifier)
+		{
+			if (uow != null)
+			{
+
+				Project toDelete = await uow.GetRepository<Project>().GetAsync(identifier);				
+				if (toDelete.ImageUrl != null)
+					await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+
+				await uow.GetRepository<Project>().DeleteAsync(identifier);
+				await uow.SaveAsync();
+				return true;
+			}
+			else
+				return false;
+		}
+		
+ #endregion Project overrides
+
+
+		public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
         {
             var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
             var managerDTO = mapper.Map<ManagerDTO>(manager.FirstOrDefault());

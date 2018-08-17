@@ -9,7 +9,10 @@ import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { debounce } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs'
+import { Subscription } from 'rxjs';
+import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'app-project-edit',
@@ -29,13 +32,18 @@ export class ProjectEditComponent implements OnInit, OnChanges {
   });
   languages: Language[];
   id: number;
+  desc: string = "Are you sure you want to remove the project?";
+  btnOkText: string = "Delete";
+  btnCancelText: string = "Cancel";
+  answer: boolean;
 
   constructor(private fb: FormBuilder,
               private projectService: ProjectService,
               private languageService: LanguageService,
               private router: Router,
               private snotifyService: SnotifyService,
-              private activatedRoute: ActivatedRoute) {  }
+              private activatedRoute: ActivatedRoute,
+              private dialog: MatDialog) {  }
 
   ngOnInit() {
     
@@ -84,12 +92,7 @@ export class ProjectEditComponent implements OnInit, OnChanges {
       console.log(project);
     formData.set("project", JSON.stringify(project));
 
-    this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      this.id = params.projectId;
-      
-});
-
-    this.projectService.update(formData, this.id)
+    this.projectService.update(formData, this.project.id)
     .subscribe(
       (d)=> {
         console.log(d);
@@ -131,5 +134,27 @@ export class ProjectEditComponent implements OnInit, OnChanges {
 
   get description() {
     return this.projectForm.get('description');
+  }
+
+  delete(id: number): void{
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {description: this.desc, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (dialogRef.componentInstance.data.answer){
+        debugger;
+        this.projectService.delete(id)
+        .subscribe(
+          (response => {
+            this.snotifyService.success("Project was deleted", "Success!");
+            setTimeout(() => (this.router.navigate(['/'])), 3000);
+          }),
+          err => {
+            this.snotifyService.error("Project wasn`t deleted", "Error!");
+          });
+        }
+      }
+    );
   }
 }

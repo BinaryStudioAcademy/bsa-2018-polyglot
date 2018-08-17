@@ -71,6 +71,8 @@ import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
 import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { MatRadioModule } from '@angular/material';
+import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+
 
 @NgModule({
   declarations: [
@@ -116,7 +118,9 @@ import { MatRadioModule } from '@angular/material';
     ConfirmDialogComponent,
     TabCommentsComponent,
     ProjectTeamComponent,
-    TeamAssignComponent
+    TeamAssignComponent,
+    TabHistoryComponent
+
   ],
   imports: [
     BrowserModule,
