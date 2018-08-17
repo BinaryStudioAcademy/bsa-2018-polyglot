@@ -47,6 +47,8 @@
                     </mat-form-field>
                     <div class="saveButton">
                         <button mat-button color="primary"  (click)="saveChanges(projectForm.value)" [disabled]="projectForm.invalid">Edit</button>
+                        
+	                    <button class="mx-1" mat-flat-button color="warn" type="button" (click)=delete(project.id)>Close project</button>
                     </div>
                 </div>
             </mat-grid-tile>
@@ -54,5 +56,7 @@
                 <span></span>
                 <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
             </mat-grid-tile>
-            </mat-grid-list>  
+            </mat-grid-list>
+            
+  <ng-snotify></ng-snotify>  
     </form>
