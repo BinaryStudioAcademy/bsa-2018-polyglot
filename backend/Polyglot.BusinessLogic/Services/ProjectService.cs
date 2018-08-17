@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AutoMapper;
@@ -15,21 +16,24 @@ using Polyglot.DataAccess.SqlRepository;
 
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.FileRepository;
 
+using Polyglot.DataAccess.Interfaces;
 namespace Polyglot.BusinessLogic.Services
 {
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		private IUnitOfWork uow;
-        public ProjectService(IUnitOfWork uow, IMapper mapper, 
-            IMongoRepository<DataAccess.MongoModels.ComplexString> rep
-           // IMongoRepository<D
-                )
+		public IFileStorageProvider fileStorageProvider;
+
+		public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
+			IFileStorageProvider provider)
             : base(uow, mapper)
         {
             stringsProvider = rep;
 			this.uow = uow;
+			this.fileStorageProvider = provider;
 
         }
 
@@ -106,6 +110,12 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
+        }
+
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(id);
@@ -113,27 +123,26 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var langs = proj.ProjectLanguageses
                     ?.Select(p => p.Language);
-                
+
+               
                 var translations = (await stringsProvider.GetAllAsync(x => x.ProjectId == id)
                     )
-                    ?.SelectMany(cs => cs.Translations);
+                    ?.SelectMany(css => css.Translations).ToList();
 
                 return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>
                 {
                     var dtos = dest.ToList();
-                    IEnumerable<Translation> langTranslations = null;
+                    List<Translation> langTranslations = null;
                     int? progress = 0;
                     int? translatedCount = 0;
                     int percentUnit = 0;
 
                     for (int i = 0; i < dtos.Count; i++)
                     {
-#warning после изменения типа Translation.Language поменять на t.Language == dtos[i].Id
-
                         langTranslations = translations
-                            ?.Where(t => String.Equals(t.Language.Trim().ToLower(), dtos[i].Name.Trim().ToLower()));
+                            ?.Where(t => t.LanguageId == dtos[i].Id).ToList();
 
-                        if (langTranslations.Count() < 1)
+                        if (langTranslations?.Count() < 1)
                             continue;
 
                         percentUnit = (int)(100 / langTranslations.Count());
@@ -208,10 +217,57 @@ namespace Polyglot.BusinessLogic.Services
 
 			return mapper.Map<ProjectDTO>(target);			
 		}
-		
-		#region ComplexStrings
 
-		public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
+
+		public override async Task<ProjectDTO> PutAsync(ProjectDTO entity)
+		{
+			var source = mapper.Map<Project>(entity);
+
+			Project target = await uow.GetRepository<Project>().GetAsync(entity.Id);
+
+
+
+			if (target.ImageUrl != null && source.ImageUrl != null)
+			{
+				await fileStorageProvider.DeleteFileAsync(target.ImageUrl);				
+			}
+			if(source.ImageUrl != null)
+			{
+				target.ImageUrl = source.ImageUrl;
+			}
+
+
+			target.Name = source.Name;
+			target.Description = source.Description;
+			target.Technology = source.Technology;
+
+			target.MainLanguage = null;
+			target.MainLanguageId = source.MainLanguageId;
+
+			uow.GetRepository<Project>().Update(target);
+			await uow.SaveAsync();
+
+			return mapper.Map<ProjectDTO>(target);
+		}
+
+
+        public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
+        {
+            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
+            var managerDTO = mapper.Map<ManagerDTO>(manager.FirstOrDefault());
+            entity.Manager = managerDTO;
+            return await PostAsync(entity);
+        }
+
+        private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
+        {
+            var result = await uow.GetRepository<T>().GetAllAsync(predicate);
+            return result;
+        }
+
+        #region ComplexStrings
+
+        public async Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync()
         {
             var strings = (await stringsProvider.GetAllAsync()).AsEnumerable();
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);

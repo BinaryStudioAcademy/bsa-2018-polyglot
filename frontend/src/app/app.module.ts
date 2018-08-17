@@ -69,6 +69,8 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
 import { ProjectTeamComponent } from './components/project-details/project-team/project-team.component';
 import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
 import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
+import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+
 
 @NgModule({
   declarations: [
@@ -107,6 +109,7 @@ import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component
     UploadFileComponent,
     TabDetailComponent,
     ImgDialogComponent,
+    ProjectEditComponent,
     LanguagesComponent,
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
