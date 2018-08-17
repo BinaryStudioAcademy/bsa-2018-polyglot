@@ -16,8 +16,6 @@ using Polyglot.DataAccess.SqlRepository;
 
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.FileRepository;
-
 using Polyglot.DataAccess.Interfaces;
 namespace Polyglot.BusinessLogic.Services
 {
@@ -110,11 +108,8 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
-        {
-            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
-            return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
-        }
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
+            mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.UserProfile.Id == userId));
 
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
@@ -254,9 +249,9 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
         {
-            var manager = await Filtration<Manager>(x => x.UserProfile.Id == userId);
-            var managerDTO = mapper.Map<ManagerDTO>(manager.FirstOrDefault());
-            entity.Manager = managerDTO;
+            var manager = await Filtration<UserProfile>(x => x.Id == userId);
+            var managerDTO = mapper.Map<UserProfileDTO>(manager.FirstOrDefault());
+            entity.UserProfile = managerDTO;
             return await PostAsync(entity);
         }
 

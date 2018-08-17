@@ -27,7 +27,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "https://www.songhall.org/images/uploads/exhibits/John_Lennon.jpg",
                     PostalCode = "10022",
                     Phone = "1-800-746-4726",
-                    Role = UserProfile.Role.Manager
+                    UserRole = UserProfile.Role.Manager
 
                 });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -43,8 +43,8 @@ namespace Polyglot.DataAccess.Seeds
                 Region = "Kyiv",
                 AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
                 PostalCode = "43022",
-                Phone = "38-095-746-4726"
-
+                Phone = "38-095-746-4726",
+                UserRole = UserProfile.Role.Manager
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
@@ -59,8 +59,8 @@ namespace Polyglot.DataAccess.Seeds
                 Region = "Lviv",
                 AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
                 PostalCode = "43022",
-                Phone = "38-095-746-4726"
-
+                Phone = "38-095-746-4726",
+                UserRole = UserProfile.Role.Manager
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
@@ -75,7 +75,8 @@ namespace Polyglot.DataAccess.Seeds
                 Region = "Florida",
                 AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
                 PostalCode = "63022",
-                Phone = "12-795-746-4726"
+                Phone = "12-795-746-4726",
+                UserRole = UserProfile.Role.Manager
 
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -91,22 +92,45 @@ namespace Polyglot.DataAccess.Seeds
                 Region = "Florida",
                 AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                 PostalCode = "63022",
-                Phone = "12-795-746-4726"
+                Phone = "12-795-746-4726",
+                UserRole = UserProfile.Role.Manager
 
             });
+            modelBuilder.Entity<UserProfile>().HasData(new UserProfile
+            {
+                Id = 6,
+                Uid = "bbgYGo9545Xcy84FUjmpHzYnESk2",
+                FullName = "Translator1",
+                BirthDate = new DateTime(1991, 9, 25),
+                RegistrationDate = DateTime.Now,
+                Country = "USA",
+                City = "Maiami",
+                Address = "3275 NW 24th Street Rd",
+                Region = "Florida",
+                AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
+                PostalCode = "63022",
+                Phone = "12-795-746-4726",
+                UserRole = UserProfile.Role.Translator
 
-            modelBuilder.Entity<Manager>().HasData(new { Id = 1, UserProfileId = 1 });
-            modelBuilder.Entity<Manager>().HasData(new { Id = 2, UserProfileId = 1 });
-            modelBuilder.Entity<Manager>().HasData(new { Id = 3, UserProfileId = 2 });
-            modelBuilder.Entity<Manager>().HasData(new { Id = 4, UserProfileId = 3 });
-            modelBuilder.Entity<Manager>().HasData(new { Id = 5, UserProfileId = 5 });
+            });
+            modelBuilder.Entity<UserProfile>().HasData(new UserProfile
+            {
+                Id = 7,
+                Uid = "Translator2",
+                FullName = "Lele Pots",
+                BirthDate = new DateTime(1991, 9, 25),
+                RegistrationDate = DateTime.Now,
+                Country = "USA",
+                City = "Maiami",
+                Address = "3275 NW 24th Street Rd",
+                Region = "Florida",
+                AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
+                PostalCode = "63022",
+                Phone = "12-795-746-4726",
+                UserRole = UserProfile.Role.Translator
 
 
-            modelBuilder.Entity<Translator>().HasData(new { Id = 1, UserProfileId = 1 });
-            modelBuilder.Entity<Translator>().HasData(new { Id = 2, UserProfileId = 1 });
-            modelBuilder.Entity<Translator>().HasData(new { Id = 3, UserProfileId = 2 });
-            modelBuilder.Entity<Translator>().HasData(new { Id = 4, UserProfileId = 3 });
-            modelBuilder.Entity<Translator>().HasData(new { Id = 5, UserProfileId = 5 });
+            });
 
 
             modelBuilder.Entity<Tag>().HasData(
@@ -458,68 +482,6 @@ namespace Polyglot.DataAccess.Seeds
                     new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
                     };
                 context.AddRange(ratings);
-                context.SaveChanges();
-            }
-
-            if (!context.Managers.Any())
-            {
-                var users = context.UserProfiles.ToList();
-                var managers = new List<Manager> {
-                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 1) },
-                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 1) },
-                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 2) },
-                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 3) },
-                   new Manager{ UserProfile = users.FirstOrDefault(u => u.Id == 5) }
-
-                    };
-
-                context.AddRange(managers);
-                context.SaveChanges();
-            }
-
-            if (!context.Translators.Any())
-            {
-                var users = context.UserProfiles.ToList();
-                var ratings = context.Ratings.ToList();
-                var translators = new List<Translator> {
-                   new Translator {
-                        UserProfile = users.FirstOrDefault(u => u.Id == 4),
-                        Ratings = {
-                            ratings.FirstOrDefault(r => r.Id == 1),
-                            ratings.FirstOrDefault(r => r.Id == 2)
-                        }
-                   },
-                   new Translator {
-                        UserProfile = users.FirstOrDefault(u => u.Id == 4),
-                        Ratings = {
-                           ratings.FirstOrDefault(r => r.Id == 3),
-                            ratings.FirstOrDefault(r => r.Id == 4)
-                        }
-                        },
-                   new Translator {
-                        UserProfile = users.FirstOrDefault(u => u.Id == 1),
-                        Ratings = {
-                           ratings.FirstOrDefault(r => r.Id == 5),
-                            ratings.FirstOrDefault(r => r.Id == 6)
-                        }
-                        },
-                   new Translator {
-                        UserProfile = users.FirstOrDefault(u => u.Id == 5),
-                        Ratings = {
-                           ratings.FirstOrDefault(r => r.Id == 7),
-                            ratings.FirstOrDefault(r => r.Id == 8)
-                        }
-                        },
-                   new Translator { UserProfile = users.FirstOrDefault(u => u.Id == 3),
-                        Ratings = {
-                           ratings.FirstOrDefault(r => r.Id == 9),
-                            ratings.FirstOrDefault(r => r.Id == 10)
-                        }
-                        }
-
-                    };
-
-                context.AddRange(translators);
                 context.SaveChanges();
             }
 
