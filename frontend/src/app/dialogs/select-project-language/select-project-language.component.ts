@@ -40,8 +40,4 @@ export class SelectProjectLanguageComponent implements OnInit {
       this.selectedLangs = this.selectedLangs.filter(l => l.id != lang.id);
     }
   }
-  
-  close(){
-    this.dialogRef.close();
-  }
 }
