@@ -19,7 +19,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TeamPrevDTO> GetProjectTeam(int id);
 
-        Task<ProjectDTO> AssignTeamToProject(int projectId, int teamId);
+        Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 
         Task<bool> DismissProjectTeam(int projectId, int teamId);
 

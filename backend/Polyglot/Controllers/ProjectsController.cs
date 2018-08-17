@@ -60,13 +60,13 @@ namespace Polyglot.Controllers
         }
 
         // PUT: Projects/:id/teams/:id
-        [HttpPut("{projectId}/teams/{teamId}")]
-        public async Task<IActionResult> AssignTeamToProject(int projectId, int teamId)
+        [HttpPut("{projectId}/teams")]
+        public async Task<IActionResult> AssignTeamsToProject(int projectId,[FromBody]int[] teamIds)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.AssignTeamToProject(projectId, teamId);
+            var entity = await service.AssignTeamsToProject(projectId, teamIds);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

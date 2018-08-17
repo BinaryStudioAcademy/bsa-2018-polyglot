@@ -127,21 +127,25 @@ namespace Polyglot.BusinessLogic.Services
             return team != null ? mapper.Map<TeamPrevDTO>(team) : null;
         }
 
-        public async Task<ProjectDTO> AssignTeamToProject(int projectId, int teamId)
+        public async Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds)
         {
+            if (teamIds.Length < 1)
+                return null;
+
             var project = await uow.GetRepository<Project>()
                 .GetAsync(projectId);
 
             if (project == null)
                 return null;
 
-            var team = await uow.GetRepository<Team>()
-                .GetAsync(teamId);
-
-            if (team == null)
-                return null;
-
-            project.Teams = new List<Team>() { team };
+            Team currentTeam;
+            foreach (var id in teamIds)
+            {
+                currentTeam = await uow.GetRepository<Team>()
+                .GetAsync(id);
+                if (currentTeam != null && !project.Teams.Contains(currentTeam))
+                    project.Teams.Add(currentTeam);
+            }
 
             project = uow.GetRepository<Project>()
                     .Update(project);
@@ -158,9 +162,15 @@ namespace Polyglot.BusinessLogic.Services
             if (project == null)
                 return false;
 
-            if(project.Teams?.Count() > 0)
+            var team = await uow.GetRepository<Team>()
+               .GetAsync(teamId);
+
+            if (team == null)
+                return false;
+
+            if (project.Teams?.Count() > 0)
             {
-                project.Teams = new List<Team>();
+                project.Teams.Remove(team);
                 project = uow.GetRepository<Project>()
                     .Update(project);
                 return await uow.SaveAsync() > 0 && project != null;
