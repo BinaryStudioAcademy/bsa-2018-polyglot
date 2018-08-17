@@ -5,6 +5,8 @@ import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Translation } from '../../../models';
+import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -69,9 +71,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
      });
   }
 
-  onSave(){
-    debugger
+  onSave(t: Translation){
+    this.route.params.subscribe(value =>
+      {
+    this.dataProvider.updateStringTranslation(t,value.keyId);
     console.log(this.keyDetails.translations);
+      });
   }
   
   onClose(index: number) {

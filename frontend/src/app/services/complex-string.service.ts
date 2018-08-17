@@ -30,9 +30,12 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, iString);
   }
 
-  updateTranslation(translation: Translation, id: number) : Observable<Translation> {
-    var str = this.api+"/4/translations";
-    return this.dataService.sendRequest(RequestMethod.Put, str, '', translation);
+  getStringTranslations(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translations', undefined, undefined);
+  }
+
+  editStringTranslation( translation: Translation, id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translation);
   }
 
   delete(id: number) : Observable<IString> {
