@@ -90,12 +90,7 @@ export class ProjectEditComponent implements OnInit, OnChanges {
       console.log(project);
     formData.set("project", JSON.stringify(project));
 
-    this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      this.id = params.projectId;
-      
-});
-
-    this.projectService.update(formData, this.id)
+    this.projectService.update(formData, this.project.id)
     .subscribe(
       (d)=> {
         console.log(d);
