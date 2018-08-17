@@ -6,7 +6,6 @@ import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
-import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -110,26 +109,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
     this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
 
-  delete(id: number): void{
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '500px',
-      data: {description: this.description, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (dialogRef.componentInstance.data.answer){
-        this.projectService.delete(id)
-        .subscribe(
-          (response => {
-            this.snotifyService.success("Project was deleted", "Success!");
-            setTimeout(() => (this.router.navigate(['../'])), 3000);
-          }),
-          err => {
-            this.snotifyService.error("Project wasn`t deleted", "Error!");
-          });
-        }
-      }
-    );
-  }
+
 }
 
  
