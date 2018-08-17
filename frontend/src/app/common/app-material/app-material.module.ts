@@ -38,6 +38,7 @@ import {
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -68,7 +69,8 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     FormsModule, 
     ReactiveFormsModule, 
     MdePopoverModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatExpansionModule
   ],
   exports: [
     LayoutModule,
@@ -100,7 +102,8 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     ReactiveFormsModule,
 
     MdePopoverModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatExpansionModule
   ]
 })
 export class AppMaterialModule { }
