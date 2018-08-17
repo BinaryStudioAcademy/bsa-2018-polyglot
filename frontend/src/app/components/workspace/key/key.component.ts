@@ -2,8 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ComplexStringService } from '../../../services/complex-string.service';
 import { MatDialog } from '@angular/material';
 import { ImgDialogComponent } from '../../../dialogs/img-dialog/img-dialog.component';
-import { ActivatedRoute } from '../../../../../node_modules/@angular/router';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-workspace-key',
