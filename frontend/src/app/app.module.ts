@@ -70,7 +70,7 @@ import { ProjectTeamComponent } from './components/project-details/project-team/
 import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
 import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
-
+import { MatRadioModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -143,7 +143,8 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
     NgxSmoothDnDModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
-    })
+    }),
+    MatRadioModule
   ],
   entryComponents: [
     LoginDialogComponent, 

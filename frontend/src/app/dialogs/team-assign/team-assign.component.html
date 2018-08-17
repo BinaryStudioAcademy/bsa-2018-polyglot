@@ -1,24 +1,52 @@
 <h2 mat-dialog-title>Assigning a team</h2>
 <mat-dialog-content>
-    team1
-    team2
-    team3
-    team4
-    team1
-    team1
-    team1
-    team1
-    team1
-    team1
-    team1
-    team1
+
+      <mat-toolbar color="primary">
+          <mat-toolbar-row>
+              <form class="search-form">
+
+                  <mat-form-field class="search-full-width">
+                
+                    <input type="search" matInput placeholder="Search">
+                    <button mat-raised-button color="primary" matSuffix>
+                      <mat-icon>search</mat-icon>
+                    </button>
+                  </mat-form-field>
+                
+                </form>
+          </mat-toolbar-row>
+      </mat-toolbar>
+
+      <div class="container">
+          <mat-checkbox *ngFor="let t of teams" (change)="change($event, t)">
+              <mat-card class="example-card">
+                  <mat-card-header>            
+                      <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
+                    
+                      <div class="title">
+                          <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
+                          <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
+                      </div>
+                  </mat-card-header>
+                  
+                  
+                  <div mat-card-image >
+                    <div  class="img-container">                  
+                      <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}">
+                    </div>
+                  </div>  
+                
+              
+                  <mat-card-actions class="card-buttons">        
+                    <button mat-raised-button color="primary" disabled routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
+                  </mat-card-actions>      
+              </mat-card> 
+          </mat-checkbox>
+      </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions class="p-1 mt-2">
-      <h4>
-        <span>No team selected</span>
-        <span>Selected team: team 88</span>
-      </h4>
       <button style="float: left" mat-raised-button color="primary" (click)="assign()" mat-button>Assign</button>
       <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
 </mat-dialog-actions>
