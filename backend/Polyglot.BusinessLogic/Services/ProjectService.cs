@@ -116,6 +116,63 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.Manager.Id == manager.FirstOrDefault().Id));
         }
 
+        #region Teams
+
+        public async Task<TeamPrevDTO> GetProjectTeam(int id)
+        {
+            var project = await uow.GetRepository<Project>()
+                    .GetAsync(id);
+
+            var team = project?.Teams?.FirstOrDefault();
+            return team != null ? mapper.Map<TeamPrevDTO>(team) : null;
+        }
+
+        public async Task<ProjectDTO> AssignTeamToProject(int projectId, int teamId)
+        {
+            var project = await uow.GetRepository<Project>()
+                .GetAsync(projectId);
+
+            if (project == null)
+                return null;
+
+            var team = await uow.GetRepository<Team>()
+                .GetAsync(teamId);
+
+            if (team == null)
+                return null;
+
+            project.Teams = new List<Team>() { team };
+
+            project = uow.GetRepository<Project>()
+                    .Update(project);
+            await uow.SaveAsync();
+            return project != null ? mapper.Map<ProjectDTO>(project) : null;
+
+        }
+
+        public async Task<bool> DismissProjectTeam(int projectId, int teamId)
+        {
+            var project = await uow.GetRepository<Project>()
+                .GetAsync(projectId);
+
+            if (project == null)
+                return false;
+
+            if(project.Teams?.Count() > 0)
+            {
+                project.Teams = new List<Team>();
+                project = uow.GetRepository<Project>()
+                    .Update(project);
+                return await uow.SaveAsync() > 0 && project != null;
+            }
+
+            return false;
+        }
+
+        #endregion Teams
+
+        #region Languages
+
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(id);
@@ -124,7 +181,7 @@ namespace Polyglot.BusinessLogic.Services
                 var langs = proj.ProjectLanguageses
                     ?.Select(p => p.Language);
 
-               
+
                 var translations = (await stringsProvider.GetAllAsync(x => x.ProjectId == id)
                     )
                     ?.SelectMany(css => css.Translations).ToList();
@@ -153,7 +210,7 @@ namespace Polyglot.BusinessLogic.Services
                         progress = (translatedCount.HasValue ? translatedCount.Value : 0) * percentUnit;
 
                         dtos[i].TranslationsCount = translatedCount.HasValue ? translatedCount.Value : 0;
-                        dtos[i].Progress =  progress.HasValue ? progress.Value : 0;
+                        dtos[i].Progress = progress.HasValue ? progress.Value : 0;
 
                     }
                 }));
@@ -166,7 +223,7 @@ namespace Polyglot.BusinessLogic.Services
             var project = await uow.GetRepository<Project>().GetAsync(projectId);
             var language = await uow.GetRepository<Language>().GetAsync(languageId);
 
-            if(project != null)
+            if (project != null)
             {
                 var languageExistInProject = project.ProjectLanguageses
                     .Select(pl => pl.Language)
@@ -180,7 +237,7 @@ namespace Polyglot.BusinessLogic.Services
                         Language = language
                     });
 
-                    uow.GetRepository<Project>().Update(project);
+                    project = uow.GetRepository<Project>().Update(project);
                     await uow.SaveAsync();
                     return mapper.Map<ProjectDTO>(project);
                 }
@@ -191,7 +248,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<bool> TryRemoveProjectLanguage(int projectId, int languageId)
         {
             var project = await uow.GetRepository<Project>().GetAsync(projectId);
-            
+
             if (project != null)
             {
                 var targetProdLang = project.ProjectLanguageses
@@ -206,50 +263,54 @@ namespace Polyglot.BusinessLogic.Services
             return false;
         }
 
+        #endregion Languages
+
+        #region Project overrides
+
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
-		{			
-			var ent = mapper.Map<Project>(entity);
-			// ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
-			ent.MainLanguage = null;
+        {
+            var ent = mapper.Map<Project>(entity);
+            // ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
+            ent.MainLanguage = null;
 
-			var target = await uow.GetRepository<Project>().CreateAsync(ent);
-			await uow.SaveAsync();
+            var target = await uow.GetRepository<Project>().CreateAsync(ent);
+            await uow.SaveAsync();
 
-			return mapper.Map<ProjectDTO>(target);			
-		}
+            return mapper.Map<ProjectDTO>(target);
+        }
 
+        public override async Task<ProjectDTO> PutAsync(ProjectDTO entity)
+        {
+            var source = mapper.Map<Project>(entity);
 
-		public override async Task<ProjectDTO> PutAsync(ProjectDTO entity)
-		{
-			var source = mapper.Map<Project>(entity);
-
-			Project target = await uow.GetRepository<Project>().GetAsync(entity.Id);
-
+            Project target = await uow.GetRepository<Project>().GetAsync(entity.Id);
 
 
-			if (target.ImageUrl != null && source.ImageUrl != null)
-			{
-				await fileStorageProvider.DeleteFileAsync(target.ImageUrl);				
-			}
-			if(source.ImageUrl != null)
-			{
-				target.ImageUrl = source.ImageUrl;
-			}
+
+            if (target.ImageUrl != null && source.ImageUrl != null)
+            {
+                await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+            }
+            if (source.ImageUrl != null)
+            {
+                target.ImageUrl = source.ImageUrl;
+            }
 
 
-			target.Name = source.Name;
-			target.Description = source.Description;
-			target.Technology = source.Technology;
+            target.Name = source.Name;
+            target.Description = source.Description;
+            target.Technology = source.Technology;
 
-			target.MainLanguage = null;
-			target.MainLanguageId = source.MainLanguageId;
+            target.MainLanguage = null;
+            target.MainLanguageId = source.MainLanguageId;
 
-			uow.GetRepository<Project>().Update(target);
-			await uow.SaveAsync();
+            target = uow.GetRepository<Project>().Update(target);
+            await uow.SaveAsync();
 
-			return mapper.Map<ProjectDTO>(target);
-		}
+            return target != null ? mapper.Map<ProjectDTO>(target) : null;
+        }
 
+        #endregion Project overrides
 
         public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
         {
@@ -278,6 +339,8 @@ namespace Polyglot.BusinessLogic.Services
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
+
+        
 
         #endregion
     }

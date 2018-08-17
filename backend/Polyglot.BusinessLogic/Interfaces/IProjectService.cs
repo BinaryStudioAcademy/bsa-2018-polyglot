@@ -14,12 +14,26 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ProjectDTO>> GetListAsync(int userId);
 
         Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
-        
+
+        #region Teams
+
+        Task<TeamPrevDTO> GetProjectTeam(int id);
+
+        Task<ProjectDTO> AssignTeamToProject(int projectId, int teamId);
+
+        Task<bool> DismissProjectTeam(int projectId, int teamId);
+
+        #endregion Teams
+
+        #region Languages
+
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
 
         Task<ProjectDTO> AddLanguageToProject(int projectId, int languageId);
 
         Task<bool> TryRemoveProjectLanguage(int projectId, int languageId);
+
+        #endregion Languages
 
         #region ComplexString
 

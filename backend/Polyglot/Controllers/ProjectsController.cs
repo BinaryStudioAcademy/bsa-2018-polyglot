@@ -49,6 +49,36 @@ namespace Polyglot.Controllers
 
         }
 
+        // GET: Projects/:id?teams
+        [HttpGet("{id}/teams", Name = "GetProjectTeam")]
+        public async Task<IActionResult> GetProjectTeam(int id)
+        {
+            var project = await service.GetProjectTeam(id);
+            return project == null ? NotFound($"Project with id = {id} has got no assigned team!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // PUT: Projects/:id/teams/:id
+        [HttpPut("{projectId}/teams/{teamId}")]
+        public async Task<IActionResult> AssignTeamToProject(int projectId, int teamId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.AssignTeamToProject(projectId, teamId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        //DELETE: projects/:id/teams/:id
+        [HttpDelete("{projId}/teams/{teamId}", Name = "DismissProjectTeam")]
+        public async Task<IActionResult> DismissProjectTeam(int projId, int teamId)
+        {
+            var success = await service.DismissProjectTeam(projId, teamId);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
         // GET: Projects/5/languages
         [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
         public async Task<IActionResult> GetProjectLangs(int id)

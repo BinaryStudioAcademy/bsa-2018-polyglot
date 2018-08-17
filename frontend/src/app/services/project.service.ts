@@ -46,7 +46,7 @@ export class ProjectService {
   }
 
   assignTeamToProject(projectId: number, teamId: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/teams/' + teamId, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/teams/' + teamId, undefined, undefined);
   }
 
   getProjectLanguages(id: number) : Observable<any> {
