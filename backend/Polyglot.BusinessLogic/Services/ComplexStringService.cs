@@ -69,13 +69,6 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
-            var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
-            {
-                TranslationKey = entity.Key,
-                ProjectId = entity.ProjectId
-            };
-            await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
-            await _uow.SaveAsync();
             var target = await _repository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
             {
