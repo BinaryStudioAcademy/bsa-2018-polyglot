@@ -27,7 +27,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                         Id = Guid.NewGuid(),
-                        Language = "Ukranian", 
+                        LanguageId = 2, 
                         TranslationValue ="Операція Валькірія", 
                         CreatedOn = DateTime.Now, 
                         UserId = 1,
@@ -49,7 +49,7 @@ namespace Polyglot.DataAccess.Seeds
                         },
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "German", 
+                            LanguageId = 3, 
                             TranslationValue ="Unternehmen Walküre", 
                             CreatedOn = DateTime.Now, UserId = 2,
                         History = new List<AdditionalTranslation> {
@@ -95,7 +95,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "Ukranian", 
+                            LanguageId = 2, 
                             TranslationValue ="Angular не має поняття області видимості або контроллера, замість цього він використовує ієрархію компонентів як основну архітектурну характеристику", 
                             CreatedOn = DateTime.Now, 
                             UserId = 5,
@@ -115,7 +115,7 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation {   Id = Guid.NewGuid(),Language = "Italian", TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
+                        new Translation {   Id = Guid.NewGuid(),LanguageId = 5, TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
                         History = new List<AdditionalTranslation> {
                             new AdditionalTranslation {
                                 UserId = 2,
@@ -159,7 +159,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "Ukranian", 
+                            LanguageId = 2, 
                             TranslationValue ="З виходом .NET Core 3 фреймворк отримає підтримку для розробки програм для робочого столу, штучного інтелекту / машинного навчання та інтернету речей.", 
                             CreatedOn = DateTime.Now, 
                             UserId = 1,
@@ -181,7 +181,7 @@ namespace Polyglot.DataAccess.Seeds
                         },
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "French", 
+                            LanguageId = 5, 
                             TranslationValue ="Avec Core 3, le framework prendra en charge le développement d'applications de bureau, d'intelligence artificielle / d'apprentissage automatique et d'IoT", 
                             CreatedOn = DateTime.Now, 
                             UserId = 2,
@@ -228,7 +228,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "Chinese", 
+                            LanguageId = 5, 
                             TranslationValue ="主要攝影於2017年2月中旬在摩洛哥開始，僱用了400名摩洛哥人和300名中國人作為技術人員組的一部分", 
                             CreatedOn = DateTime.Now, 
                             UserId = 1,
@@ -250,7 +250,7 @@ namespace Polyglot.DataAccess.Seeds
                         },
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "Spanich", 
+                            LanguageId = 4, 
                             TranslationValue ="La fotografía principal comenzó a mediados de febrero de 2017 en Marruecos y empleó a 400 marroquíes y 300 chinos como parte del grupo técnico de tripulación.", 
                             CreatedOn = DateTime.Now, 
                             UserId = 2,
@@ -298,7 +298,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "German", 
+                            LanguageId = 3, 
                             TranslationValue ="Die geopolitische Disposition Europas 1941, unmittelbar vor Beginn der Operation Barbarossa. Die Grauzone repräsentiert Nazi-Deutschland, seine Verbündeten und die von ihm kontrollierten Länder. " +
                                             "Im August 1939 unterzeichneten Deutschland und die Sowjetunion in Moskau einen Nichtangriffspakt, der Molotov-Ribbentrop-Pakt", 
                             CreatedOn = DateTime.Now, 
@@ -323,7 +323,7 @@ namespace Polyglot.DataAccess.Seeds
                         },
                         new Translation {
                             Id = Guid.NewGuid(),
-                            Language = "Ukranian", 
+                            LanguageId = 2, 
                             TranslationValue ="Геополітичне розташування Європи в 1941 році, безпосередньо перед початком операції Барбаросса. Сірий район представляє нацистську Німеччину, її союзників та країни, що знаходяться під його жорстким контролем. " +
                                                 "У серпні 1939 р. Німеччина та Радянський Союз підписали пакт про ненапад, який в Москві називають пакт Молотова-Ріббентропа", 
                             CreatedOn = DateTime.Now, 

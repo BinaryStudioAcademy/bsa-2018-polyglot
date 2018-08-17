@@ -267,14 +267,14 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<Polyglot.Common.DTOs.NoSQL.TranslationDTO, Polyglot.DataAccess.MongoModels.Translation>()
                   .ForMember(p => p.History, opt => opt.MapFrom(po => po.History))
-                  .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
+                  .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
                   .ForMember(p => p.OptionalTranslations, opt => opt.MapFrom(po => po.OptionalTranslations))
                   .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
                   .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
                 cfg.CreateMap<Polyglot.DataAccess.MongoModels.Translation, Polyglot.Common.DTOs.NoSQL.TranslationDTO>()
                   .ForMember(p => p.History, opt => opt.MapFrom(pt => pt.History))
-                  .ForMember(p => p.Language, opt => opt.MapFrom(pt => pt.Language))
+                  .ForMember(p => p.LanguageId, opt => opt.MapFrom(pt => pt.LanguageId))
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))
                   .ForMember(p => p.OptionalTranslations, opt => opt.MapFrom(pt => pt.OptionalTranslations))
                   .ForMember(p => p.TranslationValue, opt => opt.MapFrom(pt => pt.TranslationValue))
