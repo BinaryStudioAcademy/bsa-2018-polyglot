@@ -62,14 +62,14 @@ namespace Polyglot.Controllers
 
         }
 
-        // PUT: Projects/:id/languages/:id
-        [HttpPut("{projectId}/languages/{languageId}")]
-        public async Task<IActionResult> AddLanguageToProject(int projectId, int languageId)
+        // PUT: Projects/:id/languages
+        [HttpPut("{projectId}/languages")]
+        public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.AddLanguageToProject(projectId, languageId);
+            var entity = await service.AddLanguagesToProject(projectId, languageIds);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
