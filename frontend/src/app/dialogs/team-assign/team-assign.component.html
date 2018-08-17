@@ -1,3 +1,24 @@
-<p>
-  team-assign works!
-</p>
+<h2 mat-dialog-title>Assigning a team</h2>
+<mat-dialog-content>
+    team1
+    team2
+    team3
+    team4
+    team1
+    team1
+    team1
+    team1
+    team1
+    team1
+    team1
+    team1
+</mat-dialog-content>
+
+<mat-dialog-actions class="p-1 mt-2">
+      <h4>
+        <span>No team selected</span>
+        <span>Selected team: team 88</span>
+      </h4>
+      <button style="float: left" mat-raised-button color="primary" (click)="assign()" mat-button>Assign</button>
+      <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
+</mat-dialog-actions>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-team-assign',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TeamAssignComponent implements OnInit {
 
-  constructor() { }
+  @Output() onAssign = new EventEmitter<any>(true);
+  teams: any = [];
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public inputTeams: any,
+    public dialogRef: MatDialogRef<TeamAssignComponent>
+  ) {
+    if(inputTeams)
+      this.teams = inputTeams;
+   }
 
   ngOnInit() {
+  }
+
+  assign(){
+
   }
 
 }

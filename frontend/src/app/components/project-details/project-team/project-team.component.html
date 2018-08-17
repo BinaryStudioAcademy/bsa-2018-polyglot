@@ -1,31 +1,8 @@
-<p>
-  project-team works!
-</p>
+<div class="container">
 
+  <div *ngIf="!IsTeamAssigned" class="assign-team-container">
+    <h2>Your project does not have an assigned team yet</h2>
+    <button mat-flat-button color="primary" (click)="assignTeam()">Assign a team</button>
+  </div>
 
-<mat-sidenav-container class="example-container">
-    <mat-sidenav #sidenav mode="side">
-      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
-      <div class="simple-page">
-          <smooth-dnd-container (drop)="onDrop($event)">            
-            <smooth-dnd-draggable *ngFor="let item of items">
-              <div class="draggable-item">
-                {{item.data}}
-              </div>
-            </smooth-dnd-draggable>
-          </smooth-dnd-container>
-      </div>
-    </mat-sidenav>
-  
-    <mat-sidenav-content>
-      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
-      <p>
-          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
-          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg  
-          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
-          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg   
-          dsvdsvdsvsddddddd dddddddddddddddd ddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg        regre g r
-          dsvdsvdsvsddd ddddddddddddddddddddddddddddddddddddddfvfdvfd gs g re gergreg regregregergerg         regre g r
-        </p>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+</div>

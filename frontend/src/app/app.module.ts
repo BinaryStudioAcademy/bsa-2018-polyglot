@@ -152,7 +152,8 @@ import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TeamAssignComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
