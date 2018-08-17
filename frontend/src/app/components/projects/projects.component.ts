@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
-import { ManagerService } from '../../services/manager.service';
 import { ProjectService } from '../../services/project.service';
 
 import { MatDialog } from '../../../../node_modules/@angular/material';
 import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
 
 // to delete manager and user
-import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
 
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
@@ -44,10 +42,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     phone: 'string',
     avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
   };
-  manager: Manager = {
-    id:  1,
-    userProfile: this.user
-  };
+  manager: UserProfile =  this.user;
 
   ngOnInit() {
   this.OnPage = true;

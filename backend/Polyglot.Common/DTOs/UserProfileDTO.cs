@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Common.DTOs
 {
@@ -16,6 +18,19 @@ namespace Polyglot.Common.DTOs
         public string Address { get; set; }
         public string Phone { get; set; }
         public string AvatarUrl { get; set; }
+
+        public enum Role { Translator, Manager }
+
+        public ICollection<RatingDTO> Ratings { get; set; }
+        public ICollection<TeammateDTO> TeamTranslators { get; set; }
+        public List<ProjectDTO> Projects { get; set; }
+
+        public UserProfileDTO()
+        {
+            TeamTranslators = new List<TeammateDTO>();
+            Ratings = new List<RatingDTO>();
+            Projects = new List<ProjectDTO>();
+        }
     }
 }
 

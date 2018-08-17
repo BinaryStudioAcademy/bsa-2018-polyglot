@@ -34,7 +34,10 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await service.GetListAsync();
+            var user = UserIdentityService.GetCurrentUser();
+            if (user.Id == 0)
+                return Ok();
+            var projects = await service.GetListAsync(user.Id);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -110,7 +113,7 @@ namespace Polyglot.Controllers
 
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
-            var entity = await service.PostAsync(project);
+            var entity = await service.PostAsync(project,UserIdentityService.GetCurrentUser().Id);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);

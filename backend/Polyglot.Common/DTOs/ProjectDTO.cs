@@ -17,7 +17,7 @@ namespace Polyglot.Common.DTOs
 
         public DateTime CreatedOn { get; set; }
 
-        public ManagerDTO Manager { get; set; }
+        public UserProfileDTO UserProfile { get; set; }
 
         public LanguageDTO MainLanguage { get; set; }
 		
