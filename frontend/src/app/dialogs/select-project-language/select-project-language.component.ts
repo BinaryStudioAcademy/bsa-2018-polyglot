@@ -26,7 +26,8 @@ export class SelectProjectLanguageComponent implements OnInit {
 
   submit(){
     debugger;
-    this.onSelect.emit(this.selectedLangs);
+    if(this.selectedLangs && this.selectedLangs.length > 0)
+      this.onSelect.emit(this.selectedLangs);
     this.dialogRef.close();
   }
 

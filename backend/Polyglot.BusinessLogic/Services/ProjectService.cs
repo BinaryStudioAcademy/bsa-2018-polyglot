@@ -123,8 +123,12 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var langs = proj.ProjectLanguageses?.Select(p => p.Language);
                 var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+                // если строк для перевода нет тогда ничего вычислять не нужно
+                if (projectStrings.Count() < 1)
+                    return mapper.Map<IEnumerable<LanguageDTO>>(langs);
+
                 var projectTranslations = projectStrings?.SelectMany(css => css.Translations).ToList();
-                int percentUnit = (int)(100 / projectStrings.Count());
+                int percentUnit = (100 / projectStrings.Count());
 
                 // мапим языки проекта, а затем вычисляем значения Progress и TranslationsCount по каждому языку
                 return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>

@@ -38,12 +38,25 @@ export class LanguagesComponent implements OnInit {
 
   selectNew(){
     this.IsLangLoad = true;
+    const thisLangs = this.langs;
+
     this.langService.getAll()
     .subscribe(langs =>{
+      let langsToSelect = langs.filter(function(language) {
+        let l = thisLangs.find(t => t.id === language.id);
+        if(l)
+          return language.id !== l.id;
+        return true;
+      });
+      
       this.IsLangLoad = false;
+      if(langsToSelect.length < 1){
+        this.snotifyService.info("No languages available to select, all of them already added", "Sorry!");
+        return;
+      }
       let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
         data: {
-          langs: langs
+          langs: langsToSelect
         }
       });
 
@@ -53,10 +66,18 @@ export class LanguagesComponent implements OnInit {
           this.IsLoad = true;
             this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
-                /////////////////////////////////////////
+
                 if(project){
-                  this.langs.push(data);
+                  //this.langs.push(data);
+                  
+                  Array.prototype.push.apply(this.langs, data.filter(function(language) {
+                    let l = thisLangs.find(t => t.id === language.id);
+                    if(l)
+                      return language.id !== l.id;
+                    return true;
+                  }));
                   this.IsLoad = false;
+
                 }
                 else
                 {
