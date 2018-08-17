@@ -219,7 +219,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Region, opt => opt.MapFrom(pt => pt.Region))
                     .ForMember(p => p.RegistrationDate, opt => opt.MapFrom(pt => pt.RegistrationDate))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(pt => pt.FullName))
-                    .ForMember(p => p.Uid, opt => opt.MapFrom(pt => pt.Uid));
+                    .ForMember(p => p.Uid, opt => opt.MapFrom(pt => pt.Uid))
+                    .ForMember(p => p.Ratings, opt => opt.MapFrom(pt => pt.Ratings))
+                    .ForMember(p => p.TeamTranslators, opt => opt.Ignore());
 
                 #endregion
 
