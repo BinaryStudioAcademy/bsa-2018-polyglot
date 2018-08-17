@@ -42,6 +42,7 @@ export class LanguagesComponent implements OnInit {
     .subscribe(langs =>{
       this.IsLangLoad = false;
       let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
+          width: "75%",
         data: {
           langs: langs
         }
