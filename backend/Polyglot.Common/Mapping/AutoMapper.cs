@@ -183,8 +183,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.RegistrationDate, opt => opt.MapFrom(po => po.RegistrationDate))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.FullName))
                     .ForMember(p => p.Uid, opt => opt.MapFrom(po => po.Uid))
-                    .ForMember(p => p.Ratings, opt => opt.MapFrom(po => po.Ratings))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(po => po.TeamTranslators))
+                    .ForMember(p => p.Ratings, opt => opt.Ignore())
+                    .ForMember(p => p.TeamTranslators, opt => opt.Ignore())
+                    .ForMember(p => p.UserRole, opt => opt.Ignore())
                     .ForMember(p => p.Projects, opt => opt.Ignore());
                 cfg.CreateMap<UserProfile, UserProfileDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
@@ -199,9 +200,10 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.RegistrationDate, opt => opt.MapFrom(pt => pt.RegistrationDate))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(pt => pt.FullName))
                     .ForMember(p => p.Uid, opt => opt.MapFrom(pt => pt.Uid))
-                    .ForMember(p => p.Ratings, opt => opt.MapFrom(pt => pt.Ratings))
+                    .ForMember(p => p.Ratings, opt => opt.Ignore())
                     .ForMember(p => p.TeamTranslators, opt => opt.Ignore())
-                    .ForMember(p => p.Projects, opt => opt.Ignore()); ;
+                    .ForMember(p => p.UserRole, opt => opt.MapFrom(pt => (int)pt.UserRole))
+                    .ForMember(p => p.Projects, opt => opt.Ignore());
 
                 #endregion
 
