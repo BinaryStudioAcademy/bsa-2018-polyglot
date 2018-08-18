@@ -25,7 +25,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="file title",
                     PictureLink="http://www.lib.cam.ac.uk/files/stauffenberg-bendler.jpg",
                     Translations = new List<Translation> {
-                        new Translation { Language = "Ukranian", 
+                        new Translation {
+                        Id = Guid.NewGuid(),
+                        LanguageId = 2, 
                         TranslationValue ="Операція Валькірія", 
                         CreatedOn = DateTime.Now, 
                         UserId = 1,
@@ -45,8 +47,9 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
-                            Language = "German", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 3, 
                             TranslationValue ="Unternehmen Walküre", 
                             CreatedOn = DateTime.Now, UserId = 2,
                         History = new List<AdditionalTranslation> {
@@ -67,7 +70,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 4,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -76,7 +79,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "WW2", "title", "test" }
 
@@ -90,8 +93,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="Technology difference",
                     PictureLink="https://qph.fs.quoracdn.net/main-qimg-06a25d4b46bae22b0d583e6e4ee3472b",
                     Translations = new List<Translation> {
-                        new Translation { 
-                            Language = "Ukranian", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 2, 
                             TranslationValue ="Angular не має поняття області видимості або контроллера, замість цього він використовує ієрархію компонентів як основну архітектурну характеристику", 
                             CreatedOn = DateTime.Now, 
                             UserId = 5,
@@ -111,7 +115,7 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { Language = "Italian", TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
+                        new Translation {   Id = Guid.NewGuid(),LanguageId = 5, TranslationValue ="Unternehmen Walküre", CreatedOn = DateTime.Now, UserId = 2,
                         History = new List<AdditionalTranslation> {
                             new AdditionalTranslation {
                                 UserId = 2,
@@ -130,7 +134,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                      /*  new Comment {
                             UserId = 5,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -139,7 +143,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "angular", "scope", "component" }
 
@@ -153,8 +157,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description =".NET Core 3.0 announced",
                     PictureLink="https://pbs.twimg.com/media/DcsAmkxXcAIl_en.jpg",
                     Translations = new List<Translation> {
-                        new Translation { 
-                            Language = "Ukranian", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 2, 
                             TranslationValue ="З виходом .NET Core 3 фреймворк отримає підтримку для розробки програм для робочого столу, штучного інтелекту / машинного навчання та інтернету речей.", 
                             CreatedOn = DateTime.Now, 
                             UserId = 1,
@@ -174,8 +179,9 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
-                            Language = "French", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 5, 
                             TranslationValue ="Avec Core 3, le framework prendra en charge le développement d'applications de bureau, d'intelligence artificielle / d'apprentissage automatique et d'IoT", 
                             CreatedOn = DateTime.Now, 
                             UserId = 2,
@@ -197,7 +203,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 5,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -206,7 +212,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "net core", "announce", "framework" }
 
@@ -220,8 +226,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="Features of the release of the film",
                     PictureLink="https://ichef.bbci.co.uk/news/660/media/images/82107000/jpg/_82107031_chinesenavyreut.jpg",
                     Translations = new List<Translation> {
-                        new Translation { 
-                            Language = "Chinese", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 5, 
                             TranslationValue ="主要攝影於2017年2月中旬在摩洛哥開始，僱用了400名摩洛哥人和300名中國人作為技術人員組的一部分", 
                             CreatedOn = DateTime.Now, 
                             UserId = 1,
@@ -241,8 +248,9 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
-                            Language = "Spanich", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 4, 
                             TranslationValue ="La fotografía principal comenzó a mediados de febrero de 2017 en Marruecos y empleó a 400 marroquíes y 300 chinos como parte del grupo técnico de tripulación.", 
                             CreatedOn = DateTime.Now, 
                             UserId = 2,
@@ -264,7 +272,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                      /*  new Comment {
                             UserId = 3,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -273,7 +281,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 2,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "crew", "film", "marocco" }
 
@@ -288,8 +296,9 @@ namespace Polyglot.DataAccess.Seeds
                     Description ="German-Soviet relations of 1939–40",
                     PictureLink="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tweede_wereldoorlog_inval_in_Polen_1939.png/800px-Tweede_wereldoorlog_inval_in_Polen_1939.png",
                     Translations = new List<Translation> {
-                        new Translation { 
-                            Language = "German", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 3, 
                             TranslationValue ="Die geopolitische Disposition Europas 1941, unmittelbar vor Beginn der Operation Barbarossa. Die Grauzone repräsentiert Nazi-Deutschland, seine Verbündeten und die von ihm kontrollierten Länder. " +
                                             "Im August 1939 unterzeichneten Deutschland und die Sowjetunion in Moskau einen Nichtangriffspakt, der Molotov-Ribbentrop-Pakt", 
                             CreatedOn = DateTime.Now, 
@@ -312,8 +321,9 @@ namespace Polyglot.DataAccess.Seeds
                                 }
                             }
                         },
-                        new Translation { 
-                            Language = "Ukranian", 
+                        new Translation {
+                            Id = Guid.NewGuid(),
+                            LanguageId = 2, 
                             TranslationValue ="Геополітичне розташування Європи в 1941 році, безпосередньо перед початком операції Барбаросса. Сірий район представляє нацистську Німеччину, її союзників та країни, що знаходяться під його жорстким контролем. " +
                                                 "У серпні 1939 р. Німеччина та Радянський Союз підписали пакт про ненапад, який в Москві називають пакт Молотова-Ріббентропа", 
                             CreatedOn = DateTime.Now, 
@@ -338,7 +348,7 @@ namespace Polyglot.DataAccess.Seeds
                         }
                     },
                     Comments = new List<Comment> {
-                        new Comment {
+                       /* new Comment {
                             UserId = 1,
                             Text="I think it's a great job!",
                             CreatedOn= DateTime.Now
@@ -347,7 +357,7 @@ namespace Polyglot.DataAccess.Seeds
                             UserId = 4,
                             Text="Awsome!",
                             CreatedOn= DateTime.Now
-                        }
+                        }*/
                     },
                     Tags = new List<string> { "germany", "ussr", "ww2" }
 

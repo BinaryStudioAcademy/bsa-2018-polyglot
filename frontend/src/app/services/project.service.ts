@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Project } from '../models/project';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  getById(id: number) : Observable<any> {
+  getById(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
@@ -25,7 +25,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project);
   }
 
-  update(project: Project, id: number) : Observable<Project> {
+  update(project: FormData, id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, project);
   }
 
@@ -39,5 +39,17 @@ export class ProjectService {
 
   postFile(id: number, file: FormData) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
+  }
+
+  getProjectLanguages(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
+  }
+
+  addLanguagesToProject(projectId: number, languageIds: Array<number>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages', undefined, languageIds);
+  }
+
+  deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
   }
 }

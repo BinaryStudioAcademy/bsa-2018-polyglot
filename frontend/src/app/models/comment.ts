@@ -1,5 +1,7 @@
+import { UserProfile } from ".";
+
 export interface Comment {
-    userId: number;
+    user: UserProfile;
     text: string;
     createdOn: Date;
 }

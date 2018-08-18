@@ -5,6 +5,7 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 
 
 @Component({
@@ -27,9 +28,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
     private activatedRoute: ActivatedRoute,
     private router : Router,
     private dataProvider: ProjectService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private projectService: ProjectService,
+    private snotifyService: SnotifyService
    ) {}
 
+   description: string = "Are you sure you want to remove the project?";
+   btnOkText: string = "Delete";
+   btnCancelText: string = "Cancel";
+   answer: boolean;
+ 
   ngOnInit() {
     this.searchQuery = '';
 
@@ -41,11 +49,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       .subscribe((data: any) => {
         if(data)
         {
+          debugger;
           this.onSelect(data[0]);
           this.keys = data;
           this.isEmpty = this.keys.length == 0 ? true : false;
-          let keyId = this.keys[0].id;
-          this.router.navigate([this.currentPath, keyId]);
+          let keyId: number;
+          if(!this.isEmpty) {
+            keyId = this.keys[0].id;
+            this.router.navigate([this.currentPath, keyId]);
+          }
         }
       });
     });
@@ -88,14 +100,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
 
   receiveId($event) {
-    debugger;
     let temp = this.keys.findIndex( x => x.id === $event);
     if(this.selectedKey.id == this.keys[temp].id)
       this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]
 
     this.keys.splice(temp, 1);
-
+    
+    this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
+
 
 }
 

@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
+import { AgmCoreModule } from '@agm/core';
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -61,6 +62,13 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
 import { NewTeamComponent } from './components/teams/new-team/new-team.component';
+import { LanguagesComponent } from './components/project-details/languages/languages.component';
+import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
+import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 
 
 @NgModule({
@@ -100,7 +108,14 @@ import { NewTeamComponent } from './components/teams/new-team/new-team.component
     ForgotPasswordDialogComponent,
     UploadFileComponent,
     TabDetailComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    ProjectEditComponent,
+    LanguagesComponent,
+    DeleteProjectLanguageComponent,
+    SelectProjectLanguageComponent,
+    ConfirmDialogComponent,
+    TabCommentsComponent,
+    TabHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -122,8 +137,11 @@ import { NewTeamComponent } from './components/teams/new-team/new-team.component
     MatProgressSpinnerModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
-    
+    SnotifyModule,
+    MatDialogModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
+    })
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -131,8 +149,11 @@ import { NewTeamComponent } from './components/teams/new-team/new-team.component
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
+    SelectProjectLanguageComponent,
+    DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
-    ImgDialogComponent
+    ImgDialogComponent,
+    ConfirmDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

@@ -74,7 +74,7 @@ namespace Polyglot.Controllers
 
         // POST: ComplexStrings
         [HttpPost]
-        public async Task<IActionResult> AddComplexString()
+        public async Task<IActionResult> AddComplexString(IFormFile formFile)
         {
             Request.Form.TryGetValue("str", out StringValues res);
             ComplexStringDTO complexString = JsonConvert.DeserializeObject<ComplexStringDTO>(res);
@@ -100,14 +100,14 @@ namespace Polyglot.Controllers
 
         // PUT: ComplexStrings/5
         [HttpPut("{id}")]
-        public IActionResult ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult>  ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
             complexString.Id = id;
 
-            var entity = dataProvider.ModifyComplexString(complexString);
+            var entity = await dataProvider.ModifyComplexString(complexString);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(mapper.Map<ComplexStringDTO>(entity));
         }
