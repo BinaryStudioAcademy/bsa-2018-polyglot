@@ -1,23 +1,24 @@
-  <form class="search-form">
-  
+
+  <form class="search-form">  
     <mat-form-field class="search-full-width">
-  
       <input type="search" matInput placeholder="Search">
       <button mat-raised-button color="primary" matSuffix>
         <mat-icon>search</mat-icon>
       </button>
-    </mat-form-field>
-  
+    </mat-form-field>  
   </form>
+  <mat-slide-toggle color="primary" #toggle [checked]="true">
+      Switch the layout
+    </mat-slide-toggle>
+ 
+
   <div *ngIf="IsLoad" class="spinner">
       <mat-spinner></mat-spinner> 
   </div>
 
-  <mat-slide-toggle #toggle [checked]="true">
-      Switch the layout
-  </mat-slide-toggle>
+  
 
-<div *ngIf="toggle.checked" class="container"> 
+<div *ngIf="!toggle.checked" class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>        
         <img mat-card-avatar class="manager-img" src="{{manager.avatarUrl}}">
@@ -47,20 +48,25 @@
 </div>
 
 
-<div *ngIf="!toggle.checked" class="row-container">
+<div *ngIf="toggle.checked" class="row-container">
   <mat-list>
     <div class="list-item" *ngFor="let card of cards">
-      <div>
-        <img class="manager-img" src="{{manager.avatarUrl}}">
-        <span>{{manager.firstName}} {{manager.lastName}}</span>        
+      <div class="row-manager">
+        <img mat-card-avatar class="row-manager-img" src="{{manager.avatarUrl}}">
+        <span><strong>{{manager.firstName}} {{manager.lastName}}</strong></span>        
       </div>
-      <img *ngIf="card.imageUrl !== null" mat-list-avatar src={{card.imageUrl}} alt="Photo of a project">
-      <img *ngIf="card.imageUrl == null" mat-list-avatar src="/assets/images/project.jpg" alt="Photo of a project">
-      <div>
-        <h3>{{card.name}}</h3>        
-        <span>{{card.description}}</span>        
+      <div class="row-img">
+        <img *ngIf="card.imageUrl !== null" src={{card.imageUrl}} alt="Photo of a project">
+        <img *ngIf="card.imageUrl == null" mat-list-avatar src="/assets/images/project.jpg" alt="Photo of a project">
       </div>
-      <div>
+      <div class="row-info">
+        <h3>{{card.name}}</h3>
+        <p><strong>Language: </strong>{{card.mainLanguage.name}}</p>
+        <p><strong>Technology: </strong>{{card.technology}}</p>
+        <span *ngIf="card.description !== null && card.description!=='' " class="row-description" >{{card.description}}</span>
+        <span *ngIf="card.description == null || card.description=='' " class="row-description" >No description</span>       
+      </div>
+      <div class="row-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
         <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </div>

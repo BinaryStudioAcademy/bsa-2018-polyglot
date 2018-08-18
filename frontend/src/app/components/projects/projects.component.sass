@@ -102,11 +102,60 @@ mat-card-title
   height: calc(100vh - 270px)
 
 
+
+
+.row-container
+  margin-top: 30px
+  margin-bottom: 30px
+
+.row-manager
+  display: grid
+  grid-gap: 5px
+  grid-template-rows: 2
+  text-align: center
+  .row-manager-img
+    height: 60px
+    width: 60px
+    align-self: end
+
+.row-buttons
+  display: grid
+  grid-template-rows: 2
+  button
+    width: 120px
+    height: 40px
+    justify-self: center
+    align-self: center
+    text-align: center
+  
+
+
+.row-description
+  display: block
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+    
+
 .list-item
   margin: 10px
   display: grid
-  grid-template-columns: 20% 30% 30% 20%
+  grid-template-columns: 15% 25% 40% 20%
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
   max-height: 150px
   img
     max-height: 150px
+    justify-self: center
+
+.row-img
+  img
+    display: block
+    max-width: 100%
+    margin: 0 auto
+
+.row-info
+  padding-left: 10px
+  h3
+    margin: 0
+    font-size: 30px
+    margin: 5px 0
