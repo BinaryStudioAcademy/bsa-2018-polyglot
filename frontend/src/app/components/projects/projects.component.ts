@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
 
-import { MatDialog } from '../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
 
 // to delete manager and user
 import { UserProfile } from '../../models/user-profile';
 
-import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 
 
 @Component({

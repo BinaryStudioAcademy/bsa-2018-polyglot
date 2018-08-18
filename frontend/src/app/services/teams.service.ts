@@ -3,47 +3,44 @@ import { HttpService, RequestMethod } from './http.service';
 import { Observable, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Team, Right } from '../models';
-import { Teammate } from '../models/teammate';
+import { Translator } from '../models/Translator';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeamService {
 
-  private team: Team;
-  
   private api: string = "teams";
   constructor(private dataService: HttpService) { }
-  
-  getAll() : Observable<any> {
+
+  getAllTeams(): Observable<Team[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  getAllTeammates(teamId: number) : Observable<Teammate[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, teamId)
-                .pipe(map<Teammate[], any>(data => {
-                  return data.map(function(teammate: any) {
-                    return {
-                      id: teammate.id,
-                      fullName: teammate.fullName,
-                      email: teammate.email,
-
-                      rights: teammate.rights.map(right => {
-                            return {
-                              id: right.id,
-                              definition: right.definition
-                            }
-                      } ),
-
-                      teamId: teammate.teamId
-                    }
-                  })
-                }))
+  getTeam(id: number): Observable<Team> {
+    debugger;
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(body){
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
+  getAllTranslators(): Observable<Translator> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators', undefined, undefined);
   }
+
+  GetTranslator(id: number): Observable<Translator> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators/', id, undefined);
+  }
+
+  GetTranslatorRating(translatorId: number): Observable<Translator> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators/' + translatorId + '/rating', undefined, undefined);
+  }
+
+  formTeam(translatorsIds: Array<number>): Observable<Team> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, translatorsIds);
+  }
+
+ // create(body){
+ //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
+ // }
 
   update(id: number, body){
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);

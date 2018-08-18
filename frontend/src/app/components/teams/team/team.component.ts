@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatTable } from '@angular/material';
-import { Teammate } from '../../../models/teammate';
+import { Translator } from '../../../models/Translator';
 import { TeamService } from '../../../services/teams.service';
 import { SearchService } from '../../../services/search.service';
 import { ActivatedRoute } from '@angular/router';
+import { Team } from '../../../models';
 
 
 @Component({
@@ -16,10 +17,10 @@ import { ActivatedRoute } from '@angular/router';
 export class TeamComponent implements OnInit {
 
   @Input() id: number;
-  teammates: Teammate[];
+  teamTranslators: Translator[];
   emailToSearch: string;
   displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
-  dataSource: MatTableDataSource<Teammate> = new MatTableDataSource();
+  dataSource: MatTableDataSource<Translator> = new MatTableDataSource();
   emailFormControl = new FormControl('', [
     Validators.email,
   ]);
@@ -42,11 +43,12 @@ export class TeamComponent implements OnInit {
   }
 
   getTranslators(){
-    this.teammates = [];
-    this.teamService.getAllTeammates(this.id)
-        .subscribe((data: Teammate[]) => {
-          this.teammates = data;
-          this.dataSource = new MatTableDataSource(this.teammates);
+    this.teamTranslators = [];
+    this.teamService.getTeam(this.id)
+        .subscribe((data: Team) => {
+          debugger;
+          this.teamTranslators = data.teamTranslators;
+          this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;
           this.ngOnChanges();
         })
@@ -76,19 +78,19 @@ export class TeamComponent implements OnInit {
   searchTranslators() {
     this.getTranslators();
     this.searchService.FindTranslatorsByEmail(this.emailToSearch)
-        .subscribe((data: Teammate[]) => {
-          this.teammates = data.concat(this.teammates);
-          this.dataSource = new MatTableDataSource(this.teammates);
+        .subscribe((data: Translator[]) => {
+          this.teamTranslators = data.concat(this.teamTranslators);
+          this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.paginator = this.paginator;
           this.paginator.pageIndex = 0;
         });
   }
 
   checkTranslatorRight(id: number, rightName: string) : boolean{
-    if(!this.teammates)
+    if(!this.teamTranslators)
       return false;
 
-    let teammate = this.teammates.find(t => t.id === id);
+    let teammate = this.teamTranslators.find(t => t.id === id);
     if(!teammate)
       return false;
       
@@ -114,8 +116,8 @@ export class TeamComponent implements OnInit {
   }
 
   checkPaginatorNecessity(){
-    if(this.teammates){
-      this.IsPagenationNeeded = this.teammates.length > this.pageSize;
+    if(this.teamTranslators){
+      this.IsPagenationNeeded = this.teamTranslators.length > this.pageSize;
 
       if(this.IsPagenationNeeded){
         this.paginator.pageSize = this.pageSize;

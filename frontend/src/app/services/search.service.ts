@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient} from '@angular/common/http';
-import { Teammate } from '../models/teammate';
+import { Translator } from '../models/Translator';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class SearchService {
 
   constructor() { }
 
-  GetTranslatorsByTeam(teamId: number) : Observable<Teammate[]>{
+  GetTranslatorsByTeam(teamId: number) : Observable<Translator[]>{
     // собираем translator + email + rights
     return of([
     {
@@ -28,7 +28,8 @@ export class SearchService {
                 definition: "lanGuAge-add  ",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 2,
@@ -40,7 +41,8 @@ export class SearchService {
                 definition: "lanGuAge-add  ",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 3,
@@ -51,14 +53,16 @@ export class SearchService {
                 definition: "Language-select",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 4,
       fullName: 'Grisha Kolesnik',
       email: 'kes.grisha3@gmail.com',
       rights: undefined,
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 5,
@@ -79,7 +83,8 @@ export class SearchService {
                 definition: "key",
                 translatorRights: undefined
               }],
-      teamId: 21
+      teamId: 21,
+      rating: 1,
     },
     {
       id: 6,
@@ -91,7 +96,8 @@ export class SearchService {
                 definition: "key",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     ,
     {
@@ -99,7 +105,8 @@ export class SearchService {
       fullName: 'Alesha Greben',
       email: 'greben.alesha@gmail.com',
       rights: undefined,
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 8,
@@ -115,7 +122,8 @@ export class SearchService {
                 definition: "lanGuAge-add  ",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 9,
@@ -126,27 +134,30 @@ export class SearchService {
                 definition: "Language-select",
                 translatorRights: undefined
               }],
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     },
     {
       id: 10,
       fullName: 'Vasia Shamsia',
       email: 'vasi1234@gmail.com',
       rights: undefined,
-      teamId:88
+      teamId:88,
+      rating: 1,
     },
     {
       id: 11,
       fullName: 'Kateria Tarakanowa',
       email: 'katia.ss3@gmail.com',
       rights: undefined,
-      teamId: 88
+      teamId: 88,
+      rating: 1,
     }
   ].filter(m => m.teamId == teamId));
   }
 
 
-  FindTranslatorsByEmail(email: string) : Observable<Teammate[]>{
+  FindTranslatorsByEmail(email: string) : Observable<Translator[]>{
     
     return of([
       {
@@ -168,7 +179,8 @@ export class SearchService {
                   definition: "lanGuAge-select",
                   translatorRights: undefined
                 }],
-        teamId: 82
+        teamId: 82,
+        rating: 1,
       },
       {
         id: 22,
@@ -184,7 +196,8 @@ export class SearchService {
                   definition: "lanGuAge-add  ",
                   translatorRights: undefined
                 }],
-        teamId: 12
+        teamId: 12,
+        rating: 1,
       },
       {
         id: 42,
@@ -200,7 +213,8 @@ export class SearchService {
                   definition: "lanGuAge-select  ",
                   translatorRights: undefined
                 }],
-        teamId: 345
+        teamId: 345,
+        rating: 1,
       },
       {
         id: 43,
@@ -212,7 +226,8 @@ export class SearchService {
                   definition: "lanGuAge-add  ",
                   translatorRights: undefined
                 }],
-        teamId: 34
+        teamId: 34,
+        rating: 1,
       },
       {
         id: 44,
@@ -228,7 +243,8 @@ export class SearchService {
                   definition: "lanGuAge-add  ",
                   translatorRights: undefined
                 }],
-        teamId: 34
+        teamId: 34,
+        rating: 1,
       }].filter(m => m.email == email));
   }
 

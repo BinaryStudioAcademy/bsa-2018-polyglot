@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SnotifyService } from '../../../../../node_modules/ng-snotify';
-import { Translator } from '../../../models';
-import { TranslatorService } from '../../../services/translator.service';
+import { SnotifyService } from 'ng-snotify';
 import { MatTableDataSource, MatSort, MatPaginator  } from '@angular/material';
+import { TeamService } from '../../../services/teams.service';
 
 
 @Component({
@@ -22,8 +21,10 @@ export class NewTeamComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private translatorService: TranslatorService,
-    private snotifyService: SnotifyService, ) {
+  constructor(
+    private teamService: TeamService,
+    private snotifyService: SnotifyService 
+  ) {
         
         
   }
@@ -33,7 +34,7 @@ export class NewTeamComponent implements OnInit {
   }
 
   getAllTranslators(){
-     this.translatorService.getAll()
+     this.teamService.getAllTeams()
       .subscribe(translators => {
         this.translators = translators;
         debugger;
