@@ -10,6 +10,8 @@ namespace Polyglot.Common.DTOs
 
         public string Email { get; set; }
 
+        public string AvatarUrl { get; set; }
+
         public IEnumerable<RightDTO> Rights { get; set; }
 
         public double Rating { get; set; }

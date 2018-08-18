@@ -28,11 +28,11 @@ namespace Polyglot.BusinessLogic.Services
                 return null;
         }   
 
-        public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsPrevsAsync()
+        public async Task<IEnumerable<TeamDTO>> GetAllTeamsPrevsAsync()
         {
             var teams = await uow.GetRepository<Team>().GetAllAsync();
             if (teams != null)
-                return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
+                return mapper.Map<IEnumerable<TeamDTO>>(teams);
             else
                 return null;
         }

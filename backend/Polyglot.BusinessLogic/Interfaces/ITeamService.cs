@@ -9,13 +9,12 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         #region Teams
 
-        Task<IEnumerable<TeamPrevDTO>> GetAllTeamsPrevsAsync();
+        Task<IEnumerable<TeamDTO>> GetAllTeamsPrevsAsync();
 
         Task<IEnumerable<TeamDTO>> GetAllTeamsAsync();
 
         Task<IEnumerable<TranslatorDTO>> GetTeamTranslatorsAsync(int teamId);
-
-#warning возможно достаточно возвратить TeamPrevDTO
+        
         Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId);
 
         Task<bool> TryDisbandTeamAsync(int teamId);

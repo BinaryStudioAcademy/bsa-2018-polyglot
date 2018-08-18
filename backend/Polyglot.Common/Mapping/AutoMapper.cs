@@ -144,6 +144,17 @@ namespace Polyglot.Common.Mapping
 
 
 
+                cfg.CreateMap<TeamTranslator, TranslatorDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.UserProfile.Id))
+                    .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.UserProfile.FullName))
+                    .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.UserProfile.AvatarUrl))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
+#warning примапить email
+                    .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
+                    .ForMember(p => p.Rating, opt => opt.Ignore())
+                    .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
+
+
                 cfg.CreateMap<Polyglot.Common.DTOs.TranslationDTO, Polyglot.DataAccess.Entities.ComplexString>()
                     .ForMember(p => p.TranslationKey, opt => opt.MapFrom(pt => pt.TranslationKey));
                 cfg.CreateMap<Polyglot.DataAccess.Entities.ComplexString, Polyglot.Common.DTOs.TranslationDTO>()
@@ -156,15 +167,6 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
                         po.TeamTranslators
                         .Select(t => t.UserProfile)));
-
-                cfg.CreateMap<TeamTranslator, TranslatorDTO>()
-                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.UserProfile.Id))
-                    .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.UserProfile.FullName))
-                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
-#warning примапить email
-                    .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
-                    .ForMember(p => p.Rating, opt => opt.Ignore())
-                    .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
 
                 cfg.CreateMap<UserProfile, UserProfilePrevDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
