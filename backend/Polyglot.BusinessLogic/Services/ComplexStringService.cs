@@ -56,7 +56,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<ComplexStringDTO> SetStringTranslation(int identifier, TranslationDTO translation)
+        public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
             var target = await _repository.GetAsync(identifier);
             if (target != null)
@@ -65,7 +65,7 @@ namespace Polyglot.BusinessLogic.Services
                 currentTranslation.Id = Guid.NewGuid();
                 target.Translations.Add(currentTranslation);
                 var result = await _repository.Update(_mapper.Map<ComplexString>(target));
-                return _mapper.Map<ComplexStringDTO>(result);
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
             }
             return null;
 

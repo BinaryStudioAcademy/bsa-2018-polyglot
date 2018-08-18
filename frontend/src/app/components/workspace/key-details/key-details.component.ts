@@ -93,6 +93,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
       element => {
         return ({
           languageName: element.name,
+          languageId: element.id,
           ...this.getProp(element.id)
         });
       }
@@ -106,14 +107,14 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     return searchedElement.length > 0 ? searchedElement[0]: null;    
   }
   
-  onSave(t: Translation){
+  onSave(t: any){
     this.route.params.subscribe(value =>
     {
       debugger
         if(t.id) {
           this.dataProvider.editStringTranslation(t, value.keyId)
             .subscribe(
-            (d: Translation[])=> {
+            (d: any[])=> {
               console.log(this.keyDetails.translations);
             },
             err => {
@@ -122,9 +123,19 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
+          debugger
           this.dataProvider.createStringTranslation(t, value.keyId)
             .subscribe(
-              (d: Translation)=> {
+              (d: any)=> {
+                const lenght = this.keyDetails.translations.length;
+                for (var i = 0; i < lenght; i++) {
+                  if(this.keyDetails.translations[i].languageId === d.languageId) {
+                    this.keyDetails.translations[i] = {
+                      languageName: this.keyDetails.translations[i].languageName,
+                      ...d
+                    };
+                  }
+                }
                 console.log(this.keyDetails.translations);
               },
               err => {
