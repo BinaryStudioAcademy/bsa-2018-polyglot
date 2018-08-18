@@ -1,9 +1,9 @@
-import { Translator } from "./translator";
 import { Language } from "./language";
+import { UserProfile } from "./user-profile";
 
 export interface TranslatorLanguage {
     translatorId: number;
-    translator: Translator;
+    translator: UserProfile;
     languageId: number;
     language: Language;
     proficiency: string;

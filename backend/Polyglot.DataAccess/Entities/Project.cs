@@ -11,7 +11,7 @@ namespace Polyglot.DataAccess.Entities
         public string Technology { get; set; }
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
-        public virtual Manager Manager { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
 
 
 		[ForeignKey("MainLanguageId")]

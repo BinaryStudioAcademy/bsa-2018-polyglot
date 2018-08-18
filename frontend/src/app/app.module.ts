@@ -67,6 +67,7 @@ import { SelectProjectLanguageComponent } from './dialogs/select-project-languag
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 
 
 
@@ -112,7 +113,8 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    TabHistoryComponent
   ],
   imports: [
     BrowserModule,

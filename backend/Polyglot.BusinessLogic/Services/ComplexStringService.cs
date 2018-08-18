@@ -15,12 +15,15 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IMongoRepository<ComplexString> _repository;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+		private readonly IFileStorageProvider _provider;
 
-        public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow)
+
+		public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow, IFileStorageProvider provider)
         {
             _uow = uow;
             _repository = repository;
             _mapper = mapper;
+			_provider = provider;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -80,6 +83,11 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> DeleteComplexString(int identifier)
         {
+			ComplexString toDelete = await _repository.GetAsync(identifier);
+
+			if (toDelete.PictureLink != null)
+				await _provider.DeleteFileAsync(toDelete.PictureLink);
+
             await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().DeleteAsync(identifier);
             await _uow.SaveAsync();
             await _repository.DeleteAsync(identifier);

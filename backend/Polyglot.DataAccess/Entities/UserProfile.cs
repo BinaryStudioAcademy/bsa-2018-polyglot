@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
 {
@@ -26,8 +27,23 @@ namespace Polyglot.DataAccess.Entities
 
         public string AvatarUrl { get; set; }
 
-        //Temp field
-        //public string FirebaseId { get; set; }
+        public Role UserRole { get; set; }
+
+        public virtual ICollection<Rating> Ratings { get; set; }
+
+        public virtual ICollection<TeamTranslator> TeamTranslators { get; set; }
+
+        public virtual List<Project> Projects { get; set; }
+
+        public UserProfile()
+        {
+            TeamTranslators = new List<TeamTranslator>();
+            Ratings = new List<Rating>();
+            Projects = new List<Project>();
+        }
+
+        public enum Role { Manager, Translator }
+
     }
 }
 
