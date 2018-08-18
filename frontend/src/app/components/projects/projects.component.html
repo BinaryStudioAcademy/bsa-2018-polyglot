@@ -39,7 +39,30 @@
         <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </mat-card-actions>
     </mat-card>
-</div>  
+</div>
+
+<div class="row-container">
+  <mat-list>
+    <div class="list-item" *ngFor="let card of cards">
+      <div>
+        <img class="manager-img" src="{{manager.avatarUrl}}">
+        <span>{{manager.firstName}} {{manager.lastName}}</span>        
+      </div>
+      <img *ngIf="card.imageUrl !== null" mat-list-avatar src={{card.imageUrl}} alt="Photo of a project">
+      <img *ngIf="card.imageUrl == null" mat-list-avatar src="/assets/images/project.jpg" alt="Photo of a project">
+      <div>
+        <h3>{{card.name}}</h3>        
+        <span>{{card.description}}</span>        
+      </div>
+      <div>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+      </div>
+      
+    </div>    
+  </mat-list>
+
+</div>
 
 <ng-snotify></ng-snotify>
 <button routerLink="/profile/newproject" mat-fab color="primary" class="button-add">
