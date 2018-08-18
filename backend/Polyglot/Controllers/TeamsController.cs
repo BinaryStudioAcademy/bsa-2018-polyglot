@@ -22,18 +22,21 @@ namespace Polyglot.Controllers
         // GET: Teams
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
+
         {
-            var teams = await service.GetAllTeamsPrevsAsync();
+#warning ??? наверное GetAllTeamsAsync должен возвращать только команды определенного менеджера
+            var teams = await service.GetAllTeamsAsync();
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
 
-        // GET: Teams/5
-        [HttpGet("{id}", Name = "GetTeammates")]
-        public async Task<IActionResult> GetTeammates(int id)
+        // GET: teams/:id
+        [HttpGet("{id}", Name = "GetTeam")]
+        public async Task<IActionResult> GetTeam(int id)
+
         {
-            var teamTranslators = await service.GetTeamTranslatorsAsync(id);
-            return teamTranslators == null ? NotFound($"No teammates found for team with id = {id}!") as IActionResult
+            var teamTranslators = await service.GetOneAsync(id);
+            return teamTranslators == null ? NotFound($"No team found with id = {id}!") as IActionResult
                 : Ok(teamTranslators);
         }
 
@@ -41,13 +44,23 @@ namespace Polyglot.Controllers
         [HttpGet("translators", Name = "GetAllTranslators")]
         public async Task<IActionResult> GetAllTranslators()
         {
+
             var translators = await service.GetAllTranslatorsAsync();
             return translators == null ? NotFound("No translators found!") as IActionResult
                 : Ok(translators);
         }
 
+        // GET: teams/translators/:id
+        [HttpGet("translators/{id}", Name = "GetTranslator")]
+        public async Task<IActionResult> GetTranslator(int id)
+        {
+            var translators = await service.GetTranslatorAysnc(id);
+            return translators == null ? NotFound("No translators found!") as IActionResult
+                : Ok(translators);
+        }
+
         // GET: teams/translators/:id/rating
-        [HttpGet("translators/{id}/rating", Name = "GetTranslatorRating")]
+        [HttpGet("translators/{translatorId}/rating", Name = "GetTranslatorRating")]
         public async Task<IActionResult> GetTranslatorRating(int translatorId)
         {
             var translatorRating = await service.GetTranslatorRatingValueAsync(translatorId);
@@ -67,6 +80,7 @@ namespace Polyglot.Controllers
         //}
 
         // POST: Teams
+        [HttpPost]
         public async Task<IActionResult> FormTeam([FromBody]int[] translatorsIds)
         {
             if (!ModelState.IsValid)

@@ -22,30 +22,13 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<TeamDTO>> GetAllTeamsAsync()
         {
             var teams = await uow.GetRepository<Team>().GetAllAsync();
-            if (teams != null)
-                return mapper.Map<IEnumerable<TeamDTO>>(teams);
-            else
-                return null;
-        }   
-
-        public async Task<IEnumerable<TeamDTO>> GetAllTeamsPrevsAsync()
-        {
-            var teams = await uow.GetRepository<Team>().GetAllAsync();
-            if (teams != null)
-                return mapper.Map<IEnumerable<TeamDTO>>(teams);
-            else
-                return null;
-        }
-
-        public async Task<IEnumerable<TranslatorDTO>> GetTeamTranslatorsAsync(int teamId)
-        {
-            var team = await uow.GetRepository<Team>().GetAsync(teamId);
 #warning тут не вычисляется рейтинг переводчика
-            if (team != null)
-                return mapper.Map<IEnumerable<TranslatorDTO>>(team?.TeamTranslators);
-            return null;
-        }
-
+            if (teams != null && teams.Count > 0)
+                return mapper.Map<IEnumerable<TeamDTO>>(teams);
+            else
+                return new List<TeamDTO>();
+        }   
+        
         public async Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId)
         {
             var userRepo = uow.GetRepository<UserProfile>();
@@ -90,6 +73,53 @@ namespace Polyglot.BusinessLogic.Services
             return await uow.SaveAsync() > 0;
         }
 
+        #region Overrides
+
+
+        public override async Task<TeamDTO> GetOneAsync(int teamId)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            if (team != null && team.TeamTranslators != null && team.TeamTranslators.Count > 0)
+            {
+                var translators = team.TeamTranslators;
+                // вычисляем рейтинги переводчиков
+                Dictionary<int, double> ratings = new Dictionary<int, double>();
+                IEnumerable<double> ratingRatesSequence;
+                double? currentRating;
+
+                foreach (var t in translators)
+                {
+                    ratingRatesSequence = t.UserProfile?.Ratings.Select(r => r.Rate);
+                    if (ratingRatesSequence.Count() < 1)
+                        currentRating = 0.0d;
+                    else
+                        currentRating = ratingRatesSequence.Average();
+
+                    ratings.Add(t.UserProfile.Id, currentRating.HasValue ? currentRating.Value : 0.0d);
+                }
+                //маппим и после маппинга заполняем рейтинг
+                var teamTranslators = mapper.Map<IEnumerable<TeamTranslator>, IEnumerable<TranslatorDTO>>(translators, opt => opt.AfterMap((src, dest) =>
+                {
+                    var translatorsList = dest.ToList();
+                    for (int i = 0; i < translatorsList.Count; i++)
+                    {
+                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                    }
+
+                }));
+
+                return new TeamDTO()
+                {
+                    Id = team.Id,
+                    TeamTranslators = teamTranslators.ToList()
+                };
+            }
+            else
+                return null;
+        }
+
+        #endregion Overrides
+
         #region Translators
 
 
@@ -98,13 +128,23 @@ namespace Polyglot.BusinessLogic.Services
             var translators = await uow.GetRepository<UserProfile>()
                 .GetAllAsync(u => u.UserRole == UserProfile.Role.Translator);
 
-            if (translators != null)
+            if (translators != null && translators.Count > 0)
             {
-                // вычисляем рейтинг
+
+                // вычисляем рейтинги переводчиков
                 Dictionary<int, double> ratings = new Dictionary<int, double>();
+                IEnumerable<double> ratingRatesSequence;
+                double? currentRating;
+
                 foreach (var t in translators)
                 {
-                    ratings.Add(t.Id, t.Ratings.Select(r => r.Rate).Average());
+                    ratingRatesSequence = t.Ratings.Select(r => r.Rate);
+                    if (ratingRatesSequence.Count() < 1)
+                        currentRating = 0.0d;
+                    else
+                        currentRating = ratingRatesSequence.Average();
+
+                    ratings.Add(t.Id, currentRating.HasValue ? currentRating.Value : 0.0d);
                 }
                 //маппим и после маппинга заполняем рейтинг
                 return mapper.Map<IEnumerable<UserProfile>, IEnumerable<TranslatorDTO>>(translators, opt => opt.AfterMap((src, dest) =>
@@ -118,7 +158,7 @@ namespace Polyglot.BusinessLogic.Services
                 }));
             }
             else
-                return null;
+                return new List<TranslatorDTO>();
         }
 
         public async Task<TranslatorDTO> GetTranslatorAysnc(int id)
@@ -128,7 +168,11 @@ namespace Polyglot.BusinessLogic.Services
             {
                 return mapper.Map<UserProfile, TranslatorDTO>(translator, opt => opt.AfterMap((src, dest) =>
                 {
-                    dest.Rating = src.Ratings.Select(r => r.Rate).Average();
+                    var ratingRatesSequence = src.Ratings.Select(r => r.Rate);
+                    if (ratingRatesSequence.Count() < 1)
+                        dest.Rating = 0.0d;
+                    else
+                        dest.Rating = src.Ratings.Select(r => r.Rate).Average();
                 }));
             }
             else
@@ -137,11 +181,12 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<double> GetTranslatorRatingValueAsync(int translatorId)
         {
-#warning протестить правильно ли получаем rating
             var translator = await uow.GetRepository<UserProfile>().GetAsync(translatorId);
             if (translator != null && translator.UserRole == UserProfile.Role.Translator)
             {
-                return translator.Ratings.Select(r => r.Rate).Average();
+                var ratingRatesSequence = translator.Ratings.Select(r => r.Rate);
+                if (ratingRatesSequence.Count() > 0)
+                    return ratingRatesSequence.Average();
             }
 
             return 0.0d;

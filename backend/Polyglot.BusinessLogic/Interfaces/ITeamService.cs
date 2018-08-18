@@ -8,12 +8,8 @@ namespace Polyglot.BusinessLogic.Interfaces
     public interface ITeamService : ICRUDService<Team, TeamDTO>
     {
         #region Teams
-
-        Task<IEnumerable<TeamDTO>> GetAllTeamsPrevsAsync();
-
+        
         Task<IEnumerable<TeamDTO>> GetAllTeamsAsync();
-
-        Task<IEnumerable<TranslatorDTO>> GetTeamTranslatorsAsync(int teamId);
         
         Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId);
 

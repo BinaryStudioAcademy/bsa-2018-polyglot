@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,7 @@ namespace Polyglot.Controllers
         {
             var user = UserIdentityService.GetCurrentUser();
             if (user.Id == 0)
-                return Ok();
+                return Ok(new List<ProjectDTO>());
             var projects = await service.GetListAsync(user.Id);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);

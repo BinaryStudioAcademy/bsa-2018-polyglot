@@ -16,7 +16,7 @@ namespace Polyglot.Common.DTOs
 
         public double Rating { get; set; }
 
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
 
         public TranslatorDTO()
         {
