@@ -2,8 +2,8 @@
 	<div *ngIf="keyDetails.translations">
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [expanded]="expandedArray[i]" (opened)="setStep(i)" hideToggle>
-						  <mat-expansion-panel-header class="header-translation" *ngIf = "!expandedArray[i]" >
+						<mat-expansion-panel [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
@@ -26,7 +26,7 @@
 								</mat-form-field>
 								<div class="button-translation">
 									<button mat-raised-button color="primary"  (click)="onSave(t)">Save</button>
-									<button mat-raised-button color="warn"  (click)="onClose(i)">Close</button>
+									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
 								
 						  </div>

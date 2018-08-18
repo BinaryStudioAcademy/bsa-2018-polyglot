@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
@@ -9,12 +9,15 @@ import { Translation, Project, Language } from '../../../models';
 import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
 import { LanguageService } from '../../../services/language.service';
 import { elementAt } from 'rxjs/operators';
+import { SnotifyService } from 'ng-snotify';
+import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 
 @Component({
   selector: 'app-workspace-key-details',
   templateUrl: './key-details.component.html',
   styleUrls: ['./key-details.component.sass']
 })
+
 export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   public keyDetails: any; 
@@ -23,19 +26,26 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
   public Id : string;
-  expandedArray = [];
   projectId: number;
   languages: Language[];
   translationLang: any;
+  expandedArray: Array<TranslationState>;
+
+  description: string = "Do you want to save changes?";
+  btnYesText: string = "Yes";
+  btnNoText: string = "No";
+  btnCancelText: string = "Cancel";
+  answer: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(    private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
     private dataProvider: ComplexStringService,
-    private projectService: ProjectService) 
-  { 
+    private projectService: ProjectService,
+    public dialog: MatDialog,
+    private snotifyService: SnotifyService) { 
     this.Id = this.route.snapshot.queryParamMap.get('keyid');
-    this.expandedArray  
+    this.expandedArray = new Array();
   }
 
 
@@ -57,7 +67,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   step = 0;
 
   setStep(index: number) {
-    this.expandedArray[index] = true;
+    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
   }
 
 
@@ -69,7 +79,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.projectId = this.keyDetails.projectId;
         const temp = this.keyDetails.translations.length;
         for (var i = 0; i < temp; i++) {
-          this.expandedArray.push(false);
+          this.expandedArray.push({ isOpened: false, oldValue: '' });
         }
         this.getLanguages();
       });
@@ -98,7 +108,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         });
       }
     );
-    debugger
     console.log(this.keyDetails.translations);
   }
       
@@ -110,7 +119,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   onSave(t: any){
     this.route.params.subscribe(value =>
     {
-      debugger
         if(t.id) {
           this.dataProvider.editStringTranslation(t, value.keyId)
             .subscribe(
@@ -123,7 +131,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
-          debugger
           this.dataProvider.createStringTranslation(t, value.keyId)
             .subscribe(
               (d: any)=> {
@@ -146,9 +153,27 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     });
   }
   
-  onClose(index: number) {
-    this.expandedArray[index] = false;
+  onClose(index: number, translation: any) {
+     const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
+      width: '500px',
+      data: {description: this.description, btnYesText: this.btnYesText, btnNoText: this.btnNoText,  btnCancelText: this.btnCancelText, answer: this.answer}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      debugger
+      if (dialogRef.componentInstance.data.answer === 1){
+        this.expandedArray[index] = { isOpened: false, oldValue: ''};
+        this.onSave(translation);
+      }
+      else if(dialogRef.componentInstance.data.answer === 0) {
+        this.keyDetails.translations[index].translationValue = this.expandedArray[index].oldValue;
+        this.expandedArray[index] = { isOpened: false, oldValue: ''};
+      }
+    });
   }
+
+
+
+  
   ngOnDestroy() {
   }
 
@@ -157,3 +182,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
 
 }
+
+export interface TranslationState {
+  isOpened: boolean;
+  oldValue: string;
+} 
