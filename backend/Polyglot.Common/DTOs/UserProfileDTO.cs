@@ -22,12 +22,12 @@ namespace Polyglot.Common.DTOs
         public int UserRole { get; set; }
 
         public ICollection<RatingDTO> Ratings { get; set; }
-        public ICollection<TeammateDTO> TeamTranslators { get; set; }
+        public ICollection<TranslatorDTO> TeamTranslators { get; set; }
         public List<ProjectDTO> Projects { get; set; }
 
         public UserProfileDTO()
         {
-            TeamTranslators = new List<TeammateDTO>();
+            TeamTranslators = new List<TranslatorDTO>();
             Ratings = new List<RatingDTO>();
             Projects = new List<ProjectDTO>();
         }

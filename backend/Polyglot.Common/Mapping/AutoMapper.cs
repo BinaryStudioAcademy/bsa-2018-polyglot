@@ -60,7 +60,6 @@ namespace Polyglot.Common.Mapping
 					.ForMember(p => p.ImageUrl, opt => opt.MapFrom(po => po.ImageUrl))
 					.ForMember(p => p.MainLanguage, opt => opt.MapFrom(po => po.MainLanguage))
 					.ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile))
-#warning что нужно мапить?
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))				
                     .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(po => po.ProjectGlossaries))
                     .ForMember(p => p.ProjectLanguageses, opt => opt.MapFrom(po => po.ProjectLanguageses))
@@ -158,12 +157,13 @@ namespace Polyglot.Common.Mapping
                         po.TeamTranslators
                         .Select(t => t.UserProfile)));
 
-                cfg.CreateMap<TeamTranslator, TeammateDTO>()
+                cfg.CreateMap<TeamTranslator, TranslatorDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.UserProfile.Id))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.UserProfile.FullName))
                     .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
 #warning примапить email
                     .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
+                    .ForMember(p => p.Rating, opt => opt.Ignore())
                     .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
 
                 cfg.CreateMap<UserProfile, UserProfilePrevDTO>()

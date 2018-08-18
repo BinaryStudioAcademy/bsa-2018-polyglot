@@ -2,7 +2,7 @@
 
 namespace Polyglot.Common.DTOs
 {
-    public class TeammateDTO
+    public class TranslatorDTO
     {
         public int Id { get; set; }
 
@@ -12,9 +12,11 @@ namespace Polyglot.Common.DTOs
 
         public IEnumerable<RightDTO> Rights { get; set; }
 
+        public double Rating { get; set; }
+
         public int TeamId { get; set; }
 
-        public TeammateDTO()
+        public TranslatorDTO()
         {
             Rights = new List<RightDTO>();
         }
