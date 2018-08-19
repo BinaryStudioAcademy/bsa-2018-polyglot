@@ -140,6 +140,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators));
 
+                cfg.CreateMap<TranslatorLanguage, TranslatorLanguageDTO>()
+                    .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
+                    .ForMember(p => p.Proficiency, opt => opt.MapFrom(po => po.Proficiency));
 
 
                 cfg.CreateMap<TeamTranslator, TranslatorDTO>()
@@ -150,6 +153,7 @@ namespace Polyglot.Common.Mapping
 #warning примапить email
                     .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
                     .ForMember(p => p.Rating, opt => opt.Ignore())
+                    .ForMember(p => p.TranslatorLanguages, opt => opt.Ignore())
                     .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
                 cfg.CreateMap<UserProfile, TranslatorDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

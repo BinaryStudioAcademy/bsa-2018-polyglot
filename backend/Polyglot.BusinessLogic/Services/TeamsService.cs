@@ -130,7 +130,9 @@ namespace Polyglot.BusinessLogic.Services
 
             if (translators != null && translators.Count > 0)
             {
-
+                
+                var tLanguages = await uow.GetRepository<TranslatorLanguage>()
+                    .GetAllAsync();
                 // вычисляем рейтинги переводчиков
                 Dictionary<int, double> ratings = new Dictionary<int, double>();
                 IEnumerable<double> ratingRatesSequence;
@@ -150,9 +152,14 @@ namespace Polyglot.BusinessLogic.Services
                 return mapper.Map<IEnumerable<UserProfile>, IEnumerable<TranslatorDTO>>(translators, opt => opt.AfterMap((src, dest) =>
                 {
                     var translatorsList = dest.ToList();
+                    IEnumerable<TranslatorLanguage> translatorLanguages;
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
                         translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        // добавляем инфо о языках
+                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].Id);
+                        if (translatorLanguages != null && translatorLanguages.Count() > 0)
+                            translatorsList[i].TranslatorLanguages = mapper.Map<IEnumerable<TranslatorLanguageDTO>>(translatorLanguages);
                     }
 
                 }));
@@ -166,6 +173,9 @@ namespace Polyglot.BusinessLogic.Services
             var translator = await uow.GetRepository<UserProfile>().GetAsync(id);
             if (translator != null && translator.UserRole == UserProfile.Role.Translator)
             {
+                var translatorLanguages = await uow.GetRepository<TranslatorLanguage>()
+                    .GetAllAsync(tl => tl.TranslatorId == translator.Id);
+
                 return mapper.Map<UserProfile, TranslatorDTO>(translator, opt => opt.AfterMap((src, dest) =>
                 {
                     var ratingRatesSequence = src.Ratings.Select(r => r.Rate);
@@ -173,6 +183,10 @@ namespace Polyglot.BusinessLogic.Services
                         dest.Rating = 0.0d;
                     else
                         dest.Rating = src.Ratings.Select(r => r.Rate).Average();
+
+                    // добавляем инфо о языках
+                    if (translatorLanguages != null && translatorLanguages.Count() > 0)
+                        dest.TranslatorLanguages = mapper.Map<IEnumerable<TranslatorLanguageDTO>>(translatorLanguages);
                 }));
             }
             else

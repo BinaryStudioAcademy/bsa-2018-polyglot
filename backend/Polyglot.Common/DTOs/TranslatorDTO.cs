@@ -14,6 +14,8 @@ namespace Polyglot.Common.DTOs
 
         public IEnumerable<RightDTO> Rights { get; set; }
 
+        public IEnumerable<TranslatorLanguageDTO> TranslatorLanguages { get; set; }
+
         public double Rating { get; set; }
 
         public int? TeamId { get; set; }
@@ -21,6 +23,7 @@ namespace Polyglot.Common.DTOs
         public TranslatorDTO()
         {
             Rights = new List<RightDTO>();
+            TranslatorLanguages = new List<TranslatorLanguageDTO>();
         }
     }
 }
