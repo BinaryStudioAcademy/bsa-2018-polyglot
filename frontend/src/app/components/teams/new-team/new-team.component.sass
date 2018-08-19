@@ -1,6 +1,6 @@
 
 
-.newteam-container
+/*.newteam-container
   display: grid
   grid-template-columns: 40px auto 50px 
   grid-template-rows: 10% 25% auto 30px
@@ -10,40 +10,111 @@
   margin-top: 30px
   padding: 10px
 
-.container
-  grid-column-start: 2
-  grid-column-end: 3
-  grid-row-start: row1-start
-  grid-row-end: 3
-  display: grid
-  grid-template-columns: 100%
-  grid-gap: 25px
-  justify-items: center
+// .title
+//   grid-column: 2
  
-
-.title
-  grid-column: 2
- 
-.spinner
-  max-width: 100px
-  margin: 0 auto
-  padding-top: calc((55vh - 270px))
-  height: calc(100vh - 270px)
+// .spinner
+//   max-width: 100px
+//   margin: 0 auto
+//   padding-top: calc((55vh - 270px))
+//   height: calc(100vh - 270px)
   
-.example-container 
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+// .example-container 
+//   display: flex 
+//   flex-direction: column 
+//   width: 100% 
 
-.example-header 
-  width: 100%;
+// .example-header 
+//   width: 100% 
   
-.mat-form-field 
-  font-size: 14px
+// .mat-form-field 
+//   font-size: 14px
+//   width: 100%
+
+// .mat-table 
+//   overflow: auto
+//   max-height: 500px
+
+.filter-header,
+.filter-header input
+  display: block
   width: 100%
 
-.mat-table 
-  overflow: auto
-  max-height: 500px
 
+.container,
+.translators-list-wrapper
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-content: center
+  flex-wrap: wrap
 
+.creating-team-container,
+.translators-list-container
+  outline: 3px solid black
+  display: flex
+  box-sizing: border-box
+  width: auto
+  min-width: 280px
+  margin: 0
+  margin-top: 10px
+
+.translators-list-container
+  display: block
+  width: 60%
+
+.creating-team-container
+  width: 39%
+
+.new-team-container,
+.new-team-card
+  width: 100%
+  margin: 0
+  padding: 0
+
+.new-team-card
+  margin: 1%
+
+mat-card-title
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+mat-card-header
+  margin-bottom: 10px
+  grid-row-start: 1
+  grid-row-end: 2
+
+.temmate-card
+  max-width: 20%
+  min-width: 160px
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
+  margin: 1%
+  min-width: 140px
+
+.header-image
+  height: 60px
+  width: 60px
+  margin-top: 10px
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-around  
+  img
+    border-radius: 50px
+
+.header-image-small
+  height: 40px
+  width: 40px
+
+.mat-card-header-text,
+div.mat-card-header-text
+  font-size: 23px
+  margin: 0
+  vertical-align: center
+  text-align: center
+     
+.add-team-btn
+  position: fixed
+  right: 15%
+  bottom: 15%
+ 

@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SnotifyService } from 'ng-snotify';
 import { MatTableDataSource, MatSort, MatPaginator  } from '@angular/material';
 import { TeamService } from '../../../services/teams.service';
+import { ContainerComponent, DraggableComponent, IDropResult } from 'ngx-smooth-dnd';
+import { applyDrag, generateItems } from '../../../models';
+import { Translator } from '../../../models/Translator';
 
 
 @Component({
@@ -13,13 +16,21 @@ export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
   managerId: number = 1;
-  translators: any;
-  displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
-  dataSource: MatTableDataSource<any>;
+  allTranslators: Array<Translator> = [];
+  teamTranslators: Array<Translator> = [];
+  // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
+  // dataSource: MatTableDataSource<any>;
   
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  items = generateItems(50, i => ({ data: 'Draggable ' + i }))
+
+  onDrop(dropResult: IDropResult) {
+    // update item list according to the @dropResult
+    this.items = applyDrag(this.items, dropResult);
+  }
 
   constructor(
     private teamService: TeamService,
@@ -34,42 +45,27 @@ export class NewTeamComponent implements OnInit {
   }
 
   getAllTranslators(){
-     this.teamService.getAllTeams()
-      .subscribe(translators => {
-        this.translators = translators;
-        debugger;
-        this.dataSource = new MatTableDataSource(this.translators);
-        this.dataSource.filterPredicate = (data, filter: string)  => {
-          const accumulator = (currentTerm, key) => {
-            return key === 'userProfile' ? currentTerm + data.userProfile.fullName : currentTerm + data[key];
-          };
-          const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
-          // Transform the filter by converting it to lowercase and removing whitespace.
-          const transformedFilter = filter.trim().toLowerCase();
-          return dataStr.indexOf(transformedFilter) !== -1;
-        };
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-        debugger;
-        this.IsLoad = false;
-      })
+    
   }
-  
-  getRating(id:string){
-    var rating = 0;
-    for(let i = 0; i < this.translators[id].ratings.count(); i++) {
-      rating += this.translators[id].rating[i].rate
-    }
-    return rating/this.translators[id].ratings.count();
+
+  addTranslator(translator: Translator){
+
+  }
+
+  removeTranslator(translator: Translator){
+    
+  }
+
+  formTeam(){
+
   }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-
-
+   // this.dataSource.filter = filterValue;
   }
+
   nestedFilterCheck(search, data, key) {
     if (typeof data[key] === 'object') {
       for (const k in data[key]) {
