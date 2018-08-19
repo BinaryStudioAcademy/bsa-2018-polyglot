@@ -228,7 +228,7 @@ namespace Polyglot.DataAccess.Seeds
                     Translations = new List<Translation> {
                         new Translation {
                             Id = Guid.NewGuid(),
-                            LanguageId = 5, 
+                            LanguageId = 1, 
                             TranslationValue ="主要攝影於2017年2月中旬在摩洛哥開始，僱用了400名摩洛哥人和300名中國人作為技術人員組的一部分", 
                             CreatedOn = DateTime.Now, 
                             UserId = 1,
@@ -250,7 +250,7 @@ namespace Polyglot.DataAccess.Seeds
                         },
                         new Translation {
                             Id = Guid.NewGuid(),
-                            LanguageId = 4, 
+                            LanguageId = 2, 
                             TranslationValue ="La fotografía principal comenzó a mediados de febrero de 2017 en Marruecos y empleó a 400 marroquíes y 300 chinos como parte del grupo técnico de tripulación.", 
                             CreatedOn = DateTime.Now, 
                             UserId = 2,

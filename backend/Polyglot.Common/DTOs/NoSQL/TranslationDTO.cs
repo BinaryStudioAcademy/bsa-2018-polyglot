@@ -6,6 +6,7 @@ namespace Polyglot.Common.DTOs.NoSQL
 {
 	public class TranslationDTO
 	{
+        public Guid Id { get; set; }
 		public int LanguageId { get; set; }
 		public string TranslationValue { get; set; }
 		public int UserId { get; set; }

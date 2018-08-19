@@ -71,6 +71,7 @@ import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
 import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { MatRadioModule } from '@angular/material';
+import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
@@ -120,6 +121,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     TabCommentsComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
+    SaveStringConfirmComponent,
     TabHistoryComponent
 
   ],
@@ -163,7 +165,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
     ConfirmDialogComponent,
-    TeamAssignComponent
+    TeamAssignComponent,
+    SaveStringConfirmComponent
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
