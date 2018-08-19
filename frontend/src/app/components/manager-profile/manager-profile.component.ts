@@ -26,19 +26,7 @@ export class ManagerProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.manager = this.userService.getCurrrentUser();
-    // this.manager = { 
-    //  id: 1,
-    //  firstName: "",
-    //  lastName : "",
-    //  avatarUrl : "", // changed due to CORS policy issues
-    //  birthDate : new Date("12.12.1990"),
-    //  registrationDate : new Date("12.12.1990"),
-    //  country : "Ukraine",
-    //  city : "Kyiv",
-    //  region : "Dniorivskiy",
-    //  address : "Dniprovskaya Street",
-    //  postalCode : "02150",
-    //  phone : "+380-95-654-33-24"}
+
 
      this.projects = [
         { name : "Translation", technology : "Machine"},

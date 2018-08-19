@@ -10,6 +10,7 @@ import { ProjectMessageComponent } from '../../dialogs/project-message/project-m
 import { UserProfile } from '../../models/user-profile';
 
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 export class ProjectsComponent implements OnInit,OnDestroy {
   
   constructor(
-    //private managerService: ManagerService, 
+    private userService: UserService,
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { }
@@ -28,25 +29,12 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
   IsLoad : boolean = true;
   OnPage : boolean;
-  
-  user: UserProfile = {
-    id: 1,
-    firstName: 'Bill',
-    lastName: 'Gates',
-    birthDate: null,
-    registrationDate: null,
-    country: 'string',
-    city: 'string',
-    region: 'string',
-    postalCode: 'string',
-    address: 'string',
-    phone: 'string',
-    avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
-  };
-  manager: UserProfile =  this.user;
+   
+  manager: UserProfile =  this.userService.getCurrrentUser();
 
   ngOnInit() {
   this.OnPage = true;
+  debugger;
 
   this.projectService.getAll().subscribe(pr => 
     {
