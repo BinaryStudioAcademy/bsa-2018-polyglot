@@ -24,8 +24,8 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="form-input float-left">
-                <!--BUG HERE DATE BIRTH 01/01/01 formControlName="birthDate" -->
-                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Date of birth">
+               
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" formControlName="birthDate" placeholder="Date of birth">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>

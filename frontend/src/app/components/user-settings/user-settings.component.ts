@@ -19,7 +19,8 @@ export class UserSettingsComponent implements OnInit {
   profileForm: FormGroup;
   minDate = new Date(1903, 2, 1);
   maxDate = new Date();
-
+ 
+ 
   
   constructor(
     private router: ActivatedRoute, 
@@ -37,21 +38,9 @@ export class UserSettingsComponent implements OnInit {
       var arrayOfStrings = this.manager.fullName.split(' ');
       this.manager.firstName = arrayOfStrings[0];
       this.manager.lastName = arrayOfStrings[1];
+      debugger;
     }
-
-    // this.manager = {
-    //  firstName: "Sasha",
-    //  lastName : "Pushkin",
-    //  avatarUrl : "https://cdn.riastatic.com/photos/ria/dom_news_logo/20/2072/207230/207230m.jpg?v=1422268257", // changed due to CORS policy issues
-    //  birthDate : new Date("25/05/2002"),
-    //  registrationDate : new Date("12.12.2017"),
-    //  country : "Ukraine",
-    //  city : "Kyiv",
-    //  region : "Dniorivskiy",
-    //  address : "Dniprovskaya Street",
-    //  postalCode : "02150",
-    //  phone : "+380-95-654-33-24"}
-     this.createProjectForm();
+    this.createProjectForm();
   }
 
   createProjectForm(): void {
