@@ -1,120 +1,122 @@
-
-
-/*.newteam-container
-  display: grid
-  grid-template-columns: 40px auto 50px 
-  grid-template-rows: 10% 25% auto 30px
-  max-width: 1200px
-  margin-left: auto
-  margin-right: auto
-  margin-top: 30px
-  padding: 10px
-
-// .title
-//   grid-column: 2
- 
-// .spinner
-//   max-width: 100px
-//   margin: 0 auto
-//   padding-top: calc((55vh - 270px))
-//   height: calc(100vh - 270px)
-  
-// .example-container 
-//   display: flex 
-//   flex-direction: column 
-//   width: 100% 
-
-// .example-header 
-//   width: 100% 
-  
-// .mat-form-field 
-//   font-size: 14px
-//   width: 100%
-
-// .mat-table 
-//   overflow: auto
-//   max-height: 500px
-
-.filter-header,
-.filter-header input
-  display: block
-  width: 100%
-
-
 .container,
-.translators-list-wrapper
   display: flex
   flex-direction: row
-  justify-content: space-between
+  justify-content: flex-start
   align-content: center
   flex-wrap: wrap
 
-.creating-team-container,
+.new-team-container,
 .translators-list-container
   outline: 3px solid black
-  display: flex
-  box-sizing: border-box
   width: auto
   min-width: 280px
   margin: 0
   margin-top: 10px
 
 .translators-list-container
-  display: block
   width: 60%
 
 .creating-team-container
   width: 39%
 
-.new-team-container,
-.new-team-card
+.filter-header,
+.filter-header input
+  display: block
   width: 100%
-  margin: 0
-  padding: 0
-
-.new-team-card
-  margin: 1%
-
-mat-card-title
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
-
-mat-card-header
-  margin-bottom: 10px
-  grid-row-start: 1
-  grid-row-end: 2
 
 .temmate-card
-  max-width: 20%
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  flex-wrap: nowrap
+  width: 100%
+
+.dnd-container
+  outline: 1px solid green
+  max-width: 33%
+  min-width: 160px
+
+.dnd-item
+  outline: 1px solid red
+
+.draggable-item
+  box-sizing: content-box
+
+.translators-list-wrapper
+  display: flex
+  flex-direction: row
+  justify-content: flex-start
+  align-content: center
+  flex-wrap: wrap
+
+.temmate-card
+  box-sizing: border-box
   min-width: 160px
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
-  margin: 1%
-  min-width: 140px
 
-.header-image
-  height: 60px
-  width: 60px
-  margin-top: 10px
-  display: flex
-  flex-wrap: wrap
-  justify-content: space-around  
-  img
-    border-radius: 50px
+.mat-card
+  padding: 24px 0
 
-.header-image-small
-  height: 40px
-  width: 40px
+.mat-card-content
+  padding: 0 24px
 
-.mat-card-header-text,
-div.mat-card-header-text
-  font-size: 23px
-  margin: 0
-  vertical-align: center
-  text-align: center
+.mat-card-header
+  position: relative
+  padding-right: 19px
+
+.mat-card-header-text
+  padding-left: 10px
+
+.action-button
+  position: absolute
+  right: 5px
+  top: -15px
+
+
+// .new-team-container,
+// .new-team-card
+//   width: 100%
+//   margin: 0
+//   padding: 0
+
+// .new-team-card
+//   margin: 1%
+
+// mat-card-title
+//   overflow: hidden
+//   white-space: nowrap
+//   text-overflow: ellipsis
+
+// mat-card-header
+//   margin-bottom: 10px
+//   grid-row-start: 1
+//   grid-row-end: 2
+
+
+
+// .header-image
+//   height: 60px
+//   width: 60px
+//   margin-top: 10px
+//   display: flex
+//   flex-wrap: wrap
+//   justify-content: space-around  
+//   img
+//     border-radius: 50px
+
+// .header-image-small
+//   height: 40px
+//   width: 40px
+
+// .mat-card-header-text,
+// div.mat-card-header-text
+//   font-size: 23px
+//   margin: 0
+//   vertical-align: center
+//   text-align: center
      
-.add-team-btn
-  position: fixed
-  right: 15%
-  bottom: 15%
- 
+// .add-team-btn
+//   position: fixed
+//   right: 15%
+//   bottom: 15%
+//  */
