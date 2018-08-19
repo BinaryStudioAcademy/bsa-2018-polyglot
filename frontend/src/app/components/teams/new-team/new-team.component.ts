@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { SnotifyService } from 'ng-snotify';
-import { MatTableDataSource, MatSort, MatPaginator  } from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { TeamService } from '../../../services/teams.service';
 import { ContainerComponent, DraggableComponent, IDropResult } from 'ngx-smooth-dnd';
 import { applyDrag, generateItems } from '../../../models';
 import { Translator } from '../../../models/Translator';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,11 +17,11 @@ export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
   managerId: number = 1;
-  allTranslators: Array<Translator> = [];
-  teamTranslators: Array<Translator> = [];
+  allTranslators: Translator[] = [];
+  teamTranslators: Translator[] = [];
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
-  
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -33,37 +34,71 @@ export class NewTeamComponent implements OnInit {
   }
 
   constructor(
+    private router: Router,
     private teamService: TeamService,
-    private snotifyService: SnotifyService 
+    private snotifyService: SnotifyService
   ) {
-        
-        
+
+
   }
 
   ngOnInit() {
     this.getAllTranslators();
   }
 
-  getAllTranslators(){
-    
+  getAllTranslators() {
+    this.teamService.getAllTranslators()
+      .subscribe((translators: Translator[]) => {
+        this.IsLoad = false;
+        if (translators && translators.length > 0)
+          this.allTranslators = translators;
+        else {
+          this.allTranslators = [];
+          this.snotifyService.info("No translators found!", "Ooops!")
+        }
+      },
+        err => {
+          this.allTranslators = [];
+          this.snotifyService.error("An error occurred while loading translators, please try again later!", "Error!")
+          this.IsLoad = false;
+        });
   }
 
-  addTranslator(translator: Translator){
-
+  addTranslator(translator: Translator) {
+    debugger;
+    this.teamTranslators.push(translator);
+    this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
   }
 
-  removeTranslator(translator: Translator){
-    
+  removeTranslator(translator: Translator) {
+    debugger;
+    this.allTranslators.push(translator);
+    this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
   }
 
-  formTeam(){
-
+  formTeam() {
+    if (this.teamTranslators && this.teamTranslators.length > 0) {
+      this.teamService.formTeam(this.teamTranslators.map(t => t.id))
+        .subscribe((team) => {
+          if (team) {
+            this.router.navigate(['dashboard/teams']);
+            setTimeout(() => {
+              this.snotifyService.success("Team " + team.id + " successfully created!", "Success!");
+            }, 200);
+          }
+          else
+            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
+        },
+          err => {
+            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
+          })
+    }
   }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-   // this.dataSource.filter = filterValue;
+    // this.dataSource.filter = filterValue;
   }
 
   nestedFilterCheck(search, data, key) {

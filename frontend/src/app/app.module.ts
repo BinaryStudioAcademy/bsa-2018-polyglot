@@ -69,7 +69,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
-
+import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
 
 @NgModule({
   declarations: [
@@ -115,7 +115,9 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
-    TabHistoryComponent
+    TabHistoryComponent,
+    ContainerComponent, 
+    DraggableComponent
   ],
   imports: [
     BrowserModule,

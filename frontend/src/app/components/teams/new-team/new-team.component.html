@@ -59,7 +59,7 @@
                     <mat-card class="temmate-card">
                         <mat-card-header>
                           <div mat-card-avatar class="temmate-header-image header-image">
-                              <img class="header-image-small" mat-card-image height="30" src="{{t.photo}}" alt="Photo of a Shiba Inu">
+                              <img class="header-image-small" mat-card-image height="30" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
                           </div>
                           <mat-card-title>{{t.fullName}}</mat-card-title>
                           <button mat-icon-button>
@@ -69,7 +69,7 @@
                         <mat-card-content>
                           <span class="languages-list">
                             <ul>
-                              <li *ngFor="let l of t.languages">
+                              <li *ngFor="let l of t.translatorLanguages">
                                 {{l.language.name}} 
                                 <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
                               </li>
@@ -95,7 +95,7 @@
         <mat-card class="new-team-card">
           <mat-card-header>
             <div mat-card-avatar class="new-team-header-image header-image">
-              <img class="header-image" mat-card-image height="60" src="https://image.ibb.co/fa2YRF/dounia.jpg" alt="Photo of a Shiba Inu">
+              <img class="header-image" mat-card-image height="60" src="https://image.ibb.co/fa2YRF/dounia.jpg" alt="Your photo">
             </div>
             <mat-card-title class="card-title">Your new team</mat-card-title>
           </mat-card-header>
@@ -107,7 +107,7 @@
                         <mat-card class="temmate-card">
                             <mat-card-header>
                               <div mat-card-avatar class="temmate-header-image header-image">
-                                  <img class="header-image-small" mat-card-image height="30" src="{{t.photo}}" alt="Photo of a Shiba Inu">
+                                  <img class="header-image-small" mat-card-image height="30" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
                               </div>
                               <mat-card-title>{{t.fullName}}</mat-card-title>
                               <button mat-icon-button>
@@ -117,9 +117,9 @@
                             <mat-card-content>
                               <span class="languages-list">
                                 <ul>
-                                  <li *ngFor="let l of t.languages">
+                                  <li *ngFor="let l of t.translatorLanguages">
                                     {{l.language.name}} 
-                                    <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                                    <mat-progress-bar mode="determinate" value="{{l.proficiency * 33.3}}"></mat-progress-bar>
                                   </li>
                                 </ul>
                               </span>
@@ -141,7 +141,7 @@
 
       </div>
     </div>
-    <button mat-fab class="add-team-btn">Basic dfbdfer s s</button>
+    <button mat-fab class="add-team-btn" (click)="formTeam()">Basic dfbdfer s s</button>
   </div>
   <ng-snotify></ng-snotify>
 </div>
