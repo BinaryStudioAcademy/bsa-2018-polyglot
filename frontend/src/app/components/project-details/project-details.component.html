@@ -9,13 +9,14 @@
 	<mat-tab-group>
 		<mat-tab label="Overview">
 			<div *ngIf="project" class="overview-content">
+		    <img class="project-image" src="{{project.imageUrl}}">
 			<h2 *ngIf="project.description !== null && project.description!=='' ">Description:</h2>
 			<p>{{project.description}}</p>
 			<h2>Technology:</h2>
 			<p>{{project.technology}}</p>
 			<h2>Main Languague:</h2>
 			<p>{{project.mainLanguage.name}}</p>
-			<img class="project-image" src="{{project.imageUrl}}">
+			
 
 			</div>
 		</mat-tab>
