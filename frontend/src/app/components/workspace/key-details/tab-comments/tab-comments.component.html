@@ -8,7 +8,7 @@
         <button mat-flat-button class="save-button mx-1" [disabled]="commentForm.invalid">Save</button>
     </div>
 </form>
-<div  *ngFor="let com of keyDetails.comments" class="comments-container">
+<div  *ngFor="let com of keyDetails.comments.reverse()" class="comments-container">
     <mat-card  class="comment-card">
         <div class="author-info">
             <img class="comment-avatar" (click)="onImageClick(com.user.avatarUrl)" src="{{com.user.avatarUrl}}">
