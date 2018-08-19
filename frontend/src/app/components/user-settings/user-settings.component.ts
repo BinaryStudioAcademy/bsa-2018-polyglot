@@ -38,7 +38,7 @@ export class UserSettingsComponent implements OnInit {
       var arrayOfStrings = this.manager.fullName.split(' ');
       this.manager.firstName = arrayOfStrings[0];
       this.manager.lastName = arrayOfStrings[1];
-      debugger;
+     
     }
     this.createProjectForm();
   }
