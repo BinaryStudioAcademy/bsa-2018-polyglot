@@ -1,6 +1,6 @@
 ﻿namespace Polyglot.DataAccess.Entities
 {
-    public class Entity
+    public abstract class Entity : DbEntity
     {
         public int Id { get; set; }
     }

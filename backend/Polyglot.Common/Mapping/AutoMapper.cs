@@ -142,7 +142,9 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<TranslatorLanguage, TranslatorLanguageDTO>()
                     .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
-                    .ForMember(p => p.Proficiency, opt => opt.MapFrom(po => po.Proficiency));
+#warning после обновления типа Proficiency примапить
+                    //.ForMember(p => p.Proficiency, opt => opt.MapFrom(po => (int)po.Proficiency));
+                    .ForMember(p => p.Proficiency, opt => opt.Ignore());
 
 
                 cfg.CreateMap<TeamTranslator, TranslatorDTO>()

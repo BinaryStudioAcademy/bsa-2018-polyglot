@@ -2,6 +2,7 @@
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.SqlRepository;
 using System;
 using System.Collections.Generic;
@@ -35,14 +36,13 @@ namespace Polyglot.BusinessLogic.Services
        //     UserProfile manager = await userRepo.GetAsync(managerId);
        //     if (manager == null || manager.UserRole != UserProfile.Role.Manager)
        //         return null;
-
-#warning протестировать создание команды
+       
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
             foreach (var id in translatorIds)
             {
                 currentTranslator = await userRepo.GetAsync(id);
-                if (currentTranslator != null && currentTranslator.UserRole == UserProfile.Role.Translator)
+                if (currentTranslator != null && currentTranslator.UserRole == Role.Translator)
                 {
                     translators.Add(new TeamTranslator()
                     {
@@ -126,7 +126,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<TranslatorDTO>> GetAllTranslatorsAsync()
         {
             var translators = await uow.GetRepository<UserProfile>()
-                .GetAllAsync(u => u.UserRole == UserProfile.Role.Translator);
+                .GetAllAsync(u => u.UserRole == Role.Translator);
 
             if (translators != null && translators.Count > 0)
             {
@@ -171,7 +171,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<TranslatorDTO> GetTranslatorAysnc(int id)
         {
             var translator = await uow.GetRepository<UserProfile>().GetAsync(id);
-            if (translator != null && translator.UserRole == UserProfile.Role.Translator)
+            if (translator != null && translator.UserRole == Role.Translator)
             {
                 var translatorLanguages = await uow.GetRepository<TranslatorLanguage>()
                     .GetAllAsync(tl => tl.TranslatorId == translator.Id);
@@ -196,7 +196,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<double> GetTranslatorRatingValueAsync(int translatorId)
         {
             var translator = await uow.GetRepository<UserProfile>().GetAsync(translatorId);
-            if (translator != null && translator.UserRole == UserProfile.Role.Translator)
+            if (translator != null && translator.UserRole == Role.Translator)
             {
                 var ratingRatesSequence = translator.Ratings.Select(r => r.Rate);
                 if (ratingRatesSequence.Count() > 0)
