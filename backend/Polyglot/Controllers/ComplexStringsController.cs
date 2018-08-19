@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,11 +8,8 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.MongoModels;
-using Polyglot.DataAccess.MongoRepository;
 
 namespace Polyglot.Controllers
 {
@@ -118,6 +114,15 @@ namespace Polyglot.Controllers
         {
             var success = await dataProvider.DeleteComplexString(id);
             return success ? Ok() : StatusCode(304);
+        }
+
+        [HttpGet(Name = "GetComplexStringsByFilter")]
+        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<int> options)
+        {
+
+            var complexStrings = await dataProvider.GetListByFilterAsync(options);
+            return complexStrings == null ? NotFound("No files found!") as IActionResult
+                : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
         }
     }
 }

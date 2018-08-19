@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Interfaces
@@ -19,5 +20,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<TranslationDTO>> GetStringTranslationsAsync(int identifier);
 
         Task<ComplexStringDTO> SetStringTranslations(int identifier, IEnumerable<TranslationDTO> translations);
+
+        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<int> options);
     }
 }

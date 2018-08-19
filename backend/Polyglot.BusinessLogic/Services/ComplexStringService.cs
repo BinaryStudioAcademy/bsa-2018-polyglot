@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
@@ -113,6 +114,23 @@ namespace Polyglot.BusinessLogic.Services
                 return _mapper.Map<ComplexStringDTO>(target);
             }
             return null;
+        }
+
+        public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<int> options)
+        {
+            List<FilterType> filters = new List<FilterType>();
+            options.ToList().ForEach(x => filters.Add((FilterType)x));
+            var result = await Filter.FiltrationAsync<ComplexString>(x => x.Translations == null, _uow);
+            return null;
+        }
+
+        public enum FilterType
+        {
+            Translated,
+            NotTranslated,
+            HumanTranslation,
+            MachineTranslation,
+            WithTags
         }
     }
 }

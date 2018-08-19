@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AutoMapper;
@@ -10,10 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
-
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
@@ -109,7 +106,7 @@ namespace Polyglot.BusinessLogic.Services
         }
 
         public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
-            mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.UserProfile.Id == userId));
+            mapper.Map<List<ProjectDTO>>(await Filter.FiltrationAsync<Project>(x => x.UserProfile.Id == userId,uow));
 
         public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
         {
@@ -270,16 +267,10 @@ namespace Polyglot.BusinessLogic.Services
 
 		public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
         {
-            var manager = await Filtration<UserProfile>(x => x.Id == userId);
+            var manager = await Filter.FiltrationAsync<UserProfile>(x => x.Id == userId,uow);
             var managerDTO = mapper.Map<UserProfileDTO>(manager.FirstOrDefault());
             entity.UserProfile = managerDTO;
             return await PostAsync(entity);
-        }
-
-        private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
-        {
-            var result = await uow.GetRepository<T>().GetAllAsync(predicate);
-            return result;
         }
 
         #region ComplexStrings

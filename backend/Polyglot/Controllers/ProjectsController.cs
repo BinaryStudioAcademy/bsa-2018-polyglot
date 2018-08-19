@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using Newtonsoft.Json;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 
