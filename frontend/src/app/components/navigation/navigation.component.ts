@@ -47,14 +47,17 @@ export class NavigationComponent implements OnDestroy {
     this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
       () => {
         this.updateCurrentUser();
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/profile/settings']);
       }
     );
   }
 
   onSignUpClick() {
     this.dialog.open(SignupDialogComponent).afterClosed().subscribe(
-      () => this.updateCurrentUser()
+      () =>{ 
+        this.updateCurrentUser();
+        this.router.navigate(['/profile/settings']);
+      }
     );
   }
 

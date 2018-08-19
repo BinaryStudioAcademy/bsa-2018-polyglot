@@ -1,11 +1,13 @@
 <form style="width: 400px">
   <mat-form-field style="width: 300px">
-    <mat-select placeholder="Select your role" [(value)] = "selectedOption">
+    <mat-select placeholder="Select your role" [value] = "selectedOption">
       <mat-option value="translator">Translator</mat-option>
       <mat-option value="manager">Manager</mat-option>
     </mat-select>
   </mat-form-field> 
-  <button (click)="onSubmit()" class="simplebtn" mat-button style="margin-left: 5px">Sign Up!</button>
+  <div>
+    <button (click)="onSubmit()" class="simplebtn" mat-button style="margin-left: 5px">Sign Up!</button>
+  </div>
   <mat-error *ngIf="error">
     {{error}}
   </mat-error>

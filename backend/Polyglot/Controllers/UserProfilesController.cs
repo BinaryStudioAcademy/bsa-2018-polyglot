@@ -6,6 +6,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.Authentication;
 using Polyglot.Authentication.Extensions;
+using System.Linq;
 
 namespace Polyglot.Controllers
 {
@@ -85,6 +86,14 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
+        }
+
+        [HttpGet("uid")]
+        public async Task<IActionResult> GetUserByUID(string uid)
+        {
+            var entity = (await service.GetListAsync()).FirstOrDefault(u => u.Uid == uid);
+            return entity == null ? NotFound($"Translator with id = {uid} not found!") as IActionResult
+                : Ok(entity);
         }
     }
 }

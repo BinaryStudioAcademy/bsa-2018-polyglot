@@ -53,6 +53,10 @@ export class UserService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
+  getUserByUid(uid: string) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, uid, undefined);
+  }
+
   getAll() : Observable<any[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }

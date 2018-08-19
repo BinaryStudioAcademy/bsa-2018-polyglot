@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 import { AppStateService } from '../../services/app-state.service';
 import { ChooseRoleDialogComponent } from '../choose-role-dialog/choose-role-dialog.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -31,7 +32,8 @@ export class SignupDialogComponent implements OnInit {
     private router: Router,
     private snotify: SnotifyService,
     private appState: AppStateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -98,17 +100,28 @@ export class SignupDialogComponent implements OnInit {
   }
 
   onGoogleClick() {
-    this.authService.signInWithGoogle().subscribe(
-      async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+    this.authService.signInWithGoogle().subscribe(async (userCred) => {
+      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.appState.LoginStatus){
+        this.userService.getUser().subscribe((data)=>{ //if user is in db
+          this.dialogRef.close();
+          
+        },
+        err=>{ //if user is absent in db
+        console.log(err);
+        let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+          data: {
+            fullName: ''
+          }
+        });
+        const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+          dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+            dialogRef.close();
             this.dialogRef.close();
-        }
-
-        //if exist in db - show error
-        this.router.navigate(['/profile/settings']);
-      }, 
+            });
+          });
+        });
+    }, 
       (err) => {
         this.firebaseError = err.message;
       }
