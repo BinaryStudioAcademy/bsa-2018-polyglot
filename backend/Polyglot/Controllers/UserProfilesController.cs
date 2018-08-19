@@ -88,12 +88,14 @@ namespace Polyglot.Controllers
                 entity);
         }
 
-        [HttpGet("uid")]
-        public async Task<IActionResult> GetUserByUID(string uid)
+        [HttpGet("isInDb")]
+        public async Task<bool> IsUserInDb()
         {
-            var entity = (await service.GetListAsync()).FirstOrDefault(u => u.Uid == uid);
-            return entity == null ? NotFound($"Translator with id = {uid} not found!") as IActionResult
-                : Ok(entity);
+            return (await service.GetListAsync())
+                .FirstOrDefault(u => u.Uid == HttpContext.User.GetUid()) != null;
+            
         }
+
+
     }
 }

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -140,6 +140,7 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
     MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
+    MatSelectModule,
     SnotifyModule,
     MatDialogModule,
     AgmCoreModule.forRoot({

@@ -103,46 +103,57 @@ export class SignupDialogComponent implements OnInit {
     this.authService.signInWithGoogle().subscribe(async (userCred) => {
       this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        this.userService.getUser().subscribe((data)=>{ //if user is in db
-          this.dialogRef.close();
-          
-        },
-        err=>{ //if user is absent in db
-        console.log(err);
-        let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
-          data: {
-            fullName: ''
-          }
-        });
-        const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
-          dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
-            dialogRef.close();
+        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
+          if(isInDb)
             this.dialogRef.close();
+            
+          else{
+            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+              data: {
+                fullName: '',
+                email: ''
+              }
             });
-          });
-        });
-    }, 
-      (err) => {
-        this.firebaseError = err.message;
-      }
-    );
-  }
-
-  onFacebookClick() {
-    this.authService.signInWithFacebook().subscribe(
-      async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-
-        if(this.appState.LoginStatus){
-          this.dialogRef.close();
-        }
-
-        //if exist in db - show error
-        this.router.navigate(['/profile/settings']);
+            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+                dialogRef.close();
+                this.dialogRef.close();
+                });
+              });
+            }
+          });       
       }, 
       (err) => {
         this.firebaseError = err.message;
-      }
-    );  
+      });
+    }
+
+  onFacebookClick() {
+    this.authService.signInWithFacebook().subscribe(async (userCred) => {
+      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+
+        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
+          if(isInDb)
+            this.dialogRef.close();
+            
+          else{
+            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+              data: {
+                fullName: '',
+                email: ''
+              }
+            });
+            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+                dialogRef.close();
+                this.dialogRef.close();
+                });
+              });
+            }
+          });       
+      }, 
+      (err) => {
+        this.firebaseError = err.message;
+      });
   }
 }

@@ -16,7 +16,9 @@ export class ChooseRoleDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private snotify: SnotifyService,
               public dialogRef: MatDialogRef<ChooseRoleDialogComponent>,
-              private userService: UserService) { }
+              private userService: UserService) { 
+                
+              }
 
 
   selectedOption: string = "translator";

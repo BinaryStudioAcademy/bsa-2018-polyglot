@@ -53,8 +53,8 @@ export class UserService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  getUserByUid(uid: string) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, uid, undefined);
+  isUserInDb() : Observable<boolean> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/isInDb', undefined);
   }
 
   getAll() : Observable<any[]> {

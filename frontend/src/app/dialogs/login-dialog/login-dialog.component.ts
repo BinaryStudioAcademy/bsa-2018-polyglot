@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
 import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 import { AppStateService } from '../../services/app-state.service';
+import { UserService } from '../../services/user.service';
+import { ChooseRoleDialogComponent } from '../choose-role-dialog/choose-role-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -28,7 +30,8 @@ export class LoginDialogComponent implements OnInit {
     private authService : AuthService,
     private snotify: SnotifyService,
     public dialog: MatDialog,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -45,9 +48,25 @@ export class LoginDialogComponent implements OnInit {
           if (userCred.user.emailVerified) {
             this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
 
-            if(this.appState.LoginStatus){
-              this.dialogRef.close();
-            }          
+            this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
+              if(isInDb)
+                this.dialogRef.close();
+                
+              else{
+                let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+                  data: {
+                    fullName: '',
+                    email: ''
+                  }
+                });
+                const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+                  dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+                    dialogRef.close();
+                    this.dialogRef.close();
+                    });
+                  });
+                }
+              });                
           } else {
             this.snotify.clear();
             this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
@@ -76,37 +95,61 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onGoogleClick() {
-    this.authService.signInWithGoogle().subscribe(
-      async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+    this.authService.signInWithGoogle().subscribe(async (userCred) => {
+      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.appState.LoginStatus) {
-          this.dialogRef.close();
-        }
-
-        // if not exist in db - show error
+        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
+          if(isInDb)
+            this.dialogRef.close();
+            
+          else{
+            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+              data: {
+                fullName: '',
+                email: ''
+              }
+            });
+            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+                dialogRef.close();
+                this.dialogRef.close();
+                });
+              });
+            }
+          });       
       }, 
       (err) => {
-        this.firebaseError = this.handleFirebaseErrors(err);
-      }
-    );
+        this.firebaseError = err.message;
+      });
   }
 
   onFacebookClick() {
-    this.authService.signInWithFacebook().subscribe(
-      async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+    this.authService.signInWithFacebook().subscribe(async (userCred) => {
+      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
-        if(this.appState.LoginStatus) {
-          this.dialogRef.close();
-        }
-
-        // if not exist in db - show error
+        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
+          if(isInDb)
+            this.dialogRef.close();
+            
+          else{
+            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+              data: {
+                fullName: '',
+                email: ''
+              }
+            });
+            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
+                dialogRef.close();
+                this.dialogRef.close();
+                });
+              });
+            }
+          });       
       }, 
       (err) => {
-        this.firebaseError = this.handleFirebaseErrors(err);
-      }
-    );
+        this.firebaseError = err.message;
+      });
   }
 
   onForgotPasswordClick() {
