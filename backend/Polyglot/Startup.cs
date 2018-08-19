@@ -14,6 +14,7 @@ using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.Seeds;
 using Polyglot.DataAccess.SqlRepository;
+using Polyglot.GlobalExceptionHandler;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
 
 namespace Polyglot
@@ -93,11 +94,11 @@ namespace Polyglot
                 serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
             }
 
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-            //    MongoDbSeedsInitializer.MongoSeedAsync(context);
-            //}
+            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            // {
+            //     var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+            //     MongoDbSeedsInitializer.MongoSeedAsync(context);
+            // }
 
             // if (env.IsDevelopment())
             // {
@@ -107,6 +108,8 @@ namespace Polyglot
             app.UseAuthentication();
 
             app.UseCustomizedIdentity();
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseMvc();
         }
