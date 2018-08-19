@@ -1,9 +1,10 @@
 import { Rating, TeamTranslator } from ".";
+import { Role } from "./role";
 
 export interface UserProfile {
     id?: number;
     firstName?: string;
-    lastName: string;
+    lastName?: string;
     birthDate?: Date;
     registrationDate?: Date;
     country?: string;
@@ -18,4 +19,3 @@ export interface UserProfile {
     teamTranslators?: Array<TeamTranslator>;
     userRole? : Role;
 }
-enum Role { Manager , Translator};

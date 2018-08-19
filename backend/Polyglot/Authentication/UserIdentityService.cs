@@ -34,7 +34,7 @@ namespace Polyglot.Authentication
 
                 if (userInDB == null)
                 {
-                    userInDB = await service.PostAsync(User);
+                   // userInDB = await service.PostAsync(User);
                     UserIdentityService.User = userInDB;
                 }
                 else

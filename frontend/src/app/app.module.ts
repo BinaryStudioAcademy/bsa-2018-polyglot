@@ -69,6 +69,7 @@ import { TabCommentsComponent } from './components/workspace/key-details/tab-com
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
 
 
 
@@ -115,7 +116,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
-    TabHistoryComponent
+    TabHistoryComponent,
+    ChooseRoleDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -154,7 +156,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ChooseRoleDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
