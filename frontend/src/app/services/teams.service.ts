@@ -22,7 +22,7 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  getAllTranslators(): Observable<Translator> {
+  getAllTranslators(): Observable<Translator[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators', undefined, undefined);
   }
 

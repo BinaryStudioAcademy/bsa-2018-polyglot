@@ -16,6 +16,8 @@ export class SearchService {
     return of([
     {
       id: 1,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'William Pool',
       email: 'w.pool@gmail.com',
       rights: [{
@@ -33,6 +35,8 @@ export class SearchService {
     },
     {
       id: 2,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Alex Komarov',
       email: 'komarow.alex@gmail.com',
       rights: [
@@ -46,6 +50,8 @@ export class SearchService {
     },
     {
       id: 3,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Vasia Kakojto',
       email: 'koko.vs@gmail.com',
       rights: [{
@@ -58,6 +64,8 @@ export class SearchService {
     },
     {
       id: 4,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Grisha Kolesnik',
       email: 'kes.grisha3@gmail.com',
       rights: undefined,
@@ -66,6 +74,8 @@ export class SearchService {
     },
     {
       id: 5,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Grigorij Boroda',
       email: 'grg.boroda@gmail.com',
       rights: [{
@@ -88,6 +98,8 @@ export class SearchService {
     },
     {
       id: 6,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Unknown Men',
       email: 'unknown.mm231@gmail.com',
       rights: [
@@ -102,6 +114,8 @@ export class SearchService {
     ,
     {
       id: 7,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Alesha Greben',
       email: 'greben.alesha@gmail.com',
       rights: undefined,
@@ -110,6 +124,8 @@ export class SearchService {
     },
     {
       id: 8,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Misha Mavashy',
       email: 'mavashy@gmail.com',
       rights: [{
@@ -127,6 +143,8 @@ export class SearchService {
     },
     {
       id: 9,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Viktor Piwo',
       email: 'piwo.ddd@gmail.com',
       rights: [{
@@ -139,6 +157,8 @@ export class SearchService {
     },
     {
       id: 10,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Vasia Shamsia',
       email: 'vasi1234@gmail.com',
       rights: undefined,
@@ -147,6 +167,8 @@ export class SearchService {
     },
     {
       id: 11,
+      avatarUrl: '',
+      translatorLanguages: [],
       fullName: 'Kateria Tarakanowa',
       email: 'katia.ss3@gmail.com',
       rights: undefined,
@@ -164,6 +186,8 @@ export class SearchService {
         id: 144,
         fullName: 'Petr Brzeczyszsczykiewicz',
         email: 'searchTest@gmail.com',
+        avatarUrl: '',
+        translatorLanguages: [],
         rights: [{
                   id: 1,
                   definition: "key",
@@ -184,6 +208,8 @@ export class SearchService {
       },
       {
         id: 22,
+        avatarUrl: '',
+        translatorLanguages: [],
         fullName: 'Grigorij Boroda',
         email: 'searchTest2@gmail.com',
         rights: [{
@@ -201,6 +227,8 @@ export class SearchService {
       },
       {
         id: 42,
+        avatarUrl: '',
+        translatorLanguages: [],
         fullName: 'Vika Vitulskaja',
         email: 'searchTest3@gmail.com',
         rights: [{
@@ -218,6 +246,8 @@ export class SearchService {
       },
       {
         id: 43,
+        avatarUrl: '',
+        translatorLanguages: [],
         fullName: 'Don Jonh',
         email: 'searchTest4@gmail.com',
         rights: [
@@ -231,6 +261,8 @@ export class SearchService {
       },
       {
         id: 44,
+        avatarUrl: '',
+        translatorLanguages: [],
         fullName: 'Jon Don',
         email: 'searchTest4@gmail.com',
         rights: [{

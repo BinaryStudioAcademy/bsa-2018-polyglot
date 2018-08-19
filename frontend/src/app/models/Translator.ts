@@ -3,10 +3,10 @@ import { Right, TranslatorLanguage } from '.';
 export interface Translator {
   id: number;
   fullName: string;
-  photo: string;
+  avatarUrl: string;
   email: string;
   rights: Right[];
-  languages: TranslatorLanguage[];
+  translatorLanguages: TranslatorLanguage[];
   rating: number,
   teamId: number;
 }
