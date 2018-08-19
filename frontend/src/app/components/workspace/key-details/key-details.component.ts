@@ -28,14 +28,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   public Id : string;
   projectId: number;
   languages: Language[];
-  translationLang: any;
   expandedArray: Array<TranslationState>;
+  isLoad: boolean;
 
   description: string = "Do you want to save changes?";
   btnYesText: string = "Yes";
   btnNoText: string = "No";
   btnCancelText: string = "Cancel";
   answer: number;
+  keyId: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -45,7 +46,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { 
     this.Id = this.route.snapshot.queryParamMap.get('keyid');
-    this.expandedArray = new Array();
   }
 
 
@@ -74,13 +74,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
      this.route.params.subscribe(value =>
      {
-      this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+       this.keyId = value.keyId;
+       this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+        this.isLoad = false;
         this.keyDetails = data;
         this.projectId = this.keyDetails.projectId;
-        const temp = this.keyDetails.translations.length;
-        for (var i = 0; i < temp; i++) {
-          this.expandedArray.push({ isOpened: false, oldValue: '' });
-        }
         this.getLanguages();
       });
      });
@@ -89,6 +87,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   getLanguages() {
     this.projectService.getProjectLanguages(this.projectId).subscribe(
       (d: Language[])=> {
+        const temp = d.length;
+        this.expandedArray = new Array();
+        for (var i = 0; i < temp; i++) {
+          this.expandedArray.push({ isOpened: false, oldValue: '' });
+        }
         this.languages = d.map(x => Object.assign({}, x));
         this.setLanguagesInWorkspace();
       },
@@ -108,7 +111,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         });
       }
     );
-    console.log(this.keyDetails.translations);
+    this.isLoad = true;
   }
       
   getProp(id : number) {
@@ -116,11 +119,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     return searchedElement.length > 0 ? searchedElement[0]: null;    
   }
   
-  onSave(t: any){
-    this.route.params.subscribe(value =>
-    {
+  onSave(t: Translation){
+    // this.route.params.subscribe(value =>
+    // {
         if(t.id) {
-          this.dataProvider.editStringTranslation(t, value.keyId)
+          this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
               console.log(this.keyDetails.translations);
@@ -131,7 +134,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
-          this.dataProvider.createStringTranslation(t, value.keyId)
+          t.createdOn = new Date();
+          this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
               (d: any)=> {
                 const lenght = this.keyDetails.translations.length;
@@ -150,7 +154,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
               }
             ); 
         }
-    });
+    //});
   }
   
   onClose(index: number, translation: any) {

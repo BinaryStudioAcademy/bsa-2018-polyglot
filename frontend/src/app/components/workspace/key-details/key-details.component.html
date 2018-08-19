@@ -1,5 +1,8 @@
-<mat-card class="key-details my-1 px-0 grow-1 mr-0 ml-1">
-	<div *ngIf="keyDetails.translations">
+<div *ngIf="!isLoad" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
+		<mat-spinner></mat-spinner> 
+</div> 
+<mat-card *ngIf="isLoad" class="key-details my-1 px-0 grow-1 mr-0 ml-1">
+	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
 						<mat-expansion-panel [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
