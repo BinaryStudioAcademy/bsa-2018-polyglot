@@ -1,3 +1,10 @@
+.sub-menu
+  display: grid
+  grid-template-columns: 180px auto
+  mat-slide-toggle
+    align-self: center
+    justify-self: center
+
 
 .container
   margin-top: 30px
@@ -100,3 +107,66 @@ mat-card-title
   margin: 0 auto
   padding-top: calc((55vh - 270px))
   height: calc(100vh - 270px)
+
+
+
+
+.row-container
+  margin-top: 30px
+  margin-bottom: 30px
+
+.row-manager
+  display: grid
+  grid-gap: 5px
+  grid-template-rows: 2
+  text-align: center
+  .row-manager-img
+    height: 60px
+    width: 60px
+    align-self: end
+
+.row-buttons
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+  grid-gap: 5px
+  button
+    width: 120px
+    height: 40px
+    justify-self: center
+    align-self: center
+    text-align: center
+  
+
+
+.row-info
+  align-self: center
+  .row-description
+    display: block
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    vertical-align: middle
+    
+
+.list-item
+  margin: 10px
+  padding: 5px
+  display: grid
+  grid-template-columns: 15% 22% 38% 25%
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
+  max-height: 150px
+  img    
+    justify-self: center
+
+.row-info
+  padding-left: 10px
+
+.row-name
+  align-self: center
+  h3
+    margin: 0
+    font-size: 25px
+    margin: 5px 0
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis

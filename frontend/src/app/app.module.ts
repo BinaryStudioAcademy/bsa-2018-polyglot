@@ -72,6 +72,7 @@ import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { MatRadioModule } from '@angular/material';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -140,6 +141,7 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
     SnotifyModule,

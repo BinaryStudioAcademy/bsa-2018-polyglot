@@ -38,31 +38,63 @@ export class LanguagesComponent implements OnInit {
 
   selectNew(){
     this.IsLangLoad = true;
+    const thisLangs = this.langs;
+
     this.langService.getAll()
     .subscribe(langs =>{
+      let langsToSelect = langs.filter(function(language) {
+        let l = thisLangs.find(t => t.id === language.id);
+        if(l)
+          return language.id !== l.id;
+        return true;
+      });
+      
       this.IsLangLoad = false;
+      if(langsToSelect.length < 1){
+        this.snotifyService.info("No languages available to select, all of them already added", "Sorry!");
+        return;
+      }
       let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
           width: "75%",
         data: {
-          langs: langs
+          langs: langsToSelect
         }
       });
 
       dialogRef.componentInstance.onSelect.subscribe((data) => {
         if(data)
         {
-          data.forEach(language => {
           this.IsLoad = true;
-            this.projectService.addLanguageToProject(this.projectId, language.id)
+            this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
-                this.langs.push(language);
-                this.IsLoad = false;
+
+                if(project){
+                  //this.langs.push(data);
+                  
+                  Array.prototype.push.apply(this.langs, data.filter(function(language) {
+                    let l = thisLangs.find(t => t.id === language.id);
+                    if(l)
+                      return language.id !== l.id;
+                    return true;
+                  }));
+                  this.IsLoad = false;
+
+                }
+                else
+                {
+                  this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
+                }
+                
+              },
+              err => {
+                this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
+                console.log('err', err);
+                
               })
-          });
         }
         else
         {
-          this.snotifyService.error(data.message, "Error!");
+          this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
         }
       });
 

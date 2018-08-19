@@ -34,7 +34,10 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await service.GetListAsync();
+            var user = UserIdentityService.GetCurrentUser();
+            if (user.Id == 0)
+                return Ok();
+            var projects = await service.GetListAsync(user.Id);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -89,14 +92,14 @@ namespace Polyglot.Controllers
 
         }
 
-        // PUT: Projects/:id/languages/:id
-        [HttpPut("{projectId}/languages/{languageId}")]
-        public async Task<IActionResult> AddLanguageToProject(int projectId, int languageId)
+        // PUT: Projects/:id/languages
+        [HttpPut("{projectId}/languages")]
+        public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.AddLanguageToProject(projectId, languageId);
+            var entity = await service.AddLanguagesToProject(projectId, languageIds);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -140,7 +143,7 @@ namespace Polyglot.Controllers
 
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
-            var entity = await service.PostAsync(project);
+            var entity = await service.PostAsync(project,UserIdentityService.GetCurrentUser().Id);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
