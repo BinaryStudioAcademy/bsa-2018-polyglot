@@ -49,7 +49,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       .subscribe((data: any) => {
         if(data)
         {
-          debugger;
           this.onSelect(data[0]);
           this.keys = data;
           this.isEmpty = this.keys.length == 0 ? true : false;

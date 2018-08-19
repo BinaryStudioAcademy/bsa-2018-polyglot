@@ -67,6 +67,7 @@ import { SelectProjectLanguageComponent } from './dialogs/select-project-languag
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
@@ -115,6 +116,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
+    SaveStringConfirmComponent,
     TabHistoryComponent
   ],
   imports: [
@@ -154,7 +156,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SaveStringConfirmComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
