@@ -14,7 +14,6 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<File> Files { get; set; }
         public DbSet<Glossary> Glossaries { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<Manager> Managers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectHistory> ProjectHistories { get; set; }
         public DbSet<Rating> Ratings { get; set; }
@@ -22,7 +21,6 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<ComplexString> ComplexStrings { get; set; }
-        public DbSet<Translator> Translators { get; set; }
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
 
@@ -86,7 +84,7 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasForeignKey(tt => tt.TeamId);
 
             modelBuilder.Entity<TeamTranslator>()
-                .HasOne(tt => tt.Translator)
+                .HasOne(tt => tt.UserProfile)
                 .WithMany(translator => translator.TeamTranslators)
                 .HasForeignKey(tt => tt.TranslatorId);
 
@@ -99,7 +97,7 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasForeignKey(tl => tl.LanguageId);
 
             modelBuilder.Entity<TranslatorLanguage>()
-                .HasOne(tl => tl.Translator)
+                .HasOne(tl => tl.UserProfile)
                 .WithMany()
                 .HasForeignKey(tl => tl.TranslatorId);
 

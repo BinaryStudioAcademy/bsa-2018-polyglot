@@ -9,7 +9,7 @@ namespace Polyglot.DataAccess.Entities
 
         public int? TranslatorId { get; set; }
 
-        public virtual Translator Translator { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
 
         public virtual ICollection<TranslatorRight> TranslatorRights { get; set; }
 

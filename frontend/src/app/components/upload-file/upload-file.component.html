@@ -3,7 +3,7 @@
   <p>Just select file and clik <strong>Upload</strong></p>
   <p>(For this moment we work only with .json and .resx)</p>  
   <form #fileForm = ngForm>  
-    <div class="drop" ngfDrop selectable="1" multiple="1"
+    <div class="drop word-wraper" ngfDrop selectable="1" multiple="1"
       [(file)]="fileToUpload"
       [(validDrag)]="validDrag"
       [(invalidDrag)]="invalidDrag"

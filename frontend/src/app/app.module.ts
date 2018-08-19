@@ -68,6 +68,8 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
+import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
@@ -114,7 +116,8 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    TabHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -134,6 +137,7 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
     SnotifyModule,

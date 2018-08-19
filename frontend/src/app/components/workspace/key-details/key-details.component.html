@@ -5,8 +5,8 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
-						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
+						<mat-expansion-panel [expanded]="expandedArray[i]" (opened)="setStep(i)" hideToggle>
+						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i])" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
@@ -51,6 +51,8 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="History" matTooltipPosition="above">history</mat-icon>
 			</ng-template>
+			<app-tab-history></app-tab-history>
+			<!-- <app-tab-history [(keyDetails)]="keyDetails"></app-tab-history> -->
 		</mat-tab>
 		<mat-tab label="Comment">
 			<ng-template mat-tab-label>

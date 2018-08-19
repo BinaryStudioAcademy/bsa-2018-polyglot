@@ -5,6 +5,8 @@ import { AppStateService } from '../../../../services/app-state.service';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { SnotifyService } from 'ng-snotify';
 import { IString } from '../../../../models/string';
+import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-tab-comments',
@@ -14,7 +16,6 @@ import { IString } from '../../../../models/string';
 export class TabCommentsComponent implements OnInit {
 
   @Input()  public keyDetails: IString;
-  comments: any[] = new Array<any>();
   commentForm = this.fb.group({
     commentBody: ['', Validators.required]
     });
@@ -24,6 +25,7 @@ export class TabCommentsComponent implements OnInit {
   constructor(private userService: UserService,
               private fb: FormBuilder,
               private complexStringService: ComplexStringService,
+              private dialog: MatDialog,
               private snotifyService: SnotifyService) { }
 
   ngOnInit() {
@@ -32,6 +34,16 @@ export class TabCommentsComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.commentForm.reset();
+  }
+
+  onImageClick(avatarUrl: string){
+    if(avatarUrl){
+    let dialogRef = this.dialog.open(ImgDialogComponent, {
+      data: {
+        imageUri: avatarUrl
+      }
+      });
+    }
   }
 
   addComment(commentBody: string){

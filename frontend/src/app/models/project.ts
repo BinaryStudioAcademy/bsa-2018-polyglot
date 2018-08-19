@@ -1,10 +1,10 @@
-import { Manager } from "./manager";
 import { Language } from "./language";
 import { ProjectTag } from "./project-tag";
 import { ProjectGlossary } from "./project-glossary";
 import { ProjectLanguage } from "./project-language";
 import { Translation } from "./translation";
 import { Team } from "./team";
+import { UserProfile } from "./user-profile";
 
 export interface Project {
     id?: number;
@@ -13,7 +13,7 @@ export interface Project {
     technology: string;
     imageUrl?: string;
     createdOn?: Date;
-    manager?: Manager;
+    userProfile?: UserProfile;
     mainLanguage?: Language;
     teams?: Array<Team>;
     translations?: Array<Translation>;
