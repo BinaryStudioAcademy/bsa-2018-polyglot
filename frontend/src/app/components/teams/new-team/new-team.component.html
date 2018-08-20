@@ -15,7 +15,7 @@
             <input matInput placeholder="Team Name">
           </mat-form-field>
           <div class="save-btn">
-              <button mat-raised-button color="primary" (click)="formTeam()">Save</button>
+              <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 ? true : null" (click)="formTeam()">Save</button>
             </div>
           
         </div>
