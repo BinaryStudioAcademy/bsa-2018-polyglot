@@ -1,4 +1,4 @@
-<div *ngIf="keyDetails" class="container">
+<div class="container">
 <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
     <mat-form-field class="field-full-width">
         <textarea #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" 

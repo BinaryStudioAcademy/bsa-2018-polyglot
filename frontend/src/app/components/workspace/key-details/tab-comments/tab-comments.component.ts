@@ -8,6 +8,8 @@ import { IString } from '../../../../models/string';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
 import { CommentsService } from '../../../../services/comments.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tab-comments',
@@ -16,8 +18,10 @@ import { CommentsService } from '../../../../services/comments.service';
 })
 export class TabCommentsComponent implements OnInit {
 
-  @Input()  public keyDetails: IString;
   comments: Comment[];
+  routeSub: Subscription;
+  keyId: number;
+
   commentForm = this.fb.group({
     commentBody: ['', Validators.required]
     });
@@ -28,15 +32,22 @@ export class TabCommentsComponent implements OnInit {
               private fb: FormBuilder,
               private commentService: CommentsService,
               private dialog: MatDialog,
-              private snotifyService: SnotifyService) { }
+              private snotifyService: SnotifyService,
+              private activatedRoute: ActivatedRoute) { }
+
 
   ngOnInit() {
-    this.commentService.getCommentsByStringId(this.keyDetails.id)
-      .subscribe((comments)=> this.comments = comments);
+    this.routeSub = this.activatedRoute.params.subscribe((params) => {
+      
+      this.keyId = params.keyId;
+      this.getComments().subscribe(comments=>{
+        this.comments = comments;
+      });
+    });
   }
 
   getComments(){
-
+    return this.commentService.getCommentsByStringId(this.keyId)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -53,12 +64,16 @@ export class TabCommentsComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
+
   addComment(commentBody: string){
     this.comments.unshift({user: this.userService.getCurrrentUser(),
                                    text: commentBody,   
                                    createdOn: new Date(Date.now())});
 
-    this.commentService.updateStringComments(this.comments, this.keyDetails.id)
+    this.commentService.updateStringComments(this.comments, this.keyId)
       .subscribe(
         (comments) => {
             if(comments){
