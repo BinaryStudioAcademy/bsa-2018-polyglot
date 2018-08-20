@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
@@ -11,6 +11,7 @@ import { LanguageService } from '../../../services/language.service';
 import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
+import { TabHistoryComponent } from './tab-history/tab-history.component';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -39,13 +40,14 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   keyId: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
 
   constructor(private route: ActivatedRoute,
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { 
-    this.Id = this.route.snapshot.queryParamMap.get('keyid');
+      this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
 
 
@@ -68,6 +70,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   setStep(index: number) {
     this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+    this.history.showHistory(index);
   }
 
 

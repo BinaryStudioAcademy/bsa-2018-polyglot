@@ -80,7 +80,7 @@ export class ProjectTeamComponent implements OnInit {
         }        
         let dialogRef = this.dialog.open(TeamAssignComponent, {
           hasBackdrop: true,
-          width: "90%",
+          width: '640px',
         data: {
           teams: avaibleTeams
         },

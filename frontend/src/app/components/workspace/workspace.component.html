@@ -20,7 +20,7 @@
       <button class="mx-1" mat-flat-button type="button" (click)="onAdvanceSearchClick()">Advance Search</button>
     </div>
 
-    <div>
+    <div *ngIf="project">
       <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
       <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Details</button>
     </div>
