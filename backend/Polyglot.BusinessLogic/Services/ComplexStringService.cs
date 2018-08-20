@@ -13,7 +13,6 @@ using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 using TranslationDTO = Polyglot.Common.DTOs.NoSQL.TranslationDTO;
-using System.Linq;
 
 namespace Polyglot.BusinessLogic.Services
 {
