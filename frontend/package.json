@@ -32,6 +32,7 @@
     "module": "^1.2.5",
     "ng-snotify": "^4.3.1",
     "ngx-img-cropper": "^0.10.4",
+    "ngx-smooth-dnd": "^0.2.5",
     "ngx-store": "^2.0.0",
     "npm": "^6.3.0",
     "npx": "^10.2.0",

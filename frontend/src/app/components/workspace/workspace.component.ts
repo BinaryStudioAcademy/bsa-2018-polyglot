@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
@@ -14,7 +14,7 @@ import { FormControl } from '../../../../node_modules/@angular/forms';
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.sass']
 })
-export class WorkspaceComponent implements OnInit, OnDestroy{
+export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
 
   public project: Project;
   public keys: any[];
@@ -47,7 +47,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
  
   ngOnInit() {
     this.searchQuery = '';
-
+    console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
@@ -70,7 +70,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
   onAdvanceSearchClick() {
 
-  } 
+  }
+  
+  ngDoCheck(){
+    if(this.router.url == `/workspace/${this.project.id}`){
+      this.router.navigate(['/'])
+    }
+  }
    
   onAddNewStringClick() {
     let dialogRef = this.dialog.open(StringDialogComponent, {

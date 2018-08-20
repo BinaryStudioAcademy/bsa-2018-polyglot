@@ -87,11 +87,7 @@ export class TagsComponent  {
             this.tags.splice(i, 1);
           }
         }
-        for(let k = 0; k < this.allTags.length; k++){
-          if( this.allTags[k].name.toLowerCase() == this.tags[i].name.toLowerCase()){
-            this.allTags.splice(k, 1);
-          }
-        }
+      
     }
   }
 

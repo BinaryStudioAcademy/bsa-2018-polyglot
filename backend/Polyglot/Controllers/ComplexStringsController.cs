@@ -32,7 +32,6 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
-            
             var complexStrings = await dataProvider.GetListAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
@@ -57,16 +56,26 @@ namespace Polyglot.Controllers
         }
 
         // PUT: ComplexStrings/5/translations
-        [HttpPut("{id}/translations")]
-        public async Task<IActionResult> SetStringTranslations(int id, [FromBody]IEnumerable<TranslationDTO> translations)
+        [HttpPost("{id}/translations")]
+        public async Task<IActionResult> SetStringTranslation(int id, [FromBody]TranslationDTO translation)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.SetStringTranslations(id, translations);
+            var entity = await dataProvider.SetStringTranslation(id, translation);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
+        [HttpPut("{id}/translations")]
+        public async Task<IActionResult> EditStringTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+
+            var entity = await dataProvider.EditStringTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
 
         // POST: ComplexStrings
         [HttpPost]
