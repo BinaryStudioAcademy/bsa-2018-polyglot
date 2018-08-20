@@ -49,6 +49,7 @@ export class NewTeamComponent implements OnInit {
   getAllTranslators() {
     this.teamService.getAllTranslators()
       .subscribe((translators: Translator[]) => {
+        debugger;
         this.IsLoad = false;
         if (translators && translators.length > 0)
           this.allTranslators = translators;

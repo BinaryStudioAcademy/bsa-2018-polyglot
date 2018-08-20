@@ -14,9 +14,12 @@
       </mat-toolbar>
 
       <div class="translators-list-wrapper">
+
+        <!--
           <smooth-dnd-container class="dnd-container" (drop)="onDrop($event)">            
               <smooth-dnd-draggable class="dnd-item" *ngFor="let t of allTranslators">
-                <div class="draggable-item">
+              !-->  <div class="draggable-item" *ngFor="let t of allTranslators">
+                 
                     <mat-card class="temmate-card">
                         <mat-card-header>
                           <div mat-card-avatar class="temmate-header-image header-image">
@@ -44,12 +47,14 @@
                         </mat-card-actions>
                     </mat-card>
                 </div>
+                <!--
               </smooth-dnd-draggable>
           </smooth-dnd-container>
 
           <smooth-dnd-container class="dnd-container" (drop)="onDrop($event)">            
               <smooth-dnd-draggable class="dnd-item" *ngFor="let t of allTranslators">
-                <div class="draggable-item">
+                <div class="draggable-item" *ngFor="let t of allTranslators">
+                   
                     <mat-card class="temmate-card">
                         <mat-card-header>
                           <div mat-card-avatar class="temmate-header-image header-image">
@@ -77,8 +82,10 @@
                         </mat-card-actions>
                     </mat-card>
                 </div>
+
               </smooth-dnd-draggable>
           </smooth-dnd-container>
+          !-->
       </div>
 
     </div>
@@ -92,10 +99,11 @@
             <mat-card-title class="card-title">Your new team</mat-card-title>
           </mat-card-header>
           <mat-card-content class="teammates-container">
-
+<!--
               <smooth-dnd-container (drop)="onDrop($event)">            
                   <smooth-dnd-draggable *ngFor="let t of teamTranslators">
-                    <div class="draggable-item">
+                    -->
+                    <div class="draggable-item" *ngFor="let t of teamTranslators">
                         <mat-card class="temmate-card">
                             <mat-card-header>
                               <div mat-card-avatar class="temmate-header-image header-image">
@@ -123,10 +131,11 @@
                             </mat-card-actions>
                         </mat-card>
                     </div>
+                    <!--
                   </smooth-dnd-draggable>
                 </smooth-dnd-container>
 
-                  
+              -->
 
           </mat-card-content>
         </mat-card>
