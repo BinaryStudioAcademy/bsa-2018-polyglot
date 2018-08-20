@@ -32,7 +32,7 @@
     "module": "^1.2.5",
     "ng-snotify": "^4.3.1",
     "ngx-img-cropper": "^0.10.4",
-    "ngx-smooth-dnd": "^0.2.5",
+    "ngx-smooth-dnd": "^0.2.6",
     "ngx-store": "^2.0.0",
     "npm": "^6.3.0",
     "npx": "^10.2.0",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
-    "@angular/cli": "~6.1.1",
+    "@angular/cli": "^6.1.4",
     "@angular/compiler-cli": "^6.1.0",
     "@angular/language-service": "^6.1.0",
     "@types/jasmine": "~2.8.6",

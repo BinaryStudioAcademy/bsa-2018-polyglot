@@ -52,7 +52,7 @@ export class ProjectTeamComponent implements OnInit {
 
     this.IsLoad = true;
    // debugger;
-    this.teamsService.getAll()
+    this.teamsService.getAllTeams()
       .subscribe(teams => {
       //  debugger;
         if(!teams || teams.length < 1){

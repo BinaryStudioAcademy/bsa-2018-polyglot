@@ -2,7 +2,8 @@
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Entity : IEquatable<Entity>
+
+    public class Entity : DbEntity, IEquatable<Entity>
     {
         public int Id { get; set; }
 
