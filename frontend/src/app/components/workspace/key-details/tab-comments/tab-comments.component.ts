@@ -61,11 +61,10 @@ export class TabCommentsComponent implements OnInit {
     this.commentService.updateStringComments(this.comments, this.keyDetails.id)
       .subscribe(
         (comments) => {
-          console.log(comments);
-          this.comments = comments;
-          this.commentForm.reset();
             if(comments){
               this.snotifyService.success("Comment added", "Success!");
+              this.comments = comments;
+              this.commentForm.reset();
             }
             else{
               this.snotifyService.error("Comment wasn't add", "Error!");

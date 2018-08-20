@@ -18,4 +18,7 @@
         <div class="date"><i>{{com?.createdOn | date:'short'}}</i></div>
     </mat-card>
 </div>
+<div *ngIf="!comments" class="spinner">
+    <mat-spinner></mat-spinner>
+</div>
 </div>
