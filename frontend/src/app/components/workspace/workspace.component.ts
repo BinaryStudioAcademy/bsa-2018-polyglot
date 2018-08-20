@@ -28,7 +28,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   options = new FormControl();
 
   filterOptions : string [] = [
-    'Translated', 'Not translated' , 'Human translation' , 'Machine transaltion' , 'With Tags'
+    'Translated', 'Untranslated' , 'Human translation' , 'Machine transaltion' , 'With Tags'
   ]
 
   constructor(
@@ -116,6 +116,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
 
   OnSelectOption(){
+    //let opt = "?options[]=one&options[]=two"
+    this.dataProvider.getProjectStringsByFilter(this.project.id,this.options.value)
+    .subscribe(res => {
+      this.keys = res;
+    })
     console.log(this.options.value);
   }
 

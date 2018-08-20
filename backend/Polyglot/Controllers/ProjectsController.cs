@@ -164,10 +164,10 @@ namespace Polyglot.Controllers
 			return Ok();
 		}
 
-        [HttpGet(Name = "GetComplexStringsByFilter")]
-        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options)
+        [HttpPost("{id}/filteredstring", Name = "GetComplexStringsByFilter")]
+        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options,int id)
         {
-            var complexStrings = await service.GetListByFilterAsync(options);
+            var complexStrings = await service.GetListByFilterAsync(options,id);
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(complexStrings);
         }
