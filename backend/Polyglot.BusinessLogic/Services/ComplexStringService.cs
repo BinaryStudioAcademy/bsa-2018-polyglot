@@ -115,22 +115,5 @@ namespace Polyglot.BusinessLogic.Services
             }
             return null;
         }
-
-        public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<int> options)
-        {
-            List<FilterType> filters = new List<FilterType>();
-            options.ToList().ForEach(x => filters.Add((FilterType)x));
-            var result = await Filter.FiltrationAsync<ComplexString>(x => x.Translations == null, _uow);
-            return null;
-        }
-
-        public enum FilterType
-        {
-            Translated,
-            NotTranslated,
-            HumanTranslation,
-            MachineTranslation,
-            WithTags
-        }
     }
 }

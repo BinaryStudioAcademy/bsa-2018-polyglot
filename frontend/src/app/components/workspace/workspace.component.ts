@@ -6,6 +6,7 @@ import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { FormControl } from '../../../../node_modules/@angular/forms';
 
 
 @Component({
@@ -23,6 +24,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   public currentPath;
   
   private routeSub: Subscription;
+
+  options = new FormControl();
+
+  filterOptions : string [] = [
+    'Translated', 'Not translated' , 'Human translation' , 'Machine transaltion' , 'With Tags'
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,7 +56,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
       .subscribe((data: any) => {
         if(data)
         {
-          debugger;
           this.onSelect(data[0]);
           this.keys = data;
           this.isEmpty = this.keys.length == 0 ? true : false;
@@ -107,6 +113,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
     this.keys.splice(temp, 1);
     
     this.router.navigate([this.currentPath, this.selectedKey.id]);
+  }
+
+  OnSelectOption(){
+    console.log(this.options.value);
   }
 
 

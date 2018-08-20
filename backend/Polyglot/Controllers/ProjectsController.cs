@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 
@@ -161,5 +163,13 @@ namespace Polyglot.Controllers
 			await service.FileParseDictionary(id, Request.Form.Files[0]);
 			return Ok();
 		}
-	}
+
+        [HttpGet(Name = "GetComplexStringsByFilter")]
+        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options)
+        {
+            var complexStrings = await service.GetListByFilterAsync(options);
+            return complexStrings == null ? NotFound("No files found!") as IActionResult
+                : Ok(complexStrings);
+        }
+    }
 }

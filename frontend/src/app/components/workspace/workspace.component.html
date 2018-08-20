@@ -35,22 +35,10 @@
     <mat-card class="keys-list d-flex my-1 p-0">
       <div  style="width: 100%;">
       <div style="padding-top:10px;padding-bottom:10px;">
-          <mat-select multiple placeholder="Filter" class="filter">
-              <mat-option >
-                Machine translation
+          <mat-select multiple placeholder="Filter" class="filter" [formControl]="options">
+              <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
+                {{filter}}
               </mat-option>
-              <mat-option >
-                  Human translation
-                </mat-option>
-                <mat-option >
-                    Translated
-                  </mat-option>
-                  <mat-option >
-                     Not translated
-                    </mat-option>
-                    <mat-option >
-                        With tags
-                       </mat-option>
             </mat-select>
       </div>
       <mat-nav-list class="keys-list__nav">

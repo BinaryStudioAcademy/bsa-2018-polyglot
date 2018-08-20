@@ -115,14 +115,5 @@ namespace Polyglot.Controllers
             var success = await dataProvider.DeleteComplexString(id);
             return success ? Ok() : StatusCode(304);
         }
-
-        [HttpGet(Name = "GetComplexStringsByFilter")]
-        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<int> options)
-        {
-
-            var complexStrings = await dataProvider.GetListByFilterAsync(options);
-            return complexStrings == null ? NotFound("No files found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
-        }
     }
 }

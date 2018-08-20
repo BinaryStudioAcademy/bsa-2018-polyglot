@@ -27,6 +27,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync();
 
+        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options);
+
         #endregion
     }
 }

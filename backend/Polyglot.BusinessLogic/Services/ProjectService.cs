@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using AutoMapper;
@@ -14,6 +15,8 @@ using Polyglot.DataAccess.SqlRepository;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
+
 namespace Polyglot.BusinessLogic.Services
 {
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
@@ -285,6 +288,28 @@ namespace Polyglot.BusinessLogic.Services
         {
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
+        }
+
+        public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options)
+        {
+            List<FilterType> filters = new List<FilterType>();
+
+            Expression<Func<ComplexString, bool>> expr1 = x => x.Translations == null;
+            Expression<Func<ComplexString, bool>> expr2;
+
+            options.ToList().ForEach(x => filters.Add((FilterType)Enum.Parse(typeof(FilterType), x)));
+            var result = await Filter.FiltrationAsync<ComplexString>(expr1, uow);
+
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(null);
+        }
+
+        public enum FilterType
+        {
+            Translated,
+            NotTranslated,
+            HumanTranslation,
+            MachineTranslation,
+            WithTags
         }
 
         #endregion

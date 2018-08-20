@@ -21,6 +21,6 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ComplexStringDTO> SetStringTranslations(int identifier, IEnumerable<TranslationDTO> translations);
 
-        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<int> options);
+        //Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<int> options);
     }
 }
