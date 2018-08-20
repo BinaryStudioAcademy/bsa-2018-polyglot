@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
@@ -65,12 +67,39 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<ComplexStringDTO> SetStringTranslations(int identifier, IEnumerable<TranslationDTO> translations)
+        public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
             var target = await _repository.GetAsync(identifier);
             if (target != null)
             {
-                target.Translations = _mapper.Map<List<Translation>>(translations);
+                var currentTranslation = _mapper.Map<Translation>(translation);
+                currentTranslation.Id = Guid.NewGuid();
+                target.Translations.Add(currentTranslation);
+                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+            }
+            return null;
+
+        }
+
+        public async Task<ComplexStringDTO> EditStringTranslation(int identifier, TranslationDTO translation)
+        {
+            var target = await _repository.GetAsync(identifier);
+            if (target != null)
+            {
+                var translationsList = _mapper.Map<List<Translation>>(target.Translations);
+                var currentTranslation = translationsList.FirstOrDefault(x => x.Id == translation.Id);
+                currentTranslation.History.Add(new AdditionalTranslation
+                {
+                    CreatedOn = currentTranslation.CreatedOn,
+                    TranslationValue = currentTranslation.TranslationValue,
+                    UserId = currentTranslation.UserId
+                });
+                currentTranslation.TranslationValue = translation.TranslationValue;
+                currentTranslation.UserId = translation.UserId;
+                currentTranslation.CreatedOn = DateTime.Now;
+                target.Translations = translationsList;
+
                 var result = await _repository.Update(_mapper.Map<ComplexString>(target));
                 return _mapper.Map<ComplexStringDTO>(result);
             }

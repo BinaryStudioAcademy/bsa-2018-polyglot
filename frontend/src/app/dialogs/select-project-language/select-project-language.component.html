@@ -13,5 +13,5 @@
 </mat-dialog-content>
   <mat-dialog-actions class="p-1 mt-2">
       <button style="float: left" mat-raised-button color="primary" (click)="submit()" mat-button>Ok</button>
-      <button style="float: right" mat-raised-button color="warn" (click)="close()">Cancel</button>
+      <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
   </mat-dialog-actions>

@@ -4,7 +4,7 @@ import { ComplexStringService } from '../../../../services/complex-string.servic
 import { AppStateService } from '../../../../services/app-state.service';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { SnotifyService } from 'ng-snotify';
-import { IString } from '../../../../models/string';
+import { Comment } from '../../../../models/comment';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
 import { CommentsService } from '../../../../services/comments.service';
@@ -23,8 +23,11 @@ export class TabCommentsComponent implements OnInit {
   keyId: number;
 
   commentForm = this.fb.group({
-    commentBody: ['', Validators.required]
+    commentBody: ['', ]
     });
+
+
+  body: string;
 
     @ViewChild('textarea') textarea: ElementRef;
 

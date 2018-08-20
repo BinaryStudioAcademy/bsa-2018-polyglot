@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,7 @@ namespace Polyglot.Controllers
         {
             var user = UserIdentityService.GetCurrentUser();
             if (user.Id == 0)
-                return Ok();
+                return Ok(new List<ProjectDTO>());
             var projects = await service.GetListAsync(user.Id);
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
@@ -50,6 +51,36 @@ namespace Polyglot.Controllers
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
 
+        }
+
+        // GET: Projects/:id?/teams
+        [HttpGet("{id}/teams", Name = "GetProjectTeams")]
+        public async Task<IActionResult> GetProjectTeams(int id)
+        {
+            var project = await service.GetProjectTeams(id);
+            return project == null ? NotFound($"Project with id = {id} has got no assigned team!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // PUT: Projects/:id/teams/:id
+        [HttpPut("{projectId}/teams")]
+        public async Task<IActionResult> AssignTeamsToProject(int projectId,[FromBody]int[] teamIds)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.AssignTeamsToProject(projectId, teamIds);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        //DELETE: projects/:id/teams/:id
+        [HttpDelete("{projId}/teams/{teamId}", Name = "DismissProjectTeam")]
+        public async Task<IActionResult> DismissProjectTeam(int projId, int teamId)
+        {
+            var success = await service.TryDismissProjectTeam(projId, teamId);
+            return success ? Ok() : StatusCode(304) as IActionResult;
         }
 
         // GET: Projects/5/languages

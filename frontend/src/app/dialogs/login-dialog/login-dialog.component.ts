@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
 import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 import { AppStateService } from '../../services/app-state.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-dialog',
@@ -28,7 +29,8 @@ export class LoginDialogComponent implements OnInit {
     private authService : AuthService,
     private snotify: SnotifyService,
     public dialog: MatDialog,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class LoginDialogComponent implements OnInit {
 
             if(this.appState.LoginStatus){
               this.dialogRef.close();
+              this.router.navigate(['/dashboard']);
             }          
           } else {
             this.snotify.clear();
@@ -82,6 +85,7 @@ export class LoginDialogComponent implements OnInit {
 
         if(this.appState.LoginStatus) {
           this.dialogRef.close();
+          this.router.navigate(['/dashboard']);
         }
 
         // if not exist in db - show error
@@ -99,6 +103,7 @@ export class LoginDialogComponent implements OnInit {
 
         if(this.appState.LoginStatus) {
           this.dialogRef.close();
+          this.router.navigate(['/dashboard']);
         }
 
         // if not exist in db - show error

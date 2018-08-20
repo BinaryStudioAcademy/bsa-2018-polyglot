@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -61,16 +61,20 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 import { LanguagesComponent } from './components/project-details/languages/languages.component';
 import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectTeamComponent } from './components/project-details/project-team/project-team.component';
+import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
+import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { MatRadioModule } from '@angular/material';
+import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -99,6 +103,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NewProjectComponent,
     ManagerProfileComponent,
     TeamComponent,
+    NewTeamComponent,
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
@@ -114,8 +119,11 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
-    TabCommentsComponent,
-    TabHistoryComponent
+    ProjectTeamComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent,
+    TabHistoryComponent,
+    TabCommentsComponent
   ],
   imports: [
     BrowserModule,
@@ -140,9 +148,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatCheckboxModule,
     SnotifyModule,
     MatDialogModule,
+    NgxSmoothDnDModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
-    })
+    }),
+    MatRadioModule,
+    MatTabsModule
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -154,7 +165,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

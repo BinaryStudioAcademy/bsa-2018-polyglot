@@ -1,7 +1,8 @@
-import { TeamTranslator } from "./team-translator";
+import { Translator } from "./Translator";
+
 
 export interface Team {
     id: number;
-    teamTranslators: Array<TeamTranslator>;
+    teamTranslators: Array<Translator>;
 }
 
