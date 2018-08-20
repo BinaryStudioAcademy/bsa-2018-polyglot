@@ -7,6 +7,7 @@ import { SnotifyService } from 'ng-snotify';
 import { IString } from '../../../../models/string';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
+import { CommentsService } from '../../../../services/comments.service';
 
 @Component({
   selector: 'app-tab-comments',
@@ -16,6 +17,7 @@ import { MatDialog } from '@angular/material';
 export class TabCommentsComponent implements OnInit {
 
   @Input()  public keyDetails: IString;
+  comments: Comment[];
   commentForm = this.fb.group({
     commentBody: ['', Validators.required]
     });
@@ -24,13 +26,18 @@ export class TabCommentsComponent implements OnInit {
 
   constructor(private userService: UserService,
               private fb: FormBuilder,
-              private complexStringService: ComplexStringService,
+              private commentService: CommentsService,
               private dialog: MatDialog,
               private snotifyService: SnotifyService) { }
 
   ngOnInit() {
+    this.commentService.getCommentsByStringId(this.keyDetails.id)
+      .subscribe((comments)=> this.comments = comments);
   }
 
+  getComments(){
+
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     this.commentForm.reset();
@@ -47,16 +54,17 @@ export class TabCommentsComponent implements OnInit {
   }
 
   addComment(commentBody: string){
-    this.keyDetails.comments.unshift({user: this.userService.getCurrrentUser(),
+    this.comments.unshift({user: this.userService.getCurrrentUser(),
                                    text: commentBody,   
                                    createdOn: new Date(Date.now())});
 
-    this.complexStringService.update(this.keyDetails, this.keyDetails.id)
+    this.commentService.updateStringComments(this.comments, this.keyDetails.id)
       .subscribe(
-        (data) => {
-          this.keyDetails = data;
+        (comments) => {
+          console.log(comments);
+          this.comments = comments;
           this.commentForm.reset();
-            if(data){
+            if(comments){
               this.snotifyService.success("Comment added", "Success!");
             }
             else{

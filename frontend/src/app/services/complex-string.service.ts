@@ -32,4 +32,5 @@ export class ComplexStringService {
   delete(id: number) : Observable<IString> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
+
 }
