@@ -61,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 import { LanguagesComponent } from './components/project-details/languages/languages.component';
 import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
@@ -103,6 +104,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NewProjectComponent,
     ManagerProfileComponent,
     TeamComponent,
+    NewTeamComponent,
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
@@ -123,7 +125,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent
-
+    
   ],
   imports: [
     BrowserModule,
