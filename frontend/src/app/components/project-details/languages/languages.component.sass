@@ -10,7 +10,16 @@ li
     list-style: none
     margin-bottom: 2%
 
-//.lang-item mat-card,
+.lang-item mat-card
+    transition: ease-in 0.4s
+    span
+        transition: ease-in 0.7s
+
+.lang-item mat-card:hover
+    background-color: #F2F3EB
+    span
+        opacity: 1
+
 .card-content,
 .select-lang-container
     display: flex
@@ -33,6 +42,8 @@ li
         height: 40%
         align-self: flex-end
         font-size: 12px
+        span
+            opacity: 0
 
 .progress-container
     display: flex
