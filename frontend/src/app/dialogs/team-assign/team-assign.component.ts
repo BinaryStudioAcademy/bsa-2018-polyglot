@@ -44,4 +44,11 @@ debugger;
     this.dialogRef.close();
   }
 
+  getAvatarUrl(person): String {
+    if(person.avatarUrl)
+      return person.avatarUrl;
+    else
+      return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q";
+  }
+
 }

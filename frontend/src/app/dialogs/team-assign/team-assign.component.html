@@ -18,7 +18,7 @@
       </mat-toolbar>
 
       <div class="container">
-          <mat-checkbox *ngFor="let t of teams" (change)="change($event, t)">
+          <mat-checkbox  class="team-card-item" *ngFor="let t of teams" (change)="change($event, t)">
               <mat-card class="example-card">
                   <mat-card-header>            
                       <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
@@ -27,19 +27,19 @@
                           <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
                           <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
                       </div>
+                      <div class="action-btn-container">
+                            <button mat-icon-button [mat-dialog-close]="true" routerLink="/dashboard/teams/{{t.id}}">
+                              <mat-icon class="icon team-info-icon" aria-label="team-details">info</mat-icon>
+                            </button>
+                      </div>
                   </mat-card-header>
                   
                   
-                  <div mat-card-image >
-                    <div  class="img-container">                  
-                      <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}">
-                    </div>
-                  </div>  
-                
-              
-                  <mat-card-actions class="card-buttons">        
-                    <button mat-raised-button color="primary" disabled routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
-                  </mat-card-actions>      
+                  <div class="card-content">
+                        <div mat-card-image class="img-container">
+                          <img height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
+                        </div>
+                      </div>     
               </mat-card> 
           </mat-checkbox>
       </div>
