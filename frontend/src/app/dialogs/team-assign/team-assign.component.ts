@@ -11,7 +11,7 @@ export class TeamAssignComponent implements OnInit {
   @Output() onAssign = new EventEmitter<Array<number>>(true);
   teams: Array<any> = [];
   public selectedTeams: Array<any> = [];
-  toggleBool: boolean = true;
+  disabled: boolean = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -26,19 +26,18 @@ export class TeamAssignComponent implements OnInit {
   }
 
   change($event, team) {
-    if ($event.checked) {
-      this.toggleBool = false;
-    }
-    else {
-      this.toggleBool = true;
-    }
+  
 
     let inArray = this.selectedTeams.find(t => t.id === team.id);
 
-    if ($event.checked && !inArray)
+    if ($event.checked && !inArray){
+      this.disabled = false;
       this.selectedTeams.push(team);
+    }
     else if (!$event.checked && inArray) {
       this.selectedTeams = this.selectedTeams.filter(t => t.id != team.id);
+      if (this.selectedTeams.length == 0)
+      this.disabled = true;
     }
   }
 

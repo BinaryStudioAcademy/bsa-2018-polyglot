@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from '../../services/http.service';
-
 import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../../services/auth.service';
-
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +15,8 @@ export class LandingComponent implements OnInit {
   title: string;
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public router: Router
   ) {
   }
 
@@ -30,6 +29,6 @@ export class LandingComponent implements OnInit {
   }
 
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent);
+    this.dialog.open(LoginDialogComponent).afterClosed().subscribe(() =>this.router.navigate(['/dashboard']));  
   }
 }
