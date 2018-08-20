@@ -1,4 +1,5 @@
-<form style="width: 400px" class="choose-form">
+<div>
+<form style="width: 400px" class="choose-form" *ngIf="loaded">
   <mat-form-field style="width: 300px" class ="select">
     <mat-select placeholder="Select your role" [value] = "selectedOption">
       <mat-option value="translator">Translator</mat-option>
@@ -10,4 +11,5 @@
     {{error}}
   </mat-error>
 </form>
+</div>
 <ng-snotify></ng-snotify>

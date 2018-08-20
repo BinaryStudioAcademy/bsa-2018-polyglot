@@ -24,6 +24,7 @@ export class ChooseRoleDialogComponent implements OnInit {
   selectedOption: string = "translator";
   userToReceive: UserProfile;
   error: string;
+  loaded: boolean = false;
 
   @Output() onRoleChoose: EventEmitter<any> = new EventEmitter<any>(true);
 
@@ -31,7 +32,7 @@ export class ChooseRoleDialogComponent implements OnInit {
   }
 
   onSubmit(){
-    this.onRoleChoose.emit();
+    this.dialogRef.close();
   }
 
   saveDataInDb(){

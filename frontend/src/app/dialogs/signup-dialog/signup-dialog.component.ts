@@ -100,23 +100,25 @@ export class SignupDialogComponent implements OnInit {
   }
 
   onGoogleClick() {
+    let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+      data: {
+        fullName: '',
+        email: ''
+      }
+    });
     this.authService.signInWithGoogle().subscribe(async (userCred) => {
       this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
 
         this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
-          if(isInDb)
+          if(isInDb){
             this.dialogRef.close();
+            dialogRef.close();     
+          }
             
           else{
-            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
-              data: {
-                fullName: '',
-                email: ''
-              }
-            });
-            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
+            dialogRef.componentInstance.loaded = true;
+            dialogRef.afterClosed().subscribe(()=>{  
               dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
-                dialogRef.close();
                 this.dialogRef.close();
                 });
               });
