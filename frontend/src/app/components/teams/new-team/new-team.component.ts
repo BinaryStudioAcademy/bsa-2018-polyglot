@@ -49,7 +49,7 @@ export class NewTeamComponent implements OnInit {
   getAllTranslators() {
     this.teamService.getAllTranslators()
       .subscribe((translators: Translator[]) => {
-        debugger;
+       
         this.IsLoad = false;
         if (translators && translators.length > 0)
           this.allTranslators = translators;
@@ -66,13 +66,13 @@ export class NewTeamComponent implements OnInit {
   }
 
   addTranslator(translator: Translator) {
-    debugger;
+    
     this.teamTranslators.push(translator);
     this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
   }
 
   removeTranslator(translator: Translator) {
-    debugger;
+    
     this.allTranslators.push(translator);
     this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
   }
