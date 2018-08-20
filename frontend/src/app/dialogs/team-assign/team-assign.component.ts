@@ -19,7 +19,10 @@ export class TeamAssignComponent implements OnInit {
   ) {
     debugger;
     if (data && data.teams)
-      this.teams = data.teams;
+      {
+        this.teams = data.teams;
+        this.teams.sort(this.compareId);
+      }
   }
 
   ngOnInit() {
@@ -56,5 +59,12 @@ export class TeamAssignComponent implements OnInit {
       return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q";
   }
 
+  compareId(a,b) {
+    if (a.id < b.id)
+      return -1;
+    if (a.id > b.id)
+      return 1;
+    return 0;
+  }
 
 }
