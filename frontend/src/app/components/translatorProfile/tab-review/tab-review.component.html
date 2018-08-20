@@ -1,0 +1,26 @@
+<div *ngIf="userProfile" class="container">
+    <form [formGroup]="reviewForm" fxLayoutWrap (submit)="addReview(reviewForm.value.reviewBody, reviewForm.value.rating)">
+        <mat-form-field class="field-full-width">
+            <textarea #textArea rows="4" matInput placeholder="Enter review text" formControlName="reviewBody" 
+                maxlength="500"></textarea>
+        </mat-form-field>
+        <mat-form-field class="field-full-width">
+            <textarea #textArea rows="4" matInput placeholder="Enter review rating" formControlName="rating" 
+                maxlength="500"></textarea>
+        </mat-form-field>
+        <div class="button-container">
+            <button mat-flat-button class="save-button mx-1" [disabled]="reviewForm.invalid">Save</button>
+        </div>
+    </form>
+    <div  *ngFor="let rating of userProfile.rating" class="comments-container">
+        <mat-card  class="comment-card">
+            <div class="author-info">
+                <img class="comment-avatar" (click)="onImageClick(rating.createdBy.avatarUrl)" src="{{rating.createdBy.avatarUrl}}">
+                <strong class="comment-author">{{rating.createdBy.fullName}}</strong>
+            </div>
+            <div class ="text">{{rating.rate}}</div>
+            <div class ="text">{{rating.comment}}</div>
+            <div class="date"><i>{{rating.createdAt | date:'short'}}</i></div>
+        </mat-card>
+    </div>
+    </div>

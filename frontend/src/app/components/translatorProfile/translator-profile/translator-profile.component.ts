@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.component';
+import { UserService } from '../../../services/user.service';
+import { UserProfile } from '../../../models/user-profile';
 
 @Component({
   selector: 'app-translator-profile',
@@ -10,11 +12,18 @@ import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.compon
 export class TranslatorProfileComponent implements OnInit{
 
   constructor(
+    private userService: UserService,
     public dialog: MatDialog
   ) {
   }
 
+  public userProfile : any;
+
   ngOnInit(): void {
+    this.userService.getOne(4).subscribe(up => {
+      this.userProfile = up;
+      console.log(this.userProfile);
+    });
     this.Translator = { Name : " Sasha Pushkin",
      Avatar : "https://i.imgur.com/LzRiWVA.jpg",
      Birth : "25.05.2122",
