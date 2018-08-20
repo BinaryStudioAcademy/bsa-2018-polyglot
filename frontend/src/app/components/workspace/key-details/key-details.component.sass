@@ -1,18 +1,51 @@
+.mat-panel-description
+  width: 80%
+
+.mat-panel-title
+  width: 20%
+
+.header-translation
+  height: auto !important;
+
+.textarea-translation
+  width: 100%;
+  padding-top: 10px;
+  
+
+.textarea-translation textarea
+  padding-top: 10px;
+
+.none-translation 
+  text-align: center;
+
+.button-translation 
+  display: flex;
+  justify-content: space-between;
+
+.language-label
+  font-size: 16px
+
+
 \:host
   display: flex
 
-// .translations-list
-//   width: 100%
+  .mat-paginator
+    width: 100%
 
 .material-icons 
   font-size: 12px
 
 .key-details
+  height: fit-content
   overflow: auto
   width: 70%
+  padding: 0
 
 .translations-details
-  overflow: auto
+  padding-top: 0!important
+  padding-bottom: 48px!important
+  height: calc(100vh - 347px)
+  overflow: hidden
   width: 35%
 
 .translations-list
@@ -38,3 +71,28 @@
 
 .icon-size
   font-size: 30px
+
+/deep/.mat-tab-body
+  height: 50vh!important
+  ::-webkit-scrollbar 
+    width: 5px
+  ::-webkit-scrollbar-track 
+    background: #f1f1f1
+  ::-webkit-scrollbar-thumb 
+    background: #888
+  ::-webkit-scrollbar-thumb:hover 
+    background: #555
+
+
+.language
+  display: inline-block
+  width: 25%
+
+.translation
+  display: inline-block
+  width: 75%
+
+.spinner
+  display: flex;
+  justify-content: center; 
+  padding: 30px !important;

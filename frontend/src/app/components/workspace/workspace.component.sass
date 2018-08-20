@@ -16,15 +16,20 @@ header
   display: flex
   flex-direction: column
 
+.workspace-height
+  height:calc(100vh - 267px)!important
+
 .keys-list
+  max-width: 25%
   min-width: 25%
-  overflow-y: scroll
+  overflow-y: auto
 
   .mat-list-item
     height: auto
 
   .keys-list__nav
     width: 100%
+    padding-top: 0
 
 .key-details-card
   margin-right: 0 !important
@@ -43,3 +48,19 @@ header
 .project-button-wrapper
     display: flex
     justify-content: space-between
+
+.active
+  border-left: 5px solid #3f51b5!important
+  background: rgb(248,248,248)!important
+
+.no-string-div
+  font-size: 70px
+  text-align: center
+  height: calc(54vh + 3px)
+  align-items: center
+  color: Gainsboro
+
+.keys-list__nav
+  a
+    div
+      width: 100%

@@ -5,17 +5,18 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
+import { AgmCoreModule } from '@agm/core';
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { GlossariesComponent } from './components/glossaries/glossaries.component';
-import { AppRoutingModule } from 'src/app/common/app-routing-module/app-routing.module';
+import { AppRoutingModule } from './common/app-routing-module/app-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NoFoundComponent } from './components/no-found/no-found.component';
 import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.component';
@@ -57,7 +58,22 @@ import { ProjectMessageComponent } from './dialogs/project-message/project-messa
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/forgot-password-dialog.component';
-
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
+import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { LanguagesComponent } from './components/project-details/languages/languages.component';
+import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
+import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectTeamComponent } from './components/project-details/project-team/project-team.component';
+import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
+import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
+import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { MatRadioModule } from '@angular/material';
+import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
+import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -93,7 +109,20 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     ConfirmEqualValidatorDirective,
     ProjectDetailsComponent,
     ProjectMessageComponent,
-    ForgotPasswordDialogComponent
+    ForgotPasswordDialogComponent,
+    UploadFileComponent,
+    TabDetailComponent,
+    ImgDialogComponent,
+    ProjectEditComponent,
+    LanguagesComponent,
+    DeleteProjectLanguageComponent,
+    SelectProjectLanguageComponent,
+    ConfirmDialogComponent,
+    TabCommentsComponent,
+    ProjectTeamComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent,
+    TabHistoryComponent
 
   ],
   imports: [
@@ -114,10 +143,16 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
-    SnotifyModule
-    
+    SnotifyModule,
+    MatDialogModule,
+    NgxSmoothDnDModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
+    }),
+    MatRadioModule
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -125,7 +160,14 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
     CropperComponent, 
     StringDialogComponent,
     ProjectMessageComponent, 
-    ForgotPasswordDialogComponent
+    SelectProjectLanguageComponent,
+    DeleteProjectLanguageComponent,
+    ForgotPasswordDialogComponent,
+    ImgDialogComponent,
+    ConfirmDialogComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

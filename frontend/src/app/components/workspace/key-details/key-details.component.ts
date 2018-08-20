@@ -1,132 +1,194 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
+import { IString } from '../../../models/string';
+import { ComplexStringService } from '../../../services/complex-string.service';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Translation, Project, Language } from '../../../models';
+import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
+import { LanguageService } from '../../../services/language.service';
+import { elementAt } from 'rxjs/operators';
+import { SnotifyService } from 'ng-snotify';
+import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 
 @Component({
   selector: 'app-workspace-key-details',
   templateUrl: './key-details.component.html',
   styleUrls: ['./key-details.component.sass']
 })
+
 export class KeyDetailsComponent implements OnInit, OnDestroy {
 
-  //private routeSub: Subscription;
-  @Input()  public keyDetails: any; 
+  public keyDetails: any; 
   public translationsDataSource: MatTableDataSource<any>; 
   public IsEdit : boolean = false;
+  public IsPagenationNeeded: boolean = true;
+  public pageSize: number  = 5;
+  public Id : string;
+  projectId: number;
+  languages: Language[];
+  expandedArray: Array<TranslationState>;
+  isLoad: boolean;
+
+  description: string = "Do you want to save changes?";
+  btnYesText: string = "Yes";
+  btnNoText: string = "No";
+  btnCancelText: string = "Cancel";
+  answer: number;
+  keyId: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private dataProvider: ProjectService
-  ) { }
+  constructor(private route: ActivatedRoute,
+    private dataProvider: ComplexStringService,
+    private projectService: ProjectService,
+    public dialog: MatDialog,
+    private snotifyService: SnotifyService) { 
+    this.Id = this.route.snapshot.queryParamMap.get('keyid');
+  }
+
 
   ngOnChanges(){
-
-
-    if(this.keyDetails){
+    if(this.keyDetails && this.keyDetails.translations){
+      this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-      this.translationsDataSource.paginator = this.paginator;
+      
+      if(this.IsPagenationNeeded){
+        this.paginator.pageSize = this.pageSize;
+        this.translationsDataSource.paginator = this.paginator;
+      }
 
-     // this.routeSub = this.activatedRoute.params.subscribe((params) => {
-     //   this.updateTable();
-     //   console.log(params.keyId);
-     // });
     }
+    else
+      this.IsPagenationNeeded = false;
   }
+
+  step = 0;
+
+  setStep(index: number) {
+    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+  }
+
 
   ngOnInit() {
-    
+     this.route.params.subscribe(value =>
+     {
+       this.keyId = value.keyId;
+       this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+        this.isLoad = false;
+        this.keyDetails = data;
+        this.projectId = this.keyDetails.projectId;
+        this.getLanguages();
+      });
+     });
   }
 
-  updateTable() {
-  //  console.log(this.keyDetails);
-    this.translationsDataSource.data = this.keyDetails.translations;
+  getLanguages() {
+    this.projectService.getProjectLanguages(this.projectId).subscribe(
+      (d: Language[])=> {
+        const temp = d.length;
+        this.expandedArray = new Array();
+        for (var i = 0; i < temp; i++) {
+          this.expandedArray.push({ isOpened: false, oldValue: '' });
+        }
+        this.languages = d.map(x => Object.assign({}, x));
+        this.setLanguagesInWorkspace();
+      },
+      err => {
+        console.log('err', err);
+      }
+    ); 
   }
 
+  setLanguagesInWorkspace() {
+    this.keyDetails.translations = this.languages.map(
+      element => {
+        return ({
+          languageName: element.name,
+          languageId: element.id,
+          ...this.getProp(element.id)
+        });
+      }
+    );
+    this.isLoad = true;
+  }
+      
+  getProp(id : number) {
+    const searchedElement = this.keyDetails.translations.filter(el => el.languageId === id);
+    return searchedElement.length > 0 ? searchedElement[0]: null;    
+  }
+  
+  onSave(index: number, t: Translation){
+    // this.route.params.subscribe(value =>
+    // {
+        if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
+          this.dataProvider.editStringTranslation(t, this.keyId)
+            .subscribe(
+            (d: any[])=> {
+              console.log(this.keyDetails.translations);
+              this.expandedArray[index] = { isOpened: false, oldValue: ''};
+            },
+            err => {
+              console.log('err', err);
+            }
+          ); 
+        }
+        else {
+          t.createdOn = new Date();
+          this.dataProvider.createStringTranslation(t, this.keyId)
+            .subscribe(
+              (d: any)=> {
+                const lenght = this.keyDetails.translations.length;
+                for (var i = 0; i < lenght; i++) {
+                  if(this.keyDetails.translations[i].languageId === d.languageId) {
+                    this.keyDetails.translations[i] = {
+                      languageName: this.keyDetails.translations[i].languageName,
+                      ...d
+                    };
+                  }
+                }
+                console.log(this.keyDetails.translations);
+                this.expandedArray[index] = { isOpened: false, oldValue: ''};
+              },
+              err => {
+                console.log('err', err);
+              }
+            ); 
+        }
+    //});
+  }
+  
+  onClose(index: number, translation: any) {
+     const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
+      width: '500px',
+      data: {description: this.description, btnYesText: this.btnYesText, btnNoText: this.btnNoText,  btnCancelText: this.btnCancelText, answer: this.answer}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      debugger
+      if (dialogRef.componentInstance.data.answer === 1){
+        this.onSave(index, translation);
+      }
+      else if(dialogRef.componentInstance.data.answer === 0) {
+        this.keyDetails.translations[index].translationValue = this.expandedArray[index].oldValue;
+        this.expandedArray[index] = { isOpened: false, oldValue: ''};
+      }
+    });
+  }
+
+
+
+  
   ngOnDestroy() {
-    //this.routeSub.unsubscribe();
   }
 
   toggle(){
     this.IsEdit = !this.IsEdit;
-  //  console.log(this.IsEdit);
   }
 
 }
 
-const MOCK_KEY_DETAILS = {
-  projectId: 1,
-  language: 'ua',
-  originalValue: 'Привіт',
-  description: 'Вітання, що відображається на головній сторінці',
-  screenshotLink: 'http://i.i.ua/cards/pic/5/0/206905.jpg',
-  translations: [
-    {
-      language: 'en',
-      translatedValue: 'Hello',
-      userId: 2,
-      createdOn: new Date(2018, 1, 1),
-      history: [
-        {
-          translatedValue: 'Good afternoon',
-          userId: 2,
-          CreatedOn: new Date(2018, 1, 1)
-        },
-        {
-          translatedValue: 'Hello',
-          userId: 2,
-          CreatedOn: new Date(2018, 1, 1)
-        }
-      ],
-      optionalTranslations: [
-        {
-          translatedValue: 'Privet',
-          userId: 2,
-          CreatedOn: new Date(2018, 1, 1)
-        }
-      ]
-    },
-    {
-      language: 'de',
-      translatedValue: 'Hallo',
-      userId: 1,
-      CreatedOn: new Date(2018, 1, 1),
-      history: [{
-        translatedValue: 'Guten Morgen',
-        userId: 2,
-        CreatedOn: new Date(2018, 1, 1)
-      },
-      {
-        translatedValue: 'Wie geht\'s?',
-        userId: 2,
-        CreatedOn: new Date(2018, 1, 1)
-      }],
-      optionalTranslations: []
-    },
-    {
-      language: 'ru',
-      translatedValue: 'Привет',
-      userId: 4,
-      CreatedOn: new Date(2018, 1, 1),
-      history: [],
-      optionalTranslations: []
-    }
-  ],
-
-  comments: [
-    {
-      userId: 4,
-      text: 'cool',
-      CreatedOn: new Date(2018, 1, 1)
-    },
-    {
-      userId: 6,
-      text: 'You should add more traslations',
-      CreatedOn: new Date(2018, 1, 1)
-    }],
-
-  tags: ['sometag', 'greeting', 'smth']
-}
+export interface TranslationState {
+  isOpened: boolean;
+  oldValue: string;
+} 

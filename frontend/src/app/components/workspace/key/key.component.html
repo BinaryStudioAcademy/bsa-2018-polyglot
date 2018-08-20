@@ -1,8 +1,18 @@
-<h4 class="mb-1">{{ key.key }}</h4>
-<p class="d-flex flex-wrap align-items-center mt-1">
-  {{key.base}}
-
-  <mat-chip-list class="mt-1">
-    <mat-chip style="height: 20px;" color="accent" *ngFor="let tag of key.tags">{{tag}}</mat-chip>
+<button (click)="$event.preventDefault(); $event.stopPropagation();" mat-button [matMenuTriggerFor]="menu"><mat-icon aria-label="dropdown-menu">more_horiz</mat-icon></button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button (click)="onDeleteString()" mat-menu-item>Delete</button>
+    </mat-menu>
+<div class="common">
+  <div class="container">
+    <h4 class="mb-1">{{ key.key }}</h4>
+  </div>
+  <p class="text-justify d-flex flex-wrap align-items-center mt-1">
+    {{key.base}}
+  <mat-chip-list class="tags mt-1">
+    <mat-chip style="height: 20px;margin-left: 0" color="accent" *ngFor="let tag of key.tags">{{tag}}</mat-chip>
   </mat-chip-list>
+  <mat-icon *ngIf="key.pictureLink" class="picture-icon" (click)="onPictureIconClick(key)" matTooltip="Show photo" matTooltipPosition="above">
+      photo_size_select_actual
+  </mat-icon>
 </p>
+</div>

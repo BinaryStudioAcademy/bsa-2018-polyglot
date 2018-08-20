@@ -45,17 +45,14 @@ const routes: Routes = [
       { path: 'abc', component: TeamComponent }
     ]
   },
-  { path: 'project/details', canActivate: [AuthGuard], component: ProjectDetailsComponent },
+  { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
   {
     path: 'workspace/:projectId',
-
     canActivate: [AuthGuard],
     component: WorkspaceComponent,
-    children: [
-      {
-        path: '',
-        redirectTo : "key/1",
-        pathMatch : "full"
+    children: [{
+        path: 'key/:keyId',
+        component : KeyDetailsComponent
       }
     ]
   },

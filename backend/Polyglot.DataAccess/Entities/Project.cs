@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Polyglot.DataAccess.Entities
 {
@@ -10,8 +11,13 @@ namespace Polyglot.DataAccess.Entities
         public string Technology { get; set; }
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
-        public virtual Manager Manager { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
+
+
+		[ForeignKey("MainLanguageId")]
         public virtual Language MainLanguage { get; set; }
+
+		public int? MainLanguageId { get; set; }
 
         public virtual ICollection<Team> Teams { get; set; }
         public virtual ICollection<ComplexString> Translations { get; set; }

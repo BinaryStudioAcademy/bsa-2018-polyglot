@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { IString } from '../../models/string';
 import { Tag } from '../../models/tag';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -6,6 +6,8 @@ import { Inject } from '@angular/core';
 import { ComplexStringService } from '../../services/complex-string.service';
 import { MatDialogRef } from '@angular/material';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
+import { EventEmitter } from '@angular/core';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'app-string-dialog',
@@ -15,6 +17,7 @@ import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify'
 
 export class StringDialogComponent implements OnInit {
 
+  @Output() onAddString = new EventEmitter<IString>(true);
   public str: IString;
   public image: File;
 
@@ -55,19 +58,35 @@ export class StringDialogComponent implements OnInit {
       base: '',
       description: '',
       tags: [],
-      projectId: this.data.projectId
+      projectId: this.data.projectId,
+      translations: [],
+      comments: []
+      
     };
     this.image = undefined;
-    console.log(this.str);
   }
 
   onSubmit(){
-    this.complexStringService.create(this.str)
+
+    let formData = new FormData();
+    if(this.image)
+      formData.append("image", this.image);
+    formData.append("str", JSON.stringify(this.str));
+    this.complexStringService.create(formData)
       .subscribe(
         (d) => {
-          console.log(d);
-          this.snotifyService.success("ComplexString created", "Success!");
-          this.dialogRef.close();         
+          if(d)
+          {
+            this.onAddString.emit(d);
+            this.snotifyService.success("ComplexString created", "Success!");
+            this.dialogRef.close();     
+          }
+          else
+          {
+            this.snotifyService.success("ComplexString wasn`t created", "Error!");
+            this.dialogRef.close();   
+          }
+              
         },
         err => {
           console.log('err', err);

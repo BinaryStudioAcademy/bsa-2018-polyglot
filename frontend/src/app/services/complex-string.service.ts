@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { IString } from '../models/string';
+import { Translation } from '../models/translation'
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,27 +10,39 @@ import { Observable } from 'rxjs';
 
 export class ComplexStringService {
   api: string;
-  constructor(private dataService: HttpService) { 
+  constructor(private dataService: HttpService) {
     this.api = "complexstrings";
   }
 
-  getAll() : Observable<any> {
+  getAll(): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  getById(id: number) : Observable<any> {
+  getById(id: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(iString: IString) : Observable<IString> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', iString);
+  create(data: FormData): Observable<IString> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data);
   }
 
-  update(iString: IString, id: number) : Observable<IString> {
+  update(iString: IString, id: number): Observable<IString> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, iString);
   }
 
-  delete(id: number) : Observable<IString> {
+  getStringTranslations(id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translations', undefined, undefined);
+  }
+
+  createStringTranslation(translation: Translation, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id + '/translations', undefined, translation);
+  }
+
+  editStringTranslation(translation: Translation, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translation);
+  }
+
+  delete(id: number): Observable<IString> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 }

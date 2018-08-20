@@ -8,6 +8,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { UserService } from '../../services/user.service';
 import { UserProfile } from '../../models';
 import { map } from 'rxjs/operators';
+import { AppStateService } from '../../services/app-state.service';
+import { Router } from '../../../../node_modules/@angular/router';
 
 
 @Component({
@@ -27,35 +29,33 @@ export class NavigationComponent implements OnDestroy {
     media: MediaMatcher,
     public dialog: MatDialog,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private appState: AppStateService,
+    private router: Router
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener); 
   }
 
   ngOnInit(): void {
-    debugger
-    if (!this.userService.getCurrrentUser()) {
-      this.userService.getUser().subscribe(
-        (d: UserProfile)=> {
-          this.userService.saveUser(d);   
-          this.manager = d;
-        },
-        err => {
-          console.log('err', err);
-        }
-      );
-    }
+    this.updateCurrentUser();
   }
 
 
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent);
+    this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
+      () => {
+        this.updateCurrentUser();
+        this.router.navigate(['/dashboard']);
+      }
+    );
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent);
+    this.dialog.open(SignupDialogComponent).afterClosed().subscribe(
+      () => this.updateCurrentUser()
+    );
   }
 
   onNewStrClick() {
@@ -64,14 +64,39 @@ export class NavigationComponent implements OnDestroy {
 
   onLogoutClick() {
     this.authService.logout();
+    this.appState.updateState(null, '', false);
+    this.userService.removeCurrentUser();
+    this.router.navigate(['/']);
   }
 
   isLoggedIn() {
-    return this.authService.isLoggedIn();
+    return this.appState.LoginStatus;
   }
   
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  private updateCurrentUser() {
+    if (this.appState.LoginStatus){
+      if (!this.userService.getCurrrentUser()) {
+        this.userService.getUser().subscribe(
+          (d: UserProfile)=> {
+            this.userService.saveUser(d);   
+            this.manager = d;
+          },
+          err => {
+            console.log('err', err);
+          }
+        );
+      }
+    } else {
+      this.manager = { 
+        fullName: "",
+        avatarUrl: "",
+        lastName: "" 
+      }
+    }
   }
 
 

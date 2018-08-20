@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication.Extensions;
-using System.Security.Claims;
-using System.Threading;
-using Newtonsoft.Json.Serialization;
+using Polyglot.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -23,84 +14,60 @@ namespace Polyglot.Controllers
 
     public class UserProfilesController : ControllerBase
     {
-
-        private readonly ICRUDService service;
-
-        public UserProfilesController(ICRUDService service)
+        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
+        
+        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
         {
             this.service = service;
         }
 
-        // GET: Users
+        // GET: UserProfiles
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var entities = await service.GetListAsync<UserProfile, UserProfileDTO>();
-            return entities == null ? NotFound("No entitys found!") as IActionResult
+
+            var entities = await service.GetListAsync();
+            return entities == null ? NotFound("No user profiles found!") as IActionResult
                 : Ok(entities);
+
         }
 
-        public class LowercaseContractResolver : DefaultContractResolver
-        {
-            protected override string ResolvePropertyName(string propertyName)
-            {
-                return propertyName.ToLower();
-            }
-        }
-
-        // GET: Users
+        // GET: UserProfiles
         [HttpGet("user")]
-        public string GetUser()
+        public async Task<IActionResult> GetUser()
         {
-            UserProfileDTO user = new UserProfileDTO();
-            user.FullName = HttpContext.User.GetName();
-            user.AvatarUrl = HttpContext.User.GetProfilePicture();
-
-            var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return JsonConvert.SerializeObject(user, Formatting.Indented, settings);
+            UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            return user == null ? NotFound($"User not found!") as IActionResult
+               : Ok(user);
         }
 
-        // GET: Users/5
+        // GET: UserProfiles/5
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id)
         {
-            var entity = await service.GetOneAsync<Translator, TranslatorDTO>(id);
+            var entity = await service.GetOneAsync(id);
             return entity == null ? NotFound($"Translator with id = {id} not found!") as IActionResult
                 : Ok(entity);
         }
 
-        // POST: Users
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] UserProfile value)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest() as IActionResult;
+        // PUT: UserProfiles/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
 
-        //    var entity = await service.PostAsync(mapper.Map<UserProfile>(value));
-        //    return entity == null ? StatusCode(409) as IActionResult
-        //        : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-        //        mapper.Map<UserProfileDTO>(entity));
-        //}
+            var entity = await service.PutAsync(project);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
 
-        //// PUT: Users/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put(int id, [FromBody] UserProfile value)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest() as IActionResult;
-
-        //    var entity = await service.PutAsync(id, mapper.Map<UserProfile>(value));
-        //    return entity == null ? StatusCode(304) as IActionResult
-        //        : Ok(mapper.Map<UserProfileDTO>(entity));
-        //}
-
-        //// DELETE: ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var success = await service.TryDeleteAsync(id);
-        //    return success ? Ok() : StatusCode(304) as IActionResult;
-        //}
+        // DELETE: UserProfiles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTranslatorRight(int id)
+        {
+            var success = await service.TryDeleteAsync(id);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
     }
 }

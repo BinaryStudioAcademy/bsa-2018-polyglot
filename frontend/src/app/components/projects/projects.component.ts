@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
+
 
 import { MatDialog } from '../../../../node_modules/@angular/material';
 import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
 
 // to delete manager and user
-import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
-import { forEach } from '@angular/router/src/utils/collection';
 
-
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -18,55 +18,40 @@ import { forEach } from '@angular/router/src/utils/collection';
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.sass']
 })
-export class ProjectsComponent implements OnInit {
-  public cards: Project[];
-
-
-  constructor(private projectService: ProjectService,public dialog: MatDialog) { }
+export class ProjectsComponent implements OnInit,OnDestroy {
   
-
+  constructor(
+    private userService: UserService,
+    private projectService: ProjectService,
+    public dialog: MatDialog,
+    private snotifyService: SnotifyService) { }
+  
+  public cards: Project[];
   IsLoad : boolean = true;
-
-  user: UserProfile = {
-    id: 1,
-    firstName: 'Bill',
-    lastName: 'Gates',
-    birthDate: null,
-    registrationDate: null,
-    country: 'string',
-    city: 'string',
-    region: 'string',
-    postalCode: 'string',
-    address: 'string',
-    phone: 'string',
-    avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
-  };
-  manager: Manager = {
-    id:  1,
-    userProfile: this.user
-  };
+  OnPage : boolean;
+   
+  manager: UserProfile =  this.userService.getCurrrentUser();
 
   ngOnInit() {
-  
-  this.projectService.getAll().subscribe(pr => {this.cards = pr;
-    if(this.cards.length === 0){
-      setTimeout(() => this.openDialog())
+  this.OnPage = true;
+  debugger;
+
+  this.projectService.getAll().subscribe(pr => 
+    {
+      this.cards = pr;
+    if(this.cards.length === 0 && this.OnPage === true){
+     setTimeout(() => this.openDialog())
       }
       this.IsLoad = false;
-      console.log(this.cards);
   });
+  }
+
+  ngOnDestroy(){
+    this.OnPage = false;
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProjectMessageComponent, {
     });
   }
-
-  delete(id: number): void{
-    this.projectService.delete(id);
-    console.log("deleted")
-   }
 }
-
-  
-

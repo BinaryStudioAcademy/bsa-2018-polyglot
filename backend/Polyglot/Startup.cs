@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Implementations;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.Seeds;
 using Polyglot.DataAccess.SqlRepository;
+using Polyglot.GlobalExceptionHandler;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
 
 namespace Polyglot
@@ -62,7 +63,7 @@ namespace Polyglot
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            services.AddTransient(typeof(ICRUDService), typeof(CRUDService));
+            services.AddTransient(typeof(ICRUDService<,>), typeof(CRUDService<,>));
 
 
             services.Configure<Settings>(options =>{
@@ -71,6 +72,7 @@ namespace Polyglot
             });
 
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            
             services.AddScoped<IMongoDataContext, MongoDataContext>();
 
             BusinessLogicModule.ConfigureServices(services);
@@ -85,21 +87,31 @@ namespace Polyglot
                 app.UseDeveloperExceptionPage();
             }
 
-
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
+                serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
             }
 
+            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            // {
+            //     var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+            //     MongoDbSeedsInitializer.MongoSeedAsync(context);
+            // }
+
+            // if (env.IsDevelopment())
+            // {
             app.UseCors("AllowAll");
+            // }
 
             app.UseAuthentication();
 
-            //app.UseCustomizedIdentity();
+            app.UseCustomizedIdentity();
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseMvc();
-            
         }
     }
 }

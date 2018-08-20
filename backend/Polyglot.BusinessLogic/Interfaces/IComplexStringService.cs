@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.MongoModels;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
@@ -18,5 +15,11 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<bool> DeleteComplexString(int identifier);
 
         Task<ComplexStringDTO> AddComplexString(ComplexStringDTO entity);
+
+        Task<IEnumerable<TranslationDTO>> GetStringTranslationsAsync(int identifier);
+
+        Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation);
+
+        Task<ComplexStringDTO> EditStringTranslation(int identifier, TranslationDTO translation);
     }
 }

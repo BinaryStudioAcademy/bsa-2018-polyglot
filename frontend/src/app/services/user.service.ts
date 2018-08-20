@@ -10,16 +10,18 @@ export class UserService {
 
   private user: UserProfile;
 
-  
-  private endpoint: string = "userprofiles/user";
-  constructor(private dataService: HttpService) { }
+  api: string;
+  private endpoint: string = "userprofiles";
+  constructor(private dataService: HttpService) {
+    this.api = "userprofiles";
+   }
 
   getCurrrentUser(){
     return this.user;
   }
 
   getAndSave() {
-    this.dataService.sendRequest(RequestMethod.Get, this.endpoint).subscribe(
+    this.getUser().subscribe(
       (d)=> {
         this.saveUser(d);
       },
@@ -29,27 +31,41 @@ export class UserService {
     );
   }
 
+  // use this when logout
+  removeCurrentUser() {
+    this.user = undefined;
+  }
+
   saveUser(userProfile: any) {
+    if (userProfile.avatarUrl == undefined) {
+      userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
+    }
+    // can add more default values
+    
     this.user = userProfile;
   }
 
-  getUser(): Observable<UserProfile> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.endpoint);
+  getUser() : Observable<UserProfile> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
   }
 
-  getOne(id: number){
-    return this.dataService.sendRequest(RequestMethod.Get, this.endpoint, id);
+  getOne(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(body){
-    return this.dataService.sendRequest(RequestMethod.Post, this.endpoint, undefined, body);
+  getAll() : Observable<any[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
-  update(id: number, body){
-    return this.dataService.sendRequest(RequestMethod.Put, this.endpoint, id, body);
+  create(body) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
   }
 
-  delete(id: number){
-    return this.dataService.sendRequest(RequestMethod.Delete, this.endpoint, id);
+  update(id: number, body) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
+  }
+
+  delete(id: number) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
 }

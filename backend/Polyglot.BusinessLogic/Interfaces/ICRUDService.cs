@@ -4,25 +4,22 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ICRUDService
-    {
-        Task<IEnumerable<TEntityDTO>> GetListAsync<TEntity, TEntityDTO>()
-            where TEntity : Entity, new()
-            where TEntityDTO : class, new();
+    public interface ICRUDService <TEntity, TEntityDTO>
+		where TEntity : Entity, new()
+		where TEntityDTO : class, new()
+	{
+		Task<IEnumerable<TEntityDTO>> GetListAsync();
+ 
 
-        Task<TEntityDTO> GetOneAsync<TEntity, TEntityDTO>(int identifier)
-            where TEntity : Entity, new()
-            where TEntityDTO : class, new();
-        
-        Task<TEntityDTO> PutAsync<TEntity, TEntityDTO>(TEntityDTO entity)
-            where TEntity : Entity, new()
-            where TEntityDTO : class, new();
+		Task<TEntityDTO> GetOneAsync(int identifier);
+     
+		Task<TEntityDTO> PutAsync(TEntityDTO entity);
+         
 
-        Task<bool> TryDeleteAsync<TEntity>(int identifier)
-            where TEntity : Entity, new();
+		Task<bool> TryDeleteAsync(int identifier);
+     
 
-        Task<TEntityDTO> PostAsync<TEntity, TEntityDTO>(TEntityDTO entity)
-            where TEntity : Entity, new()
-            where TEntityDTO : class, new();
+		Task<TEntityDTO> PostAsync(TEntityDTO entity);
+            
     }
 }

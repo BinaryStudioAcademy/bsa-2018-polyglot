@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Polyglot.DataAccess.MongoModels;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -118,6 +117,16 @@ namespace Polyglot.DataAccess.MongoRepository
                 // log or manage the exception
                 throw ex;
             }
+        }
+
+        public long CountDocuments()
+        {
+            return Collection.CountDocuments(FilterDefinition<TEntity>.Empty);
+        }
+
+        public void InsertMany(List<TEntity> entities)
+        {
+            Collection.InsertMany(entities);
         }
     }
 }
