@@ -119,14 +119,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     return searchedElement.length > 0 ? searchedElement[0]: null;    
   }
   
-  onSave(t: Translation){
+  onSave(index: number, t: Translation){
     // this.route.params.subscribe(value =>
     // {
-        if(t.id) {
+        if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
           this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
               console.log(this.keyDetails.translations);
+              this.expandedArray[index] = { isOpened: false, oldValue: ''};
             },
             err => {
               console.log('err', err);
@@ -148,6 +149,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                   }
                 }
                 console.log(this.keyDetails.translations);
+                this.expandedArray[index] = { isOpened: false, oldValue: ''};
               },
               err => {
                 console.log('err', err);
@@ -165,8 +167,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       debugger
       if (dialogRef.componentInstance.data.answer === 1){
-        this.expandedArray[index] = { isOpened: false, oldValue: ''};
-        this.onSave(translation);
+        this.onSave(index, translation);
       }
       else if(dialogRef.componentInstance.data.answer === 0) {
         this.keyDetails.translations[index].translationValue = this.expandedArray[index].oldValue;
