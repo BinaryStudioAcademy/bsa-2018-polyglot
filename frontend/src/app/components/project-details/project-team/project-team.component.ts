@@ -16,8 +16,6 @@ export class ProjectTeamComponent implements OnInit {
   @Input() projectId: number;
   public assignedTeams: Array<any> = [];
   public IsLoad: boolean = true;
-  public IsTeamAssigned: boolean = false;
-  public IsTeamsLoading: boolean = false;
 
   constructor(
     private projectService: ProjectService,
@@ -34,11 +32,9 @@ export class ProjectTeamComponent implements OnInit {
           if(assignedTeams && assignedTeams.length > 0)
             {
               this.assignedTeams = assignedTeams;
-              this.IsTeamAssigned = true;
             }else
             {
               this.assignedTeams = [];
-              this.IsTeamAssigned = false;
               ///TODO: FIRE THE ASSIGN TEAM DIALOG
             }
           this.IsLoad = false;
@@ -50,15 +46,18 @@ export class ProjectTeamComponent implements OnInit {
   }
 
   assignTeam(){
-    this.IsTeamsLoading = true;
 
+    if(this.IsLoad)
+      return;
+
+    this.IsLoad = true;
    // debugger;
     this.teamsService.getAll()
       .subscribe(teams => {
       //  debugger;
         if(!teams || teams.length < 1){
           this.snotifyService.error("No teams found!", "Error!");
-          this.IsTeamsLoading = false;
+          this.IsLoad = false;
           return;
         }
 
@@ -71,7 +70,7 @@ export class ProjectTeamComponent implements OnInit {
           return true;
         })
 
-        this.IsTeamsLoading = false;
+        this.IsLoad = false;
 
         if(!avaibleTeams || avaibleTeams.length < 1)
         {
@@ -104,14 +103,12 @@ export class ProjectTeamComponent implements OnInit {
                     return team.id !== t.id;
                   return true;
                 }));
-                this.IsTeamAssigned = true;
                 this.IsLoad = false;
                 this.snotifyService.success("Teams successfully assigned!", "Success!");
               }
             },
           err => {
             debugger;
-            this.IsTeamAssigned = false;
             this.IsLoad = false;
             this.snotifyService.error(err, "Error!");
             console.log('err', err);
@@ -142,9 +139,13 @@ export class ProjectTeamComponent implements OnInit {
       .subscribe(responce => {
         this.snotifyService.success("Team " + id + " succesfully dismissed!", "Success!");
         this.assignedTeams = this.assignedTeams.filter(t => t.id !== id);
-        if(!this.assignedTeams || this.assignedTeams.length < 1)
-          this.IsTeamAssigned = false;
       })
   }
 
+  getAvatarUrl(person): String {
+    if(person.avatarUrl)
+      return person.avatarUrl;
+    else
+      return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q";
+  }
 }
