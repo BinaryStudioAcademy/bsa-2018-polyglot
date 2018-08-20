@@ -61,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 import { LanguagesComponent } from './components/project-details/languages/languages.component';
 import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
@@ -73,6 +74,7 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
 import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
@@ -103,6 +105,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NewProjectComponent,
     ManagerProfileComponent,
     TeamComponent,
+    NewTeamComponent,
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
@@ -119,10 +122,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
+    TabHistoryComponent,
+    ContainerComponent, 
+    DraggableComponent
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
-    TabHistoryComponent
 
   ],
   imports: [

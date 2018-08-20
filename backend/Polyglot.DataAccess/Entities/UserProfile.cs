@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Polyglot.DataAccess.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace Polyglot.DataAccess.Entities
@@ -41,9 +42,7 @@ namespace Polyglot.DataAccess.Entities
             Ratings = new List<Rating>();
             Projects = new List<Project>();
         }
-
-        public enum Role { Manager, Translator }
-
+        
     }
 }
 
