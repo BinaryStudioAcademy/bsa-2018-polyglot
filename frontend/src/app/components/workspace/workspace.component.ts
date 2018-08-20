@@ -28,7 +28,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   options = new FormControl();
 
   filterOptions : string [] = [
-    'Translated', 'Untranslated' , 'Human translation' , 'Machine transaltion' , 'With Tags'
+    'Translated', 'Untranslated' , 'Human Translation' , 'Machine Transaltion' , 'With Tags'
   ]
 
   constructor(

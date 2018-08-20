@@ -330,10 +330,10 @@ namespace Polyglot.BusinessLogic.Services
         {
             var parameter = Expression.Parameter(typeof (T));
 
-            var leftVisitor = new ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
+            var leftVisitor = new Filter.ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
             var left = leftVisitor.Visit(expr1.Body);
 
-            var rightVisitor = new ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
+            var rightVisitor = new Filter.ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
             var right = rightVisitor.Visit(expr2.Body);
 
             return Expression.Lambda<Func<T, bool>>(
@@ -352,23 +352,4 @@ namespace Polyglot.BusinessLogic.Services
         #endregion
     }
 
-     class ReplaceExpressionVisitor
-        : ExpressionVisitor
-    {
-        private readonly Expression _oldValue;
-        private readonly Expression _newValue;
-
-        public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-        {
-            _oldValue = oldValue;
-            _newValue = newValue;
-        }
-
-        public override Expression Visit(Expression node)
-        {
-            if (node == _oldValue)
-                return _newValue;
-            return base.Visit(node);
-        }
-    }
 }
