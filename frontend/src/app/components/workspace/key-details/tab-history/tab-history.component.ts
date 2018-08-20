@@ -13,7 +13,7 @@ export class TabHistoryComponent implements OnInit {
 
   @Input() public keyDetails: any;
   public translationDetails: any;
-  private history: any[];
+  private history: Array<any>;
   private user;
 
 
@@ -63,11 +63,13 @@ export class TabHistoryComponent implements OnInit {
         to: this.translationDetails.translationValue,
         when: this.translationDetails.createdOn
       });
+    
+      this.history.sort(function(a,b) {return (a.when > b.when) ? -1 : ((b.when > a.when) ? 1 : 0);} ); 
     }
 
     console.log(this.history);
   }
-
+  
   ngOnInit() {
     
 
