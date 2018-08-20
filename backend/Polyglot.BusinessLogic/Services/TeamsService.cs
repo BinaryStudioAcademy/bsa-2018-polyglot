@@ -20,14 +20,14 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<IEnumerable<TeamDTO>> GetAllTeamsAsync()
+        public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
             var teams = await uow.GetRepository<Team>().GetAllAsync();
-#warning тут не вычисляется рейтинг переводчика
+
             if (teams != null && teams.Count > 0)
-                return mapper.Map<IEnumerable<TeamDTO>>(teams);
+                return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
             else
-                return new List<TeamDTO>();
+                return new List<TeamPrevDTO>();
         }   
         
         public async Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId)

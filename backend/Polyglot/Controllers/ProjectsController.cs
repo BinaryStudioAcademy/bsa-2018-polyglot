@@ -53,7 +53,7 @@ namespace Polyglot.Controllers
 
         }
 
-        // GET: Projects/:id?teams
+        // GET: Projects/:id?/teams
         [HttpGet("{id}/teams", Name = "GetProjectTeams")]
         public async Task<IActionResult> GetProjectTeams(int id)
         {

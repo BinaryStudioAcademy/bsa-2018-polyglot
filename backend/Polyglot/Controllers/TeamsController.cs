@@ -22,7 +22,6 @@ namespace Polyglot.Controllers
         // GET: Teams
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
-
         {
 #warning ??? наверное GetAllTeamsAsync должен возвращать только команды определенного менеджера
             var teams = await service.GetAllTeamsAsync();
@@ -33,6 +32,7 @@ namespace Polyglot.Controllers
         // GET: teams/:id
         [HttpGet("{id}", Name = "GetTeam")]
         public async Task<IActionResult> GetTeam(int id)
+
 
         {
             var teamTranslators = await service.GetOneAsync(id);

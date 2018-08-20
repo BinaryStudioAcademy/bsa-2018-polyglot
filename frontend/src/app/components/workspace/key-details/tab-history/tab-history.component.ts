@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IString } from '../../../../models/string';
 import { UserService } from '../../../../services/user.service';
 import { AppStateService } from '../../../../services/app-state.service';
+import { DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-tab-history',
