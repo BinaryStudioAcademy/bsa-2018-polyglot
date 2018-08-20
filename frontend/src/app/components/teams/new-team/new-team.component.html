@@ -26,7 +26,7 @@
             <mat-card class="teammate-card">
               <div class="temmate-header">
                 <div class="teammate-header-image">
-                  <img class="header-image-small" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
+                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
                 </div>
                 <div class="teammate-name">{{t.fullName}}</div>
                 <div class="rating">
@@ -36,7 +36,7 @@
 
               </div>
 
-              <div class="languages-list">
+              <div *ngIf="t.translatorLanguages.length > 0" class="languages-list">
                 <span>
                   <ul>
                     <li *ngFor="let l of t.translatorLanguages">
@@ -45,8 +45,8 @@
                     </li>
                   </ul>
                 </span>
-
               </div>
+              <p *ngIf="t.translatorLanguages.length == 0 ">Please add some Languages!!</p>
 
               <div class="add-btn">
                 <button mat-raised-button color="warn" (click)="removeTranslator(t)">Remove</button>
@@ -75,7 +75,7 @@
           <mat-card class="teammate-card">
             <div class="temmate-header">
               <div class="teammate-header-image">
-                <img class="header-image-small" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
+                <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
               </div>
               <div class="teammate-name">{{t.fullName}}</div>
               <div class="rating">
@@ -85,7 +85,7 @@
 
             </div>
 
-            <div class="languages-list">
+            <div *ngIf="t.translatorLanguages.length > 0" class="languages-list">
               <span>
                 <ul>
                   <li *ngFor="let l of t.translatorLanguages">
@@ -94,8 +94,8 @@
                   </li>
                 </ul>
               </span>
-
             </div>
+            <p *ngIf="t.translatorLanguages.length == 0 ">Please add some Languages!!</p>
 
             <div class="add-btn">
               <button mat-raised-button color="primary" (click)="addTranslator(t)">Add</button>

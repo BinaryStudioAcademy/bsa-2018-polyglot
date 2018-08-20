@@ -19,6 +19,7 @@ export class NewTeamComponent implements OnInit {
   managerId: number = 1;
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
+  public defaultAvatar: String = "/assets/images/anonymus.jpg"
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
 
@@ -101,7 +102,13 @@ export class NewTeamComponent implements OnInit {
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     // this.dataSource.filter = filterValue;
   }
-
+  getAvatarUrl(person): String {
+    debugger;
+    if (person.avatarUrl!==" ")
+      return person.avatarUrl;
+    else
+      return this.defaultAvatar;
+  }
   nestedFilterCheck(search, data, key) {
     if (typeof data[key] === 'object') {
       for (const k in data[key]) {
