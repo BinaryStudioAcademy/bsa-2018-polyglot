@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Polyglot.DataAccess.Entities;
+using System;
 
 namespace Polyglot.Common.DTOs.NoSQL
 {
