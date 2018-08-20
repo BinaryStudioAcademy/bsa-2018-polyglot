@@ -28,6 +28,7 @@ export class TeamComponent implements OnInit {
   ckb: boolean = false;
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
+  displayNoRecords: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -73,6 +74,12 @@ export class TeamComponent implements OnInit {
   
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if(this.dataSource.filteredData.length==0) {
+      this.displayNoRecords = true;
+    } 
+    else {
+      this.displayNoRecords = false;
+    }
   }
 
   searchTranslators() {
