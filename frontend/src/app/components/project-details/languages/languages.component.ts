@@ -3,7 +3,7 @@ import { ProjectService } from '../../../services/project.service';
 import { LanguageService } from '../../../services/language.service';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 import { DeleteProjectLanguageComponent } from '../../../dialogs/delete-project-language/delete-project-language.component';
-import { MatDialog } from '../../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-language/select-project-language.component';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialog } from '../../../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 
 @Component({
