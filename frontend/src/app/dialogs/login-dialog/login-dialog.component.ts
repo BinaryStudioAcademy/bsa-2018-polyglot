@@ -46,27 +46,13 @@ export class LoginDialogComponent implements OnInit {
       this.authService.signInRegular(user.email, user.password).subscribe(
         async (userCred) => {
           if (userCred.user.emailVerified) {
-            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
-
-            this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
-              if(isInDb)
+            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+            this.userService.getUser().subscribe(
+              async (currentUser) => {
+                this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
                 this.dialogRef.close();
-                
-              else{
-                let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
-                  data: {
-                    fullName: '',
-                    email: ''
-                  }
-                });
-                const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
-                  dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
-                    dialogRef.close();
-                    this.dialogRef.close();
-                    });
-                  });
-                }
-              });                
+              }
+            );    
           } else {
             this.snotify.clear();
             this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
@@ -95,57 +81,93 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onGoogleClick() {
-    this.authService.signInWithGoogle().subscribe(async (userCred) => {
-      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-
-        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
-          if(isInDb)
-            this.dialogRef.close();
-            
-          else{
-            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
-              data: {
-                fullName: '',
-                email: ''
+    let dialogRef: MatDialogRef<ChooseRoleDialogComponent>;
+    this.authService.signInWithGoogle().subscribe( 
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+        
+        this.dialogRef.afterClosed().subscribe(
+          () => {
+            this.userService.isUserInDb().subscribe(
+              (is) => {
+                if (is) {
+                  this.userService.getUser().subscribe(
+                    async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                  );                 
+                } else {
+                  dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+                    data: {
+                      fullName: '',
+                      email: ''
+                    }
+                  });
+                  dialogRef.componentInstance.onRoleChoose.subscribe(
+                    () => {
+                      dialogRef.componentInstance.saveDataInDb().subscribe(
+                        (result) => {
+                          dialogRef.close();
+                          this.userService.getUser().subscribe(
+                            async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                          );     
+                        },
+                        (err) => {
+                          dialogRef.componentInstance.error = err.message;
+                        }
+                      );
+                    }
+                  );
+                }
               }
-            });
-            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
-              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
-                dialogRef.close();
-                this.dialogRef.close();
-                });
-              });
-            }
-          });       
+            );
+          }
+        );
+        
+        this.dialogRef.close(); 
       }, 
       (err) => {
         this.firebaseError = err.message;
-      });
+      }); 
   }
 
   onFacebookClick() {
-    this.authService.signInWithFacebook().subscribe(async (userCred) => {
-      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-
-        this.userService.isUserInDb().subscribe(isInDb => { //if user is in db
-          if(isInDb)
-            this.dialogRef.close();
-            
-          else{
-            let dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
-              data: {
-                fullName: '',
-                email: ''
+    let dialogRef: MatDialogRef<ChooseRoleDialogComponent>;
+    this.authService.signInWithFacebook().subscribe(
+      async (userCred) => {
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+        
+        this.dialogRef.afterClosed().subscribe(
+          () => {
+            this.userService.isUserInDb().subscribe(
+              async (is) => {
+                if (is) {
+                  this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                } else {
+                  dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+                    data: {
+                      fullName: '',
+                      email: ''
+                    }
+                  });
+                  dialogRef.componentInstance.onRoleChoose.subscribe(
+                    () => {
+                      dialogRef.componentInstance.saveDataInDb().subscribe(
+                        async (result) => {
+                          dialogRef.close();
+                          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                        },
+                        (err) => {
+                          dialogRef.componentInstance.error = err.message;
+                        }
+                      );
+                    }
+                  );
+                }
               }
-            });
-            const sub = dialogRef.componentInstance.onRoleChoose.subscribe(()=>{  
-              dialogRef.componentInstance.saveDataInDb().subscribe(() =>{
-                dialogRef.close();
-                this.dialogRef.close();
-                });
-              });
-            }
-          });       
+            );
+          }
+        );
+
+        this.dialogRef.close();
       }, 
       (err) => {
         this.firebaseError = err.message;

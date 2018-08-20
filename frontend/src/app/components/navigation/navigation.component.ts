@@ -67,7 +67,7 @@ export class NavigationComponent implements OnDestroy {
 
   onLogoutClick() {
     this.authService.logout();
-    this.appState.updateState(null, '', false);
+    this.appState.updateState(null, '', false, null);
     this.userService.removeCurrentUser();
     this.router.navigate(['/']);
   }
@@ -93,6 +93,7 @@ export class NavigationComponent implements OnDestroy {
           }
         );
       }
+      console.log(this.appState.currentDatabaseUser);
     } else {
       this.manager = { 
         fullName: "",

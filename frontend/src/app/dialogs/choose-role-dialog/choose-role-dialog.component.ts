@@ -32,7 +32,7 @@ export class ChooseRoleDialogComponent implements OnInit {
   }
 
   onSubmit(){
-    this.dialogRef.close();
+    this.onRoleChoose.emit(null);
   }
 
   saveDataInDb(){
