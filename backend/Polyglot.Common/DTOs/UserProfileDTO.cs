@@ -19,15 +19,15 @@ namespace Polyglot.Common.DTOs
         public string Phone { get; set; }
         public string AvatarUrl { get; set; }
 
-        public enum Role { Translator, Manager }
+        public int UserRole { get; set; }
 
         public ICollection<RatingDTO> Ratings { get; set; }
-        public ICollection<TeammateDTO> TeamTranslators { get; set; }
+        public ICollection<TranslatorDTO> TeamTranslators { get; set; }
         public List<ProjectDTO> Projects { get; set; }
 
         public UserProfileDTO()
         {
-            TeamTranslators = new List<TeammateDTO>();
+            TeamTranslators = new List<TranslatorDTO>();
             Ratings = new List<RatingDTO>();
             Projects = new List<ProjectDTO>();
         }

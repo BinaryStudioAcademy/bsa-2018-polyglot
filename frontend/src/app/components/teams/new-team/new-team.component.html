@@ -1,0 +1,138 @@
+<div class="newteam-container">
+  <h2 class="title">Create new Team</h2>
+
+  <div *ngIf="IsLoad" class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="container">
+
+    <div class="translators-list-container">
+      <mat-toolbar>
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      </mat-toolbar>
+
+      <div class="translators-list-wrapper">
+          <smooth-dnd-container class="dnd-container" (drop)="onDrop($event)">            
+              <smooth-dnd-draggable class="dnd-item" *ngFor="let t of allTranslators">
+                <div class="draggable-item">
+                    <mat-card class="temmate-card">
+                        <mat-card-header>
+                          <div mat-card-avatar class="temmate-header-image header-image">
+                              <img class="header-image-small" mat-card-image height="30" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
+                          </div>
+                          <mat-card-title>{{t.fullName}}</mat-card-title>
+                          <button class="action-button" mat-icon-button>
+                              <mat-icon (click)="addTranslator(t)" aria-label="icon-button">add_circle</mat-icon>
+                            </button>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <span class="languages-list">
+                            <ul>
+                              <li *ngFor="let l of t.translatorLanguages">
+                                {{l.language.name}} 
+                                <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                              </li>
+                            </ul>
+                          </span>
+                          <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                          <span>{{t.rating | number: '1.0-1'}}</span>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-button>Details</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+              </smooth-dnd-draggable>
+          </smooth-dnd-container>
+
+          <smooth-dnd-container class="dnd-container" (drop)="onDrop($event)">            
+              <smooth-dnd-draggable class="dnd-item" *ngFor="let t of allTranslators">
+                <div class="draggable-item">
+                    <mat-card class="temmate-card">
+                        <mat-card-header>
+                          <div mat-card-avatar class="temmate-header-image header-image">
+                              <img class="header-image-small" mat-card-image height="30" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
+                          </div>
+                          <mat-card-title>{{t.fullName}}</mat-card-title>
+                          <button class="action-button" mat-icon-button>
+                              <mat-icon  (click)="addTranslator(t)" aria-label="icon-button">add_circle</mat-icon>
+                            </button>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <span class="languages-list">
+                            <ul>
+                              <li *ngFor="let l of t.translatorLanguages">
+                                {{l.language.name}} 
+                                <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                              </li>
+                            </ul>
+                          </span>
+                          <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                          <span>{{t.rating | number: '1.0-1'}}</span>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-button>Details</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+              </smooth-dnd-draggable>
+          </smooth-dnd-container>
+      </div>
+
+    </div>
+
+    <div class="new-team-container">
+        <mat-card class="new-team-card">
+          <mat-card-header>
+            <div mat-card-avatar class="new-team-header-image header-image">
+              <img class="header-image" mat-card-image height="60" src="https://image.ibb.co/fa2YRF/dounia.jpg" alt="Your photo">
+            </div>
+            <mat-card-title class="card-title">Your new team</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="teammates-container">
+
+              <smooth-dnd-container (drop)="onDrop($event)">            
+                  <smooth-dnd-draggable *ngFor="let t of teamTranslators">
+                    <div class="draggable-item">
+                        <mat-card class="temmate-card">
+                            <mat-card-header>
+                              <div mat-card-avatar class="temmate-header-image header-image">
+                                  <img class="header-image-small" mat-card-image height="30" src="{{t.avatarUrl}}" alt="Photo of a {{t.fullName}}">
+                              </div>
+                              <mat-card-title>{{t.fullName}}</mat-card-title>
+                              <button class="action-button" mat-icon-button>
+                                  <mat-icon (click)="removeTranslator(t)" aria-label="icon-button">remove_circle</mat-icon>
+                                </button>
+                            </mat-card-header>
+                            <mat-card-content>
+                              <span class="languages-list">
+                                <ul>
+                                  <li *ngFor="let l of t.translatorLanguages">
+                                    {{l.language.name}} 
+                                    <mat-progress-bar mode="determinate" value="{{l.proficiency * 33.3}}"></mat-progress-bar>
+                                  </li>
+                                </ul>
+                              </span>
+                              <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                              <span>{{t.rating | number: '1.0-1'}}</span>
+                            </mat-card-content>
+                            <mat-card-actions>
+                              <button mat-button>Details</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                  </smooth-dnd-draggable>
+                </smooth-dnd-container>
+
+                  
+
+          </mat-card-content>
+        </mat-card>
+    </div>
+
+    <button mat-fab class="add-team-btn" (click)="formTeam()">Basic dfbdfer s s</button>
+  </div>
+  <ng-snotify></ng-snotify>
+</div>
