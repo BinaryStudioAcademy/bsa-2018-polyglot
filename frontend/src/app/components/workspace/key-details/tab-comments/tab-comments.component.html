@@ -1,11 +1,11 @@
 <div *ngIf="keyDetails" class="container">
 <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
     <mat-form-field class="field-full-width">
-        <textarea #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" 
+        <textarea [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" 
             maxlength="500"></textarea>
     </mat-form-field>
     <div class="button-container">
-        <button mat-flat-button class="save-button mx-1" [disabled]="commentForm.invalid">Save</button>
+        <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>
     </div>
 </form>
 <div  *ngFor="let com of keyDetails.comments" class="comments-container">
