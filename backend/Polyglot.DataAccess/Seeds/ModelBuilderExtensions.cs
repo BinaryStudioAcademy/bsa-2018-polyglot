@@ -661,7 +661,11 @@ namespace Polyglot.DataAccess.Seeds
                      CreatedOn = DateTime.Now,
                      Technology ="history",
                      ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                     MainLanguageId = 1
+                     MainLanguageId = 1,
+                     ProjectLanguageses = {
+                         new ProjectLanguage { LanguageId = 2, ProjectId = 2 },
+                         new ProjectLanguage { LanguageId = 3, ProjectId = 2 },
+                     }
                  },
                     new Project
             {
@@ -672,7 +676,11 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="history",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-                MainLanguageId = 1
+                MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 3 },
+                    new ProjectLanguage { LanguageId = 3, ProjectId = 3 },
+                }
             },
                     new Project
             {
@@ -683,7 +691,11 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="web",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-                MainLanguageId = 1
+                MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 4 },
+                    new ProjectLanguage { LanguageId = 5, ProjectId = 4 },
+                }
             },
                     new Project
             {
@@ -694,7 +706,11 @@ namespace Polyglot.DataAccess.Seeds
                  CreatedOn = DateTime.Now,
                  Technology ="programming",
                  ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                 MainLanguageId = 1
+                 MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
+                    new ProjectLanguage { LanguageId = 5, ProjectId = 5 },
+                }
             }
             };
 
