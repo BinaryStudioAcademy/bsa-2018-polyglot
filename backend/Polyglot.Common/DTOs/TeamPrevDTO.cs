@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Polyglot.Common.DTOs
 {
-    [Obsolete("нигде не используется")]
     public class TeamPrevDTO
     {
         public int Id { get; set; }
