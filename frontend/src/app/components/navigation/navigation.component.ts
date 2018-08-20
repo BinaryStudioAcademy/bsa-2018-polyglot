@@ -47,7 +47,6 @@ export class NavigationComponent implements OnDestroy {
     this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
       () => {
         this.updateCurrentUser();
-        this.router.navigate(['/dashboard']);
       }
     );
   }
