@@ -55,6 +55,7 @@ export class LanguagesComponent implements OnInit {
         return;
       }
       let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
+          width: "75%",
         data: {
           langs: langsToSelect
         }

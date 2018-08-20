@@ -67,9 +67,16 @@ import { DeleteProjectLanguageComponent } from './dialogs/delete-project-languag
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { TabCommentsComponent } from './components/workspace/key-details/tab-comments/tab-comments.component';
+import { ProjectTeamComponent } from './components/project-details/project-team/project-team.component';
+import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
+import { TeamAssignComponent } from './dialogs/team-assign/team-assign.component';
 import { ProjectEditComponent } from './components/project-edit/project-edit.component';
+import { MatRadioModule } from '@angular/material';
+import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [
@@ -118,6 +125,10 @@ import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
     TabHistoryComponent,
     ContainerComponent, 
     DraggableComponent
+    ProjectTeamComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -137,13 +148,16 @@ import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
     SnotifyModule,
     MatDialogModule,
+    NgxSmoothDnDModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
-    })
+    }),
+    MatRadioModule
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -155,7 +169,10 @@ import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TeamAssignComponent,
+    SaveStringConfirmComponent
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

@@ -50,12 +50,14 @@ export class ProjectEditComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    debugger;
+    if(!changes)
+      return
+    //debugger;
     this.languageService.getAll()
       .subscribe(
       (d: Language[]) => {
         this.languages = d.map(x => Object.assign({}, x));
-        debugger;
+        //debugger;
 
         let l = this.languages.find(x => x.id == this.project.mainLanguage.id);
 
@@ -67,7 +69,7 @@ export class ProjectEditComponent implements OnInit, OnChanges {
           technology: this.project.technology,
           mainLanguage: this.languages[i]
         });
-        debugger;
+        //debugger;
       },
       err => {
         console.log('err', err);

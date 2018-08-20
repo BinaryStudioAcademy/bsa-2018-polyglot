@@ -44,8 +44,4 @@ export class DeleteProjectLanguageComponent {
     });
     this.dialogRef.close();
   }
-
-  close(){
-    this.dialogRef.close();
-  }
 }
