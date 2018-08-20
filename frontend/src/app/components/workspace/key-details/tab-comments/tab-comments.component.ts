@@ -17,8 +17,11 @@ export class TabCommentsComponent implements OnInit {
 
   @Input()  public keyDetails: IString;
   commentForm = this.fb.group({
-    commentBody: ['', Validators.required]
+    commentBody: ['', ]
     });
+
+
+  body: string;
 
     @ViewChild('textarea') textarea: ElementRef;
 
