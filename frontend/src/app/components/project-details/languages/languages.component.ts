@@ -26,10 +26,46 @@ export class LanguagesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+   //this.langs = [
+   //  {
+   //    id: 1,
+   //    name: 'English',
+   //    progress: 25,
+   //    translatedCount: 140
+   //  },
+   //  {
+   //    id: 2,
+   //    name: 'Russian',
+   //    progress: 3,
+   //    translatedCount: 14
+   //  },
+   //  {
+   //    id: 3,
+   //    name: 'Spanish',
+   //    progress: 67,
+   //    translatedCount: 863
+   //  },
+   //  {
+   //    id: 4,
+   //    name: 'German',
+   //    progress: 100,
+   //    translatedCount: 32
+   //  },
+   //  {
+   //    id: 5,
+   //    name: 'Polish',
+   //    progress: 89,
+   //    translatedCount: 340
+   //  }
+   //];
+   //this.langs.sort(this.compareProgress);
+
     this.projectService.getProjectLanguages(this.projectId)
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
+          this.langs.sort(this.compareProgress);
         },
         err => {
           this.IsLoad = false;
@@ -77,6 +113,7 @@ export class LanguagesComponent implements OnInit {
                       return language.id !== l.id;
                     return true;
                   }));
+                  this.langs.sort(this.compareProgress);
                   this.IsLoad = false;
 
                 }
@@ -142,6 +179,7 @@ export class LanguagesComponent implements OnInit {
     .subscribe(() => {
 
       this.langs = this.langs.filter(l => l.id != languageId);
+      this.langs.sort(this.compareProgress);
       setTimeout(() => {
         this.snotifyService.success("Language removed", "Success!");
       }, 100);
@@ -152,6 +190,21 @@ export class LanguagesComponent implements OnInit {
       
     }
   );
+  }
+
+  compareProgress(a,b) {
+    if (a.progress < b.progress)
+      return -1;
+    if (a.progress > b.progress)
+      return 1;
+    return 0;
+  }
+
+  computeStrings(translationsCount, progress): number{
+    if(progress < 1)
+      return 0;
+    else
+      return translationsCount / progress * 100;
   }
   
 }
