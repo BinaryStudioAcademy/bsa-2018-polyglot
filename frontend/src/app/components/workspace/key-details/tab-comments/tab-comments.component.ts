@@ -7,7 +7,6 @@ import { SnotifyService } from 'ng-snotify';
 import { Comment } from '../../../../models/comment';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
-import { CommentsService } from '../../../../services/comments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
