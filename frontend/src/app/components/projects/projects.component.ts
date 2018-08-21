@@ -9,8 +9,6 @@ import { UserProfile } from '../../models/user-profile';
 
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { UserService } from '../../services/user.service';
-import * as signalR from "@aspnet/signalr";
-import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -31,8 +29,6 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   OnPage : boolean;
   
   manager: UserProfile =  this.userService.getCurrrentUser();
-
-  
   ngOnInit() {
     this.OnPage = true;
     this.projectService.getAll().subscribe(pr => 

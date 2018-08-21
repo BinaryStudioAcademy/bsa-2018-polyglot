@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Project } from '../../models';
+import { Project, UserProfile } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
-import {SnotifyService} from 'ng-snotify';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import * as signalR from "@aspnet/signalr";
+import { environment } from '../../../environments/environment';
+import { UserService } from '../../services/user.service';
 import { FormControl } from '../../../../node_modules/@angular/forms';
 
 
@@ -20,10 +23,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public keys: any[];
   public searchQuery: string;
   public selectedKey: any;
-  public isEmpty
+  public isEmpty;
   public currentPath;
-  public basicPath;
-  
+  public connection;
+  private url: string = environment.apiUrl;
+  private user: UserProfile;
+  private basicPath;
   private routeSub: Subscription;
 
   options = new FormControl();
@@ -38,8 +43,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     private dataProvider: ProjectService,
     private dialog: MatDialog,
     private projectService: ProjectService,
-    private snotifyService: SnotifyService
-   ) {}
+    private snotifyService: SnotifyService,
+    private userService: UserService
+   ) {
+     this.user = userService.getCurrrentUser();
+   }
 
    description: string = "Are you sure you want to remove the project?";
    btnOkText: string = "Delete";
@@ -47,13 +55,31 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
    answer: boolean;
  
   ngOnInit() {
+
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${this.url}/translationsHub/`).build();
+
+    this.connection.start().catch(err => console.log("ERROR " + err));
+
+
+
+    this.connection.on("stringTranslated", (message: string) => {
+      debugger;
+      console.log("String traslated " + message);
+    });
+
+    this.connection.on("stringTranslating", (message: string) => {
+      debugger;
+      console.log("Someone translating string " + message);
+  });
+
     this.searchQuery = '';
     console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
       this.basicPath = 'workspace/'+ params.projectId;
-      this.currentPath = 'workspace/'+ params.projectId +'/key'; 
+      this.currentPath = this.basicPath +'/key'; 
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
         if(data)
@@ -89,11 +115,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       });
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
-          this.keys.push(result);
-          this.selectedKey = result;
-          let keyId = this.keys[0].id;   
-          this.router.navigate([this.currentPath, keyId]);
-          this.isEmpty = false;
+          {
+            this.connection.send("newComplexString", result)
+            .then(() => {
+              console.log("new string sended");
+            });
+
+            this.keys.push(result);
+            this.selectedKey = result;
+            let keyId = this.keys[0].id;   
+            this.router.navigate([this.currentPath, keyId]);
+            this.isEmpty = false;
+          }
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();
@@ -101,6 +134,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   onSelect(key: any){
+    debugger;
     this.selectedKey = key;
   }
 

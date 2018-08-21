@@ -101,11 +101,11 @@ namespace Polyglot
             //app.UseDefaultFiles();
             //app.UseStaticFiles();
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-                MongoDbSeedsInitializer.MongoSeedAsync(context);
-            }
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+            //    MongoDbSeedsInitializer.MongoSeedAsync(context);
+            //}
 
             // if (env.IsDevelopment())
             // {
@@ -123,6 +123,7 @@ namespace Polyglot
             app.UseSignalR(options =>
             {
                 options.MapHub<ChatHub>("/hub");
+                options.MapHub<TranslationHub>("/translationsHub");
             });
         }
     }
