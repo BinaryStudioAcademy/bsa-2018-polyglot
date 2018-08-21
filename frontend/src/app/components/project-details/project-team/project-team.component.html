@@ -37,8 +37,8 @@
             <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/dashboard/teams/{{t.id}}">info</mat-icon>
           </button>
           <div (click)="dismissTeam(t.id)">
-            <mat-spinner class="dismiss-spinner" [ngClass]="{hidden: !IsLoading[t.id]}" diameter="20"></mat-spinner> 
-            <mat-icon class="icon dismiss-team-icon" [ngClass]="{hidden: IsLoading[t.id]}" aria-label="dismiss-team" >clear</mat-icon>
+              <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner"><mat-spinner diameter="18"></mat-spinner></span>
+              <span [hidden]="IsLoading[t.id]"><mat-icon class="icon dismiss-team-icon" aria-label="dismiss-team" >clear</mat-icon></span>
           </div>
         </div>
       </mat-card-header>
