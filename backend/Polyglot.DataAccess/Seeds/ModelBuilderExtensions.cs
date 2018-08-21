@@ -297,16 +297,16 @@ namespace Polyglot.DataAccess.Seeds
                        );
 
             modelBuilder.Entity<Rating>().HasData(
-            new { Id = 1, Rate = 80.0, TranslatorId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
-            new { Id = 2, Rate = 100.0, TranslatorId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
-            new { Id = 3, Rate = 50.0, TranslatorId = 2, Comment = "not bad", CreatedById = 2, CreatedAt = DateTime.Now },
-            new { Id = 4, Rate = 80.0, TranslatorId = 2, Comment = "good job!", CreatedById = 2, CreatedAt = DateTime.Now },
-            new { Id = 5, Rate = 100.0, TranslatorId = 3, Comment = "awsome!", CreatedById = 3, CreatedAt = DateTime.Now },
-            new { Id = 6, Rate = 60.0, TranslatorId = 4, Comment = "not bad", CreatedById = 3, CreatedAt = DateTime.Now },
-            new { Id = 7, Rate = 80.0, TranslatorId = 4, Comment = "good job!", CreatedById = 4, CreatedAt = DateTime.Now },
-            new { Id = 8, Rate = 100.0, TranslatorId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
-            new { Id = 9, Rate = 50.0, TranslatorId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
-            new { Id = 10, Rate = 90.0, TranslatorId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
+            new { Id = 1, Rate = 4, UserId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 2, Rate = 5, UserId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 3, Rate = 3, UserId = 2, Comment = "not bad", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 4, Rate = 4, UserId = 2, Comment = "good job!", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 5, Rate = 5, UserId = 3, Comment = "awsome!", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 6, Rate = 4, UserId = 4, Comment = "not bad", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 7, Rate = 4, UserId = 4, Comment = "good job!", CreatedById = 4, CreatedAt = DateTime.Now },
+            new { Id = 8, Rate = 5, UserId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 9, Rate = 4, UserId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 10, Rate = 4, UserId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
 
            );
 
@@ -490,16 +490,16 @@ namespace Polyglot.DataAccess.Seeds
             {
                 var users = context.UserProfiles.ToList();
                 var ratings = new List<Rating> {
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 2), Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 3),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  User = users.FirstOrDefault(u=>u.Id == 1),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 3),    Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 4),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 60.0,  User = users.FirstOrDefault(u=>u.Id == 5),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 2),    Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 1),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  User = users.FirstOrDefault(u=>u.Id == 2),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 90.0,   User =users.FirstOrDefault(u=>u.Id == 4),  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
                     };
                 context.AddRange(ratings);
                 context.SaveChanges();

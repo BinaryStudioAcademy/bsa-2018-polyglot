@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -77,8 +77,12 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 
+import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 
 @NgModule({
+  exports: [
+    MatSnackBarModule
+  ],
   declarations: [
     LandingComponent,
     NavigationComponent,
@@ -121,12 +125,14 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
+    TabCommentsComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabReviewComponent,
-    TabCommentsComponent
+    StarRatingComponent
+
   ],
   imports: [
     BrowserModule,

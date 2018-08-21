@@ -22,8 +22,10 @@ export class TranslatorProfileComponent implements OnInit{
   ngOnInit(): void {
     this.userService.getOne(4).subscribe(up => {
       this.userProfile = up;
-      console.log(this.userProfile);
     });
+    this.userService.getUserRatings(4).subscribe(ratings => {
+      this.userProfile.ratings = ratings;
+    })
     this.Translator = { Name : " Sasha Pushkin",
      Avatar : "https://i.imgur.com/LzRiWVA.jpg",
      Birth : "25.05.2122",

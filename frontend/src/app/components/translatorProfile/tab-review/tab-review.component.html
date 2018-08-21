@@ -1,25 +1,30 @@
 <div *ngIf="userProfile" class="container">
-    <form [formGroup]="reviewForm" fxLayoutWrap (submit)="addReview(reviewForm.value.reviewBody, reviewForm.value.rating)">
+    <form [formGroup]="reviewForm" fxLayoutWrap (submit)="addReview(reviewForm.value.reviewBody, rating)">
+        <div class="field-center">
+            <span>Your rating: </span>
+            <br/>
+            <app-star-rating [rating]="rating"  [starCount]="starCount" [color]="starColor" (ratingUpdated)="onRatingChanged($event)"></app-star-rating>
+        </div>
         <mat-form-field class="field-full-width">
-            <textarea #textArea rows="4" matInput placeholder="Enter review text" formControlName="reviewBody" 
-                maxlength="500"></textarea>
-        </mat-form-field>
-        <mat-form-field class="field-full-width">
-            <textarea #textArea rows="4" matInput placeholder="Enter review rating" formControlName="rating" 
+            <textarea #textArea rows="4" matInput placeholder="Enter review text" [formControl]="reviewForm.controls['reviewBody']" formControlName="reviewBody" 
                 maxlength="500"></textarea>
         </mat-form-field>
         <div class="button-container">
             <button mat-flat-button class="save-button mx-1" [disabled]="reviewForm.invalid">Save</button>
         </div>
     </form>
-    <div  *ngFor="let rating of userProfile.rating" class="comments-container">
+    <div *ngFor="let rating of userProfile.ratings" class="comments-container">
         <mat-card  class="comment-card">
             <div class="author-info">
                 <img class="comment-avatar" (click)="onImageClick(rating.createdBy.avatarUrl)" src="{{rating.createdBy.avatarUrl}}">
                 <strong class="comment-author">{{rating.createdBy.fullName}}</strong>
             </div>
-            <div class ="text">{{rating.rate}}</div>
-            <div class ="text">{{rating.comment}}</div>
+            <div class ="text">
+                {{rating.comment}}
+            </div>
+            <div class ="text">{{rating.rate}}/5
+                <i class="material-icons star">star</i>
+            </div>
             <div class="date"><i>{{rating.createdAt | date:'short'}}</i></div>
         </mat-card>
     </div>

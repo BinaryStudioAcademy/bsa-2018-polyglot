@@ -34,6 +34,18 @@ namespace Polyglot.DataAccess.SqlRepository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<UserProfile>()
+                .HasMany(up => up.Ratings)
+                .WithOne(r => r.User)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.CreatedBy)
+                .WithMany()
+                .HasForeignKey(r => r.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.MainLanguage)
                 .WithMany(l => l.Projects)
