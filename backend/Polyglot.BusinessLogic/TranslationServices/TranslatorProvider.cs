@@ -1,6 +1,9 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Polyglot.BusinessLogic.TranslationServices
 {
@@ -17,16 +20,37 @@ namespace Polyglot.BusinessLogic.TranslationServices
 
         public async Task<string> Translate(TextForTranslation item)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(_url))
-            using (HttpContent content = response.Content)
+            HttpWebRequest httpRequest = WebRequest.CreateHttp(_url + "?key=" + _key);
+            httpRequest.Method = "POST";
+            httpRequest.ContentType = "application/json";
+
+            using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
             {
-                string responsJson = await content.ReadAsStringAsync();
+               await streamWriter.WriteAsync(JsonConvert.SerializeObject(item));
+            }
+
+
+            using (var response = (HttpWebResponse)await httpRequest.GetResponseAsync())
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream))
+            {
+                string responseFromServer = await reader.ReadToEndAsync();
+
                 if (response.StatusCode != HttpStatusCode.OK)
                     return string.Empty;
-                
+
+                return JObject.Parse(responseFromServer)["data"]["translations"].ToString();
             }
-            return "";
+
+            //using (HttpClient client = new HttpClient())
+            //using (HttpResponseMessage response = await client.GetAsync(_url))
+            //using (HttpContent content = response.Content)
+            //{
+            //    string responsJson = await content.ReadAsStringAsync();
+            //    if (response.StatusCode != HttpStatusCode.OK)
+            //        return string.Empty;
+            //    return JObject.Parse(responsJson)["data"]["translations"].ToString();
+            //}
         }
 
     }

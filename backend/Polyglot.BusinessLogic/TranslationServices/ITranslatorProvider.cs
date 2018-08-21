@@ -2,7 +2,7 @@
 
 namespace Polyglot.BusinessLogic.TranslationServices
 {
-    interface ITranslatorProvider
+    public interface ITranslatorProvider
     {
          Task<string> Translate(TextForTranslation item);
     }
