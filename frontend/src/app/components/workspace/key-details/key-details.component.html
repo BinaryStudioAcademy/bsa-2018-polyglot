@@ -1,4 +1,9 @@
-<div *ngIf="!isLoad" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
+<div class="key-details mt-1 mb-1" *ngIf="isEmpty">
+	<mat-card class="no-languages-div">
+	<p>No languages</p>
+	</mat-card>
+</div>
+<div *ngIf="!isLoad && !isEmpty" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
 		<mat-spinner></mat-spinner> 
 </div> 
 <mat-card *ngIf="isLoad" class="key-details my-1 px-0 grow-1 mr-0 ml-1">
