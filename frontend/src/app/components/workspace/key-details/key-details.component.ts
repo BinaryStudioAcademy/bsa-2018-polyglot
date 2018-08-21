@@ -27,6 +27,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
   public Id : string;
+  public isEmpty
   projectId: number;
   languages: Language[];
   expandedArray: Array<TranslationState>;
@@ -83,6 +84,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.keyDetails = data;
         this.projectId = this.keyDetails.projectId;
         this.getLanguages();
+        
       });
      });
   }
@@ -96,9 +98,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           this.expandedArray.push({ isOpened: false, oldValue: '' });
         }
         this.languages = d.map(x => Object.assign({}, x));
+        this.isEmpty = false;
+        console.log(this.isEmpty);
         this.setLanguagesInWorkspace();
       },
       err => {
+        this.isEmpty = true;
         console.log('err', err);
       }
     ); 
