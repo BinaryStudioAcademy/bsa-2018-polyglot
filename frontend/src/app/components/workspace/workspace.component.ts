@@ -121,7 +121,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     
     this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
- //'Translated', 'Untranslated' , 'Human Translation' , 'Machine Translation' , 'With Tags'
   OnSelectOption(){
     //If the filters сontradict each other
     this.ContradictoryСhoise(["Translated", "Untranslated"])

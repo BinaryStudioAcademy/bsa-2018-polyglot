@@ -41,7 +41,7 @@
               </mat-option>
             </mat-select>
       </div>
-      <mat-nav-list class="keys-list__nav">
+      <mat-nav-list class="keys-list__nav key-list-style">
         <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
           <div [class.selected]="key === selectedKey"
           (click)="onSelect(key)">
