@@ -64,9 +64,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     this.connection.start().catch(err => console.log("ERROR " + err));
 
     this.connection.on("stringDeleted", (deletedStringId: number) => {
-      debugger;
       if(deletedStringId)
-        this.receiveId(deletedStringId);
+        {
+          this.snotifyService.info(`Key ${deletedStringId} deleted`, "String deleted")
+          this.receiveId(deletedStringId);
+        }
+    });
+
+    this.connection.on("stringAdded", (newString: any) => {
+      debugger;
+      if(newString && !this.keys.find(s => s.id == newString.id))
+        {
+          this.snotifyService.info(`New key added`, "String added")
+          this.keys.push(newString);
+        }
     });
 
     this.connection.on("stringTranslated", (message: string) => {
@@ -74,10 +85,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       console.log("String traslated " + message);
     });
     
-    this.connection.on("stringTranslating", (message: string) => {
-      debugger;
-      console.log("Someone translating string " + message);
-  });
+   
 
     this.searchQuery = '';
     console.log("q");
@@ -122,8 +130,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           {
-            this.connection.send("newComplexString", "sdasdsadasdasdasdas");
-
+            this.connection.send("newComplexString", result);
             this.keys.push(result);
             this.selectedKey = result;
             let keyId = this.keys[0].id;   

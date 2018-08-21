@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.Hubs
 {
     public class WorkspaceHub : Hub
     {
-        public async Task NewComplexString(string message)
+        public async Task NewComplexString(ComplexStringDTO newString)
         {
-            await Clients.All.SendAsync("stringAdded", message);
+            await Clients.All.SendAsync("stringAdded", newString);
         }
 
         public async Task ComplexStringDeleted(int deletedStingId)
