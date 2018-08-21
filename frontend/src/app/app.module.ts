@@ -76,7 +76,9 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
-
+//Ngx-Charts
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ReportsComponent } from './components/reports/reports.component';
 
 
 @NgModule({
@@ -129,7 +131,8 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -160,7 +163,8 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule
   ],
   entryComponents: [
     LoginDialogComponent, 

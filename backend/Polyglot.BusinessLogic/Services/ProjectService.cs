@@ -425,6 +425,11 @@ namespace Polyglot.BusinessLogic.Services
                 Expression.AndAlso(left, right), parameter);
         }
 
+        public Task<IEnumerable<ProjectStatisticDTO>> GetProjectStat(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public enum FilterType
         {
             Translated,

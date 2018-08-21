@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
-import { map } from '../../../../node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-reports',
