@@ -23,7 +23,6 @@ export class NewProjectComponent implements OnInit {
     private snotifyService: SnotifyService) {
 
   }
-
   
   ngOnInit() {
     this.languageService.getAll()
@@ -53,6 +52,7 @@ export class NewProjectComponent implements OnInit {
   languages: Language[];
   
   saveChanges(project: Project): void{
+    debugger;
     project.createdOn = new Date(Date.now());
     let formData = new FormData();
     if(this.projectImage)
@@ -78,8 +78,6 @@ export class NewProjectComponent implements OnInit {
       }
     );
   }
-
-
 
   getAllTechnologies() {
     return Object.keys(TypeTechnology).filter(

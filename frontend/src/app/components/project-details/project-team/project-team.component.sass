@@ -1,3 +1,5 @@
+
+    
 div.teams-container,
 .assign-team-container
     display: flex
@@ -118,6 +120,9 @@ mat-card-header.mat-card-header-placeholder
             font-size: 20px
             vertical-align: initial
 
+.dismiss-spinner
+    background: grey
+    display: inline-block
 
 .team-img
   height: 60px
@@ -159,3 +164,15 @@ mat-card-header.mat-card-header-placeholder
     color: #BBBBBB
         
 
+.assign-card
+    cursor: pointer
+    &:hover
+        .team-assign-icon
+            color: #C3D08B
+            transition: ease-in 0.4s
+        .card-content.card-content-placeholder
+            transition: ease-in 0.4s
+            background-color: #F7F7F7
+       
+.hidden
+    display: none

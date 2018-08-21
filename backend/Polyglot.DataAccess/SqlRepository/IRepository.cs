@@ -3,7 +3,7 @@ using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-    public interface IRepository <TEntity>: IBaseRepository<TEntity> where TEntity : Entity
+    public interface IRepository <TEntity>: IBaseRepository<TEntity> where TEntity : DbEntity
     {
      //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
