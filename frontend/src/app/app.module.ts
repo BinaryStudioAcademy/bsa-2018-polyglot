@@ -75,6 +75,7 @@ import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ReportsComponent } from './components/reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
