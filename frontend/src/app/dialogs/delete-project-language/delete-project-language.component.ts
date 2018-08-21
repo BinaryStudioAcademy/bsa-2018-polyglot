@@ -1,6 +1,6 @@
 import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular/material';
-import { messaging } from '../../../../node_modules/firebase';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { messaging } from 'firebase';
 
 @Component({
   selector: 'app-delete-project-language',
@@ -42,10 +42,6 @@ export class DeleteProjectLanguageComponent {
       state: this.confirmed,
       message: this.message
     });
-    this.dialogRef.close();
-  }
-
-  close(){
     this.dialogRef.close();
   }
 }

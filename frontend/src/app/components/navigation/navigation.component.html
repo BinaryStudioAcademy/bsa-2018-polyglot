@@ -23,7 +23,7 @@
         <mat-card class="profile-card">
           <mat-card-header>
             <mat-card-title class="profile-card-main">
-              <img  src="{{manager?.avatarUrl}}" class="profile-big-image">
+              <img src="{{manager?.avatarUrl}}" class="profile-big-image">
               <div style="margin-left: 30px;">
                 <h4>{{manager?.fullName}}</h4>
                 <!-- <mat-card-subtitle>{{manager.email}}</mat-card-subtitle> -->
@@ -71,17 +71,14 @@
         <mat-divider></mat-divider>
         
           
-        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick()">
+        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
             <mat-icon mat-list-icon>block</mat-icon> Logout</a>
 
 
       </div>
     </mat-sidenav>
-
     <div (click)="snav.close()">
       <router-outlet></router-outlet>
     </div>
-    
-
   </mat-sidenav-container>
 </div>

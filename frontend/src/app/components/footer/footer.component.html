@@ -6,7 +6,7 @@
   <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
   <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
   <a mat-button routerLink="/contact" routerLinkActive="active">Contacts</a>  
-  <a mat-button *ngIf="isLoggedIn()" routerLinkActive="active">Settings</a>  
+  <a mat-button *ngIf="isLoggedIn()" routerLinkActive="active"  routerLink="/profile/settings">Settings</a>  
   <a mat-button>Help & Feedback</a>
 
   <span class='spacer'></span>

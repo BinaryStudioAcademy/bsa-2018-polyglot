@@ -103,7 +103,7 @@ namespace Polyglot
             // if (env.IsDevelopment())
             // {
             app.UseCors("AllowAll");
-            // }
+            //}
 
             app.UseAuthentication();
 

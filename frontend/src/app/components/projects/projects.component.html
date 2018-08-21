@@ -26,7 +26,7 @@
         <img mat-card-avatar class="manager-img" src="{{manager.avatarUrl}}">
         <div class="title">
           <mat-card-title class="card-title">{{card.name}}</mat-card-title>
-          <mat-card-subtitle class="card-subtitle">{{manager.firstName}} {{manager.lastName}}</mat-card-subtitle>
+          <mat-card-subtitle class="card-subtitle">{{manager.fullName}}</mat-card-subtitle>
         </div>
       </mat-card-header>
       <div class="img-container">
@@ -55,24 +55,19 @@
     <div class="list-item" *ngFor="let card of cards">
       <div class="row-manager">
         <img mat-card-avatar class="row-manager-img" src="{{manager.avatarUrl}}">
-        <span><strong>{{manager.firstName}} {{manager.lastName}}</strong></span>        
+        <span><strong>{{manager.fullName}}</strong></span>        
       </div>
-      <div class="row-img">
-        <img *ngIf="card.imageUrl !== null" src={{card.imageUrl}} alt="Photo of a project">
-        <img *ngIf="card.imageUrl == null" mat-list-avatar src="/assets/images/project.jpg" alt="Photo of a project">
-      </div>
-      <div class="row-info">
+      <div class="row-name">
         <h3>{{card.name}}</h3>
-        <p><strong>Language: </strong>{{card.mainLanguage.name}}</p>
-        <p><strong>Technology: </strong>{{card.technology}}</p>
+      </div>
+      <div class="row-info">                
         <span *ngIf="card.description !== null && card.description!=='' " class="row-description" >{{card.description}}</span>
         <span *ngIf="card.description == null || card.description=='' " class="row-description" >No description</span>       
       </div>
       <div class="row-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
         <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
-      </div>
-      
+      </div>      
     </div>    
   </mat-list>
 

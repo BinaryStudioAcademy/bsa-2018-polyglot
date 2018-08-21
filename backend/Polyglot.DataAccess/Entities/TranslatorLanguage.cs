@@ -1,6 +1,6 @@
-namespace Polyglot.DataAccess.Entities
+﻿namespace Polyglot.DataAccess.Entities
 {
-    public class TranslatorLanguage
+    public class TranslatorLanguage : DbEntity
     {
         public int? TranslatorId { get; set; }
         public virtual UserProfile UserProfile { get; set; }
@@ -8,6 +8,7 @@ namespace Polyglot.DataAccess.Entities
         public int? LanguageId { get; set; }
         public virtual Language Language { get; set; }
 
+#warning заменить на Polyglot.DataAccess.Helpers.Proficiency
         public string Proficiency { get; set; }
     }
 }

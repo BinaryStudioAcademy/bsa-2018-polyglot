@@ -1,4 +1,4 @@
-import { Rating, TeamTranslator } from ".";
+import { Rating } from ".";
 
 export interface UserProfile {
     id?: number;
@@ -15,7 +15,6 @@ export interface UserProfile {
     avatarUrl?: string;
     fullName?: string;
     ratings?: Array<Rating>;
-    teamTranslators?: Array<TeamTranslator>;
     userRole? : Role;
 }
 enum Role { Manager , Translator};

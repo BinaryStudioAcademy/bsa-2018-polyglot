@@ -1,29 +1,35 @@
-<mat-card class="key-details my-1 px-0 grow-1 mr-0 ml-1">
-	<div *ngIf="keyDetails.translations">
+<div *ngIf="!isLoad" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
+		<mat-spinner></mat-spinner> 
+</div> 
+<mat-card *ngIf="isLoad" class="key-details my-1 px-0 grow-1 mr-0 ml-1">
+	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [expanded]="expandedArray[i]" (opened)="setStep(i)" hideToggle>
-						  <mat-expansion-panel-header class="header-translation" *ngIf = "!expandedArray[i]" >
-								  <mat-panel-title>
-									  <p>{{t.language}}</p>
+						<mat-expansion-panel [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
+								  <mat-panel-title class="mat-panel-title">
+									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
-								  <mat-panel-description>
-								  <p >{{t.translationValue}}</p>
-								  </mat-panel-description>
+								  <mat-panel-description class="mat-panel-description">
+								  	<p *ngIf = "t.translationValue">{{t.translationValue}}</p>
+								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
+									</p>
+								</mat-panel-description>
 							</mat-expansion-panel-header>
 					  
 						   <div >
 								<mat-form-field class="textarea-translation">
-										<mat-label class="language-label">{{t.language}}</mat-label>
+										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea matInput
 												[(ngModel)]="t.translationValue"
 												  cdkTextareaAutosize
 													  cdkAutosizeMinRows="2"
+													  placeholder="Write here to start translating"
 													  cdkAutosizeMaxRows="10"></textarea>
 								</mat-form-field>
 								<div class="button-translation">
-									<button mat-raised-button color="primary"  (click)="onSave()">Save</button>
-									<button mat-raised-button color="warn"  (click)="onClose(i)">Close</button>
+									<button mat-raised-button color="primary"  (click)="onSave(i, t)">Save</button>
+									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
 								
 						  </div>
@@ -45,14 +51,14 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="History" matTooltipPosition="above">history</mat-icon>
 			</ng-template>
-			<app-tab-history></app-tab-history>
-			<!-- <app-tab-history [(keyDetails)]="keyDetails"></app-tab-history> -->
+			<!-- <app-tab-history></app-tab-history> -->
+			<app-tab-history *ngIf="isLoad" [(keyDetails)]="keyDetails"></app-tab-history>
 		</mat-tab>
 		<mat-tab label="Comment">
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Comment" matTooltipPosition="above">comment</mat-icon>
 			</ng-template>
-			<app-tab-comments [(keyDetails)]="keyDetails"></app-tab-comments>
+			<app-tab-comments></app-tab-comments>
 			<!-- <app-tab-comments *ngIf="keyDetails" [(keyDetails)] = "keyDetails"></app-tab-comments> -->
 
 		</mat-tab>
