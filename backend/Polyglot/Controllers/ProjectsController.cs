@@ -194,5 +194,14 @@ namespace Polyglot.Controllers
 			await service.FileParseDictionary(id, Request.Form.Files[0]);
 			return Ok();
 		}
+
+		[HttpGet]
+		[Route("{id}/export")]
+		public async Task<IActionResult> GetFile(int id, int langId, string extension)
+		{
+			
+
+			return Ok();
+		}
 	}
 }
