@@ -9,6 +9,7 @@ import { UserProfile } from '../../models/user-profile';
 
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { UserService } from '../../services/user.service';
+import * as signalR from "@aspnet/signalr";
 
 
 @Component({
@@ -27,23 +28,38 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
   IsLoad : boolean = true;
   OnPage : boolean;
-   
+  
   manager: UserProfile =  this.userService.getCurrrentUser();
+  connection: any;
 
   ngOnInit() {
-  this.OnPage = true;
-  debugger;
+    this.OnPage = true;
+    this.projectService.getAll().subscribe(pr => 
+      {
+        this.cards = pr;
+      if(this.cards.length === 0 && this.OnPage === true){
+      setTimeout(() => this.openDialog())
+        }
+        this.IsLoad = false;
+    });
+    debugger
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl("/hub")
+    .build();
 
-  this.projectService.getAll().subscribe(pr => 
-    {
-      this.cards = pr;
-    if(this.cards.length === 0 && this.OnPage === true){
-     setTimeout(() => this.openDialog())
-      }
-      this.IsLoad = false;
-  });
+    this.connection.start().catch(err => document.write(err));
+
+    this.connection.on("messageReceived", (username: string, message: string) => {
+        console.log(message);
+    });
+
+    this.send();
   }
 
+  send() {
+    this.connection.send("newMessage", 'Natali', 'Natali2')
+              .then(() => console.log('send natali'));
+  }
   ngOnDestroy(){
     this.OnPage = false;
   }

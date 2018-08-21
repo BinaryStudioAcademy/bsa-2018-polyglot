@@ -98,8 +98,8 @@ namespace Polyglot
                 serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
             }
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            //app.UseDefaultFiles();
+            //app.UseStaticFiles();
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
