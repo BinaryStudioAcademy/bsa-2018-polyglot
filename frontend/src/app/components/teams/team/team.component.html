@@ -19,7 +19,11 @@
     <input matInput (keyup)="applyFilter($event.target.value)"  placeholder="Filter">
 </mat-form-field>
 
-<table mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+<div *ngIf = "displayNoRecords">
+    Not found
+</div>
+
+<table *ngIf = "!displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
 
  <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef> </th>
@@ -63,5 +67,5 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   
 </table>
-<mat-paginator *ngIf="IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf = "!displayNoRecords && IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
 

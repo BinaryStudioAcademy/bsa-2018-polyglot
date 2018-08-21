@@ -41,6 +41,18 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id +  '/dictionary' , '' , file);
   }
 
+  getProjectTeams(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams', undefined, undefined);
+  }
+
+  assignTeamsToProject(projectId: number, teamIds: Array<number>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/teams/', undefined, teamIds);
+  }
+
+  dismissProjectTeam(projectId: number, teamId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/teams/' + teamId, undefined, undefined);
+  }
+
   getProjectLanguages(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
   }
@@ -51,5 +63,9 @@ export class ProjectService {
 
   deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
+  }
+
+  getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
   }
 }

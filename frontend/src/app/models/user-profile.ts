@@ -1,4 +1,4 @@
-import { Rating, TeamTranslator } from ".";
+import { Rating } from ".";
 import { Role } from "./role";
 
 export interface UserProfile {
@@ -16,6 +16,5 @@ export interface UserProfile {
     avatarUrl?: string;
     fullName?: string;
     ratings?: Array<Rating>;
-    teamTranslators?: Array<TeamTranslator>;
     userRole? : Role;
 }

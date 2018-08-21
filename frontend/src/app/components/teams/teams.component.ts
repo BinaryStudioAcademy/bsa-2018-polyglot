@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from "../../services/teams.service";
+import { Team } from '../../models';
 
 @Component({
   selector: 'app-teams',
@@ -19,11 +20,11 @@ export class TeamsComponent implements OnInit {
   }
 
   getAllTeams(){
-    this.teamsService.getAll()
-      .subscribe(teams => {
+    this.teamsService.getAllTeams()
+      .subscribe((teams) => {
         debugger;
         this.teams = teams;
-        let a = teams.persons;
+        let a = teams
         this.IsLoad = false;
       })
   }

@@ -127,7 +127,8 @@ mat-card-title
 
 .row-buttons
   display: grid
-  grid-template-rows: 2
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+  grid-gap: 5px
   button
     width: 120px
     height: 40px
@@ -137,32 +138,35 @@ mat-card-title
   
 
 
-.row-description
-  display: block
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
+.row-info
+  align-self: center
+  .row-description
+    display: block
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    vertical-align: middle
     
 
 .list-item
   margin: 10px
+  padding: 5px
   display: grid
-  grid-template-columns: 15% 25% 40% 20%
+  grid-template-columns: 15% 22% 38% 25%
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
   max-height: 150px
-  img
-    max-height: 150px
+  img    
     justify-self: center
-
-.row-img
-  img
-    display: block
-    max-width: 100%
-    margin: 0 auto
 
 .row-info
   padding-left: 10px
+
+.row-name
+  align-self: center
   h3
     margin: 0
-    font-size: 30px
+    font-size: 25px
     margin: 5px 0
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis

@@ -1,0 +1,112 @@
+<div class="new-team">
+  <div *ngIf="IsLoad" class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="container">
+
+    <div class="new-team-container">
+      <div class="new-team-card">
+        <div class="add-from-header">
+          <div class="new-team-header-image">
+            <img class="header-image" mat-card-image src="https://www.yellow.com.mt/sys/articles/1043/59c4cb3932838_translators.jpg"
+              alt="Your photo">
+          </div>
+          <mat-form-field class="team-name">
+            <input matInput placeholder="Team Name">
+          </mat-form-field>
+          <div class="save-btn">
+              <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 ? true : null" (click)="formTeam()">Save</button>
+            </div>
+          
+        </div>
+               
+        
+        <div class="teammates-container">
+                <div class="draggable-item" *ngFor="let t of teamTranslators">
+            <mat-card class="teammate-card">
+              <div class="temmate-header">
+                <div class="teammate-header-image">
+                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
+                </div>
+                <div class="teammate-name">{{t.fullName}}</div>
+                <div class="rating">
+                  <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                  <span>{{t.rating | number: '1.0-1'}}</span>
+                </div>
+
+              </div>
+
+              <div *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+                <span>
+                  <ul>
+                    <li *ngFor="let l of t.translatorLanguages">
+                      {{l.language.name}}
+                      <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                    </li>
+                  </ul>
+                </span>
+              </div>
+              <p *ngIf="t.translatorLanguages.length == 0 ">Please add some Languages!!</p>
+
+              <div class="add-btn">
+                <button mat-raised-button color="warn" (click)="removeTranslator(t)">Remove</button>
+              </div>
+            </mat-card>
+           </div> 
+          </div>
+      </div>
+    </div>
+
+
+    <mat-divider></mat-divider>
+
+    <div class="translators-list-container">
+
+      <mat-form-field *ngIf="allTranslators.length !== 0">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      </mat-form-field>
+
+
+      <div class="translators-list-wrapper">
+
+      
+        <div class="draggable-item" *ngFor="let t of allTranslators">
+
+          <mat-card class="teammate-card">
+            <div class="temmate-header">
+              <div class="teammate-header-image">
+                <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
+              </div>
+              <div class="teammate-name">{{t.fullName}}</div>
+              <div class="rating">
+                <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                <span>{{t.rating | number: '1.0-1'}}</span>
+              </div>
+
+            </div>
+
+            <div *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+              <span>
+                <ul>
+                  <li *ngFor="let l of t.translatorLanguages">
+                    {{l.language.name}}
+                    <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                  </li>
+                </ul>
+              </span>
+            </div>
+            <p *ngIf="t.translatorLanguages.length == 0 ">Please add some Languages!!</p>
+
+            <div class="add-btn">
+              <button mat-raised-button color="primary" (click)="addTranslator(t)">Add</button>
+            </div>
+          </mat-card>
+        </div>
+   
+      </div>
+
+    </div>
+  </div>
+
+  <ng-snotify></ng-snotify>
+</div>

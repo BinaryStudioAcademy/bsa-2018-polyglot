@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,11 +8,8 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.MongoModels;
-using Polyglot.DataAccess.MongoRepository;
 
 namespace Polyglot.Controllers
 {
@@ -36,7 +32,6 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllComplexStrings()
         {
-            
             var complexStrings = await dataProvider.GetListAsync();
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<ComplexStringDTO>>(complexStrings));
@@ -61,16 +56,26 @@ namespace Polyglot.Controllers
         }
 
         // PUT: ComplexStrings/5/translations
-        [HttpPut("{id}/translations")]
-        public async Task<IActionResult> SetStringTranslations(int id, [FromBody]IEnumerable<TranslationDTO> translations)
+        [HttpPost("{id}/translations")]
+        public async Task<IActionResult> SetStringTranslation(int id, [FromBody]TranslationDTO translation)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.SetStringTranslations(id, translations);
+            var entity = await dataProvider.SetStringTranslation(id, translation);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
+        [HttpPut("{id}/translations")]
+        public async Task<IActionResult> EditStringTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+
+            var entity = await dataProvider.EditStringTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
 
         // POST: ComplexStrings
         [HttpPost]
@@ -118,6 +123,27 @@ namespace Polyglot.Controllers
         {
             var success = await dataProvider.DeleteComplexString(id);
             return success ? Ok() : StatusCode(304);
+        }
+
+        // GET: ComplexStrings/5/comments
+        [HttpGet("{id}/comments", Name = "GetComplexStringComments")]
+        public async Task<IActionResult> GetComplexStringComments(int id)
+        {
+            var comments = await dataProvider.GetCommentsAsync(id);
+            return comments == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
+                : Ok(mapper.Map<IEnumerable<CommentDTO>>(comments));
+        }
+
+        // PUT: ComplexStrings/5/comments
+        [HttpPut("{id}/comments")]
+        public async Task<IActionResult> SetStringComments(int id, [FromBody]IEnumerable<CommentDTO> comments)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.SetComments(id, comments);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

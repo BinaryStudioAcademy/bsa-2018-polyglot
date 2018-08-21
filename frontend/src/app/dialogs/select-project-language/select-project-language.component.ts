@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import {MatDialog, MatDialogConfig} from "@angular/material";
 
 @Component({
@@ -40,9 +40,5 @@ export class SelectProjectLanguageComponent implements OnInit {
     else if(!$event.checked && inArray){
       this.selectedLangs = this.selectedLangs.filter(l => l.id != lang.id);
     }
-  }
-  
-  close(){
-    this.dialogRef.close();
   }
 }
