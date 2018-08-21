@@ -11,7 +11,8 @@ namespace Polyglot.Common.DTOs.NoSQL
         public string Key { get; set; }
         [JsonProperty("projectId")]
         public int ProjectId { get; set; }
-        public string Language { get; set; }
+        [JsonProperty("languageId")]
+        public int LanguageId { get; set; }
         [JsonProperty("base")]
         public string OriginalValue { get; set; }
         [JsonProperty("description")]
