@@ -1,20 +1,22 @@
 <div class="container">
   <h3>You can also export all your translations</h3>
   <p>Just select language and file extension and click <strong>Download</strong></p>
+  <p>(For this moment we work only with .json and .resx)</p> 
+  <mat-form-field>
+    <mat-select class="mat-select" placeholder="Language" [(ngModel)]="selectedLanguage">
+      <mat-option *ngFor="let l of languages" [value]="l">
+        {{l.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-  <mat-select placeholder="Language" [(ngModel)]="selectedLanguage">
-    <mat-option *ngFor="let l of languages" [value]="l">
-      {{l.name}}
-    </mat-option>
-  </mat-select>
-
-  <mat-radio-group  class="radio-group" [(ngModel)]="selectedFormat">
-    <mat-radio-button color="primary" class="radio-item" *ngFor="let format of formats" [value]="format">
-      {{format}}
-    </mat-radio-button>
-    <p>selected format: {{selectedFormat}}</p>
-    <p>selected language: {{selectedLanguage | json}}</p>
-  </mat-radio-group>
+  <div class="radio-group">
+    <mat-radio-group [(ngModel)]="selectedFormat">
+      <mat-radio-button color="primary" class="radio-item" *ngFor="let format of formats" [value]="format">
+        {{format}}
+      </mat-radio-button>    
+    </mat-radio-group>
+  </div>
 
   <button (click)="download()" mat-flat-button color="primary" [disabled]="!selectedFormat || !selectedLanguage">
     Download
