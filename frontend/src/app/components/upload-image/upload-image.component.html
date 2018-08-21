@@ -1,7 +1,7 @@
 <form #imageForm = ngForm>
   <div [ngfBackground]="fileToUpload" class = "img">
-    <img *ngIf="!fileToUpload && !project.imageUrl" class="defaultImg" src = "/assets/images/default.jpg">
-    <img *ngIf="project.imageUrl && !fileToUpload" class="defaultImg" src="{{project.imageUrl}}">
+    <img *ngIf="!fileToUpload && !imageUrl" class="defaultImg" src = "/assets/images/default.jpg">
+    <img *ngIf="imageUrl && !fileToUpload" class="defaultImg" src="{{imageUrl}}">
   </div>
   <div ngfDrop selectable="1" multiple="1"
   [(file)]="fileToUpload"
