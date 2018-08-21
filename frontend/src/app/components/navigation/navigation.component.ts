@@ -49,6 +49,7 @@ export class NavigationComponent implements OnDestroy {
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
         this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
       }
     );
   }
@@ -58,6 +59,7 @@ export class NavigationComponent implements OnDestroy {
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
         this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
       }
     );
   }
@@ -88,17 +90,13 @@ export class NavigationComponent implements OnDestroy {
           (user: UserProfile)=> {
             this.userService.updateCurrrentUser(user);   
             this.manager = this.userService.getCurrrentUser();
-            // this.email = this.appState.currentFirebaseUser.email;
             this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
           },
           err => {
             console.log('err', err);
           }
         );
-      } else {
-        this.manager = this.userService.getCurrrentUser();
-        // this.email = this.appState.currentFirebaseUser.email;
-        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+        this.email = this.appState.currentFirebaseUser.email;
       }
     } else {
       this.manager = { 
