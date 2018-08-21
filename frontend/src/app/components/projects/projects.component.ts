@@ -31,8 +31,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   OnPage : boolean;
   
   manager: UserProfile =  this.userService.getCurrrentUser();
-  connection: any;
-  private url: string = environment.apiUrl;
+
   
   ngOnInit() {
     this.OnPage = true;
@@ -44,21 +43,6 @@ export class ProjectsComponent implements OnInit,OnDestroy {
         }
         this.IsLoad = false;
     });
-    debugger
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.url}/hub/`)
-      .build();
-
-    this.connection.start().catch(err => document.write(err));
-
-    this.connection.on("messageReceived", (username: string, message: string) => {
-        console.log(message);
-    });
-  }
-
-  send() {    
-    this.connection.send("newMessage", 'Natali', 'Natali2')
-              .then(() => console.log('send natali'));
   }
 
   ngOnDestroy(){
