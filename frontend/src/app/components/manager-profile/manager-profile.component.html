@@ -38,13 +38,19 @@
                 <hr>
                 <div class="project-list">
                 <br>
-                <div *ngFor="let p of projects">
-                        <mat-card-header>
-                          <mat-card-title>{{p.name}}</mat-card-title>
-                          <mat-card-subtitle>{{p.technology}}</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                        </mat-card-content>
+                
+                <div class="project-card" mat-list-item [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'" *ngFor="let p of projects">
+                    <div class="projects-container">
+                    <h5>Name:</h5>
+                    <div class="project-name">
+                        {{p.name}}
+                    </div>
+                    <h5>Technology:</h5>
+                    <div class="project-technology">
+                        {{p.technology}}
+                    </div>
+                    </div>
+                    <hr>
                 </div>
               </div>      
               </div>
