@@ -86,7 +86,7 @@ mat-card-header.mat-card-header
     grid-row-start: 1
     -ms-grid-row-span: 1
     grid-row-end: 2
-    background: linear-gradient(-135deg, rgba(47,47,166,0.8) 0%, rgba(47,47,166,0.8) 72%, rgba(2,0,36,1) 65%)
+    background: linear-gradient(-135deg, #fff 0%, #DCDCDC 72%, rgba(47, 47, 166, 0.8) 65%)
 
 mat-card-header.mat-card-header-placeholder
     background: linear-gradient(-135deg, rgba(219,219,219,1) 0%, rgba(219,219,219,1) 72%, rgba(187,187,187,1) 65%)
@@ -112,7 +112,8 @@ mat-card-header.mat-card-header-placeholder
     right: 2px
     top: 0
     padding: 0
-    .mat-icon-button
+    .mat-icon-button,
+    div
         display: inline-block
         width: 25px
         height: 25px
@@ -121,7 +122,6 @@ mat-card-header.mat-card-header-placeholder
             vertical-align: initial
 
 .dismiss-spinner
-    background: grey
     display: inline-block
 
 .team-img
@@ -175,4 +175,13 @@ mat-card-header.mat-card-header-placeholder
             background-color: #F7F7F7
        
 .hidden
-    display: none
+    opacity: 0
+
+.action-btn-container div
+    position: relative
+    cursor: pointer
+    .dismiss-spinner
+        position: absolute
+        top: 0
+        left: 0
+

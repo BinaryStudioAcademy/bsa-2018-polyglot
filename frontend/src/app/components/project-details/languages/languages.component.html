@@ -27,8 +27,8 @@
                   </div>
                 </div>
                 <button [disabled]="IsLoading[l.id]" (click)="onDeleteLanguage(l.id)" mat-icon-button>
-                    <mat-spinner [ngClass]="{hidden: !IsLoading[l.id]}" [diameter]="25"></mat-spinner> 
-                    <mat-icon [ngClass]="{hidden: IsLoading[l.id]}"  aria-label="">delete_sweep</mat-icon>
+                    <mat-spinner class="delete-spinner" [ngClass]="{hidden: !IsLoading[l.id]}" [diameter]="25"></mat-spinner> 
+                    <mat-icon  aria-label="">delete_sweep</mat-icon>
                 </button>
                 
               </div>
