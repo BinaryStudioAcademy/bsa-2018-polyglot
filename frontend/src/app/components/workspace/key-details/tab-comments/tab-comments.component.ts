@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material';
 import { CommentsService } from '../../../../services/comments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import * as signalR from '@aspnet/signalr';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-tab-comments',
@@ -21,6 +23,8 @@ export class TabCommentsComponent implements OnInit {
   comments: Comment[];
   routeSub: Subscription;
   keyId: number;
+  connection: any;
+  private url: string = environment.apiUrl;
 
   commentForm = this.fb.group({
     commentBody: ['', ]
@@ -46,6 +50,17 @@ export class TabCommentsComponent implements OnInit {
       this.getComments().subscribe(comments=>{
         this.comments = comments;
       });
+    });
+
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl(`${this.url}/hub/`)
+      .build();
+
+    this.connection.start().catch(err => document.write(err));
+
+    this.connection.on("commentsReceived", (comments: Comment[]) => {
+        this.comments = comments;
+        console.log(comments);
     });
   }
 
@@ -83,6 +98,7 @@ export class TabCommentsComponent implements OnInit {
               this.snotifyService.success("Comment added", "Success!");
               this.comments = comments;
               this.commentForm.reset();
+              this.send(comments);
             }
             else{
               this.snotifyService.error("Comment wasn't add", "Error!");
@@ -92,4 +108,9 @@ export class TabCommentsComponent implements OnInit {
           this.snotifyService.error("Comment added", "Error!");
         });
   }
+
+  send(comments: Comment[]) {    
+    this.connection.send("newComment", comments)
+              .then(() => console.log(comments));
+  }  
 }

@@ -47,9 +47,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     debugger
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${this.url}/hub/`)
-
-    //.withUrl("/hub")
-    .build();
+      .build();
 
     this.connection.start().catch(err => document.write(err));
 
@@ -58,8 +56,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     });
   }
 
-  send() {
-    
+  send() {    
     this.connection.send("newMessage", 'Natali', 'Natali2')
               .then(() => console.log('send natali'));
   }
