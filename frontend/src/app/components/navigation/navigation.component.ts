@@ -1,15 +1,15 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, AfterContentInit, DoCheck, AfterContentChecked, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { LoginDialogComponent } from 'src/app/dialogs/login-dialog/login-dialog.component';
-import { SignupDialogComponent } from 'src/app/dialogs/signup-dialog/signup-dialog.component';
-import { StringDialogComponent } from 'src/app/dialogs/string-dialog/string-dialog.component';
+import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
+import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import { AuthService } from '../../services/auth.service';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { UserService } from '../../services/user.service';
 import { UserProfile } from '../../models';
 import { map } from 'rxjs/operators';
 import { AppStateService } from '../../services/app-state.service';
-import { Router } from '../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -23,6 +23,8 @@ export class NavigationComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   manager : UserProfile;
+  email: string;
+  role: string;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -39,36 +41,27 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.appState.LoginStatus){
-      if (!this.userService.getCurrrentUser()) {
-        this.userService.getUser().subscribe(
-          (d: UserProfile)=> {
-            this.userService.saveUser(d);   
-            this.manager = d;
-          },
-          err => {
-            console.log('err', err);
-          }
-        );
-     }
-    }
-    else {
-        this.manager = { 
-          fullName: "",
-          avatarUrl: "",
-          lastName: "" 
-        }
-    }
-
+    this.updateCurrentUser();
   }
 
-
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent);
+    let dialogRef = this.dialog.open(LoginDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+      }
+    );
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent);
+    let dialogRef = this.dialog.open(SignupDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+      }
+    );
   }
 
   onNewStrClick() {
@@ -77,7 +70,8 @@ export class NavigationComponent implements OnDestroy {
 
   onLogoutClick() {
     this.authService.logout();
-    this.appState.updateState(null, '', false);
+    this.appState.updateState(null, '', false, null);
+    this.userService.removeCurrentUser();
     this.router.navigate(['/']);
   }
 
@@ -87,6 +81,32 @@ export class NavigationComponent implements OnDestroy {
   
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  private updateCurrentUser() {
+    if (this.appState.LoginStatus){
+      if (!this.userService.getCurrrentUser()) {
+        this.userService.getUser().subscribe(
+          (user: UserProfile)=> {
+            this.userService.updateCurrrentUser(user);   
+            this.manager = this.userService.getCurrrentUser();
+            this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+          },
+          err => {
+            console.log('err', err);
+          }
+        );
+        this.email = this.appState.currentFirebaseUser.email;
+      }
+    } else {
+      this.manager = { 
+        fullName: "",
+        avatarUrl: "",
+        lastName: "" 
+      };
+      this.email = '';
+      this.role = '';
+    }
   }
 
 

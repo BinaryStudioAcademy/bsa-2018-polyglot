@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Assigning a team</h2>
+<mat-dialog-content>
+
+        <form class="search-form">
+
+                <mat-form-field class="search-full-width">
+              
+                  <input type="search" matInput placeholder="Search">
+                  <button mat-raised-button color="primary" matSuffix>
+                    <mat-icon>search</mat-icon>
+                  </button>
+                </mat-form-field>
+              
+        </form>
+        <mat-divider></mat-divider>
+      <div class="container">
+          <mat-checkbox  class="team-card-item" *ngFor="let t of teams" (change)="change($event, t)">
+              <mat-card class="example-card">
+                  <mat-card-header>            
+                      <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
+                    
+                      <div class="title">
+                          <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
+                          <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
+                      </div>
+                      <div class="action-btn-container">
+                            <button mat-icon-button [mat-dialog-close]="true" routerLink="/dashboard/teams/{{t.id}}">
+                              <mat-icon class="icon team-info-icon" aria-label="team-details">info</mat-icon>
+                            </button>
+                      </div>
+                  </mat-card-header>
+                  
+                  
+                  <div class="card-content">
+                        <div mat-card-image class="img-container">
+                          <img height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
+                        </div>
+                      </div>     
+              </mat-card> 
+          </mat-checkbox>
+      </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="p-1 mt-2">
+      <button style="float: left" mat-raised-button color="primary" [disabled]="disabled" (click)="assign()" mat-button>Assign</button>
+      <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
+</mat-dialog-actions>

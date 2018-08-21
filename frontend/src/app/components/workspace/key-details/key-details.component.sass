@@ -1,3 +1,31 @@
+.mat-panel-description
+  width: 80%
+
+.mat-panel-title
+  width: 20%
+
+.header-translation
+  height: auto !important;
+
+.textarea-translation
+  width: 100%;
+  padding-top: 10px;
+  
+
+.textarea-translation textarea
+  padding-top: 10px;
+
+.none-translation 
+  text-align: center;
+
+.button-translation 
+  display: flex;
+  justify-content: space-between;
+
+.language-label
+  font-size: 16px
+
+
 \:host
   display: flex
 
@@ -8,14 +36,16 @@
   font-size: 12px
 
 .key-details
-  height: calc(100vh - 347px)
+  height: fit-content
   overflow: auto
   width: 70%
+  padding: 0
 
 .translations-details
   padding-top: 0!important
   padding-bottom: 48px!important
-  overflow: auto
+  height: calc(100vh - 347px)
+  overflow: hidden
   width: 35%
 
 .translations-list
@@ -41,3 +71,35 @@
 
 .icon-size
   font-size: 30px
+
+/deep/.mat-tab-body
+  height: 58vh!important
+  ::-webkit-scrollbar 
+    width: 5px
+  ::-webkit-scrollbar-track 
+    background: #f1f1f1
+  ::-webkit-scrollbar-thumb 
+    background: #888
+  ::-webkit-scrollbar-thumb:hover 
+    background: #555
+
+
+.language
+  display: inline-block
+  width: 25%
+
+.translation
+  display: inline-block
+  width: 75%
+
+.spinner
+  display: flex;
+  justify-content: center; 
+  padding: 30px !important;
+
+.no-languages-div
+  font-size: 70px
+  text-align: center
+  height: calc(54vh + 3px)
+  align-items: center
+  color: Gainsboro

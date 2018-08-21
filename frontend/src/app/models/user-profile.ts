@@ -1,7 +1,10 @@
+import { Rating } from ".";
+import { Role } from "./role";
+
 export interface UserProfile {
     id?: number;
     firstName?: string;
-    lastName: string;
+    lastName?: string;
     birthDate?: Date;
     registrationDate?: Date;
     country?: string;
@@ -12,4 +15,6 @@ export interface UserProfile {
     phone?: string;
     avatarUrl?: string;
     fullName?: string;
+    ratings?: Array<Rating>;
+    userRole? : Role;
 }

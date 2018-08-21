@@ -7,7 +7,7 @@ namespace Polyglot.DataAccess.SqlRepository
     public interface IUnitOfWork
     {
         IRepository<T> GetRepository<T>()
-            where T : Entity, new();
+            where T : DbEntity, new();
 
 
         Task<int> SaveAsync();

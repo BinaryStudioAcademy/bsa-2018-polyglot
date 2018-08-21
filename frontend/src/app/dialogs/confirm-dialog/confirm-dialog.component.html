@@ -1,0 +1,7 @@
+  <div class="header">
+    <h3 md-dialog-title>{{data.description}}</h3>
+  </div>
+  <mat-card-actions class="card-buttons">
+      <button mat-raised-button color="primary" cdkFocusInitial (click)="onOkClick()">{{data.btnOkText}}</button>
+      <button mat-raised-button color="warn" (click)="onCancelClick()">{{data.btnCancelText}}</button>
+  </mat-card-actions>

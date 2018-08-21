@@ -2,26 +2,35 @@ import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
 import { UserProfile } from '../models';
+import { AppStateService } from './app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private user: UserProfile;
-
-  
-  private endpoint: string = "userprofiles/user";
-  constructor(private dataService: HttpService) { }
+  api: string;
+  private endpoint: string = "userprofiles";
+  constructor(private dataService: HttpService, private appState: AppStateService) {
+    this.api = "userprofiles";
+   }
 
   getCurrrentUser(){
-    return this.user;
+    let user = this.appState.currentDatabaseUser;
+
+    if (user) {
+      if (!user.avatarUrl || user.avatarUrl == '') {
+        user.avatarUrl = '/assets/images/default-avatar.jpg';
+      }
+    }
+    
+    return user;
   }
 
-  getAndSave() {
-    this.dataService.sendRequest(RequestMethod.Get, this.endpoint).subscribe(
-      (d)=> {
-        this.saveUser(d);
+  getAndUpdate() {
+    this.getUser().subscribe(
+      (user)=> {
+        this.updateCurrrentUser(user);
       },
       err => {
         console.log('err', err);
@@ -29,27 +38,45 @@ export class UserService {
     );
   }
 
-  saveUser(userProfile: any) {
-    this.user = userProfile;
+  // use this when logout
+  removeCurrentUser() {
+    this.appState.currentDatabaseUser = undefined;
   }
 
-  getUser(): Observable<UserProfile> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.endpoint);
+  updateCurrrentUser (userProfile: any) {
+    if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
+      userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
+    }
+    // can add more default values
+    
+    this.appState.currentDatabaseUser = userProfile;
   }
 
-  getOne(id: number){
-    return this.dataService.sendRequest(RequestMethod.Get, this.endpoint, id);
+  getUser() : Observable<UserProfile> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
   }
 
-  create(body){
-    return this.dataService.sendRequest(RequestMethod.Post, this.endpoint, undefined, body);
+  getOne(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  update(id: number, body){
-    return this.dataService.sendRequest(RequestMethod.Put, this.endpoint, id, body);
+  isUserInDb() : Observable<boolean> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/isInDb', undefined);
   }
 
-  delete(id: number){
-    return this.dataService.sendRequest(RequestMethod.Delete, this.endpoint, id);
+  getAll() : Observable<any[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
+  }
+
+  create(body) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
+  }
+
+  update(id: number, body) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
+  }
+
+  delete(id: number) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
 }

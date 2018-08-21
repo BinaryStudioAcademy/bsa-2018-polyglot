@@ -41,3 +41,8 @@ bin/
 .vs/
 node_modules/
 packages/
+<<<<<<< HEAD
+/frontend/src/assets/images/robo3t-1.2.1-windows-x86_64-3e50a65.zip
+=======
+frontend/src/assets/images/robo3t-1.2.1-windows-x86_64-3e50a65.zip
+>>>>>>> c99bb6c075734db59bc134e773b5cf858da89815

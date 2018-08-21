@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from '../../services/http.service';
-
 import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../../services/auth.service';
-
+import { Router } from '../../../../node_modules/@angular/router';
+import { AppStateService } from '../../services/app-state.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -17,19 +17,48 @@ export class LandingComponent implements OnInit {
   title: string;
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public router: Router,
+    private appState: AppStateService,
+    private userService: UserService
   ) {
   }
 
   ngOnInit() {
     document.body.classList.add('bg-image');
+    this.updateCurrentUser();
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent);
+    let dialogRef = this.dialog.open(SignupDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.updateCurrentUser();
+      }
+    );
   }
 
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent);
+    let dialogRef = this.dialog.open(LoginDialogComponent);  
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.updateCurrentUser();
+      }
+    );
+  }
+
+  private updateCurrentUser() {
+    if (this.appState.LoginStatus){
+      if (!this.userService.getCurrrentUser()) {
+        this.userService.getUser().subscribe(
+          (user)=> {
+            this.userService.updateCurrrentUser(user);   
+          },
+          err => {
+            console.log('err', err);
+          }
+        );
+      }
+    }
   }
 }

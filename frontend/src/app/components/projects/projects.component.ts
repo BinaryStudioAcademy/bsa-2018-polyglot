@@ -1,16 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Project } from '../../models/project';
-import { ManagerService } from '../../services/manager.service';
 import { ProjectService } from '../../services/project.service';
-
-import { MatDialog } from '../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
 
 // to delete manager and user
-import { Manager } from '../../models/manager';
 import { UserProfile } from '../../models/user-profile';
 
-
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -19,40 +17,22 @@ import { UserProfile } from '../../models/user-profile';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
-  public cards: Project[];
-
-
-  constructor(
-    //private managerService: ManagerService, 
-    private projectService: ProjectService,
-    public dialog: MatDialog) { }
   
-
+  constructor(
+    private userService: UserService,
+    private projectService: ProjectService,
+    public dialog: MatDialog,
+    private snotifyService: SnotifyService) { }
+  
+  public cards: Project[];
   IsLoad : boolean = true;
-  OnPage : boolean
-
-
-  user: UserProfile = {
-    id: 1,
-    firstName: 'Bill',
-    lastName: 'Gates',
-    birthDate: null,
-    registrationDate: null,
-    country: 'string',
-    city: 'string',
-    region: 'string',
-    postalCode: 'string',
-    address: 'string',
-    phone: 'string',
-    avatarUrl: 'https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg'
-  };
-  manager: Manager = {
-    id:  1,
-    userProfile: this.user
-  };
+  OnPage : boolean;
+   
+  manager: UserProfile =  this.userService.getCurrrentUser();
 
   ngOnInit() {
   this.OnPage = true;
+  debugger;
 
   this.projectService.getAll().subscribe(pr => 
     {
@@ -72,12 +52,4 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     const dialogRef = this.dialog.open(ProjectMessageComponent, {
     });
   }
-
-  delete(id: number): void{
-    this.projectService.delete(id);
-    console.log("deleted")
-   }
 }
-
-  
-

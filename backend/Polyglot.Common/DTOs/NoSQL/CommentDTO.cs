@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Polyglot.DataAccess.Entities;
+using System;
 
 namespace Polyglot.Common.DTOs.NoSQL
 {
     public class CommentDTO
     {
-		public int UserId { get; set; }
+		public UserProfileDTO User { get; set; }
 		public string Text { get; set; }
 		public DateTime CreatedOn { get; set; }
 

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Polyglot.DataAccess.Entities;
+using System;
 
 namespace Polyglot.DataAccess.MongoModels
 {
-    public class Comment
+    public class Comment : Entity
     {
 		public int UserId { get; set; }
 		public string Text { get; set; }

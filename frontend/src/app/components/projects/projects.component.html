@@ -1,24 +1,32 @@
-  <form class="search-form">
-  
+
+
+<div class="sub-menu">
+  <mat-slide-toggle color="primary" #toggle [checked]="true">
+    Switch the layout
+  </mat-slide-toggle>
+  <form class="search-form">  
     <mat-form-field class="search-full-width">
-  
       <input type="search" matInput placeholder="Search">
       <button mat-raised-button color="primary" matSuffix>
         <mat-icon>search</mat-icon>
       </button>
-    </mat-form-field>
-  
+    </mat-form-field>  
   </form>
+</div>
+
   <div *ngIf="IsLoad" class="spinner">
       <mat-spinner></mat-spinner> 
-  </div> 
-<div class="container"> 
+  </div>
+
+  
+
+<div *ngIf="toggle.checked" class="container"> 
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>        
-        <img mat-card-avatar class="manager-img" src="{{manager.userProfile.avatarUrl}}">
+        <img mat-card-avatar class="manager-img" src="{{manager.avatarUrl}}">
         <div class="title">
           <mat-card-title class="card-title">{{card.name}}</mat-card-title>
-          <mat-card-subtitle class="card-subtitle">{{manager.userProfile.firstName}} {{manager.userProfile.lastName}}</mat-card-subtitle>
+          <mat-card-subtitle class="card-subtitle">{{manager.fullName}}</mat-card-subtitle>
         </div>
       </mat-card-header>
       <div class="img-container">
@@ -39,7 +47,31 @@
         <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </mat-card-actions>
     </mat-card>
-</div>  
+</div>
+
+
+<div *ngIf="!toggle.checked" class="row-container">
+  <mat-list>
+    <div class="list-item" *ngFor="let card of cards">
+      <div class="row-manager">
+        <img mat-card-avatar class="row-manager-img" src="{{manager.avatarUrl}}">
+        <span><strong>{{manager.fullName}}</strong></span>        
+      </div>
+      <div class="row-name">
+        <h3>{{card.name}}</h3>
+      </div>
+      <div class="row-info">                
+        <span *ngIf="card.description !== null && card.description!=='' " class="row-description" >{{card.description}}</span>
+        <span *ngIf="card.description == null || card.description=='' " class="row-description" >No description</span>       
+      </div>
+      <div class="row-buttons">
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>        
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+      </div>      
+    </div>    
+  </mat-list>
+
+</div>
 
 <ng-snotify></ng-snotify>
 <button routerLink="/profile/newproject" mat-fab color="primary" class="button-add">

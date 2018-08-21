@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { UserProfile } from '../models';
-import { BehaviorSubject } from '../../../node_modules/rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppStateService {
-  
+
   // Firebase user
   private currentFirebaseUserSubject: BehaviorSubject<firebase.User> = new BehaviorSubject<firebase.User>(null);
 
@@ -20,7 +20,15 @@ export class AppStateService {
   }
 
   // Database user
-  public currentDatabaseUser: UserProfile;
+  private currentDatabaseUserSubject: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
+
+  public get currentDatabaseUser(): UserProfile {
+    return this.currentDatabaseUserSubject.value;
+  }
+
+  public set currentDatabaseUser(v: UserProfile) {
+    this.currentDatabaseUserSubject.next(v);
+  }
 
   // Firebase token
   private currentFirebaseTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -51,10 +59,11 @@ export class AppStateService {
     this.LoginStatus = localStorage.getItem('LoginStatus') === 'true';
   }
 
-  updateState(user: firebase.User, token: string, loginStatus: boolean) {
+  updateState(user: firebase.User, token: string, loginStatus: boolean, dbUser?: UserProfile) {
     this.currentFirebaseUser = user;
     this.currentFirebaseToken = token;
     this.LoginStatus = loginStatus;
+    this.currentDatabaseUser = dbUser;
 
     //localStorage
     localStorage.setItem('currentFirebaseToken', this.currentFirebaseToken);

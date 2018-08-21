@@ -7,8 +7,9 @@ namespace Polyglot.DataAccess.MongoModels
 		public string TranslationValue { get; set; }
 		public int UserId { get; set; }
 		public DateTime CreatedOn { get; set; }
+        public Translation.TranslationType Type { get; set; }
 
-		public AdditionalTranslation()
+        public AdditionalTranslation()
 		{
 
 		}

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialog } from '../../../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
+import { IString } from '../../../../models/string';
 
 @Component({
   selector: 'app-tab-detail',
@@ -9,7 +10,7 @@ import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.co
 })
 export class TabDetailComponent implements OnInit {
 
-  @Input()  public keyDetails: any;
+  @Input()  public keyDetails: IString;
 
   constructor(public dialog: MatDialog) { }
 

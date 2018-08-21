@@ -8,6 +8,7 @@
     <Compile Remove="Migrations\20180810120917_RenameTranslatationToComplexString.cs" />
     <Compile Remove="Migrations\20180810124428_RenameTranslatationToComplexString.cs" />
     <Compile Remove="Migrations\20180810132217_RenameTranslatationToComplexString.cs" />
+    <Compile Remove="Migrations\20180815120543_RenameAuthorField.cs" />
   </ItemGroup>
 
   <ItemGroup>

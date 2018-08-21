@@ -1,16 +1,16 @@
 <!-- <p> {{ manager | json}} </p> -->
 
 <div class="container">
-  <div class="item" 
-  fxLayout
-  fxLayout.xs="column"
-  fxLayoutAlign="center"
-  fxLayoutGap="20px">
-  <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
-      <img src="{{manager.avatarUrl}}" alt="avatar" (click)="editPhoto()">
-  </div>
-  <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
-  <div class="main-info-wrapper">
+    <div class="item" 
+    fxLayout
+    fxLayout.xs="column"
+    fxLayoutAlign="center"
+    fxLayoutGap="20px">
+    <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
+        <img src="{{manager.avatarUrl}}" alt="avatar" (click)="editPhoto()">
+    </div>
+    <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
+    <div class="main-info-wrapper">
         <div class="user-name">{{manager.fullName}}</div>
         <button mat-raised-button color="primary" class="project-btn-width" routerLink="./settings">
           Settings<i class="material-icons" style="margin-left: 5px">settings</i>
@@ -18,10 +18,10 @@
         <p class="rating-star">Rating 7.8/10
             <i class="material-icons" style="color: orange ;">star</i>
         </p>
-  </div>
-  </div>
-  </div>
-  <div class="" style="margin-top: 20px"
+    </div>
+    </div>
+    </div>
+    <div class="" style="margin-top: 20px"
        fxLayout
        fxLauoutWrap
        fxLayoutAlign="center"
@@ -33,54 +33,58 @@
                 <div class="project-button-wrapper">
                     <h2 class="title">Projects</h2>
                     <button  mat-raised-button color="primary" routerLink="./newproject">Create new</button>
-                </div>
-                
+                </div>         
                 <hr>
                 <div class="project-list">
-                <br>
-                <div *ngFor="let p of projects">
-                        <mat-card-header>
-                          <mat-card-title>{{p.name}}</mat-card-title>
-                          <mat-card-subtitle>{{p.technology}}</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                        </mat-card-content>
-                </div>
-              </div>      
+                    <br>
+                    <div class="project-card" mat-list-item [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'" *ngFor="let p of projects">
+                        <div class="projects-container">
+                            <h5>Name:</h5>
+                            <div class="project-name">
+                                {{p.name}}
+                            </div>
+                            <h5>Technology:</h5>
+                            <div class="project-technology">
+                                {{p.technology}}
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>      
               </div>
             </div> 
-         </div>
+            </div>
     <div fxLayout="column" fxFlex="50%" fxFlex.sm="40%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
-   <div fxFlex>
-      <mat-card>
-          <h2>Personal detail</h2>
-          <hr>
-          <!-- BUG HERE DataBirth 1/01/01   {{manager.birthDate | date:'mediumDate'}}-->
-          <mat-card-subtitle>Birth : <span></span></mat-card-subtitle>
-          <mat-card-title>Location</mat-card-title><hr>    
-          <mat-card-subtitle>Country : <span> {{manager.country}}</span></mat-card-subtitle>
-          <mat-card-subtitle>City : <span> {{manager.city}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Region : <span> {{manager.region}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Address : <span> {{manager.address}}</span></mat-card-subtitle>
-          <mat-card-subtitle>Postal code : <span> {{manager.postalCode}}</span></mat-card-subtitle>
-          <mat-card-title>Contacts</mat-card-title><hr>
-          <mat-card-subtitle>Phone : <span> {{manager.phone}}</span></mat-card-subtitle>
-          </mat-card>
-   </div>
-  </div>
-  <div fxLayout="column" fxLayoutGap="20px"  fxFlex="25%" fxFlex.sm="30%" fxLayout.xs="column">
-    <div class="item" fxFlex>
-      <div>
-        <h2 class="title"> Experience </h2><hr>
-                <mat-card-header>
-                  <mat-card-title>Position</mat-card-title>
-                  <mat-card-subtitle>Company</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                    Responsibilities
-                </mat-card-content>
-      </div>
+    <div fxFlex>
+        <mat-card>
+            <h2>Personal detail</h2>
+            <hr>
+          
+            <mat-card-subtitle>Birth : <span>{{manager.birthDate | date:'mediumDate'}}</span></mat-card-subtitle>
+            <mat-card-title>Location</mat-card-title><hr>    
+            <mat-card-subtitle>Country : <span> {{manager.country}}</span></mat-card-subtitle>
+            <mat-card-subtitle>City : <span> {{manager.city}}</span></mat-card-subtitle>
+            <mat-card-subtitle>Region : <span> {{manager.region}}</span></mat-card-subtitle>
+            <mat-card-subtitle>Address : <span> {{manager.address}}</span></mat-card-subtitle>
+            <mat-card-subtitle>Postal code : <span> {{manager.postalCode}}</span></mat-card-subtitle>
+            <mat-card-title>Contacts</mat-card-title><hr>
+            <mat-card-subtitle>Phone : <span> {{manager.phone}}</span></mat-card-subtitle>
+        </mat-card>
     </div>
-  </div>
-  </div>
-  </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="20px"  fxFlex="25%" fxFlex.sm="30%" fxLayout.xs="column">
+        <div class="item" fxFlex>
+            <div>
+                <h2 class="title"> Experience </h2><hr>
+                <mat-card-header>
+                    <mat-card-title>Position</mat-card-title>
+                    <mat-card-subtitle>Company</mat-card-subtitle>
+                </mat-card-header>
+                    <mat-card-content>
+                        Responsibilities
+                    </mat-card-content>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

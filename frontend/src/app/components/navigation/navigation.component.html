@@ -2,11 +2,11 @@
   <mat-toolbar class="example-toolbar">
 
 
-    <button mat-icon-button (click)="snav.toggle()" *ngIf="isLoggedIn()">
+    <button mat-icon-button fxHide fxShow.lt-md="true" (click)="snav.toggle()" *ngIf="isLoggedIn()">
       <mat-icon>menu</mat-icon>
     </button>
 
-    <label class="companyName">Polyglot</label>
+    <label class="companyName" routerLink="/">Polyglot</label>
 
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
@@ -16,19 +16,19 @@
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
       <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
       <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect" *ngIf="isLoggedIn()">
-        <img src="{{manager?.avatarUrl}}" class="profile-small-image">
+        <img *ngIf="manager && manager.avatarUrl != ''" src="{{manager?.avatarUrl}}" class="profile-small-image">
       </button>
 
       <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
         <mat-card class="profile-card">
           <mat-card-header>
             <mat-card-title class="profile-card-main">
-              <img  src="{{manager?.avatarUrl}}" class="profile-big-image">
+              <img src="{{manager?.avatarUrl}}" class="profile-big-image">
               <div style="margin-left: 30px;">
                 <h4>{{manager?.fullName}}</h4>
-                <!-- <mat-card-subtitle>{{manager.email}}</mat-card-subtitle> -->
+                <!-- <mat-card-subtitle>{{email}}</mat-card-subtitle> -->
                 <p>
-                  <i>Manager</i>
+                  <i>{{role}}</i>
                 </p>
               </div>
             </mat-card-title>
@@ -51,7 +51,7 @@
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <div fxLayout="column">
-        <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
+        <button mat-mini-fab  mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
           <img src="{{manager?.avatarUrl}}" class="profile-small-image">
         </button>
         <a mat-button routerLinkActive="active" routerLink="/about-us">
@@ -61,19 +61,24 @@
         <a mat-button routerLinkActive="active" routerLink="/contact">
           <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
         <mat-divider></mat-divider>
-        <a mat-button routerLinkActive="active">
+        
+        <a mat-button routerLinkActive="active" routerLink="/profile/settings">
           <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+        <a mat-button routerLinkActive="active" routerLink="/profile">
+          <mat-icon mat-list-icon>account_box</mat-icon> Profile</a>
         <a mat-button routerLinkActive="active">
           <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+        <mat-divider></mat-divider>
+        
+          
+        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
+            <mat-icon mat-list-icon>block</mat-icon> Logout</a>
 
 
       </div>
     </mat-sidenav>
-
     <div (click)="snav.close()">
       <router-outlet></router-outlet>
     </div>
-    
-
   </mat-sidenav-container>
 </div>

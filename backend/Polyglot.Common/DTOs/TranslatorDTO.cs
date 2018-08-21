@@ -1,18 +1,29 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Polyglot.Common.DTOs
 {
     public class TranslatorDTO
     {
         public int Id { get; set; }
-        public UserProfileDTO UserProfile { get; set; }
-        public List<RatingDTO> Ratings { get; set; }
 
-        public List<TeamTranslatorDTO> TeamTranslators { get; set; }
+        public string FullName { get; set; }
+
+        public string Email { get; set; }
+
+        public string AvatarUrl { get; set; }
+
+        public IEnumerable<RightDTO> Rights { get; set; }
+
+        public IEnumerable<TranslatorLanguageDTO> TranslatorLanguages { get; set; }
+
+        public double Rating { get; set; }
+
+        public int? TeamId { get; set; }
 
         public TranslatorDTO()
         {
-            TeamTranslators = new List<TeamTranslatorDTO>();
+            Rights = new List<RightDTO>();
+            TranslatorLanguages = new List<TranslatorLanguageDTO>();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Polyglot.BusinessLogic.Services
             this.uow = uow;
         }
 
-        public async Task<IEnumerable<TEntityDTO>> GetListAsync()
+        public virtual async Task<IEnumerable<TEntityDTO>> GetListAsync()
 		{
             if (uow != null)
             {
@@ -31,7 +31,7 @@ namespace Polyglot.BusinessLogic.Services
                 return null;
         }
 
-        public async Task<TEntityDTO> GetOneAsync(int identifier)
+        public virtual async Task<TEntityDTO> GetOneAsync(int identifier)
         {
             if (uow != null)
             {
@@ -42,7 +42,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<TEntityDTO> PutAsync(TEntityDTO entity)
+        public virtual async Task<TEntityDTO> PutAsync(TEntityDTO entity)
         {
             if (uow != null)
             {
@@ -56,7 +56,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<bool> TryDeleteAsync(int identifier)
+        public virtual async Task<bool> TryDeleteAsync(int identifier)
 		{
             if (uow != null)
             {
