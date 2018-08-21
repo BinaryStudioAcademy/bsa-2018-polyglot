@@ -5,7 +5,7 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
-import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import {SnotifyService} from 'ng-snotify';
 import { FormControl } from '../../../../node_modules/@angular/forms';
 
 
@@ -28,7 +28,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   options = new FormControl();
 
   filterOptions : string [] = [
-    'Translated', 'Untranslated' , 'Human Translation' , 'Machine Transaltion' , 'With Tags'
+    'Translated', 'Untranslated' , 'Human Translation' , 'Machine Translation' , 'With Tags'
   ]
 
   constructor(
@@ -121,9 +121,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     
     this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
-
+ //'Translated', 'Untranslated' , 'Human Translation' , 'Machine Translation' , 'With Tags'
   OnSelectOption(){
-    //let opt = "?options[]=one&options[]=two"
+    //If the filters сontradict each other
+    this.ContradictoryСhoise(["Translated", "Untranslated"])
+    this.ContradictoryСhoise(["Human Translation", "Machine Translation"])
+
     this.dataProvider.getProjectStringsByFilter(this.project.id,this.options.value)
     .subscribe(res => {
       this.keys = res;
@@ -131,6 +134,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     console.log(this.options.value);
   }
 
+  ContradictoryСhoise(options : string[]){
+    if(this.options.value.includes(options[0]) && this.options.value.includes(options[1]))
+    {
+      options.forEach(element => {
+        let index = this.options.value.indexOf(element);
+        this.options.value.splice(index,1)
+      });
+    }
+  }
 
 }
 

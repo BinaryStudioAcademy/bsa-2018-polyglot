@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using System.Collections.Generic;
-=======
 ﻿using System;
 using System.Collections.Generic;
->>>>>>> 65efe20b62a8974648f1746197154dbb665f2cd4
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;

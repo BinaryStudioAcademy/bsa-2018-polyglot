@@ -376,8 +376,6 @@ namespace Polyglot.BusinessLogic.Services
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
-
-<<<<<<< HEAD
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId)
         {
             List<FilterType> filters = new List<FilterType>();
@@ -435,9 +433,6 @@ namespace Polyglot.BusinessLogic.Services
             MachineTranslation,
             WithTags
         }
-=======
-        
->>>>>>> 65efe20b62a8974648f1746197154dbb665f2cd4
 
         #endregion
     }
