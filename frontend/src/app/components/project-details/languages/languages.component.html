@@ -26,9 +26,11 @@
                       <span>Progress: {{l.progress | number:'1.0-1'}} %</span>
                   </div>
                 </div>
-                <button (click)="onDeleteLanguage(l.id)" mat-icon-button>
-                    <mat-icon aria-label="">delete_sweep</mat-icon>
+                <button [disabled]="IsLoading[l.id]" (click)="onDeleteLanguage(l.id)" mat-icon-button>
+                    <mat-spinner [ngClass]="{hidden: !IsLoading[l.id]}" [diameter]="25"></mat-spinner> 
+                    <mat-icon [ngClass]="{hidden: IsLoading[l.id]}"  aria-label="">delete_sweep</mat-icon>
                 </button>
+                
               </div>
             </mat-card>
         </li>
