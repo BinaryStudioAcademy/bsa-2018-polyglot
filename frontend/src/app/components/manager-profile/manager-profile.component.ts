@@ -5,6 +5,7 @@ import { Project } from '../../models/project';
 import { UserProfile } from '../../models/user-profile';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-manager-profile',
@@ -20,22 +21,17 @@ export class ManagerProfileComponent implements OnInit {
   constructor(
     public dialog: MatDialog, 
     private router: Router, 
-    private userService: UserService) {
+    private userService: UserService,
+    private projectService: ProjectService) {
   }
   
 
   ngOnInit(): void {
     this.manager = this.userService.getCurrrentUser();
 
-
-     this.projects = [
-        { name : "Translation", technology : "Machine"},
-        { name : "Translation", technology : "Human "},
-        { name : "Translation", technology : "Machine"},
-        { name : "Translation", technology : "Human "},
-        { name : "Translation", technology : "Machine"},
-        { name : "Translation", technology : "Human "}
-     ]
+    this.projectService.getAll().subscribe(pr => {
+        this.projects = pr;
+    });
      
   }
 
