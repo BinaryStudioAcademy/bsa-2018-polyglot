@@ -1,11 +1,11 @@
 ﻿using System.Linq;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication;
+using Polyglot.Authentication.Extensions;
 
 namespace Polyglot.Controllers
 {
@@ -37,9 +37,9 @@ namespace Polyglot.Controllers
 
         // GET: UserProfiles
         [HttpGet("user")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUserByUid()
         {
-            UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            var user = await service.GetByUidAsync(HttpContext.User.GetUid());
             return user == null ? NotFound($"User not found!") as IActionResult
                : Ok(user);
         }
@@ -83,5 +83,30 @@ namespace Polyglot.Controllers
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(UserProfileDTO user)
+        {
+            var uid = HttpContext.User.GetUid();
+            user.Uid = uid;
+            if (user.FullName == null || user.FullName == "")
+            {
+                user.FullName = HttpContext.User.GetName();
+                user.AvatarUrl = HttpContext.User.GetProfilePicture();
+            }
+            user.RegistrationDate = DateTime.UtcNow;
+            var entity = await service.PostAsync(user);
+            return entity == null ? StatusCode(409) as IActionResult
+                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
+                entity);
+        }
+
+        [HttpGet("isInDb")]
+        public async Task<bool> IsUserInDb()
+        {
+            return await service.IsExistByUidAsync(HttpContext.User.GetUid());
+        }
+
+
     }
 }

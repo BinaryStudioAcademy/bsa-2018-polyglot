@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule, MatSelectModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -78,6 +78,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+
+
 
 @NgModule({
   exports: [
@@ -126,6 +129,8 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
     TabCommentsComponent,
+    TabHistoryComponent,
+    ChooseRoleDialogComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
@@ -155,6 +160,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
+    MatSelectModule,
     SnotifyModule,
     MatDialogModule,
     NgxSmoothDnDModule,
@@ -175,9 +181,9 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
     ConfirmDialogComponent,
+    ChooseRoleDialogComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent
-
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

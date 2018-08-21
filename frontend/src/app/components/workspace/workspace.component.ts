@@ -22,6 +22,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public selectedKey: any;
   public isEmpty
   public currentPath;
+  public basicPath;
   
   private routeSub: Subscription;
 
@@ -51,6 +52,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
+      this.basicPath = 'workspace/'+ params.projectId;
       this.currentPath = 'workspace/'+ params.projectId +'/key'; 
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
@@ -119,7 +121,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
 
     this.keys.splice(temp, 1);
     
-    this.router.navigate([this.currentPath, this.selectedKey.id]);
+    if (this.keys.length > 0) {
+      this.router.navigate([this.currentPath, this.selectedKey.id]);
+    } else {
+      this.router.navigate([this.basicPath]);
+    }
   }
   OnSelectOption(){
     //If the filters сontradict each other

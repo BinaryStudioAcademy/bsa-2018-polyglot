@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Polyglot.DataAccess.Entities;
+using static Polyglot.DataAccess.Entities.UserProfile;
 
 namespace Polyglot.Common.DTOs
 {
