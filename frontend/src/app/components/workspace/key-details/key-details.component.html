@@ -34,6 +34,9 @@
 								</mat-form-field>
 								<div class="button-translation">
 									<button mat-raised-button color="primary"  (click)="onSave(i, t)">Save</button>
+									<button mat-raised-button color="primary" matTooltip="Machine Translation" matTooltipPosition="above" (click)="openMachineTranslationBottomSheet()">
+										<mat-icon class="icon-size" matTooltip="Machine Translation" matTooltipPosition="above">g_translate</mat-icon>
+									</button>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
 								
@@ -70,11 +73,6 @@
 		<mat-tab label="O_Translation">
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
-			</ng-template>
-		</mat-tab>
-		<mat-tab label="M_Translation">
-			<ng-template mat-tab-label>
-				<mat-icon class="icon-size" matTooltip="Machine Translation" matTooltipPosition="above">g_translate</mat-icon>
 			</ng-template>
 		</mat-tab>
 	</mat-tab-group>

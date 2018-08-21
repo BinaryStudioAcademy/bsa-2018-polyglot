@@ -3,11 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
-import { MatDialog, MatBottomSheet } from '@angular/material';
+import { MatDialog} from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import {SnotifyService} from 'ng-snotify';
 import { FormControl } from '../../../../node_modules/@angular/forms';
-import { MachineTransaltionBottomSheetComponent } from '../../dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
 
 
 @Component({
@@ -39,8 +38,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     private dataProvider: ProjectService,
     private dialog: MatDialog,
     private projectService: ProjectService,
-    private snotifyService: SnotifyService,
-    private bottomSheet : MatBottomSheet
+    private snotifyService: SnotifyService
    ) {}
 
    description: string = "Are you sure you want to remove the project?";
@@ -149,10 +147,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
         this.options.value.splice(index,1)
       });
     }
-  }
-
-  openMachineTranslationBottomSheet() : void {
-    this.bottomSheet.open(MachineTransaltionBottomSheetComponent);
   }
 
 }

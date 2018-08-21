@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatBottomSheet } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
@@ -12,6 +12,7 @@ import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { MachineTransaltionBottomSheetComponent } from '../../../dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -47,6 +48,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
+    private bottomSheet : MatBottomSheet,
     private snotifyService: SnotifyService) { 
       this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
@@ -196,6 +198,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   toggle(){
     this.IsEdit = !this.IsEdit;
   }
+
+  openMachineTranslationBottomSheet() : void {
+    this.bottomSheet.open(MachineTransaltionBottomSheetComponent);
+  }
+
 
 }
 
