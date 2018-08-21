@@ -2,7 +2,7 @@
   <img-cropper #cropper [image]="imageData" [settings]="cropperSettings"></img-cropper><br>
 </div>
 <div class="file-upload">
-  <input type="file" (change)="fileChangeListener($event)">
-  <span>Choose photo</span>
+    <input mat-button type="button" class="file-input" value="Choose photo" onclick="document.getElementById('file').click();" />
+    <input type="file" (change)="fileChangeListener($event)" style="display:none;" id="file" name="file"/>
 </div>
 <button class=btn (click)="uploadImage()">Upload</button>
