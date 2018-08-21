@@ -10,6 +10,7 @@ import { UserProfile } from '../../models/user-profile';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { UserService } from '../../services/user.service';
 import * as signalR from "@aspnet/signalr";
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -31,7 +32,8 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   
   manager: UserProfile =  this.userService.getCurrrentUser();
   connection: any;
-
+  private url: string = environment.apiUrl;
+  
   ngOnInit() {
     this.OnPage = true;
     this.projectService.getAll().subscribe(pr => 
@@ -44,7 +46,9 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     });
     debugger
     this.connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub")
+      .withUrl(`${this.url}/hub/`)
+
+    //.withUrl("/hub")
     .build();
 
     this.connection.start().catch(err => document.write(err));
@@ -52,14 +56,14 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     this.connection.on("messageReceived", (username: string, message: string) => {
         console.log(message);
     });
-
-    this.send();
   }
 
   send() {
+    
     this.connection.send("newMessage", 'Natali', 'Natali2')
               .then(() => console.log('send natali'));
   }
+
   ngOnDestroy(){
     this.OnPage = false;
   }
