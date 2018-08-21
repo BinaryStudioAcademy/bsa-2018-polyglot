@@ -163,12 +163,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
   
   onClose(index: number, translation: any) {
+    if(this.expandedArray[index].oldValue == translation.translationValue){
+      this.expandedArray[index].isOpened = false;
+      return;
+    }
      const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
       width: '500px',
       data: {description: this.description, btnYesText: this.btnYesText, btnNoText: this.btnNoText,  btnCancelText: this.btnCancelText, answer: this.answer}
     });
     dialogRef.afterClosed().subscribe(result => {
-      debugger
       if (dialogRef.componentInstance.data.answer === 1){
         this.onSave(index, translation);
       }
