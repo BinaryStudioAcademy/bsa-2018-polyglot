@@ -17,6 +17,7 @@ export class LanguagesComponent implements OnInit {
   public langs = [];
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
+  public IsLoading: any = {};
 
   constructor(
     private projectService: ProjectService, 
@@ -175,9 +176,10 @@ export class LanguagesComponent implements OnInit {
   }
 
   deleteLanguage(languageId: number){
+    this.IsLoading[languageId] = true;
     this.projectService.deleteProjectLanguage(this.projectId, languageId)
     .subscribe(() => {
-
+      this.IsLoading[languageId] = false;
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);
       setTimeout(() => {
@@ -185,6 +187,7 @@ export class LanguagesComponent implements OnInit {
       }, 100);
     },
     err => {
+      this.IsLoading[languageId] = false;
       this.snotifyService.error("Language wasn`t removed", "Error!");
       console.log('err', err);
       

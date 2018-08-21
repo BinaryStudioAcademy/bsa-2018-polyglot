@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -74,7 +74,10 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
 import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+
+
 
 @NgModule({
   declarations: [
@@ -119,6 +122,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
+    TabCommentsComponent,
+    TabHistoryComponent,
+    ChooseRoleDialogComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
@@ -146,6 +152,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
+    MatSelectModule,
     SnotifyModule,
     MatDialogModule,
     NgxSmoothDnDModule,
@@ -166,9 +173,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
     ConfirmDialogComponent,
+    ChooseRoleDialogComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent
-
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

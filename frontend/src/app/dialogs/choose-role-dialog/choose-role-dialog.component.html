@@ -1,0 +1,15 @@
+<div>
+<form style="width: 400px" class="choose-form">
+  <mat-form-field style="width: 300px" class ="select">
+    <mat-select placeholder="Select your role" [value] = "selectedOption">
+      <mat-option value="translator">Translator</mat-option>
+      <mat-option value="manager">Manager</mat-option>
+    </mat-select>
+  </mat-form-field> 
+  <button (click)="onSubmit()" class="simplebtn" mat-button style="margin-left: 5px">Sign Up!</button>
+  <mat-error *ngIf="error">
+    {{error}}
+  </mat-error>
+</form>
+</div>
+<ng-snotify></ng-snotify>

@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
 import { SnotifyService } from 'ng-snotify';
 import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-password-dialog.component';
 import { AppStateService } from '../../services/app-state.service';
-import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { ChooseRoleDialogComponent } from '../choose-role-dialog/choose-role-dialog.component';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-login-dialog',
@@ -24,12 +26,15 @@ export class LoginDialogComponent implements OnInit {
     pauseOnHover: false
   }
 
+  reloadEvent = new EventEmitter<any>();
+
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
     private snotify: SnotifyService,
     public dialog: MatDialog,
     private appState: AppStateService,
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -45,12 +50,15 @@ export class LoginDialogComponent implements OnInit {
       this.authService.signInRegular(user.email, user.password).subscribe(
         async (userCred) => {
           if (userCred.user.emailVerified) {
-            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);   
-
-            if(this.appState.LoginStatus){
-              this.dialogRef.close();
-              this.router.navigate(['/dashboard']);
-            }          
+            this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+            this.userService.getUser().subscribe(
+              async (currentUser) => {
+                this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                this.dialogRef.close();
+                this.router.navigate(['/dashboard/projects']);
+                this.reloadEvent.emit(null);
+              }
+            );    
           } else {
             this.snotify.clear();
             this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
@@ -79,39 +87,109 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onGoogleClick() {
-    this.authService.signInWithGoogle().subscribe(
+    let dialogRef: MatDialogRef<ChooseRoleDialogComponent>;
+    this.authService.signInWithGoogle().subscribe( 
       async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-
-        if(this.appState.LoginStatus) {
-          this.dialogRef.close();
-          this.router.navigate(['/dashboard']);
-        }
-
-        // if not exist in db - show error
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+        
+        this.dialogRef.afterClosed().subscribe(
+          () => {
+            this.userService.isUserInDb().subscribe(
+              (is) => {
+                if (is) {
+                  this.userService.getUser().subscribe(
+                    async (currentUser) => {
+                      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                      this.router.navigate(['/dashboard/projects']);
+                      this.reloadEvent.emit(null);
+                    }
+                  );                 
+                } else {
+                  dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+                    data: {
+                      fullName: '',
+                      email: ''
+                    }
+                  });
+                  dialogRef.componentInstance.onRoleChoose.subscribe(
+                    () => {
+                      dialogRef.componentInstance.saveDataInDb().subscribe(
+                        (result) => {
+                          dialogRef.close();
+                          this.userService.getUser().subscribe(
+                            async (currentUser) => {
+                              this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                              this.router.navigate(['/profile/settings']);
+                              this.reloadEvent.emit(null);
+                            }
+                          );     
+                        },
+                        (err) => {
+                          dialogRef.componentInstance.error = err.message;
+                        }
+                      );
+                    }
+                  );
+                }
+              }
+            );
+          }
+        );
+        
+        this.dialogRef.close(); 
       }, 
       (err) => {
-        this.firebaseError = this.handleFirebaseErrors(err);
-      }
-    );
+        this.firebaseError = err.message;
+      }); 
   }
 
   onFacebookClick() {
+    let dialogRef: MatDialogRef<ChooseRoleDialogComponent>;
     this.authService.signInWithFacebook().subscribe(
       async (userCred) => {
-        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+        this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
+        
+        this.dialogRef.afterClosed().subscribe(
+          () => {
+            this.userService.isUserInDb().subscribe(
+              async (is) => {
+                if (is) {
+                  this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                  this.router.navigate(['/dashboard/projects']);
+                  this.reloadEvent.emit(null);
+                } else {
+                  dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
+                    data: {
+                      fullName: '',
+                      email: ''
+                    }
+                  });
+                  dialogRef.componentInstance.onRoleChoose.subscribe(
+                    () => {
+                      dialogRef.componentInstance.saveDataInDb().subscribe(
+                        async (result) => {
+                          dialogRef.close();
+                          this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                          this.router.navigate(['/profile/settings']);
+                          this.reloadEvent.emit(null);
+                        },
+                        (err) => {
+                          dialogRef.componentInstance.error = err.message;
+                        }
+                      );
+                    }
+                  );
+                }
+              }
+            );
+          }
+        );
 
-        if(this.appState.LoginStatus) {
-          this.dialogRef.close();
-          this.router.navigate(['/dashboard']);
-        }
-
-        // if not exist in db - show error
+        this.dialogRef.close();
       }, 
       (err) => {
-        this.firebaseError = this.handleFirebaseErrors(err);
-      }
-    );
+        this.firebaseError = err.message;
+      });
   }
 
   onForgotPasswordClick() {

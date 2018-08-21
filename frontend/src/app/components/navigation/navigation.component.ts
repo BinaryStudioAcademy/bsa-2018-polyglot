@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, AfterContentInit, DoCheck, AfterContentChecked, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
@@ -23,6 +23,8 @@ export class NavigationComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   manager : UserProfile;
+  email: string;
+  role: string;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -42,18 +44,23 @@ export class NavigationComponent implements OnDestroy {
     this.updateCurrentUser();
   }
 
-
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
+    let dialogRef = this.dialog.open(LoginDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
-        this.updateCurrentUser();
+        this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
       }
     );
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent).afterClosed().subscribe(
-      () => this.updateCurrentUser()
+    let dialogRef = this.dialog.open(SignupDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.manager = this.userService.getCurrrentUser();
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+      }
     );
   }
 
@@ -63,7 +70,7 @@ export class NavigationComponent implements OnDestroy {
 
   onLogoutClick() {
     this.authService.logout();
-    this.appState.updateState(null, '', false);
+    this.appState.updateState(null, '', false, null);
     this.userService.removeCurrentUser();
     this.router.navigate(['/']);
   }
@@ -80,21 +87,25 @@ export class NavigationComponent implements OnDestroy {
     if (this.appState.LoginStatus){
       if (!this.userService.getCurrrentUser()) {
         this.userService.getUser().subscribe(
-          (d: UserProfile)=> {
-            this.userService.saveUser(d);   
-            this.manager = d;
+          (user: UserProfile)=> {
+            this.userService.updateCurrrentUser(user);   
+            this.manager = this.userService.getCurrrentUser();
+            this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
           },
           err => {
             console.log('err', err);
           }
         );
+        this.email = this.appState.currentFirebaseUser.email;
       }
     } else {
       this.manager = { 
         fullName: "",
         avatarUrl: "",
         lastName: "" 
-      }
+      };
+      this.email = '';
+      this.role = '';
     }
   }
 

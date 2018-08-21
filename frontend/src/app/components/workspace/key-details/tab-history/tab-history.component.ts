@@ -22,10 +22,9 @@ export class TabHistoryComponent implements OnInit {
   }
 
   showHistory(index) {
-    this.history = new Array<any>()
+    this.history = new Array<any>();
 
     this.translationDetails = this.keyDetails.translations[index];
-    console.log(this.keyDetails)
 
     if (this.translationDetails.history.length == 0) {
       this.history.push({
