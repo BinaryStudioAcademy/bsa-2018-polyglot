@@ -1,3 +1,26 @@
-<p>
-  reports works!
-</p>
+<div class="container">
+            <h2>Transaltions</h2>
+            
+                        <ngx-charts-bar-vertical
+                        [view]="view"
+                        [scheme]="colorScheme"
+                        [results]="data"
+                        [gradient]="gradient"
+                        [xAxis]="showXAxis"
+                        [yAxis]="showYAxis"
+                        
+                        [showXAxisLabel]="showXAxisLabel"
+                        [showYAxisLabel]="showYAxisLabel"
+                        [xAxisLabel]="xAxisLabel"
+                        [yAxisLabel]="yAxisLabel"
+                        [legendTitle]="legendTitle"
+                        (select)="onSelect($event)">
+                        </ngx-charts-bar-vertical>
+            <mat-divider></mat-divider> 
+
+</div>
+
+    
+
+
+

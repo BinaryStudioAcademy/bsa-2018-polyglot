@@ -11,6 +11,8 @@ import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
 
 import { AgmCoreModule } from '@agm/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 import { AppMaterialModule } from './common/app-material/app-material.module';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -155,7 +157,8 @@ import { ReportsComponent } from './components/reports/reports.component';
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule 
   ],
   entryComponents: [
     LoginDialogComponent, 

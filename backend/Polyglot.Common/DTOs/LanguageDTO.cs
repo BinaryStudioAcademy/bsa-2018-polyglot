@@ -11,5 +11,11 @@ namespace Polyglot.Common.DTOs
         public int Progress { get; set; }
 
         public int TranslationsCount { get; set; }
+
+        public int StringsCount { get; set; }
+
+        public int TranslatedStrings { get; set; }
+
+        public int NotTranslatedStrings { get; set; }
     }
 }

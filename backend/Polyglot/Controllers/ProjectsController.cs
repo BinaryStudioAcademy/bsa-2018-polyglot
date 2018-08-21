@@ -93,6 +93,19 @@ namespace Polyglot.Controllers
 
         }
 
+
+        // GET: Projects/5/report
+        [HttpGet("{id}/report", Name = "GetProjectReport")]
+        public async Task<IActionResult> GetProjectReport(int id)
+        {
+            var project = await service.GetProjectStat(id);
+            return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
+                : Ok(project);
+
+        }
+
+
+
         // PUT: Projects/:id/languages
         [HttpPut("{projectId}/languages")]
         public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)

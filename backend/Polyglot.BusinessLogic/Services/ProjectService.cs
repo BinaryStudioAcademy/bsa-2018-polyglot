@@ -381,9 +381,16 @@ namespace Polyglot.BusinessLogic.Services
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
-
         
-
         #endregion
+
+        public async Task<IEnumerable<ProjectStatisticDTO>> GetProjectStat(int id)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(id);
+            var strings  = await GetProjectStringsAsync(id);
+          
+            return null;
+        }
+
     }
 }

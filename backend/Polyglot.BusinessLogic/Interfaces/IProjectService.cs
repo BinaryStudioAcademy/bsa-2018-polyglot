@@ -42,5 +42,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync();
 
         #endregion
+
+        Task<IEnumerable<ProjectStatisticDTO>> GetProjectStat(int id);
     }
 }
