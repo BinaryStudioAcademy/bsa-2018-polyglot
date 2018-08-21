@@ -19,7 +19,6 @@ export class ManagerProfileComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog, 
-    private router: Router, 
     private userService: UserService) {
   }
   

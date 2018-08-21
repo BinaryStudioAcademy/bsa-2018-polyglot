@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, AfterContentInit, DoCheck, AfterContentChecked, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from 'src/app/dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from 'src/app/dialogs/signup-dialog/signup-dialog.component';
@@ -23,6 +23,8 @@ export class NavigationComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   manager : UserProfile;
+  email: string;
+  role: string;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
@@ -42,21 +44,20 @@ export class NavigationComponent implements OnDestroy {
     this.updateCurrentUser();
   }
 
-
   onLoginClick() {
-    this.dialog.open(LoginDialogComponent).afterClosed().subscribe(
+    let dialogRef = this.dialog.open(LoginDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
-        this.updateCurrentUser();
-        this.router.navigate(['/profile/settings']);
+        this.manager = this.userService.getCurrrentUser();
       }
     );
   }
 
   onSignUpClick() {
-    this.dialog.open(SignupDialogComponent).afterClosed().subscribe(
-      () =>{ 
-        this.updateCurrentUser();
-        this.router.navigate(['/profile/settings']);
+    let dialogRef = this.dialog.open(SignupDialogComponent);
+    dialogRef.componentInstance.reloadEvent.subscribe(
+      () => {
+        this.manager = this.userService.getCurrrentUser();
       }
     );
   }
@@ -84,22 +85,29 @@ export class NavigationComponent implements OnDestroy {
     if (this.appState.LoginStatus){
       if (!this.userService.getCurrrentUser()) {
         this.userService.getUser().subscribe(
-          (d: UserProfile)=> {
-            this.userService.saveUser(d);   
-            this.manager = d;
+          (user: UserProfile)=> {
+            this.userService.updateCurrrentUser(user);   
+            this.manager = this.userService.getCurrrentUser();
+            // this.email = this.appState.currentFirebaseUser.email;
+            this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
           },
           err => {
             console.log('err', err);
           }
         );
+      } else {
+        this.manager = this.userService.getCurrrentUser();
+        // this.email = this.appState.currentFirebaseUser.email;
+        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
       }
-      console.log(this.appState.currentDatabaseUser);
     } else {
       this.manager = { 
         fullName: "",
         avatarUrl: "",
         lastName: "" 
-      }
+      };
+      this.email = '';
+      this.role = '';
     }
   }
 

@@ -16,13 +16,21 @@ export class UserService {
    }
 
   getCurrrentUser(){
-    return this.appState.currentDatabaseUser;
+    let user = this.appState.currentDatabaseUser;
+
+    if (user) {
+      if (!user.avatarUrl || user.avatarUrl == '') {
+        user.avatarUrl = '/assets/images/default-avatar.jpg';
+      }
+    }
+    
+    return user;
   }
 
-  getAndSave() {
+  getAndUpdate() {
     this.getUser().subscribe(
-      (d)=> {
-        this.saveUser(d);
+      (user)=> {
+        this.updateCurrrentUser(user);
       },
       err => {
         console.log('err', err);
@@ -35,8 +43,8 @@ export class UserService {
     this.appState.currentDatabaseUser = undefined;
   }
 
-  saveUser(userProfile: any) {
-    if (userProfile.avatarUrl == undefined) {
+  updateCurrrentUser (userProfile: any) {
+    if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
       userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
     }
     // can add more default values

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { IUserLogin } from '../../models';
 import { AuthService } from '../../services/auth.service';
@@ -7,6 +7,7 @@ import { ForgotPasswordDialogComponent } from '../forgot-password-dialog/forgot-
 import { AppStateService } from '../../services/app-state.service';
 import { UserService } from '../../services/user.service';
 import { ChooseRoleDialogComponent } from '../choose-role-dialog/choose-role-dialog.component';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-login-dialog',
@@ -25,13 +26,16 @@ export class LoginDialogComponent implements OnInit {
     pauseOnHover: false
   }
 
+  reloadEvent = new EventEmitter<any>();
+
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private authService : AuthService,
     private snotify: SnotifyService,
     public dialog: MatDialog,
     private appState: AppStateService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -51,6 +55,8 @@ export class LoginDialogComponent implements OnInit {
               async (currentUser) => {
                 this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
                 this.dialogRef.close();
+                this.router.navigate(['/dashboard/projects']);
+                this.reloadEvent.emit(null);
               }
             );    
           } else {
@@ -92,7 +98,11 @@ export class LoginDialogComponent implements OnInit {
               (is) => {
                 if (is) {
                   this.userService.getUser().subscribe(
-                    async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                    async (currentUser) => {
+                      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                      this.router.navigate(['/dashboard/projects']);
+                      this.reloadEvent.emit(null);
+                    }
                   );                 
                 } else {
                   dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
@@ -107,7 +117,11 @@ export class LoginDialogComponent implements OnInit {
                         (result) => {
                           dialogRef.close();
                           this.userService.getUser().subscribe(
-                            async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                            async (currentUser) => {
+                              this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                              this.router.navigate(['/profile/settings']);
+                              this.reloadEvent.emit(null);
+                            }
                           );     
                         },
                         (err) => {
@@ -141,6 +155,8 @@ export class LoginDialogComponent implements OnInit {
               async (is) => {
                 if (is) {
                   this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                  this.router.navigate(['/dashboard/projects']);
+                  this.reloadEvent.emit(null);
                 } else {
                   dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
                     data: {
@@ -154,6 +170,8 @@ export class LoginDialogComponent implements OnInit {
                         async (result) => {
                           dialogRef.close();
                           this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
+                          this.router.navigate(['/profile/settings']);
+                          this.reloadEvent.emit(null);
                         },
                         (err) => {
                           dialogRef.componentInstance.error = err.message;

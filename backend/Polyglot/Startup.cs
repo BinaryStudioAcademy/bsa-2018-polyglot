@@ -107,7 +107,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            app.UseCustomizedIdentity();
+            //app.UseCustomizedIdentity();
 
             app.ConfigureCustomExceptionMiddleware();
 

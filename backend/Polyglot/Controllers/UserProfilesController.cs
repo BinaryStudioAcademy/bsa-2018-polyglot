@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication;
 using Polyglot.Authentication.Extensions;
-using System.Linq;
 
 namespace Polyglot.Controllers
 {
@@ -16,9 +14,9 @@ namespace Polyglot.Controllers
 
     public class UserProfilesController : ControllerBase
     {
-        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
+        private readonly IUserService service;
         
-        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
+        public UserProfilesController(IUserService service)
         {
             this.service = service;
         }
@@ -36,9 +34,9 @@ namespace Polyglot.Controllers
 
         // GET: UserProfiles
         [HttpGet("user")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUserByUid()
         {
-            UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            var user = await service.GetByUidAsync(HttpContext.User.GetUid());
             return user == null ? NotFound($"User not found!") as IActionResult
                : Ok(user);
         }
@@ -82,6 +80,7 @@ namespace Polyglot.Controllers
                 user.FullName = HttpContext.User.GetName();
                 user.AvatarUrl = HttpContext.User.GetProfilePicture();
             }
+            user.RegistrationDate = DateTime.UtcNow;
             var entity = await service.PostAsync(user);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
@@ -91,9 +90,7 @@ namespace Polyglot.Controllers
         [HttpGet("isInDb")]
         public async Task<bool> IsUserInDb()
         {
-            return (await service.GetListAsync())
-                .FirstOrDefault(u => u.Uid == HttpContext.User.GetUid()) != null;
-            
+            return await service.IsExistByUidAsync(HttpContext.User.GetUid());
         }
 
 

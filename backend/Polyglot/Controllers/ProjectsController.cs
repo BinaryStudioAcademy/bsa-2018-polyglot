@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.Authentication;
+using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
@@ -17,15 +20,18 @@ namespace Polyglot.Controllers
     [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
 		private IProjectService service;
+        private IUserService userService;
 
         public IFileStorageProvider fileStorageProvider;
-        public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
+        public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IUserService userService)
         {
 			this.service =  projectService;
             fileStorageProvider = provider;
+            this.userService = userService;
         }
 
 
@@ -34,7 +40,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var user = UserIdentityService.GetCurrentUser();
+            var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
             if (user.Id == 0)
                 return Ok();
             var projects = await service.GetListAsync(user.Id);
@@ -113,7 +119,9 @@ namespace Polyglot.Controllers
 
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
-            var entity = await service.PostAsync(project,UserIdentityService.GetCurrentUser().Id);
+
+            var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
+            var entity = await service.PostAsync(project, user.Id);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);

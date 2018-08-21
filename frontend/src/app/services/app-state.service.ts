@@ -7,7 +7,7 @@ import { BehaviorSubject } from '../../../node_modules/rxjs';
   providedIn: 'root'
 })
 export class AppStateService {
-  
+
   // Firebase user
   private currentFirebaseUserSubject: BehaviorSubject<firebase.User> = new BehaviorSubject<firebase.User>(null);
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { IUserSignUp } from '../../models/user-signup';
 import { AuthService } from '../../services/auth.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
@@ -25,7 +25,8 @@ export class SignupDialogComponent implements OnInit {
     closeOnClick: false,
     pauseOnHover: false        
   }
-  private isInDb: boolean;
+
+  reloadEvent = new EventEmitter<any>();
 
   constructor(
     public dialogRef: MatDialogRef<SignupDialogComponent>,
@@ -112,7 +113,11 @@ export class SignupDialogComponent implements OnInit {
               (is) => {
                 if (is) {
                   this.userService.getUser().subscribe(
-                    async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                    async (currentUser) => {
+                      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                      this.router.navigate(['/dashboard/projects']);
+                      this.reloadEvent.emit(null);
+                    }
                   );                 
                 } else {
                   dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
@@ -127,7 +132,11 @@ export class SignupDialogComponent implements OnInit {
                         (result) => {
                           dialogRef.close();
                           this.userService.getUser().subscribe(
-                            async (currentUser) => this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser)
+                            async (currentUser) => {
+                              this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                              this.router.navigate(['/profile/settings']);
+                              this.reloadEvent.emit(null);
+                            }
                           );     
                         },
                         (err) => {
@@ -162,6 +171,7 @@ export class SignupDialogComponent implements OnInit {
                 if (is) {
                   this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
                   this.router.navigate(['/dashboard/projects']);
+                  this.reloadEvent.emit(null);
                 } else {
                   dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
                     data: {
@@ -175,7 +185,8 @@ export class SignupDialogComponent implements OnInit {
                         async (result) => {
                           dialogRef.close();
                           this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
-                          this.router.navigate(['/dashboard/projects']);
+                          this.router.navigate(['/profile/settings']);
+                          this.reloadEvent.emit(null);
                         },
                         (err) => {
                           dialogRef.componentInstance.error = err.message;
