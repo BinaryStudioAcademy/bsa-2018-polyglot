@@ -8,22 +8,23 @@ namespace Polyglot.Authentication.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        [Authorize]
-        public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
-        {
-            //app.UseWhen(context => context.Request.Headers.ContainsKey("Authorization"), appBuilder =>
-            //    //{
-            //    //}
-            app.UseWhen(
-            context => context.Request.Path.StartsWithSegments(""),
-            a => a.Use(async (context, next) =>
-            {
-                UserIdentityService identityService = new UserIdentityService();
-                await identityService.SaveDate(context);
-                await next();
-            }));
-            return app;
-        }
+        //[Authorize]
+        //public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
+        //{
+        //    //app.UseWhen(context => context.Request.Headers.ContainsKey("Authorization"), appBuilder =>
+        //    //    //{
+        //    //    //}
+
+        //    app.UseWhen(
+        //    context => context.Request.Path.StartsWithSegments(""),
+        //    a => a.Use(async (context, next) =>
+        //    {
+        //        UserIdentityService identityService = new UserIdentityService();
+        //        await identityService.SaveDate(context);
+        //        await next();
+        //    }));
+        //    return app;
+        //}
 
         public static IServiceCollection AddFirebaseAuthentication(this IServiceCollection services, string projectId)
         {

@@ -11,46 +11,48 @@ using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.Authentication
 {
-    [Authorize]
+    //[Authorize]
     public class UserIdentityService
     {
-        private static UserProfileDTO User { get; set; }
+        //private static UserProfileDTO User { get; set; }
+        //private readonly ICRUDService<UserProfile, UserProfileDTO> service;
 
-        public UserIdentityService()
-        {
-            User = new UserProfileDTO();
-        }
+        //public UserIdentityService(ICRUDService<UserProfile, UserProfileDTO> service)
+        //{
+        //    this.service = service;
+        //    //User = new UserProfileDTO();
+        //}
 
-        public async Task SaveDate(HttpContext httpContext)
-        {
-            if (httpContext.User.GetUid() != null)
-            {
-                User.FullName = httpContext.User.GetName();
-                User.Uid = httpContext.User.GetUid();
-                User.AvatarUrl = httpContext.User.GetProfilePicture();
-                ICRUDService<UserProfile, UserProfileDTO> service = (ICRUDService<UserProfile, UserProfileDTO>)httpContext.RequestServices.GetService(typeof(ICRUDService<UserProfile, UserProfileDTO>));
-                IEnumerable<UserProfileDTO> users = await service.GetListAsync();
-                UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == User.Uid);
+        //public async Task SaveDate(HttpContext httpContext)
+        //{
+        //    if (httpContext.User.GetUid() != null)
+        //    {
+        //        User.FullName = httpContext.User.GetName();
+        //        User.Uid = httpContext.User.GetUid();
+        //        User.AvatarUrl = httpContext.User.GetProfilePicture();
+        //        ICRUDService<UserProfile, UserProfileDTO> service = (ICRUDService<UserProfile, UserProfileDTO>)httpContext.RequestServices.GetService(typeof(ICRUDService<UserProfile, UserProfileDTO>));
+        //        IEnumerable<UserProfileDTO> users = await service.GetListAsync();
+        //        UserProfileDTO userInDB = users.FirstOrDefault(x => x.Uid == User.Uid);
 
-                if (userInDB == null)
-                {
-                    userInDB = await service.PostAsync(User);
-                    UserIdentityService.User = userInDB;
-                }
-                else
-                {
-                    User = userInDB;
-                }
-            }
-            else
-            {
-                User = new UserProfileDTO();
-            }
-        }
+        //        if (userInDB == null)
+        //        {
+        //            // userInDB = await service.PostAsync(User);
+        //            UserIdentityService.User = userInDB;
+        //        }
+        //        else
+        //        {
+        //            User = userInDB;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        User = new UserProfileDTO();
+        //    }
+        //}
 
-        public static UserProfileDTO GetCurrentUser()
-        {
-            return User;
-        }
+        //public async Task<UserProfileDTO> GetCurrentUser(HttpContext context)
+        //{
+        //    return (await service.GetListAsync()).FirstOrDefault(u => u.Uid == context.User.GetUid());
+        //}
     }
 }
