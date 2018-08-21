@@ -48,8 +48,9 @@
 			<app-project-edit [project]="project" ></app-project-edit>
 		</mat-tab>
 
-		<mat-tab label="Uploads">			
-			<app-upload-file></app-upload-file>		
+		<mat-tab label="Files">			
+			<app-upload-file></app-upload-file>
+			<app-download-file [projectId]="project.id"></app-download-file>		
 		</mat-tab>
 
 	</mat-tab-group>

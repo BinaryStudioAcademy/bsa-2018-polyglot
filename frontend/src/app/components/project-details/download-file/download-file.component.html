@@ -1,0 +1,22 @@
+<div class="container">
+  <h3>You can also export all your translations</h3>
+  <p>Just select language and file extension and click <strong>Download</strong></p>
+
+  <mat-select placeholder="Language" [(ngModel)]="selectedLanguage">
+    <mat-option *ngFor="let l of languages" [value]="l">
+      {{l.name}}
+    </mat-option>
+  </mat-select>
+
+  <mat-radio-group  class="radio-group" [(ngModel)]="selectedFormat">
+    <mat-radio-button color="primary" class="radio-item" *ngFor="let format of formats" [value]="format">
+      {{format}}
+    </mat-radio-button>
+    <p>selected: {{selectedFormat}}</p>
+  </mat-radio-group>
+
+  <button mat-flat-button color="primary" [disabled]="!selectedFormat || !selectedLanguage">
+    Download
+  </button>
+
+</div>
