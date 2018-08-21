@@ -153,7 +153,7 @@ namespace Polyglot.BusinessLogic.Services
 					}
 					xdoc.Add(root);
 					string temp0 = xdoc.ToString();
-					arr = Encoding.ASCII.GetBytes(temp0);
+					arr = Encoding.UTF8.GetBytes(temp0);
 					break;
 				case ".json":
 
@@ -162,8 +162,8 @@ namespace Polyglot.BusinessLogic.Services
 						if(c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
 							myDictionary.Add(c.Key, c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue);
 					}
-					string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
-					arr = Encoding.ASCII.GetBytes(temp);
+					string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);					
+					arr = Encoding.UTF8.GetBytes(temp);
 					break;
 				default:
 					throw new NotImplementedException();
