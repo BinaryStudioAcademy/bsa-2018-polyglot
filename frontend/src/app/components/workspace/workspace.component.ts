@@ -47,6 +47,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     private userService: UserService
    ) {
      this.user = userService.getCurrrentUser();
+     debugger;
+     this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${this.url}/workspaceHub/`).build();
    }
 
    description: string = "Are you sure you want to remove the project?";
@@ -55,19 +58,22 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
    answer: boolean;
  
   ngOnInit() {
-
-    this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${this.url}/translationsHub/`).build();
+    debugger;
+    
 
     this.connection.start().catch(err => console.log("ERROR " + err));
 
-
+    this.connection.on("stringDeleted", (deletedStringId: number) => {
+      debugger;
+      if(deletedStringId)
+        this.receiveId(deletedStringId);
+    });
 
     this.connection.on("stringTranslated", (message: string) => {
       debugger;
       console.log("String traslated " + message);
     });
-
+    
     this.connection.on("stringTranslating", (message: string) => {
       debugger;
       console.log("Someone translating string " + message);
@@ -116,10 +122,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           {
-            this.connection.send("newComplexString", result)
-            .then(() => {
-              console.log("new string sended");
-            });
+            this.connection.send("newComplexString", "sdasdsadasdasdasdas");
 
             this.keys.push(result);
             this.selectedKey = result;
@@ -149,6 +152,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   receiveId($event) {
+    debugger;
     let temp = this.keys.findIndex( x => x.id === $event);
     if(this.selectedKey.id == this.keys[temp].id)
       this.selectedKey = this.keys[temp-1] ? this.keys[temp-1] : this.keys[temp+1]

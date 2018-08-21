@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Polyglot.Hubs
 {
-    public class TranslationHub : Hub
+    public class WorkspaceHub : Hub
     {
         public async Task NewComplexString(string message)
         {
             await Clients.All.SendAsync("stringAdded", message);
+        }
+
+        public async Task ComplexStringDeleted(int deletedStingId)
+        {
+            await Clients.All.SendAsync("stringDeleted", deletedStingId);
         }
 
         public async Task NewLanguage(string message)
@@ -23,9 +28,9 @@ namespace Polyglot.Hubs
             await Clients.All.SendAsync("stringTranslated", message);
         }
 
-        public async Task TranslationCommit(string message)
+        public async Task TranslationCommit(int translatingById, string translatingByFullName)
         {
-            await Clients.All.SendAsync("stringTranslating", message);
+            await Clients.All.SendAsync("stringTranslating", translatingById, translatingByFullName);
         }
     }
 }

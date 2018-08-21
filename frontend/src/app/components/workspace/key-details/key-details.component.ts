@@ -42,6 +42,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
+  @Input() connection;
 
   constructor(private route: ActivatedRoute,
     private dataProvider: ComplexStringService,

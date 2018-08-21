@@ -26,7 +26,7 @@ export class TabHistoryComponent implements OnInit {
 
     this.translationDetails = this.keyDetails.translations[index];
 
-    if (this.translationDetails.history.length == 0) {
+    if (this.translationDetails.history && this.translationDetails.history.length == 0) {
       this.history.push({
         user: this.user.fullName,
         avatarUrl: this.user.avatarUrl,

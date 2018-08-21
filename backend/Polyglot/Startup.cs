@@ -123,7 +123,7 @@ namespace Polyglot
             app.UseSignalR(options =>
             {
                 options.MapHub<ChatHub>("/hub");
-                options.MapHub<TranslationHub>("/translationsHub");
+                options.MapHub<WorkspaceHub>("/workspaceHub");
             });
         }
     }
