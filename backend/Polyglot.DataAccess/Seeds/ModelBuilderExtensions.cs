@@ -310,19 +310,19 @@ namespace Polyglot.DataAccess.Seeds
 
            );
 
-            modelBuilder.Entity<Glossary>().HasData(
-            new Glossary { Id = 1, TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
-            new Glossary { Id = 2, TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
-            new Glossary { Id = 3, TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
-            new Glossary { Id = 4, TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
-            new Glossary { Id = 5, TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
-            new Glossary { Id = 6, TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
-            new Glossary { Id = 7, TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
-            new Glossary { Id = 8, TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
-            new Glossary { Id = 9, TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
-            new Glossary { Id = 10, TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
+           // modelBuilder.Entity<Glossary>().HasData(
+           // new Glossary { Id = 1, TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
+           // new Glossary { Id = 2, TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
+           // new Glossary { Id = 3, TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
+           // new Glossary { Id = 4, TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
+           // new Glossary { Id = 5, TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
+           // new Glossary { Id = 6, TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
+           // new Glossary { Id = 7, TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
+           // new Glossary { Id = 8, TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
+           // new Glossary { Id = 9, TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
+           // new Glossary { Id = 10, TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
 
-           );
+           //);
 
             modelBuilder.Entity<ProjectGlossary>().HasData(
                 new { Id = 1, ProjectId = 1, GlossaryId = 1 },
@@ -524,25 +524,25 @@ namespace Polyglot.DataAccess.Seeds
                 context.SaveChanges();
             }
 
-            if (!context.Glossaries.Any())
-            {
-                var glossaries = new List<Glossary> {
-                        new Glossary { TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
-                        new Glossary { TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
-                        new Glossary { TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
-                        new Glossary { TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
-                        new Glossary { TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
-                        new Glossary { TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
-                        new Glossary { TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
-                        new Glossary { TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
-                        new Glossary { TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
-                        new Glossary { TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
+            //if (!context.Glossaries.Any())
+            //{
+            //    var glossaries = new List<Glossary> {
+            //            new Glossary { TermText = "ABC", ExplanationText = "American-British-Canadian talks in 1941", OriginLanguage = "English" },
+            //            new Glossary { TermText = "MAAF", ExplanationText = "Mediterranean Allied Air Force", OriginLanguage = "English" },
+            //            new Glossary { TermText = "HIWI", ExplanationText = "Hilfsfreiwillige - German Army volunteer forces usually made up of Soviet volunteers1", OriginLanguage = "English" },
+            //            new Glossary { TermText = "Knickebein", ExplanationText = "Crooked Leg - German navigational system using radio beams to guide bombers", OriginLanguage = "English" },
+            //            new Glossary { TermText = "Humint", ExplanationText = "Human Intelligence - Intelligence gathered by spies and informers (as opposed to signals intelligence or SIGINT)", OriginLanguage = "English" },
+            //            new Glossary { TermText = "Kutusov", ExplanationText = "Operational code name for the Soviet offensive against German forces in the Kursk Salient - July 1943", OriginLanguage = "English" },
+            //            new Glossary { TermText = "CLR", ExplanationText = "Common Language Runtime.", OriginLanguage = "English" },
+            //            new Glossary { TermText = "NGEN", ExplanationText = "Native (image) generation.", OriginLanguage = "English" },
+            //            new Glossary { TermText = "Bootstrap", ExplanationText = "A way to initialize and launch an app or system.", OriginLanguage = "English" },
+            //            new Glossary { TermText = "Dependency injection", ExplanationText = "A design pattern and mechanism for creating and delivering parts of an application (dependencies) to other parts of an application that require them.", OriginLanguage = "English" }
 
-                };
+            //    };
 
-                context.AddRange(glossaries);
-                context.SaveChanges();
-            }
+            //    context.AddRange(glossaries);
+            //    context.SaveChanges();
+            //}
 
             if (!context.Tags.Any())
             {
