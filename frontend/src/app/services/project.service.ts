@@ -64,4 +64,8 @@ export class ProjectService {
   deleteProjectLanguage(projectId: number, languageId: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
   }
+
+  getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
+  }
 }
