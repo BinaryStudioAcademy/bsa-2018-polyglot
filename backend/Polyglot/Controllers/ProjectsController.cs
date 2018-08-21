@@ -12,6 +12,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
+using System.Text;
 
 namespace Polyglot.Controllers
 {
@@ -199,9 +200,27 @@ namespace Polyglot.Controllers
 		[Route("{id}/export")]
 		public async Task<IActionResult> GetFile(int id, int langId, string extension)
 		{
-			
+			 var test = await service.GetFile(id, langId, extension);
 
-			return Ok();
+
+			string ex;
+			string name;
+			switch (extension)
+			{
+				case ".resx":
+					ex = "application/xml";
+					name = "data.resx";
+					break;
+				case ".json":
+					ex = "application/json";
+					name = "data.json";
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+
+			var temp =  File(test, ex , name);
+			return temp;
 		}
 	}
 }

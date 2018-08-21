@@ -4,6 +4,8 @@ using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
+using System.IO;
+using Polyglot;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
@@ -15,9 +17,11 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
 
-        #region Teams
+		Task<byte[]> GetFile(int id, int languageId, string format);
 
-        Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
+		#region Teams
+
+		Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
 
         Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 
