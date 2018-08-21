@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { HttpService, RequestMethod } from '../../services/http.service';
 import { ngfModule, ngf } from "angular-file"
+import { Project } from '../../models';
 
 @Component({
   selector: 'app-upload-image',
@@ -8,6 +9,7 @@ import { ngfModule, ngf } from "angular-file"
   styleUrls: ['./upload-image.component.sass']
 })
 export class UploadImageComponent implements OnInit {
+  @Input() project: Project;
   @Output() fileEvent = new EventEmitter<File>();
   fileToUpload: File;
 
@@ -16,6 +18,7 @@ export class UploadImageComponent implements OnInit {
   constructor(private dataService: HttpService) { }
 
   ngOnInit() {
+    
   }
 
 
