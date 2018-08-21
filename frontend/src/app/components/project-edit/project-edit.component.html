@@ -54,7 +54,7 @@
             </mat-grid-tile>
             <mat-grid-tile>
                 <span></span>
-                <app-upload-image [project]="project" (fileEvent) = "receiveImage($event)"></app-upload-image>
+                <app-upload-image [imageUrl]="project.imageUrl" (fileEvent) = "receiveImage($event)"></app-upload-image>
             </mat-grid-tile>
             </mat-grid-list>
             

@@ -9,7 +9,7 @@ import { Project } from '../../models';
   styleUrls: ['./upload-image.component.sass']
 })
 export class UploadImageComponent implements OnInit {
-  @Input() project: Project;
+  @Input() imageUrl: String;
   @Output() fileEvent = new EventEmitter<File>();
   fileToUpload: File;
 
