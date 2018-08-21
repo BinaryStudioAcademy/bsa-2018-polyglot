@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.SqlRepository;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "",
                     PostalCode = "10022",
                     Phone = "1-800-746-4726",
-                    UserRole = UserProfile.Role.Manager
+                    UserRole = Role.Manager
 
                 });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -44,7 +45,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
                 PostalCode = "43022",
                 Phone = "38-095-746-4726",
-                UserRole = UserProfile.Role.Manager
+                UserRole = Role.Manager
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
@@ -60,7 +61,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
                 PostalCode = "43022",
                 Phone = "38-095-746-4726",
-                UserRole = UserProfile.Role.Manager
+                UserRole = Role.Manager
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
             {
@@ -76,7 +77,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
                 PostalCode = "63022",
                 Phone = "12-795-746-4726",
-                UserRole = UserProfile.Role.Manager
+                UserRole = Role.Manager
 
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -93,7 +94,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                 PostalCode = "63022",
                 Phone = "12-795-746-4726",
-                UserRole = UserProfile.Role.Manager
+                UserRole = Role.Manager
 
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -110,7 +111,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
                 PostalCode = "63022",
                 Phone = "12-795-746-4726",
-                UserRole = UserProfile.Role.Translator
+                UserRole = Role.Translator
 
             });
             modelBuilder.Entity<UserProfile>().HasData(new UserProfile
@@ -127,7 +128,7 @@ namespace Polyglot.DataAccess.Seeds
                 AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                 PostalCode = "63022",
                 Phone = "12-795-746-4726",
-                UserRole = UserProfile.Role.Translator
+                UserRole = Role.Translator
 
 
             });
@@ -368,7 +369,7 @@ namespace Polyglot.DataAccess.Seeds
                         AvatarUrl = "https://www.songhall.org/images/uploads/exhibits/John_Lennon.jpg",
                         PostalCode = "10022",
                         Phone = "1-800-746-4726",
-                        UserRole = UserProfile.Role.Manager
+                        UserRole = Role.Manager
 
                     },
                     new UserProfile
@@ -385,7 +386,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/1/17/Batman-BenAffleck.jpg/200px-Batman-BenAffleck.jpg",
                     PostalCode = "43022",
                     Phone = "38-095-746-4726",
-                    UserRole = UserProfile.Role.Manager
+                    UserRole = Role.Manager
 
                     },
                     new UserProfile
@@ -402,7 +403,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "https://pbs.twimg.com/profile_images/934857621709950977/VYahTdwt_400x400.jpg",
                     PostalCode = "43022",
                     Phone = "38-095-746-4726",
-                    UserRole = UserProfile.Role.Manager
+                    UserRole = Role.Manager
 
                     },
                     new UserProfile
@@ -419,7 +420,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "https://www.famousbirthdays.com/faces/bartl-johannes-image.jpg",
                     PostalCode = "63022",
                     Phone = "12-795-746-4726",
-                    UserRole = UserProfile.Role.Manager
+                    UserRole = Role.Manager
                 },
                     new UserProfile
                 {
@@ -435,7 +436,7 @@ namespace Polyglot.DataAccess.Seeds
                     AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                     PostalCode = "63022",
                     Phone = "12-795-746-4726",
-                    UserRole = UserProfile.Role.Manager
+                    UserRole = Role.Manager
                 },
                     new UserProfile
                     {
@@ -451,7 +452,7 @@ namespace Polyglot.DataAccess.Seeds
                         AvatarUrl = "https://i.telegraph.co.uk/multimedia/archive/03403/lelepons2_3403661k.jpg",
                         PostalCode = "63022",
                         Phone = "12-795-746-4726",
-                        UserRole = UserProfile.Role.Translator
+                        UserRole = Role.Translator
                     }
                     };
 

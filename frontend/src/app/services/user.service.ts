@@ -17,6 +17,7 @@ export class UserService {
    }
 
   getCurrrentUser(){
+    
     return this.user;
   }
 

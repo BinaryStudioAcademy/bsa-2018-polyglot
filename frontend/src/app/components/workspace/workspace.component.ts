@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
-import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import {SnotifyService} from 'ng-snotify';
+import { FormControl } from '../../../../node_modules/@angular/forms';
 
 
 @Component({
@@ -13,7 +14,7 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.sass']
 })
-export class WorkspaceComponent implements OnInit, OnDestroy{
+export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
 
   public project: Project;
   public keys: any[];
@@ -23,6 +24,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   public currentPath;
   
   private routeSub: Subscription;
+
+  options = new FormControl();
+
+  filterOptions : string [] = [
+    'Translated', 'Untranslated' , 'Human Translation' , 'Machine Translation' , 'With Tags'
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -40,7 +47,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
  
   ngOnInit() {
     this.searchQuery = '';
-
+    console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
@@ -63,7 +70,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
   }
   onAdvanceSearchClick() {
 
-  } 
+  }
+  
+  ngDoCheck(){
+
+    if(this.project && this.keys && this.router.url == `/workspace/${this.project.id}` && this.keys.length != 0){
+      this.router.navigate(['/'])
+    }
+  }
    
   onAddNewStringClick() {
     let dialogRef = this.dialog.open(StringDialogComponent, {
@@ -107,7 +121,27 @@ export class WorkspaceComponent implements OnInit, OnDestroy{
     
     this.router.navigate([this.currentPath, this.selectedKey.id]);
   }
+  OnSelectOption(){
+    //If the filters сontradict each other
+    this.ContradictoryСhoise(["Translated", "Untranslated"])
+    this.ContradictoryСhoise(["Human Translation", "Machine Translation"])
 
+    this.dataProvider.getProjectStringsByFilter(this.project.id,this.options.value)
+    .subscribe(res => {
+      this.keys = res;
+    })
+    console.log(this.options.value);
+  }
+
+  ContradictoryСhoise(options : string[]){
+    if(this.options.value.includes(options[0]) && this.options.value.includes(options[1]))
+    {
+      options.forEach(element => {
+        let index = this.options.value.indexOf(element);
+        this.options.value.splice(index,1)
+      });
+    }
+  }
 
 }
 

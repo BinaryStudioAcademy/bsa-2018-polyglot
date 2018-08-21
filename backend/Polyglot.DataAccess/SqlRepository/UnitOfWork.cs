@@ -20,7 +20,7 @@ namespace Polyglot.DataAccess.SqlRepository
         }
 
         public IRepository<T> GetRepository<T>() 
-            where T : Entity, new()
+            where T : DbEntity, new() 
         {
             var targetType = typeof(T);
             if (repositories.ContainsKey(targetType))

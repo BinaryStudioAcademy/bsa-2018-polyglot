@@ -32,6 +32,7 @@ export class ProjectTeamComponent implements OnInit {
           if(assignedTeams && assignedTeams.length > 0)
             {
               this.assignedTeams = assignedTeams;
+              this.assignedTeams.sort(this.compareId);
             }else
             {
               this.assignedTeams = [];
@@ -52,7 +53,7 @@ export class ProjectTeamComponent implements OnInit {
 
     this.IsLoad = true;
    // debugger;
-    this.teamsService.getAll()
+    this.teamsService.getAllTeams()
       .subscribe(teams => {
       //  debugger;
         if(!teams || teams.length < 1){
@@ -103,6 +104,7 @@ export class ProjectTeamComponent implements OnInit {
                     return team.id !== t.id;
                   return true;
                 }));
+                this.assignedTeams.sort(this.compareId);
                 this.IsLoad = false;
                 this.snotifyService.success("Teams successfully assigned!", "Success!");
               }
@@ -148,4 +150,13 @@ export class ProjectTeamComponent implements OnInit {
     else
       return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q";
   }
+
+  compareId(a,b) {
+    if (a.id < b.id)
+      return -1;
+    if (a.id > b.id)
+      return 1;
+    return 0;
+  }
+
 }

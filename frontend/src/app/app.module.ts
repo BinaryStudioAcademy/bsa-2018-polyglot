@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -61,6 +61,7 @@ import { ForgotPasswordDialogComponent } from './dialogs/forgot-password-dialog/
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { TabDetailComponent } from './components/workspace/key-details/tab-detail/tab-detail.component';
 import { ImgDialogComponent } from './dialogs/img-dialog/img-dialog.component';
+import { NewTeamComponent } from './components/teams/new-team/new-team.component';
 import { LanguagesComponent } from './components/project-details/languages/languages.component';
 import { DeleteProjectLanguageComponent } from './dialogs/delete-project-language/delete-project-language.component';
 import { SelectProjectLanguageComponent } from './dialogs/select-project-language/select-project-language.component';
@@ -104,6 +105,7 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
     NewProjectComponent,
     ManagerProfileComponent,
     TeamComponent,
+    NewTeamComponent,
     SearchComponent,
     CropperComponent,
     UserSettingsComponent,
@@ -119,13 +121,12 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
-    TabCommentsComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabReviewComponent
-
+    TabReviewComponent,
+    TabCommentsComponent
   ],
   imports: [
     BrowserModule,
@@ -154,7 +155,8 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
-    MatRadioModule
+    MatRadioModule,
+    MatTabsModule
   ],
   entryComponents: [
     LoginDialogComponent, 
