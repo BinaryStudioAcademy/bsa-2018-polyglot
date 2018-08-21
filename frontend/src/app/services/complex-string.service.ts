@@ -3,6 +3,7 @@ import { HttpService, RequestMethod } from './http.service';
 import { IString } from '../models/string';
 import { Translation } from '../models/translation'
 import { Observable } from 'rxjs';
+import { Comment } from '../models/comment'
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,14 @@ export class ComplexStringService {
 
   delete(id: number): Observable<IString> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
+  }
+
+  updateStringComments(comments: Comment[], id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comments);
+  }
+
+  getCommentsByStringId(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/comments', undefined);
   }
 
 }
