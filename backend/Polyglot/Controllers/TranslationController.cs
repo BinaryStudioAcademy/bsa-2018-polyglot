@@ -16,15 +16,12 @@ namespace Polyglot.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Translate([FromBody] TextForTranslation item)
+        public async Task<IActionResult> Translate([FromBody]TextForTranslation item)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-            var entity = await _provider.Translate(item);
-            return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity}",
-                    entity);
+            return Ok(await _provider.Translate(item));
         }
     }
 }

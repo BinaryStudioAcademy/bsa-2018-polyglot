@@ -1,57 +1,60 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
-using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Polyglot.BusinessLogic.TranslationServices
 {
-    class TranslatorProvider : ITranslatorProvider
+    public class TranslatorProvider : ITranslatorProvider
     {
-        private readonly string _key;
         private readonly string _url;
+        private readonly string _key;
 
-        public TranslatorProvider(string providerKey,string providerUrl)
+        public TranslatorProvider(string providerUrl,string providerKey)
         {
-            _key = providerKey;
             _url = providerUrl;
+            _key = providerKey;
         }
 
         public async Task<string> Translate(TextForTranslation item)
         {
-            HttpWebRequest httpRequest = WebRequest.CreateHttp(_url + "?key=" + _key);
+            var path = _url + "?key=" + _key;
+
+            HttpWebRequest httpRequest = WebRequest.CreateHttp(path);
             httpRequest.Method = "POST";
             httpRequest.ContentType = "application/json";
 
-            using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
+            byte[] byteArray = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(item));
+
+            httpRequest.ContentLength = byteArray.Length;
+
+            using (var streamWriter = httpRequest.GetRequestStream())
             {
-               await streamWriter.WriteAsync(JsonConvert.SerializeObject(item));
+                await streamWriter.WriteAsync(byteArray, 0, byteArray.Length);
             }
 
-
-            using (var response = (HttpWebResponse)await httpRequest.GetResponseAsync())
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
+            try
             {
-                string responseFromServer = await reader.ReadToEndAsync();
+                using (var response = (HttpWebResponse) await httpRequest.GetResponseAsync())
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                    return string.Empty;
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    string responseFromServer = await reader.ReadToEndAsync();
 
-                return JObject.Parse(responseFromServer)["data"]["translations"].ToString();
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        return string.Empty;
+
+                    return JObject.Parse(responseFromServer)["data"]["translations"].ToString();
+                }
             }
-
-            //using (HttpClient client = new HttpClient())
-            //using (HttpResponseMessage response = await client.GetAsync(_url))
-            //using (HttpContent content = response.Content)
-            //{
-            //    string responsJson = await content.ReadAsStringAsync();
-            //    if (response.StatusCode != HttpStatusCode.OK)
-            //        return string.Empty;
-            //    return JObject.Parse(responsJson)["data"]["translations"].ToString();
-            //}
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
-
     }
 }
