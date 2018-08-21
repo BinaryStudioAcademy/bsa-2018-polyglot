@@ -209,5 +209,16 @@ namespace Polyglot.Controllers
             return complexStrings == null ? NotFound("No files found!") as IActionResult
                 : Ok(complexStrings);
         }
+
+        [HttpGet("{projectId}/activities")]
+        public async Task<IActionResult> GetAllActivities(int projectId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var activities = await service.GetAllActivitiesByProjectId(projectId);
+            return activities == null ? StatusCode(404) as IActionResult
+                : Ok(activities);
+        }
     }
 }

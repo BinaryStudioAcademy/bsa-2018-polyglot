@@ -15,6 +15,9 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
 
+        Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
+
+
         #region Teams
 
         Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
@@ -44,5 +47,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId);
 
         #endregion
+
+
     }
 }

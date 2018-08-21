@@ -24,14 +24,18 @@ namespace Polyglot.BusinessLogic.Services
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		public IFileStorageProvider fileStorageProvider;
+        private readonly IComplexStringService _stringService;
+        ICRUDService<UserProfile, UserProfileDTO> _userService;
 
-		public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-			IFileStorageProvider provider)
+
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
+			IFileStorageProvider provider, IComplexStringService stringService, ICRUDService<UserProfile, UserProfileDTO> userService)
             : base(uow, mapper)
         {
             stringsProvider = rep;
 			this.fileStorageProvider = provider;
-
+            this._stringService = stringService;
+            this._userService = userService;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -435,6 +439,74 @@ namespace Polyglot.BusinessLogic.Services
         }
 
         #endregion
+
+        public async Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id)
+        {
+            List<ActivityDTO> allActivities = new List<ActivityDTO>();
+
+            var projectStrings = await this.GetProjectStringsAsync(id);
+            foreach(var projectString in projectStrings)
+            {
+                allActivities.Add(new ActivityDTO()
+                {
+                    Message = $"Complex string with key {projectString.Key}" +
+                    $" was assigned to the project"             
+                });
+
+                var comments = await this._stringService.GetCommentsAsync(projectString.Id);
+
+                foreach (var comment in comments)
+                {
+                    allActivities.Add(new ActivityDTO()
+                    {
+                        Message = $"New comment was added by {comment.User.FullName} in string with key {projectString.Key}",
+                        DateTime = comment.CreatedOn,
+                        User = comment.User
+                    });
+                }
+                /*
+                var translations = await this._stringService.GetStringTranslationsAsync(projectString.Id);      unavailable because userId in translations = 0
+
+                foreach(var translation in translations)
+                {
+                    var user = await this._userService.GetOneAsync(translation.UserId);
+                    allActivities.Add(new ActivityDTO()
+                    {
+                        Message = $"New translation was added in string with key {projectString.Key} by {user.FullName}",
+                        DateTime = translation.CreatedOn,
+                        User = user
+                    });
+                    foreach (var trans in translation.History)
+                    {
+                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        allActivities.Add(new ActivityDTO()
+                        {
+                            Message = $"Additional translation in string with key {projectString.Key} by {user2.FullName}",
+                            DateTime = trans.CreatedOn,
+                            User = user2
+                        });
+                    }
+                }
+                */
+            }
+            
+            var teams = await this.GetProjectTeams(id);
+
+            foreach(var team in teams)
+            {
+                ActivityDTO activity = new ActivityDTO();
+                if(team.Persons.Count == 1)
+                {
+                    activity.Message = $"Team with 1 person was assigned to the project";
+                }
+                else
+                {
+                    activity.Message = $"Team with {team.Persons.Count} people was assigned to the project";
+                }
+                allActivities.Add(activity);
+            }
+            return allActivities;
+        }
     }
 
 }

@@ -76,6 +76,7 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
 
 
 
@@ -129,7 +130,8 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    ProjectActivitiesComponent
   ],
   imports: [
     BrowserModule,
