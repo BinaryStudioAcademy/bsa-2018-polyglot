@@ -68,4 +68,16 @@ export class ProjectService {
   getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
   }
+
+  assignGlossariesToProject(projectId: number, glossaryIds: Array<number>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/glossaries', undefined, glossaryIds);
+  }
+
+  dismissProjectGlossary(projectId: number, glossaryId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/glossaries/' + glossaryId, undefined, undefined);
+  }
+
+  getetAssignedGlossaries(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/glossaries', undefined, undefined);
+  }
 }
