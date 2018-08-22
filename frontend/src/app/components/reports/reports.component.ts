@@ -71,8 +71,9 @@ export class ReportsComponent implements OnInit {
           this.IsLoad = false;
         });
 
-        this.projectService.getProjectReport(this.project.id);
-        
+        this.projectService.getProjectReport(this.project.id).subscribe(charts => 
+          console.log(charts)   
+        );
   }
 
   ngOnChanges(changes: SimpleChanges) {

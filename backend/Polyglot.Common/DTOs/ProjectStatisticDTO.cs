@@ -6,8 +6,6 @@ namespace Polyglot.Common.DTOs
 {
     public class ProjectStatisticDTO
     {
-        public int Id { get; set; }
-
         public IEnumerable<ChartDTO> Charts { get; set; }
 
         public ProjectStatisticDTO()

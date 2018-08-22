@@ -428,25 +428,36 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<ProjectStatisticDTO> GetProjectStat(int id)
         {
 
-            var project = await uow.GetRepository<Project>()
-                .GetAsync(id);
+            var charts = new List<ChartDTO>();
 
-            var statistic = new ProjectStatisticDTO();
-
-            var complexStrings = stringsProvider.GetAllAsync().Result.Where(x => x.ProjectId == id).ToList();
+            var complexStrings = (await stringsProvider.GetAllAsync()).Where(x => x.ProjectId == id).ToList();
             var languages = await uow.GetRepository<Language>().GetAllAsync();
-            var Chart = new ChartDTO();
-            foreach (var languageId in project.ProjectLanguageses)
+
+            var chart1 = new ChartDTO
             {
-                var current = complexStrings.Count(x =>
-                    x.Translations.Exists(lang => lang.LanguageId == languageId.LanguageId));
+                Name = "Translated strings",
+                Values = new List<Point>()
+            };
 
-                  Chart.Name = "Translated strings";                 
-                  Chart.Values.Add(languages.Where(x=>x.Id==languageId.LanguageId).Select(y=>y.Name),current);
-              }
+            foreach (var language in languages)
+            {
+                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
+                if (count > 0)
+                {
+                    chart1.Values.Add(new Point
+                    {
+                        Name = language.Name,
+                        Value = count
+                    });
+                }
 
-            statistic.Charts.Append(Chart);
-            return statistic;
+
+            }
+            charts.Add(chart1);
+            return new ProjectStatisticDTO
+            {
+                Charts = charts
+            };
         }
 
         public enum FilterType
