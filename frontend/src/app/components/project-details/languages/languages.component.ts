@@ -80,10 +80,10 @@ export class LanguagesComponent implements OnInit {
                 debugger;
                 if(project){
 
-                  let langsStringData = data.map(function(l: any) {
-                    return `${l.id}: ${l.name}`;
-                  }).join(', ');
-                  this.connection.send("newLanguage", `${this.projectId}`, langsStringData);
+                  // let langsStringData = data.map(function(l: any) {
+                  //   return `${l.id}: ${l.name}`;
+                  // }).join(', ');
+                  this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
 
                   Array.prototype.push.apply(this.langs, data.filter(function(language) {
                     let l = thisLangs.find(t => t.id === language.id);
@@ -159,7 +159,7 @@ export class LanguagesComponent implements OnInit {
     .subscribe(() => {
       this.IsLoading[languageId] = false;
 
-      this.connection.send("languageDeleted",  `${this.projectId}`, `${languageId}: ${this.langs.filter(l => l.id === languageId)[0].name} removed`);
+      this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
 
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);

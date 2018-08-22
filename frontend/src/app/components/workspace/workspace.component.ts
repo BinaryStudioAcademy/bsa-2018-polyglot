@@ -10,6 +10,7 @@ import * as signalR from "@aspnet/signalr";
 import { environment } from '../../../environments/environment';
 import { UserService } from '../../services/user.service';
 import { FormControl } from '../../../../node_modules/@angular/forms';
+import { ComplexStringService } from '../../services/complex-string.service';
 
 
 @Component({
@@ -43,7 +44,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     private dialog: MatDialog,
     private projectService: ProjectService,
     private snotifyService: SnotifyService,
-    private userService: UserService
+    private userService: UserService,
+    private complexStringService: ComplexStringService
    ) {
      this.user = userService.getCurrrentUser();
      debugger;
@@ -106,7 +108,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       dialogRef.componentInstance.onAddString.subscribe((result) => {
         if(result)
           {
-            this.connection.send("newComplexString", result);
+            debugger;
+            this.connection.send("newComplexString", this.project.id,  result.id);
             this.keys.push(result);
             this.selectedKey = result;
             let keyId = this.keys[0].id;   
@@ -143,17 +146,28 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     this.connection.on("stringDeleted", (deletedStringId: number) => {
       if(deletedStringId)
         {
+          debugger;
           this.snotifyService.info(`Key ${deletedStringId} deleted`, "String deleted")
           this.receiveId(deletedStringId);
         }
     });
 
-    this.connection.on("stringAdded", (newString: any) => {
-      debugger;
-      if(newString && !this.keys.find(s => s.id == newString.id))
+    this.connection.on("stringAdded", (newStringId: number) => {
+      if(!this.keys.find(s => s.id == newStringId))
         {
-          this.snotifyService.info(`New key added`, "String added")
-          this.keys.push(newString);
+          if(!this.keys.find(s => s.id == newStringId))
+        {
+          this.complexStringService.getById(newStringId)
+          .subscribe((newStr) => 
+          {
+            if(newStr){
+              this.snotifyService.info(`New key added`, "String added")
+              this.keys.push(newStr);
+            }
+            
+          })
+        }
+          
         }
     });
 
@@ -161,15 +175,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       {
         this.snotifyService.info(message , "Translated")
       });
-      this.connection.on("languageAdded", (message: string) => 
+
+      this.connection.on("languageAdded", (languagesIds: Array<number>) => 
       {
-        console.log('dddddddddddddddd');
-        this.snotifyService.info(message , "Language added")
+        console.log(languagesIds);
+        this.snotifyService.info(languagesIds.join(", ") , "Language added")
+        
       });
-      this.connection.on("languageDeleted", (message: string) => 
+      this.connection.on("languageDeleted", (languageId: number) => 
       {
-        this.snotifyService.info(message , "Language removed")
+        this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
       });
+
       this.connection.on("newTranslation", (message: string) => 
       {
         this.snotifyService.info(message , "Translated")

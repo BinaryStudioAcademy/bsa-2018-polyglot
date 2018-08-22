@@ -44,7 +44,7 @@ export class KeyComponent implements OnInit {
             this.snotifyService.success("String deleted", "Success!");
             debugger;
             if(this.connection)
-              this.connection.send("complexStringDeleted", this.key.id);
+              this.connection.send("complexStringDeleted", this.key.projectId, this.key.id);
           }),
           err => {
             this.snotifyService.error("String wasn`t deleted", "Error!");
