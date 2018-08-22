@@ -2,13 +2,8 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } 
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog, MatBottomSheet } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
-import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Translation, Project, Language } from '../../../models';
-import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
-import { LanguageService } from '../../../services/language.service';
-import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
@@ -116,6 +111,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         return ({
           languageName: element.name,
           languageId: element.id,
+          languageCode : element.code,
           ...this.getProp(element.id)
         });
       }
@@ -198,17 +194,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     this.IsEdit = !this.IsEdit;
   }
 
-  openMachineTranslationBottomSheet(id : any,value : any) : void {
+  openMachineTranslationBottomSheet(id : any,target : any) : void {
     //this.keyDetails.base
-    console.log(id);
-    console.log(value);
-    let machineTranslation = value;
     const dialogRef = this.bottomSheet.open(MachineTransaltionBottomSheetComponent,
-       { data : {translation : machineTranslation }}
+       { data : {text : this.keyDetails.base , target : target }}
       );
 
     dialogRef.afterDismissed().subscribe(result => {
       console.log(result);
+      this.expandedArray[id].isOpened = false;
     })
   }
 

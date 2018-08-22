@@ -10,7 +10,7 @@ export class TranslationService {
 
   api: string;
   constructor(private dataService: HttpService) { 
-    this.api = "transation";
+    this.api = "translation";
   }
 
   getTransation(item : GoogleTranslation) : Observable<any> {

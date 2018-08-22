@@ -1,8 +1,14 @@
-<p>
-  Current translation : <br>
-  <mat-form-field>
-      <input matInput [(ngModel)]="data.translation">
-    </mat-form-field>
-  <button mat-button (click)="onNoClick()">No</button>
-  <button mat-button>Ok</button>
-</p>
+<div>
+  Current translation : {{data.text}} <br>
+  Lang : {{data.target}}
+  </div>
+
+  <div>
+    <p>
+      Translation : {{Translation}}
+    </p>
+  </div>
+  <div>
+  <button mat-button (click)="onYesClick()">Yes</button>
+  <button mat-button (click)="onNoClick()">Ok</button>
+</div>
