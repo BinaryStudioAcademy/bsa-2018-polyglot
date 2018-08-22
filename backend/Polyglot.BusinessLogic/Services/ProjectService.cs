@@ -12,6 +12,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
+using System.Text;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
@@ -121,6 +122,63 @@ namespace Polyglot.BusinessLogic.Services
             }
 
         }
+
+		public async Task<byte[]> GetFile(int id, int languageId, string format)
+		{
+			Language targetLanguage = await uow.GetRepository<Language>().GetAsync(languageId);
+			Project targetProject = await uow.GetRepository<Project>().GetAsync(id);
+			List<DataAccess.MongoModels.ComplexString> targetStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+
+
+			byte[] arr = null;
+
+			Dictionary<string, string> myDictionary = new Dictionary<string, string>();
+			
+
+			switch (format)
+			{
+				case ".resx":
+					XDocument xdoc = new XDocument();
+					XElement root = new XElement("root");
+					foreach(var c in targetStrings)
+					{
+						if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+						{
+							XElement key = new XElement("data");
+							XAttribute name = new XAttribute("name", c.Key);
+
+							key.Add(name);
+
+							XElement value = new XElement("value", c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue);
+
+							key.Add(value);
+
+							root.Add(key);
+						}
+					}
+					xdoc.Add(root);
+					string temp0 = xdoc.ToString();
+					arr = Encoding.UTF8.GetBytes(temp0);
+					break;
+				case ".json":
+
+					foreach(var c in targetStrings)
+					{
+						if(c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+							myDictionary.Add(c.Key, c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue);
+					}
+					string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);					
+					arr = Encoding.UTF8.GetBytes(temp);
+					break;
+				default:
+					throw new NotImplementedException();
+						
+			}
+
+			return arr;
+			
+		}
+
 
         public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
             mapper.Map<List<ProjectDTO>>(await Filter.FiltrationSqlModelAsync<Project>(x => x.UserProfile.Id == userId,uow));
