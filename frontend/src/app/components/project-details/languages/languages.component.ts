@@ -5,6 +5,8 @@ import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify'
 import { DeleteProjectLanguageComponent } from '../../../dialogs/delete-project-language/delete-project-language.component';
 import { MatDialog } from '@angular/material';
 import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-language/select-project-language.component';
+import { LanguageStatistic } from '../../../models/languageStatistic';
+import { Language } from '../../../models';
 
 @Component({
   selector: 'app-languages',
@@ -14,7 +16,7 @@ import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-
 export class LanguagesComponent implements OnInit {
 
   @Input() projectId: number;
-  public langs = [];
+  public langs: LanguageStatistic[] = [];
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   public IsLoading: any = {};
@@ -28,41 +30,7 @@ export class LanguagesComponent implements OnInit {
 
   ngOnInit() {
 
-   //this.langs = [
-   //  {
-   //    id: 1,
-   //    name: 'English',
-   //    progress: 25,
-   //    translatedCount: 140
-   //  },
-   //  {
-   //    id: 2,
-   //    name: 'Russian',
-   //    progress: 3,
-   //    translatedCount: 14
-   //  },
-   //  {
-   //    id: 3,
-   //    name: 'Spanish',
-   //    progress: 67,
-   //    translatedCount: 863
-   //  },
-   //  {
-   //    id: 4,
-   //    name: 'German',
-   //    progress: 100,
-   //    translatedCount: 32
-   //  },
-   //  {
-   //    id: 5,
-   //    name: 'Polish',
-   //    progress: 89,
-   //    translatedCount: 340
-   //  }
-   //];
-   //this.langs.sort(this.compareProgress);
-
-    this.projectService.getProjectLanguages(this.projectId)
+    this.projectService.getProjectLanguagesStatistic(this.projectId)
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
@@ -108,7 +76,18 @@ export class LanguagesComponent implements OnInit {
                 if(project){
                   //this.langs.push(data);
                   
-                  Array.prototype.push.apply(this.langs, data.filter(function(language) {
+                  Array.prototype.push.apply(this.langs, 
+                    data.map(function(language: Language) {
+                      return {
+                        id: language.id,
+                        name: language.name,    
+                        code: language.code,
+                        translatedStringsCount: 0,
+                        complexStringsCount: 0,
+                        progress: 0
+                      }
+                    })
+                    .filter(function(language) {
                     let l = thisLangs.find(t => t.id === language.id);
                     if(l)
                       return language.id !== l.id;
@@ -145,12 +124,12 @@ export class LanguagesComponent implements OnInit {
   }
 
   onDeleteLanguage(languageId: number){
-    if(this.langs.filter(l => l.id === languageId)[0].translationsCount > 0)
+    if(this.langs.filter(l => l.id === languageId)[0].translatedStringsCount > 0)
       {
         const dialogRef = this.dialog.open(DeleteProjectLanguageComponent, {
           data: {
             languageName: this.langs.filter(l => l.id === languageId)[0].name,
-            translationsCount: this.langs.filter(l => l.id === languageId)[0].translationsCount
+            translationsCount: this.langs.filter(l => l.id === languageId)[0].translatedStringsCount
           }
         });
 
@@ -195,19 +174,12 @@ export class LanguagesComponent implements OnInit {
   );
   }
 
-  compareProgress(a,b) {
+  compareProgress(a: LanguageStatistic, b: LanguageStatistic) {
     if (a.progress < b.progress)
       return -1;
     if (a.progress > b.progress)
       return 1;
     return 0;
-  }
-
-  computeStrings(translationsCount, progress): number{
-    if(progress < 1)
-      return 0;
-    else
-      return translationsCount / progress * 100;
   }
   
 }

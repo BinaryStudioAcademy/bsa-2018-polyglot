@@ -37,12 +37,12 @@ namespace Polyglot.Controllers
 
         [HttpPost]
         // POST: Languages
-        public async Task<IActionResult> AddLanguage([FromBody]LanguageDTO project)
+        public async Task<IActionResult> AddLanguage([FromBody]LanguageDTO language)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(project);
+            var entity = await service.PostAsync(language);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -50,12 +50,12 @@ namespace Polyglot.Controllers
 
         // PUT: Languages/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyLanguage(int id, [FromBody]LanguageDTO project)
+        public async Task<IActionResult> ModifyLanguage(int id, [FromBody]LanguageDTO language)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(project);
+            var entity = await service.PutAsync(language);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

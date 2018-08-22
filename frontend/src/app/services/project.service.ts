@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
-import { Project } from '../models/project';
 import { Observable, of } from 'rxjs';
+import { Language, Project, LanguageStatistic } from  '../models';
+import { map } from '../../../node_modules/rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -53,9 +54,25 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/teams/' + teamId, undefined, undefined);
   }
 
-  getProjectLanguages(id: number) : Observable<any> {
+  getProjectLanguages(id: number) : Observable<Language[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
   }
+
+  getProjectLanguagesStatistic(id: number) : Observable<LanguageStatistic[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages/stat', undefined, undefined)
+    .pipe(map<LanguageStatistic[],any>(data => {
+      return data.map(function(langStat: any){
+        return {
+          id: langStat.id, 
+          name: langStat.name,
+          code: langStat.code,
+          translatedStringsCount: langStat.translatedStringsCount,
+          complexStringsCount: langStat.complexStringsCount,
+          progress: langStat.complexStringsCount < 1 ? 0 : 100 / langStat.complexStringsCount *  langStat.translatedStringsCount
+        };
+      });
+    }));
+}
 
   addLanguagesToProject(projectId: number, languageIds: Array<number>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages', undefined, languageIds);
@@ -67,5 +84,15 @@ export class ProjectService {
 
   getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
+  }
+
+  computeProgress(complexStringsCount: number, translatedStringsCount: number) : number
+  {
+    if(complexStringsCount < 1)
+      return 0;
+    else
+    {
+      return 100 / complexStringsCount * translatedStringsCount;
+    }
   }
 }

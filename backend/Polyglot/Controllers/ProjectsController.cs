@@ -88,9 +88,19 @@ namespace Polyglot.Controllers
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
 
+        // GET: Projects/5/languages/stat
+        [HttpGet("{id}/languages/stat", Name = "GetProjectLanguagesStatistic")]
+        public async Task<IActionResult> GetProjectLanguagesStatistic(int id)
+        {
+            var project = await service.GetProjectLanguagesStatistic(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
+
+        }
+
         // GET: Projects/5/languages
         [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
-        public async Task<IActionResult> GetProjectLangs(int id)
+        public async Task<IActionResult> GetProjectLanguages(int id)
         {
             var project = await service.GetProjectLanguages(id);
             return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
