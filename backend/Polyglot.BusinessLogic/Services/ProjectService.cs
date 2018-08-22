@@ -12,6 +12,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
+using System.Text;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
@@ -24,14 +25,18 @@ namespace Polyglot.BusinessLogic.Services
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
 		public IFileStorageProvider fileStorageProvider;
+        private readonly IComplexStringService _stringService;
+        ICRUDService<UserProfile, UserProfileDTO> _userService;
 
-		public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-			IFileStorageProvider provider)
+
+        public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
+			IFileStorageProvider provider, IComplexStringService stringService, IUserService userService)
             : base(uow, mapper)
         {
             stringsProvider = rep;
 			this.fileStorageProvider = provider;
-
+            this._stringService = stringService;
+            this._userService = userService;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -117,6 +122,63 @@ namespace Polyglot.BusinessLogic.Services
             }
 
         }
+
+		public async Task<byte[]> GetFile(int id, int languageId, string format)
+		{
+			Language targetLanguage = await uow.GetRepository<Language>().GetAsync(languageId);
+			Project targetProject = await uow.GetRepository<Project>().GetAsync(id);
+			List<DataAccess.MongoModels.ComplexString> targetStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+
+
+			byte[] arr = null;
+
+			Dictionary<string, string> myDictionary = new Dictionary<string, string>();
+			
+
+			switch (format)
+			{
+				case ".resx":
+					XDocument xdoc = new XDocument();
+					XElement root = new XElement("root");
+					foreach(var c in targetStrings)
+					{
+						if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+						{
+							XElement key = new XElement("data");
+							XAttribute name = new XAttribute("name", c.Key);
+
+							key.Add(name);
+
+							XElement value = new XElement("value", c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue);
+
+							key.Add(value);
+
+							root.Add(key);
+						}
+					}
+					xdoc.Add(root);
+					string temp0 = xdoc.ToString();
+					arr = Encoding.UTF8.GetBytes(temp0);
+					break;
+				case ".json":
+
+					foreach(var c in targetStrings)
+					{
+						if(c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+							myDictionary.Add(c.Key, c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue);
+					}
+					string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);					
+					arr = Encoding.UTF8.GetBytes(temp);
+					break;
+				default:
+					throw new NotImplementedException();
+						
+			}
+
+			return arr;
+			
+		}
+
 
         public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
             mapper.Map<List<ProjectDTO>>(await Filter.FiltrationSqlModelAsync<Project>(x => x.UserProfile.Id == userId,uow));
@@ -435,6 +497,85 @@ namespace Polyglot.BusinessLogic.Services
         }
 
         #endregion
+
+        public async Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id)
+        {
+            List<ActivityDTO> allActivities = new List<ActivityDTO>();
+
+            var projectStrings = await this.GetProjectStringsAsync(id);
+            foreach(var projectString in projectStrings)
+            {
+                allActivities.Add(new ActivityDTO()
+                {
+                    Message = $"Complex string with key {projectString.Key}" +
+                    $" was assigned to the project",
+                    DateTime = DateTime.Now
+                });
+
+                var comments = await this._stringService.GetCommentsAsync(projectString.Id);
+
+                foreach (var comment in comments)
+                {
+                    allActivities.Add(new ActivityDTO()
+                    {
+                        Message = $"New comment was added by {comment.User.FullName} in string with key {projectString.Key}",
+                        DateTime = comment.CreatedOn,
+                        User = comment.User
+                    });
+                }
+                
+                var translations = await this._stringService.GetStringTranslationsAsync(projectString.Id);    
+                foreach(var translation in translations)
+                {
+                    var user = await this._userService.GetOneAsync(translation.UserId);
+                    allActivities.Add(new ActivityDTO()
+                    {
+                        Message = $"New translation was added in string with key {projectString.Key} by {user.FullName}",
+                        DateTime = translation.CreatedOn,
+                        User = user
+                    });
+                    foreach (var trans in translation.History)
+                    {
+                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        allActivities.Add(new ActivityDTO()
+                        {
+                            Message = $"Translation in string with key {projectString.Key} was added by {user2.FullName}(obsolete)",
+                            DateTime = trans.CreatedOn,
+                            User = user2
+                        });
+                    }
+                    foreach (var trans in translation.OptionalTranslations)
+                    {
+                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        allActivities.Add(new ActivityDTO()
+                        {
+                            Message = $"Optional translation in string with key {projectString.Key} was added by {user2.FullName}",
+                            DateTime = trans.CreatedOn,
+                            User = user2
+                        });
+                    }
+                }
+                
+            }
+            
+            var teams = await this.GetProjectTeams(id);
+
+            foreach(var team in teams)
+            {
+                ActivityDTO activity = new ActivityDTO();
+                activity.DateTime = DateTime.Now;
+                if(team.Persons.Count == 1)
+                {
+                    activity.Message = $"Team with 1 person was assigned to the project";
+                }
+                else
+                {
+                    activity.Message = $"Team with {team.Persons.Count} people was assigned to the project";
+                }
+                allActivities.Add(activity);
+            }
+            return allActivities.OrderByDescending(act => act.DateTime);
+        }
     }
 
 }

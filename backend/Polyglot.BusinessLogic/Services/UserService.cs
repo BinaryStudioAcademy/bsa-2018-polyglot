@@ -16,6 +16,7 @@ namespace Polyglot.BusinessLogic.Services
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)
         {
+
         }
 
         public async Task<UserProfileDTO> GetByUidAsync(string uid)

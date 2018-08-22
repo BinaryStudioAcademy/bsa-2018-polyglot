@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
@@ -16,6 +16,8 @@ import { UserService } from '../../../services/user.service';
 import { Observable } from '../../../../../node_modules/rxjs';
 import * as signalR from '../../../../../node_modules/@aspnet/signalr';
 import { environment } from '../../../../environments/environment';
+import { AppStateService } from '../../../services/app-state.service';
+
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -47,6 +49,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   btnCancelText: string = "Cancel";
   answer: number;
   keyId: number;
+  isDisabled: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
@@ -59,21 +62,55 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService,
-    private userService: UserService
-  ) { 
-    debugger;
-      this.user = userService.getCurrrentUser();
-// ===================================================================
-      //get the connection from router params
-
-      this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
-
-      // get the connection from router params
-// ===================================================================
-      
+    private appState: AppStateService) { 
+      this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
 
+
+  ngOnChanges(){
+    debugger;
+
+    if(this.keyDetails && this.keyDetails.translations){
+      this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
+      this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
+      
+      if(this.IsPagenationNeeded){
+        this.paginator.pageSize = this.pageSize;
+        this.translationsDataSource.paginator = this.paginator;
+      }
+
+    }
+    else
+      this.IsPagenationNeeded = false;
+  }
+
+  step = 0;
+
+  setStep(index: number) {
+    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+    this.history.showHistory(index);
+  }
+
+
+  ngOnInit() {
+
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+
+     this.route.params.subscribe(value =>
+     {
+       this.keyId = value.keyId;
+       this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+        this.isLoad = false;
+        this.keyDetails = data;
+        this.projectId = this.keyDetails.projectId;
+        this.getLanguages();
+        
+      });
+     });
+  }
+
+  
   subscribeChanges(){
     if(this.connection)
         {
@@ -117,45 +154,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           //     this.editingUsers[translatingById] = translatingByFullName;
           // });
         }
-  }
-
-  ngOnChanges(){
-    debugger;
-
-    if(this.keyDetails && this.keyDetails.translations){
-      this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
-      this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-      
-      if(this.IsPagenationNeeded){
-        this.paginator.pageSize = this.pageSize;
-        this.translationsDataSource.paginator = this.paginator;
-      }
-
-    }
-    else
-      this.IsPagenationNeeded = false;
-  }
-
-  step = 0;
-
-  setStep(index: number) {
-    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
-    this.history.showHistory(index);
-  }
-
-
-  ngOnInit() {
-     this.route.params.subscribe(value =>
-     {
-       this.keyId = value.keyId;
-       this.dataProvider.getById(value.keyId).subscribe((data: any) => {
-        this.isLoad = false;
-        this.keyDetails = data;
-        this.projectId = this.keyDetails.projectId;
-        this.getLanguages();
-        
-      });
-     });
   }
 
   getLanguages() {
@@ -202,6 +200,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     // this.route.params.subscribe(value =>
     // {
         if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
@@ -215,6 +214,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         }
         else {
           t.createdOn = new Date();
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
               (d: any)=> {
@@ -270,8 +270,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy() {
-  }
 
+  }
 }
 
 export interface TranslationState {
