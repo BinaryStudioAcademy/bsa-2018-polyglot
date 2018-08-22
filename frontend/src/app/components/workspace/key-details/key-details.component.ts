@@ -96,6 +96,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         if(this.appState.getWorkspaceState === null) {
             debugger
             this.router.navigate([`/workspace/${this.projectId}`]);
+            return;
         }
 
         this.languages = this.appState.getWorkspaceState.languages;
