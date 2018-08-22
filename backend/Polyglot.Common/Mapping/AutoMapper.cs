@@ -106,12 +106,18 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Comment, opt => opt.MapFrom(po => po.Comment))
                     .ForMember(p => p.CreatedAt, opt => opt.MapFrom(po => po.CreatedAt))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(po => po.CreatedBy))
+                    .ForMember(p => p.CreatedById, opt => opt.MapFrom(po => po.CreatedById))
+                    .ForMember(p => p.User, opt => opt.MapFrom(po => po.User))
+                    .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId))
                     .ForMember(p => p.Rate, opt => opt.MapFrom(po => po.Rate));
                 cfg.CreateMap<Rating, RatingDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.Comment, opt => opt.MapFrom(pt => pt.Comment))
                     .ForMember(p => p.CreatedAt, opt => opt.MapFrom(pt => pt.CreatedAt))
-                    .ForMember(p => p.CreatedBy, opt => opt.MapFrom(pt => pt.CreatedBy))
+                    .ForMember(p => p.CreatedBy, opt => opt.MapFrom(po => po.CreatedBy))
+                    .ForMember(p => p.CreatedById, opt => opt.MapFrom(po => po.CreatedById))
+                    .ForMember(p => p.User, opt => opt.MapFrom(po => po.User))
+                    .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId))
                     .ForMember(p => p.Rate, opt => opt.MapFrom(pt => pt.Rate));
 
                 cfg.CreateMap<RightDTO, Right>()

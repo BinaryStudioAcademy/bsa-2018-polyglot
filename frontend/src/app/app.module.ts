@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -76,10 +76,14 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 
-
+import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 
 @NgModule({
+  exports: [
+    MatSnackBarModule
+  ],
   declarations: [
     LandingComponent,
     NavigationComponent,
@@ -129,7 +133,9 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabCommentsComponent
+    TabReviewComponent,
+    StarRatingComponent
+
   ],
   imports: [
     BrowserModule,

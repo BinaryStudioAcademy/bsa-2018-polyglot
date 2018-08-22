@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 using Polyglot.Authentication.Extensions;
 
 namespace Polyglot.Controllers
@@ -15,10 +17,12 @@ namespace Polyglot.Controllers
     public class UserProfilesController : ControllerBase
     {
         private readonly IUserService service;
+        private readonly ICRUDService<Rating, RatingDTO> ratingService;
         
-        public UserProfilesController(IUserService service)
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService)
         {
             this.service = service;
+            this.ratingService = ratingService;
         }
 
         // GET: UserProfiles
@@ -48,6 +52,17 @@ namespace Polyglot.Controllers
             var entity = await service.GetOneAsync(id);
             return entity == null ? NotFound($"Translator with id = {id} not found!") as IActionResult
                 : Ok(entity);
+        }
+
+        [HttpGet("{id}/ratings")]
+        public async Task<IActionResult> GetUserRatings(int id)
+        {
+            var ratings = await ratingService.GetListAsync();
+            var userRatings = ratings?.Where(x => x.UserId == id);
+
+            return userRatings == null
+                ? NotFound($"Ratings for user with id = {id} not found") as IActionResult
+                : Ok(userRatings);
         }
 
         // PUT: UserProfiles/5

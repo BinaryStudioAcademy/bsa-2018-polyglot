@@ -58,7 +58,12 @@ fxLayoutGap="20px">
                         </mat-card-content>
               </div>
             </div>
-       </div>
+           <div class="item" fxFlex>
+              <div>
+                <app-tab-review *ngIf="userProfile && userProfile.ratings" [(userProfile)]="userProfile"></app-tab-review>
+              </div>
+            </div>
+          </div>
   <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
  <div fxFlex>
     <mat-card>
