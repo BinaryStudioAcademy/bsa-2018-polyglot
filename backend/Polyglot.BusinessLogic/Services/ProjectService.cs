@@ -30,7 +30,7 @@ namespace Polyglot.BusinessLogic.Services
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-			IFileStorageProvider provider, IComplexStringService stringService, ICRUDService<UserProfile, UserProfileDTO> userService)
+			IFileStorageProvider provider, IComplexStringService stringService, IUserService userService)
             : base(uow, mapper)
         {
             stringsProvider = rep;
