@@ -425,9 +425,28 @@ namespace Polyglot.BusinessLogic.Services
                 Expression.AndAlso(left, right), parameter);
         }
 
-        public Task<IEnumerable<ProjectStatisticDTO>> GetProjectStat(int id)
+        public async Task<ProjectStatisticDTO> GetProjectStat(int id)
         {
-            throw new NotImplementedException();
+
+            var project = await uow.GetRepository<Project>()
+                .GetAsync(id);
+
+            var statistic = new ProjectStatisticDTO();
+
+            var complexStrings = stringsProvider.GetAllAsync().Result.Where(x => x.ProjectId == id).ToList();
+            var languages = await uow.GetRepository<Language>().GetAllAsync();
+            var Chart = new ChartDTO();
+            foreach (var languageId in project.ProjectLanguageses)
+            {
+                var current = complexStrings.Count(x =>
+                    x.Translations.Exists(lang => lang.LanguageId == languageId.LanguageId));
+
+                  Chart.Name = "Translated strings";                 
+                  Chart.Values.Add(languages.Where(x=>x.Id==languageId.LanguageId).Select(y=>y.Name),current);
+              }
+
+            statistic.Charts.Append(Chart);
+            return statistic;
         }
 
         public enum FilterType

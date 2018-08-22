@@ -45,6 +45,6 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         #endregion
 
-        Task<IEnumerable<ProjectStatisticDTO>> GetProjectStat(int id);
+        Task<ProjectStatisticDTO> GetProjectStat(int id);
     }
 }

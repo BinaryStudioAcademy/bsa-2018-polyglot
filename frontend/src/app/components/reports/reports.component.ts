@@ -70,6 +70,8 @@ export class ReportsComponent implements OnInit {
         err => {
           this.IsLoad = false;
         });
+
+        this.projectService.getProjectReport(this.project.id);
         
   }
 

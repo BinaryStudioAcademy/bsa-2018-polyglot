@@ -8,14 +8,11 @@ namespace Polyglot.Common.DTOs
     {
         public int Id { get; set; }
 
-        public IEnumerable<LanguageDTO> Languages { get; set; }
-
-        public IEnumerable<TranslatorDTO> Translators { get; set;}
+        public IEnumerable<ChartDTO> Charts { get; set; }
 
         public ProjectStatisticDTO()
         {
-            Languages = new List<LanguageDTO>();
-            Translators = new List<TranslatorDTO>();
+            Charts = new List<ChartDTO>();
         }
     }
 }

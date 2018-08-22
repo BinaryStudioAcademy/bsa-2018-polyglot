@@ -68,4 +68,8 @@ export class ProjectService {
   getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
   }
+
+  getProjectReport(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/report', undefined, undefined);
+  }
 }
