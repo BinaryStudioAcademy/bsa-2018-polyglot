@@ -48,7 +48,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     private complexStringService: ComplexStringService
    ) {
      this.user = userService.getCurrrentUser();
-     debugger;
    }
 
    description: string = "Are you sure you want to remove the project?";
@@ -59,12 +58,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   
 
   ngOnInit() {
-    debugger;
-    
-    this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
-    this.connection.start().catch(err => console.log("ERROR " + err));
-
     this.searchQuery = '';
     console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
@@ -88,6 +81,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       });
     });
   }
+
   onAdvanceSearchClick() {
 
   }
@@ -140,6 +134,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   subscribeProjectChanges(){
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+
+    this.connection.start().catch(err => console.log("ERROR " + err));
 
     this.connection.send("joinProjectGroup", `${this.project.id}`)
 
@@ -171,24 +169,28 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
         }
     });
 
-    this.connection.on("stringTranslated", (message: string) => 
+    this.connection.on("stringTranslated", (complexStringId: number, languageId: number) => 
       {
-        this.snotifyService.info(message , "Translated")
+        // получить строку с сервера, вывести уведомление
+        this.snotifyService.info("String translated" , "Translated")
       });
 
       this.connection.on("languageAdded", (languagesIds: Array<number>) => 
       {
+        // обновить строку
         console.log(languagesIds);
         this.snotifyService.info(languagesIds.join(", ") , "Language added")
         
       });
       this.connection.on("languageDeleted", (languageId: number) => 
       {
+        // обновить строку
         this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
       });
 
       this.connection.on("newTranslation", (message: string) => 
       {
+        // обновить строку
         this.snotifyService.info(message , "Translated")
       });
     

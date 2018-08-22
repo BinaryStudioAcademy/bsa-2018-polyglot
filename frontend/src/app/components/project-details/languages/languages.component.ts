@@ -28,13 +28,44 @@ export class LanguagesComponent implements OnInit {
     private snotifyService: SnotifyService,
     public dialog: MatDialog
   ) {
-    this.connection = new signalR.HubConnectionBuilder()
-          .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
-    this.connection.start().catch(err => console.log("ERROR " + err));
+
    }
 
   ngOnInit() {
+    debugger;
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+    this.connection.start().catch(err => console.log("ERROR " + err));
+
     this.projectService.getProjectLanguages(this.projectId)
+        .subscribe(langs => {
+          this.IsLoad = false;
+          this.langs = langs;
+          this.langs.sort(this.compareProgress);
+          this.subscribeProjectChanges();
+        },
+        err => {
+          this.IsLoad = false;
+        });
+  }
+
+  ngOnDestroy() {
+    this.connection.send("leaveProjectGroup", `${this.projectId}`);
+    this.connection.stop();
+  }
+
+  subscribeProjectChanges(){
+    
+    this.connection.send("joinProjectGroup", `${this.projectId}`)
+
+    this.connection.on("languageAdded", (languagesIds: Array<number>) => 
+      {
+        console.log(languagesIds);
+        this.snotifyService.info(languagesIds.join(", ") , "Language added")
+        this.IsLoad = true;
+// ==============================================================================
+// ==============> Загрузить с сервера только те языки которые были добавленны 
+        this.projectService.getProjectLanguages(this.projectId)
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
@@ -43,6 +74,20 @@ export class LanguagesComponent implements OnInit {
         err => {
           this.IsLoad = false;
         });
+      });
+      this.connection.on("languageDeleted", (languageId: number) => 
+      {
+        this.langs = this.langs.filter(l => l.id != languageId);
+        this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
+      });
+
+      this.connection.on("stringTranslated", (complexStringId: number, languageId: number) => 
+      {
+        // обновить данные 
+      //  this.projectService
+      // {projId}/languages/{langId}/stats
+       // this.snotifyService.info(message , "Translated")
+      });
   }
 
   selectNew(){

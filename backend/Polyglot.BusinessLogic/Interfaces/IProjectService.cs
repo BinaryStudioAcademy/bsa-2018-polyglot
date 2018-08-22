@@ -35,6 +35,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
 
+        Task<LanguageDTO> GetProjectLanguageStatistic(int projectId, int langId);
+
         Task<ProjectDTO> AddLanguagesToProject(int projectId, int[] languageIds);
 
         Task<bool> TryRemoveProjectLanguage(int projectId, int languageId);

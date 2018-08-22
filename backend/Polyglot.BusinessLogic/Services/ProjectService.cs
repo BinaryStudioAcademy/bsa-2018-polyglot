@@ -295,6 +295,11 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
+        public async Task<LanguageDTO> GetProjectLanguageStatistic(int projectId, int langId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ProjectDTO> AddLanguagesToProject(int projectId, int[] languageIds)
         {
             if (languageIds.Length < 1)
