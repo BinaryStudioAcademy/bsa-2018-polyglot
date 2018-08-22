@@ -7,7 +7,6 @@ import { SnotifyService } from 'ng-snotify';
 import { Comment } from '../../../../models/comment';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
-import { CommentsService } from '../../../../services/comments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -33,7 +32,7 @@ export class TabCommentsComponent implements OnInit {
 
   constructor(private userService: UserService,
               private fb: FormBuilder,
-              private commentService: CommentsService,
+              private complexStringService: ComplexStringService,
               private dialog: MatDialog,
               private snotifyService: SnotifyService,
               private activatedRoute: ActivatedRoute) { }
@@ -50,7 +49,7 @@ export class TabCommentsComponent implements OnInit {
   }
 
   getComments(){
-    return this.commentService.getCommentsByStringId(this.keyId)
+    return this.complexStringService.getCommentsByStringId(this.keyId)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -76,7 +75,7 @@ export class TabCommentsComponent implements OnInit {
                                    text: commentBody,   
                                    createdOn: new Date(Date.now())});
 
-    this.commentService.updateStringComments(this.comments, this.keyId)
+    this.complexStringService.updateStringComments(this.comments, this.keyId)
       .subscribe(
         (comments) => {
             if(comments){
