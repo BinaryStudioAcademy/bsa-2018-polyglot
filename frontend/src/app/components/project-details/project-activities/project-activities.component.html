@@ -10,10 +10,13 @@
         <input matInput class="date-input" (dateChange)="onFilterChange()" [(ngModel)]="to" [matDatepicker]="pickerTo" placeholder="To">
         <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
         <mat-datepicker #pickerTo></mat-datepicker>
+
+        <h4>Start typing username:</h4>
+        <input matInput (keyup)="onFilterChange()" [(ngModel)]="filterUserName" placeholder="Username">
     </div> 
-    <div fxFlex="70%" class="activities">
+    <div fxFlex="70%" >
         <div *ngFor="let action of filteredActivities" class="comments-container">
-            <mat-card  class="comment-card">
+            <mat-card  class="comment-card" class="action">
                 <div class="author-info">
                     <img class="comment-avatar" (click)="onImageClick(com?.user?.avatarUrl)" src="{{com?.user?.avatarUrl}}">
                 </div>

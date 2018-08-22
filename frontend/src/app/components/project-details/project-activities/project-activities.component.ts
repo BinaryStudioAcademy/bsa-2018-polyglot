@@ -35,10 +35,11 @@ export class ProjectActivitiesComponent implements OnInit {
     if(this.filterUserName != null && this.filterUserName != ""){
       this.filteredActivities = this.filteredActivities.filter(act => {
          if(act.user != null){
-          act.user.fullName == this.filterUserName
+           return act.user.fullName.toLowerCase().startsWith(this.filterUserName.toLowerCase());
         }
       });
     }
   }
+
 
 }
