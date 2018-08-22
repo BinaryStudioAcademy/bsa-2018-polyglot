@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
@@ -40,6 +40,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   btnCancelText: string = "Cancel";
   answer: number;
   keyId: number;
+  isDisabled: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
@@ -201,6 +202,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     this.IsEdit = !this.IsEdit;
   }
 
+  toggleDisable() {
+    this.isDisabled = !this.isDisabled;
+  }
 }
 
 export interface TranslationState {

@@ -12,14 +12,12 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
-        private IUnitOfWork uow;
-        private IMapper mapper;
+
 
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)
         {
-            this.uow = uow;
-            this.mapper = mapper;
+
         }
 
         public async Task<UserProfileDTO> GetByUidAsync(string uid)
