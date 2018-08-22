@@ -21,10 +21,9 @@ export class ChooseRoleDialogComponent implements OnInit {
               }
 
 
-  selectedOption: string = "translator";
+  selectedOption: string = 'Translator';
   userToReceive: UserProfile;
   error: string;
-  loaded: boolean = false;
 
   @Output() onRoleChoose: EventEmitter<any> = new EventEmitter<any>(true);
 
@@ -38,18 +37,19 @@ export class ChooseRoleDialogComponent implements OnInit {
   saveDataInDb(){
     
     let role: Role;
-    if(this.selectedOption === "translator"){
+    if(this.selectedOption === "Translator"){
       role = Role.Translator;
     }
-    if(this.selectedOption === "manager"){
+    if(this.selectedOption === "Manager"){
       role = Role.Manager;
     }
 
     this.userToReceive = {
       fullName: this.data.fullName,
-      userRole: role,
-      
+      userRole: role
     }
+
+    console.log(this.userToReceive);
 
     return this.userService.create(this.userToReceive);
   }
