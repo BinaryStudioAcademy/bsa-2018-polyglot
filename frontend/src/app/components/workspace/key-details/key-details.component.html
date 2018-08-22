@@ -27,13 +27,20 @@
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea matInput
 												[(ngModel)]="t.translationValue"
+												(input)="change(t)"
 												  cdkTextareaAutosize
 													  cdkAutosizeMinRows="2"
 													  placeholder="Write here to start translating"
 													  cdkAutosizeMaxRows="10"></textarea>
 								</mat-form-field>
-								<div class="state-container">
-									<span>Vasia translating...</span>
+								<div [hidden]="!someOneTranslating" class="state-container">
+										<span *ngFor="let u of editingUsers">
+											<a [routerLink]="['/']" [routerLinkActive]="'active'">
+												{{u.fullName}} 
+											</a>
+											,&nbsp;
+										</span>
+										translating this line right now
 								</div>
 								<div class="button-translation">
 									<button mat-raised-button color="primary"  (click)="onSave(i, t)">Save</button>

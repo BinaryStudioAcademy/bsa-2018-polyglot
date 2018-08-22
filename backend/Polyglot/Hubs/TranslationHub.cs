@@ -24,12 +24,17 @@ namespace Polyglot.Hubs
             await Clients.All.SendAsync("languageAdded", message);
         }
 
+        public async Task LanguageDeleted(string message)
+        {
+            await Clients.All.SendAsync("languageDeleted", message);
+        }
+
         public async Task NewTranslation(string message)
         {
             await Clients.All.SendAsync("stringTranslated", message);
         }
 
-        public async Task TranslationCommit(int translatingById, string translatingByFullName)
+        public async Task Translating(int translatingById, string translatingByFullName)
         {
             await Clients.All.SendAsync("stringTranslating", translatingById, translatingByFullName);
         }

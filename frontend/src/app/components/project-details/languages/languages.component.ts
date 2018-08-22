@@ -5,6 +5,8 @@ import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify'
 import { DeleteProjectLanguageComponent } from '../../../dialogs/delete-project-language/delete-project-language.component';
 import { MatDialog } from '@angular/material';
 import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-language/select-project-language.component';
+import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-languages',
@@ -18,49 +20,20 @@ export class LanguagesComponent implements OnInit {
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   public IsLoading: any = {};
+  private connection: any;
 
   constructor(
     private projectService: ProjectService, 
     private langService: LanguageService,
     private snotifyService: SnotifyService,
     public dialog: MatDialog
-  ) { }
+  ) {
+    this.connection = new signalR.HubConnectionBuilder()
+          .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+    this.connection.start().catch(err => console.log("ERROR " + err));
+   }
 
   ngOnInit() {
-
-   //this.langs = [
-   //  {
-   //    id: 1,
-   //    name: 'English',
-   //    progress: 25,
-   //    translatedCount: 140
-   //  },
-   //  {
-   //    id: 2,
-   //    name: 'Russian',
-   //    progress: 3,
-   //    translatedCount: 14
-   //  },
-   //  {
-   //    id: 3,
-   //    name: 'Spanish',
-   //    progress: 67,
-   //    translatedCount: 863
-   //  },
-   //  {
-   //    id: 4,
-   //    name: 'German',
-   //    progress: 100,
-   //    translatedCount: 32
-   //  },
-   //  {
-   //    id: 5,
-   //    name: 'Polish',
-   //    progress: 89,
-   //    translatedCount: 340
-   //  }
-   //];
-   //this.langs.sort(this.compareProgress);
 
     this.projectService.getProjectLanguages(this.projectId)
         .subscribe(langs => {
@@ -105,9 +78,14 @@ export class LanguagesComponent implements OnInit {
             this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
 
+                debugger;
                 if(project){
-                  //this.langs.push(data);
-                  
+
+                  let langsStringData = data.map(function(l: any) {
+                    return `${l.id}: ${l.name}`;
+                  }).join(', ');
+                  this.connection.send("newLanguage", langsStringData);
+
                   Array.prototype.push.apply(this.langs, data.filter(function(language) {
                     let l = thisLangs.find(t => t.id === language.id);
                     if(l)
@@ -158,7 +136,7 @@ export class LanguagesComponent implements OnInit {
           if(data && data.state)
           {
             this.snotifyService.info(data.message, "Deletion confirmed.");
-            this.deleteLanguage(languageId)
+            this.deleteLanguage(languageId);
           }
           else
           {
@@ -176,10 +154,14 @@ export class LanguagesComponent implements OnInit {
   }
 
   deleteLanguage(languageId: number){
+    debugger;
     this.IsLoading[languageId] = true;
     this.projectService.deleteProjectLanguage(this.projectId, languageId)
     .subscribe(() => {
       this.IsLoading[languageId] = false;
+
+      this.connection.send("languageDeleted", `${languageId}: ${this.langs.filter(l => l.id === languageId)[0].name} removed`);
+
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);
       setTimeout(() => {

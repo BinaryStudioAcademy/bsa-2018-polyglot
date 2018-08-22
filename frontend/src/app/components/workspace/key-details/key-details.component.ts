@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';
@@ -12,6 +12,10 @@ import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { UserService } from '../../../services/user.service';
+import { Observable } from '../../../../../node_modules/rxjs';
+import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -23,11 +27,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   public keyDetails: any; 
   public translationsDataSource: MatTableDataSource<any>; 
-  public IsEdit : boolean = false;
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
+  public IsEdit : boolean = false;
   public Id : string;
   public isEmpty
+  public someOneTranslating: boolean = false;
+  public editingUsers: any = [];
+  private connection;
+  private user;
   projectId: number;
   languages: Language[];
   expandedArray: Array<TranslationState>;
@@ -42,18 +50,78 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
-  @Input() connection;
 
-  constructor(private route: ActivatedRoute,
+
+  constructor(
+    private router : Router,
+    private route: ActivatedRoute,
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
-    private snotifyService: SnotifyService) { 
-      this.Id = this.route.snapshot.queryParamMap.get('keyid');
+    private snotifyService: SnotifyService,
+    private userService: UserService
+  ) { 
+    debugger;
+      this.user = userService.getCurrrentUser();
+// ===================================================================
+      //get the connection from router params
+
+      this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+
+      // get the connection from router params
+// ===================================================================
+      
   }
 
+  subscribeChanges(){
+    if(this.connection)
+        {
+
+          this.connection.on("translating", (translatingById: number, translatingByFullName: string) => 
+          {
+            debugger;
+         //   if(translatingById !== this.user.id)
+         //   {
+              this.editingUsers.push({
+                id: translatingById,
+                fullName: translatingByFullName
+              });
+              this.someOneTranslating = true;
+         //   }
+              
+          });
+          
+          this.connection.on("stringTranslated", (message: string) => 
+          {
+            this.snotifyService.info(message , "Translated")
+          });
+
+        //  this.connection.on("newLanguage", (message: string) => 
+        //  {
+        //    this.snotifyService.info(message , "Language added")
+        //  });
+//
+        //  this.connection.on("languageDeleted", (message: string) => 
+        //  {
+        //    this.snotifyService.info(message , "Language removed")
+        //  });
+
+          this.connection.on("newTranslation", (message: string) => 
+          {
+            this.snotifyService.info(message , "Translated")
+          });
+
+          // this.connection.on("newTranslation", (translatingById: number, translatingByFullName: string) => {
+          //   if(translatingById !== this.user.id)
+          //     this.editingUsers[translatingById] = translatingByFullName;
+          // });
+        }
+  }
 
   ngOnChanges(){
+    debugger;
+
     if(this.keyDetails && this.keyDetails.translations){
       this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
       this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
@@ -129,6 +197,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
   
   onSave(index: number, t: Translation){
+    debugger;
+    
     // this.route.params.subscribe(value =>
     // {
         if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
@@ -169,6 +239,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
   
   onClose(index: number, translation: any) {
+    debugger;
+    
     if(this.expandedArray[index].oldValue == translation.translationValue){
       this.expandedArray[index].isOpened = false;
       return;
@@ -188,14 +260,16 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
-  
-  ngOnDestroy() {
-  }
-
   toggle(){
     this.IsEdit = !this.IsEdit;
+  }
+
+  change(t){
+    // проверяем изменена ли строка
+    // если да то кидаем всем уведомление
+  }
+  
+  ngOnDestroy() {
   }
 
 }

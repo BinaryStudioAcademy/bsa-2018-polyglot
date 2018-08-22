@@ -26,7 +26,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public isEmpty;
   public currentPath;
   public connection;
-  private url: string = environment.apiUrl;
   private user: UserProfile;
   private basicPath;
   private routeSub: Subscription;
@@ -49,14 +48,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
      this.user = userService.getCurrrentUser();
      debugger;
      this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${this.url}/workspaceHub/`).build();
+          .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
    }
 
    description: string = "Are you sure you want to remove the project?";
    btnOkText: string = "Delete";
    btnCancelText: string = "Cancel";
    answer: boolean;
- 
+
   ngOnInit() {
     debugger;
     
@@ -80,12 +79,24 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
         }
     });
 
-    this.connection.on("stringTranslated", (message: string) => {
-      debugger;
-      console.log("String traslated " + message);
-    });
+    this.connection.on("stringTranslated", (message: string) => 
+      {
+        this.snotifyService.info(message , "Translated")
+      });
+      this.connection.on("newLanguage", (message: string) => 
+      {
+        console.log('dddddddddddddddd');
+        this.snotifyService.info(message , "Language added")
+      });
+      this.connection.on("languageDeleted", (message: string) => 
+      {
+        this.snotifyService.info(message , "Language removed")
+      });
+      this.connection.on("newTranslation", (message: string) => 
+      {
+        this.snotifyService.info(message , "Translated")
+      });
     
-   
 
     this.searchQuery = '';
     console.log("q");
@@ -144,7 +155,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   onSelect(key: any){
-    debugger;
     this.selectedKey = key;
   }
 
@@ -172,6 +182,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       this.router.navigate([this.basicPath]);
     }
   }
+
   OnSelectOption(){
     //If the filters сontradict each other
     this.ContradictoryСhoise(["Translated", "Untranslated"])
@@ -195,31 +206,3 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
 }
-
- 
-
-/*
-let MOCK_PROJECT = (id: number): Project => ({
-  id : id,
-  name: 'Binary Studio Academy Project',
-  description: 'Academy for young and motivated studens! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magnam distinctio repudiandae quas fugit ad quaerat impedit ipsum!  Rem quo, impedit eum adipisci, molestiae cum omnis vitae nisi minima tenetur itaque!',
-  technology: 'AngularJS, Node.js',
-  imageUrl: 'https://d3ot0t2g92r1ra.cloudfront.net/img/logo@3x_optimized.svg',
-  createdOn: new Date(),
-  manager: <any>{
-
-  },
-  mainLanguage: <any>{
-
-  },
-  teams: [],
-  translations: [
-    { id: 1, tanslationKey: 'Hello' },
-    { id: 2, tanslationKey: 'Cancel' },
-    { id: 3, tanslationKey: 'Confirm' },
-    { id: 4, tanslationKey: 'Delete' }
-  ],
-  projectLanguageses: [],
-  projectGlossaries: [],
-  projectTags: []
-});*/
