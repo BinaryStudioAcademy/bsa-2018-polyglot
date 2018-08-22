@@ -44,7 +44,7 @@ export class NewProjectComponent implements OnInit {
   projectImage: File;
   project: Project;
   projectForm: FormGroup = this.fb.group({
-    name: [ '', [Validators.required, Validators.minLength(4)]],
+    name: [ '', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
     description: [ '', [Validators.maxLength(500)]],
     technology: [ '', [Validators.required]],
     mainLanguage: [ '', [Validators.required]],
