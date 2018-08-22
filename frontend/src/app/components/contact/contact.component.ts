@@ -7,8 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contact.component.sass']
 })
 export class ContactComponent implements OnInit {
-  lat: number = 49.8559897;
-  lng: number = 24.0197202;
+  lat: number = 49.856991;
+  lng: number = 24.020273
+  zoom: number = 12;
   constructor() { }
 
   ngOnInit() {

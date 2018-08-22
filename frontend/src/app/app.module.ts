@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule, MatSelectModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -81,9 +81,14 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { ReportsComponent } from './components/reports/reports.component';
 import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
+import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 
 
 @NgModule({
+  exports: [
+    MatSnackBarModule
+  ],
   declarations: [
     LandingComponent,
     NavigationComponent,
@@ -134,8 +139,10 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
-    ReportsComponent
-  
+    ReportsComponent,
+    TabReviewComponent,
+    StarRatingComponent
+
   ],
   imports: [
     BrowserModule,

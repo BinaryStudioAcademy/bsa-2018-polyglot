@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
-import { UserProfile } from '../models';
+import { UserProfile, Rating } from '../models';
 import { AppStateService } from './app-state.service';
 
 @Injectable({
@@ -54,6 +54,10 @@ export class UserService {
 
   getUser() : Observable<UserProfile> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
+  }
+
+  getUserRatings(id: number) : Observable<Rating> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/ratings');
   }
 
   getOne(id: number) : Observable<any> {
