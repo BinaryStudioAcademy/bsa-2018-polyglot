@@ -32,7 +32,8 @@ export class HttpService {
         type: RequestMethod,
         endpoint: string,
         params: number | string = "",
-        body: any = {}) {
+        body: any = {},
+        respType: string = 'json') {
 
         let headers;
         if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "projects"
@@ -49,7 +50,13 @@ export class HttpService {
 
         switch (type) {
             case RequestMethod.Get:
-                request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { headers });
+                debugger;
+                if(respType === 'json'){
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json' , headers });
+                }else if(respType === 'blob'){
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob' , headers });
+                }
+                debugger;
                 break;
             case RequestMethod.Post:
                 request = this.httpClient.post(`${this.url}/${endpoint}/`, body, { headers });

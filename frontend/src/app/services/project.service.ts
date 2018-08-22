@@ -67,6 +67,6 @@ export class ProjectService {
 
   getProjectFile(projectId: number, languageId: number, extension: string) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/export/',
-                  '?langId=' + languageId + '&extension=' + extension, undefined);
+                  '?langId=' + languageId + '&extension=' + extension, undefined, 'blob');
   }
 }

@@ -25,12 +25,22 @@ export class DownloadFileComponent implements OnInit {
   }
 
   download() {
-    /*
+    
     this.projectService.getProjectFile(this.projectId, this.selectedLanguage.id, this.selectedFormat)
-    .subscribe(() => {});
+    .subscribe((data) => {
+      debugger;
+
+      // var test = data.;
+
+      let url = window.URL.createObjectURL(data);
+      var win = window.open(url, '_blank');
+      win.focus();
+      debugger;
+    });
     debugger;
-    */
+    
+   /*
    var win = window.open(`http://localhost:58828/projects/${this.projectId}/export?langId=${this.selectedLanguage.id}&extension=${this.selectedFormat}`,'_blank');
-   win.focus();
+   win.focus();*/
   }
 }
