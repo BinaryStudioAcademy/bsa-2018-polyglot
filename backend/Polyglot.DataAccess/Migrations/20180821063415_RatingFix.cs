@@ -17,7 +17,7 @@ namespace Polyglot.DataAccess.Migrations
                 name: "UserId",
                 table: "Ratings",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_UserId",
