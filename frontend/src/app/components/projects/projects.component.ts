@@ -21,7 +21,7 @@ import { UserService } from '../../services/user.service';
 export class ProjectsComponent implements OnInit,OnDestroy {
 
   public state: string;
-  public checked: boolean;
+  public checked = true;
   
   constructor(
     private userService: UserService,
@@ -37,16 +37,14 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   manager: UserProfile =  this.userService.getCurrrentUser();
 
   ngOnInit() {
-  this.OnPage = true;
-
-    this.state = this.appStateService.Layout;
-    if (this.state === null || this.state === 'card') {
-      this.state = 'card';
-      this.checked = true;
-      this.appStateService.Layout = 'card';
-    } else {
-      this.checked = false;
-    }
+  this.OnPage = true;  
+ 
+   if(this.appStateService.Layout === null || this.appStateService.Layout === 'card') {
+     this.checked = true;
+     this.appStateService.Layout = 'card';
+   } else {
+     this.checked = false;
+   }
     
   debugger;
 
@@ -70,14 +68,14 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   }
 
   changeLayout(){
-    debugger;
-    if (this.state === 'row') {
-      this.appStateService.Layout = 'card';
-      this.state = 'card';
-    } else if (this.state === 'card') {
-      this.appStateService.Layout = 'row';
-      this.state = 'row';
-    }
+    debugger;   
+   if(this.checked){
+     this.appStateService.Layout = 'row';
+     this.checked = false;
+   } else {
+     this.appStateService.Layout = 'card';
+     this.checked = true;
+   }
   }
 
 }
