@@ -262,7 +262,7 @@ namespace Polyglot.Common.Mapping
 				  .ForMember(p => p.Key, opt => opt.MapFrom(po => po.Key));
                 cfg.CreateMap<ComplexString, ComplexStringDTO>()
                   .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                  .ForMember(p => p.Comments, opt => opt.MapFrom(po => po.Comments))
+                  .ForMember(p => p.Comments, opt => opt.Ignore())
                   .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
                   .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
                   .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
