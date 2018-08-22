@@ -28,7 +28,7 @@
           
           <div mat-card-image >
             <div  class="img-container">                  
-              <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}">
+              <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'" >
             </div>
           </div>  
         
