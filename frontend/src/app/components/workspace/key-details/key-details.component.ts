@@ -12,6 +12,7 @@ import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -27,6 +28,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   public IsPagenationNeeded: boolean = true;
   public pageSize: number  = 5;
   public Id : string;
+  public isEmpty
   projectId: number;
   languages: Language[];
   expandedArray: Array<TranslationState>;
@@ -46,7 +48,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
-    private snotifyService: SnotifyService) { 
+    private snotifyService: SnotifyService,
+    private appState: AppStateService) { 
       this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
 
@@ -83,6 +86,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.keyDetails = data;
         this.projectId = this.keyDetails.projectId;
         this.getLanguages();
+        
       });
      });
   }
@@ -96,9 +100,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           this.expandedArray.push({ isOpened: false, oldValue: '' });
         }
         this.languages = d.map(x => Object.assign({}, x));
+        this.isEmpty = false;
+        console.log(this.isEmpty);
         this.setLanguagesInWorkspace();
       },
       err => {
+        this.isEmpty = true;
         console.log('err', err);
       }
     ); 
@@ -126,6 +133,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     // this.route.params.subscribe(value =>
     // {
         if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
@@ -139,6 +147,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         }
         else {
           t.createdOn = new Date();
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
               (d: any)=> {
@@ -163,12 +172,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
   
   onClose(index: number, translation: any) {
+    if(this.expandedArray[index].oldValue == translation.translationValue){
+      this.expandedArray[index].isOpened = false;
+      return;
+    }
      const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
       width: '500px',
       data: {description: this.description, btnYesText: this.btnYesText, btnNoText: this.btnNoText,  btnCancelText: this.btnCancelText, answer: this.answer}
     });
     dialogRef.afterClosed().subscribe(result => {
-      debugger
       if (dialogRef.componentInstance.data.answer === 1){
         this.onSave(index, translation);
       }

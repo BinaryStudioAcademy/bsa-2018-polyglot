@@ -1,30 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
-import { UserProfile } from '../models';
+import { UserProfile, Rating } from '../models';
+import { AppStateService } from './app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private user: UserProfile;
-
   api: string;
   private endpoint: string = "userprofiles";
-  constructor(private dataService: HttpService) {
+  constructor(private dataService: HttpService, private appState: AppStateService) {
     this.api = "userprofiles";
    }
 
   getCurrrentUser(){
+    let user = this.appState.currentDatabaseUser;
+
+    if (user) {
+      if (!user.avatarUrl || user.avatarUrl == '') {
+        user.avatarUrl = '/assets/images/default-avatar.jpg';
+      }
+    }
     
-    return this.user;
+    return user;
   }
 
-  getAndSave() {
+  getAndUpdate() {
     this.getUser().subscribe(
-      (d)=> {
-        this.saveUser(d);
+      (user)=> {
+        this.updateCurrrentUser(user);
       },
       err => {
         console.log('err', err);
@@ -34,24 +40,32 @@ export class UserService {
 
   // use this when logout
   removeCurrentUser() {
-    this.user = undefined;
+    this.appState.currentDatabaseUser = undefined;
   }
 
-  saveUser(userProfile: any) {
-    if (userProfile.avatarUrl == undefined) {
+  updateCurrrentUser (userProfile: any) {
+    if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
       userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
     }
     // can add more default values
     
-    this.user = userProfile;
+    this.appState.currentDatabaseUser = userProfile;
   }
 
   getUser() : Observable<UserProfile> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
   }
 
+  getUserRatings(id: number) : Observable<Rating> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/ratings');
+  }
+
   getOne(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
+  }
+
+  isUserInDb() : Observable<boolean> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/isInDb', undefined);
   }
 
   getAll() : Observable<any[]> {

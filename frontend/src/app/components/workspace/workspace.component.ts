@@ -5,7 +5,8 @@ import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
-import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import {SnotifyService} from 'ng-snotify';
+import { FormControl } from '../../../../node_modules/@angular/forms';
 
 
 @Component({
@@ -21,8 +22,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public selectedKey: any;
   public isEmpty
   public currentPath;
+  public basicPath;
   
   private routeSub: Subscription;
+
+  options = new FormControl();
+
+  filterOptions : string [] = [
+    'Translated', 'Untranslated' , 'Human Translation' , 'Machine Translation' , 'With Tags'
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -44,6 +52,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
+      this.basicPath = 'workspace/'+ params.projectId;
       this.currentPath = 'workspace/'+ params.projectId +'/key'; 
       this.dataProvider.getProjectStrings(params.projectId)
       .subscribe((data: any) => {
@@ -112,9 +121,33 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
 
     this.keys.splice(temp, 1);
     
-    this.router.navigate([this.currentPath, this.selectedKey.id]);
+    if (this.keys.length > 0) {
+      this.router.navigate([this.currentPath, this.selectedKey.id]);
+    } else {
+      this.router.navigate([this.basicPath]);
+    }
+  }
+  OnSelectOption(){
+    //If the filters сontradict each other
+    this.ContradictoryСhoise(["Translated", "Untranslated"])
+    this.ContradictoryСhoise(["Human Translation", "Machine Translation"])
+
+    this.dataProvider.getProjectStringsByFilter(this.project.id,this.options.value)
+    .subscribe(res => {
+      this.keys = res;
+    })
+    console.log(this.options.value);
   }
 
+  ContradictoryСhoise(options : string[]){
+    if(this.options.value.includes(options[0]) && this.options.value.includes(options[1]))
+    {
+      options.forEach(element => {
+        let index = this.options.value.indexOf(element);
+        this.options.value.splice(index,1)
+      });
+    }
+  }
 
 }
 

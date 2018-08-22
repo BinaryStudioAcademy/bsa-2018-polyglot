@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule, MatSelectModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -74,10 +74,17 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
 import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
+import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+
 
 @NgModule({
+  exports: [
+    MatSnackBarModule
+  ],
   declarations: [
     LandingComponent,
     NavigationComponent,
@@ -120,12 +127,16 @@ import { DownloadFileComponent } from './components/project-details/download-fil
     DeleteProjectLanguageComponent,
     SelectProjectLanguageComponent,
     ConfirmDialogComponent,
+    TabCommentsComponent,
+    TabHistoryComponent,
+    ChooseRoleDialogComponent,
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
-    DownloadFileComponent
+    DownloadFileComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,
@@ -148,6 +159,7 @@ import { DownloadFileComponent } from './components/project-details/download-fil
     MatSlideToggleModule,
     ImageCropperModule,
     MatCheckboxModule,
+    MatSelectModule,
     SnotifyModule,
     MatDialogModule,
     NgxSmoothDnDModule,
@@ -168,9 +180,9 @@ import { DownloadFileComponent } from './components/project-details/download-fil
     ForgotPasswordDialogComponent,
     ImgDialogComponent,
     ConfirmDialogComponent,
+    ChooseRoleDialogComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent
-
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

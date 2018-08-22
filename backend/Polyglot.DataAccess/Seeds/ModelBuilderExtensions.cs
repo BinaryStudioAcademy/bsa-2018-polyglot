@@ -297,16 +297,16 @@ namespace Polyglot.DataAccess.Seeds
                        );
 
             modelBuilder.Entity<Rating>().HasData(
-            new { Id = 1, Rate = 80.0, TranslatorId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
-            new { Id = 2, Rate = 100.0, TranslatorId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
-            new { Id = 3, Rate = 50.0, TranslatorId = 2, Comment = "not bad", CreatedById = 2, CreatedAt = DateTime.Now },
-            new { Id = 4, Rate = 80.0, TranslatorId = 2, Comment = "good job!", CreatedById = 2, CreatedAt = DateTime.Now },
-            new { Id = 5, Rate = 100.0, TranslatorId = 3, Comment = "awsome!", CreatedById = 3, CreatedAt = DateTime.Now },
-            new { Id = 6, Rate = 60.0, TranslatorId = 4, Comment = "not bad", CreatedById = 3, CreatedAt = DateTime.Now },
-            new { Id = 7, Rate = 80.0, TranslatorId = 4, Comment = "good job!", CreatedById = 4, CreatedAt = DateTime.Now },
-            new { Id = 8, Rate = 100.0, TranslatorId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
-            new { Id = 9, Rate = 50.0, TranslatorId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
-            new { Id = 10, Rate = 90.0, TranslatorId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
+            new { Id = 1, Rate = 4, UserId = 1, Comment = "good job!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 2, Rate = 5, UserId = 1, Comment = "awsome!", CreatedById = 1, CreatedAt = DateTime.Now },
+            new { Id = 3, Rate = 3, UserId = 2, Comment = "not bad", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 4, Rate = 4, UserId = 2, Comment = "good job!", CreatedById = 2, CreatedAt = DateTime.Now },
+            new { Id = 5, Rate = 5, UserId = 3, Comment = "awsome!", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 6, Rate = 4, UserId = 4, Comment = "not bad", CreatedById = 3, CreatedAt = DateTime.Now },
+            new { Id = 7, Rate = 4, UserId = 4, Comment = "good job!", CreatedById = 4, CreatedAt = DateTime.Now },
+            new { Id = 8, Rate = 5, UserId = 5, Comment = "awsome!", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 9, Rate = 4, UserId = 5, Comment = "not bad", CreatedById = 5, CreatedAt = DateTime.Now },
+            new { Id = 10, Rate = 4, UserId = 1, Comment = "good job!", CreatedById = 3, CreatedAt = DateTime.Now }
 
            );
 
@@ -490,16 +490,16 @@ namespace Polyglot.DataAccess.Seeds
             {
                 var users = context.UserProfiles.ToList();
                 var ratings = new List<Rating> {
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                    new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 2), Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 3),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  User = users.FirstOrDefault(u=>u.Id == 1),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 3),    Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 4),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 60.0,  User = users.FirstOrDefault(u=>u.Id == 5),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 80.0,  User = users.FirstOrDefault(u=>u.Id == 2),    Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 100.0,  User =users.FirstOrDefault(u=>u.Id == 1),   Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 50.0,  User = users.FirstOrDefault(u=>u.Id == 2),    Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+                    new Rating { Rate = 90.0,   User =users.FirstOrDefault(u=>u.Id == 4),  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
                     };
                 context.AddRange(ratings);
                 context.SaveChanges();
@@ -662,7 +662,11 @@ namespace Polyglot.DataAccess.Seeds
                      CreatedOn = DateTime.Now,
                      Technology ="history",
                      ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                     MainLanguageId = 1
+                     MainLanguageId = 1,
+                     ProjectLanguageses = {
+                         new ProjectLanguage { LanguageId = 2, ProjectId = 2 },
+                         new ProjectLanguage { LanguageId = 3, ProjectId = 2 },
+                     }
                  },
                     new Project
             {
@@ -673,7 +677,11 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="history",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-                MainLanguageId = 1
+                MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 3 },
+                    new ProjectLanguage { LanguageId = 3, ProjectId = 3 },
+                }
             },
                     new Project
             {
@@ -684,7 +692,11 @@ namespace Polyglot.DataAccess.Seeds
                 CreatedOn = DateTime.Now,
                 Technology ="web",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-                MainLanguageId = 1
+                MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 4 },
+                    new ProjectLanguage { LanguageId = 5, ProjectId = 4 },
+                }
             },
                     new Project
             {
@@ -695,7 +707,11 @@ namespace Polyglot.DataAccess.Seeds
                  CreatedOn = DateTime.Now,
                  Technology ="programming",
                  ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                 MainLanguageId = 1
+                 MainLanguageId = 1,
+                ProjectLanguageses = {
+                    new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
+                    new ProjectLanguage { LanguageId = 5, ProjectId = 5 },
+                }
             }
             };
 

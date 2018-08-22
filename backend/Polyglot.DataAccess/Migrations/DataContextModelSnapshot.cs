@@ -196,13 +196,17 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("CreatedById");
+                    b.Property<int>("CreatedById");
 
                     b.Property<double>("Rate");
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -415,8 +419,14 @@ namespace Polyglot.DataAccess.Migrations
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Rating", b =>
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Team", b =>

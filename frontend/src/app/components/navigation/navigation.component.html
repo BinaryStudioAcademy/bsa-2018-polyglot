@@ -26,9 +26,9 @@
               <img src="{{manager?.avatarUrl}}" class="profile-big-image">
               <div style="margin-left: 30px;">
                 <h4>{{manager?.fullName}}</h4>
-                <!-- <mat-card-subtitle>{{manager.email}}</mat-card-subtitle> -->
+                <!-- <mat-card-subtitle>{{email}}</mat-card-subtitle> -->
                 <p>
-                  <i>Manager</i>
+                  <i>{{role}}</i>
                 </p>
               </div>
             </mat-card-title>
@@ -71,7 +71,7 @@
         <mat-divider></mat-divider>
         
           
-        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick()">
+        <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
             <mat-icon mat-list-icon>block</mat-icon> Logout</a>
 
 

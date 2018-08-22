@@ -16,6 +16,8 @@ export class ProjectTeamComponent implements OnInit {
   @Input() projectId: number;
   public assignedTeams: Array<any> = [];
   public IsLoad: boolean = true;
+  public IsLoading: any = {};
+  public spinnerColor ='#F6182A';
 
   constructor(
     private projectService: ProjectService,
@@ -137,10 +139,18 @@ export class ProjectTeamComponent implements OnInit {
   }
 
   dismissTeam(id: number){
+    if(this.IsLoading[id])
+      return;
+    this.IsLoading[id] = true;
     this.projectService.dismissProjectTeam(this.projectId, id)
       .subscribe(responce => {
+        this.IsLoading[id] = false;
         this.snotifyService.success("Team " + id + " succesfully dismissed!", "Success!");
         this.assignedTeams = this.assignedTeams.filter(t => t.id !== id);
+      },
+      err => {
+        this.IsLoading[id] = false;
+        this.snotifyService.error("Team " + id + " wasn`t dismissed!", "Error!");
       })
   }
 

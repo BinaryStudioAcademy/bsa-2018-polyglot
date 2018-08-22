@@ -23,7 +23,6 @@ export class UserSettingsComponent implements OnInit {
  
   
   constructor(
-    private router: ActivatedRoute, 
     private fb: FormBuilder, 
     private  dialog: MatDialog,
     private userService: UserService

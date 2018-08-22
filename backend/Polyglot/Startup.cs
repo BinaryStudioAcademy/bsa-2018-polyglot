@@ -9,6 +9,7 @@ using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Services;
+using Polyglot.BusinessLogic.TranslationServices;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
@@ -60,6 +61,10 @@ namespace Polyglot
             services.AddScoped<IFileStorageProvider, FileStorageProvider>(provider =>
                 new FileStorageProvider(Configuration.GetConnectionString("PolyglotStorage")));
 
+            services.AddScoped<ITranslatorProvider, TranslatorProvider>(provider =>
+                new TranslatorProvider("https://translation.googleapis.com/language/translate/v2",
+                    Configuration.GetValue<string>("google_translation_key")));
+
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
             services.AddScoped<IMapper>(sp => mapper.GetDefaultMapper());
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
@@ -107,7 +112,7 @@ namespace Polyglot
 
             app.UseAuthentication();
 
-            app.UseCustomizedIdentity();
+            //app.UseCustomizedIdentity();
 
             app.ConfigureCustomExceptionMiddleware();
 

@@ -10,14 +10,15 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
-using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
-
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.MongoModels;
+using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
+
 namespace Polyglot.BusinessLogic.Services
 {
     public class ProjectService : CRUDService<Project,ProjectDTO>, IProjectService
@@ -176,7 +177,7 @@ namespace Polyglot.BusinessLogic.Services
 
 
         public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
-            mapper.Map<List<ProjectDTO>>(await Filtration<Project>(x => x.UserProfile.Id == userId));
+            mapper.Map<List<ProjectDTO>>(await Filter.FiltrationSqlModelAsync<Project>(x => x.UserProfile.Id == userId,uow));
 
         #region Teams
 
@@ -414,16 +415,10 @@ namespace Polyglot.BusinessLogic.Services
 
 		public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
         {
-            var manager = await Filtration<UserProfile>(x => x.Id == userId);
+            var manager = await Filter.FiltrationSqlModelAsync<UserProfile>(x => x.Id == userId,uow);
             var managerDTO = mapper.Map<UserProfileDTO>(manager.FirstOrDefault());
             entity.UserProfile = managerDTO;
             return await PostAsync(entity);
-        }
-
-        private async Task<IEnumerable<T>> Filtration<T>(Expression<Func<T, bool>> predicate) where T : Entity,new()
-        {
-            var result = await uow.GetRepository<T>().GetAllAsync(predicate);
-            return result;
         }
 
         #region ComplexStrings
@@ -439,9 +434,65 @@ namespace Polyglot.BusinessLogic.Services
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
+        public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId)
+        {
+            List<FilterType> filters = new List<FilterType>();
+            options.ToList().ForEach(x => filters.Add((FilterType)Enum.Parse(typeof(FilterType), x.Replace(" ",string.Empty))));
 
-        
+            Expression<Func<ComplexString, bool>> finalFilter = x => x.ProjectId == projectId;
+
+            Expression<Func<ComplexString, bool>> translatedFilter = x => x.Translations.Count != 0;
+            Expression<Func<ComplexString, bool>> untranslatedFilter = x => x.Translations.Count == 0;
+            Expression<Func<ComplexString, bool>> withTagsFilter = x => x.Tags.Count != 0;
+            Expression<Func<ComplexString, bool>> machineTranslationFilter = x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine);
+            Expression<Func<ComplexString, bool>> humanTranslationFilter = x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine);
+
+            if (filters.Contains(FilterType.Translated))
+                finalFilter = AndAlso(finalFilter, translatedFilter);
+
+            if(filters.Contains(FilterType.Untranslated))
+                finalFilter = AndAlso(finalFilter, untranslatedFilter);
+
+            if (filters.Contains(FilterType.HumanTranslation))
+                finalFilter = AndAlso(finalFilter, humanTranslationFilter);
+
+            if (filters.Contains(FilterType.MachineTranslation))
+                finalFilter = AndAlso(finalFilter, machineTranslationFilter);
+
+            if (filters.Contains(FilterType.WithTags))
+                finalFilter = AndAlso(finalFilter, withTagsFilter);
+
+            var result = await Filter.FiltrationMongoModelAsync(finalFilter, stringsProvider);
+
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
+        }
+
+        private Expression<Func<T, bool>> AndAlso<T>(
+            Expression<Func<T, bool>> expr1,
+            Expression<Func<T, bool>> expr2)
+        {
+            var parameter = Expression.Parameter(typeof (T));
+
+            var leftVisitor = new Filter.ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
+            var left = leftVisitor.Visit(expr1.Body);
+
+            var rightVisitor = new Filter.ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
+            var right = rightVisitor.Visit(expr2.Body);
+
+            return Expression.Lambda<Func<T, bool>>(
+                Expression.AndAlso(left, right), parameter);
+        }
+
+        public enum FilterType
+        {
+            Translated,
+            Untranslated,
+            HumanTranslation,
+            MachineTranslation,
+            WithTags
+        }
 
         #endregion
     }
+
 }

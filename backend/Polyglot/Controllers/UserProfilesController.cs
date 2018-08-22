@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication;
+using Polyglot.Authentication.Extensions;
 
 namespace Polyglot.Controllers
 {
@@ -14,11 +16,13 @@ namespace Polyglot.Controllers
 
     public class UserProfilesController : ControllerBase
     {
-        private readonly ICRUDService<UserProfile, UserProfileDTO> service;
+        private readonly IUserService service;
+        private readonly ICRUDService<Rating, RatingDTO> ratingService;
         
-        public UserProfilesController(ICRUDService<UserProfile, UserProfileDTO> service)
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService)
         {
             this.service = service;
+            this.ratingService = ratingService;
         }
 
         // GET: UserProfiles
@@ -34,9 +38,9 @@ namespace Polyglot.Controllers
 
         // GET: UserProfiles
         [HttpGet("user")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUserByUid()
         {
-            UserProfileDTO user = UserIdentityService.GetCurrentUser();
+            var user = await service.GetByUidAsync(HttpContext.User.GetUid());
             return user == null ? NotFound($"User not found!") as IActionResult
                : Ok(user);
         }
@@ -48,6 +52,17 @@ namespace Polyglot.Controllers
             var entity = await service.GetOneAsync(id);
             return entity == null ? NotFound($"Translator with id = {id} not found!") as IActionResult
                 : Ok(entity);
+        }
+
+        [HttpGet("{id}/ratings")]
+        public async Task<IActionResult> GetUserRatings(int id)
+        {
+            var ratings = await ratingService.GetListAsync();
+            var userRatings = ratings?.Where(x => x.UserId == id);
+
+            return userRatings == null
+                ? NotFound($"Ratings for user with id = {id} not found") as IActionResult
+                : Ok(userRatings);
         }
 
         // PUT: UserProfiles/5
@@ -69,5 +84,30 @@ namespace Polyglot.Controllers
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(UserProfileDTO user)
+        {
+            var uid = HttpContext.User.GetUid();
+            user.Uid = uid;
+            if (user.FullName == null || user.FullName == "")
+            {
+                user.FullName = HttpContext.User.GetName();
+                user.AvatarUrl = HttpContext.User.GetProfilePicture();
+            }
+            user.RegistrationDate = DateTime.UtcNow;
+            var entity = await service.PostAsync(user);
+            return entity == null ? StatusCode(409) as IActionResult
+                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
+                entity);
+        }
+
+        [HttpGet("isInDb")]
+        public async Task<bool> IsUserInDb()
+        {
+            return await service.IsExistByUidAsync(HttpContext.User.GetUid());
+        }
+
+
     }
 }
