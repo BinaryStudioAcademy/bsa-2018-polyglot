@@ -1,4 +1,4 @@
-namespace Polyglot.Common.DTOs
+﻿namespace Polyglot.Common.DTOs
 {
     public class LanguageDTO
     {
@@ -7,9 +7,5 @@ namespace Polyglot.Common.DTOs
         public string Name { get; set; }
 
         public string Code { get; set; }
-
-        public int Progress { get; set; }
-
-        public int TranslationsCount { get; set; }
     }
 }
