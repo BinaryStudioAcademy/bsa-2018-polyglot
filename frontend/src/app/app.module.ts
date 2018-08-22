@@ -74,11 +74,12 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
 import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
+import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
-
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+
 
 @NgModule({
   exports: [
@@ -133,9 +134,9 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabReviewComponent,
+    TabCommentsComponent,
+    DownloadFileComponent,
     StarRatingComponent
-
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
+using System.Text;
 
 namespace Polyglot.Controllers
 {
@@ -202,6 +203,32 @@ namespace Polyglot.Controllers
 			return Ok();
 		}
 
+
+		[HttpGet]
+		[Route("{id}/export")]
+		public async Task<IActionResult> GetFile(int id, int langId, string extension)
+		{
+			 var test = await service.GetFile(id, langId, extension);
+
+			
+			string ex;			
+			switch (extension)
+			{
+				case ".resx":
+					ex = "application/xml";					
+					break;
+				case ".json":
+					ex = "application/json";					
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+
+			var temp = File(test, ex);
+			return temp;
+		}
+	}
+
         [HttpPost("{id}/filteredstring", Name = "GetComplexStringsByFilter")]
         public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options,int id)
         {
@@ -210,4 +237,5 @@ namespace Polyglot.Controllers
                 : Ok(complexStrings);
         }
     }
+
 }
