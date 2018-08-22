@@ -450,7 +450,8 @@ namespace Polyglot.BusinessLogic.Services
                 allActivities.Add(new ActivityDTO()
                 {
                     Message = $"Complex string with key {projectString.Key}" +
-                    $" was assigned to the project"             
+                    $" was assigned to the project",
+                    DateTime = DateTime.Now
                 });
 
                 var comments = await this._stringService.GetCommentsAsync(projectString.Id);
@@ -495,6 +496,7 @@ namespace Polyglot.BusinessLogic.Services
             foreach(var team in teams)
             {
                 ActivityDTO activity = new ActivityDTO();
+                activity.DateTime = DateTime.Now;
                 if(team.Persons.Count == 1)
                 {
                     activity.Message = $"Team with 1 person was assigned to the project";
@@ -505,7 +507,7 @@ namespace Polyglot.BusinessLogic.Services
                 }
                 allActivities.Add(activity);
             }
-            return allActivities;
+            return allActivities.OrderByDescending(act => act.DateTime);
         }
     }
 
