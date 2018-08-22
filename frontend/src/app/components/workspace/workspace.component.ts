@@ -47,8 +47,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
    ) {
      this.user = userService.getCurrrentUser();
      debugger;
-     this.connection = new signalR.HubConnectionBuilder()
-          .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
    }
 
    description: string = "Are you sure you want to remove the project?";
@@ -56,47 +54,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
    btnCancelText: string = "Cancel";
    answer: boolean;
 
+  
+
   ngOnInit() {
     debugger;
     
-
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
     this.connection.start().catch(err => console.log("ERROR " + err));
-
-    this.connection.on("stringDeleted", (deletedStringId: number) => {
-      if(deletedStringId)
-        {
-          this.snotifyService.info(`Key ${deletedStringId} deleted`, "String deleted")
-          this.receiveId(deletedStringId);
-        }
-    });
-
-    this.connection.on("stringAdded", (newString: any) => {
-      debugger;
-      if(newString && !this.keys.find(s => s.id == newString.id))
-        {
-          this.snotifyService.info(`New key added`, "String added")
-          this.keys.push(newString);
-        }
-    });
-
-    this.connection.on("stringTranslated", (message: string) => 
-      {
-        this.snotifyService.info(message , "Translated")
-      });
-      this.connection.on("newLanguage", (message: string) => 
-      {
-        console.log('dddddddddddddddd');
-        this.snotifyService.info(message , "Language added")
-      });
-      this.connection.on("languageDeleted", (message: string) => 
-      {
-        this.snotifyService.info(message , "Language removed")
-      });
-      this.connection.on("newTranslation", (message: string) => 
-      {
-        this.snotifyService.info(message , "Translated")
-      });
-    
 
     this.searchQuery = '';
     console.log("q");
@@ -160,12 +125,56 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+    this.connection.send("leaveProjectGroup", `${this.project.id}`);
+    this.connection.stop();
   }
 
   getProjById(id: number){
     this.dataProvider.getById(id).subscribe(proj =>{
       this.project = proj;
+      this.subscribeProjectChanges();
     });
+  }
+
+  subscribeProjectChanges(){
+
+    this.connection.send("joinProjectGroup", `${this.project.id}`)
+
+    this.connection.on("stringDeleted", (deletedStringId: number) => {
+      if(deletedStringId)
+        {
+          this.snotifyService.info(`Key ${deletedStringId} deleted`, "String deleted")
+          this.receiveId(deletedStringId);
+        }
+    });
+
+    this.connection.on("stringAdded", (newString: any) => {
+      debugger;
+      if(newString && !this.keys.find(s => s.id == newString.id))
+        {
+          this.snotifyService.info(`New key added`, "String added")
+          this.keys.push(newString);
+        }
+    });
+
+    this.connection.on("stringTranslated", (message: string) => 
+      {
+        this.snotifyService.info(message , "Translated")
+      });
+      this.connection.on("languageAdded", (message: string) => 
+      {
+        console.log('dddddddddddddddd');
+        this.snotifyService.info(message , "Language added")
+      });
+      this.connection.on("languageDeleted", (message: string) => 
+      {
+        this.snotifyService.info(message , "Language removed")
+      });
+      this.connection.on("newTranslation", (message: string) => 
+      {
+        this.snotifyService.info(message , "Translated")
+      });
+    
   }
 
   receiveId($event) {
