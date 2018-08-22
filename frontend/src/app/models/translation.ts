@@ -11,4 +11,11 @@ export interface Translation {
   history: AdditionalTranslation[];
   optionalTranslations: AdditionalTranslation[]
 
+  Type : TranslationType
+
+}
+
+enum TranslationType {
+  Human,
+  Machine
 }

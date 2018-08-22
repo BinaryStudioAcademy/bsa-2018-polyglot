@@ -194,16 +194,16 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     this.IsEdit = !this.IsEdit;
   }
 
-  openMachineTranslationBottomSheet(id : any,target : any) : void {
-    //this.keyDetails.base
+  openMachineTranslationBottomSheet(id : any, item : any) : void {
     const dialogRef = this.bottomSheet.open(MachineTransaltionBottomSheetComponent,
-       { data : {text : this.keyDetails.base , target : target }}
+       { data : {text : this.keyDetails.base , target : item .languageCode , languageName : item.languageName }}
       );
-
     dialogRef.afterDismissed().subscribe(result => {
-      console.log(result);
-      this.expandedArray[id].isOpened = false;
+      if(result){
+      this.keyDetails.translations[id].translationValue = result;
+      }
     })
+
   }
 
 

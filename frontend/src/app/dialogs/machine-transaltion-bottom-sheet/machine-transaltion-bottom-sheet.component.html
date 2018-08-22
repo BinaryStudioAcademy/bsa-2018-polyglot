@@ -1,14 +1,18 @@
-<div>
-  Current translation : {{data.text}} <br>
-  Lang : {{data.target}}
-  </div>
-
+<div style="padding: 20px;">
   <div>
-    <p>
-      Translation : {{Translation}}
-    </p>
+    <h3>Machine translation</h3> 
+    <hr>
+  <span style="color:gray;margin-bottom: 10px;">Current text : </span>{{data.text}} <br>
+  <span style="color:gray;margin-bottom: 10px;">Translated to : </span>{{data.languageName}} <br>
+  <span style="color:gray;margin-bottom: 10px;">Code : </span>{{data.target}}
+</div>
+  <div>
+    <h5>Google Translate</h5>
+      <span>Translation : <mat-spinner *ngIf="isLoading" style="display: inline;margin-left:10px" [diameter]="25"></mat-spinner>{{Translation}}</span>
   </div>
   <div>
-  <button mat-button (click)="onYesClick()">Yes</button>
-  <button mat-button (click)="onNoClick()">Ok</button>
+  <br>
+  <button mat-raised-button color="primary" style="float:left" (click)="onYesClick()">Yes</button>
+  <button mat-raised-button color="warn" style="float:right" (click)="onNoClick()">No</button>
+  </div>
 </div>

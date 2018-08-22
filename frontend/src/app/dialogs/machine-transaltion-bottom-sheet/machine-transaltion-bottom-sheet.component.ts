@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, OnChanges, AfterContentInit, ChangeDetectorRef } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '../../../../node_modules/@angular/material';
 import { TranslationService } from '../../services/translation.service';
-import { Observable, Subject } from '../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-machine-transaltion-bottom-sheet',
@@ -10,7 +9,8 @@ import { Observable, Subject } from '../../../../node_modules/rxjs';
 })
 export class MachineTransaltionBottomSheetComponent implements OnInit{
 
-  public Translation : string
+  public Translation : string;
+  public isLoading: boolean;
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
@@ -19,8 +19,10 @@ export class MachineTransaltionBottomSheetComponent implements OnInit{
     }
 
   ngOnInit() {
+    this.isLoading = true;
     this.service.getTransation({ q : this.data.text, target : this.data.target}).subscribe((res : any) =>{
       this.Translation = res[0].translatedText;
+      this.isLoading = false;
       this._changeDetectorRef.detectChanges();
     })
   }
