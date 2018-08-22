@@ -48,7 +48,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
  
   ngOnInit() {
     this.searchQuery = '';
-    console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);

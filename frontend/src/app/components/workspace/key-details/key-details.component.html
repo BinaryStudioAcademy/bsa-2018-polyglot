@@ -34,7 +34,7 @@
 								</mat-form-field>
 								<div class="button-translation">
 									<button mat-raised-button color="primary"  (click)="onSave(i, t)">Save</button>
-									<button mat-raised-button color="primary" matTooltip="Machine Translation" matTooltipPosition="above" (click)="openMachineTranslationBottomSheet()">
+									<button mat-raised-button color="primary" matTooltip="Machine Translation" matTooltipPosition="above" (click)="openMachineTranslationBottomSheet(t.translationValue)">
 										<mat-icon class="icon-size" matTooltip="Machine Translation" matTooltipPosition="above">g_translate</mat-icon>
 									</button>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>

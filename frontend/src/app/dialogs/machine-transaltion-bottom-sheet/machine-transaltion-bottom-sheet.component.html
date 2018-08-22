@@ -1,3 +1,8 @@
 <p>
-  machine-transaltion-bottom-sheet works!
+  Current translation : <br>
+  <mat-form-field>
+      <input matInput [(ngModel)]="data.translation">
+    </mat-form-field>
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button>Ok</button>
 </p>

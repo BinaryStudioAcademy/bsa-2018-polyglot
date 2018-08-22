@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule, MatDialogRef, MatBottomSheetModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -152,6 +152,7 @@ import { MachineTransaltionBottomSheetComponent } from './dialogs/machine-transa
     MatSortModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatBottomSheetModule,
     ImageCropperModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -179,6 +180,7 @@ import { MachineTransaltionBottomSheetComponent } from './dialogs/machine-transa
     TeamAssignComponent,
     SaveStringConfirmComponent,
     MachineTransaltionBottomSheetComponent
+    
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

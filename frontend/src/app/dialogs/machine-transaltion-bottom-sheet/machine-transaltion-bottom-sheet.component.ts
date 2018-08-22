@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatBottomSheetRef } from '../../../../node_modules/@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-machine-transaltion-bottom-sheet',
@@ -8,9 +8,13 @@ import { MatBottomSheetRef } from '../../../../node_modules/@angular/material';
 })
 export class MachineTransaltionBottomSheetComponent implements OnInit {
 
-  constructor(private bottomSheetRef: MatBottomSheetRef<MachineTransaltionBottomSheetComponent>) { }
+  constructor(
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private bottomSheetRef: MatBottomSheetRef<MachineTransaltionBottomSheetComponent>) { }
 
   ngOnInit() {
   }
-
+  onNoClick(): void {
+    this.bottomSheetRef.dismiss(this.data);
+  }
 }
