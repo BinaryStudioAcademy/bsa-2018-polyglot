@@ -1,5 +1,4 @@
-<div class="container" *ngIf="allActivities" fxLayout="row">
-
+<div class="container" *ngIf="allActivities && allActivities.length != 0" fxLayout="row">
     <div fxFlex="30%">
         <h4>From:</h4>
         <input matInput class="date-input" (dateChange)="onFilterChange()" [(ngModel)]="from" [matDatepicker]="pickerFrom" placeholder="From">
@@ -25,4 +24,7 @@
             </mat-card>
         </div>
     </div>
+</div>
+<div  *ngIf="!allActivities || allActivities.length == 0">
+    <p class="no-activities">No Activities</p>
 </div>
