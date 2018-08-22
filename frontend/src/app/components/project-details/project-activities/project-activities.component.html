@@ -1,24 +1,22 @@
 <div class="container" *ngIf="allActivities && allActivities.length != 0" fxLayout="row">
-    <div fxFlex="30%">
+    <div fxFlex="30%" class = "filter">
         <h4>From:</h4>
         <input matInput class="date-input" (dateChange)="onFilterChange()" [(ngModel)]="from" [matDatepicker]="pickerFrom" placeholder="From">
         <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
         <mat-datepicker #pickerFrom></mat-datepicker>
-
+        <hr>
         <h4>To:</h4>
         <input matInput class="date-input" (dateChange)="onFilterChange()" [(ngModel)]="to" [matDatepicker]="pickerTo" placeholder="To">
         <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
         <mat-datepicker #pickerTo></mat-datepicker>
-
+        <hr>
         <h4>Start typing username:</h4>
         <input matInput (keyup)="onFilterChange()" [(ngModel)]="filterUserName" placeholder="Username">
+        <hr>
     </div> 
-    <div fxFlex="70%" >
+    <div fxFlex="50%" >
         <div *ngFor="let action of filteredActivities" class="comments-container">
-            <mat-card  class="comment-card" class="action">
-                <div class="author-info">
-                    <img class="comment-avatar" (click)="onImageClick(com?.user?.avatarUrl)" src="{{com?.user?.avatarUrl}}">
-                </div>
+            <mat-card  class="activity-card">
                 <div class ="text">{{action.message}}</div>
                 <div class="date"><i>{{action.dateTime | date:'short'}}</i></div>
             </mat-card>
