@@ -15,6 +15,6 @@ export class MachineTransaltionBottomSheetComponent implements OnInit {
   ngOnInit() {
   }
   onNoClick(): void {
-    this.bottomSheetRef.dismiss(this.data);
+    this.bottomSheetRef.dismiss(this.data.transaltion);
   }
 }

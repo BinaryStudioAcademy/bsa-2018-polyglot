@@ -86,7 +86,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.keyDetails = data;
         this.projectId = this.keyDetails.projectId;
         this.getLanguages();
-        
       });
      });
   }
@@ -199,7 +198,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     this.IsEdit = !this.IsEdit;
   }
 
-  openMachineTranslationBottomSheet(value : any) : void {
+  openMachineTranslationBottomSheet(id : any,value : any) : void {
+    //this.keyDetails.base
+    console.log(id);
     console.log(value);
     let machineTranslation = value;
     const dialogRef = this.bottomSheet.open(MachineTransaltionBottomSheetComponent,
