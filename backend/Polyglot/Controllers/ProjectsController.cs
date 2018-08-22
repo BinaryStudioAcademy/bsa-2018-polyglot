@@ -109,8 +109,10 @@ namespace Polyglot.Controllers
                 : Ok(project);
         }
 
-        // PUT: Projects/:id/languages
-        [HttpPut("{projectId}/languages")]
+        
+
+		// PUT: Projects/:id/languages
+		[HttpPut("{projectId}/languages")]
 		public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
 		{
 			if (!ModelState.IsValid)

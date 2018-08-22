@@ -1,5 +1,5 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { IString } from '../../../models/string';

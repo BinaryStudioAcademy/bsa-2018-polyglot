@@ -30,7 +30,7 @@ export class ProjectActivitiesComponent implements OnInit {
       this.filteredActivities = this.filteredActivities.filter(act => new Date(act.dateTime) >= new Date(this.from));
     }
     if(this.to != null){
-      this.filteredActivities = this.filteredActivities.filter(act => new Date(act.dateTime) <= new Date(this.to));
+      this.filteredActivities = this.filteredActivities.filter(act => new Date(act.dateTime) <= this._increaseDay(new Date(this.to)));
     }
     if(this.filterUserName != null && this.filterUserName != ""){
       this.filteredActivities = this.filteredActivities.filter(act => {
@@ -41,5 +41,9 @@ export class ProjectActivitiesComponent implements OnInit {
     }
   }
 
+  private _increaseDay(date: Date): Date{
+    date.setDate(date.getDate() + 1);
+    return date;
+  }
 
 }
