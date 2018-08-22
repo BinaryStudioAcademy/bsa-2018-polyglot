@@ -539,7 +539,17 @@ namespace Polyglot.BusinessLogic.Services
                         var user2 = await this._userService.GetOneAsync(trans.UserId);
                         allActivities.Add(new ActivityDTO()
                         {
-                            Message = $"Additional translation in string with key {projectString.Key} by {user2.FullName}",
+                            Message = $"Translation in string with key {projectString.Key} was added by {user2.FullName}(obsolete)",
+                            DateTime = trans.CreatedOn,
+                            User = user2
+                        });
+                    }
+                    foreach (var trans in translation.OptionalTranslations)
+                    {
+                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        allActivities.Add(new ActivityDTO()
+                        {
+                            Message = $"Optional translation in string with key {projectString.Key} was added by {user2.FullName}",
                             DateTime = trans.CreatedOn,
                             User = user2
                         });
