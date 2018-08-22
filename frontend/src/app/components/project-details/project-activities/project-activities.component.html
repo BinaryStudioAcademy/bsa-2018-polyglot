@@ -14,7 +14,7 @@
         <input matInput (keyup)="onFilterChange()" [(ngModel)]="filterUserName" placeholder="Username">
         <hr>
     </div> 
-    <div fxFlex="50%" >
+    <div fxFlex="70%" >
         <div *ngFor="let action of filteredActivities" class="comments-container">
             <mat-card  class="activity-card">
                 <div class ="text">{{action.message}}</div>
