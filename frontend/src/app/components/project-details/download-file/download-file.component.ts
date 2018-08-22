@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ProjectService } from '../../../services/project.service';
+import { saveAs } from 'file-saver/FileSaver';
+import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
+
 
 @Component({
   selector: 'app-download-file',
@@ -8,9 +11,9 @@ import { ProjectService } from '../../../services/project.service';
 })
 export class DownloadFileComponent implements OnInit {
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private projectService: ProjectService, private snotifyService: SnotifyService) { }
 
-  @Input() projectId: number;
+  @Input() project;
 
   public selectedFormat: string;
   public formats: string[] = ['.json', '.resx'];
@@ -18,29 +21,20 @@ export class DownloadFileComponent implements OnInit {
   public languages = [];
 
   ngOnInit() {
-    this.projectService.getProjectLanguages(this.projectId)
+    this.projectService.getProjectLanguages(this.project.id)
     .subscribe(langs => {
        this.languages = langs;
     });
   }
 
   download() {
-    
-    this.projectService.getProjectFile(this.projectId, this.selectedLanguage.id, this.selectedFormat)
+    this.projectService.getProjectFile(this.project.id, this.selectedLanguage.id, this.selectedFormat)
     .subscribe((data) => {
-      debugger;
-
-      // var test = data.;
-
-      let url = window.URL.createObjectURL(data);
-      var win = window.open(url, '_blank');
-      win.focus();
-      debugger;
+      debugger; 
+      saveAs(data, `${this.project.name}(${this.selectedLanguage.code})${this.selectedFormat}`);
+      this.snotifyService.success("File Downloaded", "Success!");
+    }, err => {
+      this.snotifyService.error("File wasn`t downloaded", "Error!");
     });
-    debugger;
-    
-   /*
-   var win = window.open(`http://localhost:58828/projects/${this.projectId}/export?langId=${this.selectedLanguage.id}&extension=${this.selectedFormat}`,'_blank');
-   win.focus();*/
   }
 }

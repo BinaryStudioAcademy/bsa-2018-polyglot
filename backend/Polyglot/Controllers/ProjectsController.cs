@@ -202,24 +202,21 @@ namespace Polyglot.Controllers
 		{
 			 var test = await service.GetFile(id, langId, extension);
 
-
-			string ex;
-			string name;
+			
+			string ex;			
 			switch (extension)
 			{
 				case ".resx":
-					ex = "application/xml";
-					name = "data.resx";
+					ex = "application/xml";					
 					break;
 				case ".json":
-					ex = "application/json";
-					name = "data.json";
+					ex = "application/json";					
 					break;
 				default:
 					throw new NotImplementedException();
 			}
 
-			var temp =  File(test, ex , name);
+			var temp = File(test, ex);
 			return temp;
 		}
 	}
