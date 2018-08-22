@@ -205,7 +205,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Uid, opt => opt.MapFrom(po => po.Uid))
                     .ForMember(p => p.Ratings, opt => opt.Ignore())
                     .ForMember(p => p.TeamTranslators, opt => opt.Ignore())
-                    .ForMember(p => p.UserRole, opt => opt.Ignore())
+                    .ForMember(p => p.UserRole, opt => opt.MapFrom(po => po.UserRole))
                     .ForMember(p => p.Projects, opt => opt.Ignore());
                 cfg.CreateMap<UserProfile, UserProfileDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
