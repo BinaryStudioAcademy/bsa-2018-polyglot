@@ -10,6 +10,7 @@ import { UserProfile } from '../../models';
 import { map } from 'rxjs/operators';
 import { AppStateService } from '../../services/app-state.service';
 import { Router } from '@angular/router';
+import { EventService } from '../../services/event.service';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class NavigationComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   manager : UserProfile;
-  email: string;
+  // email: string;
   role: string;
 
   constructor(
@@ -33,11 +34,24 @@ export class NavigationComponent implements OnDestroy {
     private authService: AuthService,
     private userService: UserService,
     private appState: AppStateService,
-    private router: Router
+    private router: Router,
+    private eventService: EventService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener); 
+    this.eventService.listen().subscribe(
+      (event) => {
+        switch(event) {
+          case 'signUp':
+            this.onSignUpClick();
+            break;
+          case 'login':
+            this.onLoginClick();
+            break;
+        }
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -49,7 +63,8 @@ export class NavigationComponent implements OnDestroy {
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
         this.manager = this.userService.getCurrrentUser();
-        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+        console.log(this.manager);
+        this.role = this.roleToString(this.manager.userRole);
       }
     );
   }
@@ -59,7 +74,7 @@ export class NavigationComponent implements OnDestroy {
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
         this.manager = this.userService.getCurrrentUser();
-        this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+        this.role = this.roleToString(this.manager.userRole);
       }
     );
   }
@@ -90,13 +105,13 @@ export class NavigationComponent implements OnDestroy {
           (user: UserProfile)=> {
             this.userService.updateCurrrentUser(user);   
             this.manager = this.userService.getCurrrentUser();
-            this.role = this.manager.userRole == 0 ? 'Translator' : 'Manager';
+            this.role = this.roleToString(this.manager.userRole);
           },
           err => {
             console.log('err', err);
           }
         );
-        this.email = this.appState.currentFirebaseUser.email;
+        // this.email = this.appState.currentFirebaseUser.email;
       }
     } else {
       this.manager = { 
@@ -104,12 +119,21 @@ export class NavigationComponent implements OnDestroy {
         avatarUrl: "",
         lastName: "" 
       };
-      this.email = '';
+      // this.email = '';
       this.role = '';
     }
   }
-
-
-
   
+  roleToString(roleId: number) {
+    let roleStr: string;
+    switch(roleId) {
+      case 0:
+        roleStr = 'Translator';
+        break;
+      case 1:
+        roleStr = 'Manager';
+        break;
+    }
+    return roleStr;
+  }
 }

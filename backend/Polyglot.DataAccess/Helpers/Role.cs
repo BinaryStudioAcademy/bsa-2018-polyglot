@@ -1,8 +1,8 @@
 ﻿namespace Polyglot.DataAccess.Helpers
 {
-    public enum Role
+    public enum Role : int
     {
-        Manager,
-        Translator
+        Translator,
+        Manager
     }
 }

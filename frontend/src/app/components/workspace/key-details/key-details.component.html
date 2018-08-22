@@ -10,7 +10,7 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+						<mat-expansion-panel [(disabled)]="isDisabled" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
@@ -20,8 +20,21 @@
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
 								</mat-panel-description>
-							</mat-expansion-panel-header>
-					  
+								<button mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+									<mat-icon style="font-size: 22px">translate</mat-icon>
+								</button>
+								<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
+									<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
+										<mat-form-field class="textarea-translation">
+											<textarea matInput cdkTextareaAutosize
+												cdkAutosizeMinRows="1"
+												placeholder="Write here your optional translation"
+												cdkAutosizeMaxRows="10"></textarea>
+										</mat-form-field>
+										<button mat-raised-button color="primary">Suggest</button>
+									</div>
+								</mat-menu>
+							</mat-expansion-panel-header>		  
 						   <div >
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>

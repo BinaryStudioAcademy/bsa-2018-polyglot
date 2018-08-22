@@ -10,6 +10,9 @@
         <div *ngIf="name.errors.minlength">
             Name must be at least 4 characters long. 
         </div>
+        <div *ngIf="name.errors.maxlength">
+            Name must be not longer than 25 characters long. 
+        </div>
     </mat-error>
 </mat-form-field>
 <mat-form-field class="field-full-width">

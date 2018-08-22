@@ -40,6 +40,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     btnCancelText: string = "Cancel";
     answer: number;
     keyId: number;
+    isDisabled: boolean;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
@@ -95,9 +96,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         if(this.appState.getWorkspaceState === null) {
             debugger
             this.router.navigate([`/workspace/${this.projectId}`]);
-
-            //this.router.navigateByUrl(`workspace/${this.projectId}`);
-            //this.router.navigate(`$`);
         }
 
         this.languages = this.appState.getWorkspaceState.languages;
@@ -108,23 +106,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         }
         this.isEmpty = false;
         this.setLanguagesInWorkspace();
-        // this.projectService.getProjectLanguages(this.projectId).subscribe(
-        //     (d: Language[]) => {
-        //         const temp = d.length;
-        //         this.expandedArray = new Array();
-        //         for (var i = 0; i < temp; i++) {
-        //             this.expandedArray.push({ isOpened: false, oldValue: '' });
-        //         }
-        //         this.languages = d.map(x => Object.assign({}, x));
-        //         this.isEmpty = false;
-        //         console.log(this.isEmpty);
-        //         this.setLanguagesInWorkspace();
-        //     },
-        //     err => {
-        //         this.isEmpty = true;
-        //         console.log('err', err);
-        //     }
-        // );
     }
 
     setLanguagesInWorkspace() {
@@ -181,6 +162,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                         console.log('err', err);
                     }
                 );
+
         }
         //});
     }
@@ -215,6 +197,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.IsEdit = !this.IsEdit;
     }
 
+    toggleDisable() {
+        this.isDisabled = !this.isDisabled;
+    }
 }
 
 export interface TranslationState {
