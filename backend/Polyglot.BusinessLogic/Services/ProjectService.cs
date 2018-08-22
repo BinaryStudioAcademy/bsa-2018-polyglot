@@ -523,9 +523,8 @@ namespace Polyglot.BusinessLogic.Services
                         User = comment.User
                     });
                 }
-                /*
-                var translations = await this._stringService.GetStringTranslationsAsync(projectString.Id);      unavailable because userId in translations = 0
-
+                
+                var translations = await this._stringService.GetStringTranslationsAsync(projectString.Id);    
                 foreach(var translation in translations)
                 {
                     var user = await this._userService.GetOneAsync(translation.UserId);
@@ -546,7 +545,7 @@ namespace Polyglot.BusinessLogic.Services
                         });
                     }
                 }
-                */
+                
             }
             
             var teams = await this.GetProjectTeams(id);
