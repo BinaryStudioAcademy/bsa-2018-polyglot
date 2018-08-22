@@ -65,7 +65,18 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/languages/' + languageId, undefined, undefined);
   }
 
+
+  getProjectFile(projectId: number, languageId: number, extension: string) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/export/',
+                  '?langId=' + languageId + '&extension=' + extension, undefined, 'blob');
+  }
+
   getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
+
+  }
+
+  getProjectActivitiesById(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/activities', undefined);
   }
 }

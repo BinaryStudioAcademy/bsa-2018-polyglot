@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild,} from '@angular/core';
+
+import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog, MatBottomSheet } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
@@ -9,6 +10,7 @@ import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm
 import { TabHistoryComponent } from './tab-history/tab-history.component';
 import { MachineTransaltionBottomSheetComponent } from '../../../dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
 import { TranslationType } from '../../../models/TranslationType';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -37,6 +39,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   btnCancelText: string = "Cancel";
   answer: number;
   keyId: number;
+  isDisabled: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
@@ -46,7 +49,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private projectService: ProjectService,
     public dialog: MatDialog,
     private bottomSheet : MatBottomSheet,
-    private snotifyService: SnotifyService) { 
+    private snotifyService: SnotifyService,
+    private appState: AppStateService) { 
       this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
 
@@ -130,6 +134,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     // this.route.params.subscribe(value =>
     // {
         if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
@@ -150,6 +155,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             t.Type = TranslationType.Human;
           }
           t.createdOn = new Date();
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
               (d: any)=> {
@@ -217,6 +223,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   }
 
 
+  toggleDisable() {
+    this.isDisabled = !this.isDisabled;
+  }
 }
 
 export interface TranslationState {

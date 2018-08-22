@@ -31,23 +31,14 @@
           <div class="item" fxFlex>
               <div>
                 <div class="project-button-wrapper">
-                    <h2 class="title">Projects</h2>
+                    <h2 class="title">Projects:</h2>
                     <button  mat-raised-button color="primary" routerLink="./newproject">Create new</button>
                 </div>         
                 <hr>
                 <div class="project-list">
                     <br>
                     <div class="project-card" mat-list-item [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'" *ngFor="let p of projects">
-                        <div class="projects-container">
-                            <h5>Name:</h5>
-                            <div class="project-name">
-                                {{p.name}}
-                            </div>
-                            <h5>Technology:</h5>
-                            <div class="project-technology">
-                                {{p.technology}}
-                            </div>
-                        </div>
+                        <h3 class="project">{{p.name}}</h3>
                         <hr>
                     </div>
                 </div>      
