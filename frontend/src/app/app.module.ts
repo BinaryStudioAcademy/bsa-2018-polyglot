@@ -135,6 +135,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
+    TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent
   ],
