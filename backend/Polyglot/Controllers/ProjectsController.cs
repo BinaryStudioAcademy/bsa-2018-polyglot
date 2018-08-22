@@ -90,18 +90,6 @@ namespace Polyglot.Controllers
 			return success ? Ok() : StatusCode(304) as IActionResult;
 		}
 
-		// GET: Projects/5/languages
-		[HttpGet("{id}/languages", Name = "GetProjectLanguages")]
-		public async Task<IActionResult> GetProjectLangs(int id)
-		{
-			var project = await service.GetProjectLanguages(id);
-			return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-				: Ok(project);
-
-		}
-
-<<<<<<< HEAD
-
         // GET: Projects/5/report
         [HttpGet("{id}/report", Name = "GetProjectReport")]
         public async Task<IActionResult> GetProjectReport(int id)
@@ -109,10 +97,17 @@ namespace Polyglot.Controllers
             var project = await service.GetProjectStat(id);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
-
         }
+        // GET: Projects/5/languages
+        [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
+		public async Task<IActionResult> GetProjectLangs(int id)
+		{
+			var project = await service.GetProjectLanguages(id);
+			return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+				: Ok(project);
 
-
+		}
+        
 
         // PUT: Projects/:id/languages
         [HttpPut("{projectId}/languages")]
@@ -120,14 +115,6 @@ namespace Polyglot.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
-=======
-		// PUT: Projects/:id/languages
-		[HttpPut("{projectId}/languages")]
-		public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
-		{
-			if (!ModelState.IsValid)
-				return BadRequest() as IActionResult;
->>>>>>> 77469665efd82d3623555d89e4a7ea39ad440add
 
 			var entity = await service.AddLanguagesToProject(projectId, languageIds);
 			return entity == null ? StatusCode(304) as IActionResult
