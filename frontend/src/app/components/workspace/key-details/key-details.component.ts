@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog, MatBottomSheet } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { ComplexStringService } from '../../../services/complex-string.service';
-import { Translation, Project, Language } from '../../../models';
+import { Translation, Language } from '../../../models';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
 import { MachineTransaltionBottomSheetComponent } from '../../../dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
+import { TranslationType } from '../../../models/TranslationType';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -28,6 +29,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   languages: Language[];
   expandedArray: Array<TranslationState>;
   isLoad: boolean;
+  isMachineTranslation : boolean;
 
   description: string = "Do you want to save changes?";
   btnYesText: string = "Yes";
@@ -140,6 +142,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
+          if(this.isMachineTranslation){
+            t.Type = TranslationType.Machine;
+          }
+          else{
+            t.Type = TranslationType.Human;
+          }
           t.createdOn = new Date();
           this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
@@ -201,6 +209,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     dialogRef.afterDismissed().subscribe(result => {
       if(result){
       this.keyDetails.translations[id].translationValue = result;
+      this.isMachineTranslation = true;
       }
     })
 

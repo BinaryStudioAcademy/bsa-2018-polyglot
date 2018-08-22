@@ -27,11 +27,7 @@ export class MachineTransaltionBottomSheetComponent implements OnInit{
     })
   }
 
-  onNoClick(): void {
-    this.bottomSheetRef.dismiss();
-  }
-
-  onYesClick(): void {
+  onSelect(): void {
     this.bottomSheetRef.dismiss(this.Translation);
   }
 }

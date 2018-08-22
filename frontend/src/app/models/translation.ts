@@ -1,3 +1,5 @@
+import { TranslationType } from "./TranslationType";
+
 import { AdditionalTranslation } from "./additionalTranslation";
 
 export interface Translation {
@@ -15,7 +17,3 @@ export interface Translation {
 
 }
 
-enum TranslationType {
-  Human,
-  Machine
-}

@@ -6,13 +6,17 @@
   <span style="color:gray;margin-bottom: 10px;">Translated to : </span>{{data.languageName}} <br>
   <span style="color:gray;margin-bottom: 10px;">Code : </span>{{data.target}}
 </div>
-  <div>
-    <h5>Google Translate</h5>
-      <span>Translation : <mat-spinner *ngIf="isLoading" style="display: inline;margin-left:10px" [diameter]="25"></mat-spinner>{{Translation}}</span>
+    <h4 style="margin-bottom: 0px">Providers:</h4>
+    <mat-nav-list>
+    <mat-list-item (click)="onSelect()" style="padding-left: 0px!important">
+    <div mat-line>
+    <span style="font-weight: bold">Google Translate</span>
   </div>
-  <div>
+      <div mat-line style="padding-top: 10px;padding-bottom: 10px;">
+         Translation : <mat-spinner *ngIf="isLoading" style="display: inline;margin-left:10px" [diameter]="25"></mat-spinner>{{Translation}}
+        </div>
+        <br>
+        </mat-list-item>
+    </mat-nav-list>
   <br>
-  <button mat-raised-button color="primary" style="float:left" (click)="onYesClick()">Yes</button>
-  <button mat-raised-button color="warn" style="float:right" (click)="onNoClick()">No</button>
-  </div>
 </div>
