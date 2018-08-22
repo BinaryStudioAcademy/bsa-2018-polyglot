@@ -26,7 +26,7 @@
             <mat-card class="teammate-card">
               <div class="temmate-header">
                 <div class="teammate-header-image">
-                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
+                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" >
                 </div>
                 <div class="teammate-name">{{t.fullName}}</div>
                 <div class="rating">
@@ -75,7 +75,7 @@
           <mat-card class="teammate-card">
             <div class="temmate-header">
               <div class="teammate-header-image">
-                <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
+                <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" >
               </div>
               <div class="teammate-name">{{t.fullName}}</div>
               <div class="rating">
