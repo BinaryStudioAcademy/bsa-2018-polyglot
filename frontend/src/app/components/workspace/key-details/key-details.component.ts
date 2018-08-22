@@ -1,17 +1,15 @@
+
 import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatBottomSheet } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
-import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Translation, Project, Language } from '../../../models';
-import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
-import { LanguageService } from '../../../services/language.service';
-import { elementAt } from 'rxjs/operators';
+import { Translation, Language } from '../../../models';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { MachineTransaltionBottomSheetComponent } from '../../../dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
+import { TranslationType } from '../../../models/TranslationType';
 import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
@@ -33,6 +31,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   languages: Language[];
   expandedArray: Array<TranslationState>;
   isLoad: boolean;
+  isMachineTranslation : boolean;
 
   description: string = "Do you want to save changes?";
   btnYesText: string = "Yes";
@@ -49,6 +48,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
+    private bottomSheet : MatBottomSheet,
     private snotifyService: SnotifyService,
     private appState: AppStateService) { 
       this.Id = this.route.snapshot.queryParamMap.get('keyid');
@@ -87,7 +87,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.keyDetails = data;
         this.projectId = this.keyDetails.projectId;
         this.getLanguages();
-        
       });
      });
   }
@@ -118,6 +117,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         return ({
           languageName: element.name,
           languageId: element.id,
+          languageCode : element.code,
           ...this.getProp(element.id)
         });
       }
@@ -147,6 +147,13 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
           ); 
         }
         else {
+          if(this.isMachineTranslation){
+            t.Type = TranslationType.Machine;
+            this.isMachineTranslation = false;
+          }
+          else{
+            t.Type = TranslationType.Human;
+          }
           t.createdOn = new Date();
           t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.createStringTranslation(t, this.keyId)
@@ -201,6 +208,20 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   toggle(){
     this.IsEdit = !this.IsEdit;
   }
+
+  openMachineTranslationBottomSheet(id : any, item : any) : void {
+    const dialogRef = this.bottomSheet.open(MachineTransaltionBottomSheetComponent,
+       { data : {text : this.keyDetails.base , target : item .languageCode , languageName : item.languageName }}
+      );
+    dialogRef.afterDismissed().subscribe(result => {
+      if(result){
+      this.keyDetails.translations[id].translationValue = result;
+      this.isMachineTranslation = true;
+      }
+    })
+
+  }
+
 
   toggleDisable() {
     this.isDisabled = !this.isDisabled;

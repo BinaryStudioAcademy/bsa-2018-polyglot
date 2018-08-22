@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog} from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import {SnotifyService} from 'ng-snotify';
 import { FormControl } from '../../../../node_modules/@angular/forms';
@@ -48,7 +48,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
  
   ngOnInit() {
     this.searchQuery = '';
-    console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule, MatSelectModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -77,6 +77,7 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { MachineTransaltionBottomSheetComponent } from './dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
 import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
 
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
@@ -137,6 +138,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
+    MachineTransaltionBottomSheetComponent,
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
@@ -161,6 +163,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     MatSortModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatBottomSheetModule,
     ImageCropperModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -186,7 +189,9 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ConfirmDialogComponent,
     ChooseRoleDialogComponent,
     TeamAssignComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    MachineTransaltionBottomSheetComponent
+    
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
