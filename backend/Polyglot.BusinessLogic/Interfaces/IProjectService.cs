@@ -17,6 +17,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
 
+        Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
+
 		Task<byte[]> GetFile(int id, int languageId, string format);
 
 		#region Teams
@@ -48,5 +50,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId);
 
         #endregion
+
+
     }
 }

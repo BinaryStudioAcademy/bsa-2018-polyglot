@@ -77,6 +77,8 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
+
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 
@@ -135,6 +137,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
+    ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent

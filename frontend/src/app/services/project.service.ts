@@ -75,4 +75,8 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
 
   }
+
+  getProjectActivitiesById(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/activities', undefined);
+  }
 }

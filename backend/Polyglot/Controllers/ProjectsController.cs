@@ -205,6 +205,27 @@ namespace Polyglot.Controllers
 		}
 
 
+        [HttpPost("{id}/filteredstring", Name = "GetComplexStringsByFilter")]
+        public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options,int id)
+        {
+            var complexStrings = await service.GetListByFilterAsync(options,id);
+            return complexStrings == null ? NotFound("No files found!") as IActionResult
+                : Ok(complexStrings);
+        }
+
+        [HttpGet("{projectId}/activities")]
+        public async Task<IActionResult> GetAllActivities(int projectId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var activities = await service.GetAllActivitiesByProjectId(projectId);
+            return activities == null ? StatusCode(404) as IActionResult
+                : Ok(activities);
+        }
+    
+
+
 		[HttpGet]
 		[Route("{id}/export")]
 		public async Task<IActionResult> GetFile(int id, int langId, string extension)
@@ -230,14 +251,8 @@ namespace Polyglot.Controllers
 		}
 
 
-		[HttpPost("{id}/filteredstring", Name = "GetComplexStringsByFilter")]
-		public async Task<IActionResult> GetComplexStringsByFilter([FromBody]IEnumerable<string> options, int id)
-		{
-			var complexStrings = await service.GetListByFilterAsync(options, id);
-			return complexStrings == null ? NotFound("No files found!") as IActionResult
-				: Ok(complexStrings);
-		}
 	}
+
 }
 
 
