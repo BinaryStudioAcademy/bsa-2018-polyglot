@@ -33,10 +33,10 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   public cards: Project[];
   IsLoad : boolean = true;
   OnPage : boolean;
-   
+  
   manager: UserProfile =  this.userService.getCurrrentUser();
-
   ngOnInit() {
+
   this.OnPage = true;  
  
    if(this.appStateService.Layout === null || this.appStateService.Layout === 'card') {

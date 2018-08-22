@@ -16,6 +16,7 @@ using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.Seeds;
 using Polyglot.DataAccess.SqlRepository;
 using Polyglot.GlobalExceptionHandler;
+using Polyglot.Hubs;
 using mapper = Polyglot.Common.Mapping.AutoMapper;
 
 namespace Polyglot
@@ -80,6 +81,8 @@ namespace Polyglot
             
             services.AddScoped<IMongoDataContext, MongoDataContext>();
 
+            services.AddSignalR();
+
             BusinessLogicModule.ConfigureServices(services);
         }
 
@@ -87,6 +90,7 @@ namespace Polyglot
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -99,11 +103,14 @@ namespace Polyglot
                 serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
             }
 
-            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            // {
-            //     var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-            //     MongoDbSeedsInitializer.MongoSeedAsync(context);
-            // }
+            //app.UseDefaultFiles();
+            //app.UseStaticFiles();
+
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+            //    MongoDbSeedsInitializer.MongoSeedAsync(context);
+            //}
 
             // if (env.IsDevelopment())
             // {
@@ -117,6 +124,12 @@ namespace Polyglot
             app.ConfigureCustomExceptionMiddleware();
 
             app.UseMvc();
+
+            app.UseSignalR(options =>
+            {
+                options.MapHub<ChatHub>("/hub");
+                options.MapHub<WorkspaceHub>("/workspaceHub");
+            });
         }
     }
 }

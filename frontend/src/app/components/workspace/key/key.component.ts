@@ -13,6 +13,7 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 export class KeyComponent implements OnInit {
 
   @Input() public key: any;
+  @Input() public connection: any;
   @Output() idEvent = new EventEmitter<number>();
   description: string = "Are you sure you want to remove the string?";
   btnOkText: string = "Delete";
@@ -21,12 +22,16 @@ export class KeyComponent implements OnInit {
 
   constructor(private dataProvider: ComplexStringService,
               public dialog: MatDialog,
-              private snotifyService: SnotifyService) { }
+              private snotifyService: SnotifyService) {
+                debugger;
+                let a = this.connection;
+               }
 
   ngOnInit() {
   }
 
   onDeleteString() {
+    debugger;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
       data: {description: this.description, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
@@ -37,6 +42,9 @@ export class KeyComponent implements OnInit {
         .subscribe(
           (response => {
             this.snotifyService.success("String deleted", "Success!");
+            debugger;
+            if(this.connection)
+              this.connection.send("complexStringDeleted", this.key.projectId, this.key.id);
           }),
           err => {
             this.snotifyService.error("String wasn`t deleted", "Error!");

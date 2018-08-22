@@ -12,7 +12,12 @@ import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { UserService } from '../../../services/user.service';
+import { Observable } from '../../../../../node_modules/rxjs';
+import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { environment } from '../../../../environments/environment';
 import { AppStateService } from '../../../services/app-state.service';
+
 
 @Component({
     selector: 'app-workspace-key-details',

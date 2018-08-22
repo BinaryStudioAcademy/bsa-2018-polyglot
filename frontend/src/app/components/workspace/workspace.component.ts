@@ -1,37 +1,46 @@
-import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Project, Language } from '../../models';
-import { ProjectService } from '../../services/project.service';
-import { MatDialog } from '@angular/material';
-import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
-import { SnotifyService } from 'ng-snotify';
-import { FormControl } from '../../../../node_modules/@angular/forms';
-import { AppStateService } from '../../services/app-state.service';
-import { WorkspaceState } from '../../models/workspace-state';
+import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { Project, Language, UserProfile } from "../../models";
+import { ProjectService } from "../../services/project.service";
+import { MatDialog } from "@angular/material";
+import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog.component";
+import { SnotifyService } from "ng-snotify";
+import { FormControl } from "../../../../node_modules/@angular/forms";
+import { AppStateService } from "../../services/app-state.service";
+import { WorkspaceState } from "../../models/workspace-state";
+import * as signalR from "@aspnet/signalr";
+import { environment } from "../../../environments/environment";
+import { UserService } from "../../services/user.service";
+import { ComplexStringService } from "../../services/complex-string.service";
 
 @Component({
-    selector: 'app-workspace',
-    templateUrl: './workspace.component.html',
-    styleUrls: ['./workspace.component.sass']
+    selector: "app-workspace",
+    templateUrl: "./workspace.component.html",
+    styleUrls: ["./workspace.component.sass"]
 })
-
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[];
     public searchQuery: string;
     public selectedKey: any;
-    public isEmpty
+    public isEmpty;
     public currentPath;
     public basicPath;
+    public connection;
+    user: UserProfile;
 
     private routeSub: Subscription;
 
     options = new FormControl();
 
     filterOptions: string[] = [
-        'Translated', 'Untranslated', 'Human Translation', 'Machine Translation', 'With Tags'
-    ]
+        "Translated",
+        "Untranslated",
+        "Human Translation",
+        "Machine Translation",
+        "With Tags"
+    ];
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -40,8 +49,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private dialog: MatDialog,
         private projectService: ProjectService,
         private snotifyService: SnotifyService,
-        private appState: AppStateService
-    ) { }
+        private appState: AppStateService,
+        private userService: UserService,
+        private complexStringService: ComplexStringService
+    ) {
+        this.user = userService.getCurrrentUser();
+    }
 
     description: string = "Are you sure you want to remove the project?";
     btnOkText: string = "Delete";
@@ -49,21 +62,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        this.searchQuery = '';
+        this.searchQuery = "";
         console.log("q");
-        this.routeSub = this.activatedRoute.params.subscribe((params) => {
+        this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             this.getProjById(params.projectId);
         });
     }
-    onAdvanceSearchClick() {
-
-    }
+    onAdvanceSearchClick() {}
 
     ngDoCheck() {
-
-        if (this.project && this.keys && this.router.url == `/workspace/${this.project.id}` && this.keys.length != 0) {
-            this.router.navigate(['/'])
+        if (
+            this.project &&
+            this.keys &&
+            this.router.url == `/workspace/${this.project.id}` &&
+            this.keys.length != 0
+        ) {
+            this.router.navigate(["/"]);
         }
     }
 
@@ -73,14 +88,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 projectId: this.project.id
             }
         });
-        dialogRef.componentInstance.onAddString.subscribe((result) => {
-            if (result)
+        dialogRef.componentInstance.onAddString.subscribe(result => {
+            if (result) {
+                this.connection.send(
+                    "newComplexString",
+                    this.project.id,
+                    result.id
+                );
                 this.keys.push(result);
-            this.selectedKey = result;
-            let keyId = this.keys[0].id;
-            this.router.navigate([this.currentPath, keyId]);
-            this.isEmpty = false;
-        })
+                this.selectedKey = result;
+                let keyId = this.keys[0].id;
+                this.router.navigate([this.currentPath, keyId]);
+                this.isEmpty = false;
+            }
+        });
         dialogRef.afterClosed().subscribe(() => {
             dialogRef.componentInstance.onAddString.unsubscribe();
         });
@@ -92,6 +113,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
+        this.connection.send("leaveProjectGroup", `${this.project.id}`);
+        this.connection.stop();
     }
 
     getProjById(id: number) {
@@ -104,33 +127,41 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         languages: d
                     };
                     this.appState.setWorkspaceState = workspaceState;
-                    this.basicPath = 'workspace/' + this.project.id;
-                    this.currentPath = 'workspace/' + this.project.id + '/key';
-                    this.dataProvider.getProjectStrings(this.project.id)
+                    this.basicPath = "workspace/" + this.project.id;
+                    this.currentPath = "workspace/" + this.project.id + "/key";
+                    this.dataProvider
+                        .getProjectStrings(this.project.id)
                         .subscribe((data: any) => {
                             if (data) {
                                 this.onSelect(data[0]);
                                 this.keys = data;
-                                this.isEmpty = this.keys.length == 0 ? true : false;
+                                this.isEmpty =
+                                    this.keys.length == 0 ? true : false;
                                 let keyId: number;
                                 if (!this.isEmpty) {
                                     keyId = this.keys[0].id;
-                                    this.router.navigate([this.currentPath, keyId]);
+                                    this.router.navigate([
+                                        this.currentPath,
+                                        keyId
+                                    ]);
                                 }
                             }
                         });
                 },
                 err => {
-                    console.log('err', err);
+                    console.log("err", err);
                 }
             );
+            this.subscribeProjectChanges();
         });
     }
 
     receiveId($event) {
         let temp = this.keys.findIndex(x => x.id === $event);
         if (this.selectedKey.id == this.keys[temp].id)
-            this.selectedKey = this.keys[temp - 1] ? this.keys[temp - 1] : this.keys[temp + 1]
+            this.selectedKey = this.keys[temp - 1]
+                ? this.keys[temp - 1]
+                : this.keys[temp + 1];
 
         this.keys.splice(temp, 1);
 
@@ -142,51 +173,91 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
     OnSelectOption() {
         //If the filters сontradict each other
-        this.ContradictoryСhoise(["Translated", "Untranslated"])
-        this.ContradictoryСhoise(["Human Translation", "Machine Translation"])
+        this.ContradictoryСhoise(["Translated", "Untranslated"]);
+        this.ContradictoryСhoise(["Human Translation", "Machine Translation"]);
 
-        this.dataProvider.getProjectStringsByFilter(this.project.id, this.options.value)
+        this.dataProvider
+            .getProjectStringsByFilter(this.project.id, this.options.value)
             .subscribe(res => {
                 this.keys = res;
-            })
+            });
         console.log(this.options.value);
     }
 
     ContradictoryСhoise(options: string[]) {
-        if (this.options.value.includes(options[0]) && this.options.value.includes(options[1])) {
+        if (
+            this.options.value.includes(options[0]) &&
+            this.options.value.includes(options[1])
+        ) {
             options.forEach(element => {
                 let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1)
+                this.options.value.splice(index, 1);
             });
         }
     }
 
+    subscribeProjectChanges() {
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl(`${environment.apiUrl}/workspaceHub/`)
+            .build();
+
+        this.connection.start().catch(err => console.log("ERROR " + err));
+
+        this.connection.send("joinProjectGroup", `${this.project.id}`);
+
+        this.connection.on("stringDeleted", (deletedStringId: number) => {
+            if (deletedStringId) {
+                debugger;
+                this.snotifyService.info(
+                    `Key ${deletedStringId} deleted`,
+                    "String deleted"
+                );
+                this.receiveId(deletedStringId);
+            }
+        });
+
+        this.connection.on("stringAdded", (newStringId: number) => {
+            if (!this.keys.find(s => s.id == newStringId)) {
+                if (!this.keys.find(s => s.id == newStringId)) {
+                    this.complexStringService
+                        .getById(newStringId)
+                        .subscribe(newStr => {
+                            if (newStr) {
+                                this.snotifyService.info(
+                                    `New key added`,
+                                    "String added"
+                                );
+                                this.keys.push(newStr);
+                            }
+                        });
+                }
+            }
+        });
+
+        this.connection.on(
+            "stringTranslated",
+            (complexStringId: number, languageId: number) => {
+                // получить строку с сервера, вывести уведомление
+                this.snotifyService.info("String translated", "Translated");
+            }
+        );
+
+        this.connection.on("languageAdded", (languagesIds: Array<number>) => {
+            // обновить строку
+            console.log(languagesIds);
+            this.snotifyService.info(languagesIds.join(", "), "Language added");
+        });
+        this.connection.on("languageDeleted", (languageId: number) => {
+            // обновить строку
+            this.snotifyService.info(
+                `lang with id =${languageId} removed`,
+                "Language removed"
+            );
+        });
+
+        this.connection.on("newTranslation", (message: string) => {
+            // обновить строку
+            this.snotifyService.info(message, "Translated");
+        });
+    }
 }
-
-
-
-/*
-let MOCK_PROJECT = (id: number): Project => ({
-  id : id,
-  name: 'Binary Studio Academy Project',
-  description: 'Academy for young and motivated studens! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magnam distinctio repudiandae quas fugit ad quaerat impedit ipsum!  Rem quo, impedit eum adipisci, molestiae cum omnis vitae nisi minima tenetur itaque!',
-  technology: 'AngularJS, Node.js',
-  imageUrl: 'https://d3ot0t2g92r1ra.cloudfront.net/img/logo@3x_optimized.svg',
-  createdOn: new Date(),
-  manager: <any>{
-
-  },
-  mainLanguage: <any>{
-
-  },
-  teams: [],
-  translations: [
-    { id: 1, tanslationKey: 'Hello' },
-    { id: 2, tanslationKey: 'Cancel' },
-    { id: 3, tanslationKey: 'Confirm' },
-    { id: 4, tanslationKey: 'Delete' }
-  ],
-  projectLanguageses: [],
-  projectGlossaries: [],
-  projectTags: []
-});*/

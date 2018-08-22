@@ -7,6 +7,9 @@ import { MatDialog } from '@angular/material';
 import { SelectProjectLanguageComponent } from '../../../dialogs/select-project-language/select-project-language.component';
 import { LanguageStatistic } from '../../../models/languageStatistic';
 import { Language } from '../../../models';
+import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { environment } from '../../../../environments/environment';
+
 
 @Component({
   selector: 'app-languages',
@@ -20,17 +23,52 @@ export class LanguagesComponent implements OnInit {
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   public IsLoading: any = {};
+  private connection: any;
 
   constructor(
     private projectService: ProjectService, 
     private langService: LanguageService,
     private snotifyService: SnotifyService,
     public dialog: MatDialog
-  ) { }
+  ) {
+
+   }
 
   ngOnInit() {
+    debugger;
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
+    this.connection.start().catch(err => console.log("ERROR " + err));
 
     this.projectService.getProjectLanguagesStatistic(this.projectId)
+        .subscribe(langs => {
+          this.IsLoad = false;
+          this.langs = langs;
+          this.langs.sort(this.compareProgress);
+          this.subscribeProjectChanges();
+        },
+        err => {
+          this.IsLoad = false;
+        });
+  }
+
+  ngOnDestroy() {
+    this.connection.send("leaveProjectGroup", `${this.projectId}`);
+    this.connection.stop();
+  }
+
+  subscribeProjectChanges(){
+    
+    this.connection.send("joinProjectGroup", `${this.projectId}`)
+
+    this.connection.on("languageAdded", (languagesIds: Array<number>) => 
+      {
+        console.log(languagesIds);
+        this.snotifyService.info(languagesIds.join(", ") , "Language added")
+        this.IsLoad = true;
+// ==============================================================================
+// ==============> Загрузить с сервера только те языки которые были добавленны 
+        this.projectService.getProjectLanguagesStatistic(this.projectId)
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
@@ -39,6 +77,20 @@ export class LanguagesComponent implements OnInit {
         err => {
           this.IsLoad = false;
         });
+      });
+      this.connection.on("languageDeleted", (languageId: number) => 
+      {
+        this.langs = this.langs.filter(l => l.id != languageId);
+        this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
+      });
+
+      this.connection.on("stringTranslated", (complexStringId: number, languageId: number) => 
+      {
+        // обновить данные 
+      //  this.projectService
+      // {projId}/languages/{langId}/stats
+       // this.snotifyService.info(message , "Translated")
+      });
   }
 
   selectNew(){
@@ -73,7 +125,9 @@ export class LanguagesComponent implements OnInit {
             this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
 
+                debugger;
                 if(project){
+
                   //this.langs.push(data);
                   
                   Array.prototype.push.apply(this.langs, 
@@ -95,7 +149,7 @@ export class LanguagesComponent implements OnInit {
                   }));
                   this.langs.sort(this.compareProgress);
                   this.IsLoad = false;
-
+                  this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
                 }
                 else
                 {
@@ -137,7 +191,7 @@ export class LanguagesComponent implements OnInit {
           if(data && data.state)
           {
             this.snotifyService.info(data.message, "Deletion confirmed.");
-            this.deleteLanguage(languageId)
+            this.deleteLanguage(languageId);
           }
           else
           {
@@ -155,10 +209,14 @@ export class LanguagesComponent implements OnInit {
   }
 
   deleteLanguage(languageId: number){
+    debugger;
     this.IsLoading[languageId] = true;
     this.projectService.deleteProjectLanguage(this.projectId, languageId)
     .subscribe(() => {
       this.IsLoading[languageId] = false;
+
+      this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
+
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);
       setTimeout(() => {
