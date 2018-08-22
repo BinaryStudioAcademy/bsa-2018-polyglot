@@ -3,6 +3,8 @@ import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project.service';
 import { MatDialog } from '@angular/material';
 import { ProjectMessageComponent } from '../../dialogs/project-message/project-message.component';
+import {AppStateService} from '../../services/app-state.service';
+
 
 // to delete manager and user
 import { UserProfile } from '../../models/user-profile';
@@ -17,9 +19,13 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
+
+  public state: string;
+  public checked = true;
   
   constructor(
     private userService: UserService,
+    private appStateService: AppStateService,
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { }
@@ -31,7 +37,15 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   manager: UserProfile =  this.userService.getCurrrentUser();
 
   ngOnInit() {
-  this.OnPage = true;
+  this.OnPage = true;  
+ 
+   if(this.appStateService.Layout === null || this.appStateService.Layout === 'card') {
+     this.checked = true;
+     this.appStateService.Layout = 'card';
+   } else {
+     this.checked = false;
+   }
+    
   debugger;
 
   this.projectService.getAll().subscribe(pr => 
@@ -52,4 +66,16 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     const dialogRef = this.dialog.open(ProjectMessageComponent, {
     });
   }
+
+  changeLayout(){
+    debugger;   
+   if(this.checked){
+     this.appStateService.Layout = 'row';
+     this.checked = false;
+   } else {
+     this.appStateService.Layout = 'card';
+     this.checked = true;
+   }
+  }
+
 }
