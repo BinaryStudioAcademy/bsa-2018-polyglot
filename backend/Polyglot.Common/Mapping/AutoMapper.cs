@@ -38,7 +38,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.GlossaryStrings, opt => opt.MapFrom(pt => pt.GlossaryStrings))
                     .ForMember(p => p.OriginLanguage, opt => opt.MapFrom(pt => pt.OriginLanguage))
-                    .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(pt => pt.ProjectGlossaries));
+                    .ForMember(p => p.ProjectGlossaries, opt => opt.Ignore());
 
                 cfg.CreateMap<GlossaryStringDTO, GlossaryString>()
                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

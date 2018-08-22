@@ -44,5 +44,16 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId);
 
         #endregion
+
+
+        #region Glossary
+
+        Task<ProjectDTO> AssignGlossaries(int projectId, int[] glossaryIds);
+
+        Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId);
+
+        Task<bool> TryDismissGlossary(int projectId, int glossaryId);
+
+        #endregion
     }
 }

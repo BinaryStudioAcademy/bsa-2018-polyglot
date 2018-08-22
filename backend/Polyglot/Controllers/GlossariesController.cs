@@ -17,16 +17,16 @@ namespace Polyglot.Controllers
             this.service = service;
         }
 
-        // GET: Glossarys
+        // GET: Glossaries
         [HttpGet]
-        public async Task<IActionResult> GetAllGlossarys()
+        public async Task<IActionResult> GetAllGlossaries()
         {
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No glossaries found!") as IActionResult
                 : Ok(projects);
         }
 
-        // GET: Glossarys/5
+        // GET: Glossaries/5
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
         {
@@ -35,7 +35,7 @@ namespace Polyglot.Controllers
                 : Ok(project);
         }
 
-        // POST: Glossarys
+        // POST: Glossaries
         public async Task<IActionResult> AddGlossary([FromBody]GlossaryDTO project)
         {
             if (!ModelState.IsValid)
@@ -47,7 +47,7 @@ namespace Polyglot.Controllers
                 entity);
         }
 
-        // PUT: Glossarys/5
+        // PUT: Glossaries/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyGlossary(int id, [FromBody]GlossaryDTO project)
         {
