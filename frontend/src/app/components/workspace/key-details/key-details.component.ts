@@ -12,6 +12,7 @@ import { elementAt } from 'rxjs/operators';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-workspace-key-details',
@@ -47,7 +48,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     private dataProvider: ComplexStringService,
     private projectService: ProjectService,
     public dialog: MatDialog,
-    private snotifyService: SnotifyService) { 
+    private snotifyService: SnotifyService,
+    private appState: AppStateService) { 
       this.Id = this.route.snapshot.queryParamMap.get('keyid');
   }
 
@@ -131,6 +133,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     // this.route.params.subscribe(value =>
     // {
         if(t.id!="00000000-0000-0000-0000-000000000000"&&t.id) {
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.editStringTranslation(t, this.keyId)
             .subscribe(
             (d: any[])=> {
@@ -144,6 +147,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         }
         else {
           t.createdOn = new Date();
+          t.userId = this.appState.currentDatabaseUser.id;
           this.dataProvider.createStringTranslation(t, this.keyId)
             .subscribe(
               (d: any)=> {
