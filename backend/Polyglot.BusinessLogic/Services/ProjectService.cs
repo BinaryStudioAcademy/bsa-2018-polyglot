@@ -293,7 +293,37 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<LanguageStatisticDTO> GetProjectLanguageStatistic(int projectId, int langId)
         {
-            throw new NotImplementedException();
+            var proj = await uow.GetRepository<Project>().GetAsync(projectId);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var lang = proj.ProjectLanguageses?.Where(pl => pl.LanguageId == langId)
+                    .Select(p => p.Language)
+                    .FirstOrDefault();
+
+                var languageStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == projectId && x.LanguageId == langId);
+                // если строк для перевода нет тогда ничего вычислять не нужно
+                if (languageStrings.Count() < 1)
+                    return lang!= null ? mapper.Map<LanguageStatisticDTO>(lang) : null;
+
+                var languageTranslations = languageStrings?.SelectMany(css => css.Translations).ToList();
+
+                // мапим языки проекта, а затем добавляем TranslatedStrings и ComplexStringsCount
+                return mapper.Map<Language, LanguageStatisticDTO>(lang, opt => opt.AfterMap((src, dest) =>
+                {
+                    var languageDTO = dest;
+                    int? translatedCount = 0;
+                    
+                    translatedCount = languageTranslations
+                        ?.Where(t => !String.IsNullOrWhiteSpace(t.TranslationValue))
+                        ?.Count();
+
+                    if (translatedCount.HasValue || translatedCount.Value > 0)
+                        languageDTO.TranslatedStringsCount = translatedCount.Value;
+
+                    languageDTO.ComplexStringsCount = languageStrings.Count();
+                }));
+            }
+            return null;
 
         }
 
