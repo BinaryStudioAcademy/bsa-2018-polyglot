@@ -144,6 +144,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         else {
           if(this.isMachineTranslation){
             t.Type = TranslationType.Machine;
+            this.isMachineTranslation = false;
           }
           else{
             t.Type = TranslationType.Human;
