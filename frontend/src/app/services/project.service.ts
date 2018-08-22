@@ -57,6 +57,10 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages', undefined, undefined);
   }
 
+  getProjectReports(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
+  }
+
   addLanguagesToProject(projectId: number, languageIds: Array<number>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages', undefined, languageIds);
   }

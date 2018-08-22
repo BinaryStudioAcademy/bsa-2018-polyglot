@@ -79,6 +79,8 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
 //Ngx-Charts
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { ReportsComponent } from './components/reports/reports.component';
+import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 @NgModule({
@@ -133,6 +135,7 @@ import { ReportsComponent } from './components/reports/reports.component';
     TabHistoryComponent,
     TabCommentsComponent,
     ReportsComponent
+  
   ],
   imports: [
     BrowserModule,
@@ -164,7 +167,9 @@ import { ReportsComponent } from './components/reports/reports.component';
     }),
     MatRadioModule,
     MatTabsModule,
-    NgxChartsModule
+    NgxChartsModule,
+    NgxInfiniteScrollerModule,
+    InfiniteScrollModule
   ],
   entryComponents: [
     LoginDialogComponent, 

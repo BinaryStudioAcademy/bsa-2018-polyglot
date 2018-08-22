@@ -54,7 +54,7 @@ export class ReportsComponent implements OnInit {
         });
 
 
-        this.projectService.getProjectStrings(this.project.id)
+        this.projectService.getProjectReports(this.project.id)
       .subscribe(strings => {
         this.IsLoad = false;
         
