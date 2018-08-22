@@ -76,6 +76,7 @@ import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-s
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { GlossaryService } from './services/glossary.service';
 
 
 
@@ -179,7 +180,7 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService],
+    SnotifyService, GlossaryService],
 
   bootstrap: [AppComponent]
 
