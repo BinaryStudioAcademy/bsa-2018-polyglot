@@ -74,6 +74,20 @@ export class ProjectService {
     }));
 }
 
+getProjectLanguageStatistic(projectId: number, langId: number) : Observable<LanguageStatistic> {
+  return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/languages/' + langId + '/stat', undefined, undefined)
+  .pipe(map<LanguageStatistic,any>(function(langStat) {
+    return {
+        id: langStat.id, 
+        name: langStat.name,
+        code: langStat.code,
+        translatedStringsCount: langStat.translatedStringsCount,
+        complexStringsCount: langStat.complexStringsCount,
+        progress: langStat.complexStringsCount < 1 ? 0 : 100 / langStat.complexStringsCount *  langStat.translatedStringsCount
+    }
+  }));
+}
+
   addLanguagesToProject(projectId: number, languageIds: Array<number>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages', undefined, languageIds);
   }

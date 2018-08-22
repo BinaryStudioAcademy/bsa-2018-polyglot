@@ -36,9 +36,14 @@ export class LanguagesComponent implements OnInit {
 
   ngOnInit() {
     debugger;
+
     this.connection = new signalR.HubConnectionBuilder()
     .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
-    this.connection.start().catch(err => console.log("ERROR " + err));
+    this.connectSignalR();
+    this.connection.onclose(function(e){
+      console.log("SignalR connection closed.Reconnecting....");
+      this.connectSignalR();
+    });
 
     this.projectService.getProjectLanguagesStatistic(this.projectId)
         .subscribe(langs => {
@@ -64,7 +69,7 @@ export class LanguagesComponent implements OnInit {
     this.connection.on("languageAdded", (languagesIds: Array<number>) => 
       {
         console.log(languagesIds);
-        this.snotifyService.info(languagesIds.join(", ") , "Language added")
+        this.snotifyService.info(languagesIds.join(", ") + " added" , "Language added")
         this.IsLoad = true;
 // ==============================================================================
 // ==============> Загрузить с сервера только те языки которые были добавленны 
@@ -86,10 +91,11 @@ export class LanguagesComponent implements OnInit {
 
       this.connection.on("stringTranslated", (complexStringId: number, languageId: number) => 
       {
-        // обновить данные 
-      //  this.projectService
-      // {projId}/languages/{langId}/stats
-       // this.snotifyService.info(message , "Translated")
+        this.projectService.getProjectLanguageStatistic(this.projectId, languageId)
+          .subscribe(lang => {
+            let targetId = this.langs.findIndex(l => l.id === languageId);
+            this.langs[targetId] = lang;
+          });
       });
   }
 
@@ -149,7 +155,16 @@ export class LanguagesComponent implements OnInit {
                   }));
                   this.langs.sort(this.compareProgress);
                   this.IsLoad = false;
-                  this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
+                  
+                  if(this.connection.connection.connectionState === 1)
+                  {
+                    this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
+                  }
+                  else
+                  {
+                    this.connectSignalR();
+                    this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
+                  }
                 }
                 else
                 {
@@ -215,7 +230,15 @@ export class LanguagesComponent implements OnInit {
     .subscribe(() => {
       this.IsLoading[languageId] = false;
 
-      this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
+      if(this.connection.connection.connectionState === 1)
+        {
+          this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
+        }
+        else
+        {
+          this.connectSignalR();
+          this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
+        }
 
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);
@@ -238,6 +261,10 @@ export class LanguagesComponent implements OnInit {
     if (a.progress > b.progress)
       return 1;
     return 0;
+  }
+
+  connectSignalR(){
+    this.connection.start().catch(err => console.log("ERROR " + err));
   }
   
 }

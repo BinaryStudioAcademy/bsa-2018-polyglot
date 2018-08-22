@@ -62,6 +62,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
+
+      this.connection = new signalR.HubConnectionBuilder()
+            .withUrl(`${environment.apiUrl}/workspaceHub/`)
+            .build();
+
+      this.connection.start().catch(err => console.log("ERROR " + err));
+      this.connection.onclose(function(e){
+        console.log("SignalR connection closed.Reconnecting....");
+        this.connectSignalR();
+      });
+
         this.searchQuery = "";
         console.log("q");
         this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -90,11 +101,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
-                this.connection.send(
+                
+                if(this.connection.connection.connectionState === 1)
+                {
+                  this.connection.send(
                     "newComplexString",
                     this.project.id,
                     result.id
                 );
+                }
+                else{
+                  this.connectSignalR();
+                  this.connection.send(
+                    "newComplexString",
+                    this.project.id,
+                    result.id
+                );
+                }
                 this.keys.push(result);
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
@@ -197,12 +220,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     subscribeProjectChanges() {
-        this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${environment.apiUrl}/workspaceHub/`)
-            .build();
-
-        this.connection.start().catch(err => console.log("ERROR " + err));
-
+        
         this.connection.send("joinProjectGroup", `${this.project.id}`);
 
         this.connection.on("stringDeleted", (deletedStringId: number) => {
@@ -247,6 +265,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             console.log(languagesIds);
             this.snotifyService.info(languagesIds.join(", "), "Language added");
         });
+
         this.connection.on("languageDeleted", (languageId: number) => {
             // обновить строку
             this.snotifyService.info(
@@ -254,10 +273,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 "Language removed"
             );
         });
+    }
 
-        this.connection.on("newTranslation", (message: string) => {
-            // обновить строку
-            this.snotifyService.info(message, "Translated");
-        });
+    connectSignalR(){
+      this.connection.start().catch(err => console.log("ERROR " + err));
     }
 }
