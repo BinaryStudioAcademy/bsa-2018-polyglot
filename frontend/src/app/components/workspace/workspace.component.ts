@@ -23,7 +23,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public isEmpty
   public currentPath;
   public basicPath;
-  private currentPage = 1;
+  private currentPage = 0;
   
   private routeSub: Subscription;
 
@@ -55,20 +55,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       this.getProjById(params.projectId);
       this.basicPath = 'workspace/'+ params.projectId;
       this.currentPath = 'workspace/'+ params.projectId +'/key'; 
-      this.dataProvider.getProjectStrings(params.projectId)
+      this.dataProvider.getProjectStringsWithPagination(params.projectId,4,0)
       .subscribe((data: any) => {
-        if(data)
-        {
-          this.onSelect(data[0]);
-          this.keys = data;
-          this.isEmpty = this.keys.length == 0 ? true : false;
-          let keyId: number;
+        this.keys = data.complexStrings;
+        console.log(this.keys);
+        this.onSelect(this.keys[0]);
+        this.isEmpty = this.keys.length === 0;
+        let keyId: number;
           if(!this.isEmpty) {
             keyId = this.keys[0].id;
             this.router.navigate([this.currentPath, keyId]);
           }
-        }
       });
+    this.currentPage ++;
     });
   }
   onAdvanceSearchClick() {
@@ -161,10 +160,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   getKeys(page: number = 1, saveResultsCallback: (keys) => void){
-    return this.dataProvider. getProjectStrings(this.project.id)
-    .subscribe((keys: any []) => {
+    return this.dataProvider. getProjectStringsWithPagination(this.project.id,4,this.currentPage)
+    .subscribe((keys: any) => {
        this.currentPage++;
-       saveResultsCallback(keys);
+       saveResultsCallback(keys.complexStrings);
       
     });
       

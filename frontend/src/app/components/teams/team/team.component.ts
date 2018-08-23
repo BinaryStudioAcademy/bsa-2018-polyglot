@@ -47,7 +47,7 @@ export class TeamComponent implements OnInit {
     this.teamTranslators = [];
     this.teamService.getTeam(this.id)
         .subscribe((data: Team) => {
-          debugger;
+          
           this.teamTranslators = data.teamTranslators;
           this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;

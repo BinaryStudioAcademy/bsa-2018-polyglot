@@ -17,7 +17,7 @@ export class TeamAssignComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<TeamAssignComponent>
   ) {
-    debugger;
+    
     if (data && data.teams)
       {
         this.teams = data.teams;
@@ -45,7 +45,7 @@ export class TeamAssignComponent implements OnInit {
   }
 
   assign() {
-    debugger;
+    
     if (this.selectedTeams.length > 0) {
       this.onAssign.emit(this.selectedTeams);
     }

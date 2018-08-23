@@ -56,14 +56,14 @@ export class ReportsComponent implements OnInit {
 
         this.projectService.getProjectReports(this.project.id)
       .subscribe(strings => {
-        /*this.IsLoad = false;
+        this.IsLoad = false;
         
         this.strings = strings.map(function (string: any) {
           return {
             name: string.name,
             value: string.translationsCount,
           };
-        });*/
+        });
 
         console.log(this.strings)
       },

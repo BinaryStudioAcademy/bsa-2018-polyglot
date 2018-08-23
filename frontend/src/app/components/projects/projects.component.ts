@@ -32,7 +32,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
   this.OnPage = true;
-  debugger;
+  
 
   this.projectService.getAll().subscribe(pr => 
     {

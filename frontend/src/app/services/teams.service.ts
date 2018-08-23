@@ -18,7 +18,7 @@ export class TeamService {
   }
 
   getTeam(id: number): Observable<Team> {
-    debugger;
+    
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
