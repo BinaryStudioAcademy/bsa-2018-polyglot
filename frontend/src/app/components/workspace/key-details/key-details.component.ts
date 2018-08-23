@@ -154,12 +154,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     }
 
     getLanguages() {
+        debugger;
         if(this.appState.getWorkspaceState === null) {
             debugger
             this.router.navigate([`/workspace/${this.projectId}`]);
+            return;
         }
 
         this.languages = this.appState.getWorkspaceState.languages;
+
         const temp = this.languages.length;
         this.expandedArray = new Array();
         for (var i = 0; i < temp; i++) {
@@ -227,6 +230,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                            t.languageId
 
                        );
+
                        }
                        else{
                          this.connectSignalR();
@@ -237,6 +241,8 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                            t.languageId
                        )
                    }
+                   
+                   console.log("String translated..");
                     },
                     err => {
                         console.log('err', err);
