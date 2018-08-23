@@ -1,110 +1,96 @@
-<div class="container">
-<div class="item" 
-fxLayout
-fxLayout.xs="column"
-fxLayoutAlign="center"
-fxLayoutGap="20px">
-<div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
-    <img src="{{Translator.Avatar}}" alt="avatar" (click)="editPhoto()">
-</div>
-<div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
-<div fxFlex="50%">
-  <div class="user-name">{{Translator.Name}}</div>
-  <mat-card-subtitle>Registration date : <span> {{Translator.RegistrationDate}}</span>
-   </mat-card-subtitle>
-</div>
-<div class="user-rating" fxFlex="50%">
-    <mat-card-subtitle>Rating <span>7.8/10
-        <i class="material-icons" style="color: orange ;">star</i>
-       </span>
-     </mat-card-subtitle>
-</div>
-</div>
-</div>
-<div class="" style="margin-top: 20px;"
-     fxLayout
-     fxLayoutAlign="center"
-     fxLayout.xs="column"
-     fxLayoutGap="20px">
-     <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" >
-        <div class="item" fxFlex>
-            <div>
-              <h2 class="title"> Languages</h2>
-              <hr>
-              <div class="languages-list">
-              <br>
-              <div *ngFor="let l of Languages">
-                      <mat-card-header>
-                        <mat-card-title>{{l.Name}}</mat-card-title>
-                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
-                      </mat-card-header>
-                      <mat-card-content>
-                    <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
-                      </mat-card-content>
-              </div>  
-            </div>    
+<div class="container" *ngIf="userProfile">
+    <div class="item" 
+    fxLayout
+    fxLayout.xs="column"
+    fxLayoutAlign="center"
+    fxLayoutGap="20px">
+        <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
+            <img src="{{userProfile.avatarUrl}}" alt="avatar" (click)="editPhoto()">
+        </div>
+        <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
+            <div fxFlex="50%">
+                <div class="user-name">
+                    {{userProfile.fullName}}
+                </div>
+                <mat-card-subtitle>
+                    Registration date : <span> {{userProfile.registrationDate | date:'shortDate'}}</span>
+                </mat-card-subtitle>
             </div>
-          </div> 
-          <div class="item" fxFlex>
-              <div>
-                <h2 class="title"> Experience </h2>
-                <hr>
+            <div class="user-rating" fxFlex="50%">
+                <mat-card-subtitle>Rating
+                    <span>  {{calculateAvarageRating()}}/5
+                        <i class="material-icons" style="color: orange ;">star</i>
+                    </span>
+                </mat-card-subtitle>
+            </div>
+        </div>
+    </div>
+    <div class="" style="margin-top: 20px;"
+        fxLayout
+        fxLayoutAlign="center"
+        fxLayout.xs="column"
+        fxLayoutGap="20px">
+        <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" >
+            <div class="item" fxFlex>
+                <div>
+                    <h2 class="title"> Experience </h2>
+                    <hr>
                         <mat-card-header>
-                          <mat-card-title>Position</mat-card-title>
-                          <mat-card-subtitle>Company</mat-card-subtitle>
+                            <mat-card-title>Position</mat-card-title>
+                            <mat-card-subtitle>Company</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
                             Responsibilities
                         </mat-card-content>
-              </div>
+                </div>
             </div>
-           <div class="item" fxFlex>
-              <div>
-                <app-tab-review *ngIf="userProfile && userProfile.ratings" [(userProfile)]="userProfile"></app-tab-review>
-              </div>
+            <div class="item" fxFlex>
+                <div>
+                    <app-tab-review *ngIf="userProfile && userProfile.ratings" [(userProfile)]="userProfile"></app-tab-review>
+                </div>
             </div>
-          </div>
-  <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
- <div fxFlex>
-    <mat-card>
-        <h2>Personal detail</h2>
-        <hr>
-        <mat-card-subtitle>Birth : <span> {{Translator.Birth}}</span></mat-card-subtitle>
-        <mat-card-title>Location</mat-card-title><hr>    
-        <mat-card-subtitle>Country : <span> {{Translator.Country}}</span></mat-card-subtitle>
-        <mat-card-subtitle>City : <span> {{Translator.City}}</span></mat-card-subtitle>
-        <mat-card-subtitle>Region : <span> {{Translator.Region}}</span></mat-card-subtitle>
-        <mat-card-subtitle>Address : <span> {{Translator.Address}}</span></mat-card-subtitle>
-        <mat-card-subtitle>Postal code : <span> {{Translator.PostalCode}}</span></mat-card-subtitle>
-        <mat-card-title>Contacts</mat-card-title><hr>
-        <mat-card-subtitle>Phone : <span> {{Translator.Phone}}</span></mat-card-subtitle>
-        </mat-card>
- </div>
-   <div fxFlex style="margin-top: 20px;">
-     <mat-card>
-      <h2>Review</h2>
-      <div *ngFor="let c of Comments">
-      <hr>
-      <br>
-        <mat-card-header>
-            <img mat-card-avatar src="{{c.Avatar}}" alt="">
-          <mat-card-title>{{c.CreatedBy}}</mat-card-title>
-        </mat-card-header>
-        <br>
-        <mat-card-content>
-            <mat-card-subtitle>Comment : <span> "{{c.Body}}"              
-               </span>
-             </mat-card-subtitle>
-            <mat-card-subtitle>Rating :<span>{{c.Rating}}/10
-                <i class="material-icons" style="color: orange ;">star</i>
-               </span>
-             </mat-card-subtitle>
-             <mat-card-subtitle>Created :<span>{{c.CreatedOn}}</span>
-             </mat-card-subtitle>
-          </mat-card-content>
         </div>
-      </mat-card>
+        <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
+        <div fxFlex>
+            <mat-card>
+                <h2>Personal detail</h2>
+                <hr>
+                <mat-card-subtitle>Birth : <span> {{userProfile.birthDate | date:'shortDate'}}</span></mat-card-subtitle>
+                <mat-card-title>Location</mat-card-title><hr>    
+                <mat-card-subtitle>Country : <span> {{userProfile.country}}</span></mat-card-subtitle>
+                <mat-card-subtitle>City : <span> {{userProfile.city}}</span></mat-card-subtitle>
+                <mat-card-subtitle>Region : <span> {{userProfile.region}}</span></mat-card-subtitle>
+                <mat-card-subtitle>Address : <span> {{userProfile.address}}</span></mat-card-subtitle>
+                <mat-card-subtitle>Postal code : <span> {{userProfile.postalCode}}</span></mat-card-subtitle>
+                <mat-card-title>Contacts</mat-card-title><hr>
+                <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
+            </mat-card>
+        </div>
+        <div fxFlex style="margin-top: 20px;">
+            <mat-card>
+            <h2>Review</h2>
+            <div *ngFor="let c of Comments">
+            <hr>
+            <br>
+                <mat-card-header>
+                    <img mat-card-avatar src="{{c.Avatar}}" alt="">
+                <mat-card-title>{{c.CreatedBy}}</mat-card-title>
+                </mat-card-header>
+                <br>
+                <mat-card-content>
+                    <mat-card-subtitle>Comment : <span> "{{c.Body}}"              
+                    </span>
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>Rating :<span>{{c.Rating}}/10
+                        <i class="material-icons" style="color: orange ;">star</i>
+                    </span>
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>Created :<span>{{c.CreatedOn}}</span>
+                    </mat-card-subtitle>
+                </mat-card-content>
+                </div>
+            </mat-card>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
