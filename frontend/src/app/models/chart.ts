@@ -5,7 +5,7 @@ export interface Chart {
 
 export interface Point {
     name: string;
-    data: any
+    value: any
 }
 
 

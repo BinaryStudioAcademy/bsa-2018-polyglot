@@ -91,6 +91,7 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 
 
+
 @NgModule({
   exports: [
     MatSnackBarModule
@@ -150,6 +151,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent
+    
   ],
   imports: [
     BrowserModule,

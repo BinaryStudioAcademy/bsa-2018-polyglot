@@ -579,7 +579,7 @@ namespace Polyglot.BusinessLogic.Services
 
             var chart1 = new ChartDTO
             {
-                Name = "Translated strings",
+                Name = "Not translated strings",
                 Values = new List<Point>()
             };
 
