@@ -16,6 +16,7 @@ export class TranslatorProfileComponent implements OnInit{
 
     public userProfile : any;
     public Comments: Comment[];
+    Languages: Language[];
 
     ngOnInit(): void {
             this.userProfile = this.userService.getCurrrentUser();
@@ -29,8 +30,21 @@ export class TranslatorProfileComponent implements OnInit{
             { CreatedBy : "Savinov Ivan",Body : "Comment body with text",CreatedOn : "08.11.2018", Rating : 7.9 , 
             Avatar : "http://static-29.sinclairstoryline.com/resources/media/2d9080f1-46ec-47b0-3874-d5190c1b02e7-2d9080f146ec47b03874d5190c1b02e7rendition_1_scottthuman5x7bluegradient.jpg?1519078303490"}
         ];
+
+        this.Languages = [
+            {Name : "French",Proficiency : 47},
+            {Name : "Spanish",Proficiency : 77},
+            {Name : "English",Proficiency : 97},
+            {Name : "OtherLang",Proficiency : 50},
+            {Name : "OtherLang",Proficiency : 50},
+            {Name : "OtherLang",Proficiency : 50},
+            {Name : "OtherLang",Proficiency : 50}
+          ];
+          
+       
     }
 
+    
     calculateAvarageRating(){
         if(!this.userProfile.ratings.length) {
             return 0;
@@ -58,3 +72,8 @@ export interface Comment{
     CreatedOn : string,
     Rating : number
 }
+
+export interface Language{
+    Name : string,
+    Proficiency : number
+  }
