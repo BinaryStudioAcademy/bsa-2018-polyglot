@@ -74,6 +74,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
 
   setStep(index: number) {
     this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+    for (let i = 0; i < this.expandedArray.length; i++) {
+        if (i != index) {
+            this.expandedArray[i].isOpened = false;
+        }
+    }
     this.history.showHistory(index);
   }
 
