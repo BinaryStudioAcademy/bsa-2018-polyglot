@@ -19,8 +19,7 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
-
-  public state: string;
+  
   public checked = true;
   
   constructor(

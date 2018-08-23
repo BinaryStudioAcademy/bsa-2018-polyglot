@@ -20,7 +20,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public keys: any[];
   public searchQuery: string;
   public selectedKey: any;
-  public isEmpty
   public currentPath;
   public basicPath;
   
@@ -59,9 +58,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
         {
           this.onSelect(data[0]);
           this.keys = data;
-          this.isEmpty = this.keys.length == 0 ? true : false;
           let keyId: number;
-          if(!this.isEmpty) {
+          if(this.keys.length !== 0) {
             keyId = this.keys[0].id;
             this.router.navigate([this.currentPath, keyId]);
           }
@@ -91,8 +89,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
           this.keys.push(result);
           this.selectedKey = result;
           let keyId = this.keys[0].id;   
-          this.router.navigate([this.currentPath, keyId]);
-          this.isEmpty = false;
+          this.router.navigate([this.currentPath, keyId]);          
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();
