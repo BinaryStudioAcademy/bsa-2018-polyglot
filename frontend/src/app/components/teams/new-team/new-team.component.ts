@@ -103,7 +103,7 @@ export class NewTeamComponent implements OnInit {
     // this.dataSource.filter = filterValue;
   }
   getAvatarUrl(person): String {
-    debugger;
+    
     if (person.avatarUrl!==" ")
       return person.avatarUrl;
     else

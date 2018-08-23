@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
+import { Chart } from '../../models/chart';
 
 @Component({
   selector: 'app-reports',
@@ -15,6 +16,7 @@ export class ReportsComponent implements OnInit {
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   view: any[] = [600, 400];
+  charts: Chart[]
 
   // options
   showXAxis = true;
@@ -54,18 +56,11 @@ export class ReportsComponent implements OnInit {
         });
 
 
-        this.projectService.getProjectReports(this.project.id)
-      .subscribe(strings => {
-        /*this.IsLoad = false;
-        
-        this.strings = strings.map(function (string: any) {
-          return {
-            name: string.name,
-            value: string.translationsCount,
-          };
-        });*/
-
-        console.log(this.strings)
+      this.projectService.getProjectReports(this.project.id)
+      .subscribe(reports => {
+        this.IsLoad = false;
+        this.charts = reports;
+        console.log(this.charts)
       },
         err => {
           this.IsLoad = false;

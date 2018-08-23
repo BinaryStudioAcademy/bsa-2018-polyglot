@@ -27,10 +27,10 @@ export class ProjectTeamComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-   // debugger;
+   // 
     this.projectService.getProjectTeams(this.projectId)
         .subscribe(assignedTeams => {
-         // debugger;
+         // 
           if(assignedTeams && assignedTeams.length > 0)
             {
               this.assignedTeams = assignedTeams;
@@ -54,17 +54,17 @@ export class ProjectTeamComponent implements OnInit {
       return;
 
     this.IsLoad = true;
-   // debugger;
+   // 
     this.teamsService.getAllTeams()
       .subscribe(teams => {
-      //  debugger;
+      //  
         if(!teams || teams.length < 1){
           this.snotifyService.error("No teams found!", "Error!");
           this.IsLoad = false;
           return;
         }
 
-     //   debugger;
+     //   
         const thisTeams = this.assignedTeams;
         let avaibleTeams = teams.filter(function(team) {
           let t = thisTeams.find(t => t.id === team.id);
@@ -91,13 +91,13 @@ export class ProjectTeamComponent implements OnInit {
 
       dialogRef.componentInstance.onAssign.subscribe((selectedTeams : Array<any>) => {
         this.IsLoad = true;
-        debugger;
+        
         if(selectedTeams && selectedTeams.length > 0)
         {
           this.projectService.assignTeamsToProject(this.projectId, selectedTeams.map(t => t.id))
             .subscribe(responce => {
               ///TODO: fire a progress notification//////////////////////////////////////////////////////////////
-              debugger;
+              
               if(responce)
               {
                 Array.prototype.push.apply(this.assignedTeams, selectedTeams.filter(function(team) {
@@ -112,7 +112,7 @@ export class ProjectTeamComponent implements OnInit {
               }
             },
           err => {
-            debugger;
+            
             this.IsLoad = false;
             this.snotifyService.error(err, "Error!");
             console.log('err', err);
@@ -130,7 +130,7 @@ export class ProjectTeamComponent implements OnInit {
 
     },
     err => {
-      debugger;
+      
       this.snotifyService.error("An error occurred while loading teams, please try again later", "Error!");
       console.log('err', err);
       

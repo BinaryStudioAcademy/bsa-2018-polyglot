@@ -34,10 +34,3 @@ export class AuthGuard implements CanActivate {
 
 }
 
-// debugger
-//           return this.userService.getUser().pipe(
-//               switchMap((user: UserProfile) => {
-//                 this.userService.saveUser(user);
-//                 return of(true);    
-//               })
-//           )
