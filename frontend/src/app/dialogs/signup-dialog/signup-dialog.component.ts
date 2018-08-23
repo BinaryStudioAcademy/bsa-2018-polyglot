@@ -20,7 +20,7 @@ export class SignupDialogComponent implements OnInit {
   public selectedOption : string;
   private IsNotificationSend: boolean;
   private notificationConfig = {
-    timeout: 10000,
+    timeout: 4000,
     showProgressBar: true,
     closeOnClick: false,
     pauseOnHover: false        
@@ -73,8 +73,11 @@ export class SignupDialogComponent implements OnInit {
                 this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);
                 this.IsNotificationSend = true;   
                 setTimeout(
-                  () => dialogRef.close(), 
-                  10000);
+                  () => {
+                    dialogRef.close();
+                    this.dialogRef.close();
+                  }, 
+                  4000);
               },
               (err) => {
                 dialogRef.close();
