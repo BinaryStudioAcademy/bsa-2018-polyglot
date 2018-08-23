@@ -29,7 +29,8 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatChipsModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatDialogModule
 
 
 
@@ -70,7 +71,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ReactiveFormsModule, 
     MdePopoverModule,
     BrowserAnimationsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule
   ],
   exports: [
     LayoutModule,
@@ -103,7 +105,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
     MdePopoverModule,
     BrowserAnimationsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule
   ]
 })
 export class AppMaterialModule { }
