@@ -161,7 +161,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   getKeys(page: number = 1, saveResultsCallback: (keys) => void){
-    return this.dataProvider.getProjectStrings(this.project.id)
+    return this.dataProvider. getProjectStrings(this.project.id)
     .subscribe((keys: any []) => {
        this.currentPage++;
        saveResultsCallback(keys);

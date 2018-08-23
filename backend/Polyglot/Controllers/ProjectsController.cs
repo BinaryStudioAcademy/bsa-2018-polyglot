@@ -91,10 +91,10 @@ namespace Polyglot.Controllers
 		}
 
         // GET: Projects/5/report
-        [HttpGet("{id}/report", Name = "GetProjectReport")]
+        [HttpGet("{id}/reports", Name = "GetProjectReport")]
         public async Task<IActionResult> GetProjectReport(int id)
         {
-            var project = await service.GetProjectStat(id);
+            var project = await service.GetProjectStatistic(id);
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
@@ -129,17 +129,26 @@ namespace Polyglot.Controllers
 			return success ? Ok() : StatusCode(304) as IActionResult;
 		}
 
-		// Get: Projects/5/complexString
-		[HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
-		public async Task<IActionResult> GetProjectStrings(int id)
-		{
-			var projectsStrings = await service.GetProjectStringsAsync(id);
-			return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
-				: Ok(projectsStrings);
-		}
+	    // Get: Projects/5/complexString
+	    [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
+	    public async Task<IActionResult> GetProjectStrings(int id)
+	    {
+	        var projectsStrings = await service.GetProjectStringsAsync(id);
+	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+	            : Ok(projectsStrings);
+	    }
 
-		// POST: Projects
-		[HttpPost]
+        // Get: Projects/5/complexString
+       [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
+	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery]int itemsOnPage=5, [FromQuery] int page=0)
+	    {
+	        var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+	            : Ok(projectsStrings);
+	    }
+
+        // POST: Projects
+        [HttpPost]
 		public async Task<IActionResult> AddProject(IFormFile formFile)
 		{
 

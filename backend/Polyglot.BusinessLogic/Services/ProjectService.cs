@@ -438,6 +438,25 @@ namespace Polyglot.BusinessLogic.Services
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
+
+        public async Task<PaginatedStringsDTO> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
+        {
+            var skipItems = itemsOnPage * page;
+
+            var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+
+            var paginatedStrings = strings.OrderBy(x=>x.Id).Skip(skipItems).Take(itemsOnPage);
+
+            var totalPages = (int)Math.Ceiling((double)(paginatedStrings?.Count() ?? 0) / itemsOnPage);
+
+            return new PaginatedStringsDTO
+            {
+                TotalPages = totalPages,
+                ComplexStrings = mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings)
+        }; 
+                
+        }
+
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId)
         {
             List<FilterType> filters = new List<FilterType>();
@@ -487,21 +506,46 @@ namespace Polyglot.BusinessLogic.Services
                 Expression.AndAlso(left, right), parameter);
         }
 
-        public async Task<ProjectStatisticDTO> GetProjectStat(int id)
+        public async Task<ProjectStatisticDTO> GetProjectStatistic(int id)
         {
-
             var charts = new List<ChartDTO>();
+            var chart1 = await GetTranskatedStringToLanguagesStatistic(id);
+            var chart2 = await GetNotTranskatedStringToLanguagesStatistic(id);
 
+            charts.Add(chart1);
+            charts.Add(chart2);
+
+            return new ProjectStatisticDTO
+            {
+                Charts = charts
+            };
+        }
+
+        public async Task<ChartDTO> GetTranskatedStringToLanguagesStatistic(int id)
+            {
             var complexStrings = (await stringsProvider.GetAllAsync()).Where(x => x.ProjectId == id).ToList();
             var languages = await uow.GetRepository<Language>().GetAllAsync();
+            var projectLanguages= (await uow.GetRepository<Project>().GetAsync(id)).ProjectLanguageses;
 
-            var chart1 = new ChartDTO
+            var resLAng = from lang in languages
+                    join projectLanguage in projectLanguages on lang.Id equals projectLanguage.LanguageId
+                    where projectLanguage.ProjectId == id
+                    select new Language
+                    {
+                        Id = lang.Id,
+                        Code = lang.Code,
+                        Name = lang.Name,
+                    };
+               resLAng=resLAng.ToList();
+
+
+                var chart1 = new ChartDTO
             {
                 Name = "Translated strings",
                 Values = new List<Point>()
             };
 
-            foreach (var language in languages)
+            foreach (var language in resLAng)
             {
                 var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
                 if (count > 0)
@@ -512,14 +556,46 @@ namespace Polyglot.BusinessLogic.Services
                         Value = count
                     });
                 }
-
-
             }
-            charts.Add(chart1);
-            return new ProjectStatisticDTO
+                return chart1;
+            }
+
+        public async Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id)
+        {
+            var complexStrings = (await stringsProvider.GetAllAsync()).Where(x => x.ProjectId == id).ToList();
+            var languages = await uow.GetRepository<Language>().GetAllAsync();
+
+            var projectLanguages = (await uow.GetRepository<Project>().GetAsync(id)).ProjectLanguageses;
+            var resLang = from lang in languages
+                join projectLanguage in projectLanguages on lang.Id equals projectLanguage.LanguageId
+                where projectLanguage.ProjectId == id
+                select new Language
+                {
+                    Id=lang.Id,
+                    Code = lang.Code,
+                    Name = lang.Name,
+                };
+
+
+            var chart1 = new ChartDTO
             {
-                Charts = charts
+                Name = "Translated strings",
+                Values = new List<Point>()
             };
+
+            foreach (var language in resLang)
+            {
+                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id));
+                if (count > 0)
+                {
+                    chart1.Values.Add(new Point
+                    {
+                        Name = language.Name,
+                        Value = count
+                    });
+                }
+            }
+            return chart1;
         }
 
         public enum FilterType

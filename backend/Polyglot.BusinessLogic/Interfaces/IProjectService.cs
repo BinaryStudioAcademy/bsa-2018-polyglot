@@ -9,7 +9,7 @@ using Polyglot;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IProjectService : ICRUDService<Project,ProjectDTO>
+    public interface IProjectService : ICRUDService<Project, ProjectDTO>
     {
         Task FileParseDictionary(int id, IFormFile file);
 
@@ -19,11 +19,11 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
 
-		Task<byte[]> GetFile(int id, int languageId, string format);
+        Task<byte[]> GetFile(int id, int languageId, string format);
 
-		#region Teams
+        #region Teams
 
-		Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
+        Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
 
         Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 
@@ -45,12 +45,16 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);
 
+        Task<PaginatedStringsDTO> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page);
+
         Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync();
 
-        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId);
+        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId);
 
         #endregion
 
-        Task<ProjectStatisticDTO> GetProjectStat(int id);
+        Task<ProjectStatisticDTO> GetProjectStatistic(int id);
+        Task<ChartDTO> GetTranskatedStringToLanguagesStatistic(int id);
+        Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
     }
 }
