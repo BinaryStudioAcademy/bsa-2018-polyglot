@@ -9,29 +9,36 @@ namespace Polyglot.Hubs
 {
     public class WorkspaceHub : Hub
     {
-        public async Task JoinProjectGroup(string projectId)
+
+        public async Task JoinProjectGroup(string groupName)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, projectId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        public async Task LeaveProjectGroup(string projectId)
+        public async Task LeaveProjectGroup(string groupName)
         {
             try
             {
                 // ConnectionId может быть уже недоступен и по истечению time out
                 // будет сгенерировано исключение
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, projectId);
-            }catch(TaskCanceledException ex)
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            }
+            catch (TaskCanceledException ex)
             {
 
             }
+        }
+
+        public async Task Test(string test)
+        {
+            await Clients.All.SendAsync("test", test);
         }
 
         public async Task NewComplexString(string projectId, int newStringId)
         {
             await Clients.Group(projectId).SendAsync("stringAdded", newStringId);
 #warning заменить
-          //  await Clients.OthersInGroup(projectId).SendAsync("stringAdded", newStringId);
+            //  await Clients.OthersInGroup(projectId).SendAsync("stringAdded", newStringId);
         }
 
         public async Task ComplexStringDeleted(string projectId, int deletedStingId)
@@ -59,14 +66,14 @@ namespace Polyglot.Hubs
         {
             await Clients.Group(projectId).SendAsync("stringTranslated", complexStringId, languageId);
 #warning заменить
-        //    await Clients.OthersInGroup(projectId).SendAsync("stringTranslated", complexStringId, languageId);
+            //    await Clients.OthersInGroup(projectId).SendAsync("stringTranslated", complexStringId, languageId);
         }
 
         public async Task Translating(string projectId, int complexStringId, int languageId, int translatingById, string translatingByFullName)
         {
             await Clients.Group(projectId).SendAsync("stringTranslating", translatingById, translatingByFullName);
 #warning заменить
-           // await Clients.OthersInGroup(projectId).SendAsync("stringTranslating", translatingById, translatingByFullName);
+            // await Clients.OthersInGroup(projectId).SendAsync("stringTranslating", translatingById, translatingByFullName);
         }
     }
 }

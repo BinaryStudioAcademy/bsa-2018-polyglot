@@ -23,15 +23,15 @@ export class KeyComponent implements OnInit {
   constructor(private dataProvider: ComplexStringService,
               public dialog: MatDialog,
               private snotifyService: SnotifyService) {
-                debugger;
-                let a = this.connection;
+                //debugger;
+                //let a = this.connection;
                }
 
   ngOnInit() {
   }
 
   onDeleteString() {
-    debugger;
+    //debugger;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
       data: {description: this.description, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
@@ -42,9 +42,9 @@ export class KeyComponent implements OnInit {
         .subscribe(
           (response => {
             this.snotifyService.success("String deleted", "Success!");
-            debugger;
-            if(this.connection)
-              this.connection.send("complexStringDeleted", this.key.projectId, this.key.id);
+            //debugger;
+            //if(this.connection)
+            //  this.connection.send("complexStringDeleted", this.key.projectId, this.key.id);
           }),
           err => {
             this.snotifyService.error("String wasn`t deleted", "Error!");

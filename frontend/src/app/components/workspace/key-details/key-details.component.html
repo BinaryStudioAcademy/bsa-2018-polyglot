@@ -4,8 +4,8 @@
 	</mat-card>
 </div>
 <div *ngIf="!isLoad && !isEmpty" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
-		<mat-spinner></mat-spinner> 
-</div> 
+		<mat-spinner></mat-spinner>
+</div>
 <mat-card *ngIf="isLoad" class="key-details my-1 px-0 grow-1 mr-0 ml-1">
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
@@ -34,13 +34,12 @@
 										<button mat-raised-button color="primary">Suggest</button>
 									</div>
 								</mat-menu>
-							</mat-expansion-panel-header>		  
+							</mat-expansion-panel-header>
 						   <div >
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea matInput
 												[(ngModel)]="t.translationValue"
-												(input)="change(t)"
 												  cdkTextareaAutosize
 													  cdkAutosizeMinRows="2"
 													  placeholder="Write here to start translating"
@@ -49,7 +48,7 @@
 								<div [hidden]="!someOneTranslating" class="state-container">
 										<span *ngFor="let u of editingUsers">
 											<a [routerLink]="['/']" [routerLinkActive]="'active'">
-												{{u.fullName}} 
+												{{u.fullName}}
 											</a>
 											,&nbsp;
 										</span>
@@ -59,7 +58,7 @@
 									<button mat-raised-button color="primary"  (click)="onSave(i, t)">Save</button>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
-								
+
 						  </div>
 						</mat-expansion-panel>
 				</mat-accordion>

@@ -22,7 +22,7 @@ export class TabCommentsComponent implements OnInit {
   comments: Comment[];
   routeSub: Subscription;
   keyId: number;
-  connection: any;
+  //connection: any;
   private url: string = environment.apiUrl;
 
   commentForm = this.fb.group({
@@ -44,23 +44,23 @@ export class TabCommentsComponent implements OnInit {
 
   ngOnInit() {
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      
+
       this.keyId = params.keyId;
       this.getComments().subscribe(comments=>{
         this.comments = comments;
       });
     });
 
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.url}/hub/`)
-      .build();
+    // this.connection = new signalR.HubConnectionBuilder()
+    //   .withUrl(`${this.url}/hub/`)
+    //   .build();
 
-    this.connection.start().catch(err => document.write(err));
+    // this.connection.start().catch(err => document.write(err));
 
-    this.connection.on("commentsReceived", (comments: Comment[]) => {
-        this.comments = comments;
-        console.log(comments);
-    });
+    // this.connection.on("commentsReceived", (comments: Comment[]) => {
+    //     this.comments = comments;
+    //     console.log(comments);
+    // });
   }
 
   getComments(){
@@ -87,7 +87,7 @@ export class TabCommentsComponent implements OnInit {
 
   addComment(commentBody: string){
     this.comments.unshift({user: this.userService.getCurrrentUser(),
-                                   text: commentBody,   
+                                   text: commentBody,
                                    createdOn: new Date(Date.now())});
 
     this.complexStringService.updateStringComments(this.comments, this.keyId)
@@ -97,7 +97,7 @@ export class TabCommentsComponent implements OnInit {
               this.snotifyService.success("Comment added", "Success!");
               this.comments = comments;
               this.commentForm.reset();
-              this.send(comments);
+              //this.send(comments);
             }
             else{
               this.snotifyService.error("Comment wasn't add", "Error!");
@@ -108,8 +108,8 @@ export class TabCommentsComponent implements OnInit {
         });
   }
 
-  send(comments: Comment[]) {    
-    this.connection.send("newComment", comments)
-              .then(() => console.log(comments));
-  }  
+//   send(comments: Comment[]) {
+//     this.connection.send("newComment", comments)
+//               .then(() => console.log(comments));
+//   }
 }

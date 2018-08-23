@@ -8,7 +8,6 @@ import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog
 import { SnotifyService } from "ng-snotify";
 import { FormControl } from "../../../../node_modules/@angular/forms";
 import { AppStateService } from "../../services/app-state.service";
-import { WorkspaceState } from "../../models/workspace-state";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../../environments/environment";
 import { UserService } from "../../services/user.service";
@@ -27,7 +26,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public isEmpty;
     public currentPath;
     public basicPath;
-    public connection;
+    //public connection;
     user: UserProfile;
 
     private routeSub: Subscription;
@@ -63,15 +62,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnInit() {
 
-      this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${environment.apiUrl}/workspaceHub/`)
-            .build();
+    //   this.connection = new signalR.HubConnectionBuilder()
+    //         .withUrl(`${environment.apiUrl}/workspaceHub/`)
+    //         .build();
 
-      this.connection.start().catch(err => console.log("ERROR " + err));
-      this.connection.onclose(function(e){
-        console.log("SignalR connection closed.Reconnecting....");
-        this.connectSignalR();
-      });
+    //   this.connection.start().catch(err => console.log("ERROR " + err));
+    //   this.connection.onclose(function(e){
+    //     console.log("SignalR connection closed.Reconnecting....");
+    //     this.connectSignalR();
+    //   });
 
         this.searchQuery = "";
         console.log("q");
@@ -101,23 +100,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
-                
-                if(this.connection.connection.connectionState === 1)
-                {
-                  this.connection.send(
-                    "newComplexString",
-                    this.project.id,
-                    result.id
-                );
-                }
-                else{
-                  this.connectSignalR();
-                  this.connection.send(
-                    "newComplexString",
-                    this.project.id,
-                    result.id
-                );
-                }
+
+                // if(this.connection.connection.connectionState === 1)
+                // {
+                //   this.connection.send(
+                //     "newComplexString",
+                //     this.project.id,
+                //     result.id
+                // );
+                // }
+                // else{
+                //   this.connectSignalR();
+                //   this.connection.send(
+                //     "newComplexString",
+                //     this.project.id,
+                //     result.id
+                // );
+                //}
                 this.keys.push(result);
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
@@ -136,8 +135,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        this.connection.send("leaveProjectGroup", `${this.project.id}`);
-        this.connection.stop();
+        // this.connection.send("leaveProjectGroup", `${this.project.id}`);
+        // this.connection.stop();
     }
 
     getProjById(id: number) {
@@ -175,7 +174,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     console.log("err", err);
                 }
             );
-            this.subscribeProjectChanges();
+            //this.subscribeProjectChanges();
         });
     }
 
@@ -219,63 +218,63 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    subscribeProjectChanges() {
-        
-        this.connection.send("joinProjectGroup", `${this.project.id}`);
+    // subscribeProjectChanges() {
 
-        this.connection.on("stringDeleted", (deletedStringId: number) => {
-            if (deletedStringId) {
-                debugger;
-                this.snotifyService.info(
-                    `Key ${deletedStringId} deleted`,
-                    "String deleted"
-                );
-                this.receiveId(deletedStringId);
-            }
-        });
+    //     this.connection.send("joinProjectGroup", `${this.project.id}`);
 
-        this.connection.on("stringAdded", (newStringId: number) => {
-            if (!this.keys.find(s => s.id == newStringId)) {
-                if (!this.keys.find(s => s.id == newStringId)) {
-                    this.complexStringService
-                        .getById(newStringId)
-                        .subscribe(newStr => {
-                            if (newStr) {
-                                this.snotifyService.info(
-                                    `New key added`,
-                                    "String added"
-                                );
-                                this.keys.push(newStr);
-                            }
-                        });
-                }
-            }
-        });
+    //     this.connection.on("stringDeleted", (deletedStringId: number) => {
+    //         if (deletedStringId) {
+    //             debugger;
+    //             this.snotifyService.info(
+    //                 `Key ${deletedStringId} deleted`,
+    //                 "String deleted"
+    //             );
+    //             this.receiveId(deletedStringId);
+    //         }
+    //     });
 
-        this.connection.on(
-            "stringTranslated",
-            (complexStringId: number, languageId: number) => {
-                // получить строку с сервера, вывести уведомление
-                this.snotifyService.info("String translated", "Translated");
-            }
-        );
+    //     this.connection.on("stringAdded", (newStringId: number) => {
+    //         if (!this.keys.find(s => s.id == newStringId)) {
+    //             if (!this.keys.find(s => s.id == newStringId)) {
+    //                 this.complexStringService
+    //                     .getById(newStringId)
+    //                     .subscribe(newStr => {
+    //                         if (newStr) {
+    //                             this.snotifyService.info(
+    //                                 `New key added`,
+    //                                 "String added"
+    //                             );
+    //                             this.keys.push(newStr);
+    //                         }
+    //                     });
+    //             }
+    //         }
+    //     });
 
-        this.connection.on("languageAdded", (languagesIds: Array<number>) => {
-            // обновить строку
-            console.log(languagesIds);
-            this.snotifyService.info(languagesIds.join(", "), "Language added");
-        });
+    //     this.connection.on(
+    //         "stringTranslated",
+    //         (complexStringId: number, languageId: number) => {
+    //             // получить строку с сервера, вывести уведомление
+    //             this.snotifyService.info("String translated", "Translated");
+    //         }
+    //     );
 
-        this.connection.on("languageDeleted", (languageId: number) => {
-            // обновить строку
-            this.snotifyService.info(
-                `lang with id =${languageId} removed`,
-                "Language removed"
-            );
-        });
-    }
+    //     this.connection.on("languageAdded", (languagesIds: Array<number>) => {
+    //         // обновить строку
+    //         console.log(languagesIds);
+    //         this.snotifyService.info(languagesIds.join(", "), "Language added");
+    //     });
 
-    connectSignalR(){
-      this.connection.start().catch(err => console.log("ERROR " + err));
-    }
+    //     this.connection.on("languageDeleted", (languageId: number) => {
+    //         // обновить строку
+    //         this.snotifyService.info(
+    //             `lang with id =${languageId} removed`,
+    //             "Language removed"
+    //         );
+    //     });
+    // }
+
+    // connectSignalR(){
+    //   this.connection.start().catch(err => console.log("ERROR " + err));
+    // }
 }

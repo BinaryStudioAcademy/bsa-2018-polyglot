@@ -13,9 +13,10 @@ import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
 import { AppStateService } from '../../../services/app-state.service';
-import { HubConnection } from '../../../../../node_modules/@aspnet/signalr';
 import { environment } from '../../../../environments/environment';
 import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { SignalrService } from '../../../services/signalr.service';
+import { TranslationState } from '../../../models/translation-state';
 
 @Component({
     selector: 'app-workspace-key-details',
@@ -25,17 +26,19 @@ import * as signalR from '../../../../../node_modules/@aspnet/signalr';
 
 export class KeyDetailsComponent implements OnInit, OnDestroy {
 
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
+
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
     public IsEdit: boolean = false;
     public IsPagenationNeeded: boolean = true;
     public pageSize: number = 5;
     public Id: string;
-    public isEmpty
-    connection: any;
+    public isEmpty: boolean;
     projectId: number;
     languages: Language[];
-    expandedArray: Array<TranslationState>;
+    expandedArray: TranslationState[];
     isLoad: boolean;
 
     description: string = "Do you want to save changes?";
@@ -45,21 +48,38 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     answer: number;
     keyId: number;
     isDisabled: boolean;
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
+    dataIsLoaded: boolean = false;
 
     constructor(private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
-        private projectService: ProjectService,
         public dialog: MatDialog,
         private snotifyService: SnotifyService,
         private appState: AppStateService,
         private router: Router,
+        private signalrService: SignalrService
     ) {
-        this.Id = this.route.snapshot.queryParamMap.get('keyid');
     }
 
+    ngOnInit() {
+        if (this.appState.getWorkspaceState === null) {
+            this.dataIsLoaded = false;
+            this.router.navigate([`/workspace/${this.projectId}`]);
+            return;
+        }
+        this.dataIsLoaded = true;
+
+        this.route.params.subscribe(value => {
+            this.keyId = value.keyId;
+            this.dataProvider.getById(value.keyId).subscribe((data: any) => {
+                this.isLoad = false;
+                this.keyDetails = data;
+                this.projectId = this.keyDetails.projectId;
+                this.signalrService.createConnection(this.keyDetails.id);
+                this.subscribeProjectChanges();
+                this.getLanguages();
+            });
+        });
+    }
 
     ngOnChanges() {
         if (this.keyDetails && this.keyDetails.translations) {
@@ -70,97 +90,46 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                 this.paginator.pageSize = this.pageSize;
                 this.translationsDataSource.paginator = this.paginator;
             }
-
         }
-        else
+        else {
             this.IsPagenationNeeded = false;
+        }
     }
 
-    step = 0;
+    ngOnDestroy() {
+        if (this.dataIsLoaded) {
+            this.signalrService.closeConnection(this.keyDetails.id);
+        }
+    }
 
     setStep(index: number) {
         this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
         this.history.showHistory(index);
     }
 
-
-    ngOnInit() {
-
-        debugger;
-        this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${environment.apiUrl}/workspaceHub/`)
-            .build();
-
-        this.connection.start().catch(err => console.log("ERROR " + err));
-        this.connection.onclose(function(e){
-          console.log("SignalR connection closed.Reconnecting....");
-          this.connectSignalR();
-        });
-
-        this.route.params.subscribe(value => {
-            this.keyId = value.keyId;
-            this.dataProvider.getById(value.keyId).subscribe((data: any) => {
-                this.isLoad = false;
-                this.keyDetails = data;
-                this.projectId = this.keyDetails.projectId;
-                this.getLanguages();
-            });
-        });
-    }
-
-    ngOnDestroy() {1
-        this.connection.send("leaveProjectGroup", `${this.projectId}`);
-        this.connection.stop();
-    }
-
     subscribeProjectChanges() {
-        
-        this.connection.send("joinProjectGroup", `${this.projectId}`);
-
-        this.connection.on("stringDeleted", (deletedStringId: number) => {
-
-// ================> проверить id если та строка 
-// ================> на которой мы сейачас находимся то перенаправить на воркспейс
-                if(deletedStringId === this.keyId){
-                    this.snotifyService.info(
-                        `This string(id:${deletedStringId}) is deleted!`,
-                        "String deleted"
-                    );
-// ===============> 
+        this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
+            debugger
+            console.log(translation);
+            const lenght = this.keyDetails.translations.length;
+            for (var i = 0; i < lenght; i++) {
+                if (this.keyDetails.translations[i].languageId === translation.languageId) {
+                    this.keyDetails.translations[i] = {
+                        languageName: this.keyDetails.translations[i].languageName,
+                        languageId: this.keyDetails.translations[i].languageId,
+                        ...translation
+                    };
                 }
-        });
-
-        this.connection.on(
-            "stringTranslated",
-            (complexStringId: number, languageId: number) => {
-                // получить строку с сервера, вывести уведомление
-                this.snotifyService.info("String translated", "Translated");
             }
-        );
-
-        this.connection.on("languageAdded", (languagesIds: Array<number>) => {
-            // обновить строку
-            console.log(languagesIds);
-            this.snotifyService.info(languagesIds.join(", "), "Language added");
+        });
+        this.signalrService.connection.on("changedTranslation", (test: any) => {
+            debugger
+            console.log(test);
         });
 
-        this.connection.on("languageDeleted", (languageId: number) => {
-            // обновить строку
-            this.snotifyService.info(
-                `lang with id =${languageId} removed`,
-                "Language removed"
-            );
-        });
     }
 
     getLanguages() {
-        debugger;
-        if(this.appState.getWorkspaceState === null) {
-            debugger
-            this.router.navigate([`/workspace/${this.projectId}`]);
-            return;
-        }
-
         this.languages = this.appState.getWorkspaceState.languages;
 
         const temp = this.languages.length;
@@ -169,10 +138,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             this.expandedArray.push({ isOpened: false, oldValue: '' });
         }
         this.isEmpty = false;
-        this.setLanguagesInWorkspace();
-    }
-
-    setLanguagesInWorkspace() {
         this.keyDetails.translations = this.languages.map(
             element => {
                 return ({
@@ -196,11 +161,11 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             this.dataProvider.editStringTranslation(t, this.keyId)
                 .subscribe(
                     (d: any[]) => {
-                        console.log(this.keyDetails.translations);
+                        //console.log(this.keyDetails.translations);
                         this.expandedArray[index] = { isOpened: false, oldValue: '' };
                     },
                     err => {
-                        console.log('err', err);
+                        this.snotifyService.error(err);
                     }
                 );
         }
@@ -209,48 +174,15 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             this.dataProvider.createStringTranslation(t, this.keyId)
                 .subscribe(
                     (d: any) => {
-                        const lenght = this.keyDetails.translations.length;
-                        for (var i = 0; i < lenght; i++) {
-                            if (this.keyDetails.translations[i].languageId === d.languageId) {
-                                this.keyDetails.translations[i] = {
-                                    languageName: this.keyDetails.translations[i].languageName,
-                                    ...d
-                                };
-                            }
-                        }
+
                         console.log(this.keyDetails.translations);
                         this.expandedArray[index] = { isOpened: false, oldValue: '' };
-                        debugger;
-                       if(this.connection.connection.connectionState === 1)
-                       {
-                         this.connection.send(
-                           "stringTranslated",
-                           this.projectId,
-                           this.keyId,
-                           t.languageId
-
-                       );
-
-                       }
-                       else{
-                         this.connectSignalR();
-                         this.connection.send(
-                           "stringTranslated",
-                           this.projectId,
-                           this.keyId,
-                           t.languageId
-                       )
-                   }
-                   
-                   console.log("String translated..");
                     },
                     err => {
                         console.log('err', err);
                     }
                 );
-
         }
-        //});
     }
 
     onClose(index: number, translation: any) {
@@ -280,13 +212,56 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     toggleDisable() {
         this.isDisabled = !this.isDisabled;
     }
-
-    connectSignalR(){
-        this.connection.start().catch(err => console.log("ERROR " + err));
-      }
 }
 
-export interface TranslationState {
-    isOpened: boolean;
-    oldValue: string;
-}
+
+
+// this.signalrService.connection.on(
+        //   "addedFirstTranslation",
+        //   (translation: any) => {
+        //     debugger
+        //     const lang = this.languages.filter(el => el.id === translation.languageId)[0];
+        //     this.keyDetails.translations.filter(el => el.languageId === translation.languageId)[0]
+        //       = {
+        //         languageName: lang.name,
+        //         languageId: lang.id,
+        //         ...translation
+        //       };
+        //     // получить строку с сервера, вывести уведомление
+        //     this.snotifyService.info("String translated", "Translated");
+        //   }
+        // );
+        // this.connection.on("stringDeleted", (deletedStringId: number) => {
+
+        //     // ================> проверить id если та строка
+        //     // ================> на которой мы сейачас находимся то перенаправить на воркспейс
+        //     if (deletedStringId === this.keyId) {
+        //         this.snotifyService.info(
+        //             `This string(id:${deletedStringId}) is deleted!`,
+        //             "String deleted"
+        //         );
+        //         // ===============>
+        //     }
+        // });
+
+        // this.connection.on(
+        //     "stringTranslated",
+        //     (complexStringId: number, languageId: number) => {
+        //         // получить строку с сервера, вывести уведомление
+        //         this.snotifyService.info("String translated", "Translated");
+        //     }
+        // );
+
+        // this.connection.on("languageAdded", (languagesIds: Array<number>) => {
+        //     // обновить строку
+        //     console.log(languagesIds);
+        //     this.snotifyService.info(languagesIds.join(", "), "Language added");
+        // });
+
+        // this.connection.on("languageDeleted", (languageId: number) => {
+        //     // обновить строку
+        //     this.snotifyService.info(
+        //         `lang with id =${languageId} removed`,
+        //         "Language removed"
+        //     );
+        // });

@@ -5,7 +5,7 @@ export interface Translation {
   id: string;
   userId: number;
   translationValue: string;
-  language: string;
+  languageId: number;
   createdOn: Date;
 
   history: AdditionalTranslation[];
