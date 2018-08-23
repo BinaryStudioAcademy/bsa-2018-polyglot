@@ -82,6 +82,7 @@ import { ProjectActivitiesComponent } from './components/project-details/project
 
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -142,7 +143,8 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
