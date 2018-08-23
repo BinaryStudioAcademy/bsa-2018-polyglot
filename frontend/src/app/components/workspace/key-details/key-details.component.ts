@@ -226,6 +226,13 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
   toggleDisable() {
     this.isDisabled = !this.isDisabled;
   }
+
+  highlightString(index: number) {
+    if (this.expandedArray[index].isOpened) {
+      return '2px ridge #6495ED';
+    }
+    return '';
+  }
 }
 
 export interface TranslationState {
