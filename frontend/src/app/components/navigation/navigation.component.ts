@@ -63,7 +63,6 @@ export class NavigationComponent implements OnDestroy {
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
         this.manager = this.userService.getCurrrentUser();
-        console.log(this.manager);
         this.role = this.roleToString(this.manager.userRole);
       }
     );

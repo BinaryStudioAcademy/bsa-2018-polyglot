@@ -18,7 +18,7 @@ export class RatingService {
   }
 
   getAll() : Observable<any[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
   create(body) : Observable<Rating>{
