@@ -40,7 +40,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     languages: Language[];
     expandedArray: TranslationState[];
     isLoad: boolean;
-
+    comments: Comment[];
     description: string = "Do you want to save changes?";
     btnYesText: string = "Yes";
     btnNoText: string = "No";
@@ -77,6 +77,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                 this.signalrService.createConnection(this.keyDetails.id);
                 this.subscribeProjectChanges();
                 this.getLanguages();
+            });
+            this.dataProvider.getCommentsByStringId(this.keyId).subscribe(comments => {
+                this.comments = comments;
             });
         });
     }
@@ -117,22 +120,24 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             debugger
             console.log(translation);
             this.setNewValueTranslation(translation);
-
         });
-
+        this.signalrService.connection.on("commentAdded", (comments: any) => {
+            debugger
+            this.comments = comments;
+        });
     }
 
     setNewValueTranslation(translation: any) {
         const lenght = this.keyDetails.translations.length;
-            for (var i = 0; i < lenght; i++) {
-                if (this.keyDetails.translations[i].languageId === translation.languageId) {
-                    this.keyDetails.translations[i] = {
-                        languageName: this.keyDetails.translations[i].languageName,
-                        languageId: this.keyDetails.translations[i].languageId,
-                        ...translation
-                    };
-                }
+        for (var i = 0; i < lenght; i++) {
+            if (this.keyDetails.translations[i].languageId === translation.languageId) {
+                this.keyDetails.translations[i] = {
+                    languageName: this.keyDetails.translations[i].languageName,
+                    languageId: this.keyDetails.translations[i].languageId,
+                    ...translation
+                };
             }
+        }
     }
 
     getLanguages() {

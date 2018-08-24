@@ -26,7 +26,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public isEmpty;
     public currentPath;
     public basicPath;
-    //public connection;
     user: UserProfile;
 
     private routeSub: Subscription;
@@ -61,19 +60,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-
-    //   this.connection = new signalR.HubConnectionBuilder()
-    //         .withUrl(`${environment.apiUrl}/workspaceHub/`)
-    //         .build();
-
-    //   this.connection.start().catch(err => console.log("ERROR " + err));
-    //   this.connection.onclose(function(e){
-    //     console.log("SignalR connection closed.Reconnecting....");
-    //     this.connectSignalR();
-    //   });
-
         this.searchQuery = "";
-        console.log("q");
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             this.getProjById(params.projectId);
@@ -100,23 +87,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
-
-                // if(this.connection.connection.connectionState === 1)
-                // {
-                //   this.connection.send(
-                //     "newComplexString",
-                //     this.project.id,
-                //     result.id
-                // );
-                // }
-                // else{
-                //   this.connectSignalR();
-                //   this.connection.send(
-                //     "newComplexString",
-                //     this.project.id,
-                //     result.id
-                // );
-                //}
                 this.keys.push(result);
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
@@ -135,8 +105,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        // this.connection.send("leaveProjectGroup", `${this.project.id}`);
-        // this.connection.stop();
     }
 
     getProjById(id: number) {
@@ -174,7 +142,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     console.log("err", err);
                 }
             );
-            //this.subscribeProjectChanges();
         });
     }
 

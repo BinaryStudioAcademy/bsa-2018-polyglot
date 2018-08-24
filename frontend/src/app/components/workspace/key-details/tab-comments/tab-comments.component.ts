@@ -20,9 +20,10 @@ import { SignalrService } from '../../../../services/signalr.service';
 })
 export class TabCommentsComponent implements OnInit {
 
+    @Input()  comments: Comment[];
     @ViewChild('textarea') textarea: ElementRef;
 
-    comments: Comment[];
+
     routeSub: Subscription;
     keyId: number;
     private url: string = environment.apiUrl;
@@ -36,19 +37,13 @@ export class TabCommentsComponent implements OnInit {
         private complexStringService: ComplexStringService,
         private dialog: MatDialog,
         private snotifyService: SnotifyService,
-        private activatedRoute: ActivatedRoute,
-        private signalrService: SignalrService) { }
+        private activatedRoute: ActivatedRoute) { }
 
 
     ngOnInit() {
         this.routeSub = this.activatedRoute.params.subscribe((params) => {
             this.keyId = params.keyId;
-            this.complexStringService.getCommentsByStringId(this.keyId).subscribe(comments => {
-                this.comments = comments;
-            });
         });
-        debugger
-        this.subscribeOnAdding();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -57,13 +52,6 @@ export class TabCommentsComponent implements OnInit {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-    }
-
-    subscribeOnAdding() {
-        this.signalrService.connection.on("commentAdded", (comments: any) => {
-            debugger
-            this.comments = comments;
-        });
     }
 
     onImageClick(avatarUrl: string) {

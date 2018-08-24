@@ -23,10 +23,9 @@ export class LanguagesComponent implements OnInit {
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   public IsLoading: any = {};
-  private connection: any;
 
   constructor(
-    private projectService: ProjectService, 
+    private projectService: ProjectService,
     private langService: LanguageService,
     private snotifyService: SnotifyService,
     public dialog: MatDialog
@@ -35,22 +34,11 @@ export class LanguagesComponent implements OnInit {
    }
 
   ngOnInit() {
-    debugger;
-
-    this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${environment.apiUrl}/workspaceHub/`).build();
-    this.connectSignalR();
-    this.connection.onclose(function(e){
-      console.log("SignalR connection closed.Reconnecting....");
-      this.connectSignalR();
-    });
-
     this.projectService.getProjectLanguagesStatistic(this.projectId)
         .subscribe(langs => {
           this.IsLoad = false;
           this.langs = langs;
           this.langs.sort(this.compareProgress);
-          this.subscribeProjectChanges();
         },
         err => {
           this.IsLoad = false;
@@ -58,45 +46,6 @@ export class LanguagesComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.connection.send("leaveProjectGroup", `${this.projectId}`);
-    this.connection.stop();
-  }
-
-  subscribeProjectChanges(){
-    
-    this.connection.send("joinProjectGroup", `${this.projectId}`)
-
-    this.connection.on("languageAdded", (languagesIds: Array<number>) => 
-      {
-        console.log(languagesIds);
-        this.snotifyService.info(languagesIds.join(", ") + " added" , "Language added")
-        this.IsLoad = true;
-// ==============================================================================
-// ==============> Загрузить с сервера только те языки которые были добавленны 
-        this.projectService.getProjectLanguagesStatistic(this.projectId)
-        .subscribe(langs => {
-          this.IsLoad = false;
-          this.langs = langs;
-          this.langs.sort(this.compareProgress);
-        },
-        err => {
-          this.IsLoad = false;
-        });
-      });
-      this.connection.on("languageDeleted", (languageId: number) => 
-      {
-        this.langs = this.langs.filter(l => l.id != languageId);
-        this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
-      });
-
-      this.connection.on("stringTranslated", (complexStringId: number, languageId: number) => 
-      {
-        this.projectService.getProjectLanguageStatistic(this.projectId, languageId)
-          .subscribe(lang => {
-            let targetId = this.langs.findIndex(l => l.id === languageId);
-            this.langs[targetId] = lang;
-          });
-      });
   }
 
   selectNew(){
@@ -111,14 +60,14 @@ export class LanguagesComponent implements OnInit {
           return language.id !== l.id;
         return true;
       });
-      
+
       this.IsLangLoad = false;
       if(langsToSelect.length < 1){
         this.snotifyService.info("No languages available to select, all of them already added", "Sorry!");
         return;
       }
       let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
-          
+
         data: {
           langs: langsToSelect
         }
@@ -135,12 +84,12 @@ export class LanguagesComponent implements OnInit {
                 if(project){
 
                   //this.langs.push(data);
-                  
-                  Array.prototype.push.apply(this.langs, 
+
+                  Array.prototype.push.apply(this.langs,
                     data.map(function(language: Language) {
                       return {
                         id: language.id,
-                        name: language.name,    
+                        name: language.name,
                         code: language.code,
                         translatedStringsCount: 0,
                         complexStringsCount: 0,
@@ -155,27 +104,17 @@ export class LanguagesComponent implements OnInit {
                   }));
                   this.langs.sort(this.compareProgress);
                   this.IsLoad = false;
-                  
-                  if(this.connection.connection.connectionState === 1)
-                  {
-                    this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
-                  }
-                  else
-                  {
-                    this.connectSignalR();
-                    this.connection.send("newLanguage", `${this.projectId}`, data.map(l => l.id));
-                  }
                 }
                 else
                 {
                   this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
                 }
-                
+
               },
               err => {
                 this.snotifyService.error("An error occurred while adding languages to project, please try again", "Error!");
                 console.log('err', err);
-                
+
               })
         }
         else
@@ -189,7 +128,7 @@ export class LanguagesComponent implements OnInit {
       });
 
     })
-    
+
   }
 
   onDeleteLanguage(languageId: number){
@@ -230,16 +169,6 @@ export class LanguagesComponent implements OnInit {
     .subscribe(() => {
       this.IsLoading[languageId] = false;
 
-      if(this.connection.connection.connectionState === 1)
-        {
-          this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
-        }
-        else
-        {
-          this.connectSignalR();
-          this.connection.send("languageDeleted",  `${this.projectId}`, languageId);
-        }
-
       this.langs = this.langs.filter(l => l.id != languageId);
       this.langs.sort(this.compareProgress);
       setTimeout(() => {
@@ -249,8 +178,7 @@ export class LanguagesComponent implements OnInit {
     err => {
       this.IsLoading[languageId] = false;
       this.snotifyService.error("Language wasn`t removed", "Error!");
-      console.log('err', err);
-      
+
     }
   );
   }
@@ -262,9 +190,43 @@ export class LanguagesComponent implements OnInit {
       return 1;
     return 0;
   }
-
-  connectSignalR(){
-    this.connection.start().catch(err => console.log("ERROR " + err));
-  }
-  
 }
+
+
+
+// subscribeProjectChanges(){
+
+//     this.connection.send("joinProjectGroup", `${this.projectId}`)
+
+//     this.connection.on("languageAdded", (languagesIds: Array<number>) =>
+//       {
+//         console.log(languagesIds);
+//         this.snotifyService.info(languagesIds.join(", ") + " added" , "Language added")
+//         this.IsLoad = true;
+// // ==============================================================================
+// // ==============> Загрузить с сервера только те языки которые были добавленны
+//         this.projectService.getProjectLanguagesStatistic(this.projectId)
+//         .subscribe(langs => {
+//           this.IsLoad = false;
+//           this.langs = langs;
+//           this.langs.sort(this.compareProgress);
+//         },
+//         err => {
+//           this.IsLoad = false;
+//         });
+//       });
+//       this.connection.on("languageDeleted", (languageId: number) =>
+//       {
+//         this.langs = this.langs.filter(l => l.id != languageId);
+//         this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
+//       });
+
+//       this.connection.on("stringTranslated", (complexStringId: number, languageId: number) =>
+//       {
+//         this.projectService.getProjectLanguageStatistic(this.projectId, languageId)
+//           .subscribe(lang => {
+//             let targetId = this.langs.findIndex(l => l.id === languageId);
+//             this.langs[targetId] = lang;
+//           });
+//       });
+//   }
