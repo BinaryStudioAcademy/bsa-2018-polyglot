@@ -14,7 +14,7 @@ export class ReportsComponent implements OnInit {
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
   view: any[] = [350, 350];
-  piView: any[] = [500, 400];
+  pieView: any[] = [500, 400];
 
   charts: any;
   explodeSlices = false;
