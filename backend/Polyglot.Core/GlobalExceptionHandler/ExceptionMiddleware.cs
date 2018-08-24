@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Polyglot.GlobalExceptionHandler
+namespace Polyglot.Core.GlobalExceptionHandler
 {
     public class ExceptionMiddleware
     {

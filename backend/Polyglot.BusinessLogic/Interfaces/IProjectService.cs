@@ -4,8 +4,6 @@ using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
-using System.IO;
-using Polyglot;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
@@ -14,8 +12,6 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task FileParseDictionary(int id, IFormFile file);
 
         Task<IEnumerable<ProjectDTO>> GetListAsync(int userId);
-
-        Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
 
         Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
 

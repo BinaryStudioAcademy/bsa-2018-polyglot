@@ -7,6 +7,7 @@ using Polyglot.DataAccess.SqlRepository;
 
 using Polyglot.DataAccess.Entities;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -20,26 +21,23 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<UserProfileDTO> GetByUidAsync(string uid)
-        {
-            var repository = uow.GetRepository<UserProfile>();
-            var user = await repository.GetAllAsync(u => u.Uid == uid);
 
-            if (user.Count > 1)
+
+        public async Task<UserProfileDTO> GetByUidAsync()
+        {
+            var user = await CurrentUser.GetCurrentUserProfile();
+            if (user == null)
             {
                 return null;
             }
 
-            return mapper.Map<UserProfile, UserProfileDTO>(user.First());
+            return mapper.Map<UserProfile, UserProfileDTO>(user);
         }
 
         public async Task<bool> IsExistByUidAsync(string uid)
         {
-            var repository = uow.GetRepository<UserProfile>();
-
-            var result = await repository.GetAllAsync(u => u.Uid == uid);
-
-            return result.Count > 0;
+            var user = await CurrentUser.GetCurrentUserProfile();
+            return user != null;
         }
     }
 }

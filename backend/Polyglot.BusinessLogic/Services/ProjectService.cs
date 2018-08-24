@@ -14,6 +14,7 @@ using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -180,8 +181,11 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
-        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId) =>
-            mapper.Map<List<ProjectDTO>>(await Filter.FiltrationSqlModelAsync<Project>(x => x.UserProfile.Id == userId, uow));
+        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
+        {
+            return mapper.Map<List<ProjectDTO>>(await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == userId));
+        }
+
 
         #region Teams
 
@@ -354,9 +358,12 @@ namespace Polyglot.BusinessLogic.Services
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
         {
+            //var managerDto = mapper.Map<UserProfileDTO>(await CurrentUser.GetCurrentUserProfile());
+            //entity.UserProfile = managerDto;
             var ent = mapper.Map<Project>(entity);
             // ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
             ent.MainLanguage = null;
+            ent.UserProfile = await CurrentUser.GetCurrentUserProfile();
 
             var target = await uow.GetRepository<Project>().CreateAsync(ent);
             await uow.SaveAsync();
@@ -415,15 +422,6 @@ namespace Polyglot.BusinessLogic.Services
         }
 
         #endregion Project overrides
-
-
-        public async Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId)
-        {
-            var manager = await Filter.FiltrationSqlModelAsync<UserProfile>(x => x.Id == userId, uow);
-            var managerDTO = mapper.Map<UserProfileDTO>(manager.FirstOrDefault());
-            entity.UserProfile = managerDTO;
-            return await PostAsync(entity);
-        }
 
         #region ComplexStrings
 
@@ -485,7 +483,7 @@ namespace Polyglot.BusinessLogic.Services
             if (filters.Contains(FilterType.WithTags))
                 finalFilter = AndAlso(finalFilter, withTagsFilter);
 
-            var result = await Filter.FiltrationMongoModelAsync(finalFilter, stringsProvider);
+            var result = await stringsProvider.GetAllAsync(finalFilter);
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
         }
@@ -537,11 +535,11 @@ namespace Polyglot.BusinessLogic.Services
             foreach (var language in languages)
             {
                 var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
-                    chart1.Values.Add(new Point
-                    {
-                        Name = language.Name,
-                        Value = count
-                    });
+                chart1.Values.Add(new Point
+                {
+                    Name = language.Name,
+                    Value = count
+                });
             }
             return chart1;
         }
@@ -560,11 +558,11 @@ namespace Polyglot.BusinessLogic.Services
             foreach (var language in languages)
             {
                 var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id));
-                    chart1.Values.Add(new Point
-                    {
-                        Name = language.Name,
-                        Value = count
-                    });             
+                chart1.Values.Add(new Point
+                {
+                    Name = language.Name,
+                    Value = count
+                });
             }
             return chart1;
         }

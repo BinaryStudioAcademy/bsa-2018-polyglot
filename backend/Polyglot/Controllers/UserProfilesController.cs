@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication.Extensions;
 
 namespace Polyglot.Controllers
 {
@@ -40,7 +40,7 @@ namespace Polyglot.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetUserByUid()
         {
-            var user = await service.GetByUidAsync(HttpContext.User.GetUid());
+            var user = await service.GetByUidAsync();
             return user == null ? NotFound($"User not found!") as IActionResult
                : Ok(user);
         }
