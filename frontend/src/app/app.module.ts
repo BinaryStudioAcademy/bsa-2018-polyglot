@@ -91,6 +91,7 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 
 
 @NgModule({
@@ -157,7 +158,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
-    UserProfileComponent
+    UserProfileComponent, TabGlossaryComponent
   ],
   imports: [
     BrowserModule,

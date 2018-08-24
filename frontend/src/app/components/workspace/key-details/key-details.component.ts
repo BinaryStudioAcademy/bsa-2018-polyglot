@@ -43,6 +43,8 @@ export class KeyDetailsComponent implements OnInit {
     keyId: number;
     isDisabled: boolean = false;
 
+    currentTranslation: string;
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
 

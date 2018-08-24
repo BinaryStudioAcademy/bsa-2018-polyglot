@@ -1,0 +1,8 @@
+<div *ngIf="glossary.length === 0">
+  <p>No match</p>
+</div>
+<div *ngIf="glossary.length !== 0">
+  <p *ngFor="let term of glossary">
+    <strong>{{term.expression}}</strong> : {{term.definition}}
+  </p>
+</div>
