@@ -127,7 +127,6 @@ namespace Polyglot
 
             app.UseSignalR(options =>
             {
-                options.MapHub<ChatHub>("/hub");
                 options.MapHub<WorkspaceHub>("/workspaceHub");
             });
 

@@ -86,7 +86,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await _hubContext.Clients.Group(id.ToString()).SendAsync("addedFirstTranslation", entity);
+                await _hubContext.Clients.Group(id.ToString()).SendAsync("changedTranslation", entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
@@ -117,12 +117,12 @@ namespace Polyglot.Controllers
             var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ComplexStringDTO>(entity)); 
+                mapper.Map<ComplexStringDTO>(entity));
         }
 
         // PUT: ComplexStrings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult>  ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult> ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -159,6 +159,12 @@ namespace Polyglot.Controllers
                 return BadRequest();
 
             var entity = await dataProvider.SetComments(id, comments);
+
+            if (entity != null)
+            {
+               await _hubContext.Clients.Group(id.ToString()).SendAsync("commentAdded", entity);
+            }
+
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

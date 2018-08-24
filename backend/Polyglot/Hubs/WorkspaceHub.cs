@@ -29,11 +29,6 @@ namespace Polyglot.Hubs
             }
         }
 
-        public async Task Test(string test)
-        {
-            await Clients.All.SendAsync("test", test);
-        }
-
         public async Task NewComplexString(string projectId, int newStringId)
         {
             await Clients.Group(projectId).SendAsync("stringAdded", newStringId);
@@ -62,18 +57,5 @@ namespace Polyglot.Hubs
             // await Clients.OthersInGroup(projectId).SendAsync("languageDeleted", languageId);
         }
 
-        public async Task NewTranslation(string projectId, int complexStringId, int languageId)
-        {
-            await Clients.Group(projectId).SendAsync("stringTranslated", complexStringId, languageId);
-#warning заменить
-            //    await Clients.OthersInGroup(projectId).SendAsync("stringTranslated", complexStringId, languageId);
-        }
-
-        public async Task Translating(string projectId, int complexStringId, int languageId, int translatingById, string translatingByFullName)
-        {
-            await Clients.Group(projectId).SendAsync("stringTranslating", translatingById, translatingByFullName);
-#warning заменить
-            // await Clients.OthersInGroup(projectId).SendAsync("stringTranslating", translatingById, translatingByFullName);
-        }
     }
 }
