@@ -8,6 +8,8 @@ namespace Polyglot.Common.DTOs
 
 #warning нужно добавить manager-a
 
+        public string Name { get; set; }
+
         public List<TranslatorDTO> TeamTranslators { get; set; }
 
         public TeamDTO()

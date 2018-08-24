@@ -53,6 +53,15 @@ export class AppStateService {
   }
 
 
+  public get Layout() : string {
+    return localStorage.getItem('LayoutView');
+  }
+
+  public set Layout(status: string){
+    localStorage.setItem('LayoutView', status);
+  }
+
+
   constructor() {
     // getting from localStorage
     this.currentFirebaseToken = localStorage.getItem('currentFirebaseToken');

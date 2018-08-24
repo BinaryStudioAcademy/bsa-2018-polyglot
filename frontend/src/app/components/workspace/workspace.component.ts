@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog} from '@angular/material';
 import { StringDialogComponent } from '../../dialogs/string-dialog/string-dialog.component';
 import {SnotifyService} from 'ng-snotify';
 import { FormControl } from '../../../../node_modules/@angular/forms';
@@ -20,7 +20,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public keys: any[];
   public searchQuery: string;
   public selectedKey: any;
-  public isEmpty
   public currentPath;
   public basicPath;
   private currentPage = 0;
@@ -49,7 +48,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
  
   ngOnInit() {
     this.searchQuery = '';
-    console.log("q");
     this.routeSub = this.activatedRoute.params.subscribe((params) => {
       //making api call using service service.get(params.projectId); ..
       this.getProjById(params.projectId);
@@ -57,19 +55,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       this.currentPath = 'workspace/'+ params.projectId +'/key'; 
       this.dataProvider.getProjectStringsWithPagination(params.projectId,4,0)
       .subscribe((data: any) => {
+        if(data)
+        {
         this.keys = data.complexStrings;
-        console.log(this.keys);
         this.onSelect(this.keys[0]);
-        this.isEmpty = this.keys.length === 0;
         let keyId: number;
-          if(!this.isEmpty) {
+        if(this.keys.length !== 0) {
             keyId = this.keys[0].id;
             this.router.navigate([this.currentPath, keyId]);
           }
-      });
+      }});
     this.currentPage ++;
     });
   }
+  
   onAdvanceSearchClick() {
 
   }
@@ -95,8 +94,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
           this.keys.push(result);
           this.selectedKey = result;
           let keyId = this.keys[0].id;   
-          this.router.navigate([this.currentPath, keyId]);
-          this.isEmpty = false;
+          this.router.navigate([this.currentPath, keyId]);          
       })
       dialogRef.afterClosed().subscribe(()=>{
         dialogRef.componentInstance.onAddString.unsubscribe();

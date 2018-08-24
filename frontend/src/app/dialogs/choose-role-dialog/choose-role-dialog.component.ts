@@ -20,7 +20,7 @@ export class ChooseRoleDialogComponent implements OnInit {
                 
               }
 
-
+  buttonDisable: boolean;
   selectedOption: string = 'Translator';
   userToReceive: UserProfile;
   error: string;
@@ -32,6 +32,7 @@ export class ChooseRoleDialogComponent implements OnInit {
 
   onSubmit(){
     this.onRoleChoose.emit(null);
+    this.buttonDisable = true;
   }
 
   saveDataInDb(){
