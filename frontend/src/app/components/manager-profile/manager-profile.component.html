@@ -45,7 +45,7 @@
               </div>
             </div> 
         </div>
-        <div fxLayout="column" fxLayoutGap="20px" fxFlex.sm="30%" fxFlex="25%" fxLayout.xs="column" >
+        <div *ngIf="teams && teams.length > 0" fxLayout="column" fxLayoutGap="20px" fxFlex.sm="30%" fxFlex="25%" fxLayout.xs="column" >
             <div class="item" fxFlex>
                 <div>
                   <h2 class="title">Teams:</h2>
