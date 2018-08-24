@@ -27,7 +27,7 @@ export class ManagerProfileComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.manager = this.userService.getCurrrentUser();
+    this.manager = this.userService.getCurrentUser();
 
     this.projectService.getAll().subscribe(pr => {
         this.projects = pr;

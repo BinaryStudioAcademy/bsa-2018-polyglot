@@ -62,7 +62,7 @@ export class NavigationComponent implements OnDestroy {
     let dialogRef = this.dialog.open(LoginDialogComponent);
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
-        this.manager = this.userService.getCurrrentUser();
+        this.manager = this.userService.getCurrentUser();
         this.role = this.roleToString(this.manager.userRole);
       }
     );
@@ -72,7 +72,7 @@ export class NavigationComponent implements OnDestroy {
     let dialogRef = this.dialog.open(SignupDialogComponent);
     dialogRef.componentInstance.reloadEvent.subscribe(
       () => {
-        this.manager = this.userService.getCurrrentUser();
+        this.manager = this.userService.getCurrentUser();
         this.role = this.roleToString(this.manager.userRole);
       }
     );
@@ -99,11 +99,11 @@ export class NavigationComponent implements OnDestroy {
 
   private updateCurrentUser() {
     if (this.appState.LoginStatus){
-      if (!this.userService.getCurrrentUser()) {
+      if (!this.userService.getCurrentUser()) {
         this.userService.getUser().subscribe(
           (user: UserProfile)=> {
             this.userService.updateCurrrentUser(user);   
-            this.manager = this.userService.getCurrrentUser();
+            this.manager = this.userService.getCurrentUser();
             this.role = this.roleToString(this.manager.userRole);
           },
           err => {

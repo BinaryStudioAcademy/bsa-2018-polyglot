@@ -15,7 +15,7 @@ export class UserService {
     this.api = "userprofiles";
    }
 
-  getCurrrentUser(){
+  getCurrentUser(){
     let user = this.appState.currentDatabaseUser;
 
     if (user) {
