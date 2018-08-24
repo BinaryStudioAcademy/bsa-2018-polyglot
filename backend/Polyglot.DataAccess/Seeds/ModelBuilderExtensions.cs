@@ -258,11 +258,11 @@ namespace Polyglot.DataAccess.Seeds
             );
 
             modelBuilder.Entity<Team>().HasData(
-             new { Id = 1, ProjectId = 5 },
-             new { Id = 2, ProjectId = 2 },
-             new { Id = 3, ProjectId = 3 },
-             new { Id = 4, ProjectId = 1 },
-             new { Id = 5, ProjectId = 4 }
+             new { Id = 1, ProjectId = 5, Name = "Team Alpha" },
+             new { Id = 2, ProjectId = 2, Name = "Team Beta" },
+             new { Id = 3, ProjectId = 3, Name = "Team Gamma" },
+             new { Id = 4, ProjectId = 1, Name = "Team Tetta" },
+             new { Id = 5, ProjectId = 4, Name = "Team Omega" }
             );
 
 
@@ -567,6 +567,7 @@ namespace Polyglot.DataAccess.Seeds
             {
                 var teams = new List<Team> {
                      new Team {
+                         Name = "Team Alpha",
                          TeamTranslators = new List<TeamTranslator> {
                             new TeamTranslator {
                                 TranslatorId = 1,
@@ -591,6 +592,7 @@ namespace Polyglot.DataAccess.Seeds
                          }
                      },
                      new Team {
+                         Name = "Team Beta",
                          TeamTranslators = new List<TeamTranslator> {
                             new TeamTranslator {
                                 TranslatorId = 4,

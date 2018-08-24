@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
-import { UserProfile, Rating } from '../models';
+import { UserProfile, Rating, Team } from '../models';
 import { AppStateService } from './app-state.service';
 
 @Injectable({
@@ -56,8 +56,12 @@ export class UserService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
   }
 
-  getUserRatings(id: number) : Observable<Rating> {
+  getUserRatings(id: number) : Observable<Rating[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/ratings');
+  }
+
+  getUserTeams(id) : Observable<Team[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams');
   }
 
   getOne(id: number) : Observable<any> {
