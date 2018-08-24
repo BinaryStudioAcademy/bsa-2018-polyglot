@@ -60,6 +60,7 @@ export class TeamComponent implements OnInit {
         .subscribe((data: Team) => {
           
           this.teamTranslators = data.teamTranslators;
+          console.log(this.teamTranslators);
           this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;
           this.ngOnChanges();
@@ -117,7 +118,7 @@ export class TeamComponent implements OnInit {
         return false;
       }
       return teammate.rights
-        .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+        .find(r => r.definition == rightName)
         != null;
       
   }
