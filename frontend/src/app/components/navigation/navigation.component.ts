@@ -102,7 +102,7 @@ export class NavigationComponent implements OnDestroy {
       if (!this.userService.getCurrentUser()) {
         this.userService.getUser().subscribe(
           (user: UserProfile)=> {
-            this.userService.updateCurrrentUser(user);   
+            this.userService.updateCurrentUser(user);   
             this.manager = this.userService.getCurrentUser();
             this.role = this.roleToString(this.manager.userRole);
           },
