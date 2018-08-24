@@ -20,9 +20,12 @@
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
 								</mat-panel-description>
+								<button  mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+									<mat-icon class="icon-size">g_translate</mat-icon>
+								</button>
 								<button mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
 									<mat-icon style="font-size: 22px">translate</mat-icon>
-								</button>
+								</button>	
 								<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
 									<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
 										<mat-form-field class="textarea-translation">
@@ -34,6 +37,9 @@
 										<button mat-raised-button color="primary">Suggest</button>
 									</div>
 								</mat-menu>
+							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">							  
+								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
+							</mat-menu>
 							</mat-expansion-panel-header>		  
 						   <div >
 								<mat-form-field class="textarea-translation">
@@ -48,9 +54,6 @@
 								<div class="button-translation">
 									<div>
 									<button mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
-									<button mat-raised-button class="machine-translation-btn" matTooltip="Machine Translation" matTooltipPosition="below" (click)="openMachineTranslationBottomSheet(i,t)">
-										<mat-icon class="icon-size" matTooltip="Machine Translation">g_translate</mat-icon>
-									</button>
 									</div>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
@@ -70,7 +73,7 @@
 			</ng-template>
 			<app-tab-detail [(keyDetails)]="keyDetails"></app-tab-detail>
 		</mat-tab>
-		<mat-tab label="History">
+		<mat-tab label="History" >
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="History" matTooltipPosition="above">history</mat-icon>
 			</ng-template>
@@ -85,7 +88,7 @@
 			<!-- <app-tab-comments *ngIf="keyDetails" [(keyDetails)] = "keyDetails"></app-tab-comments> -->
 
 		</mat-tab>
-		<mat-tab label="O_Translation">
+		<mat-tab label="O_Translation" >
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
 			</ng-template>

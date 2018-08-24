@@ -1,0 +1,17 @@
+<div style="padding-left: 20px!important;padding-right: 20px!important;width: 400px">
+  <div>
+    <h3>Machine translation</h3>
+    <hr>
+  </div>
+  <mat-nav-list>
+    <mat-list-item (click)="onSelect()" style="padding: 0px!important">
+      <div mat-line>
+        <span><img style="width:24px;height:24px;margin-right: 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/2000px-Google_Translate_logo.svg.png" alt="Google"></span><span style="font-size: 16px;">Google Translate</span>
+      </div>
+      <div mat-line style="padding-top: 10px;padding-bottom: 10px;">
+        <span style="color:gray">Translation : </span><mat-spinner *ngIf="isLoading" [diameter]="25"></mat-spinner>{{Translation}}
+      </div>
+      <br>
+    </mat-list-item>
+  </mat-nav-list>
+  <br>
