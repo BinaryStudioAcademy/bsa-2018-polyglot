@@ -6,7 +6,7 @@
       <mat-option value="Manager">Manager</mat-option>
     </mat-select>
   </mat-form-field> 
-  <button (click)="onSubmit()" class="simplebtn" mat-button style="margin-left: 5px">Sign Up!</button>
+  <button [disabled]="buttonDisable" (click)="onSubmit()" class="simplebtn" mat-button style="margin-left: 5px">Sign Up!</button>
   <mat-error *ngIf="error">
     {{error}}
   </mat-error>

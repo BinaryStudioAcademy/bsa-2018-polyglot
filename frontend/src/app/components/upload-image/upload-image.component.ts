@@ -1,7 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { HttpService, RequestMethod } from '../../services/http.service';
-import { ngfModule, ngf } from "angular-file"
-import { Project } from '../../models';
 
 @Component({
   selector: 'app-upload-image',
@@ -13,9 +10,9 @@ export class UploadImageComponent implements OnInit {
   @Output() fileEvent = new EventEmitter<File>();
   fileToUpload: File;
 
-  validDrag;
-  invalidDrag;
-  constructor(private dataService: HttpService) { }
+  validDrag: boolean;
+  invalidDrag: boolean;
+  constructor() { }
 
   ngOnInit() {
     

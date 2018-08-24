@@ -65,15 +65,15 @@ export class UserService {
   }
 
   getOne(id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, id);
   }
 
   isUserInDb() : Observable<boolean> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/isInDb', undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/isInDb');
   }
 
   getAll() : Observable<any[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
   create(body) : Observable<UserProfile>{
