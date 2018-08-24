@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Polyglot.Common\Polyglot.Common.csproj" />
+    <ProjectReference Include="..\Polyglot.Core\Polyglot.Core.csproj" />
     <ProjectReference Include="..\Polyglot.DataAccess\Polyglot.DataAccess.csproj" />
   </ItemGroup>
 

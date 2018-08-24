@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,14 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
-using Polyglot.Authentication;
-using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using System.Text;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -26,14 +22,12 @@ namespace Polyglot.Controllers
 	public class ProjectsController : ControllerBase
 	{
 		private IProjectService service;
-		private IUserService userService;
 
 		public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IUserService userService)
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
 		{
 			this.service = projectService;
 			fileStorageProvider = provider;
-			this.userService = userService;
 		}
 
 
@@ -42,8 +36,9 @@ namespace Polyglot.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllProjects()
 		{
-			var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
-			if (user.Id == 0)
+		    var user = await CurrentUser.GetCurrentUserProfile();
+
+            if (user.Id == 0)
 				return Ok(new List<ProjectDTO>());
 			var projects = await service.GetListAsync(user.Id);
 			return projects == null ? NotFound("No projects found!") as IActionResult
@@ -170,8 +165,7 @@ namespace Polyglot.Controllers
 				project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
 			}
 
-			var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
-			var entity = await service.PostAsync(project, user.Id);
+			var entity = await service.PostAsync(project);
 			return entity == null ? StatusCode(409) as IActionResult
 				: Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
 				entity);

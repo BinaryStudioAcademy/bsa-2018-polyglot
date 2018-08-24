@@ -7,7 +7,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IUserService : ICRUDService<UserProfile, UserProfileDTO>
     {
-        Task<UserProfileDTO> GetByUidAsync(string uid);
+        Task<UserProfileDTO> GetByUidAsync();
 
         Task<bool> IsExistByUidAsync(string uid);
     }
