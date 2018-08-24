@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.Hubs;
 
 namespace Polyglot.Controllers
 {
@@ -19,13 +21,16 @@ namespace Polyglot.Controllers
     {
         private readonly IMapper mapper;
         private readonly IComplexStringService dataProvider;
-
         public IFileStorageProvider fileStorageProvider;
-        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider)
+        private readonly IHubContext<WorkspaceHub> _hubContext;
+
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider,
+            IHubContext<WorkspaceHub> hubContext)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
             fileStorageProvider = provider;
+            _hubContext = hubContext;
         }
 
         // GET: ComplexStrings
@@ -63,6 +68,12 @@ namespace Polyglot.Controllers
                 return BadRequest();
 
             var entity = await dataProvider.SetStringTranslation(id, translation);
+
+            if (entity != null)
+            {
+                await _hubContext.Clients.Group(id.ToString()).SendAsync("addedFirstTranslation", entity);
+            }
+
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -72,6 +83,12 @@ namespace Polyglot.Controllers
         {
 
             var entity = await dataProvider.EditStringTranslation(id, translation);
+
+            if (entity != null)
+            {
+                await _hubContext.Clients.Group(id.ToString()).SendAsync("changedTranslation", entity);
+            }
+
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -100,12 +117,12 @@ namespace Polyglot.Controllers
             var entity = await dataProvider.AddComplexString(complexString);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ComplexStringDTO>(entity)); 
+                mapper.Map<ComplexStringDTO>(entity));
         }
 
         // PUT: ComplexStrings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult>  ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult> ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -142,6 +159,12 @@ namespace Polyglot.Controllers
                 return BadRequest();
 
             var entity = await dataProvider.SetComments(id, comments);
+
+            if (entity != null)
+            {
+               await _hubContext.Clients.Group(id.ToString()).SendAsync("commentAdded", entity);
+            }
+
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

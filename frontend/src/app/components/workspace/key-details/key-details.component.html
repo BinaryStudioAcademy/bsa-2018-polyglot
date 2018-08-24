@@ -4,8 +4,8 @@
 	</mat-card>
 </div>
 <div *ngIf="!isLoad && !isEmpty" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
-		<mat-spinner></mat-spinner> 
-</div> 
+		<mat-spinner></mat-spinner>
+</div>
 <mat-card *ngIf="isLoad" class="key-details my-1 px-0 grow-1 mr-0 ml-1">
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
@@ -51,13 +51,22 @@
 													  placeholder="Write here to start translating"
 													  cdkAutosizeMaxRows="10"></textarea>
 								</mat-form-field>
+								<div [hidden]="!someOneTranslating" class="state-container">
+										<span *ngFor="let u of editingUsers">
+											<a [routerLink]="['/']" [routerLinkActive]="'active'">
+												{{u.fullName}}
+											</a>
+											,&nbsp;
+										</span>
+										translating this line right now
+								</div>
 								<div class="button-translation">
 									<div>
 									<button mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
 									</div>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
 								</div>
-								
+
 						  </div>
 						</mat-expansion-panel>
 				</mat-accordion>
@@ -84,7 +93,7 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Comment" matTooltipPosition="above">comment</mat-icon>
 			</ng-template>
-			<app-tab-comments></app-tab-comments>
+			<app-tab-comments [(comments)] = "comments"></app-tab-comments>
 			<!-- <app-tab-comments *ngIf="keyDetails" [(keyDetails)] = "keyDetails"></app-tab-comments> -->
 
 		</mat-tab>

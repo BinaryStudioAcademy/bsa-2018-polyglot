@@ -1,4 +1,4 @@
-namespace Polyglot.Common.DTOs
+﻿namespace Polyglot.Common.DTOs
 {
     public class LanguageDTO
     {
