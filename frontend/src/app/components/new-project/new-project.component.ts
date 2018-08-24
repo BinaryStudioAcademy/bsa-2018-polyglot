@@ -51,7 +51,7 @@ export class NewProjectComponent implements OnInit {
   });
   languages: Language[];
   
-  saveChanges(project: Project): void{
+  saveChanges(project: Project): void{    
     project.createdOn = new Date(Date.now());
     let formData = new FormData();
     if(this.projectImage){

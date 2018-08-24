@@ -22,7 +22,7 @@ export class TeamsComponent implements OnInit {
   getAllTeams(){
     this.teamsService.getAllTeams()
       .subscribe((teams) => {
-        debugger;
+        
         this.teams = teams;
         let a = teams
         this.IsLoad = false;

@@ -1,0 +1,28 @@
+<div class="reports-container">
+    
+        <mat-card class="bar" >
+            <h2>{{charts[0].name}}</h2>
+        <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="charts[0].data" [gradient]="gradient" [xAxis]="showXAxis"
+            [barPadding]="10" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
+            [legendTitle]="legendTitle" (select)="onSelect($event)">
+        </ngx-charts-bar-vertical>
+    </mat-card>
+
+    <mat-card class="pie" >
+            <h2>{{charts[1].name}}</h2>
+        <ngx-charts-pie-chart [view]="view" [scheme]="colorScheme" [results]="charts[1].data" [explodeSlices]="explodeSlices" [labels]="showLabels"
+            [doughnut]="doughnut" [gradient]="gradient" (select)="onSelect($event)">
+        </ngx-charts-pie-chart>
+    </mat-card>
+   
+    <mat-card class="advanced-pie">
+            <h2>{{charts[1].name}}</h2>
+            <ngx-charts-advanced-pie-chart
+            [view]="pieView"
+            [scheme]="colorScheme"
+            [results]="charts[1].data"
+            [gradient]="gradient"
+            (select)="onSelect($event)">
+          </ngx-charts-advanced-pie-chart>
+    </mat-card>
+</div>
