@@ -33,13 +33,11 @@ export class HttpService {
         endpoint: string,
         params: number | string = "",
         body: any = {},
-        respType: string = 'json') {
+        respType: string = 'json',
+        typeOfContent: string = "json") {
 
         let headers;
-        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "projects"
-                                                                        && endpoint != "complexstrings"
-                                                                        && !endpoint.includes("dictionary")
-                                                                        && !endpoint.includes("export")) {
+        if ((type === RequestMethod.Post || type === RequestMethod.Put) && typeOfContent == 'json') {
             headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': this.token });
         } else {
             headers = new HttpHeaders({ 'Authorization': this.token });
@@ -50,13 +48,19 @@ export class HttpService {
 
         switch (type) {
             case RequestMethod.Get:
+<<<<<<< HEAD
        
+=======
+>>>>>>> 0202874dd1e54e44c60bfddf34c7d88bd4870508
                 if(respType === 'json'){
                     request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json' , headers });
                 }else if(respType === 'blob'){
                     request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob' , headers });
                 }
+<<<<<<< HEAD
            
+=======
+>>>>>>> 0202874dd1e54e44c60bfddf34c7d88bd4870508
                 break;
             case RequestMethod.Post:
                 request = this.httpClient.post(`${this.url}/${endpoint}/`, body, { headers });

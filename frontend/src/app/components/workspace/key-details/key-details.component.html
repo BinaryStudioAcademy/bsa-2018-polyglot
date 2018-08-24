@@ -10,7 +10,7 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [(disabled)]="isDisabled" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+						<mat-expansion-panel [style.border]="highlightString(i)" [(disabled)]="isDisabled" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>

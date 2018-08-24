@@ -19,8 +19,7 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./projects.component.sass']
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
-
-  public state: string;
+  
   public checked = true;
   
   constructor(
@@ -46,7 +45,6 @@ export class ProjectsComponent implements OnInit,OnDestroy {
      this.checked = false;
    }
     
-  debugger;
 
   this.projectService.getAll().subscribe(pr => 
     {
@@ -67,8 +65,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     });
   }
 
-  changeLayout(){
-    debugger;   
+  changeLayout(){  
    if(this.checked){
      this.appStateService.Layout = 'row';
      this.checked = false;

@@ -48,7 +48,7 @@ export class TagsComponent  {
     const input = event.input;
     const value = event.value;
 
-    if ((value || '').trim()) {
+    if (((value || '').trim()) && value.length <= 15) {
       this.tags.push({name: value.trim(), color: '', id: 0, projectTags:[]});
     }
 

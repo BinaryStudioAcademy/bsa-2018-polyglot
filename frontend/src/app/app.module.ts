@@ -75,13 +75,22 @@ import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+
+//Ngx-Charts
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ReportsComponent } from './components/reports/reports.component';
+import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
+
 
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -142,7 +151,13 @@ import { MachineTranslationMenuComponent } from './dialogs/machine-translation-m
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,
-    MachineTranslationMenuComponent
+    MachineTranslationMenuComponent,
+    ReportsComponent,
+    ProjectActivitiesComponent,
+    TabReviewComponent,
+    DownloadFileComponent,
+    StarRatingComponent,  
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -174,7 +189,10 @@ import { MachineTranslationMenuComponent } from './dialogs/machine-translation-m
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule,
+    NgxInfiniteScrollerModule,
+    InfiniteScrollModule
   ],
   entryComponents: [
     LoginDialogComponent, 

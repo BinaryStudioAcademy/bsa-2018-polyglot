@@ -16,15 +16,15 @@ export class ComplexStringService {
   }
 
   getAll(): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
   getById(id: number): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, id);
   }
 
   create(data: FormData): Observable<IString> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data);
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data, undefined, 'form-data');
   }
 
   update(iString: IString, id: number): Observable<IString> {
@@ -32,7 +32,7 @@ export class ComplexStringService {
   }
 
   getStringTranslations(id: number): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translations', undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/translations');
   }
 
   createStringTranslation(translation: Translation, id: number): Observable<any> {

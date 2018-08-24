@@ -141,10 +141,12 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<TeamDTO, Team>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators));
+                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(p => p.Name));
                 cfg.CreateMap<Team, TeamDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators));
+                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(p => p.Name));
 
                 cfg.CreateMap<TranslatorLanguage, TranslatorLanguageDTO>()
                     .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))

@@ -56,30 +56,24 @@ export class KeyDetailsComponent implements OnInit {
         this.Id = this.route.snapshot.queryParamMap.get('keyid');
     }
 
-
-    ngOnChanges() {
-        if (this.keyDetails && this.keyDetails.translations) {
-            this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
-            this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-
-            if (this.IsPagenationNeeded) {
-                this.paginator.pageSize = this.pageSize;
-                this.translationsDataSource.paginator = this.paginator;
-            }
-
+    ngOnChanges(){
+        if(this.keyDetails && this.keyDetails.translations){
+          this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
+          this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
+          
+          if(this.IsPagenationNeeded){
+            this.paginator.pageSize = this.pageSize;
+            this.translationsDataSource.paginator = this.paginator;
+          }
+    
         }
         else
-            this.IsPagenationNeeded = false;
-    }
+          this.IsPagenationNeeded = false;
+      }
+    
+      step = 0;
 
-    step = 0;
-
-    setStep(index: number) {
-        this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
-        this.history.showHistory(index);
-    }
-
-    ngOnInit() {
+      ngOnInit() {
         this.isMachineTranslation = false;
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
@@ -91,6 +85,18 @@ export class KeyDetailsComponent implements OnInit {
             });
         });
     }
+
+
+  setStep(index: number) {
+    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+    for (let i = 0; i < this.expandedArray.length; i++) {
+        if (i != index) {
+            this.expandedArray[i].isOpened = false;
+        }
+    }
+    this.history.showHistory(index);
+  }
+
 
     getLanguages() {
 
@@ -134,6 +140,15 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onSave(index: number, t: Translation) {
+
+        if (this.isMachineTranslation) {
+            t.Type = TranslationType.Machine;
+            this.isMachineTranslation = false;
+        }
+        else {
+            t.Type = TranslationType.Human;
+        }
+
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             t.userId = this.appState.currentDatabaseUser.id;
             this.dataProvider.editStringTranslation(t, this.keyId)
@@ -148,13 +163,6 @@ export class KeyDetailsComponent implements OnInit {
                 );
         }
         else {
-            if (this.isMachineTranslation) {
-                t.Type = TranslationType.Machine;
-                this.isMachineTranslation = false;
-            }
-            else {
-                t.Type = TranslationType.Human;
-            }
             t.createdOn = new Date();
             t.userId = this.appState.currentDatabaseUser.id;
             this.dataProvider.createStringTranslation(t, this.keyId)
@@ -225,9 +233,17 @@ export class KeyDetailsComponent implements OnInit {
         this.expandedArray[$event.keyId].isOpened = true;
     }
 
-    toggleDisable() {
-        this.isDisabled = !this.isDisabled;
+
+  toggleDisable() {
+    this.isDisabled = !this.isDisabled;
+  }
+
+  highlightString(index: number) {
+    if (this.expandedArray[index].isOpened) {
+      return '2px ridge #6495ED';
     }
+    return '';
+  }
 }
 
 

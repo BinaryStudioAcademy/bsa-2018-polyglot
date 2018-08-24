@@ -90,8 +90,16 @@ namespace Polyglot.Controllers
 			return success ? Ok() : StatusCode(304) as IActionResult;
 		}
 
-		// GET: Projects/5/languages
-		[HttpGet("{id}/languages", Name = "GetProjectLanguages")]
+        // GET: Projects/5/report
+        [HttpGet("{id}/reports", Name = "GetProjectReport")]
+        public async Task<IActionResult> GetProjectReport(int id)
+        {
+            var project = await service.GetProjectStatistic(id);
+            return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
+                : Ok(project);
+        }
+        // GET: Projects/5/languages
+        [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
 		public async Task<IActionResult> GetProjectLangs(int id)
 		{
 			var project = await service.GetProjectLanguages(id);
@@ -99,13 +107,14 @@ namespace Polyglot.Controllers
 				: Ok(project);
 
 		}
+        
 
-		// PUT: Projects/:id/languages
-		[HttpPut("{projectId}/languages")]
-		public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
-		{
-			if (!ModelState.IsValid)
-				return BadRequest() as IActionResult;
+        // PUT: Projects/:id/languages
+        [HttpPut("{projectId}/languages")]
+        public async Task<IActionResult> AddLanguagesToProject(int projectId, [FromBody]int[] languageIds)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
 
 			var entity = await service.AddLanguagesToProject(projectId, languageIds);
 			return entity == null ? StatusCode(304) as IActionResult
@@ -120,17 +129,26 @@ namespace Polyglot.Controllers
 			return success ? Ok() : StatusCode(304) as IActionResult;
 		}
 
-		// Get: Projects/5/complexString
-		[HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
-		public async Task<IActionResult> GetProjectStrings(int id)
-		{
-			var projectsStrings = await service.GetProjectStringsAsync(id);
-			return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
-				: Ok(projectsStrings);
-		}
+	    // Get: Projects/5/complexString
+	    [HttpGet("{id}/complexStrings", Name = "GetProjectStrings")]
+	    public async Task<IActionResult> GetProjectStrings(int id)
+	    {
+	        var projectsStrings = await service.GetProjectStringsAsync(id);
+	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+	            : Ok(projectsStrings);
+	    }
 
-		// POST: Projects
-		[HttpPost]
+        // Get: Projects/5/complexString
+       [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
+	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage=5, [FromQuery(Name = "page")] int page=0)
+	    {
+	        var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+	            : Ok(projectsStrings);
+	    }
+
+        // POST: Projects
+        [HttpPost]
 		public async Task<IActionResult> AddProject(IFormFile formFile)
 		{
 
