@@ -52,12 +52,10 @@ export class ProjectEditComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if(!changes)
       return
-    //debugger;
     this.languageService.getAll()
       .subscribe(
       (d: Language[]) => {
         this.languages = d.map(x => Object.assign({}, x));
-        //debugger;
 
         let l = this.languages.find(x => x.id == this.project.mainLanguage.id);
 
@@ -69,7 +67,6 @@ export class ProjectEditComponent implements OnInit, OnChanges {
           technology: this.project.technology,
           mainLanguage: this.languages[i]
         });
-        //debugger;
       },
       err => {
         console.log('err', err);
@@ -83,7 +80,7 @@ export class ProjectEditComponent implements OnInit, OnChanges {
 }
 
   saveChanges(project: Project): void {
-    debugger;
+    
     // project.createdOn = new Date(Date.now());
     let formData = new FormData();
     if(this.projectImage)
@@ -143,7 +140,7 @@ export class ProjectEditComponent implements OnInit, OnChanges {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (dialogRef.componentInstance.data.answer){
-        debugger;
+        
         this.projectService.delete(id)
         .subscribe(
           (response => {

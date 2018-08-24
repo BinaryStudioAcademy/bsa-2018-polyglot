@@ -30,7 +30,7 @@ export class DownloadFileComponent implements OnInit {
   download() {
     this.projectService.getProjectFile(this.project.id, this.selectedLanguage.id, this.selectedFormat)
     .subscribe((data) => {
-      debugger; 
+       
       saveAs(data, `${this.project.name}(${this.selectedLanguage.code})${this.selectedFormat}`);
       this.snotifyService.success("File Downloaded", "Success!");
     }, err => {

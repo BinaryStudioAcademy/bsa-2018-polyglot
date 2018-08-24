@@ -16,8 +16,7 @@ export class ChooseRoleDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private snotify: SnotifyService,
               public dialogRef: MatDialogRef<ChooseRoleDialogComponent>,
-              private userService: UserService) { 
-                
+              private userService: UserService) {  
               }
 
 
@@ -35,12 +34,11 @@ export class ChooseRoleDialogComponent implements OnInit {
   }
 
   saveDataInDb(){
-    
     let role: Role;
-    if(this.selectedOption === "Translator"){
+    if(this.selectedOption === 'Translator'){
       role = Role.Translator;
     }
-    if(this.selectedOption === "Manager"){
+    if(this.selectedOption === 'Manager'){
       role = Role.Manager;
     }
 

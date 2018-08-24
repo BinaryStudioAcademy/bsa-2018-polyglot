@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180822191514_TeamNameAdded")]
+    partial class TeamNameAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,9 +264,9 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("TeamId");
+                    b.Property<int?>("TeamId");
 
-                    b.Property<int>("TranslatorId");
+                    b.Property<int?>("TranslatorId");
 
                     b.HasKey("Id");
 
@@ -272,7 +274,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("TranslatorId");
 
-                    b.ToTable("TeamTranslators");
+                    b.ToTable("TeamTranslator");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>
@@ -442,13 +444,11 @@ namespace Polyglot.DataAccess.Migrations
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.Team", "Team")
                         .WithMany("TeamTranslators")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TeamId");
 
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
                         .WithMany("TeamTranslators")
-                        .HasForeignKey("TranslatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TranslatorId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>

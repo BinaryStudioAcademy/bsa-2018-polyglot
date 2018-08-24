@@ -141,10 +141,12 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<TeamDTO, Team>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators));
+                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
                 cfg.CreateMap<Team, TeamDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators));
+                    .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
 
                 cfg.CreateMap<TranslatorLanguage, TranslatorLanguageDTO>()
                     .ForMember(p => p.Language, opt => opt.MapFrom(po => po.Language))
@@ -154,19 +156,26 @@ namespace Polyglot.Common.Mapping
 
 
                 cfg.CreateMap<TeamTranslator, TranslatorDTO>()
-                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.UserProfile.Id))
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.UserProfile.FullName))
                     .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.UserProfile.AvatarUrl))
                     .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
+                    .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.TranslatorId))
 #warning примапить email
                     .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
                     .ForMember(p => p.Rating, opt => opt.Ignore())
                     .ForMember(p => p.TranslatorLanguages, opt => opt.Ignore())
                     .ForMember(p => p.Rights, opt => opt.MapFrom(po => po.TranslatorRights.Select(tr => tr.Right)));
-                cfg.CreateMap<UserProfile, TranslatorDTO>()
+                cfg.CreateMap<TranslatorDTO, TeamTranslator>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId))
+                    .ForMember(p => p.TranslatorId, opt => opt.MapFrom(po => po.UserId));
+
+                cfg.CreateMap<UserProfile, TranslatorDTO>()
+                    .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.FullName))
                     .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl))
+                    .ForMember(p => p.Id, opt => opt.Ignore())
                     .ForMember(p => p.TeamId, opt => opt.Ignore())
 #warning примапить email
                     .ForMember(p => p.Email, opt => opt.UseValue("EMAIL_NOT_MAPPED_YET"))
@@ -182,6 +191,7 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<Team, TeamPrevDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
                         po.TeamTranslators
                         .Select(t => t.UserProfile)));

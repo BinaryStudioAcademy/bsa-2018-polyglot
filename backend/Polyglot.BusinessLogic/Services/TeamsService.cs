@@ -103,7 +103,7 @@ namespace Polyglot.BusinessLogic.Services
                     var translatorsList = dest.ToList();
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                     }
 
                 }));
@@ -116,6 +116,29 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
                 return null;
+        }
+
+        public override async Task<TeamDTO> PutAsync(TeamDTO entity)
+        {
+            if (uow != null)
+            {
+                var teamRepository = uow.GetRepository<Team>();
+                var teamTranslatorRepository = uow.GetRepository<TeamTranslator>();
+                var teamTranslatorsToRemove = (await teamTranslatorRepository.GetAllAsync(x => x.TeamId == entity.Id)).Where(x => entity.TeamTranslators.All(y => y.Id != x.Id));
+                foreach (var teamTranslator in teamTranslatorsToRemove)
+                {
+                    await teamTranslatorRepository.DeleteAsync(teamTranslator.Id);
+                }
+                
+
+                var target = teamRepository.Update(mapper.Map<Team>(entity));
+                if (target != null)
+                {
+                    await uow.SaveAsync();
+                    return mapper.Map<TeamDTO>(target);
+                }
+            }
+            return null;
         }
 
         #endregion Overrides
@@ -155,9 +178,9 @@ namespace Polyglot.BusinessLogic.Services
                     IEnumerable<TranslatorLanguage> translatorLanguages;
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                         // добавляем инфо о языках
-                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].Id);
+                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].UserId);
                         if (translatorLanguages != null && translatorLanguages.Count() > 0)
                             translatorsList[i].TranslatorLanguages = mapper.Map<IEnumerable<TranslatorLanguageDTO>>(translatorLanguages);
                     }

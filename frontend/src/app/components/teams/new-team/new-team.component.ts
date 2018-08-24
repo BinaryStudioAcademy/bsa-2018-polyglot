@@ -69,18 +69,18 @@ export class NewTeamComponent implements OnInit {
   addTranslator(translator: Translator) {
     
     this.teamTranslators.push(translator);
-    this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
+    this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
   }
 
   removeTranslator(translator: Translator) {
     
     this.allTranslators.push(translator);
-    this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
+    this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
   }
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.id))
+      this.teamService.formTeam(this.teamTranslators.map(t => t.userId))
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
@@ -103,7 +103,7 @@ export class NewTeamComponent implements OnInit {
     // this.dataSource.filter = filterValue;
   }
   getAvatarUrl(person): String {
-    debugger;
+    
     if (person.avatarUrl!==" ")
       return person.avatarUrl;
     else
