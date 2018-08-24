@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
         if (!this.userService.getCurrentUser()) {
             return this.userService.getUser().pipe(
                 map((user: UserProfile) => {
-                  this.userService.updateCurrrentUser(user);
+                  this.userService.updateCurrentUser(user);
                   return true;    
                 })
             )

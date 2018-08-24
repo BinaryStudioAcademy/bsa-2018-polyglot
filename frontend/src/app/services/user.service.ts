@@ -30,7 +30,7 @@ export class UserService {
   getAndUpdate() {
     this.getUser().subscribe(
       (user)=> {
-        this.updateCurrrentUser(user);
+        this.updateCurrentUser(user);
       },
       err => {
         console.log('err', err);
@@ -43,7 +43,7 @@ export class UserService {
     this.appState.currentDatabaseUser = undefined;
   }
 
-  updateCurrrentUser (userProfile: any) {
+  updateCurrentUser (userProfile: any) {
     if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
       userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
     }
