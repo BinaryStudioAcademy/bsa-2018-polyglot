@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { Project } from '../../models';
 import { ProjectService } from '../../services/project.service';
+import { Chart } from '../../models/chart';
 
 @Component({
   selector: 'app-reports',
@@ -9,12 +10,16 @@ import { ProjectService } from '../../services/project.service';
 })
 export class ReportsComponent implements OnInit {
   @Input() project: Project;
-  public langs = [];
-  public strings = [];
-  data = []
+ 
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
-  view: any[] = [600, 400];
+  view: any[] = [350, 350];
+  piView: any[] = [500, 400];
+
+  charts: any;
+  explodeSlices = false;
+  doughnut = false;
+  showLabels = true;
 
   // options
   showXAxis = true;
@@ -27,67 +32,25 @@ export class ReportsComponent implements OnInit {
   yAxisLabel = 'Translations';
   timeline = true;
   legendTitle = 'Languages'
+  colorScheme = 'vivid'
 
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
   constructor(private projectService: ProjectService, ) {
-
   }
 
   ngOnInit() {
-    this.projectService.getProjectLanguages(this.project.id)
-      .subscribe(langs => {
-        this.IsLoad = false;
-        this.data = langs.map(function (lang: any) {
+
+    this.projectService.getProjectReports(this.project.id)
+      .subscribe(reports => {
+        this.charts = reports.charts.map(function (chart: any) {
           return {
-            name: lang.name,
-            value: lang.translationsCount,
+            name: chart.name,
+            data: chart.values,
           };
         });
-        console.log(this.data)
-        console.log(this.project)
-
-      },
-        err => {
-          this.IsLoad = false;
-        });
-
-
-        this.projectService.getProjectReports(this.project.id)
-      .subscribe(strings => {
-        this.IsLoad = false;
-        
-        this.strings = strings.map(function (string: any) {
-          return {
-            name: string.name,
-            value: string.translationsCount,
-          };
-        });
-
-        console.log(this.strings)
       },
         err => {
           this.IsLoad = false;
         });
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes)
-      return
-
-  }
-  compareProgress(a, b) {
-    if (a.progress < b.progress)
-      return -1;
-    if (a.progress > b.progress)
-      return 1;
-    return 0;
-  }
-
-
-
-
-
 
 }

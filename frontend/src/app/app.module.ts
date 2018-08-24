@@ -149,7 +149,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
-    StarRatingComponent
+    StarRatingComponent  
   ],
   imports: [
     BrowserModule,
