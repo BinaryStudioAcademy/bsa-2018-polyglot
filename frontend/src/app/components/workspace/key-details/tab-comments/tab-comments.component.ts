@@ -71,7 +71,7 @@ export class TabCommentsComponent implements OnInit {
   }
 
   addComment(commentBody: string){
-    this.comments.unshift({user: this.userService.getCurrrentUser(),
+    this.comments.unshift({user: this.userService.getCurrentUser(),
                                    text: commentBody,   
                                    createdOn: new Date(Date.now())});
 

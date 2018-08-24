@@ -58,7 +58,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       .subscribe((data: any) => {
         if(data)
         {
-        this.keys = data.complexStrings;
+        this.keys = data;
         this.onSelect(this.keys[0]);
         let keyId: number;
         if(this.keys.length !== 0) {
@@ -162,7 +162,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
     return this.dataProvider. getProjectStringsWithPagination(this.project.id, this.elementsOnPage ,this.currentPage)
     .subscribe((keys: any) => {
        this.currentPage++;
-       saveResultsCallback(keys.complexStrings);
+       saveResultsCallback(keys);
       
     });
       

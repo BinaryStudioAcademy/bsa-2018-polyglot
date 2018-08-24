@@ -31,7 +31,7 @@ export class TranslatorProfileComponent implements OnInit{
     Languages: Language[];
 
     ngOnInit(): void {
-            this.userProfile = this.userService.getCurrrentUser();
+            this.userProfile = this.userService.getCurrentUser();
             this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
             this.userProfile.ratings = ratings;
             this.userService.getUserTeams(this.userProfile.id).subscribe(t => {

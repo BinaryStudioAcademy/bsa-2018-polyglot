@@ -33,7 +33,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   IsLoad : boolean = true;
   OnPage : boolean;
    
-  manager: UserProfile =  this.userService.getCurrrentUser();
+  manager: UserProfile =  this.userService.getCurrentUser();
 
   ngOnInit() {
   this.OnPage = true;  

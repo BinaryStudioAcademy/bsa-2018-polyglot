@@ -18,7 +18,7 @@
         <div *ngFor="let action of filteredActivities" class="comments-container">
             <mat-card  class="activity-card">
                 <div class ="text">{{action.message}}</div>
-                <div class="date"><i>{{action.dateTime | date:'short'}}</i></div>
+                <div class="date"><i>{{action.dateTime | date:'medium'}}</i></div>
             </mat-card>
         </div>
     </div>

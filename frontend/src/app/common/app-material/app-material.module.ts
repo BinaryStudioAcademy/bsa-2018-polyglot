@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { LayoutModule } from '@angular/cdk/layout';
-
 import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { MdePopoverModule } from '@material-extended/mde';
 import {
   MatToolbarModule,
@@ -30,16 +26,14 @@ import {
   MatProgressSpinnerModule,
   MatChipsModule,
   MatPaginatorModule,
-  MatDialogModule
-
-
+  MatDialogModule,
+  
 
 } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -72,7 +66,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MdePopoverModule,
     BrowserAnimationsModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
+    
   ],
   exports: [
     LayoutModule,
@@ -102,11 +97,11 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatTableModule,
     FormsModule,
     ReactiveFormsModule,
-
     MdePopoverModule,
     BrowserAnimationsModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
+  
   ]
 })
 export class AppMaterialModule { }
