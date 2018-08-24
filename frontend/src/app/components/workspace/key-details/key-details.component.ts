@@ -111,7 +111,19 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
             debugger
             console.log(translation);
-            const lenght = this.keyDetails.translations.length;
+            this.setNewValueTranslation(translation);
+        });
+        this.signalrService.connection.on("changedTranslation", (translation: any) => {
+            debugger
+            console.log(translation);
+            this.setNewValueTranslation(translation);
+
+        });
+
+    }
+
+    setNewValueTranslation(translation: any) {
+        const lenght = this.keyDetails.translations.length;
             for (var i = 0; i < lenght; i++) {
                 if (this.keyDetails.translations[i].languageId === translation.languageId) {
                     this.keyDetails.translations[i] = {
@@ -121,12 +133,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                     };
                 }
             }
-        });
-        this.signalrService.connection.on("changedTranslation", (test: any) => {
-            debugger
-            console.log(test);
-        });
-
     }
 
     getLanguages() {
