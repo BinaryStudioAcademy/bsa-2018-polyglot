@@ -437,21 +437,15 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
 
-        public async Task<PaginatedStringsDTO> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
+        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
         {
             var skipItems = itemsOnPage * page;
-
+            
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
-
+            
             var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
-
-            var totalPages = (int)Math.Ceiling((double)(paginatedStrings?.Count() ?? 0) / itemsOnPage);
-
-            return new PaginatedStringsDTO
-            {
-                TotalPages = totalPages,
-                ComplexStrings = mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings)
-            };
+            
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
 
         }
 
