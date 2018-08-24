@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,47 +7,43 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
-using Polyglot.Authentication;
-using Polyglot.Authentication.Extensions;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using System.Text;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.Controllers
 {
-    [Produces("application/json")]
-    [Route("[controller]")]
-    [ApiController]
-    [Authorize]
-    public class ProjectsController : ControllerBase
-    {
-        private IProjectService service;
-        private IUserService userService;
+	[Produces("application/json")]
+	[Route("[controller]")]
+	[ApiController]
+	[Authorize]
+	public class ProjectsController : ControllerBase
+	{
+		private IProjectService service;
 
-        public IFileStorageProvider fileStorageProvider;
-        public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IUserService userService)
-        {
-            this.service = projectService;
-            fileStorageProvider = provider;
-            this.userService = userService;
-        }
+		public IFileStorageProvider fileStorageProvider;
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
+		{
+			this.service = projectService;
+			fileStorageProvider = provider;
+		}
 
 
         // GET: Projects
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllProjects()
-        {
-            var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
+		[HttpGet]
+		public async Task<IActionResult> GetAllProjects()
+		{
+		    var user = await CurrentUser.GetCurrentUserProfile();
+
             if (user.Id == 0)
-                return Ok(new List<ProjectDTO>());
-            var projects = await service.GetListAsync(user.Id);
-            return projects == null ? NotFound("No projects found!") as IActionResult
-                : Ok(projects);
-        }
+				return Ok(new List<ProjectDTO>());
+			var projects = await service.GetListAsync(user.Id);
+			return projects == null ? NotFound("No projects found!") as IActionResult
+				: Ok(projects);
+		}
 
         // GET: Projects/5
         [HttpGet("{id}", Name = "GetProject")]
@@ -90,40 +85,24 @@ namespace Polyglot.Controllers
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
 
-
-
-
-        // GET: Projects/:id/languages
+        // GET: Projects/5/report
+        [HttpGet("{id}/reports", Name = "GetProjectReport")]
+        public async Task<IActionResult> GetProjectReport(int id)
+        {
+            var project = await service.GetProjectStatistic(id);
+            return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
+                : Ok(project);
+        }
+        // GET: Projects/5/languages
         [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
-        public async Task<IActionResult> GetProjectLangs(int id)
-        {
-            var project = await service.GetProjectLanguages(id);
-            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-                : Ok(project);
+		public async Task<IActionResult> GetProjectLangs(int id)
+		{
+			var project = await service.GetProjectLanguages(id);
+			return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+				: Ok(project);
 
-
-        }
-
-        // GET: Projects/5/languages/stat
-        [HttpGet("{id}/languages/stat", Name = "GetProjectLanguagesStatistic")]
-        public async Task<IActionResult> GetProjectLanguagesStatistic(int id)
-        {
-            var project = await service.GetProjectLanguagesStatistic(id);
-            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-                : Ok(project);
-
-        }
-
-        // GET: Projects/:projId/languages/:langId/stats
-        [HttpGet("{projId}/languages/{langId}/stats", Name = "GetProjectLanguageStatistic")]
-        public async Task<IActionResult> GetProjectLangsuageStatistic(int projectId, int langId)
-        {
-            var project = await service.GetProjectLanguageStatistic(projectId, langId);
-            return project == null ? NotFound($"Language not found!") as IActionResult
-                : Ok(project);
-        }
-
-
+		}
+        
 
         // PUT: Projects/:id/languages
         [HttpPut("{projectId}/languages")]
@@ -154,10 +133,19 @@ namespace Polyglot.Controllers
                 : Ok(projectsStrings);
         }
 
+        // Get: Projects/5/complexString
+       [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
+	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
+	    {
+	        var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+	            : Ok(projectsStrings);
+	    }
+
         // POST: Projects
         [HttpPost]
-        public async Task<IActionResult> AddProject(IFormFile formFile)
-        {
+		public async Task<IActionResult> AddProject(IFormFile formFile)
+		{
 
             Request.Form.TryGetValue("project", out StringValues res);
 
@@ -177,11 +165,10 @@ namespace Polyglot.Controllers
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
 
-            var user = await userService.GetByUidAsync(HttpContext.User.GetUid());
-            var entity = await service.PostAsync(project, user.Id);
-            return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                entity);
+			var entity = await service.PostAsync(project);
+			return entity == null ? StatusCode(409) as IActionResult
+				: Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
+				entity);
 
         }
 

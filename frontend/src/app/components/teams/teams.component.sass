@@ -1,5 +1,3 @@
-
-
 .container
   margin-top: 30px
   margin-bottom: 30px
@@ -7,8 +5,6 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
   grid-gap: 25px
   justify-items: center
-
-
 
 .search-form 
   min-width: 150px
@@ -27,17 +23,19 @@
   display: grid
   grid-template-rows: 70px auto 50px
 
-.manager-img
+
+.mat-card-avatar
   height: 60px
   width: 60px
 
 .card-title
   font-size: 23px
-  margin: 0
+  margin-left: 10px
   margin-bottom: 10px
 
 .card-subtitle
   font-size: 15px
+  margin-left: 10px
 
 .button-add
  position: fixed
@@ -66,21 +64,22 @@
   display: grid
   grid-template-columns: minmax(170px, 1fr)
 
-mat-card-title
+.mat-card-title
   overflow: hidden
   white-space: nowrap
   text-overflow: ellipsis
 
 
-mat-card-header
+.mat-card-header
   margin-bottom: 10px
   grid-row-start: 1
   grid-row-end: 2
 
 
+
 .team-img
-  height: 60px
-  width: 60px
+  height: 50px
+  width: 50px
 
 
 .temp
@@ -93,14 +92,15 @@ mat-card-header
 
 
 .img-container
-  margin-top: 10px
+  margin: 20px
+  padding: 20px
   display: flex
   flex-wrap: wrap
-  justify-content: space-around  
+  align-content: space-between
+  justify-content: space-around
   img
     border-radius: 50px
-
-
+    margin: 5px
 
 
 .mat-card-actions 

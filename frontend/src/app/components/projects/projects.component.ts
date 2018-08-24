@@ -20,35 +20,33 @@ import { UserService } from '../../services/user.service';
 })
 export class ProjectsComponent implements OnInit,OnDestroy {
 
-  public state: string;
   public checked = true;
-  
+
   constructor(
     private userService: UserService,
     private appStateService: AppStateService,
     private projectService: ProjectService,
     public dialog: MatDialog,
     private snotifyService: SnotifyService) { }
-  
+
   public cards: Project[];
   IsLoad : boolean = true;
   OnPage : boolean;
-  
-  manager: UserProfile =  this.userService.getCurrrentUser();
+
+  manager: UserProfile =  this.userService.getCurrentUser();
   ngOnInit() {
 
-  this.OnPage = true;  
- 
+  this.OnPage = true;
+
    if(this.appStateService.Layout === null || this.appStateService.Layout === 'card') {
      this.checked = true;
      this.appStateService.Layout = 'card';
    } else {
      this.checked = false;
    }
-    
-  debugger;
 
-  this.projectService.getAll().subscribe(pr => 
+
+  this.projectService.getAll().subscribe(pr =>
     {
       this.cards = pr;
     if(this.cards.length === 0 && this.OnPage === true){
@@ -68,7 +66,6 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   }
 
   changeLayout(){
-    debugger;   
    if(this.checked){
      this.appStateService.Layout = 'row';
      this.checked = false;

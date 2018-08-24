@@ -16,10 +16,10 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
       if ( this.appState.LoginStatus ) {
-        if (!this.userService.getCurrrentUser()) {
+        if (!this.userService.getCurrentUser()) {
             return this.userService.getUser().pipe(
                 map((user: UserProfile) => {
-                  this.userService.updateCurrrentUser(user);
+                  this.userService.updateCurrentUser(user);
                   return true;    
                 })
             )
@@ -34,10 +34,3 @@ export class AuthGuard implements CanActivate {
 
 }
 
-// debugger
-//           return this.userService.getUser().pipe(
-//               switchMap((user: UserProfile) => {
-//                 this.userService.saveUser(user);
-//                 return of(true);    
-//               })
-//           )

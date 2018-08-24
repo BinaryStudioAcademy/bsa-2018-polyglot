@@ -9,4 +9,5 @@ export interface Translator {
   translatorLanguages: TranslatorLanguage[];
   rating: number,
   teamId: number;
+  userId: number;
 }

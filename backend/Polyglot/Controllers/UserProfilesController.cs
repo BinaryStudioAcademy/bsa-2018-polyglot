@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
-using Polyglot.Authentication.Extensions;
 
 namespace Polyglot.Controllers
 {
@@ -18,11 +18,13 @@ namespace Polyglot.Controllers
     {
         private readonly IUserService service;
         private readonly ICRUDService<Rating, RatingDTO> ratingService;
-        
-        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService)
+        private readonly ITeamService teamService;
+
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService)
         {
             this.service = service;
             this.ratingService = ratingService;
+            this.teamService = teamService;
         }
 
         // GET: UserProfiles
@@ -40,7 +42,7 @@ namespace Polyglot.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetUserByUid()
         {
-            var user = await service.GetByUidAsync(HttpContext.User.GetUid());
+            var user = await service.GetByUidAsync();
             return user == null ? NotFound($"User not found!") as IActionResult
                : Ok(user);
         }
@@ -63,6 +65,17 @@ namespace Polyglot.Controllers
             return userRatings == null
                 ? NotFound($"Ratings for user with id = {id} not found") as IActionResult
                 : Ok(userRatings);
+        }
+
+        [HttpGet("{id}/teams")]
+        public async Task<IActionResult> GetUserTeams(int id)
+        {
+            var teams = await teamService.GetListAsync();
+            var userTeams = teams?.Where(x => x.TeamTranslators.Any(y => y.UserId == id));
+
+            return userTeams == null
+                ? NotFound($"Teams for user with id = {id} not found") as IActionResult
+                : Ok(userTeams);
         }
 
         // PUT: UserProfiles/5

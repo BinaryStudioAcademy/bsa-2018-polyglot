@@ -25,8 +25,7 @@ export class TabHistoryComponent implements OnInit {
 
     this.translationDetails = this.keyDetails.translations[index];
 
-
-    if (this.translationDetails.history.length == 0) {
+    if (this.translationDetails.history.length === 0) {
       if (!this.users[this.translationDetails.userId]) {
         this.userService.getOne(this.translationDetails.userId).subscribe(
           (user) => {

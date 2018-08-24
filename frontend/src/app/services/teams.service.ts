@@ -18,7 +18,7 @@ export class TeamService {
   }
 
   getTeam(id: number): Observable<Team> {
-    debugger;
+    
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
@@ -37,7 +37,6 @@ export class TeamService {
   formTeam(translatorsIds: Array<number>): Observable<Team> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, translatorsIds);
   }
-
  // create(body){
  //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
  // }
@@ -46,7 +45,7 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
   }
 
-  delete(id: number){
+  delete(id: number): Observable<any>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
 }

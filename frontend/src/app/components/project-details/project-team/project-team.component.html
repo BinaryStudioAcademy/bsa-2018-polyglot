@@ -4,8 +4,8 @@
       <mat-card-header class="mat-card-header-placeholder">
         <img mat-card-avatar class="manager-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q">
         <div class="title">
-            <div class="text-placeholder title-placeholder"></div>
-            <div class="text-placeholder subtitle-placeholder"></div>
+          <div class="text-placeholder title-placeholder"></div>
+          <div class="text-placeholder subtitle-placeholder"></div>
         </div>
         <div class="action-btn-container">
           <button disabled mat-icon-button>
@@ -17,19 +17,23 @@
         </div>
       </mat-card-header>
       <div class="card-content card-content-placeholder">
-            <mat-icon *ngIf="!IsLoad" aria-label="team-assign-button" class="team-assign-icon">add_circle</mat-icon>
-            <div *ngIf="IsLoad" class="spinner">
-                    <mat-spinner></mat-spinner>
-            </div>
+        <mat-icon *ngIf="!IsLoad" aria-label="team-assign-button" class="team-assign-icon">add_circle</mat-icon>
+        <div *ngIf="IsLoad" class="spinner">
+          <mat-spinner></mat-spinner>
+        </div>
       </div>
     </mat-card>
 
     <mat-card class="example-card" *ngFor="let t of assignedTeams">
       <mat-card-header>
-        <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
+        <a class="manager-img" [routerLink]="['/profile']">
+          <img mat-card-avatar src="/assets/images/anonymus.jpg">
+        </a>
 
         <div class="title">
-          <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
+            <mat-card-title class="card-title">
+                <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
+            </mat-card-title>
           <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
         </div>
         <div class="action-btn-container">
@@ -37,8 +41,12 @@
             <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/dashboard/teams/{{t.id}}">info</mat-icon>
           </button>
           <div (click)="dismissTeam(t.id)">
-              <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner"><mat-spinner diameter="18"></mat-spinner></span>
-              <span [hidden]="IsLoading[t.id]"><mat-icon class="icon dismiss-team-icon" aria-label="dismiss-team" >clear</mat-icon></span>
+            <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner">
+              <mat-spinner diameter="18"></mat-spinner>
+            </span>
+            <span [hidden]="IsLoading[t.id]">
+              <mat-icon class="icon dismiss-team-icon" aria-label="dismiss-team">clear</mat-icon>
+            </span>
           </div>
         </div>
       </mat-card-header>
@@ -46,7 +54,9 @@
 
       <div class="card-content">
         <div mat-card-image class="img-container">
-          <img height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
+          <a class="translator-img" *ngFor="let p of t.persons" routerLink="/translator/{{p.id}}">
+            <img height="60" src="{{getAvatarUrl(p)}}" onError="this.src='/assets/images/default-avatar.jpg'">
+          </a>
         </div>
       </div>
     </mat-card>

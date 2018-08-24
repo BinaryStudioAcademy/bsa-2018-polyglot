@@ -80,7 +80,6 @@ export class LanguagesComponent implements OnInit {
             this.projectService.addLanguagesToProject(this.projectId, data.map(l => l.id))
               .subscribe((project) => {
 
-                debugger;
                 if(project){
 
                   //this.langs.push(data);

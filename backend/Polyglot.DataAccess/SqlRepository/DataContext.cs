@@ -23,6 +23,7 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<ComplexString> ComplexStrings { get; set; }
         public DbSet<TranslatorLanguage> TranslatorLanguages { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<TeamTranslator> TeamTranslators { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

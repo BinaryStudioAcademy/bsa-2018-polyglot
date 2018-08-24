@@ -27,6 +27,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public currentPath;
     public basicPath;
     user: UserProfile;
+    private currentPage = 0;
+    private elementsOnPage = 7;
 
     private routeSub: Subscription;
 
@@ -51,7 +53,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService
     ) {
-        this.user = userService.getCurrrentUser();
+        this.user = userService.getCurrentUser();
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -60,13 +62,29 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        this.searchQuery = "";
-        this.routeSub = this.activatedRoute.params.subscribe(params => {
+        this.searchQuery = '';
+        this.routeSub = this.activatedRoute.params.subscribe((params) => {
             //making api call using service service.get(params.projectId); ..
             this.getProjById(params.projectId);
+            this.basicPath = 'workspace/' + params.projectId;
+            this.currentPath = 'workspace/' + params.projectId + '/key';
+            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+                .subscribe((data: any) => {
+                    if (data) {
+                        this.keys = data;
+                        this.onSelect(this.keys[0]);
+                        let keyId: number;
+                        if (this.keys.length !== 0) {
+                            keyId = this.keys[0].id;
+                            this.router.navigate([this.currentPath, keyId]);
+                        }
+                    }
+                });
+            this.currentPage++;
         });
     }
-    onAdvanceSearchClick() {}
+
+    onAdvanceSearchClick() { }
 
     ngDoCheck() {
         if (
@@ -165,22 +183,46 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.ContradictoryСhoise(["Translated", "Untranslated"]);
         this.ContradictoryСhoise(["Human Translation", "Machine Translation"]);
 
-        this.dataProvider
-            .getProjectStringsByFilter(this.project.id, this.options.value)
+        this.dataProvider.getProjectStringsByFilter(this.project.id, this.options.value)
             .subscribe(res => {
                 this.keys = res;
-            });
+            })
         console.log(this.options.value);
     }
 
+
+    public onScrollUp(): void {
+        this.getKeys(
+            this.currentPage,
+            (keys) => {
+                this.keys = keys.concat(this.keys);
+            });
+    }
+
+    public onScrollDown(): void {
+        this.getKeys(
+            this.currentPage,
+            (keys) => {
+                this.keys = this.keys.concat(keys);
+            });
+    }
+
+    getKeys(page: number = 1, saveResultsCallback: (keys) => void) {
+        return this.dataProvider.getProjectStringsWithPagination(this.project.id, this.elementsOnPage, this.currentPage)
+            .subscribe((keys: any) => {
+                this.currentPage++;
+                saveResultsCallback(keys);
+
+            });
+
+    }
+
+
     ContradictoryСhoise(options: string[]) {
-        if (
-            this.options.value.includes(options[0]) &&
-            this.options.value.includes(options[1])
-        ) {
+        if (this.options.value.includes(options[0]) && this.options.value.includes(options[1])) {
             options.forEach(element => {
                 let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1);
+                this.options.value.splice(index, 1)
             });
         }
     }

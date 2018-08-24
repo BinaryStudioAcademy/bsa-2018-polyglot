@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatTabsModule, MatSnackBarModule, MatSelectModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule, DateAdapter } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -75,12 +75,22 @@ import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+
+//Ngx-Charts
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ReportsComponent } from './components/reports/reports.component';
+import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
+
 
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -140,7 +150,14 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    MachineTranslationMenuComponent,
+    ReportsComponent,
+    ProjectActivitiesComponent,
+    TabReviewComponent,
+    DownloadFileComponent,
+    StarRatingComponent,  
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -161,6 +178,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     MatSortModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatBottomSheetModule,
     ImageCropperModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -171,7 +189,10 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule,
+    NgxInfiniteScrollerModule,
+    InfiniteScrollModule
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -187,6 +208,7 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
     ChooseRoleDialogComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent
+    
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
@@ -196,4 +218,8 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
 
 
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private dateAdapter:DateAdapter<Date>) {
+		dateAdapter.setLocale('en-in'); // DD/MM/YYYY
+	}
+}

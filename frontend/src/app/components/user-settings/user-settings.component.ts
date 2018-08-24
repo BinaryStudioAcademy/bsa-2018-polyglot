@@ -32,7 +32,7 @@ export class UserSettingsComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.manager = this.userService.getCurrrentUser();
+    this.manager = this.userService.getCurrentUser();
     if (this.manager.fullName != undefined) {
       var arrayOfStrings = this.manager.fullName.split(' ');
       this.manager.firstName = arrayOfStrings[0];

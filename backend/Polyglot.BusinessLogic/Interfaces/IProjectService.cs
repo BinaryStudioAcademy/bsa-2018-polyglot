@@ -4,26 +4,22 @@ using Polyglot.Common.DTOs;
 using Microsoft.AspNetCore.Http;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
-using System.IO;
-using Polyglot;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IProjectService : ICRUDService<Project,ProjectDTO>
+    public interface IProjectService : ICRUDService<Project, ProjectDTO>
     {
         Task FileParseDictionary(int id, IFormFile file);
 
         Task<IEnumerable<ProjectDTO>> GetListAsync(int userId);
 
-        Task<ProjectDTO> PostAsync(ProjectDTO entity, int userId);
-
         Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
 
-		Task<byte[]> GetFile(int id, int languageId, string format);
+        Task<byte[]> GetFile(int id, int languageId, string format);
 
-		#region Teams
+        #region Teams
 
-		Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
+        Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
 
         Task<ProjectDTO> AssignTeamsToProject(int projectId, int[] teamIds);
 
@@ -32,10 +28,6 @@ namespace Polyglot.BusinessLogic.Interfaces
         #endregion Teams
 
         #region Languages
-
-        Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int id);
-
-        Task<LanguageStatisticDTO> GetProjectLanguageStatistic(int projectId, int langId);
 
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
 
@@ -49,12 +41,16 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id);
 
+        Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page);
+
         Task<IEnumerable<ComplexStringDTO>> GetAllStringsAsync();
 
-        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options,int projectId);
+        Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId);
 
         #endregion
 
-
+        Task<ProjectStatisticDTO> GetProjectStatistic(int id);
+        Task<ChartDTO> GetTranskatedStringToLanguagesStatistic(int id);
+        Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
     }
 }

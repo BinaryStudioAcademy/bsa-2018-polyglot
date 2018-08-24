@@ -2,21 +2,18 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
-import { IString } from '../../../models/string';
 import { ComplexStringService } from '../../../services/complex-string.service';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Translation, Project, Language } from '../../../models';
-import { ValueTransformer } from '../../../../../node_modules/@angular/compiler/src/util';
-import { LanguageService } from '../../../services/language.service';
-import { elementAt } from 'rxjs/operators';
+import { Translation, Language } from '../../../models';
 import { SnotifyService } from 'ng-snotify';
 import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './tab-history/tab-history.component';
+import { TranslationType } from '../../../models/TranslationType';
 import { AppStateService } from '../../../services/app-state.service';
 import { environment } from '../../../../environments/environment';
 import * as signalR from '../../../../../node_modules/@aspnet/signalr';
 import { SignalrService } from '../../../services/signalr.service';
 import { TranslationState } from '../../../models/translation-state';
+import { TranslationService } from '../../../services/translation.service';
 
 @Component({
     selector: 'app-workspace-key-details',
@@ -24,7 +21,7 @@ import { TranslationState } from '../../../models/translation-state';
     styleUrls: ['./key-details.component.sass']
 })
 
-export class KeyDetailsComponent implements OnInit, OnDestroy {
+export class KeyDetailsComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
@@ -49,6 +46,10 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     keyId: number;
     isDisabled: boolean;
     dataIsLoaded: boolean = false;
+    isMachineTranslation: boolean;
+    public MachineTranslation: string;
+    public previousTranslation: string;
+
 
     constructor(private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
@@ -56,7 +57,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         private snotifyService: SnotifyService,
         private appState: AppStateService,
         private router: Router,
-        private signalrService: SignalrService
+        private signalrService: SignalrService,
+        private projectService: ProjectService,
+        private service: TranslationService
     ) {
     }
 
@@ -67,6 +70,7 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             return;
         }
         this.dataIsLoaded = true;
+        this.isMachineTranslation = false;
 
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
@@ -84,48 +88,57 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnChanges() {
-        if (this.keyDetails && this.keyDetails.translations) {
-            this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
-            this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-
-            if (this.IsPagenationNeeded) {
-                this.paginator.pageSize = this.pageSize;
-                this.translationsDataSource.paginator = this.paginator;
-            }
-        }
-        else {
-            this.IsPagenationNeeded = false;
-        }
-    }
-
     ngOnDestroy() {
         if (this.dataIsLoaded) {
             this.signalrService.closeConnection(this.keyDetails.id);
         }
     }
 
-    setStep(index: number) {
-        this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
-        this.history.showHistory(index);
-    }
+
+    ngOnChanges(){
+        if(this.keyDetails && this.keyDetails.translations){
+          this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
+          this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
+
+          if(this.IsPagenationNeeded){
+            this.paginator.pageSize = this.pageSize;
+            this.translationsDataSource.paginator = this.paginator;
+          }
+
+        }
+        else
+          this.IsPagenationNeeded = false;
+      }
+
+
 
     subscribeProjectChanges() {
         this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
-            debugger
-            console.log(translation);
             this.setNewValueTranslation(translation);
         });
         this.signalrService.connection.on("changedTranslation", (translation: any) => {
-            debugger
-            console.log(translation);
             this.setNewValueTranslation(translation);
         });
         this.signalrService.connection.on("commentAdded", (comments: any) => {
-            debugger
             this.comments = comments;
         });
     }
+
+
+
+  setStep(index: number) {
+    this.expandedArray[index] = { isOpened: true, oldValue: this.keyDetails.translations[index].translationValue };
+    for (let i = 0; i < this.expandedArray.length; i++) {
+        if (i != index) {
+            this.expandedArray[i].isOpened = false;
+        }
+    }
+    this.history.showHistory(index);
+  }
+
+
+
+
 
     setNewValueTranslation(translation: any) {
         const lenght = this.keyDetails.translations.length;
@@ -167,6 +180,12 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
     }
 
     onSave(index: number, t: any) {
+            if (this.isMachineTranslation) {
+                t.Type = TranslationType.Machine;
+                this.isMachineTranslation = false;
+            }
+            else {
+                t.Type = TranslationType.Human;
 
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider.editStringTranslation(t, this.keyId)
@@ -185,8 +204,6 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
             this.dataProvider.createStringTranslation(t, this.keyId)
                 .subscribe(
                     (d: any) => {
-
-                        console.log(this.keyDetails.translations);
                         this.expandedArray[index] = { isOpened: false, oldValue: '' };
                     },
                     err => {
@@ -195,9 +212,9 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
                 );
         }
     }
-
+    }
     onClose(index: number, translation: any) {
-        if (this.expandedArray[index].oldValue == translation.translationValue) {
+        if (this.expandedArray[index].oldValue == translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
             return;
         }
@@ -208,21 +225,52 @@ export class KeyDetailsComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (dialogRef.componentInstance.data.answer === 1) {
                 this.onSave(index, translation);
+                this.isMachineTranslation = false;
             }
             else if (dialogRef.componentInstance.data.answer === 0) {
                 this.keyDetails.translations[index].translationValue = this.expandedArray[index].oldValue;
                 this.expandedArray[index] = { isOpened: false, oldValue: '' };
+                if(this.isMachineTranslation){
+                    this.keyDetails.translations[index].translationValue = this.previousTranslation;
+                    this.isMachineTranslation = false;
+                }
             }
         });
+    }
+
+
+
+    onMachineTranslationMenuClick(item: any): void {
+        this.service.getTransation({ q: this.keyDetails.base, target: item }).subscribe((res: any) => {
+            this.MachineTranslation = res[0].translatedText;
+        })
     }
 
     toggle() {
         this.IsEdit = !this.IsEdit;
     }
+    selectTranslation($event) {
 
-    toggleDisable() {
-        this.isDisabled = !this.isDisabled;
+        this.previousTranslation = this.keyDetails.translations[$event.keyId].translationValue;
+
+        this.isMachineTranslation = true;
+
+        this.keyDetails.translations[$event.keyId].translationValue = $event.translation;
+
+        this.expandedArray[$event.keyId].isOpened = true;
     }
+
+
+  toggleDisable() {
+    this.isDisabled = !this.isDisabled;
+  }
+
+  highlightString(index: number) {
+    if (this.expandedArray[index].isOpened) {
+      return '2px ridge #6495ED';
+    }
+    return '';
+  }
 }
 
 

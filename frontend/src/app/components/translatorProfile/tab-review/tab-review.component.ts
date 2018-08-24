@@ -41,7 +41,7 @@ export class TabReviewComponent implements OnInit {
     const ratingObj = {
       comment: reviewBody,
       rate: rating,
-      createdById: this.userService.getCurrrentUser().id,
+      createdById: this.userService.getCurrentUser().id,
       userId: this.userProfile.id,
       createdAt: new Date(Date.now())
     };

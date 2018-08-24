@@ -1,6 +1,6 @@
-﻿using Polyglot.DataAccess.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.DataAccess.Entities
 {
