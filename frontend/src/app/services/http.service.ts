@@ -48,11 +48,19 @@ export class HttpService {
 
         switch (type) {
             case RequestMethod.Get:
+<<<<<<< HEAD
+       
+=======
+>>>>>>> 0202874dd1e54e44c60bfddf34c7d88bd4870508
                 if(respType === 'json'){
                     request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json' , headers });
                 }else if(respType === 'blob'){
                     request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob' , headers });
                 }
+<<<<<<< HEAD
+           
+=======
+>>>>>>> 0202874dd1e54e44c60bfddf34c7d88bd4870508
                 break;
             case RequestMethod.Post:
                 request = this.httpClient.post(`${this.url}/${endpoint}/`, body, { headers });

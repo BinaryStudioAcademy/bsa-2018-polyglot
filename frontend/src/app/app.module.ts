@@ -84,12 +84,12 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
-import { MachineTransaltionBottomSheetComponent } from './dialogs/machine-transaltion-bottom-sheet/machine-transaltion-bottom-sheet.component';
 import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
 
 
 import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
@@ -145,12 +145,18 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     ProjectTeamComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
+    TabHistoryComponent,
+    TabCommentsComponent,
+    ProjectActivitiesComponent,
+    TabReviewComponent,
+    DownloadFileComponent,
+    StarRatingComponent,
+    MachineTranslationMenuComponent,
     ReportsComponent,
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
-    MachineTransaltionBottomSheetComponent,
     UserProfileComponent
   ],
   imports: [
@@ -201,8 +207,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     ConfirmDialogComponent,
     ChooseRoleDialogComponent,
     TeamAssignComponent,
-    SaveStringConfirmComponent,
-    MachineTransaltionBottomSheetComponent
+    SaveStringConfirmComponent
     
   ],
   providers: [HttpService, AuthService, AuthGuard,
