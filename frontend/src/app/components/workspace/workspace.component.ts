@@ -23,6 +23,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   public currentPath;
   public basicPath;
   private currentPage = 0;
+  private elementsOnPage = 7; 
   
   private routeSub: Subscription;
 
@@ -53,7 +54,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
       this.getProjById(params.projectId);
       this.basicPath = 'workspace/'+ params.projectId;
       this.currentPath = 'workspace/'+ params.projectId +'/key'; 
-      this.dataProvider.getProjectStringsWithPagination(params.projectId,4,0)
+      this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
       .subscribe((data: any) => {
         if(data)
         {
@@ -158,7 +159,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck{
   }
 
   getKeys(page: number = 1, saveResultsCallback: (keys) => void){
-    return this.dataProvider. getProjectStringsWithPagination(this.project.id,4,this.currentPage)
+    return this.dataProvider. getProjectStringsWithPagination(this.project.id, this.elementsOnPage ,this.currentPage)
     .subscribe((keys: any) => {
        this.currentPage++;
        saveResultsCallback(keys.complexStrings);
