@@ -93,16 +93,36 @@ namespace Polyglot.Controllers
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
+        
+        // GET: Projects/5/languages/stat
+        [HttpGet("{prodId}/languages/stat", Name = "GetProjectLanguagesStatistic")]
+        public async Task<IActionResult> GetProjectLanguagesStatistic(int prodId)
+        {
+            var project = await service.GetProjectLanguagesStatistic(prodId);
+            return project == null ? NotFound($"Project with id = {prodId} has got no languages statistic!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // GET: Projects/:projId/languages/:langId/stat
+        [HttpGet("{projId}/languages/{langId}/stat", Name = "GetProjectLanguageStatistic")]
+        public async Task<IActionResult> GetProjectLanguageStatistic(int projId, int langId)
+        {
+            var project = await service.GetProjectLanguageStatistic(projId, langId);
+            return project == null ? NotFound($"Project with id = {projId} has got no language with id = {langId}!") as IActionResult
+                : Ok(project);
+
+        }
+
         // GET: Projects/5/languages
         [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
-		public async Task<IActionResult> GetProjectLangs(int id)
-		{
-			var project = await service.GetProjectLanguages(id);
-			return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-				: Ok(project);
+        public async Task<IActionResult> GetProjectLanguages(int id)
+        {
+            var project = await service.GetProjectLanguages(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
 
-		}
-        
+        }
 
         // PUT: Projects/:id/languages
         [HttpPut("{projectId}/languages")]

@@ -254,7 +254,8 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Languages
 
-        public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
+
+        public async Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int id)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(id);
             if (proj != null && proj.ProjectLanguageses.Count > 0)
@@ -263,16 +264,14 @@ namespace Polyglot.BusinessLogic.Services
                 var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
                 // если строк для перевода нет тогда ничего вычислять не нужно
                 if (projectStrings.Count() < 1)
-                    return mapper.Map<IEnumerable<LanguageDTO>>(langs);
+                    return mapper.Map<IEnumerable<LanguageStatisticDTO>>(langs);
 
                 var projectTranslations = projectStrings?.SelectMany(css => css.Translations).ToList();
-                int percentUnit = (100 / projectStrings.Count());
 
-                // мапим языки проекта, а затем вычисляем значения Progress и TranslationsCount по каждому языку
-                return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageDTO>>(langs, opt => opt.AfterMap((src, dest) =>
+                // мапим языки проекта, а затем добавляем TranslatedStrings и ComplexStringsCount по каждому языку
+                return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageStatisticDTO>>(langs, opt => opt.AfterMap((src, dest) =>
                 {
                     var languageDTOs = dest.ToList();
-                    int progress = 0;
                     int? translatedCount = 0;
 
                     for (int i = 0; i < languageDTOs.Count; i++)
@@ -285,13 +284,60 @@ namespace Polyglot.BusinessLogic.Services
                         if (!translatedCount.HasValue || translatedCount.Value < 1)
                             continue;
 
-                        progress = translatedCount.Value * percentUnit;
-
-                        languageDTOs[i].TranslationsCount = translatedCount.Value;
-                        languageDTOs[i].Progress = progress;
+                        languageDTOs[i].ComplexStringsCount = projectStrings.Count();
+                        languageDTOs[i].TranslatedStringsCount = translatedCount.Value;
 
                     }
                 }));
+            }
+            return null;
+        }
+
+        public async Task<LanguageStatisticDTO> GetProjectLanguageStatistic(int projId, int langId)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(projId);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var lang = proj.ProjectLanguageses
+                    ?.Where(pl => pl.LanguageId == langId)
+                    ?.Select(pl => pl.Language)
+                    ?.FirstOrDefault();
+
+                if (lang == null)
+                    return null;
+
+                var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == projId);
+                // если строк для перевода нет тогда ничего вычислять не нужно
+                if (projectStrings.Count() < 1)
+                    return mapper.Map<LanguageStatisticDTO>(lang);
+
+                var languageTranslatedCount = projectStrings
+                    ?.SelectMany(css => css.Translations)
+                    ?.Where(lt => lt.LanguageId == langId && !String.IsNullOrWhiteSpace(lt.TranslationValue))
+                    ?.Count();
+
+                // мапим язык, а затем добавляем TranslatedStrings и ComplexStringsCount 
+                return mapper.Map<Language, LanguageStatisticDTO>(lang, opt => opt.AfterMap((src, dest) =>
+                {
+                    var languageDTO = dest;
+
+                    languageDTO.ComplexStringsCount = projectStrings.Count();
+                    languageDTO.TranslatedStringsCount = languageTranslatedCount.HasValue ? languageTranslatedCount.Value : 0;
+                }));
+            }
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(id);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses?.Select(p => p.Language);
+                if (langs != null)
+                    return mapper.Map<IEnumerable<LanguageDTO>>(langs);
             }
             return null;
         }
@@ -667,6 +713,7 @@ namespace Polyglot.BusinessLogic.Services
             }
             return allActivities.OrderByDescending(act => act.DateTime);
         }
+
     }
 
 }
