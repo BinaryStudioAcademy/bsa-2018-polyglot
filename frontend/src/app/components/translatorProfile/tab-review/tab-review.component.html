@@ -13,19 +13,4 @@
             <button mat-flat-button class="save-button mx-1" [disabled]="reviewForm.invalid">Save</button>
         </div>
     </form>
-    <div *ngFor="let rating of userProfile.ratings" class="comments-container">
-        <mat-card  class="comment-card">
-            <div class="author-info">
-                <img class="comment-avatar" (click)="onImageClick(rating.createdBy.avatarUrl)" src="{{rating.createdBy.avatarUrl}}">
-                <strong class="comment-author">{{rating.createdBy.fullName}}</strong>
-            </div>
-            <div class ="text">
-                {{rating.comment}}
-            </div>
-            <div class ="text">{{rating.rate}}/5
-                <i class="material-icons star">star</i>
-            </div>
-            <div class="date"><i>{{rating.createdAt | date:'medium'}}</i></div>
-        </mat-card>
-    </div>
     </div>

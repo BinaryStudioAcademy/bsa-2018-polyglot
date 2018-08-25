@@ -33,7 +33,6 @@ export class TabReviewComponent implements OnInit {
   }
 
   onRatingChanged(rating){
-    console.log(rating);
     this.rating = rating;
   }
   
@@ -49,13 +48,10 @@ export class TabReviewComponent implements OnInit {
     this.ratingsService.create(ratingObj).subscribe(
       (data) => {
         this.reviewForm.reset();
-          if (data) {
-            this.userProfile.ratings.unshift(data);
-            console.log("Review added.");
-          }
-          else {
-            console.log("Review not added.");
-          }
+        this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
+          this.userProfile.ratings = ratings;
+        });
+          
       },
       err => {
         console.log("Error", err);

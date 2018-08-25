@@ -43,14 +43,14 @@ export class TranslatorProfileComponent implements OnInit{
                         this.router.navigate(['/404']);
                     }
                     this.userProfile = user;
+                    this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
+                        this.userProfile.ratings = ratings;
+                        this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
+                            this.teams = t;
+                        });
+                    });
                 });
             });
-            this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
-            this.userProfile.ratings = ratings;
-            this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
-                this.teams = t;
-              });
-        });
     
         this.Comments = [
             { CreatedBy : "Petrov Ivan",Body : "Comment body with text",CreatedOn : "12.12.2018", Rating : 4.9 ,
