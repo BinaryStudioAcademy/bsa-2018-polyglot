@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
-  managerId: number = 1;
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
   public defaultAvatar: String = "/assets/images/anonymus.jpg"
@@ -85,9 +84,9 @@ export class NewTeamComponent implements OnInit {
     this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
   }
 
-  formTeam() {
+  formTeam(name : any) {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.userId))
+      this.teamService.formTeam(this.teamTranslators.map(t => t.id),name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);

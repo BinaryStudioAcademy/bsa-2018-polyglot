@@ -199,6 +199,7 @@ namespace Polyglot.Common.Mapping
 
 
                 cfg.CreateMap<Team, TeamPrevDTO>()
+                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
