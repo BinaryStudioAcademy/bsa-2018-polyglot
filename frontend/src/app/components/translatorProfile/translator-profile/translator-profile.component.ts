@@ -67,8 +67,8 @@ export class TranslatorProfileComponent implements OnInit{
         });
         dialogRef.afterClosed().subscribe(result => {
             if (dialogRef.componentInstance.data.answer){
-                team.teamTranslators = team.teamTranslators.filter(tt => tt.userId !== this.userProfile.id);
-                this.teamService.update(team.id, team).subscribe(
+                let translatorId = team.teamTranslators.find(translator => {return translator.userId === this.userProfile.id}).id;
+                this.teamService.deletedTeamTranslators([translatorId]).subscribe(
                     (d) => {
                         setTimeout(() => {
                             this.snotifyService.success("Left team", "Success!");
