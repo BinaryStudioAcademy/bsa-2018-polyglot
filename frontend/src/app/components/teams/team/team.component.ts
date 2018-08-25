@@ -104,7 +104,7 @@ export class TeamComponent implements OnInit {
         });
   }
 
-  checkTranslatorRight(id: number, rightName: number) : boolean{
+  checkTranslatorRight(id: number, rightDefinition: number) : boolean{
     if(!this.teamTranslators)
       return false;
 
@@ -117,7 +117,7 @@ export class TeamComponent implements OnInit {
         return false;
       }
       return teammate.rights
-        .find(r => r.definition == rightName)
+        .find(r => r.definition == rightDefinition)
         != null;
       
   }
