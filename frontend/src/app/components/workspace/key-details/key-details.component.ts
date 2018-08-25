@@ -14,6 +14,7 @@ import * as signalR from '../../../../../node_modules/@aspnet/signalr';
 import { SignalrService } from '../../../services/signalr.service';
 import { TranslationState } from '../../../models/translation-state';
 import { TranslationService } from '../../../services/translation.service';
+import { SignalrSubscribeActions } from '../../../models/signalrModels/signalr-subscribe-actions';
 
 @Component({
     selector: 'app-workspace-key-details',
@@ -113,13 +114,10 @@ export class KeyDetailsComponent implements OnInit {
 
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
+        this.signalrService.connection.on(SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation], (translation: any) => {
             this.setNewValueTranslation(translation);
         });
-        this.signalrService.connection.on("changedTranslation", (translation: any) => {
-            this.setNewValueTranslation(translation);
-        });
-        this.signalrService.connection.on("commentAdded", (comments: any) => {
+        this.signalrService.connection.on(SignalrSubscribeActions[SignalrSubscribeActions.commentAdded], (comments: any) => {
             this.comments = comments;
         });
     }
