@@ -19,6 +19,7 @@ export class NewTeamComponent implements OnInit {
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
   public defaultAvatar: String = "/assets/images/anonymus.jpg"
+  public name : string;
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
 
@@ -84,9 +85,9 @@ export class NewTeamComponent implements OnInit {
     this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
   }
 
-  formTeam(name : any) {
+  formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.id),name)
+      this.teamService.formTeam(this.teamTranslators.map(t => t.id),this.name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
@@ -100,7 +101,7 @@ export class NewTeamComponent implements OnInit {
           err => {
             this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
           })
-    }
+    } 
   }
 
   applyFilter(filterValue: string) {
