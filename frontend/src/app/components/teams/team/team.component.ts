@@ -104,7 +104,7 @@ export class TeamComponent implements OnInit {
         });
   }
 
-  checkTranslatorRight(id: number, rightName: string) : boolean{
+  checkTranslatorRight(id: number, rightName: number) : boolean{
     if(!this.teamTranslators)
       return false;
 
