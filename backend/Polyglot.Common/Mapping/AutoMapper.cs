@@ -134,7 +134,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Definition, opt => opt.MapFrom(po => po.Definition));
                 cfg.CreateMap<Right, RightDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.Definition, opt => opt.MapFrom(pt => pt.Definition));
+                    .ForMember(p => p.Definition, opt => opt.MapFrom(pt => (int)pt.Definition));
 
                 cfg.CreateMap<TagDTO, Tag>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

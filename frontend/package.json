@@ -37,7 +37,7 @@
     "ng-snotify": "^4.3.1",
     "ngx-img-cropper": "^0.10.4",
     "ngx-infinite-scroll": "^6.0.1",
-    "ngx-infinite-scroller": "^0.3.4",
+    "ngx-infinite-scroller": "^0.3.5",
     "ngx-smooth-dnd": "^0.2.6",
     "ngx-store": "^2.0.0",
     "npm": "^6.3.0",

@@ -52,4 +52,12 @@ export class TeamService {
   delete(id: number): Observable<any>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
+
+  setTranslatorRight(teamId: number, translatorId: number, definition: number): Observable<Translator>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + teamId + "/addTranslatorRight", translatorId, definition);
+  }
+
+  removeTranslatorRight(teamId: number, translatorId: number, definition: number): Observable<Translator>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + teamId + "/removeTranslatorRight", translatorId, definition);
+  }
 }
