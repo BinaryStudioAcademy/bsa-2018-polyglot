@@ -169,6 +169,7 @@ export class KeyDetailsComponent implements OnInit {
                 return ({
                     languageName: element.name,
                     languageId: element.id,
+                    languageCode : element.code,
                     ...this.getProp(element.id)
                 });
             }

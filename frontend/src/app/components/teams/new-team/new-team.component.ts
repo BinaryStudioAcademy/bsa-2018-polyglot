@@ -16,10 +16,10 @@ import { Router } from '@angular/router';
 export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
-  managerId: number = 1;
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
   public defaultAvatar: String = "/assets/images/anonymus.jpg"
+  public name : string;
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
 
@@ -87,7 +87,7 @@ export class NewTeamComponent implements OnInit {
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.userId))
+      this.teamService.formTeam(this.teamTranslators.map(t => t.id),this.name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
@@ -101,7 +101,7 @@ export class NewTeamComponent implements OnInit {
           err => {
             this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
           })
-    }
+    } 
   }
 
   applyFilter(filterValue: string) {

@@ -1,7 +1,4 @@
 <div class="new-team">
-  <div *ngIf="IsLoad" class="spinner">
-    <mat-spinner></mat-spinner>
-  </div>
   <div class="container">
 
     <div class="new-team-container">
@@ -12,10 +9,11 @@
               alt="Your photo">
           </div>
           <mat-form-field class="team-name">
-            <input matInput placeholder="Team Name">
+            <input matInput required placeholder="Team Name" [(ngModel)]="name" #teamName="ngModel">
           </mat-form-field>
+    
           <div class="save-btn">
-              <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 ? true : null" (click)="formTeam()">Save</button>
+              <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 || teamName.invalid ? true : null" (click)="formTeam()">Save</button>
             </div>
           
         </div>
@@ -68,7 +66,9 @@
 
 
       <div class="translators-list-wrapper">
-
+          <div *ngIf="IsLoad" class="spinner">
+              <mat-spinner></mat-spinner>
+            </div>
       
         <div class="draggable-item" *ngFor="let t of allTranslators">
 

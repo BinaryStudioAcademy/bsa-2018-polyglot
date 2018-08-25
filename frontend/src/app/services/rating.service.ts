@@ -21,7 +21,7 @@ export class RatingService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
-  create(body) : Observable<Rating>{
+  create(body) : Observable<any>{
     return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
   }
 

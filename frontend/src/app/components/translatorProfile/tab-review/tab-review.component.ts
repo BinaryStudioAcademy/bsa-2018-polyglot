@@ -5,6 +5,7 @@ import { UserService } from '../../../services/user.service';
 import { RatingService } from '../../../services/rating.service';
 import { Rating } from '../../../models';
 import { StarRatingColor } from '../star-rating/star-rating.component';
+import { SnotifyService } from 'ng-snotify';
 
 @Component({
   selector: 'app-tab-review',
@@ -20,20 +21,20 @@ export class TabReviewComponent implements OnInit {
 
   @Input()  public userProfile: UserProfile;
   reviewForm = this.fb.group({
-    reviewBody: ['', Validators.required]
+    reviewBody: ['']
     });
 
     @ViewChild('textArea') textArea: ElementRef;
 
   constructor(private fb: FormBuilder,
     private userService: UserService,
+    private snotifyService: SnotifyService,
     private ratingsService: RatingService) { }
 
   ngOnInit() {
   }
 
   onRatingChanged(rating){
-    console.log(rating);
     this.rating = rating;
   }
   
@@ -42,23 +43,22 @@ export class TabReviewComponent implements OnInit {
       comment: reviewBody,
       rate: rating,
       createdById: this.userService.getCurrentUser().id,
-      userId: this.userProfile.id,
-      createdAt: new Date(Date.now())
+      userId: this.userProfile.id
     };
 
     this.ratingsService.create(ratingObj).subscribe(
       (data) => {
         this.reviewForm.reset();
-          if (data) {
-            this.userProfile.ratings.unshift(data);
-            console.log("Review added.");
-          }
-          else {
-            console.log("Review not added.");
-          }
-      },
-      err => {
-        console.log("Error", err);
-      });
+        this.userProfile.ratings.unshift(data);
+        if (data) {
+          this.snotifyService.success("review added", "Success!");
+      }
+      else {
+          this.snotifyService.error("review wasn't add", "Error!");
+      }
+  },
+  err => {
+      this.snotifyService.error("review wasn't add", "Error!");
+  });
   }
 }

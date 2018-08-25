@@ -178,9 +178,10 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
-        public async Task<IEnumerable<ProjectDTO>> GetListAsync(int userId)
+        public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
-            return mapper.Map<List<ProjectDTO>>(await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == userId));
+            var user = await CurrentUser.GetCurrentUserProfile();
+            return mapper.Map<List<ProjectDTO>>(await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id));
         }
 
 

@@ -23,7 +23,7 @@ namespace Polyglot.DataAccess.SqlRepository
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)
-        {
+         {
             return (await DbSet.AddAsync(entity)).Entity;
         }
 
