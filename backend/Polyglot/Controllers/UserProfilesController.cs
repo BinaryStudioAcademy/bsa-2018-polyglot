@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +27,15 @@ namespace Polyglot.Controllers
         private readonly ICRUDService<Rating, RatingDTO> ratingService;
         private readonly ITeamService teamService;
         private readonly IFileStorageProvider fileStorageProvider;
+        private readonly IMapper mapper;
 
-        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider)
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider, IMapper mapper)
         {
             this.service = service;
             this.ratingService = ratingService;
             this.teamService = teamService;
             this.fileStorageProvider = fileStorageProvider;
+            this.mapper = mapper;
         }
 
         // GET: UserProfiles
@@ -126,8 +129,8 @@ namespace Polyglot.Controllers
         [HttpPut("photo")]
         public async Task<IActionResult> AddCropedPhoto(IFormFile formFile)
         {
-            var currentUserId = (await CurrentUser.GetCurrentUserProfile())?.Id;
-            if (currentUserId == null)
+            var currentUser = mapper.Map<UserProfileDTO>(await CurrentUser.GetCurrentUserProfile());
+            if (currentUser == null)
             {
                 return Unauthorized();
             }
@@ -142,14 +145,13 @@ namespace Polyglot.Controllers
                     await photo.CopyToAsync(ms);
                     byteArr = ms.ToArray();
                 }
+                
+                currentUser.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
+                var result = await service.PutUserBool(currentUser);
 
-                UserProfileDTO user = await service.GetOneAsync(currentUserId.Value);
-                user.AvatarUrl = "test";//await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
-                var updatedUser = await service.PutAsync(user);
-
-                return updatedUser == null
+                return currentUser == null
                     ? StatusCode(400) as IActionResult
-                    : Ok(updatedUser);
+                    : Ok(currentUser);
             }
             
             return BadRequest();
