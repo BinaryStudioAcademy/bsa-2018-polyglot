@@ -114,7 +114,7 @@ namespace Polyglot.Controllers
             return success ? Ok() : StatusCode(304) as IActionResult;
         }
 
-        [HttpPost("{teamId}/translators/{userId}")]
+        [HttpPut("{teamId}/addTranslatorRight/{userId}")]
         public async Task<IActionResult> AddRightToTranslator(int teamId, int userId, [FromBody]int definition)
         {
             RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
@@ -124,7 +124,7 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-        [HttpPut("{teamId}/translators/{userId}")]
+        [HttpPut("{teamId}/removeTranslatorRight/{userId}")]
         public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]int definition)
         {
             RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number

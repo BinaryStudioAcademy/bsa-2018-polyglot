@@ -60,7 +60,6 @@ export class TeamComponent implements OnInit {
         .subscribe((data: Team) => {
           
           this.teamTranslators = data.teamTranslators;
-          console.log(this.teamTranslators);
           this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;
           this.ngOnChanges();
@@ -125,11 +124,15 @@ export class TeamComponent implements OnInit {
 
   changeTranslatorRight(e, id, rightDefinition: number){
     if(e.checked){
-        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe();
+        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;
+        });
       }
-    else
-      {
-        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe();
+    else{
+        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;);
       }
   }
 
