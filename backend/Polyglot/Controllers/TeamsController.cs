@@ -13,10 +13,12 @@ namespace Polyglot.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService service;
+        private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
-        public TeamsController(ITeamService service, IMapper mapper)
+        public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper)
         {
             this.service = service;
+            this.teamTranslatorService = teamTranslatorService;
         }
 
         // GET: Teams
@@ -103,6 +105,19 @@ namespace Polyglot.Controllers
             var entity = await service.PutAsync(team);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
+        }
+
+        [HttpDelete("translators")]
+        public async Task<IActionResult> RemoveTeamTranslators([FromBody]int[] teamTranslatorIds)
+        {
+            foreach (int id in teamTranslatorIds)
+            {
+                var entity = await teamTranslatorService.TryDeleteAsync(id);
+                if (!entity)
+                    return BadRequest();
+            }
+
+            return Ok();
         }
 
         // DELETE: ApiWithActions/5

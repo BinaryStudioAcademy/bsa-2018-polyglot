@@ -123,14 +123,6 @@ namespace Polyglot.BusinessLogic.Services
             if (uow != null)
             {
                 var teamRepository = uow.GetRepository<Team>();
-                var teamTranslatorRepository = uow.GetRepository<TeamTranslator>();
-                var teamTranslatorsToRemove = (await teamTranslatorRepository.GetAllAsync(x => x.TeamId == entity.Id)).Where(x => entity.TeamTranslators.All(y => y.Id != x.Id));
-                foreach (var teamTranslator in teamTranslatorsToRemove)
-                {
-                    await teamTranslatorRepository.DeleteAsync(teamTranslator.Id);
-                }
-                
-
                 var target = teamRepository.Update(mapper.Map<Team>(entity));
                 if (target != null)
                 {
