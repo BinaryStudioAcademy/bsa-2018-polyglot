@@ -36,11 +36,7 @@ namespace Polyglot.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllProjects()
 		{
-		    var user = await CurrentUser.GetCurrentUserProfile();
-
-            if (user.Id == 0)
-				return Ok(new List<ProjectDTO>());
-			var projects = await service.GetListAsync(user.Id);
+			var projects = await service.GetListAsync();
 			return projects == null ? NotFound("No projects found!") as IActionResult
 				: Ok(projects);
 		}

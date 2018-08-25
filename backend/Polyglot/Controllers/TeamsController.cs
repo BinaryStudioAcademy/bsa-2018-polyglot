@@ -5,6 +5,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
 using System.Collections.Generic;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -23,8 +24,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-#warning ??? наверное GetAllTeamsAsync должен возвращать только команды определенного менеджера
-            var teams = await service.GetAllTeamsAsync();
+            var teams = await service.GetAllTeamsAsync(); 
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
@@ -86,8 +86,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-#warning у команды пока что нет менеджера
-            var entity = await service.FormTeamAsync(translatorsIds, -1);
+            var entity = await service.FormTeamAsync(translatorsIds);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);

@@ -4,11 +4,10 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.SqlRepository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -22,21 +21,27 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
-            var teams = await uow.GetRepository<Team>().GetAllAsync();
+            var user = await CurrentUser.GetCurrentUserProfile();
+            IEnumerable<Team> result = new List<Team>();
 
-            if (teams != null && teams.Count > 0)
-                return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
+            if (user.UserRole == Role.Translator)
+            {
+                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
+                var allTeams = await uow.GetRepository<Team>().GetAllAsync();
+                result = allTeams.Where(x => translatorTeams.Any(y => y.TeamId == x.Id));
+            }
             else
-                return new List<TeamPrevDTO>();
+            {
+                 result = await uow.GetRepository<Team>().GetAllAsync(x => x.CreatedBy == user);
+            }
+
+            return mapper.Map<IEnumerable<TeamPrevDTO>>(result);
         }   
         
-        public async Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId)
+        public async Task<TeamDTO> FormTeamAsync(int[] translatorIds)
         {
             var userRepo = uow.GetRepository<UserProfile>();
-       //     UserProfile manager = await userRepo.GetAsync(managerId);
-       //     if (manager == null || manager.UserRole != UserProfile.Role.Manager)
-       //         return null;
-       
+
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
             foreach (var id in translatorIds)
@@ -54,15 +59,22 @@ namespace Polyglot.BusinessLogic.Services
             if (translators.Count < 1)
                 return null;
 
-#warning неизвестно что делать с менеджером
-            Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team());
-            await uow.SaveAsync();
+            var manager = await CurrentUser.GetCurrentUserProfile();
 
-            newTeam.TeamTranslators = translators;
-            newTeam = uow.GetRepository<Team>().Update(newTeam);
-            await uow.SaveAsync();
+            if (manager.UserRole == Role.Manager)
+            {
 
-            return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
+                Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team {CreatedBy = manager});
+                await uow.SaveAsync();
+
+                newTeam.TeamTranslators = translators;
+                newTeam = uow.GetRepository<Team>().Update(newTeam);
+                await uow.SaveAsync();
+
+                return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
+            }
+
+            return null;
         }
 
         public async Task<bool> TryDisbandTeamAsync(int teamId)

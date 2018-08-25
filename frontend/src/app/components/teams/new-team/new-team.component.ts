@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
-  managerId: number = 1;
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
   public defaultAvatar: String = "/assets/images/anonymus.jpg"
