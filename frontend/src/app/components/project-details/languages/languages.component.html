@@ -21,8 +21,8 @@
                     <mat-progress-bar class="lang-progress" mode="determinate" value="{{l.progress}}"></mat-progress-bar>
                   </div>
                   <div class="lang-progress-info">
-                      <span>Strings total: {{computeStrings(l.translationsCount, l.progress) | number:'1.0-0'}}</span>
-                      <span>Translated: {{l.translationsCount | number:'1.0-0'}}</span>
+                      <span>Strings total: {{l.complexStringsCount | number:'1.0-0'}}</span>
+                      <span>Translated: {{l.translatedStringsCount | number:'1.0-0'}}</span>
                       <span>Progress: {{l.progress | number:'1.0-1'}} %</span>
                   </div>
                 </div>

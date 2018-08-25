@@ -1,7 +1,6 @@
-
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource, MatPaginator, MatDialog, } from '@angular/material';
+import { Component, OnInit, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ProjectService } from '../../../services/project.service';
 import { ComplexStringService } from '../../../services/complex-string.service';
 import { Translation, Language } from '../../../models';
@@ -10,6 +9,10 @@ import { SaveStringConfirmComponent } from '../../../dialogs/save-string-confirm
 import { TabHistoryComponent } from './tab-history/tab-history.component';
 import { TranslationType } from '../../../models/TranslationType';
 import { AppStateService } from '../../../services/app-state.service';
+import { environment } from '../../../../environments/environment';
+import * as signalR from '../../../../../node_modules/@aspnet/signalr';
+import { SignalrService } from '../../../services/signalr.service';
+import { TranslationState } from '../../../models/translation-state';
 import { TranslationService } from '../../../services/translation.service';
 
 @Component({
@@ -20,71 +23,107 @@ import { TranslationService } from '../../../services/translation.service';
 
 export class KeyDetailsComponent implements OnInit {
 
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
+
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
     public IsEdit: boolean = false;
     public IsPagenationNeeded: boolean = true;
     public pageSize: number = 5;
     public Id: string;
-    public isEmpty;
-    public MachineTranslation: string;
-    public previousTranslation: string;
+    public isEmpty: boolean;
     projectId: number;
     languages: Language[];
-    expandedArray: Array<TranslationState>;
+    expandedArray: TranslationState[];
     isLoad: boolean;
-    isMachineTranslation: boolean;
-
+    comments: Comment[];
     description: string = "Do you want to save changes?";
     btnYesText: string = "Yes";
     btnNoText: string = "No";
     btnCancelText: string = "Cancel";
     answer: number;
     keyId: number;
-    isDisabled: boolean = false;
+    isDisabled: boolean;
+    dataIsLoaded: boolean = false;
+    isMachineTranslation: boolean;
+    public MachineTranslation: string;
+    public previousTranslation: string;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
 
     constructor(private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
-        private projectService: ProjectService,
         public dialog: MatDialog,
         private snotifyService: SnotifyService,
         private appState: AppStateService,
-        private service: TranslationService) {
-        this.Id = this.route.snapshot.queryParamMap.get('keyid');
+        private router: Router,
+        private signalrService: SignalrService,
+        private projectService: ProjectService,
+        private service: TranslationService
+    ) {
     }
 
-    ngOnChanges(){
-        if(this.keyDetails && this.keyDetails.translations){
-          this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
-          this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
-          
-          if(this.IsPagenationNeeded){
-            this.paginator.pageSize = this.pageSize;
-            this.translationsDataSource.paginator = this.paginator;
-          }
-    
+    ngOnInit() {
+        if (this.appState.getWorkspaceState === null) {
+            this.dataIsLoaded = false;
+            this.router.navigate([`/workspace/${this.projectId}`]);
+            return;
         }
-        else
-          this.IsPagenationNeeded = false;
-      }
-    
-      step = 0;
-
-      ngOnInit() {
+        this.dataIsLoaded = true;
         this.isMachineTranslation = false;
+
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
+                this.signalrService.createConnection(this.keyDetails.id);
+                this.subscribeProjectChanges();
                 this.getLanguages();
+            });
+            this.dataProvider.getCommentsByStringId(this.keyId).subscribe(comments => {
+                this.comments = comments;
             });
         });
     }
+
+    ngOnDestroy() {
+        if (this.dataIsLoaded) {
+            this.signalrService.closeConnection(this.keyDetails.id);
+        }
+    }
+
+
+    ngOnChanges(){
+        if(this.keyDetails && this.keyDetails.translations){
+          this.IsPagenationNeeded = this.keyDetails.translations.length > this.pageSize;
+          this.translationsDataSource = new MatTableDataSource(this.keyDetails.translations);
+
+          if(this.IsPagenationNeeded){
+            this.paginator.pageSize = this.pageSize;
+            this.translationsDataSource.paginator = this.paginator;
+          }
+
+        }
+        else
+          this.IsPagenationNeeded = false;
+      }
+
+
+
+    subscribeProjectChanges() {
+        this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
+            this.setNewValueTranslation(translation);
+        });
+        this.signalrService.connection.on("changedTranslation", (translation: any) => {
+            this.setNewValueTranslation(translation);
+        });
+        this.signalrService.connection.on("commentAdded", (comments: any) => {
+            this.comments = comments;
+        });
+    }
+
 
 
   setStep(index: number) {
@@ -98,35 +137,36 @@ export class KeyDetailsComponent implements OnInit {
   }
 
 
-    getLanguages() {
 
-        this.projectService.getProjectLanguages(this.projectId).subscribe(
-            (d: Language[]) => {
-                const temp = d.length;
-                this.expandedArray = new Array();
-                for (var i = 0; i < temp; i++) {
-                    this.expandedArray.push({ isOpened: false, oldValue: '' });
-                }
-                this.languages = d.map(x => Object.assign({}, x));
-                this.isEmpty = false;
-                console.log(this.isEmpty);
-                this.setLanguagesInWorkspace();
-            },
-            err => {
-                this.isEmpty = true;
-                console.log('err', err);
+
+
+    setNewValueTranslation(translation: any) {
+        const lenght = this.keyDetails.translations.length;
+        for (var i = 0; i < lenght; i++) {
+            if (this.keyDetails.translations[i].languageId === translation.languageId) {
+                this.keyDetails.translations[i] = {
+                    languageName: this.keyDetails.translations[i].languageName,
+                    languageId: this.keyDetails.translations[i].languageId,
+                    ...translation
+                };
             }
-        );
-
+        }
     }
 
-    setLanguagesInWorkspace() {
+    getLanguages() {
+        this.languages = this.appState.getWorkspaceState.languages;
+
+        const temp = this.languages.length;
+        this.expandedArray = new Array();
+        for (var i = 0; i < temp; i++) {
+            this.expandedArray.push({ isOpened: false, oldValue: '' });
+        }
+        this.isEmpty = false;
         this.keyDetails.translations = this.languages.map(
             element => {
                 return ({
                     languageName: element.name,
                     languageId: element.id,
-                    languageCode: element.code,
                     ...this.getProp(element.id)
                 });
             }
@@ -139,45 +179,31 @@ export class KeyDetailsComponent implements OnInit {
         return searchedElement.length > 0 ? searchedElement[0] : null;
     }
 
-    onSave(index: number, t: Translation) {
-
-        if (this.isMachineTranslation) {
-            t.Type = TranslationType.Machine;
-            this.isMachineTranslation = false;
-        }
-        else {
-            t.Type = TranslationType.Human;
-        }
+    onSave(index: number, t: any) {
+            if (this.isMachineTranslation) {
+                t.Type = TranslationType.Machine;
+                this.isMachineTranslation = false;
+            }
+            else {
+                t.Type = TranslationType.Human;
 
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
-            t.userId = this.appState.currentDatabaseUser.id;
             this.dataProvider.editStringTranslation(t, this.keyId)
                 .subscribe(
                     (d: any[]) => {
-                        console.log(this.keyDetails.translations);
+                        //console.log(this.keyDetails.translations);
                         this.expandedArray[index] = { isOpened: false, oldValue: '' };
                     },
                     err => {
-                        console.log('err', err);
+                        this.snotifyService.error(err);
                     }
                 );
         }
         else {
             t.createdOn = new Date();
-            t.userId = this.appState.currentDatabaseUser.id;
             this.dataProvider.createStringTranslation(t, this.keyId)
                 .subscribe(
                     (d: any) => {
-                        const lenght = this.keyDetails.translations.length;
-                        for (var i = 0; i < lenght; i++) {
-                            if (this.keyDetails.translations[i].languageId === d.languageId) {
-                                this.keyDetails.translations[i] = {
-                                    languageName: this.keyDetails.translations[i].languageName,
-                                    ...d
-                                };
-                            }
-                        }
-                        console.log(this.keyDetails.translations);
                         this.expandedArray[index] = { isOpened: false, oldValue: '' };
                     },
                     err => {
@@ -186,7 +212,7 @@ export class KeyDetailsComponent implements OnInit {
                 );
         }
     }
-
+    }
     onClose(index: number, translation: any) {
         if (this.expandedArray[index].oldValue == translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
@@ -212,9 +238,7 @@ export class KeyDetailsComponent implements OnInit {
         });
     }
 
-    toggle() {
-        this.IsEdit = !this.IsEdit;
-    }
+
 
     onMachineTranslationMenuClick(item: any): void {
         this.service.getTransation({ q: this.keyDetails.base, target: item }).subscribe((res: any) => {
@@ -222,6 +246,9 @@ export class KeyDetailsComponent implements OnInit {
         })
     }
 
+    toggle() {
+        this.IsEdit = !this.IsEdit;
+    }
     selectTranslation($event) {
 
         this.previousTranslation = this.keyDetails.translations[$event.keyId].translationValue;
@@ -247,7 +274,53 @@ export class KeyDetailsComponent implements OnInit {
 }
 
 
-export interface TranslationState {
-    isOpened: boolean;
-    oldValue: string;
-} 
+
+// this.signalrService.connection.on(
+        //   "addedFirstTranslation",
+        //   (translation: any) => {
+        //     debugger
+        //     const lang = this.languages.filter(el => el.id === translation.languageId)[0];
+        //     this.keyDetails.translations.filter(el => el.languageId === translation.languageId)[0]
+        //       = {
+        //         languageName: lang.name,
+        //         languageId: lang.id,
+        //         ...translation
+        //       };
+        //     // получить строку с сервера, вывести уведомление
+        //     this.snotifyService.info("String translated", "Translated");
+        //   }
+        // );
+        // this.connection.on("stringDeleted", (deletedStringId: number) => {
+
+        //     // ================> проверить id если та строка
+        //     // ================> на которой мы сейачас находимся то перенаправить на воркспейс
+        //     if (deletedStringId === this.keyId) {
+        //         this.snotifyService.info(
+        //             `This string(id:${deletedStringId}) is deleted!`,
+        //             "String deleted"
+        //         );
+        //         // ===============>
+        //     }
+        // });
+
+        // this.connection.on(
+        //     "stringTranslated",
+        //     (complexStringId: number, languageId: number) => {
+        //         // получить строку с сервера, вывести уведомление
+        //         this.snotifyService.info("String translated", "Translated");
+        //     }
+        // );
+
+        // this.connection.on("languageAdded", (languagesIds: Array<number>) => {
+        //     // обновить строку
+        //     console.log(languagesIds);
+        //     this.snotifyService.info(languagesIds.join(", "), "Language added");
+        // });
+
+        // this.connection.on("languageDeleted", (languageId: number) => {
+        //     // обновить строку
+        //     this.snotifyService.info(
+        //         `lang with id =${languageId} removed`,
+        //         "Language removed"
+        //     );
+        // });

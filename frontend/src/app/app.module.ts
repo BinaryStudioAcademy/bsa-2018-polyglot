@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule, DateAdapter } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -218,4 +218,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 
 
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private dateAdapter:DateAdapter<Date>) {
+		dateAdapter.setLocale('en-in'); // DD/MM/YYYY
+	}
+}
