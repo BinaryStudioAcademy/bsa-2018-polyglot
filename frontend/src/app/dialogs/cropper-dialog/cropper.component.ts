@@ -11,6 +11,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 export class CropperComponent implements OnInit{
 
   cropperSettings: CropperSettings;
+  imageData: any;
   public selectedImage: File;
   image: File;
   @ViewChild('cropper', undefined) 
@@ -33,6 +34,7 @@ export class CropperComponent implements OnInit{
     this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
     this.cropperSettings.cropperDrawSettings.strokeWidth = 2;
     this.cropperSettings.noFileInput = true;
+    this.imageData = {}
    }
 
   ngOnInit() {
