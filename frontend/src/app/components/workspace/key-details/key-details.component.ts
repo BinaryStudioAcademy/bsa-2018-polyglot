@@ -11,6 +11,7 @@ import { TabHistoryComponent } from './tab-history/tab-history.component';
 import { TranslationType } from '../../../models/TranslationType';
 import { AppStateService } from '../../../services/app-state.service';
 import { TranslationService } from '../../../services/translation.service';
+import { TabGlossaryComponent } from './tab-glossary/tab-glossary.component';
 
 @Component({
     selector: 'app-workspace-key-details',
@@ -47,6 +48,7 @@ export class KeyDetailsComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
+    @ViewChild(TabGlossaryComponent) glossary: TabGlossaryComponent;
 
     constructor(private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
@@ -97,6 +99,7 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     this.history.showHistory(index);
+    this.currentTranslation = this.keyDetails.translations[index].translationValue;
   }
 
 
@@ -142,6 +145,7 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onSave(index: number, t: Translation) {
+        this.currentTranslation = '';
 
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
@@ -190,8 +194,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onClose(index: number, translation: any) {
+        
         if (this.expandedArray[index].oldValue == translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
+            this.currentTranslation = '';
             return;
         }
         const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
@@ -210,8 +216,10 @@ export class KeyDetailsComponent implements OnInit {
                     this.keyDetails.translations[index].translationValue = this.previousTranslation;
                     this.isMachineTranslation = false;
                 }
+                this.currentTranslation = '';
             }
         });
+        
     }
 
     toggle() {

@@ -10,24 +10,22 @@ import { GlossaryService } from '../../../../services/glossary.service';
 export class TabGlossaryComponent implements OnInit, OnChanges  {
 
   glossary: GlossaryTerm[] = [];
-  // base: string;
-  // translation: string;
 
-  @Input() base: string;
   @Input() translation: string;
+  @Input() keyDetails: any;
 
   constructor(private glossaryService: GlossaryService) { }
 
   ngOnInit() {
   }
-  
-  ngOnChanges(){
-    debugger;
-    this.glossary = [];
-    if(!this.translation){
-      this.translation = '';
-    }
-    this.glossary = this.glossaryService.fakeGlossaryParse(this.base, this.translation);
-  }
 
+  ngOnChanges() {
+    this.glossary = [];
+    if (!this.translation) {
+      this.glossary = this.glossaryService.fakeGlossaryParse(this.keyDetails.base, '');
+    } else {
+      this.glossary = this.glossaryService.fakeGlossaryParse(this.keyDetails.base, this.translation);
+    }
+
+  }
 }
