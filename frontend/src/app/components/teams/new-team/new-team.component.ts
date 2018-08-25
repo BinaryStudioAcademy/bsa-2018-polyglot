@@ -77,9 +77,9 @@ export class NewTeamComponent implements OnInit {
     this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
   }
 
-  formTeam() {
+  formTeam(name : any) {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.id))
+      this.teamService.formTeam(this.teamTranslators.map(t => t.id),name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);

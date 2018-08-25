@@ -81,12 +81,12 @@ namespace Polyglot.Controllers
 
         // POST: Teams
         [HttpPost]
-        public async Task<IActionResult> FormTeam([FromBody]int[] translatorsIds)
+        public async Task<IActionResult> FormTeam([FromBody]ReceiveTeamDTO translatorIds)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-            var entity = await service.FormTeamAsync(translatorsIds);
+            var entity = await service.FormTeamAsync(translatorIds);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);

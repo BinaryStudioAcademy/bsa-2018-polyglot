@@ -34,7 +34,6 @@ export class KeyDetailsComponent implements OnInit {
     expandedArray: Array<TranslationState>;
     isLoad: boolean;
     isMachineTranslation: boolean;
-    IsMachineTranslationLoad: boolean;
 
     description: string = "Do you want to save changes?";
     btnYesText: string = "Yes";
@@ -219,11 +218,7 @@ export class KeyDetailsComponent implements OnInit {
 
     onMachineTranslationMenuClick(item: any): void {
         this.service.getTransation({ q: this.keyDetails.base, target: item }).subscribe((res: any) => {
-            if(this.MachineTranslation == res[0].translatedText){
-                this.IsMachineTranslationLoad = false; 
-            }
             this.MachineTranslation = res[0].translatedText;
-            this.IsMachineTranslationLoad = true; 
         })
     }
 

@@ -22,7 +22,8 @@
               </a>
               <div class="title">
                   <mat-card-title class="card-title">
-                      <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.id}}</a>
+                      <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">Team №{{t.id}}</a>
+                      <a *ngIf="t.name !== null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">{{t.name}}</a>
                   </mat-card-title>
                  
 

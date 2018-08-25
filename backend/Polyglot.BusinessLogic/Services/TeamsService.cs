@@ -38,18 +38,18 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<IEnumerable<TeamPrevDTO>>(result);
         }   
         
-        public async Task<TeamDTO> FormTeamAsync(int[] translatorIds)
+        public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
         {
             var userRepo = uow.GetRepository<UserProfile>();
 
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
-            foreach (var id in translatorIds)
+            foreach (var id in receivedTeam.TranslatorIds)
             {
                 currentTranslator = await userRepo.GetAsync(id);
                 if (currentTranslator != null && currentTranslator.UserRole == Role.Translator)
                 {
-                    translators.Add(new TeamTranslator()
+                    translators.Add(new TeamTranslator
                     {
                         UserProfile = currentTranslator
                     });
@@ -64,10 +64,12 @@ namespace Polyglot.BusinessLogic.Services
             if (manager.UserRole == Role.Manager)
             {
 
-                Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team {CreatedBy = manager});
+                Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team());
                 await uow.SaveAsync();
 
                 newTeam.TeamTranslators = translators;
+                newTeam.CreatedBy = manager;
+                newTeam.Name = receivedTeam.Name;
                 newTeam = uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
 

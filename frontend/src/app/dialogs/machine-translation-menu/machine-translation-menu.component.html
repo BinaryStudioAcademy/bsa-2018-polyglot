@@ -9,7 +9,7 @@
         <span><img style="width:24px;height:24px;margin-right: 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/2000px-Google_Translate_logo.svg.png" alt="Google"></span><span style="font-size: 16px;">Google Translate</span>
       </div>
       <div mat-line style="padding-top: 10px;padding-bottom: 10px;">
-        <span style="color:gray">Translation : </span><mat-spinner style="display: inline;margin-left: 5px;" *ngIf="IsLoadingSpinner" [diameter]="25"></mat-spinner>{{Translation}}
+        <span style="color:gray">Translation : </span><mat-spinner style="display: inline;margin-left: 5px;" *ngIf="isLoading" [diameter]="25"></mat-spinner>{{Translation}}
       </div>
       <br>
     </mat-list-item>

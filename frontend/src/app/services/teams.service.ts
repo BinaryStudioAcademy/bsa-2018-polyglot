@@ -34,8 +34,8 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators/' + translatorId + '/rating', undefined, undefined);
   }
 
-  formTeam(translatorsIds: Array<number>): Observable<Team> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, translatorsIds);
+  formTeam(translatorIds: Array<number>,name : string): Observable<Team> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, {translatorIds:translatorIds,name:name});
   }
  // create(body){
  //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);

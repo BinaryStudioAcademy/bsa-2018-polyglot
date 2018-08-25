@@ -7,26 +7,27 @@ import { TranslationService } from '../../services/translation.service';
     styleUrls: ['./machine-translation-menu.component.sass']
 })
 export class MachineTranslationMenuComponent implements OnInit,OnChanges{
-
+ 
     @Input() data : any;
     @Input() keyId : any;
-    @Input() IsLoadingSpinner : boolean;
     @Output() selectTranslationEvent = new EventEmitter<any>();
 
-    public Translation : any;
+    public Translation : any = " ";
+    public isLoading : boolean;
 
     constructor() { }
 
     ngOnInit() {
-        this.Translation = this.data;
-        
+        if(this.Translation !== this.data){
+        this.isLoading = true;
+        }
       }
 
       ngOnChanges(changes:SimpleChanges){
         console.log(changes);
         if(changes['data']){
            this.Translation = changes.data.currentValue;
-           this.IsLoadingSpinner = false;
+           this.isLoading = false;
         }
       }
     
