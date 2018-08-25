@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
-import { GlossaryTerm } from '../models/GlossaryTerm';
+import { GlossaryTerm } from '../models/glossaryTerm';
 import { forEach } from '@angular/router/src/utils/collection';
 
 @Injectable({
