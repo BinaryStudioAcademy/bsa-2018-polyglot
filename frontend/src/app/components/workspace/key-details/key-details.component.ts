@@ -79,7 +79,7 @@ export class KeyDetailsComponent implements OnInit {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
-                this.signalrService.createConnection(this.keyDetails.id);
+                this.signalrService.createConnection(this.keyDetails.id, 'workspaceHub');
                 this.subscribeProjectChanges();
                 this.getLanguages();
             });
