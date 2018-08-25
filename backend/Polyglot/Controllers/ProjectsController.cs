@@ -146,9 +146,7 @@ namespace Polyglot.Controllers
         [HttpPost]
 		public async Task<IActionResult> AddProject(IFormFile formFile)
 		{
-
-            Request.Form.TryGetValue("project", out StringValues res);
-
+			Request.Form.TryGetValue("project", out StringValues res);
             ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
 
             if (Request.Form.Files.Count != 0)
