@@ -109,9 +109,9 @@ export class TranslatorProfileComponent implements OnInit{
             data: {imageUrl: this.userProfile.avatarUrl}
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (dialogRef.componentInstance.selectedImage){
+            if (dialogRef.componentInstance.cropedImageBlob){
                 let formData = new FormData();
-                formData.append("image", dialogRef.componentInstance.selectedImage);
+                formData.append("image", dialogRef.componentInstance.cropedImageBlob);
                 this.userService.updatePhoto(formData).subscribe(
                     (d) => {
                         setTimeout(() => {
