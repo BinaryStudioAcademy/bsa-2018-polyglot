@@ -9,8 +9,11 @@ import {MAT_DIALOG_DATA} from '@angular/material';
   styleUrls: ['./cropper.component.sass']
 })
 export class CropperComponent implements OnInit{
+
   cropperSettings: CropperSettings;
   imageData: any;
+  public selectedImage: File;
+  image: File;
   @ViewChild('cropper', undefined) 
   cropper: ImageCropperComponent;
   constructor(
@@ -45,7 +48,7 @@ export class CropperComponent implements OnInit{
 
   fileChangeListener($event) {
     var image:any = new Image();
-    var file:File = $event.target.files[0];
+    this.image = $event.target.files[0];
     var myReader:FileReader = new FileReader();
     var that = this;
     myReader.onloadend = function (loadEvent:any) {
@@ -53,10 +56,11 @@ export class CropperComponent implements OnInit{
       that.cropper.setImage(image);
      };
 
-    myReader.readAsDataURL(file);
+    myReader.readAsDataURL(this.image);
   }
 
   uploadImage() {
-    console.log("SAVED!");
+     this.selectedImage = this.image;
+     this.dialogRef.close();
   }
 }

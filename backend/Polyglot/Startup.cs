@@ -19,7 +19,6 @@ using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
 using Microsoft.EntityFrameworkCore;
-
 namespace Polyglot
 {
     public class Startup
@@ -55,11 +54,10 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-
-
             services.AddSignalR();
 
-            //BusinessLogicModule.ConfigureServices(services);
+            services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
+
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);
             CoreModule.ConfigureServices(services);
@@ -111,14 +109,3 @@ namespace Polyglot
         }
     }
 }
-
-
-/*
-
-app.UseCors(builder => builder
-    .WithOrigins("http://localhost:4200")
-    .AllowAnyOrigin()
-    .AllowCredentials()
-    .AllowAnyHeader()
-    .AllowAnyMethod());
-*/

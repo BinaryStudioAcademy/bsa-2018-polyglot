@@ -84,6 +84,10 @@ export class UserService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
   }
 
+  updatePhoto(photo: FormData) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/photo', undefined, photo, undefined, 'form-data');
+  }
+
   delete(id: number) : Observable<UserProfile>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }

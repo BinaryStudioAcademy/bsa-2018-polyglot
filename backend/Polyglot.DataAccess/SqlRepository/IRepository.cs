@@ -15,5 +15,7 @@ namespace Polyglot.DataAccess.SqlRepository
         TEntity Update(TEntity entity);
 
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
+
+        bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
     }
 }

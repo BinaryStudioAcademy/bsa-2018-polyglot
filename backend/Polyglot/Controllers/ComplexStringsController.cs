@@ -22,15 +22,14 @@ namespace Polyglot.Controllers
         private readonly IMapper mapper;
         private readonly IComplexStringService dataProvider;
         public IFileStorageProvider fileStorageProvider;
-        private readonly IHubContext<WorkspaceHub> _hubContext;
+        private readonly ISignalrWorkspaceService signalrService;
 
-        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider,
-            IHubContext<WorkspaceHub> hubContext)
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider, ISignalrWorkspaceService signalrService)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
             fileStorageProvider = provider;
-            _hubContext = hubContext;
+            this.signalrService = signalrService;
         }
 
         // GET: ComplexStrings
@@ -69,9 +68,10 @@ namespace Polyglot.Controllers
 
             var entity = await dataProvider.SetStringTranslation(id, translation);
 
+
             if (entity != null)
             {
-                await _hubContext.Clients.Group(id.ToString()).SendAsync("addedFirstTranslation", entity);
+                await signalrService.ChangedTranslation(id.ToString(), entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
@@ -86,7 +86,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await _hubContext.Clients.Group(id.ToString()).SendAsync("changedTranslation", entity);
+                await signalrService.ChangedTranslation(id.ToString(), entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
@@ -162,7 +162,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-               await _hubContext.Clients.Group(id.ToString()).SendAsync("commentAdded", entity);
+                await signalrService.CommentAdded(id.ToString(), entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
