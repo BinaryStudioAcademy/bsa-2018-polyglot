@@ -4,6 +4,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using System.Linq;
+using System;
 
 namespace Polyglot.Controllers
 {
@@ -39,6 +40,7 @@ namespace Polyglot.Controllers
         // POST: Ratings
         public async Task<IActionResult> AddRating([FromBody]RatingDTO project)
         {
+            project.CreatedAt = DateTime.Now;
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 

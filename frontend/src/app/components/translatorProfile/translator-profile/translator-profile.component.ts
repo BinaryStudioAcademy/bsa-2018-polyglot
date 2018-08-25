@@ -112,13 +112,6 @@ export class TranslatorProfileComponent implements OnInit{
 
 }
 
-export interface Comment{
-    CreatedBy : string,
-    Avatar : string ,
-    Body : string,
-    CreatedOn : string,
-    Rating : number
-}
 
 export interface Language{
     Name : string,

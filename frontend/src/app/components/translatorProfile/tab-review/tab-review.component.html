@@ -6,7 +6,7 @@
             <app-star-rating [rating]="rating"  [starCount]="starCount" [color]="starColor" (ratingUpdated)="onRatingChanged($event)"></app-star-rating>
         </div>
         <mat-form-field class="field-full-width">
-            <textarea #textArea rows="4" matInput placeholder="Enter review text" [formControl]="reviewForm.controls['reviewBody']" formControlName="reviewBody" 
+            <textarea  #textArea rows="4" matInput placeholder="Enter review text" [formControl]="reviewForm.controls['reviewBody']" formControlName="reviewBody" 
                 maxlength="500"></textarea>
         </mat-form-field>
         <div class="button-container">

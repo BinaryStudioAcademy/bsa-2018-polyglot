@@ -31,7 +31,7 @@
         fxLayoutAlign="center"
         fxLayout.xs="column"
         fxLayoutGap="20px">
-        <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" >   
+        <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" class="left-card" >   
             <div class="item" fxFlex>
                 <div>
                     <h2 class="title"> Experience </h2>
@@ -45,7 +45,7 @@
                         </mat-card-content>
                 </div>
             </div>
-            <div class="item" fxFlex>
+            <div class="item left-card" fxFlex>
                 <div>
                           <h2 class="title">Teams</h2>
                           <hr>
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 <div class="item" fxFlex>  
-            <div>
+            <div class="left-card">
               <h2 class="title"> Languages</h2>
               <hr>
               <div class="languages-list">
@@ -80,7 +80,7 @@
             </div>  
         </div>
     </div>
-            <div class="item" fxFlex>
+            <div class="item" fxFlex class="left-card" *ngIf="!isOwnersProfile()">
                 <div>
                     <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
                 </div>

@@ -21,7 +21,7 @@ export class TabReviewComponent implements OnInit {
 
   @Input()  public userProfile: UserProfile;
   reviewForm = this.fb.group({
-    reviewBody: ['', Validators.required]
+    reviewBody: ['']
     });
 
     @ViewChild('textArea') textArea: ElementRef;
@@ -43,8 +43,7 @@ export class TabReviewComponent implements OnInit {
       comment: reviewBody,
       rate: rating,
       createdById: this.userService.getCurrentUser().id,
-      userId: this.userProfile.id,
-      createdAt: new Date(Date.now())
+      userId: this.userProfile.id
     };
 
     this.ratingsService.create(ratingObj).subscribe(
