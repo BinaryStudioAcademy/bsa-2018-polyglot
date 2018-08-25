@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using System.Linq;
+using System;
 
 namespace Polyglot.Controllers
 {
@@ -10,9 +12,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class RatingsController : ControllerBase
     {
-        private readonly ICRUDService<Rating, RatingDTO> service;
+        private readonly IRatingService service;
 
-        public RatingsController(ICRUDService<Rating, RatingDTO> service)
+        public RatingsController(IRatingService service)
         {
             this.service = service;
         }
@@ -21,7 +23,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRatings()
         {
-            var projects = await service.GetListAsync();
+            var projects = (await service.GetListAsync());
             return projects == null ? NotFound("No ratings found!") as IActionResult
                 : Ok(projects);
         }
@@ -38,13 +40,13 @@ namespace Polyglot.Controllers
         // POST: Ratings
         public async Task<IActionResult> AddRating([FromBody]RatingDTO project)
         {
+            project.CreatedAt = DateTime.Now;
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
             var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                entity);
+                : Ok(entity);
         }
 
         // PUT: Ratings/5
