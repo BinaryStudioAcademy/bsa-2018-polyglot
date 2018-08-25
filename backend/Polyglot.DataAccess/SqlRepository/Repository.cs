@@ -64,6 +64,22 @@ namespace Polyglot.DataAccess.SqlRepository
             return DbSet.Update(entity).Entity;
         }
 
+        public bool UpdateBool(TEntity entity)
+        {
+            var entityDb = entity as Entity;
+            if (entityDb != null)
+            {
+                var existingEntity = DbSet.Find(entityDb.Id);
+                if (existingEntity == null)
+                    return false;
+
+                context.Entry(existingEntity).State = EntityState.Detached;
+            }
+
+            context.Entry(entity).State = EntityState.Modified;
+            return true;
+        }
+
         //public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where) 
         //    => 
         //    ApplyIncludes().AnyAsync(where);
