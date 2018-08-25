@@ -7,6 +7,8 @@ import { Team } from '../../../models/team';
 import { TeamService } from '../../../services/teams.service';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-translator-profile',
@@ -24,14 +26,25 @@ export class TranslatorProfileComponent implements OnInit{
     constructor(private userService: UserService,
               public dialog: MatDialog,
               private teamService: TeamService,
-              private snotifyService: SnotifyService) { }
+              private snotifyService: SnotifyService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router) { }
 
     public userProfile : any;
     public Comments: Comment[];
     Languages: Language[];
+    private routeSub: Subscription;
 
     ngOnInit(): void {
-            this.userProfile = this.userService.getCurrentUser();
+
+            this.routeSub = this.activatedRoute.params.subscribe((params) => {
+                this.userService.getOne(params.translatorId).subscribe((user)=>{
+                    if(user.userRole == 1){
+                        this.router.navigate(['/404']);
+                    }
+                    this.userProfile = user;
+                });
+            });
             this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
             this.userProfile.ratings = ratings;
             this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
@@ -54,9 +67,11 @@ export class TranslatorProfileComponent implements OnInit{
             {Name : "OtherLang",Proficiency : 50},
             {Name : "OtherLang",Proficiency : 50},
             {Name : "OtherLang",Proficiency : 50}
-          ];
-          
-       
+          ];      
+    }
+
+    isOwnersProfile(){
+        return this.userProfile.id == this.userService.getCurrentUser().id;
     }
     
     leaveTeam(team: Team)
