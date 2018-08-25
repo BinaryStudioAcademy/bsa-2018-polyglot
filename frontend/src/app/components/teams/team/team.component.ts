@@ -109,7 +109,7 @@ export class TeamComponent implements OnInit {
     if(!this.teamTranslators)
       return false;
 
-    let teammate = this.teamTranslators.find(t => t.id === id);
+    let teammate = this.teamTranslators.find(t => t.userId === id);
     if(!teammate)
       return false;
       
@@ -123,14 +123,13 @@ export class TeamComponent implements OnInit {
       
   }
 
-  changeTranslatorRight(e, id){
-    if(e.checked)
-      {
-        // add right
+  changeTranslatorRight(e, id, rightDefinition: number){
+    if(e.checked){
+        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe();
       }
     else
       {
-        //remove right
+        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe();
       }
   }
 

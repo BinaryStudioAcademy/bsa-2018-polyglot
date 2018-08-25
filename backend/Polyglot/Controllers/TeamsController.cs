@@ -5,6 +5,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
 using System.Collections.Generic;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -111,6 +112,26 @@ namespace Polyglot.Controllers
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        [HttpPost("{teamId}/translators/{userId}")]
+        public async Task<IActionResult> AddRightToTranslator(int teamId, int userId, [FromBody]int definition)
+        {
+            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
+
+            var entity = await service.SetTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{teamId}/translators/{userId}")]
+        public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]int definition)
+        {
+            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
+
+            var entity = await service.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

@@ -43,6 +43,7 @@ export class HttpService {
             headers = new HttpHeaders({ 'Authorization': this.token });
         }
         headers.append('Access-Control-Allow-Origin', '*');
+        console.log(`${this.url}/${endpoint}/${params}`);
 
         let request: Observable<any>;
 
