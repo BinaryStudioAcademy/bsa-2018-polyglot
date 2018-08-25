@@ -1,12 +1,18 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.FileRepository;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.Controllers
 {
@@ -19,12 +25,14 @@ namespace Polyglot.Controllers
         private readonly IUserService service;
         private readonly ICRUDService<Rating, RatingDTO> ratingService;
         private readonly ITeamService teamService;
+        private readonly IFileStorageProvider fileStorageProvider;
 
-        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService)
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider)
         {
             this.service = service;
             this.ratingService = ratingService;
             this.teamService = teamService;
+            this.fileStorageProvider = fileStorageProvider;
         }
 
         // GET: UserProfiles
@@ -115,7 +123,39 @@ namespace Polyglot.Controllers
                 entity);
         }
 
-        [HttpGet("isInDb")]
+        [HttpPut("photo")]
+        public async Task<IActionResult> AddCropedPhoto(IFormFile formFile)
+        {
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile photo = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    photo.CopyTo(ms);
+                    await photo.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
+
+                UserProfileDTO user = await service.GetOneAsync(currentUser.Id);
+                user.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
+                var updatedUser = await service.PutAsync(user);
+
+                return updatedUser == null
+                    ? StatusCode(400) as IActionResult
+                    : Ok(updatedUser);
+            }
+            
+            return BadRequest();
+        }
+
+    [HttpGet("isInDb")]
         public async Task<bool> IsUserInDb()
         {
             return await service.IsExistByUidAsync(HttpContext.User.GetUid());

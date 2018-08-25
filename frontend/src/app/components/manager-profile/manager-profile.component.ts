@@ -49,9 +49,27 @@ export class ManagerProfileComponent implements OnInit {
   }
 
   editPhoto(){
-    this.dialog.open(CropperComponent, {
+    const dialogRef = this.dialog.open(CropperComponent, {
       data: {imageUrl: this.manager.avatarUrl}
     });
+    dialogRef.afterClosed().subscribe(result => {
+        if (dialogRef.componentInstance.selectedImage){
+            let formData = new FormData();
+            formData.append("image", dialogRef.componentInstance.selectedImage);
+            this.userService.updatePhoto(formData).subscribe(
+                (d) => {
+                    setTimeout(() => {
+                        this.snotifyService.success("Photo updated.", "Success!");
+                        }, 100);
+                        this.manager = d;
+                    },
+                    err => {
+                        this.snotifyService.error("Photo failed to update!", "Error!");
+                    }
+                );
+            }
+        }
+    );
   }
 
   leaveTeam(team: Team) {
