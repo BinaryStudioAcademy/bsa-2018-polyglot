@@ -43,12 +43,10 @@ export class KeyDetailsComponent implements OnInit {
     answer: number;
     keyId: number;
     isDisabled: boolean = false;
-
     currentTranslation: string;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(TabHistoryComponent) history: TabHistoryComponent;
-    @ViewChild(TabGlossaryComponent) glossary: TabGlossaryComponent;
 
     constructor(private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
