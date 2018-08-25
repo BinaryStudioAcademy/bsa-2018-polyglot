@@ -9,86 +9,81 @@ import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.co
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import * as signalR from '@aspnet/signalr';
+import { environment } from '../../../../../environments/environment';
+import { SignalrService } from '../../../../services/signalr.service';
 
 @Component({
-  selector: 'app-tab-comments',
-  templateUrl: './tab-comments.component.html',
-  styleUrls: ['./tab-comments.component.sass']
+    selector: 'app-tab-comments',
+    templateUrl: './tab-comments.component.html',
+    styleUrls: ['./tab-comments.component.sass']
 })
 export class TabCommentsComponent implements OnInit {
 
-  comments: Comment[];
-  routeSub: Subscription;
-  keyId: number;
-
-  commentForm = this.fb.group({
-    commentBody: ['', ]
-    });
-
-
-  body: string;
-
+    @Input()  comments: Comment[];
     @ViewChild('textarea') textarea: ElementRef;
 
-  constructor(private userService: UserService,
-              private fb: FormBuilder,
-              private complexStringService: ComplexStringService,
-              private dialog: MatDialog,
-              private snotifyService: SnotifyService,
-              private activatedRoute: ActivatedRoute) { }
 
-
-  ngOnInit() {
-    this.routeSub = this.activatedRoute.params.subscribe((params) => {
-      
-      this.keyId = params.keyId;
-      this.getComments().subscribe(comments=>{
-        this.comments = comments;
-      });
+    routeSub: Subscription;
+    keyId: number;
+    private url: string = environment.apiUrl;
+    commentForm = this.fb.group({
+        commentBody: ['',]
     });
-  }
+    body: string;
 
-  getComments(){
-    return this.complexStringService.getCommentsByStringId(this.keyId)
-  }
+    constructor(private userService: UserService,
+        private fb: FormBuilder,
+        private complexStringService: ComplexStringService,
+        private dialog: MatDialog,
+        private snotifyService: SnotifyService,
+        private activatedRoute: ActivatedRoute) { }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.commentForm.reset();
-  }
 
-  onImageClick(avatarUrl: string){
-    if(avatarUrl){
-    let dialogRef = this.dialog.open(ImgDialogComponent, {
-      data: {
-        imageUri: avatarUrl
-      }
-      });
-    }
-  }
-
-  ngOnDestroy() {
-    this.routeSub.unsubscribe();
-  }
-
-  addComment(commentBody: string){
-    this.comments.unshift({user: this.userService.getCurrentUser(),
-                                   text: commentBody,   
-                                   createdOn: new Date(Date.now())});
-
-    this.complexStringService.updateStringComments(this.comments, this.keyId)
-      .subscribe(
-        (comments) => {
-            if(comments){
-              this.snotifyService.success("Comment added", "Success!");
-              this.comments = comments;
-              this.commentForm.reset();
-            }
-            else{
-              this.snotifyService.error("Comment wasn't add", "Error!");
-            }
-        },
-        err => {
-          this.snotifyService.error("Comment added", "Error!");
+    ngOnInit() {
+        this.routeSub = this.activatedRoute.params.subscribe((params) => {
+            this.keyId = params.keyId;
         });
-  }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.commentForm.reset();
+    }
+
+    ngOnDestroy() {
+        this.routeSub.unsubscribe();
+    }
+
+    onImageClick(avatarUrl: string) {
+        if (avatarUrl) {
+            let dialogRef = this.dialog.open(ImgDialogComponent, {
+                data: {
+                    imageUri: avatarUrl
+                }
+            });
+        }
+    }
+
+    addComment(commentBody: string) {
+        this.comments.unshift({
+            user: this.userService.getCurrentUser(),
+            text: commentBody,
+            createdOn: new Date(Date.now())
+        });
+
+        this.complexStringService.updateStringComments(this.comments, this.keyId)
+            .subscribe(
+                (comments) => {
+                    if (comments) {
+                        this.snotifyService.success("Comment added", "Success!");
+                        this.commentForm.reset();
+                    }
+                    else {
+                        this.snotifyService.error("Comment wasn't add", "Error!");
+                    }
+                },
+                err => {
+                    this.snotifyService.error("Comment added", "Error!");
+                });
+    }
 }

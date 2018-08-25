@@ -13,8 +13,6 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
-
-
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)
         {

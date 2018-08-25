@@ -61,7 +61,10 @@ export class HttpService {
                 request = this.httpClient.put(`${this.url}/${endpoint}/${params}`, body, { headers });
                 break;
             case RequestMethod.Delete:
-                request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, { headers });
+                const httpOptions = {
+                    headers: headers, body: body
+                };
+                request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, httpOptions);
                 break;
         }
 
