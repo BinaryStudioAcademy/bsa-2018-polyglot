@@ -20,3 +20,4 @@ export * from './user-profile';
 export * from './user-signup';
 export * from './user';
 export * from './utils';
+export * from './languageStatistic';

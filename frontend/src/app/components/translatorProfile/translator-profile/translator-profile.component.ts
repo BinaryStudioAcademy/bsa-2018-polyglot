@@ -31,7 +31,7 @@ export class TranslatorProfileComponent implements OnInit{
     Languages: Language[];
 
     ngOnInit(): void {
-            this.userProfile = this.userService.getCurrrentUser();
+            this.userProfile = this.userService.getCurrentUser();
             this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
             this.userProfile.ratings = ratings;
             this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
@@ -67,8 +67,8 @@ export class TranslatorProfileComponent implements OnInit{
         });
         dialogRef.afterClosed().subscribe(result => {
             if (dialogRef.componentInstance.data.answer){
-                team.teamTranslators = team.teamTranslators.filter(tt => tt.userId !== this.userProfile.id);
-                this.teamService.update(team.id, team).subscribe(
+                let translatorId = team.teamTranslators.find(translator => {return translator.userId === this.userProfile.id}).id;
+                this.teamService.deletedTeamTranslators([translatorId]).subscribe(
                     (d) => {
                         setTimeout(() => {
                             this.snotifyService.success("Left team", "Success!");

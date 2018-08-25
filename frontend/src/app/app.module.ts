@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule, DateAdapter } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -91,6 +91,7 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 
 
 @NgModule({
@@ -157,7 +158,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
-    UserProfileComponent
+    UserProfileComponent, TabGlossaryComponent
   ],
   imports: [
     BrowserModule,
@@ -218,4 +219,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 
 
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private dateAdapter:DateAdapter<Date>) {
+		dateAdapter.setLocale('en-in'); // DD/MM/YYYY
+	}
+}

@@ -155,12 +155,36 @@ namespace Polyglot.Controllers
             return BadRequest();
         }
 
-    [HttpGet("isInDb")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddCropedPhoto(int id, IFormFile formFile)
+        {
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile photo = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    photo.CopyTo(ms);
+                    await photo.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
+
+                UserProfileDTO user = await service.GetOneAsync(id);
+                user.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
+                var updatedUser = await service.PutAsync(user);
+
+                return updatedUser == null
+                    ? StatusCode(400) as IActionResult
+                    : Ok(updatedUser);
+            }
+            
+            return BadRequest();
+        }
+
+        [HttpGet("isInDb")]
         public async Task<bool> IsUserInDb()
         {
             return await service.IsExistByUidAsync(HttpContext.User.GetUid());
         }
-
-
     }
 }

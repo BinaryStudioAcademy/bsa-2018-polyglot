@@ -60,9 +60,6 @@ namespace Polyglot.BusinessLogic.Services
                     break;
 
                 /*
-
-
-
                     using (var reader = new StreamReader(file.OpenReadStream()))
                     {
                         str = reader.ReadToEnd();
@@ -437,7 +434,7 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
         }
 
-        public async Task<PaginatedStringsDTO> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
+        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
         {
             var skipItems = itemsOnPage * page;
 
@@ -445,13 +442,7 @@ namespace Polyglot.BusinessLogic.Services
 
             var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
 
-            var totalPages = (int)Math.Ceiling((double)(paginatedStrings?.Count() ?? 0) / itemsOnPage);
-
-            return new PaginatedStringsDTO
-            {
-                TotalPages = totalPages,
-                ComplexStrings = mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings)
-            };
+            return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
 
         }
 

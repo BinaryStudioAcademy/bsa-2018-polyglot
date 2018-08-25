@@ -1,5 +1,6 @@
 ﻿using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,6 +27,10 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<RightDTO>> GetTranslatorRightsAsync(int translatorId);
 
         Task<double> GetTranslatorRatingValueAsync(int translatorId);
+
+        Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition);
+
+        Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition);
 
         #endregion Translators
     }

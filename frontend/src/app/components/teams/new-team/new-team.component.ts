@@ -70,15 +70,13 @@ export class NewTeamComponent implements OnInit {
 
     if (this.teamTranslators.length < 9) { 
       this.teamTranslators.push(translator);
-      this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
+      this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
     }
     else {
       this.snotifyService.error("Ohh we are sorry!, the team can not have more than 9 players", "Error!") 
     }
     
     
-    this.teamTranslators.push(translator);
-    this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
   }
 
   removeTranslator(translator: Translator) {

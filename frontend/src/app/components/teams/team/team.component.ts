@@ -104,11 +104,11 @@ export class TeamComponent implements OnInit {
         });
   }
 
-  checkTranslatorRight(id: number, rightName: string) : boolean{
+  checkTranslatorRight(id: number, rightDefinition: number) : boolean{
     if(!this.teamTranslators)
       return false;
 
-    let teammate = this.teamTranslators.find(t => t.id === id);
+    let teammate = this.teamTranslators.find(t => t.userId === id);
     if(!teammate)
       return false;
       
@@ -117,19 +117,22 @@ export class TeamComponent implements OnInit {
         return false;
       }
       return teammate.rights
-        .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+        .find(r => r.definition == rightDefinition)
         != null;
       
   }
 
-  changeTranslatorRight(e, id){
-    if(e.checked)
-      {
-        // add right
+  changeTranslatorRight(e, id, rightDefinition: number){
+    if(e.checked){
+        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;
+        });
       }
-    else
-      {
-        //remove right
+    else{
+        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;});
       }
   }
 

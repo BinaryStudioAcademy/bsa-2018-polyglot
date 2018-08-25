@@ -38,7 +38,7 @@ export class ManagerProfileComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.manager = this.userService.getCurrrentUser();
+    this.manager = this.userService.getCurrentUser();
 
     this.projectService.getAll().subscribe(pr => {
         this.projects = pr;
@@ -79,18 +79,18 @@ export class ManagerProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (dialogRef.componentInstance.data.answer) {
-        team.teamTranslators = team.teamTranslators.filter(tt => tt.userId !== this.manager.id);
-          this.teamService.update(team.id, team).subscribe(
-            (d) => {
-              setTimeout(() => {
-                this.snotifyService.success("Left team", "Success!");
-              }, 100);
-              this.teams = this.teams.filter(t => t.id !== team.id);
-            },
-            err => {
-              this.snotifyService.error("Team wasn`t left", "Error!");
-            }
-          );
+        let translatorId = team.teamTranslators.find(translator => {return translator.userId === this.manager.id}).id;
+        this.teamService.deletedTeamTranslators([translatorId]).subscribe(
+          (d) => {
+            setTimeout(() => {
+              this.snotifyService.success("Left team", "Success!");
+            }, 100);
+            this.teams = this.teams.filter(t => t.id !== team.id);
+          },
+          err => {
+            this.snotifyService.error("Team wasn`t left", "Error!");
+          }
+        );
         }
       }
     );
