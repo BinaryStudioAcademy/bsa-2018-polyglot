@@ -7,9 +7,8 @@ using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.Hubs
 {
-    public class WorkspaceHub : Hub
+    public class WorkspaceHub : Microsoft.AspNetCore.SignalR.Hub
     {
-
         public async Task JoinProjectGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -28,34 +27,34 @@ namespace Polyglot.Hubs
 
             }
         }
-
-        public async Task NewComplexString(string projectId, int newStringId)
-        {
-            await Clients.Group(projectId).SendAsync("stringAdded", newStringId);
-#warning заменить
-            //  await Clients.OthersInGroup(projectId).SendAsync("stringAdded", newStringId);
-        }
-
-        public async Task ComplexStringDeleted(string projectId, int deletedStingId)
-        {
-            await Clients.Group(projectId).SendAsync("stringDeleted", deletedStingId);
-#warning заменить 
-            // await Clients.OthersInGroup(projectId).SendAsync("stringDeleted", deletedStingId);
-        }
-
-        public async Task NewLanguage(string projectId, int[] languageIds)
-        {
-            await Clients.Group(projectId).SendAsync("languageAdded", languageIds);
-#warning заменить 
-            // await Clients.OthersInGroup(projectId).SendAsync("languageAdded", languageIds);
-        }
-
-        public async Task LanguageDeleted(string projectId, int languageId)
-        {
-            await Clients.Group(projectId).SendAsync("languageDeleted", languageId);
-#warning заменить 
-            // await Clients.OthersInGroup(projectId).SendAsync("languageDeleted", languageId);
-        }
-
     }
 }
+
+
+//public async Task NewComplexString(string projectId, int newStringId)
+//{
+//    await Clients.Group(projectId).SendAsync("stringAdded", newStringId);
+//#warning заменить
+//    //  await Clients.OthersInGroup(projectId).SendAsync("stringAdded", newStringId);
+//}
+
+//public async Task ComplexStringDeleted(string projectId, int deletedStingId)
+//{
+//    await Clients.Group(projectId).SendAsync("stringDeleted", deletedStingId);
+//#warning заменить 
+//    // await Clients.OthersInGroup(projectId).SendAsync("stringDeleted", deletedStingId);
+//}
+
+//public async Task NewLanguage(string projectId, int[] languageIds)
+//{
+//    await Clients.Group(projectId).SendAsync("languageAdded", languageIds);
+//#warning заменить 
+//    // await Clients.OthersInGroup(projectId).SendAsync("languageAdded", languageIds);
+//}
+
+//public async Task LanguageDeleted(string projectId, int languageId)
+//{
+//    await Clients.Group(projectId).SendAsync("languageDeleted", languageId);
+//#warning заменить 
+//    // await Clients.OthersInGroup(projectId).SendAsync("languageDeleted", languageId);
+//}
