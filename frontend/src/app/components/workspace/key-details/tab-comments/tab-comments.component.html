@@ -15,7 +15,7 @@
             <strong class="comment-author">{{com?.user?.fullName}}</strong>
         </div>
         <div class ="text">{{com?.text}}</div>
-        <div class="date"><i>{{com?.createdOn | date:'short'}}</i></div>
+        <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
     </mat-card>
 </div>
 <div *ngIf="!comments" class="spinner">

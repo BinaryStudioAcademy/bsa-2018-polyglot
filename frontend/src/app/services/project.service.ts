@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
-import { Project } from '../models/project';
 import { Observable, of } from 'rxjs';
+import { Language, Project, LanguageStatistic } from  '../models';
+import { map } from '../../../node_modules/rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,36 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages');
   }
 
+  getProjectLanguagesStatistic(id: number) : Observable<LanguageStatistic[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages/stat', undefined, undefined)
+    .pipe(map<LanguageStatistic[],any>(data => {
+      return data.map(function(langStat: any){
+        return {
+          id: langStat.id, 
+          name: langStat.name,
+          code: langStat.code,
+          translatedStringsCount: langStat.translatedStringsCount,
+          complexStringsCount: langStat.complexStringsCount,
+          progress: langStat.complexStringsCount < 1 ? 0 : 100 / langStat.complexStringsCount *  langStat.translatedStringsCount
+        };
+      });
+    }));
+}
+
+getProjectLanguageStatistic(projectId: number, langId: number) : Observable<LanguageStatistic> {
+  return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/languages/' + langId + '/stat', undefined, undefined)
+  .pipe(map<LanguageStatistic,any>(function(langStat) {
+    return {
+        id: langStat.id, 
+        name: langStat.name,
+        code: langStat.code,
+        translatedStringsCount: langStat.translatedStringsCount,
+        complexStringsCount: langStat.complexStringsCount,
+        progress: langStat.complexStringsCount < 1 ? 0 : 100 / langStat.complexStringsCount *  langStat.translatedStringsCount
+    }
+  }));
+}
+
   addLanguagesToProject(projectId: number, languageIds: Array<number>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/languages', undefined, languageIds);
   }
@@ -85,5 +116,15 @@ export class ProjectService {
 
   getProjectReports(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
+  }
+
+  computeProgress(complexStringsCount: number, translatedStringsCount: number) : number
+  {
+    if(complexStringsCount < 1)
+      return 0;
+    else
+    {
+      return 100 / complexStringsCount * translatedStringsCount;
+    }
   }
 }

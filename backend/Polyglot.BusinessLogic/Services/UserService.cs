@@ -13,8 +13,6 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
-
-
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)
         {
@@ -38,6 +36,18 @@ namespace Polyglot.BusinessLogic.Services
         {
             var user = await CurrentUser.GetCurrentUserProfile();
             return user != null;
+        }
+
+        public async Task<bool> PutUserBool(UserProfileDTO userProfileDTO)
+        {
+            var result = uow.GetRepository<UserProfile>().UpdateBool((mapper.Map<UserProfile>(userProfileDTO)));
+            if (result)
+            {
+                await uow.SaveAsync();
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -217,7 +217,7 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Definition");
+                    b.Property<int>("Definition");
 
                     b.HasKey("Id");
 
@@ -266,9 +266,9 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("TeamId");
+                    b.Property<int>("TeamId");
 
-                    b.Property<int?>("TranslatorId");
+                    b.Property<int>("TranslatorId");
 
                     b.HasKey("Id");
 
@@ -276,7 +276,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("TranslatorId");
 
-                    b.ToTable("TeamTranslator");
+                    b.ToTable("TeamTranslators");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>
@@ -450,11 +450,13 @@ namespace Polyglot.DataAccess.Migrations
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.Team", "Team")
                         .WithMany("TeamTranslators")
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
                         .WithMany("TeamTranslators")
-                        .HasForeignKey("TranslatorId");
+                        .HasForeignKey("TranslatorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>

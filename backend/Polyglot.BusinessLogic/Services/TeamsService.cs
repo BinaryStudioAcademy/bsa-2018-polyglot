@@ -117,7 +117,7 @@ namespace Polyglot.BusinessLogic.Services
                     var translatorsList = dest.ToList();
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                     }
 
                 }));
@@ -130,6 +130,21 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
                 return null;
+        }
+
+        public override async Task<TeamDTO> PutAsync(TeamDTO entity)
+        {
+            if (uow != null)
+            {
+                var teamRepository = uow.GetRepository<Team>();
+                var target = teamRepository.Update(mapper.Map<Team>(entity));
+                if (target != null)
+                {
+                    await uow.SaveAsync();
+                    return mapper.Map<TeamDTO>(target);
+                }
+            }
+            return null;
         }
 
         #endregion Overrides
@@ -169,9 +184,9 @@ namespace Polyglot.BusinessLogic.Services
                     IEnumerable<TranslatorLanguage> translatorLanguages;
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                         // добавляем инфо о языках
-                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].Id);
+                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].UserId);
                         if (translatorLanguages != null && translatorLanguages.Count() > 0)
                             translatorsList[i].TranslatorLanguages = mapper.Map<IEnumerable<TranslatorLanguageDTO>>(translatorLanguages);
                     }
@@ -224,6 +239,43 @@ namespace Polyglot.BusinessLogic.Services
         {
 // TODO IMPLEMENT
             throw new System.NotImplementedException();
+        }
+
+        public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            translator.TranslatorRights.Add(new TranslatorRight()
+            {
+                RightId = right.Id,
+                TeamTranslatorId = translator.Id
+            });
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
+        }
+
+        public async Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            var translatorRight = translator.TranslatorRights
+                .FirstOrDefault(tr => tr.RightId == right.Id &&  tr.TeamTranslatorId == translator.Id);
+
+            translator.TranslatorRights.Remove(translatorRight);
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
         }
 
         #endregion Translators

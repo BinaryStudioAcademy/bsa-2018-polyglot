@@ -250,19 +250,17 @@ namespace Polyglot.DataAccess.Seeds
              );
 
             modelBuilder.Entity<Right>().HasData(
-             new Right { Id = 1, Definition = "Add new language" },
-             new Right { Id = 2, Definition = "Add new key" },
-             new Right { Id = 3, Definition = "Add new team member" },
-             new Right { Id = 4, Definition = "Select new language" },
-             new Right { Id = 5, Definition = "Delete key" }
+             new Right { Id = 1, Definition = RightDefinition.AddNewLanguage },
+             new Right { Id = 2, Definition = RightDefinition.AddNewKey },
+             new Right { Id = 3, Definition = RightDefinition.SelectNewLanguage }
             );
 
             modelBuilder.Entity<Team>().HasData(
-             new { Id = 1, ProjectId = 5 },
-             new { Id = 2, ProjectId = 2 },
-             new { Id = 3, ProjectId = 3 },
-             new { Id = 4, ProjectId = 1 },
-             new { Id = 5, ProjectId = 4 }
+             new { Id = 1, ProjectId = 5, Name = "Team Alpha" },
+             new { Id = 2, ProjectId = 2, Name = "Team Beta" },
+             new { Id = 3, ProjectId = 3, Name = "Team Gamma" },
+             new { Id = 4, ProjectId = 1, Name = "Team Tetta" },
+             new { Id = 5, ProjectId = 4, Name = "Team Omega" }
             );
 
 
@@ -476,11 +474,9 @@ namespace Polyglot.DataAccess.Seeds
             if (!context.Rights.Any())
             {
                 var rights = new List<Right> {
-                    new Right {  Definition = "Add new language" },
-                    new Right {  Definition = "Add new key" },
-                    new Right {  Definition = "Add new team member" },
-                    new Right {  Definition = "Select new language" },
-                    new Right {  Definition = "Delete key" }
+                    new Right {  Definition = RightDefinition.AddNewLanguage },
+                    new Right {  Definition = RightDefinition.AddNewKey },
+                    new Right {  Definition = RightDefinition.SelectNewLanguage }
                     };
                 context.AddRange(rights);
                 context.SaveChanges();
@@ -567,6 +563,7 @@ namespace Polyglot.DataAccess.Seeds
             {
                 var teams = new List<Team> {
                      new Team {
+                         Name = "Team Alpha",
                          TeamTranslators = new List<TeamTranslator> {
                             new TeamTranslator {
                                 TranslatorId = 1,
@@ -591,6 +588,7 @@ namespace Polyglot.DataAccess.Seeds
                          }
                      },
                      new Team {
+                         Name = "Team Beta",
                          TeamTranslators = new List<TeamTranslator> {
                             new TeamTranslator {
                                 TranslatorId = 4,

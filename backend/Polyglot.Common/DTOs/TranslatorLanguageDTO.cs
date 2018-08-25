@@ -2,7 +2,7 @@
 {
     public class TranslatorLanguageDTO 
     {
-        public LanguageDTO Language { get; set; }
+        public LanguageStatisticDTO Language { get; set; }
         
         public int Proficiency { get; set; }
 

@@ -60,7 +60,7 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'translator', canActivate: [AuthGuard], component: TranslatorProfileComponent },
+  { path: 'translator/:translatorId', canActivate: [AuthGuard], component: TranslatorProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

@@ -1,12 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.FileRepository;
+using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.Controllers
 {
@@ -18,11 +25,17 @@ namespace Polyglot.Controllers
     {
         private readonly IUserService service;
         private readonly ICRUDService<Rating, RatingDTO> ratingService;
-        
-        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService)
+        private readonly ITeamService teamService;
+        private readonly IFileStorageProvider fileStorageProvider;
+        private readonly IMapper mapper;
+
+        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider, IMapper mapper)
         {
             this.service = service;
             this.ratingService = ratingService;
+            this.teamService = teamService;
+            this.fileStorageProvider = fileStorageProvider;
+            this.mapper = mapper;
         }
 
         // GET: UserProfiles
@@ -65,6 +78,17 @@ namespace Polyglot.Controllers
                 : Ok(userRatings);
         }
 
+        [HttpGet("{id}/teams")]
+        public async Task<IActionResult> GetUserTeams(int id)
+        {
+            var teams = await teamService.GetListAsync();
+            var userTeams = teams?.Where(x => x.TeamTranslators.Any(y => y.UserId == id));
+
+            return userTeams == null
+                ? NotFound($"Teams for user with id = {id} not found") as IActionResult
+                : Ok(userTeams);
+        }
+
         // PUT: UserProfiles/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
@@ -102,12 +126,41 @@ namespace Polyglot.Controllers
                 entity);
         }
 
+        [HttpPut("photo")]
+        public async Task<IActionResult> AddCropedPhoto(IFormFile formFile)
+        {
+            var currentUser = mapper.Map<UserProfileDTO>(await CurrentUser.GetCurrentUserProfile());
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile photo = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    photo.CopyTo(ms);
+                    await photo.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
+                
+                currentUser.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
+                var result = await service.PutUserBool(currentUser);
+
+                return currentUser == null
+                    ? StatusCode(400) as IActionResult
+                    : Ok(currentUser);
+            }
+            
+            return BadRequest();
+        }
+
         [HttpGet("isInDb")]
         public async Task<bool> IsUserInDb()
         {
             return await service.IsExistByUidAsync(HttpContext.User.GetUid());
         }
-
-
     }
 }

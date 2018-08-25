@@ -49,7 +49,7 @@ export class NewTeamComponent implements OnInit {
   getAllTranslators() {
     this.teamService.getAllTranslators()
       .subscribe((translators: Translator[]) => {
-       
+
         this.IsLoad = false;
         if (translators && translators.length > 0)
           this.allTranslators = translators;
@@ -66,15 +66,22 @@ export class NewTeamComponent implements OnInit {
   }
 
   addTranslator(translator: Translator) {
+
+    if (this.teamTranslators.length < 9) { 
+      this.teamTranslators.push(translator);
+      this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
+    }
+    else {
+      this.snotifyService.error("Ohh we are sorry!, the team can not have more than 9 players", "Error!") 
+    }
     
-    this.teamTranslators.push(translator);
-    this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
+    
   }
 
   removeTranslator(translator: Translator) {
-    
+
     this.allTranslators.push(translator);
-    this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
+    this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
   }
 
   formTeam(name : any) {
@@ -102,8 +109,8 @@ export class NewTeamComponent implements OnInit {
     // this.dataSource.filter = filterValue;
   }
   getAvatarUrl(person): String {
-    
-    if (person.avatarUrl!==" ")
+
+    if (person.avatarUrl !== " ")
       return person.avatarUrl;
     else
       return this.defaultAvatar;

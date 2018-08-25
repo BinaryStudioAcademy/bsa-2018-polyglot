@@ -5,10 +5,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic;
+using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Services;
+using Polyglot.BusinessLogic.TranslationServices;
+using Polyglot.DataAccess.FileRepository;
+using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.MongoRepository;
+using Polyglot.DataAccess.Seeds;
+using Polyglot.DataAccess.SqlRepository;
+using Polyglot.Hubs;
+using mapper = Polyglot.Common.Mapping.AutoMapper;
 using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
-
+using Microsoft.EntityFrameworkCore;
 namespace Polyglot
 {
     public class Startup
@@ -44,6 +54,9 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
+            services.AddSignalR();
+
+            services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);
@@ -55,10 +68,24 @@ namespace Polyglot
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+                context.Database.Migrate();
+                serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
+            }
+
+            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            // {
+            //     var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
+            //     MongoDbSeedsInitializer.MongoSeedAsync(context);
+            // }
 
             BusinessLogicModule.ConfigureMiddleware(app);
             CommonModule.ConfigureMiddleware(app);
@@ -73,17 +100,12 @@ namespace Polyglot
             app.UseAuthentication();
 
             app.UseMvc();
+
+            app.UseSignalR(options =>
+            {
+                options.MapHub<WorkspaceHub>("/workspaceHub");
+            });
+
         }
     }
 }
-
-
-/*
-
-app.UseCors(builder => builder
-    .WithOrigins("http://localhost:4200")
-    .AllowAnyOrigin()
-    .AllowCredentials()
-    .AllowAnyHeader()
-    .AllowAnyMethod());
-*/

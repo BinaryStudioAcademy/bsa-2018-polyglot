@@ -3,6 +3,10 @@ import { MatDialog } from '@angular/material';
 import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.component';
 import { UserService } from '../../../services/user.service';
 import { UserProfile } from '../../../models/user-profile';
+import { Team } from '../../../models/team';
+import { TeamService } from '../../../services/teams.service';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-translator-profile',
@@ -11,17 +15,28 @@ import { UserProfile } from '../../../models/user-profile';
 })
 export class TranslatorProfileComponent implements OnInit{
 
+    teams : Team[];
+    description: string = "Are you sure you want to leave the team?";
+    btnOkText: string = "Yes";
+    btnCancelText: string = "No";
+    answer: boolean;
+
     constructor(private userService: UserService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private teamService: TeamService,
+              private snotifyService: SnotifyService) { }
 
     public userProfile : any;
     public Comments: Comment[];
     Languages: Language[];
 
     ngOnInit(): void {
-            this.userProfile = this.userService.getCurrrentUser();
+            this.userProfile = this.userService.getCurrentUser();
             this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
             this.userProfile.ratings = ratings;
+            this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
+                this.teams = t;
+              });
         });
     
         this.Comments = [
@@ -43,8 +58,32 @@ export class TranslatorProfileComponent implements OnInit{
           
        
     }
-
     
+    leaveTeam(team: Team)
+    {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {description: this.description, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (dialogRef.componentInstance.data.answer){
+                let translatorId = team.teamTranslators.find(translator => {return translator.userId === this.userProfile.id}).id;
+                this.teamService.deletedTeamTranslators([translatorId]).subscribe(
+                    (d) => {
+                        setTimeout(() => {
+                            this.snotifyService.success("Left team", "Success!");
+                            }, 100);
+                            this.teams = this.teams.filter(t => t.id !== team.id);
+                        },
+                        err => {
+                            this.snotifyService.error("Team wasn`t left", "Error!");
+                        }
+                    );
+                }
+            }
+        );
+    }
+
     calculateAvarageRating(){
         if(!this.userProfile.ratings.length) {
             return 0;
@@ -58,9 +97,27 @@ export class TranslatorProfileComponent implements OnInit{
     }
 
     editPhoto(){
-        this.dialog.open(CropperComponent, {
+        const dialogRef = this.dialog.open(CropperComponent, {
             data: {imageUrl: this.userProfile.avatarUrl}
         });
+        dialogRef.afterClosed().subscribe(result => {
+            if (dialogRef.componentInstance.selectedImage){
+                let formData = new FormData();
+                formData.append("image", dialogRef.componentInstance.selectedImage);
+                this.userService.updatePhoto(formData).subscribe(
+                    (d) => {
+                        setTimeout(() => {
+                            this.snotifyService.success("Photo updated.", "Success!");
+                            }, 100);
+                            this.userProfile = d;
+                        },
+                        err => {
+                            this.snotifyService.error("Photo failed to update!", "Error!");
+                        }
+                    );
+                }
+            }
+        );
     }
 
 }

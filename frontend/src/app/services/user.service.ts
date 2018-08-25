@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
-import { UserProfile, Rating } from '../models';
+import { UserProfile, Rating, Team } from '../models';
 import { AppStateService } from './app-state.service';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class UserService {
     this.api = "userprofiles";
    }
 
-  getCurrrentUser(){
+  getCurrentUser(){
     let user = this.appState.currentDatabaseUser;
 
     if (user) {
@@ -30,7 +30,7 @@ export class UserService {
   getAndUpdate() {
     this.getUser().subscribe(
       (user)=> {
-        this.updateCurrrentUser(user);
+        this.updateCurrentUser(user);
       },
       err => {
         console.log('err', err);
@@ -43,7 +43,7 @@ export class UserService {
     this.appState.currentDatabaseUser = undefined;
   }
 
-  updateCurrrentUser (userProfile: any) {
+  updateCurrentUser (userProfile: any) {
     if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
       userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
     }
@@ -56,8 +56,12 @@ export class UserService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user');
   }
 
-  getUserRatings(id: number) : Observable<Rating> {
+  getUserRatings(id: number) : Observable<Rating[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/ratings');
+  }
+
+  getUserTeams(id) : Observable<Team[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams');
   }
 
   getOne(id: number) : Observable<any> {
@@ -78,6 +82,10 @@ export class UserService {
 
   update(id: number, body) : Observable<UserProfile>{
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
+  }
+
+  updatePhoto(photo: FormData) : Observable<UserProfile>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/photo', undefined, photo, undefined, 'form-data');
   }
 
   delete(id: number) : Observable<UserProfile>{
