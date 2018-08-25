@@ -11,7 +11,7 @@ export class SearchService {
 
   constructor() { }
 
-  GetTranslatorsByTeam(teamId: number) : Observable<Translator[]>{
+  GetTranslatorsByTeam(teamId: number) : Observable<any>{
     // собираем translator + email + rights
     return of([
     {
@@ -190,7 +190,7 @@ export class SearchService {
   }
 
 
-  FindTranslatorsByEmail(email: string) : Observable<Translator[]>{
+  FindTranslatorsByEmail(email: string) : Observable<any>{
     
     return of([
       {

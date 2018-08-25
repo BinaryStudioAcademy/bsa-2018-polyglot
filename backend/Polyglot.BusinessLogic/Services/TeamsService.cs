@@ -123,14 +123,6 @@ namespace Polyglot.BusinessLogic.Services
             if (uow != null)
             {
                 var teamRepository = uow.GetRepository<Team>();
-                var teamTranslatorRepository = uow.GetRepository<TeamTranslator>();
-                var teamTranslatorsToRemove = (await teamTranslatorRepository.GetAllAsync(x => x.TeamId == entity.Id)).Where(x => entity.TeamTranslators.All(y => y.Id != x.Id));
-                foreach (var teamTranslator in teamTranslatorsToRemove)
-                {
-                    await teamTranslatorRepository.DeleteAsync(teamTranslator.Id);
-                }
-                
-
                 var target = teamRepository.Update(mapper.Map<Team>(entity));
                 if (target != null)
                 {
@@ -233,6 +225,43 @@ namespace Polyglot.BusinessLogic.Services
         {
 // TODO IMPLEMENT
             throw new System.NotImplementedException();
+        }
+
+        public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            translator.TranslatorRights.Add(new TranslatorRight()
+            {
+                RightId = right.Id,
+                TeamTranslatorId = translator.Id
+            });
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
+        }
+
+        public async Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            var translatorRight = translator.TranslatorRights
+                .FirstOrDefault(tr => tr.RightId == right.Id &&  tr.TeamTranslatorId == translator.Id);
+
+            translator.TranslatorRights.Remove(translatorRight);
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
         }
 
         #endregion Translators

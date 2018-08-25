@@ -46,6 +46,7 @@
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea matInput
 												[(ngModel)]="t.translationValue"
+												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
 													  cdkAutosizeMinRows="2"
 													  placeholder="Write here to start translating"
@@ -100,7 +101,14 @@
 		<mat-tab label="O_Translation" >
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
+			</ng-template>			
+		</mat-tab>
+
+		<mat-tab label="Glossary" >
+			<ng-template mat-tab-label>
+				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">book</mat-icon>
 			</ng-template>
+			<app-tab-glossary [keyDetails]="keyDetails" [translation]="currentTranslation"></app-tab-glossary>
 		</mat-tab>
 	</mat-tab-group>
 </mat-card>
