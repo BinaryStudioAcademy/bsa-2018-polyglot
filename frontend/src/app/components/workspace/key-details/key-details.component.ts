@@ -14,6 +14,7 @@ import * as signalR from '../../../../../node_modules/@aspnet/signalr';
 import { SignalrService } from '../../../services/signalr.service';
 import { TranslationState } from '../../../models/translation-state';
 import { TranslationService } from '../../../services/translation.service';
+import { SignalrSubscribeActions } from '../../../models/signalrModels/signalr-subscribe-actions';
 import { TabGlossaryComponent } from './tab-glossary/tab-glossary.component';
 
 @Component({
@@ -81,7 +82,7 @@ export class KeyDetailsComponent implements OnInit {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
-                this.signalrService.createConnection(this.keyDetails.id);
+                this.signalrService.createConnection(this.keyDetails.id, 'workspaceHub');
                 this.subscribeProjectChanges();
                 this.getLanguages();
             });
@@ -116,13 +117,10 @@ export class KeyDetailsComponent implements OnInit {
 
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on("addedFirstTranslation", (translation: any) => {
+        this.signalrService.connection.on(SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation], (translation: any) => {
             this.setNewValueTranslation(translation);
         });
-        this.signalrService.connection.on("changedTranslation", (translation: any) => {
-            this.setNewValueTranslation(translation);
-        });
-        this.signalrService.connection.on("commentAdded", (comments: any) => {
+        this.signalrService.connection.on(SignalrSubscribeActions[SignalrSubscribeActions.commentAdded], (comments: any) => {
             this.comments = comments;
         });
     }
