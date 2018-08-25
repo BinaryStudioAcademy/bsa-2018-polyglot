@@ -132,7 +132,7 @@ export class TeamComponent implements OnInit {
     else{
         this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
           let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
-          this.teamTranslators[teammateIndex] = teammate;);
+          this.teamTranslators[teammateIndex] = teammate;});
       }
   }
 
