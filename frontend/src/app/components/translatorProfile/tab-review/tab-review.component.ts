@@ -5,6 +5,7 @@ import { UserService } from '../../../services/user.service';
 import { RatingService } from '../../../services/rating.service';
 import { Rating } from '../../../models';
 import { StarRatingColor } from '../star-rating/star-rating.component';
+import { SnotifyService } from 'ng-snotify';
 
 @Component({
   selector: 'app-tab-review',
@@ -27,6 +28,7 @@ export class TabReviewComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private userService: UserService,
+    private snotifyService: SnotifyService,
     private ratingsService: RatingService) { }
 
   ngOnInit() {
@@ -48,13 +50,16 @@ export class TabReviewComponent implements OnInit {
     this.ratingsService.create(ratingObj).subscribe(
       (data) => {
         this.reviewForm.reset();
-        this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
-          this.userProfile.ratings = ratings;
-        });
-          
-      },
-      err => {
-        console.log("Error", err);
-      });
+        this.userProfile.ratings.unshift(data);
+        if (data) {
+          this.snotifyService.success("review added", "Success!");
+      }
+      else {
+          this.snotifyService.error("review wasn't add", "Error!");
+      }
+  },
+  err => {
+      this.snotifyService.error("review wasn't add", "Error!");
+  });
   }
 }

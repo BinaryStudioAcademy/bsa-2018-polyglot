@@ -11,9 +11,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class RatingsController : ControllerBase
     {
-        private readonly ICRUDService<Rating, RatingDTO> service;
+        private readonly IRatingService service;
 
-        public RatingsController(ICRUDService<Rating, RatingDTO> service)
+        public RatingsController(IRatingService service)
         {
             this.service = service;
         }
@@ -22,7 +22,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRatings()
         {
-            var projects = (await service.GetListAsync()).Reverse();
+            var projects = (await service.GetListAsync());
             return projects == null ? NotFound("No ratings found!") as IActionResult
                 : Ok(projects);
         }

@@ -23,11 +23,11 @@ namespace Polyglot.Controllers
     public class UserProfilesController : ControllerBase
     {
         private readonly IUserService service;
-        private readonly ICRUDService<Rating, RatingDTO> ratingService;
+        private readonly IRatingService ratingService;
         private readonly ITeamService teamService;
         public IFileStorageProvider fileStorageProvider;
 
-        public UserProfilesController(IUserService service, ICRUDService<Rating, RatingDTO> ratingService, ITeamService teamService)
+        public UserProfilesController(IUserService service, IRatingService ratingService, ITeamService teamService)
         {
             this.service = service;
             this.ratingService = ratingService;
@@ -71,7 +71,7 @@ namespace Polyglot.Controllers
 
             return userRatings == null
                 ? NotFound($"Ratings for user with id = {id} not found") as IActionResult
-                : Ok(userRatings);
+                : Ok(userRatings.Reverse());
         }
 
         [HttpGet("{id}/teams")]
