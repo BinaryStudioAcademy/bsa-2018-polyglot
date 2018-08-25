@@ -15,6 +15,7 @@ import { SignalrService } from '../../../services/signalr.service';
 import { TranslationState } from '../../../models/translation-state';
 import { TranslationService } from '../../../services/translation.service';
 import { SignalrSubscribeActions } from '../../../models/signalrModels/signalr-subscribe-actions';
+import { TabGlossaryComponent } from './tab-glossary/tab-glossary.component';
 
 @Component({
     selector: 'app-workspace-key-details',
@@ -50,6 +51,8 @@ export class KeyDetailsComponent implements OnInit {
     isMachineTranslation: boolean;
     public MachineTranslation: string;
     public previousTranslation: string;
+    currentTranslation: string;
+
 
 
     constructor(private route: ActivatedRoute,
@@ -132,6 +135,7 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     this.history.showHistory(index);
+    this.currentTranslation = this.keyDetails.translations[index].translationValue;
   }
 
 
@@ -177,7 +181,10 @@ export class KeyDetailsComponent implements OnInit {
         return searchedElement.length > 0 ? searchedElement[0] : null;
     }
 
+
     onSave(index: number, t: any) {
+            this.currentTranslation = '';
+  
             if (this.isMachineTranslation) {
                 t.Type = TranslationType.Machine;
                 this.isMachineTranslation = false;
@@ -212,8 +219,10 @@ export class KeyDetailsComponent implements OnInit {
     }
     }
     onClose(index: number, translation: any) {
+        
         if (this.expandedArray[index].oldValue == translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
+            this.currentTranslation = '';
             return;
         }
         const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
@@ -232,8 +241,10 @@ export class KeyDetailsComponent implements OnInit {
                     this.keyDetails.translations[index].translationValue = this.previousTranslation;
                     this.isMachineTranslation = false;
                 }
+                this.currentTranslation = '';
             }
         });
+        
     }
 
 
