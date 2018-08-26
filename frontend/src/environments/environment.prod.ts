@@ -8,6 +8,5 @@ export const environment = {
         storageBucket: "polyglot-dbc9a.appspot.com",
         messagingSenderId: "366581495425"
     },
-    apiUrl: '/api',
-    hubUrl: ''
+    apiUrl: '/api'
 };
