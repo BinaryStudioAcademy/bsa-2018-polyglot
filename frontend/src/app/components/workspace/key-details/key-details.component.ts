@@ -76,12 +76,6 @@ export class KeyDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        if (!this.appState.getWorkspaceState) {
-            debugger;
-            this.dataIsLoaded = false;
-            this._location.back();
-            return;
-        }
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
 
