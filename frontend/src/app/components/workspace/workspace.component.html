@@ -1,84 +1,63 @@
 <header class="project-header d-flex align-items-center py-0">
-  <div class="d-flex flex-column grow-1 px-2 secondary">
-    <h2>{{project?.name}}</h2>
-  </div>
+    <div class="d-flex flex-column grow-1 px-2 secondary">
+        <h2>{{project?.name}}</h2>
+    </div>
 </header>
 
 <section class="project-main">
-  <mat-card class="d-flex align-items-center py-0 px-1 justify-space-between search-bar">
-    <div>
-      <mat-form-field class="search-form-field" [floatLabel]="'never'">
-        <button mat-button matSuffix mat-icon-button aria-label="Search">
-          <mat-icon>search</mat-icon>
-        </button>
-        <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
-        <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
-          <mat-icon>close</mat-icon>
-        </button>
+    <mat-card class="d-flex align-items-center py-0 px-1 justify-space-between search-bar">
+        <div>
+            <mat-form-field class="search-form-field" [floatLabel]="'never'">
+                <button mat-button matSuffix mat-icon-button aria-label="Search">
+                    <mat-icon>search</mat-icon>
+                </button>
+                <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
+                    <mat-icon>close</mat-icon>
+                </button>
 
-      </mat-form-field>
-      <button class="mx-1" mat-flat-button type="button" (click)="onAdvanceSearchClick()">Advance Search</button>
-    </div>
-
-    <div *ngIf="project">
-      <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
-      <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
-    </div>
-  </mat-card>
-
-  <div class="mt-1 mb-1" *ngIf="keys.length === 0">
-      <mat-card class="no-string-div">
-      <p>No strings</p>
-    </mat-card>
-  </div>
-  <div class="d-flex workspace-height" *ngIf="keys.length !== 0">
-    <mat-card class="keys-list d-flex my-1 p-0">
-      <div style="width: 100%;">
-        <div style="padding-top:10px;padding-bottom:10px;">
-          <mat-select multiple placeholder="Filter" class="filter" [formControl]="options">
-            <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
-              {{filter}}
-            </mat-option>
-          </mat-select>
+            </mat-form-field>
+            <button class="mx-1" mat-flat-button type="button" (click)="onAdvanceSearchClick()">Advance Search</button>
         </div>
 
-
-          <mat-nav-list class="keys-list__nav key-list-style"
-           ngxInfiniteScroller
-           horizontal="false"
-           (onScrollUp)="onScrollUp()" 
-           (onScrollDown)="onScrollDown()">
-
-            <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
-              <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
-                <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
-              </div>
-              <mat-divider></mat-divider>
-            </a>
-
-          </mat-nav-list>
-
-        
-
-
-        <!-- <mat-nav-list class="keys-list__nav key-list-style">
-        <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
-          <div [class.selected]="key === selectedKey"
-          (click)="onSelect(key)">
-            <app-workspace-key (idEvent)="receiveId($event)" [key]="key" [connection]="connection"></app-workspace-key>
-          </div>
-          <mat-divider></mat-divider>
-        </a>
-      
-      </mat-nav-list>  -->
-
-
-
-      </div>
+        <div *ngIf="project">
+            <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
+            <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
+        </div>
     </mat-card>
-    <div style="width: 100%;" *ngIf="keys.length !== 0">
-    <router-outlet></router-outlet>
-  </div>
-  </div>
-  <ng-snotify></ng-snotify>
+
+    <div class="mt-1 mb-1" *ngIf="keys.length === 0">
+        <mat-card class="no-string-div">
+            <p>No strings</p>
+        </mat-card>
+    </div>
+    <div class="d-flex workspace-height" *ngIf="keys.length !== 0">
+        <mat-card class="keys-list d-flex my-1 p-0">
+            <div style="width: 100%;">
+                <div style="padding-top:10px;padding-bottom:10px;">
+                    <mat-select multiple placeholder="Filter" class="filter" [formControl]="options">
+                        <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
+                            {{filter}}
+                        </mat-option>
+                    </mat-select>
+                </div>
+
+
+                <mat-nav-list class="keys-list__nav key-list-style" ngxInfiniteScroller horizontal="false" (onScrollUp)="onScrollUp()" (onScrollDown)="onScrollDown()">
+
+                    <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
+                        <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
+                            <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </a>
+
+                </mat-nav-list>
+            </div>
+        </mat-card>
+        <div style="width: 100%;" *ngIf="keys.length !== 0">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    <ng-snotify></ng-snotify>
 </section>

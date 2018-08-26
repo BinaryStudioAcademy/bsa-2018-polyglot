@@ -20,7 +20,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 })
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
-    public keys: any[];
+    public keys: any[] = [];
     public searchQuery: string;
     public selectedKey: any;
     public isEmpty;
