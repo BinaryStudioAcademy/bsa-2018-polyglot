@@ -108,7 +108,7 @@
                             <hr>
                             <br>
                             <mat-card-header>
-                                <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" alt="">
+                                <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
                             <mat-card-title>{{review.createdBy.fullName}}</mat-card-title>
                             </mat-card-header>
                             <br>
