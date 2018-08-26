@@ -75,4 +75,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             this.checked = true;
         }
     }
+    
+    isCurrentUserManager(){
+        return this.userService.isCurrentUserManager();
+    }
 }

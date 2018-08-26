@@ -55,7 +55,7 @@
                               <div *ngFor="let t of teams">
                                   <div class="team-card">
                                         <h3 class="team" mat-list-item [routerLink]="['/dashboard/teams', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</h3>
-                                        <button class="team-leave-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam(t)>Leave</button>
+                                        <button *ngIf="isOwnersProfile()" class="team-leave-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam(t)>Leave</button>
                                   </div>
                                   <hr>
                               </div>
@@ -80,14 +80,11 @@
             </div>  
         </div>
     </div>
-            <div class="item" fxFlex class="left-card" *ngIf="!isOwnersProfile()">
-                <div>
-                    <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
-                </div>
-            </div>
+
         </div>
         <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
             <div fxFlex>
+                    
                 <mat-card>
                     <h2>Personal detail</h2>
                     <hr>
@@ -101,7 +98,11 @@
                     <mat-card-title>Contacts</mat-card-title><hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                <mat-card>
+                
+                <mat-card *ngIf="!isOwnersProfile()">
+                    <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
+                </mat-card>
+                <mat-card class="review-card" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
                         <h2>Reviews: </h2>
                         <div *ngFor="let review of userProfile.ratings">
                             <hr>

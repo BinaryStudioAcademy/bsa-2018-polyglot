@@ -24,9 +24,9 @@
             <mat-card class="teammate-card">
               <div class="temmate-header">
                 <div class="teammate-header-image">
-                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" >
+                  <a  [routerLink]="['/translator', t.userId]"><img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" ></a>
                 </div>
-                <div class="teammate-name">{{t.fullName}}</div>
+                <div class="teammate-name"><a  [routerLink]="['/translator', t.userId]">{{t.fullName}}</a></div>
                 <div class="rating">
                   <mat-icon aria-label="icon-button">star_rate</mat-icon>
                   <span>{{t.rating | number: '1.0-1'}}</span>
@@ -75,9 +75,9 @@
           <mat-card class="teammate-card">
             <div class="temmate-header">
               <div class="teammate-header-image">
-                <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" >
+                <a  [routerLink]="['/translator', t.userId]"><img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" ></a>
               </div>
-              <div class="teammate-name">{{t.fullName}}</div>
+              <div class="teammate-name"><a  [routerLink]="['/translator', t.userId]">{{t.fullName}}</a></div>
               <div class="rating">
                 <mat-icon aria-label="icon-button">star_rate</mat-icon>
                 <span>{{t.rating | number: '1.0-1'}}</span>
