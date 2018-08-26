@@ -82,7 +82,7 @@ namespace Polyglot.Common.Mapping
 					.ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))
 					.ForMember(p => p.Description, opt => opt.MapFrom(pt => pt.Description))
 					.ForMember(p => p.ImageUrl, opt => opt.MapFrom(pt => pt.ImageUrl))
-					.ForMember(p => p.MainLanguage, opt => opt.Ignore())
+					.ForMember(p => p.MainLanguage, opt => opt.MapFrom(pt => pt.MainLanguage))
 					.ForMember(p => p.UserProfile, opt => opt.Ignore())
 					.ForMember(p => p.Name, opt => opt.MapFrom(pt => pt.Name))				
                     .ForMember(p => p.ProjectGlossaries, opt => opt.Ignore())
