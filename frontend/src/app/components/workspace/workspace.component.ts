@@ -101,7 +101,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     onAdvanceSearchClick() { }
 
-   /* ngDoCheck() {
+    ngDoCheck() {
         debugger;
         if (
             this.project &&
@@ -111,7 +111,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         ) {
             this.router.navigate(["/"]);
         }
-    }*/
+    }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
