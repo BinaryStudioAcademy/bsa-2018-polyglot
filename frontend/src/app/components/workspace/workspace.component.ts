@@ -65,37 +65,53 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.searchQuery = '';
         this.routeSub = this.activatedRoute.params.subscribe((params) => {
             //making api call using service service.get(params.projectId); ..
-            this.getProjById(params.projectId);
-            this.basicPath = 'workspace/' + params.projectId;
-            this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
-                .subscribe((data: any) => {
-                    if (data) {
-                        this.keys = data;
-                        this.onSelect(this.keys[0]);
-                        let keyId: number;
-                        if (this.keys.length !== 0) {
-                            keyId = this.keys[0].id;
-                            this.router.navigate([this.currentPath, keyId]);
-                        }
-                    }
-                });
+            this.dataProvider.getById(params.projectId).subscribe(proj => {
+                this.project = proj;
+           
+            this.projectService.getProjectLanguages(this.project.id).subscribe(
+                (d: Language[]) => {
+                    const workspaceState = {
+                        projectId: this.project.id,
+                        languages: d
+                    };
+                    this.appState.setWorkspaceState = workspaceState;
+                    this.basicPath = 'workspace/' + params.projectId;
+                    this.currentPath = 'workspace/' + params.projectId + '/key';
+                    this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+                        .subscribe((data: any) => {
+                            if (data) {
+                                this.keys = data;
+                                this.onSelect(this.keys[0]);
+                                let keyId: number;
+                                if (this.keys.length !== 0) {
+                                    keyId = this.keys[0].id;
+                                    this.router.navigate([this.currentPath, keyId]);
+                                }
+                            }
+                        });
+                },
+                err => {
+                    console.log("err", err);
+                }
+            );
+            });
             this.currentPage++;
         });
     }
 
     onAdvanceSearchClick() { }
 
-    ngDoCheck() {
+   /* ngDoCheck() {
+        debugger;
         if (
             this.project &&
             this.keys &&
             this.router.url == `/workspace/${this.project.id}` &&
-            this.keys.length != 0
+            this.keys.length !== 0
         ) {
             this.router.navigate(["/"]);
         }
-    }
+    }*/
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
@@ -128,38 +144,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     getProjById(id: number) {
         this.dataProvider.getById(id).subscribe(proj => {
             this.project = proj;
-            this.projectService.getProjectLanguages(this.project.id).subscribe(
-                (d: Language[]) => {
-                    const workspaceState = {
-                        projectId: this.project.id,
-                        languages: d
-                    };
-                    this.appState.setWorkspaceState = workspaceState;
-                    this.basicPath = "workspace/" + this.project.id;
-                    this.currentPath = "workspace/" + this.project.id + "/key";
-                    this.dataProvider
-                        .getProjectStrings(this.project.id)
-                        .subscribe((data: any) => {
-                            if (data) {
-                                this.onSelect(data[0]);
-                                this.keys = data;
-                                this.isEmpty =
-                                    this.keys.length == 0 ? true : false;
-                                let keyId: number;
-                                if (!this.isEmpty) {
-                                    keyId = this.keys[0].id;
-                                    this.router.navigate([
-                                        this.currentPath,
-                                        keyId
-                                    ]);
-                                }
-                            }
-                        });
-                },
-                err => {
-                    console.log("err", err);
-                }
-            );
         });
     }
 
