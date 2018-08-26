@@ -46,6 +46,6 @@
 </div>
 
 <ng-snotify></ng-snotify>
-<button routerLink="/profile/newteam" mat-fab color="primary" class="button-add">
+<button *ngIf="isCurrentUserManager()" routerLink="/profile/newteam" mat-fab color="primary" class="button-add">
   <mat-icon aria-label="Add button">add</mat-icon>
 </button>
