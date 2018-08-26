@@ -11,22 +11,26 @@
           <mat-form-field class="team-name">
             <input matInput required placeholder="Team Name" [(ngModel)]="name" #teamName="ngModel">
           </mat-form-field>
-    
+
           <div class="save-btn">
-              <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 || teamName.invalid ? true : null" (click)="formTeam()">Save</button>
-            </div>
-          
+            <button mat-raised-button color="primary" [disabled]="teamTranslators.length == 0 || teamName.invalid ? true : null" (click)="formTeam()">Save</button>
+          </div>
+
         </div>
-               
-        
+
+
         <div class="teammates-container">
-                <div class="draggable-item" *ngFor="let t of teamTranslators">
+          <div class="draggable-item" *ngFor="let t of teamTranslators">
             <mat-card class="teammate-card">
               <div class="temmate-header">
                 <div class="teammate-header-image">
-                  <a  [routerLink]="['/translator', t.userId]"><img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" ></a>
+                  <a [routerLink]="['/translator', t.userId]">
+                    <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                  </a>
                 </div>
-                <div class="teammate-name"><a  [routerLink]="['/translator', t.userId]">{{t.fullName}}</a></div>
+                <div class="teammate-name">
+                  <a style="text-decoration: none; color:black" [routerLink]="['/translator', t.userId]">{{t.fullName}}</a>
+                </div>
                 <div class="rating">
                   <mat-icon aria-label="icon-button">star_rate</mat-icon>
                   <span>{{t.rating | number: '1.0-1'}}</span>
@@ -50,8 +54,8 @@
                 <button mat-raised-button color="warn" (click)="removeTranslator(t)">Remove</button>
               </div>
             </mat-card>
-           </div> 
           </div>
+        </div>
       </div>
     </div>
 
@@ -66,18 +70,22 @@
 
 
       <div class="translators-list-wrapper">
-          <div *ngIf="IsLoad" class="spinner">
-              <mat-spinner></mat-spinner>
-            </div>
-      
+        <div *ngIf="IsLoad" class="spinner">
+          <mat-spinner></mat-spinner>
+        </div>
+
         <div class="draggable-item" *ngFor="let t of allTranslators">
 
           <mat-card class="teammate-card">
             <div class="temmate-header">
               <div class="teammate-header-image">
-                <a  [routerLink]="['/translator', t.userId]"><img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'" ></a>
+                <a [routerLink]="['/translator', t.userId]">
+                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                </a>
               </div>
-              <div class="teammate-name"><a  [routerLink]="['/translator', t.userId]">{{t.fullName}}</a></div>
+              <div class="teammate-name">
+                <a style="text-decoration: none; color:black" [routerLink]="['/translator', t.userId]">{{t.fullName}}</a>
+              </div>
               <div class="rating">
                 <mat-icon aria-label="icon-button">star_rate</mat-icon>
                 <span>{{t.rating | number: '1.0-1'}}</span>
@@ -102,11 +110,11 @@
             </div>
           </mat-card>
         </div>
-   
+
       </div>
 
     </div>
   </div>
 </div>
 
-<ng-snotify></ng-snotify>  
+<ng-snotify></ng-snotify>
