@@ -77,6 +77,8 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
 import { GlossaryService } from './services/glossary.service';
+import { GlossaryCreateDialogComponent } from './dialogs/glossary-create-dialog/glossary-create-dialog.component';
+import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glossary-edit-dialog.component';
 
 
 
@@ -130,7 +132,9 @@ import { GlossaryService } from './services/glossary.service';
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
-    TabCommentsComponent
+    TabCommentsComponent,
+    GlossaryCreateDialogComponent,
+    GlossaryEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -176,7 +180,9 @@ import { GlossaryService } from './services/glossary.service';
     ConfirmDialogComponent,
     ChooseRoleDialogComponent,
     TeamAssignComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    GlossaryCreateDialogComponent,
+    GlossaryEditDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

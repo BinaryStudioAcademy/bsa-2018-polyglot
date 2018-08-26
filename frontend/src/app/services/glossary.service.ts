@@ -18,15 +18,15 @@ export class GlossaryService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
-  create(glossary: Glossary) : Observable<Glossary> {
+  create(glossary) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', glossary);
   }
 
-  update(glossary: Glossary, id: number) : Observable<Glossary> {
+  update(glossary: Glossary, id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, glossary);
   }
 
-  delete(id: number) : Observable<Glossary> {
+  delete(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 }
