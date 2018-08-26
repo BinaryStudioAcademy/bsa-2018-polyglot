@@ -180,7 +180,8 @@ namespace Polyglot.Controllers
             }
 
 			var entity = await service.PostAsync(project);
-			return entity == null ? StatusCode(409) as IActionResult
+            entity = await service.AddLanguagesToProject(entity.Id, new int[] { project.MainLanguage.Id });
+            return entity == null ? StatusCode(409) as IActionResult
 				: Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
 				entity);
 
