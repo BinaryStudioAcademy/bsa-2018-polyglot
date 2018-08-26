@@ -282,11 +282,15 @@ namespace Polyglot.BusinessLogic.Services
                             ?.Where(t => t.LanguageId == languageDTOs[i].Id && !String.IsNullOrWhiteSpace(t.TranslationValue))
                             ?.Count();
 
-                        if (!translatedCount.HasValue || translatedCount.Value < 1)
-                            continue;
-
                         languageDTOs[i].ComplexStringsCount = projectStrings.Count();
-                        languageDTOs[i].TranslatedStringsCount = translatedCount.Value;
+
+                        if (translatedCount.HasValue && translatedCount.Value > 0)
+                        {
+                            languageDTOs[i].TranslatedStringsCount = translatedCount.Value;
+                        }
+
+                        
+                        
 
                     }
                 }));
