@@ -16,9 +16,9 @@
 <div class="container">
       <mat-card class="example-card" *ngFor="let t of teams; let i = index">
           <mat-card-header>            
-              <a class="manager-img" [routerLink]="['/profile']">
+              <a class="manager-img">
                 <img mat-card-avatar  src="/assets/images/anonymus.jpg">
-              </a>
+              </a> 
               <div class="title">
                   <mat-card-title class="card-title">
                      <!--  <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">Team №{{t.id}}</a>
@@ -33,8 +33,9 @@
           
           
           <div mat-card-image >
-            <div  class="img-container">                  
-              <img *ngFor="let p of t.persons" height="60" src="{{p.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'" >
+            <div  class="img-container" >    
+
+              <a *ngFor="let p of t.persons"  [routerLink]="['/translator', p.id]"><img height="60" src="{{p.avatarUrl}}"  onError="this.src='/assets/images/default-avatar.jpg'" ></a>
             </div>
           </div>  
         
@@ -46,6 +47,6 @@
 </div>
 
 <ng-snotify></ng-snotify>
-<button routerLink="/profile/newteam" mat-fab color="primary" class="button-add">
+<button *ngIf="isCurrentUserManager()" routerLink="/profile/newteam" mat-fab color="primary" class="button-add">
   <mat-icon aria-label="Add button">add</mat-icon>
 </button>

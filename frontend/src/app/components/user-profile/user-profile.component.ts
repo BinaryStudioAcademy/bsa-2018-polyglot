@@ -21,4 +21,8 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  isCurrentUserManager(){
+    return this.userService.isCurrentUserManager();
+  }
+
 }
