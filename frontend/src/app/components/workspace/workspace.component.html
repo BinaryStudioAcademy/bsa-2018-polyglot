@@ -15,14 +15,19 @@
                 <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
                     <mat-icon>close</mat-icon>
                 </button>
-
             </mat-form-field>
-            <button class="mx-1" mat-flat-button type="button" (click)="onAdvanceSearchClick()">Advance Search</button>
+            <mat-form-field class="filter">
+                <mat-select multiple placeholder="Filter" [formControl]="options">
+                    <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
+                        {{filter}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
-
-        <div *ngIf="project">
-            <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
-            <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
+        <div class="mt-1 mb-1" *ngIf="keys.length === 0">
+            <mat-card class="no-string-div">
+                <p>No strings</p>
+            </mat-card>
         </div>
     </mat-card>
 
@@ -34,15 +39,6 @@
     <div class="d-flex workspace-height" *ngIf="keys.length !== 0">
         <mat-card class="keys-list d-flex my-1 p-0">
             <div style="width: 100%;">
-                <div style="padding-top:10px;padding-bottom:10px;">
-                    <mat-select multiple placeholder="Filter" class="filter" [formControl]="options">
-                        <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
-                            {{filter}}
-                        </mat-option>
-                    </mat-select>
-                </div>
-
-
                 <mat-nav-list class="keys-list__nav key-list-style" ngxInfiniteScroller horizontal="false" (onScrollUp)="onScrollUp()" (onScrollDown)="onScrollDown()">
 
                     <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
