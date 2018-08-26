@@ -7,6 +7,8 @@ namespace Polyglot.DataAccess.Entities
         
         public virtual ICollection<GlossaryString> GlossaryStrings { get; set; }
 
+        public string Name { get; set; }
+
         public string OriginLanguage { get; set; }
         
         public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
