@@ -54,7 +54,6 @@ export class NewTeamComponent implements OnInit {
         this.IsLoad = false;
         if (translators && translators.length > 0){
           this.allTranslators = translators;
-          console.log(this.allTranslators);
         }
         else {
           this.allTranslators = [];
