@@ -16,6 +16,7 @@ namespace Polyglot.BusinessLogic
             services.AddTransient<IComplexStringService, Services.ComplexStringService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamsService>();
+            services.AddTransient<IGlossaryService, GlossaryService>();
         }
     }
 }

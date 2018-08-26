@@ -79,6 +79,7 @@ import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-r
 import { GlossaryService } from './services/glossary.service';
 import { GlossaryCreateDialogComponent } from './dialogs/glossary-create-dialog/glossary-create-dialog.component';
 import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glossary-edit-dialog.component';
+import { GlossaryComponent } from './components/glossaries/glossary/glossary.component';
 
 
 
@@ -134,7 +135,8 @@ import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glos
     TabHistoryComponent,
     TabCommentsComponent,
     GlossaryCreateDialogComponent,
-    GlossaryEditDialogComponent
+    GlossaryEditDialogComponent,
+    GlossaryComponent
   ],
   imports: [
     BrowserModule,

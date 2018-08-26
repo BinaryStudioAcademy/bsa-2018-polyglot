@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
 import { Glossary } from '../models';
+import { GlossaryString } from '../models/glossary-string';
 
 @Injectable()
 export class GlossaryService {
@@ -28,5 +29,17 @@ export class GlossaryService {
 
   delete(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
+  }
+
+  addString(id : number, string : GlossaryString) : Observable<any>{
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${id}/strings`, undefined, undefined);
+  }
+
+  editString(id : number, string : GlossaryString) : Observable<any>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + `/${id}/strings`, undefined, undefined);
+  }
+
+  deleteString(id : number, string : GlossaryString) : Observable<any>{
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + `/${id}/strings`, undefined, undefined);
   }
 }
