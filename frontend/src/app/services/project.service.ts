@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable, of } from 'rxjs';
 import { Language, Project, LanguageStatistic } from  '../models';
-import { map } from '../../../node_modules/rxjs/operators';
+import { map, filter } from '../../../node_modules/rxjs/operators';
+import { debug } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/teams');
   }
 
-  assignTeamsToProject(projectId: number, teamIds: Array<number>) : Observable<any> {
+  assignTeamsToProject(projectId: number, teamIds: number[]) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/teams/', undefined, teamIds);
   }
 
@@ -58,8 +59,8 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages');
   }
 
-  getProjectLanguagesStatistic(id: number) : Observable<LanguageStatistic[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/languages/stat', undefined, undefined)
+  getProjectLanguagesStatistic(projectId: number) : Observable<LanguageStatistic[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/languages/stat', undefined, undefined)
     .pipe(map<LanguageStatistic[],any>(data => {
       return data.map(function(langStat: any){
         return {
