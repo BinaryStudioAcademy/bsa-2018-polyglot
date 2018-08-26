@@ -13,7 +13,7 @@ export class SignalrService {
 
     public createConnection(groupName: string, hubUrl: string) {
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${environment.hubUrl}/${hubUrl}`)
+            .withUrl(`${environment.apiUrl}/${hubUrl}`)
             .build();
 
         var connectionPromise = this.connection
