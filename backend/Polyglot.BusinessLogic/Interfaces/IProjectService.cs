@@ -30,6 +30,8 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int projectId);
 
         Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int projectId);
+        
+     //   Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int projectId, int[] languageIds);
 
         Task<LanguageStatisticDTO> GetProjectLanguageStatistic(int projectId, int languageId);
 
