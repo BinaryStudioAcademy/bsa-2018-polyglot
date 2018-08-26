@@ -117,14 +117,4 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
   getProjectReports(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
   }
-
-  computeProgress(complexStringsCount: number, translatedStringsCount: number) : number
-  {
-    if(complexStringsCount < 1)
-      return 0;
-    else
-    {
-      return 100 / complexStringsCount * translatedStringsCount;
-    }
-  }
 }

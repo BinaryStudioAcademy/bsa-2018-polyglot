@@ -21,7 +21,7 @@
         <mat-form-field>
           <textarea id="description" name="description" type="text" [(ngModel)]="str.description" matInput placeholder="Description"
                     #description="ngModel" maxlength="500" autocomplete="yes"></textarea>
-          <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
+          <mat-hint align="end">{{description.value ? description.value.length : 0}} / 500</mat-hint>
         </mat-form-field>
       </div>
       </mat-grid-tile>
