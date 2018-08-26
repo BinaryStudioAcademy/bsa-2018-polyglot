@@ -52,8 +52,10 @@ export class NewTeamComponent implements OnInit {
       .subscribe((translators: Translator[]) => {
 
         this.IsLoad = false;
-        if (translators && translators.length > 0)
+        if (translators && translators.length > 0){
           this.allTranslators = translators;
+          console.log(this.allTranslators);
+        }
         else {
           this.allTranslators = [];
           this.snotifyService.info("No translators found!", "Ooops!")
@@ -87,7 +89,7 @@ export class NewTeamComponent implements OnInit {
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.id),this.name)
+      this.teamService.formTeam(this.teamTranslators.map(t => t.userId),this.name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
