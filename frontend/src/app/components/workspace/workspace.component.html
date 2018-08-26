@@ -15,9 +15,14 @@
         <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
           <mat-icon>close</mat-icon>
         </button>
-
+      </mat-form-field>      
+      <mat-form-field class="filter">
+        <mat-select multiple placeholder="Filter" [formControl]="options">
+          <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
+            {{filter}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
-      <button class="mx-1" mat-flat-button type="button" (click)="onAdvanceSearchClick()">Advance Search</button>
     </div>
 
     <div *ngIf="project">
@@ -34,15 +39,6 @@
   <div class="d-flex workspace-height" *ngIf="keys.length !== 0">
     <mat-card class="keys-list d-flex my-1 p-0">
       <div style="width: 100%;">
-        <div style="padding-top:10px;padding-bottom:10px;">
-          <mat-select multiple placeholder="Filter" class="filter" [formControl]="options">
-            <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
-              {{filter}}
-            </mat-option>
-          </mat-select>
-        </div>
-
-
           <mat-nav-list class="keys-list__nav key-list-style"
            ngxInfiniteScroller
            horizontal="false"
