@@ -30,21 +30,12 @@ export class GlossaryEditDialogComponent implements OnInit {
     this.glossaryService.update(this.glossary, this.glossary.id)
       .subscribe(
         (d) => {
-          if(d)
-          {
-            this.snotifyService.success("Glossary edited", "Success!");
-            this.dialogRef.close();     
-          }
-          else
-          {
-            this.snotifyService.success("Glossary wasn`t edited", "Error!");
-            this.dialogRef.close();   
-          }
-              
+          this.snotifyService.success("Glossary edited", "Success!");
+          this.dialogRef.close();   
         },
         err => {
           console.log('err', err);
-          this.snotifyService.success("Glossary wasn`t edited", "Error!");
+          this.snotifyService.error("Glossary wasn`t edited", "Error!");
           this.dialogRef.close();     
         });
   }
@@ -52,16 +43,8 @@ export class GlossaryEditDialogComponent implements OnInit {
   onDelete(){
     this.glossaryService.delete(this.glossary.id).subscribe(
       (d) => {
-        if(d)
-        {
-          this.snotifyService.success("Glossary deleted", "Success!");
-          this.dialogRef.close();     
-        }
-        else
-        {
-          this.snotifyService.error("Glossary wasn`t deleted", "Error!");
-          this.dialogRef.close();   
-        }
+        this.snotifyService.success("Glossary deleted", "Success!");
+        this.dialogRef.close(); 
             
       },
       err => {
