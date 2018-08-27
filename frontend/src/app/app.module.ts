@@ -156,7 +156,7 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
     GlossaryComponent,
-    GlossaryStringDialogComponent
+    GlossaryStringDialogComponent,
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
