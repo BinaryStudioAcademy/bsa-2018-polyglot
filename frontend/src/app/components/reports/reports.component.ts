@@ -10,9 +10,9 @@ import { Chart } from '../../models/chart';
 })
 export class ReportsComponent implements OnInit {
   @Input() projectId: number;
- 
-  public IsLoad: boolean = true;
-  public IsLangLoad: boolean = false;
+
+  public isLoad: boolean = false;
+
   view: any[] = [350, 350];
   pieView: any[] = [500, 400];
 
@@ -40,18 +40,25 @@ export class ReportsComponent implements OnInit {
   ngOnInit() {
 
     this.projectService.getProjectReports(this.projectId)
-      .subscribe(reports => {
+      .subscribe(reports => { 
         this.charts = reports.charts.map(function (chart: any) {
-          return {
-            name: chart.name,
-            data: chart.values,
-          };
+            return {
+              name: chart.name,
+              data: chart.values,
+            };
+         
         });
         console.log(this.charts);
       },
         err => {
-          this.IsLoad = false;
-        });
+          this.isLoad = false;
+        },
+        () => 
+        {
+          this.isLoad = true;
+        }
+      
+      );
   }
 
 }
