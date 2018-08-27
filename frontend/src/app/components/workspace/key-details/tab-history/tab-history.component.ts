@@ -1,36 +1,69 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IString } from '../../../../models/string';
 import { UserService } from '../../../../services/user.service';
-import { AppStateService } from '../../../../services/app-state.service';
-import { DatePipe} from '@angular/common';
+import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
+import { ComplexStringService } from '../../../../services/complex-string.service';
 
 @Component({
   selector: 'app-tab-history',
   templateUrl: './tab-history.component.html',
   styleUrls: ['./tab-history.component.sass']
 })
+
 export class TabHistoryComponent implements OnInit {
 
-  @Input() public keyDetails: any;
+  public keyDetails: any;
   public translationDetails: any;
   private history: Array<any>;
   private users = {};
+  private keyId: number;
 
+  constructor(
+    private dataProvider: ComplexStringService,
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) {
 
-  constructor(private userService: UserService, private appState: AppStateService) { 
+  }
+
+  ngOnInit() {
+    this.route.params.subscribe(
+      value => {
+        this.keyId = value.keyId;
+        this.dataProvider.getById(value.keyId).subscribe(
+          (data: any) => {
+            this.keyDetails = data;
+            for (let i = 0; i < data.translations.length; i++) {
+              if (!this.users[data.translations[i].userId]) {
+                this.userService.getOne(data.translations[i].userId).subscribe(
+                  (user) => this.users[data.translations[i].userId] = user
+                );
+              }
+              for (let j = 0; j < data.translations[i].history.length; j++) {
+                if (!this.users[data.translations[i].history[j].userId]) {
+                  this.userService.getOne(data.translations[i].history[j].userId).subscribe(
+                    (user) => this.users[data.translations[i].history[j].userId] = user
+                  );
+                }
+              }
+            }
+          }
+        );
+      }
+    );
   }
 
   showHistory(index) {
     this.history = new Array<any>();
 
-    this.translationDetails = this.keyDetails.translations[index];
+    this.dataProvider.getById(this.keyId).subscribe(
+      (result) => {
+        this.keyDetails = result;
 
-    if (this.translationDetails.history.length === 0) {
-      if (!this.users[this.translationDetails.userId]) {
-        this.userService.getOne(this.translationDetails.userId).subscribe(
-          (user) => {
-            this.users[this.translationDetails.userId] = user;
-            this.history.push({
+        this.translationDetails = this.keyDetails.translations[index];
+
+        if (this.translationDetails) {
+          if (this.translationDetails.history.length === 0) {
+            this.history.unshift({
               user: this.users[this.translationDetails.userId].fullName,
               avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
               action: 'translated',
@@ -38,24 +71,8 @@ export class TabHistoryComponent implements OnInit {
               to: this.translationDetails.translationValue,
               when: this.translationDetails.createdOn
             });
-          }
-        );
-      } else {
-        this.history.push({
-          user: this.users[this.translationDetails.userId].fullName,
-          avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
-          action: 'translated',
-          from: this.keyDetails.base,
-          to: this.translationDetails.translationValue,
-          when: this.translationDetails.createdOn
-        });
-      }
-    } else {
-      if (!this.users[this.translationDetails.history[0].userId]) {
-        this.userService.getOne(this.translationDetails.history[0].userId).subscribe(
-          (user) => {
-            this.users[this.translationDetails.history[0].userId] = user;
-            this.history.push({
+          } else {
+            this.history.unshift({
               user: this.users[this.translationDetails.history[0].userId].fullName,
               avatarUrl: this.users[this.translationDetails.history[0].userId].avatarUrl,
               action: 'translated',
@@ -63,24 +80,8 @@ export class TabHistoryComponent implements OnInit {
               to: this.translationDetails.history[0].translationValue, 
               when: this.translationDetails.history[0].createdOn
             });
-          }
-        );
-      } else {
-        this.history.push({
-          user: this.users[this.translationDetails.history[0].userId].fullName,
-          avatarUrl: this.users[this.translationDetails.history[0].userId].avatarUrl,
-          action: 'translated',
-          from: this.keyDetails.base,
-          to: this.translationDetails.history[0].translationValue, 
-          when: this.translationDetails.history[0].createdOn
-        });
-      }
-      for (let i = 1; i < this.translationDetails.history.length; i++) {
-        if (!this.users[this.translationDetails.history[i].userId]) {
-          this.userService.getOne(this.translationDetails.history[i].userId).subscribe(
-            (user) => {
-              this.users[this.translationDetails.history[i].userId] = user;
-              this.history.push({
+            for (let i = 1; i < this.translationDetails.history.length; i++) {
+              this.history.unshift({
                 user: this.users[this.translationDetails.history[i].userId].fullName,
                 avatarUrl: this.users[this.translationDetails.history[i].userId].avatarUrl,
                 action: 'changed',
@@ -89,23 +90,7 @@ export class TabHistoryComponent implements OnInit {
                 when: this.translationDetails.history[i].createdOn
               });
             }
-          );
-        } else {
-          this.history.push({
-            user: this.users[this.translationDetails.history[i].userId].fullName,
-            avatarUrl: this.users[this.translationDetails.history[i].userId].avatarUrl,
-            action: 'changed',
-            from: this.translationDetails.history[i-1].translationValue,
-            to: this.translationDetails.history[i].translationValue,
-            when: this.translationDetails.history[i].createdOn
-          });
-        }
-      }
-      if (!this.users[this.translationDetails.userId]) {
-        this.userService.getOne(this.translationDetails.userId).subscribe(
-          (user) => {
-            this.users[this.translationDetails.userId] = user;
-            this.history.push({
+            this.history.unshift({
               user: this.users[this.translationDetails.userId].fullName,
               avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
               action: 'changed', 
@@ -114,21 +99,8 @@ export class TabHistoryComponent implements OnInit {
               when: this.translationDetails.createdOn
             });
           }
-        );
-      } else {
-        this.history.push({
-          user: this.users[this.translationDetails.userId].fullName,
-          avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
-          action: 'changed', 
-          from: this.translationDetails.history[this.translationDetails.history.length - 1].translationValue,
-          to: this.translationDetails.translationValue,
-          when: this.translationDetails.createdOn
-        });
+        }
       }
-      this.history.sort(function(a,b) {return (a.when > b.when) ? -1 : ((b.when > a.when) ? 1 : 0);} ); 
-    }
-  }
-  
-  ngOnInit() {
+    );
   }
 }
