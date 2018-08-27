@@ -85,38 +85,39 @@
                     <mat-card-title>Contacts</mat-card-title><hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                
-                <mat-card *ngIf="!isOwnersProfile()">
-                    <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
-                </mat-card>
-                <mat-card class="review-card" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
-                        <h2>Reviews: </h2>
-                        <div *ngFor="let review of userProfile.ratings">
-                            <hr>
-                            <br>
-                            <mat-card-header>
-                                    <a [routerLink]="['/user', review.createdById]" >
-                                        <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
-                                    </a>
-                            <mat-card-title>
-                                <a [routerLink]="['/user', review.createdById]" >{{review.createdBy.fullName}}</a>
-                            </mat-card-title>
-                            </mat-card-header>
-                            <br>
-                            <mat-card-content>
-                                <mat-card-subtitle>
-                                    <span>{{review.comment}}</span>
-                                </mat-card-subtitle>
-                                <mat-card-subtitle>
-                                <span>
-                                    {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
-                                </span>
-                                </mat-card-subtitle>
-                                <mat-card-subtitle><span>{{review.createdAt | date: 'medium'}}</span>
-                                </mat-card-subtitle>
-                            </mat-card-content>
-                        </div>
-                </mat-card>
+                <div class="review">
+                    <mat-card *ngIf="!isOwnersProfile()">
+                        <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
+                    </mat-card>
+                    <mat-card class="review-card" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
+                            <h2>Reviews: </h2>
+                            <div *ngFor="let review of userProfile.ratings">
+                                <hr>
+                                <br>
+                                <mat-card-header>
+                                        <a [routerLink]="['/user', review.createdById]" >
+                                            <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                                        </a>
+                                <mat-card-title>
+                                    <a [routerLink]="['/user', review.createdById]" >{{review.createdBy.fullName}}</a>
+                                </mat-card-title>
+                                </mat-card-header>
+                                <br>
+                                <mat-card-content>
+                                    <mat-card-subtitle>
+                                        <span>{{review.comment}}</span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle>
+                                    <span>
+                                        {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
+                                    </span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle><span>{{review.createdAt | date: 'medium'}}</span>
+                                    </mat-card-subtitle>
+                                </mat-card-content>
+                            </div>
+                    </mat-card>
+                </div>
             </div>
         </div>
     </div>

@@ -22,14 +22,14 @@ export class UserProfileComponent implements OnInit {
     ngOnInit() {
         this.activatedRoute.params.subscribe((params)=>{
             if(params.userId){
+                if(params.userId == this.userService.getCurrentUser().id){
+                    this.router.navigate(['/profile']);
+                }
                 this.userService.getOne(params.userId).subscribe((user)=>{
                     if(!user){
                         this.router.navigate(['/404']);
                     }
                     this.SelectedUser = user;
-                    if(this.isOwnersProfile()){
-                        this.router.navigate(['/profile']);
-                    }
                 },
                 err=>{
                     this.router.navigate(['/404']);
@@ -44,9 +44,4 @@ export class UserProfileComponent implements OnInit {
     isSelectedUserManager(){
         return this.SelectedUser.userRole == 1;
     }
-
-    isOwnersProfile(){
-        return this.userService.getCurrentUser().id == this.SelectedUser.id;
-    }
-
 }
