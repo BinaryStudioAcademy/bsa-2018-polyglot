@@ -8,15 +8,13 @@ import { HubConnection } from "@aspnet/signalr";
 })
 export class SignalrService {
     connection: any;
-    isWorking: boolean = true;
 
     constructor() {}
 
     public createConnection(groupName: string, hubUrl: string) {
         if (
-            (!this.connection ||
-                this.connection.connection.connectionState === 2) &&
-            this.isWorking
+            !this.connection ||
+                this.connection.connection.connectionState === 2
         ) {
             this.connect(
                 groupName,
@@ -26,27 +24,27 @@ export class SignalrService {
                 debugger;
                 if (this.connection.connection.connectionState === 1) {
                     console.log(`Connecting to group ${groupName}`);
-                    this.connection.send("joinProjectGroup", groupName);
+                    this.connection.send("joinGroup", groupName);
                 }
             });
         } else {
             if (this.connection.connection.connectionState === 1) {
                 console.log(`Connecting to group ${groupName}`);
-                this.connection.send("joinProjectGroup", groupName);
+                this.connection.send("joinGroup", groupName);
             }
         }
     }
 
     public closeConnection(groupName: string) {
-        this.isWorking = false;
         if (
             this.connection &&
             this.connection.connection.connectionState === 1
         ) {
             console.log(`Disconnecting from group ${groupName}`);
-            this.connection.send("leaveProjectGroup", groupName);
-            console.log(`Stoping SignalR connection`);
-            this.connection.stop();
+            this.connection.send("leaveGroup", groupName);
+            this.connection.onclose(err => {});
+          //  console.log(`Stoping SignalR connection`);
+          //  this.connection.stop();
         }
     }
 

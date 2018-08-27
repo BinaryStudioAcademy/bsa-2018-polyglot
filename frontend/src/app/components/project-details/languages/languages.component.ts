@@ -13,6 +13,9 @@ import { LanguageStatistic } from "../../../models/languageStatistic";
 import { Language } from "../../../models";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { environment } from "../../../../environments/environment";
+import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
+import { SignalrService } from "../../../services/signalr.service";
+import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 
 @Component({
     selector: "app-languages",
@@ -31,7 +34,8 @@ export class LanguagesComponent implements OnInit {
         private projectService: ProjectService,
         private langService: LanguageService,
         private snotifyService: SnotifyService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private signalrService: SignalrService
     ) {}
 
     ngOnInit() {
@@ -42,6 +46,13 @@ export class LanguagesComponent implements OnInit {
                     this.IsLoad = false;
                     this.langs = langs;
                     this.langs.sort(this.compareProgress);
+                    this.signalrService.createConnection(
+                        `${SignalrGroups[SignalrGroups.project]}${
+                            this.projectId
+                        }`,
+                        "workspaceHub"
+                    );
+                    this.subscribeProjectChanges();
                 },
                 err => {
                     this.IsLoad = false;
@@ -49,7 +60,29 @@ export class LanguagesComponent implements OnInit {
             );
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.signalrService.closeConnection(`${SignalrGroups[SignalrGroups.project]}${this.projectId}`);
+    }
+
+    subscribeProjectChanges() {
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
+            (languageId: number) => {
+                let removedLanguage = this.langs.filter(l => l.id === languageId);
+                if(removedLanguage && removedLanguage.length > 0)
+                {
+                    this.snotifyService.info(`${removedLanguage[0].name} removed`  , "Language removed")
+                    this.langs = this.langs.filter(l => l.id != languageId);
+                }
+            }
+        );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.LanguagesAdded],
+            (languagesIds: number[]) => {
+                
+            }
+        );
+    }
 
     selectNew() {
         this.IsLangLoad = true;
@@ -202,7 +235,6 @@ export class LanguagesComponent implements OnInit {
             .subscribe(
                 () => {
                     this.IsLoading[languageId] = false;
-
                     this.langs = this.langs.filter(l => l.id != languageId);
                     this.langs.sort(this.compareProgress);
                     setTimeout(() => {
