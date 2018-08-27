@@ -65,15 +65,32 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ExplanationText");
+                    b.Property<string>("Name");
 
                     b.Property<string>("OriginLanguage");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Glossaries");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ExplanationText");
+
+                    b.Property<int?>("GlossaryId");
 
                     b.Property<string>("TermText");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Glossaries");
+                    b.HasIndex("GlossaryId");
+
+                    b.ToTable("GlossaryStrings");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Language", b =>
@@ -359,6 +376,13 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UploadedBy")
                         .WithMany()
                         .HasForeignKey("UploadedById");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Glossary")
+                        .WithMany("GlossaryStrings")
+                        .HasForeignKey("GlossaryId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Project", b =>

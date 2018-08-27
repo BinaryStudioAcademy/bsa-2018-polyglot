@@ -24,7 +24,7 @@ namespace Polyglot.Core.Authentication
 
         private static async Task<UserProfile> CurrentUserProfileContainer()
         {
-            IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext.RequestServices.GetService(typeof(IUnitOfWork));
+            IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
             UserProfile user = await unitOfWork.GetRepository<UserProfile>().GetAsync(x => x.Uid == CurrentContext.User.GetUid());
             return user;
         }

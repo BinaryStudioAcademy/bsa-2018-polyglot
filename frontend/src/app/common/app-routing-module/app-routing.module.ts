@@ -23,7 +23,9 @@ import { LandingGuard } from '../../services/guards/landing-guard.service';
 import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
 import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
 import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
+import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
+
 
   
 const routes: Routes = [
@@ -45,6 +47,7 @@ const routes: Routes = [
       { path: 'teams', component: TeamsComponent },
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
+      { path: 'glossaries/:glossaryId', component: GlossaryComponent },
       { path: 'strings', component: NoFoundComponent },
       { path: 'abc', component: TeamComponent }
     ]

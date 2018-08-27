@@ -27,7 +27,13 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         #region Languages
 
-        Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int id);
+        Task<IEnumerable<LanguageDTO>> GetProjectLanguages(int projectId);
+
+        Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int projectId);
+        
+     //   Task<IEnumerable<LanguageStatisticDTO>> GetProjectLanguagesStatistic(int projectId, int[] languageIds);
+
+        Task<LanguageStatisticDTO> GetProjectLanguageStatistic(int projectId, int languageId);
 
         Task<ProjectDTO> AddLanguagesToProject(int projectId, int[] languageIds);
 
@@ -47,8 +53,21 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         #endregion
 
+
+
+        #region Glossary
+
+        Task<ProjectDTO> AssignGlossaries(int projectId, int[] glossaryIds);
+
+        Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId);
+
+        Task<bool> TryDismissGlossary(int projectId, int glossaryId);
+
+        #endregion
+
         Task<ProjectStatisticDTO> GetProjectStatistic(int id);
         Task<ChartDTO> GetTranskatedStringToLanguagesStatistic(int id);
         Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
+
     }
 }

@@ -20,6 +20,9 @@ namespace Polyglot.BusinessLogic
             services.AddTransient<IComplexStringService, ComplexStringService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamsService>();
+
+            services.AddTransient<IGlossaryService, GlossaryService>();
+
             services.AddTransient<IRatingService, RatingService>();
             services.AddScoped<ITranslatorProvider, TranslatorProvider>(provider =>
                 new TranslatorProvider("https://translation.googleapis.com/language/translate/v2",
@@ -29,6 +32,7 @@ namespace Polyglot.BusinessLogic
 
         public static void ConfigureMiddleware(IApplicationBuilder app)
         {
+
         }
     }
 }

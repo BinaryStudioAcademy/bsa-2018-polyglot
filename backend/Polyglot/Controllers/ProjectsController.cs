@@ -89,16 +89,36 @@ namespace Polyglot.Controllers
             return project == null ? NotFound($"Project with id = {id} not found!") as IActionResult
                 : Ok(project);
         }
+        
+        // GET: Projects/5/languages/stat
+        [HttpGet("{prodId}/languages/stat", Name = "GetProjectLanguagesStatistic")]
+        public async Task<IActionResult> GetProjectLanguagesStatistic(int prodId)
+        {
+            var project = await service.GetProjectLanguagesStatistic(prodId);
+            return project == null ? NotFound($"Project with id = {prodId} has got no languages statistic!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // GET: Projects/:projId/languages/:langId/stat
+        [HttpGet("{projId}/languages/{langId}/stat", Name = "GetProjectLanguageStatistic")]
+        public async Task<IActionResult> GetProjectLanguageStatistic(int projId, int langId)
+        {
+            var project = await service.GetProjectLanguageStatistic(projId, langId);
+            return project == null ? NotFound($"Project with id = {projId} has got no language with id = {langId}!") as IActionResult
+                : Ok(project);
+
+        }
+
         // GET: Projects/5/languages
         [HttpGet("{id}/languages", Name = "GetProjectLanguages")]
-		public async Task<IActionResult> GetProjectLangs(int id)
-		{
-			var project = await service.GetProjectLanguages(id);
-			return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-				: Ok(project);
+        public async Task<IActionResult> GetProjectLanguages(int id)
+        {
+            var project = await service.GetProjectLanguages(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
 
-		}
-        
+        }
 
         // PUT: Projects/:id/languages
         [HttpPut("{projectId}/languages")]
@@ -160,7 +180,8 @@ namespace Polyglot.Controllers
             }
 
 			var entity = await service.PostAsync(project);
-			return entity == null ? StatusCode(409) as IActionResult
+            entity = await service.AddLanguagesToProject(entity.Id, new int[] { project.MainLanguage.Id });
+            return entity == null ? StatusCode(409) as IActionResult
 				: Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
 				entity);
 
@@ -219,6 +240,36 @@ namespace Polyglot.Controllers
                 : Ok(complexStrings);
         }
 
+
+        // GET: Projects/5/glossaries
+        [HttpGet("{id}/glossaries")]
+        public async Task<IActionResult> GetAssignedGlossaries(int id)
+        {
+            var project = await service.GetProjectLanguages(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // PUT: Projects/:id/glossaries
+        [HttpPut("{projectId}/glossaries")]
+        public async Task<IActionResult> AssignGlossariesToProject(int projectId, [FromBody]int[] glossaryIds)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+            var entity = await service.AssignGlossaries(projectId, glossaryIds);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        //DELETE: projects/:id/glossaries/:id
+        [HttpDelete("{projId}/glossaries/{glossaryId}")]
+        public async Task<IActionResult> DismissProjectGlossary(int projId, int glossaryId)
+        {
+            var success = await service.TryDismissGlossary(projId, glossaryId);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+        
         [HttpGet("{projectId}/activities")]
         public async Task<IActionResult> GetAllActivities(int projectId)
         {
@@ -255,6 +306,7 @@ namespace Polyglot.Controllers
             var temp = File(test, ex);
             return temp;
         }
+
 
 
     }

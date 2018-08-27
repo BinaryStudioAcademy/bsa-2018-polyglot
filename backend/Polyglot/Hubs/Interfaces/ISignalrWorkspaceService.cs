@@ -9,6 +9,7 @@ namespace Polyglot.Hubs
     public interface ISignalrWorkspaceService
     {
         Task ChangedTranslation(string groupName, TranslationDTO entity);
+
         Task CommentAdded(string groupName, IEnumerable<CommentDTO> comments);
     }
 }
