@@ -77,6 +77,11 @@ import { TabHistoryComponent } from './components/workspace/key-details/tab-hist
 import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
 import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
+import { GlossaryService } from './services/glossary.service';
+import { GlossaryCreateDialogComponent } from './dialogs/glossary-create-dialog/glossary-create-dialog.component';
+import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glossary-edit-dialog.component';
+import { GlossaryComponent } from './components/glossaries/glossary/glossary.component';
+import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/glossary-string-dialog.component';
 
 //Ngx-Charts
 import {NgxChartsModule} from '@swimlane/ngx-charts';
@@ -148,6 +153,10 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
     SaveStringConfirmComponent,
     TabHistoryComponent,
     TabCommentsComponent,
+    GlossaryCreateDialogComponent,
+    GlossaryEditDialogComponent,
+    GlossaryComponent,
+    GlossaryStringDialogComponent,
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
@@ -208,12 +217,16 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
     ConfirmDialogComponent,
     ChooseRoleDialogComponent,
     TeamAssignComponent,
+    SaveStringConfirmComponent,
+    GlossaryCreateDialogComponent,
+    GlossaryEditDialogComponent,
+    GlossaryStringDialogComponent,
     SaveStringConfirmComponent
-    
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService],
+    SnotifyService, GlossaryService],
 
   bootstrap: [AppComponent]
 

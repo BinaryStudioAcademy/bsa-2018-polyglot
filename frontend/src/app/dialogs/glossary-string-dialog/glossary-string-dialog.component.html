@@ -1,0 +1,25 @@
+<mat-dialog-content>
+  <form (submit)="onSubmit()">
+      <mat-form-field>
+        <input id="key" name="key" type="text" [(ngModel)]="string.termText" required matInput placeholder="Term Text"
+                #key="ngModel" autocomplete="yes">
+        <mat-error *ngIf="key.errors">
+          Term Text is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>  
+        <input id="base" name="base" type="text" [(ngModel)]="string.explanationText" required matInput placeholder="Explanation Text"
+                #base="ngModel" autocomplete="yes">
+        <mat-error *ngIf="base.errors">
+          Explanation Text is required
+        </mat-error>
+      </mat-form-field>
+
+      <button 
+        type="submit" 
+        mat-raised-button color="primary">
+        Save
+      </button>
+  </form>
+</mat-dialog-content>

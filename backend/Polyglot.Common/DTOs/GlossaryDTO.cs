@@ -5,15 +5,19 @@ namespace Polyglot.Common.DTOs
     public class GlossaryDTO
     {
         public int Id { get; set; }
-        public string TermText { get; set; }
-        public string ExplanationText { get; set; }
+
+        public string Name { get; set; }
+
+        public virtual ICollection<GlossaryStringDTO> GlossaryStrings { get; set; }
+
         public string OriginLanguage { get; set; }
         
-        public List<GlossaryDTO> ProjectGlossaries { get; set; }
+        public List<ProjectDTO> ProjectGlossaries { get; set; }
 
         public GlossaryDTO()
         {
-            ProjectGlossaries = new List<GlossaryDTO>();
+            GlossaryStrings = new List<GlossaryStringDTO>();
+            ProjectGlossaries = new List<ProjectDTO>();
         }
     }
 }

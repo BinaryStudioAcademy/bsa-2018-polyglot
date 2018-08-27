@@ -9,7 +9,7 @@ import { Chart } from '../../models/chart';
   styleUrls: ['./reports.component.sass']
 })
 export class ReportsComponent implements OnInit {
-  @Input() project: Project;
+  @Input() projectId: number;
  
   public IsLoad: boolean = true;
   public IsLangLoad: boolean = false;
@@ -39,7 +39,7 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.projectService.getProjectReports(this.project.id)
+    this.projectService.getProjectReports(this.projectId)
       .subscribe(reports => {
         this.charts = reports.charts.map(function (chart: any) {
           return {
@@ -47,6 +47,7 @@ export class ReportsComponent implements OnInit {
             data: chart.values,
           };
         });
+        console.log(this.charts);
       },
         err => {
           this.IsLoad = false;

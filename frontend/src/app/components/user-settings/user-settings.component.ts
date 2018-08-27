@@ -5,13 +5,13 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component';
 import { MatDialog } from '@angular/material';
 import { UserService } from '../../services/user.service';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 
 @Component({
   selector: 'app-user-settings',
   templateUrl: './user-settings.component.html',
   styleUrls: ['./user-settings.component.sass']
 })
-
 
 export class UserSettingsComponent implements OnInit {
 
@@ -20,12 +20,11 @@ export class UserSettingsComponent implements OnInit {
   minDate = new Date(1903, 2, 1);
   maxDate = new Date();
  
- 
-  
   constructor(
     private fb: FormBuilder, 
     private  dialog: MatDialog,
-    private userService: UserService
+    private userService: UserService,
+    private snotifyService: SnotifyService
   ) {
     //GET Id here
     //console.log(router.snapshot.params.id);
@@ -40,6 +39,30 @@ export class UserSettingsComponent implements OnInit {
      
     }
     this.createProjectForm();
+  }
+
+  editPhoto(){
+    const dialogRef = this.dialog.open(CropperComponent, {
+      data: {imageUrl: this.manager.avatarUrl}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+        if (dialogRef.componentInstance.cropedImageBlob){
+            let formData = new FormData();
+            formData.append("image", dialogRef.componentInstance.cropedImageBlob);
+            this.userService.updatePhoto(formData).subscribe(
+                (d) => {
+                    setTimeout(() => {
+                        this.snotifyService.success("Photo updated.", "Success!");
+                        }, 100);
+                        this.manager = d;
+                    },
+                    err => {
+                        this.snotifyService.error("Photo failed to update!", "Error!");
+                    }
+                );
+            }
+        }
+    );
   }
 
   createProjectForm(): void {
@@ -98,12 +121,6 @@ export class UserSettingsComponent implements OnInit {
 
   get phone() {
     return this.profileForm.get('phone');
-  }
-
-  editPhoto() {
-    this.dialog.open(CropperComponent, {
-      data: {imageUrl: this.manager.avatarUrl}
-    });
   }
 
 }

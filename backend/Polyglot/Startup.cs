@@ -54,7 +54,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR();
 
             services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
@@ -74,34 +74,21 @@ namespace Polyglot
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-                context.Database.Migrate();
-                serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
-            }
-
-            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            // {
-            //     var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-            //     MongoDbSeedsInitializer.MongoSeedAsync(context);
-            // }
-
             BusinessLogicModule.ConfigureMiddleware(app);
             CommonModule.ConfigureMiddleware(app);
             CoreModule.ConfigureMiddleware(app);
             DataAccessModule.ConfigureMiddleware(app);
 
-            // if (env.IsDevelopment())
-            // {
-            app.UseCors("AllowAll");
-            //}
+           // if (env.IsDevelopment())
+          //  {
+                app.UseCors("AllowAll");
+           // }
 
             app.UseAuthentication();
 
             app.UseMvc();
 
-            app.UseSignalR(options =>
+            app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
             });

@@ -31,16 +31,25 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<GlossaryDTO, Glossary>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                   .ForMember(p => p.ExplanationText, opt => opt.MapFrom(po => po.ExplanationText))
+                   .ForMember(p => p.GlossaryStrings, opt => opt.MapFrom(po => po.GlossaryStrings))
+                   .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                    .ForMember(p => p.OriginLanguage, opt => opt.MapFrom(po => po.OriginLanguage))
-                   .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(po => po.ProjectGlossaries))
-                   .ForMember(p => p.TermText, opt => opt.MapFrom(po => po.TermText));
+                   .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(po => po.ProjectGlossaries));
                 cfg.CreateMap<Glossary, GlossaryDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
-                    .ForMember(p => p.ExplanationText, opt => opt.MapFrom(pt => pt.ExplanationText))
+                    .ForMember(p => p.GlossaryStrings, opt => opt.MapFrom(pt => pt.GlossaryStrings))
+                    .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.OriginLanguage, opt => opt.MapFrom(pt => pt.OriginLanguage))
-                    .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(pt => pt.ProjectGlossaries))
-                    .ForMember(p => p.TermText, opt => opt.MapFrom(pt => pt.TermText));
+                    .ForMember(p => p.ProjectGlossaries, opt => opt.Ignore());
+
+                cfg.CreateMap<GlossaryStringDTO, GlossaryString>()
+                   .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                   .ForMember(p => p.TermText, opt => opt.MapFrom(po => po.TermText))
+                   .ForMember(p => p.ExplanationText, opt => opt.MapFrom(po => po.ExplanationText));
+                cfg.CreateMap<GlossaryString, GlossaryStringDTO>()
+                   .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                   .ForMember(p => p.TermText, opt => opt.MapFrom(po => po.TermText))
+                   .ForMember(p => p.ExplanationText, opt => opt.MapFrom(po => po.ExplanationText));
 
                 cfg.CreateMap<LanguageStatisticDTO, Language>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
