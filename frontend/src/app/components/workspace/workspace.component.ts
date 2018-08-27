@@ -29,6 +29,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     user: UserProfile;
     private currentPage = 0;
     private elementsOnPage = 7;
+    public isLoad: boolean;
 
     private routeSub: Subscription;
 
@@ -75,23 +76,31 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         languages: d
                     };
                     this.appState.setWorkspaceState = workspaceState;
+                },
+                err => {
+                    this.keys=null;
+                    this.isLoad= true;
+                    console.log("err", err);
+                },
+                ()=>{
                     this.basicPath = 'workspace/' + params.projectId;
                     this.currentPath = 'workspace/' + params.projectId + '/key';
                     this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
-                        .subscribe((data: any) => {
-                            if (data) {
-                                this.keys = data;
-                                this.onSelect(this.keys[0]);
-                                let keyId: number;
-                                if (this.keys.length !== 0) {
-                                    keyId = this.keys[0].id;
-                                    this.router.navigate([this.currentPath, keyId]);
-                                }
+                    .subscribe((data: any) => {
+                        if (data) {
+                            this.keys = data;
+                            this.isLoad= true;
+                            this.onSelect(this.keys[0]);
+                            let keyId: number;
+                            if (this.keys.length !== 0) {
+                                keyId = this.keys[0].id;
+                                this.router.navigate([this.currentPath, keyId]);
                             }
-                        });
-                },
-                err => {
-                    console.log("err", err);
+                        }
+                    },
+                ()=>{
+                    this.isLoad=false;
+                });                    
                 }
             );
             });
@@ -102,7 +111,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     onAdvanceSearchClick() { }
 
     ngDoCheck() {
-        debugger;
         if (
             this.project &&
             this.keys &&
