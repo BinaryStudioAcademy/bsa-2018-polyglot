@@ -161,7 +161,7 @@ namespace Polyglot.Controllers
         [HttpGet("isInDb")]
         public async Task<bool> IsUserInDb()
         {
-            return await service.IsExistByUidAsync(HttpContext.User.GetUid());
+            return await service.IsExistByUidAsync();
         }
     }
 }
