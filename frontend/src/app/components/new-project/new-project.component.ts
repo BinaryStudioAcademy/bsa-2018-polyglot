@@ -8,98 +8,120 @@ import { LanguageService } from '../../services/language.service';
 import { Router } from '@angular/router';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { debounce } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { SelectProjectLanguageComponent } from '../../dialogs/select-project-language/select-project-language.component';
 
 @Component({
-  selector: 'app-new-project',
-  templateUrl: './new-project.component.html',
-  styleUrls: ['./new-project.component.sass']
+    selector: 'app-new-project',
+    templateUrl: './new-project.component.html',
+    styleUrls: ['./new-project.component.sass']
 })
 
 export class NewProjectComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private projectService: ProjectService,
-    private languageService: LanguageService, 
-    private router: Router,
-    private snotifyService: SnotifyService) {
+    constructor(private fb: FormBuilder, private projectService: ProjectService,
+                private languageService: LanguageService, 
+                private router: Router,
+                private snotifyService: SnotifyService,
+                public dialog: MatDialog) {
 
-  }
+    }
   
-  ngOnInit() {
-    this.languageService.getAll()
-      .subscribe(
-      (d: Language[])=> {
-        this.languages = d.map(x => Object.assign({}, x));
-      },
-      err => {
-        console.log('err', err);
-      }
-    );  
-  }
-
-  receiveImage($event){
-      this.projectImage = $event[0];
-      $event.pop();
-  }
-
-  projectImage: File;
-  project: Project;
-  projectForm: FormGroup = this.fb.group({
-    name: [ '', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-    description: [ '', [Validators.maxLength(500)]],
-    technology: [ '', [Validators.required]],
-    mainLanguage: [ '', [Validators.required]],
-  });
-  languages: Language[];
-  
-  saveChanges(project: Project): void{    
-    project.createdOn = new Date(Date.now());
-    let formData = new FormData();
-    if(this.projectImage){
-      formData.append("image", this.projectImage);
+     ngOnInit() {
+        this.languageService.getAll()
+        .subscribe(
+        (d: Language[])=> {
+            this.languages = d.map(x => Object.assign({}, x));
+        },
+        err => {
+            console.log('err', err);
+        });  
     }
 
-    formData.append("project", JSON.stringify(project));
+    receiveImage($event){
+        this.projectImage = $event[0];
+        $event.pop();
+    }
 
-    this.projectService.create(formData)
-    .subscribe(
-      (d)=> {
-        this.router.navigate(['../']);
-        setTimeout(() => {
-          this.snotifyService.success("Project created", "Success!");
-        }, 100);
+    projectImage: File;
+    project: Project;
+    projectForm: FormGroup = this.fb.group({
+        name: [ '', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+        description: [ '', [Validators.maxLength(500)]],
+        technology: [ '', [Validators.required]],
+        mainLanguage: [ '', [Validators.required]],
+    });
+    languages: Language[];
+  
+    saveChanges(project: Project): void{
+        let langsToSelect = this.languages.filter((lang)=>{
+            return lang.id !== project.mainLanguage.id;
+        });
+
+
+        let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
+            data: {
+                langs: langsToSelect
+            }
+        });   
+
+        dialogRef.componentInstance.onSelect.subscribe(data => {
+            if(data){
+                project.projectLanguageses = data;
+                project.createdOn = new Date(Date.now());
+                let formData = new FormData();
+                if(this.projectImage){
+                    formData.append("image", this.projectImage);
+                }
         
-      },
-      err => {
-        this.snotifyService.error("Project wasn`t created", "Error!");
-        console.log('err', err);        
-      }
-    );
-  }
+                formData.append("project", JSON.stringify(project));
+        
+                this.projectService.create(formData)
+                .subscribe(
+                (d)=> {
+                    this.router.navigate(['../']);
+                    setTimeout(() => {
+                    this.snotifyService.success("Project created", "Success!");
+                    }, 100);
+                    
+                },
+                err => {
+                    this.snotifyService.error("Project wasn`t created", "Error!");
+                    console.log('err', err);        
+                });
+            }
+            else{
+                //this.snotifyService.error("Youe have to choose 1 project language", "Error!");   why its not working??
+            }
+        });
 
-  getAllTechnologies() {
-    return Object.keys(TypeTechnology).filter(
-      (type) => isNaN(<any>type) && type !== 'values'
-    );
-  }
 
-  getLanguages(){
-    return this.languages.map(l => l.name);
-  }
+    }
+
+    getAllTechnologies() {
+        return Object.keys(TypeTechnology).filter(
+        (type) => isNaN(<any>type) && type !== 'values'
+        );
+    }
+
+    getLanguages(){
+        return this.languages.map(l => l.name);
+    }
 
 
-  get name() {
-    return this.projectForm.get('name');
-  }
+    get name() {
+        return this.projectForm.get('name');
+    }
 
-  get technology() {
-    return this.projectForm.get('technology');
-  }
+    get technology() {
+        return this.projectForm.get('technology');
+    }
 
-  get mainLanguage() {
-    return this.projectForm.get('mainLanguage');
-  }
+    get mainLanguage() {
+        return this.projectForm.get('mainLanguage');
+    }
 
-  get description() {
-    return this.projectForm.get('description');
-  }
+    get description() {
+        return this.projectForm.get('description');
+    }
 }
