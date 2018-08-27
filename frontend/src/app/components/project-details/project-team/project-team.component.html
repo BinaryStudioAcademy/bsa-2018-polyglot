@@ -54,7 +54,7 @@
 
       <div class="card-content">
         <div mat-card-image class="img-container">
-          <a class="translator-img" *ngFor="let p of t.persons" routerLink="/translator/{{p.id}}">
+          <a class="translator-img" *ngFor="let p of t.persons" routerLink="/user/{{p.id}}">
             <img height="60" src="{{getAvatarUrl(p)}}" onError="this.src='/assets/images/default-avatar.jpg'">
           </a>
         </div>

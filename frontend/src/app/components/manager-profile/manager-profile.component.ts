@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component';
 import { Project } from '../../models/project';
@@ -19,7 +19,7 @@ import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dia
 export class ManagerProfileComponent implements OnInit {
   
   fullName : string;
-  manager : UserProfile
+  @Input() public manager : UserProfile
   projects : Project[]
   teams : Team[]
   description: string = "Are you sure you want to leave the team?";
@@ -38,7 +38,6 @@ export class ManagerProfileComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.manager = this.userService.getCurrentUser();
 
     this.projectService.getAll().subscribe(pr => {
         this.projects = pr;
@@ -48,28 +47,34 @@ export class ManagerProfileComponent implements OnInit {
     });
   }
 
+  isOwnersProfile(){
+    return this.manager.id == this.userService.getCurrentUser().id;
+  }
+
   editPhoto(){
-    const dialogRef = this.dialog.open(CropperComponent, {
-      data: {imageUrl: this.manager.avatarUrl}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-        if (dialogRef.componentInstance.cropedImageBlob){
-            let formData = new FormData();
-            formData.append("image", dialogRef.componentInstance.cropedImageBlob);
-            this.userService.updatePhoto(formData).subscribe(
-                (d) => {
-                    setTimeout(() => {
-                        this.snotifyService.success("Photo updated.", "Success!");
-                        }, 100);
-                        this.manager = d;
-                    },
-                    err => {
-                        this.snotifyService.error("Photo failed to update!", "Error!");
-                    }
-                );
-            }
-        }
-    );
+    if(this.isOwnersProfile()){
+      const dialogRef = this.dialog.open(CropperComponent, {
+        data: {imageUrl: this.manager.avatarUrl}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+          if (dialogRef.componentInstance.cropedImageBlob){
+              let formData = new FormData();
+              formData.append("image", dialogRef.componentInstance.cropedImageBlob);
+              this.userService.updatePhoto(formData).subscribe(
+                  (d) => {
+                      setTimeout(() => {
+                          this.snotifyService.success("Photo updated.", "Success!");
+                          }, 100);
+                          this.manager = d;
+                      },
+                      err => {
+                          this.snotifyService.error("Photo failed to update!", "Error!");
+                      }
+                  );
+              }
+          }
+      );
+    }
   }
 
   leaveTeam(team: Team) {
