@@ -63,14 +63,14 @@ button
 .profile-card-navigation-button
   text-align: center
   
-.example-container 
-  display: flex
-  flex-direction: column
-  position: relative
-  top: 0
-  bottom: 0
-  left: 0
-  right: 0
+// .example-container 
+//   display: flex
+//   flex-direction: column
+//   position: relative
+//   top: 0
+//   bottom: 0
+//   left: 0
+//   right: 0
 
 
 .example-is-mobile .example-toolbar 
@@ -81,12 +81,40 @@ button
 
 h1.example-app-name 
   margin-left: 8px
+/*
+ * Actual Sticky Footer Styles
+ */
+
+
+.page-wrap 
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+
+.content 
+  flex: 1
+
+
+
+/*
+ * Make the Component injected by Router Outlet full height:
+ */
+main 
+  display: flex
+  flex-direction: column
+  > *:not(router-outlet) 
+    flex: 1
+    display: block
+  
+
+
 
 
 .example-sidenav-container 
   /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
      causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
-  flex: 1
+  min-height: 100vh
 
 
 .example-is-mobile .example-sidenav-container 

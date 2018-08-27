@@ -1,4 +1,5 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+  
   <mat-toolbar class="example-toolbar">
 
 
@@ -47,7 +48,6 @@
 
     </div>
   </mat-toolbar>
-
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <div fxLayout="column">
@@ -77,8 +77,17 @@
 
       </div>
     </mat-sidenav>
-    <div (click)="snav.close()">
-      <router-outlet></router-outlet>
+
+
+    <div class="page-wrap" >
+     
+      <main  (click)="snav.close()" class="content">
+        <router-outlet></router-outlet>
+      </main >
+      <app-footer></app-footer>
+
     </div>
+
+    
   </mat-sidenav-container>
 </div>
