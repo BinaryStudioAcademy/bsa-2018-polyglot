@@ -476,11 +476,10 @@ namespace Polyglot.DataAccess.Seeds
             if (!context.Rights.Any())
             {
                 var rights = new List<Right> {
-                    new Right { Id = 1, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 2, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 3, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 4, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 5, Definition = RightDefinition.AddNewKey }
+                    new Right { Definition = RightDefinition.AddNewKey },
+                    new Right { Definition = RightDefinition.AddNewLanguage },
+                    new Right { Definition = RightDefinition.SelectNewLanguage },
+                    
                 };
                 context.AddRange(rights);
                 context.SaveChanges();
@@ -490,16 +489,16 @@ namespace Polyglot.DataAccess.Seeds
             {
                 var users = context.UserProfiles.ToList();
                 var ratings = new List<Rating> {
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now, UserId = 2 },
+                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now, UserId = 2 },
+                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now, UserId = 3 },
+                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now, UserId = 3 },
+                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now, UserId = 4 },
+                   new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now, UserId = 4 },
+                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now, UserId = 5 },
+                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now, UserId = 2 },
+                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now, UserId = 1 },
+                   new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now, UserId = 1}
                    };
                 context.AddRange(ratings);
                 context.SaveChanges();
@@ -646,10 +645,7 @@ namespace Polyglot.DataAccess.Seeds
                            new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
                            new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
                    },
-                   ProjectGlossaries = {
-                           new ProjectGlossary { GlossaryId = 1, ProjectId = 1 },
-                           new ProjectGlossary { GlossaryId = 2, ProjectId = 1 },
-                   },
+                                      
                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
                    },
 
@@ -708,7 +704,7 @@ namespace Polyglot.DataAccess.Seeds
                 Technology ="programming",
                 ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
                 MainLanguageId = 1,
-               ProjectLanguageses = {
+                ProjectLanguageses = {
                    new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
                    new ProjectLanguage { LanguageId = 5, ProjectId = 5 },
                }

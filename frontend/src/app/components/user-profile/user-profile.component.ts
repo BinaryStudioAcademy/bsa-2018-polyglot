@@ -1,28 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfile } from '../../models';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.sass']
+    selector: 'app-user-profile',
+    templateUrl: './user-profile.component.html',
+    styleUrls: ['./user-profile.component.sass']
 })
 export class UserProfileComponent implements OnInit {
-  currentUser: UserProfile;
+  
+    public SelectedUser: UserProfile;
+    private routeSub: Subscription;
+  
 
-  constructor(private userService: UserService,
-              private router: Router) { }
+    constructor(private userService: UserService,
+                private router: Router,
+                private activatedRoute: ActivatedRoute,) { }
 
-  ngOnInit() {
-    this.currentUser = this.userService.getCurrentUser();
-    if(this.currentUser.userRole == 0){
-      this.router.navigate(['/translator', this.currentUser.id]);
+    ngOnInit() {
+        this.activatedRoute.params.subscribe((params)=>{
+            if(params.userId){
+                if(params.userId == this.userService.getCurrentUser().id){
+                    this.router.navigate(['/profile']);
+                }
+                this.userService.getOne(params.userId).subscribe((user)=>{
+                    if(!user){
+                        this.router.navigate(['/404']);
+                    }
+                    this.SelectedUser = user;
+                },
+                err=>{
+                    this.router.navigate(['/404']);
+                });
+            }
+            else{
+                this.SelectedUser = this.userService.getCurrentUser();
+            }
+        });
     }
-  }
 
-  isCurrentUserManager(){
-    return this.userService.isCurrentUserManager();
-  }
-
+    isSelectedUserManager(){
+        return this.SelectedUser.userRole == 1;
+    }
 }
