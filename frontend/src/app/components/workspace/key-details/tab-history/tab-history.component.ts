@@ -11,144 +11,29 @@ import { ComplexStringService } from '../../../../services/complex-string.servic
 
 export class TabHistoryComponent implements OnInit {
 
-  public keyDetails: any;
-  public translationDetails: any;
-  private history: Array<any>;
-  private users = {};
-  private keyId: number;
-  
-  private user: any;
+  public history: Array<any>;
 
   constructor(
     private dataProvider: ComplexStringService,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
-    this.user = this.userService.getCurrentUser();
   }
 
   ngOnInit() {
-    this.route.params.subscribe(
-      value => {
-        this.keyId = value.keyId;
-        this.dataProvider.getById(value.keyId).subscribe(
-          (data: any) => {
-            this.keyDetails = data;
-            // for (let i = 0; i < data.translations.length; i++) {
-            //   if (!this.users[data.translations[i].userId]) {
-            //     this.userService.getOne(data.translations[i].userId).subscribe(
-            //       (user) => this.users[data.translations[i].userId] = user
-            //     );
-            //   }
-            //   for (let j = 0; j < data.translations[i].history.length; j++) {
-            //     if (!this.users[data.translations[i].history[j].userId]) {
-            //       this.userService.getOne(data.translations[i].history[j].userId).subscribe(
-            //         (user) => this.users[data.translations[i].history[j].userId] = user
-            //       );
-            //     }
-            //   }
-            // }
-          }
-        );
-      }
-    );
   }
 
-  showHistory(index) {
+  showHistory(keyId: number, translationId: string) {
     this.history = [];
 
-    this.dataProvider.getById(this.keyId).subscribe(
-      (result) => {
-        this.keyDetails = result;
-
-        for(let i = 0; i < this.keyDetails.translations.length; i++) {
-          if (this.keyDetails.translations[i].id === index) {
-            this.translationDetails = this.keyDetails.translations[i];
-          }
+    if (keyId && translationId) {
+      this.dataProvider.getTranslationHistory(keyId, translationId).subscribe(
+        (result) => {
+          this.history = result;
         }
-
-        // this.translationDetails = this.keyDetails.translations[index];
-
-        if (this.translationDetails) {
-          if (this.translationDetails.history.length === 0) {
-            this.history.unshift({
-              user: this.user.fullName,
-              avatarUrl: this.user.avatarUrl,
-              action: 'translated',
-              from: this.keyDetails.base,
-              to: this.translationDetails.translationValue,
-              when: this.translationDetails.createdOn
-            });
-          } else {
-            this.history.unshift({
-              user: this.user.fullName,
-              avatarUrl: this.user.avatarUrl,
-              action: 'translated',
-              from: this.keyDetails.base,
-              to: this.translationDetails.history[0].translationValue, 
-              when: this.translationDetails.history[0].createdOn
-            });
-            for (let i = 1; i < this.translationDetails.history.length; i++) {
-              this.history.unshift({
-                user: this.user.fullName,
-                avatarUrl: this.user.avatarUrl,
-                action: 'changed',
-                from: this.translationDetails.history[i-1].translationValue,
-                to: this.translationDetails.history[i].translationValue,
-                when: this.translationDetails.history[i].createdOn
-              });
-            }
-            this.history.unshift({
-              user: this.user.fullName,
-              avatarUrl: this.user.avatarUrl,
-              action: 'changed', 
-              from: this.translationDetails.history[this.translationDetails.history.length - 1].translationValue,
-              to: this.translationDetails.translationValue,
-              when: this.translationDetails.createdOn
-            });
-          }
-        }
-
-        // if (this.translationDetails) {
-        //   if (this.translationDetails.history.length === 0) {
-        //     this.history.unshift({
-        //       user: this.users[this.translationDetails.userId].fullName,
-        //       avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
-        //       action: 'translated',
-        //       from: this.keyDetails.base,
-        //       to: this.translationDetails.translationValue,
-        //       when: this.translationDetails.createdOn
-        //     });
-        //   } else {
-        //     this.history.unshift({
-        //       user: this.users[this.translationDetails.history[0].userId].fullName,
-        //       avatarUrl: this.users[this.translationDetails.history[0].userId].avatarUrl,
-        //       action: 'translated',
-        //       from: this.keyDetails.base,
-        //       to: this.translationDetails.history[0].translationValue, 
-        //       when: this.translationDetails.history[0].createdOn
-        //     });
-        //     for (let i = 1; i < this.translationDetails.history.length; i++) {
-        //       this.history.unshift({
-        //         user: this.users[this.translationDetails.history[i].userId].fullName,
-        //         avatarUrl: this.users[this.translationDetails.history[i].userId].avatarUrl,
-        //         action: 'changed',
-        //         from: this.translationDetails.history[i-1].translationValue,
-        //         to: this.translationDetails.history[i].translationValue,
-        //         when: this.translationDetails.history[i].createdOn
-        //       });
-        //     }
-        //     this.history.unshift({
-        //       user: this.users[this.translationDetails.userId].fullName,
-        //       avatarUrl: this.users[this.translationDetails.userId].avatarUrl,
-        //       action: 'changed', 
-        //       from: this.translationDetails.history[this.translationDetails.history.length - 1].translationValue,
-        //       to: this.translationDetails.translationValue,
-        //       when: this.translationDetails.createdOn
-        //     });
-        //   }
-        // }
-      }
-    );
+      );
+    } else {
+      return;
+    }
   }
 }
