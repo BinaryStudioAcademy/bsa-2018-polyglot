@@ -32,12 +32,12 @@ export class HttpService {
         type: RequestMethod,
         endpoint: string,
         params: number | string = "",
-        body: any = {}) {
+        body: any = {},
+        respType: string = 'json',
+        typeOfContent: string = "json") {
 
         let headers;
-        if ((type === RequestMethod.Post || type === RequestMethod.Put) && endpoint != "projects"
-                                                                        && endpoint != "complexstrings"
-                                                                        && !endpoint.includes("dictionary")) {
+        if ((type === RequestMethod.Post || type === RequestMethod.Put) && typeOfContent == 'json') {
             headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': this.token });
         } else {
             headers = new HttpHeaders({ 'Authorization': this.token });
@@ -48,7 +48,11 @@ export class HttpService {
 
         switch (type) {
             case RequestMethod.Get:
-                request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { headers });
+                if(respType === 'json'){
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json' , headers });
+                }else if(respType === 'blob'){
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob' , headers });
+                }
                 break;
             case RequestMethod.Post:
                 request = this.httpClient.post(`${this.url}/${endpoint}/`, body, { headers });
@@ -57,7 +61,10 @@ export class HttpService {
                 request = this.httpClient.put(`${this.url}/${endpoint}/${params}`, body, { headers });
                 break;
             case RequestMethod.Delete:
-                request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, { headers });
+                const httpOptions = {
+                    headers: headers, body: body
+                };
+                request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, httpOptions);
                 break;
         }
 

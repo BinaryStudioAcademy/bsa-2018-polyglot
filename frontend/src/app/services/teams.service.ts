@@ -18,7 +18,7 @@ export class TeamService {
   }
 
   getTeam(id: number): Observable<Team> {
-    debugger;
+    
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
@@ -34,10 +34,13 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators/' + translatorId + '/rating', undefined, undefined);
   }
 
-  formTeam(translatorsIds: Array<number>): Observable<Team> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, translatorsIds);
+  formTeam(translatorIds: Array<number>,name : string): Observable<Team> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, {translatorIds:translatorIds,name:name});
   }
 
+  deletedTeamTranslators(teamTranslatorIds: Array<number>): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/translators', undefined, teamTranslatorIds);
+  }
  // create(body){
  //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
  // }
@@ -46,7 +49,15 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
   }
 
-  delete(id: number){
+  delete(id: number): Observable<any>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
+  }
+
+  setTranslatorRight(teamId: number, translatorId: number, definition: number): Observable<Translator>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + teamId + "/addTranslatorRight", translatorId, definition);
+  }
+
+  removeTranslatorRight(teamId: number, translatorId: number, definition: number): Observable<Translator>{
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + teamId + "/removeTranslatorRight", translatorId, definition);
   }
 }

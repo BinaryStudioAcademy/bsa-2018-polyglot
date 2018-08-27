@@ -7,41 +7,47 @@ using Polyglot.DataAccess.SqlRepository;
 
 using Polyglot.DataAccess.Entities;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services
 {
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
-        private IUnitOfWork uow;
-        private IMapper mapper;
-
         public UserService(IUnitOfWork uow, IMapper mapper)
             :base(uow, mapper)
         {
-            this.uow = uow;
-            this.mapper = mapper;
+
         }
 
-        public async Task<UserProfileDTO> GetByUidAsync(string uid)
-        {
-            var repository = uow.GetRepository<UserProfile>();
-            var user = await repository.GetAllAsync(u => u.Uid == uid);
 
-            if (user.Count > 1)
+
+        public async Task<UserProfileDTO> GetByUidAsync()
+        {
+            var user = await CurrentUser.GetCurrentUserProfile();
+            if (user == null)
             {
                 return null;
             }
 
-            return mapper.Map<UserProfile, UserProfileDTO>(user.First());
+            return mapper.Map<UserProfile, UserProfileDTO>(user);
         }
 
         public async Task<bool> IsExistByUidAsync(string uid)
         {
-            var repository = uow.GetRepository<UserProfile>();
+            var user = await CurrentUser.GetCurrentUserProfile();
+            return user != null;
+        }
 
-            var result = await repository.GetAllAsync(u => u.Uid == uid);
+        public async Task<bool> PutUserBool(UserProfileDTO userProfileDTO)
+        {
+            var result = uow.GetRepository<UserProfile>().UpdateBool((mapper.Map<UserProfile>(userProfileDTO)));
+            if (result)
+            {
+                await uow.SaveAsync();
+                return true;
+            }
 
-            return result.Count > 0;
+            return false;
         }
     }
 }

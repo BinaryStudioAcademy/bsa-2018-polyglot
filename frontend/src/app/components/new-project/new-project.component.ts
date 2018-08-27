@@ -44,27 +44,25 @@ export class NewProjectComponent implements OnInit {
   projectImage: File;
   project: Project;
   projectForm: FormGroup = this.fb.group({
-    name: [ '', [Validators.required, Validators.minLength(4)]],
+    name: [ '', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
     description: [ '', [Validators.maxLength(500)]],
     technology: [ '', [Validators.required]],
     mainLanguage: [ '', [Validators.required]],
   });
   languages: Language[];
   
-  saveChanges(project: Project): void{
-    debugger;
+  saveChanges(project: Project): void{    
     project.createdOn = new Date(Date.now());
     let formData = new FormData();
-    if(this.projectImage)
+    if(this.projectImage){
       formData.append("image", this.projectImage);
+    }
 
-      console.log(project);
     formData.append("project", JSON.stringify(project));
 
     this.projectService.create(formData)
     .subscribe(
       (d)=> {
-        console.log(d);
         this.router.navigate(['../']);
         setTimeout(() => {
           this.snotifyService.success("Project created", "Success!");
@@ -73,8 +71,7 @@ export class NewProjectComponent implements OnInit {
       },
       err => {
         this.snotifyService.error("Project wasn`t created", "Error!");
-        console.log('err', err);
-        
+        console.log('err', err);        
       }
     );
   }

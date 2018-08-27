@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule } from '@angular/material';
+import { MatChipsModule, MatCheckboxModule, MatDialogModule, MatSelectModule, MatTabsModule,  MatSnackBarModule, MatBottomSheetModule, DateAdapter } from '@angular/material';
 
 import { HttpService } from './services/http.service';
 import { TranslatorProfileComponent } from './components/translatorProfile/translator-profile/translator-profile.component';
@@ -74,7 +74,8 @@ import { ProjectEditComponent } from './components/project-edit/project-edit.com
 import { MatRadioModule } from '@angular/material';
 import { SaveStringConfirmComponent } from './dialogs/save-string-confirm/save-string-confirm.component';
 import { TabHistoryComponent } from './components/workspace/key-details/tab-history/tab-history.component';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { DownloadFileComponent } from './components/project-details/download-file/download-file.component';
+import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ChooseRoleDialogComponent } from './dialogs/choose-role-dialog/choose-role-dialog.component';
 import { GlossaryService } from './services/glossary.service';
 import { GlossaryCreateDialogComponent } from './dialogs/glossary-create-dialog/glossary-create-dialog.component';
@@ -82,9 +83,26 @@ import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glos
 import { GlossaryComponent } from './components/glossaries/glossary/glossary.component';
 import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/glossary-string-dialog.component';
 
+//Ngx-Charts
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ReportsComponent } from './components/reports/reports.component';
+import { NgxInfiniteScrollerModule } from 'ngx-infinite-scroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
+import { ProjectActivitiesComponent } from './components/project-details/project-activities/project-activities.component';
+
+
+import { TabReviewComponent } from './components/translatorProfile/tab-review/tab-review.component';
+import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
+import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 
 
 @NgModule({
+  exports: [
+    MatSnackBarModule
+  ],
   declarations: [
     LandingComponent,
     NavigationComponent,
@@ -139,6 +157,17 @@ import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/
     GlossaryEditDialogComponent,
     GlossaryComponent,
     GlossaryStringDialogComponent
+    ProjectActivitiesComponent,
+    TabReviewComponent,
+    DownloadFileComponent,
+    StarRatingComponent,
+    MachineTranslationMenuComponent,
+    ReportsComponent,
+    ProjectActivitiesComponent,
+    TabReviewComponent,
+    DownloadFileComponent,
+    StarRatingComponent,  
+    UserProfileComponent, TabGlossaryComponent
   ],
   imports: [
     BrowserModule,
@@ -159,6 +188,7 @@ import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/
     MatSortModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatBottomSheetModule,
     ImageCropperModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -169,7 +199,10 @@ import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/
       apiKey: 'AIzaSyD_x9oQzDz-pzi_PIa9M48c_FrYGFwnImo'
     }),
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule,
+    NgxInfiniteScrollerModule,
+    InfiniteScrollModule
   ],
   entryComponents: [
     LoginDialogComponent, 
@@ -187,7 +220,9 @@ import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/
     SaveStringConfirmComponent,
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
-    GlossaryStringDialogComponent
+    GlossaryStringDialogComponent,
+    SaveStringConfirmComponent
+
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
@@ -197,4 +232,8 @@ import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/
 
 
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private dateAdapter:DateAdapter<Date>) {
+		dateAdapter.setLocale('en-in'); // DD/MM/YYYY
+	}
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from "../../services/teams.service";
-import { Team } from '../../models';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-teams',
@@ -10,10 +10,10 @@ import { Team } from '../../models';
 export class TeamsComponent implements OnInit {
 
   IsLoad : boolean = true;
-  managerId: number = 1;
   teams: any;
 
-  constructor(private teamsService: TeamService) { }
+  constructor(private teamsService: TeamService,
+              private userService: UserService) { }
 
   ngOnInit() {
     this.getAllTeams();
@@ -21,12 +21,15 @@ export class TeamsComponent implements OnInit {
 
   getAllTeams(){
     this.teamsService.getAllTeams()
-      .subscribe((teams) => {
-        debugger;
+      .subscribe((teams) => {       
         this.teams = teams;
-        let a = teams
+        console.log(teams)
         this.IsLoad = false;
       })
+  }
+
+  isCurrentUserManager(){
+    return this.userService.isCurrentUserManager();
   }
 
 }

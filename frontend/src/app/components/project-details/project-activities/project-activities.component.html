@@ -1,0 +1,28 @@
+<div class="container" *ngIf="allActivities && allActivities.length != 0" fxLayout="row">
+    <div fxFlex="30%" class = "filter">
+        <mat-form-field class="date-input">
+            <input matInput (dateChange)="onFilterChange()" [(ngModel)]="from" [matDatepicker]="pickerFrom" placeholder="From">
+            <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFrom></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="date-input">
+            <input matInput (dateChange)="onFilterChange()" [(ngModel)]="to" [matDatepicker]="pickerTo" placeholder="To">
+            <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+            <mat-datepicker #pickerTo></mat-datepicker>
+        </mat-form-field>
+        <h4>Start typing username:</h4>
+        <input matInput (keyup)="onFilterChange()" [(ngModel)]="filterUserName" placeholder="Username">
+        <hr>
+    </div> 
+    <div fxFlex="70%" >
+        <div *ngFor="let action of filteredActivities" class="comments-container">
+            <mat-card  class="activity-card">
+                <div class ="text">{{action.message}}</div>
+                <div class="date"><i>{{action.dateTime | date:'medium'}}</i></div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<div  *ngIf="!allActivities || allActivities.length == 0">
+    <p class="no-activities">No Activities</p>
+</div>

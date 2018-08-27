@@ -12,6 +12,7 @@
   <div class = "top-buttons">
   <a mat-raised-button routerLink="." class="top-button">Add new translator</a>
   <a mat-raised-button routerLink="." class="top-button">Invite new user</a>
+  <button mat-raised-button class="top-button" (click)="delete(id)" color="warn" type="button">Delete team</button>
 </div>
 </div>
 
@@ -35,7 +36,7 @@
   </ng-container>
   <ng-container matColumnDef="fullName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-    <td mat-cell *matCellDef="let element"> {{element.fullName}} </td>
+    <td mat-cell *matCellDef="let element"> <a [routerLink]="['/translator', element.userId]">{{element.fullName}}</a> </td>
   </ng-container>
   <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
@@ -45,9 +46,9 @@
       <th mat-header-cell *matHeaderCellDef > Rights </th>
       <td  mat-cell *matCellDef="let element">
           <div *ngIf="element.teamId === id" id="right-checkboxes">
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-add')" (change)="changeTranslatorRight($event, element.id)"> Add new language</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'key')" (change)="changeTranslatorRight($event, element.id)"> Add new key</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.id, 'language-select')" (change)="changeTranslatorRight($event, element.id)"> Select new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)" (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)" (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Select new language</mat-checkbox>
             </div>
       </td>
   </ng-container>
@@ -69,3 +70,4 @@
 </table>
 <mat-paginator *ngIf = "!displayNoRecords && IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
 
+<ng-snotify></ng-snotify>  

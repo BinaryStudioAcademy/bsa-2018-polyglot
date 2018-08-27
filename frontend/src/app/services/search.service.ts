@@ -11,7 +11,7 @@ export class SearchService {
 
   constructor() { }
 
-  GetTranslatorsByTeam(teamId: number) : Observable<Translator[]>{
+  GetTranslatorsByTeam(teamId: number) : Observable<any>{
     // собираем translator + email + rights
     return of([
     {
@@ -32,6 +32,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 1
     },
     {
       id: 2,
@@ -47,6 +48,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 2
     },
     {
       id: 3,
@@ -61,6 +63,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 3
     },
     {
       id: 4,
@@ -71,6 +74,7 @@ export class SearchService {
       rights: undefined,
       teamId: 88,
       rating: 1,
+      userId: 4
     },
     {
       id: 5,
@@ -95,6 +99,7 @@ export class SearchService {
               }],
       teamId: 21,
       rating: 1,
+      userId: 5
     },
     {
       id: 6,
@@ -110,6 +115,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 6
     },
     ,
     {
@@ -121,6 +127,7 @@ export class SearchService {
       rights: undefined,
       teamId: 88,
       rating: 1,
+      userId: 7
     },
     {
       id: 8,
@@ -140,6 +147,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 8
     },
     {
       id: 9,
@@ -154,6 +162,7 @@ export class SearchService {
               }],
       teamId: 88,
       rating: 1,
+      userId: 9
     },
     {
       id: 10,
@@ -164,6 +173,7 @@ export class SearchService {
       rights: undefined,
       teamId:88,
       rating: 1,
+      userId: 10
     },
     {
       id: 11,
@@ -174,12 +184,13 @@ export class SearchService {
       rights: undefined,
       teamId: 88,
       rating: 1,
+      userId: 11
     }
   ].filter(m => m.teamId == teamId));
   }
 
 
-  FindTranslatorsByEmail(email: string) : Observable<Translator[]>{
+  FindTranslatorsByEmail(email: string) : Observable<any>{
     
     return of([
       {
@@ -205,6 +216,7 @@ export class SearchService {
                 }],
         teamId: 82,
         rating: 1,
+        userId: 144
       },
       {
         id: 22,
@@ -224,6 +236,7 @@ export class SearchService {
                 }],
         teamId: 12,
         rating: 1,
+        userId: 22
       },
       {
         id: 42,
@@ -243,6 +256,7 @@ export class SearchService {
                 }],
         teamId: 345,
         rating: 1,
+        userId: 42
       },
       {
         id: 43,
@@ -258,6 +272,7 @@ export class SearchService {
                 }],
         teamId: 34,
         rating: 1,
+        userId: 43
       },
       {
         id: 44,
@@ -277,6 +292,7 @@ export class SearchService {
                 }],
         teamId: 34,
         rating: 1,
+        userId: 44
       }].filter(m => m.email == email));
   }
 

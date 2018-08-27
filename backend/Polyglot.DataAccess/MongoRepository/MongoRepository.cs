@@ -8,7 +8,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoRepository
 {
-    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity: Entity
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : Entity
     {
         string _collectionName;
 
@@ -86,6 +86,7 @@ namespace Polyglot.DataAccess.MongoRepository
                 throw ex;
             }
         }
+
 
         public async Task<TEntity> DeleteAsync(int id)
         {

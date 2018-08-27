@@ -9,8 +9,11 @@ import {MAT_DIALOG_DATA} from '@angular/material';
   styleUrls: ['./cropper.component.sass']
 })
 export class CropperComponent implements OnInit{
+
   cropperSettings: CropperSettings;
-  imageData: any;
+  imageData: File;
+  public cropedImageBlob: Blob;
+  image: File;
   @ViewChild('cropper', undefined) 
   cropper: ImageCropperComponent;
   constructor(
@@ -31,21 +34,20 @@ export class CropperComponent implements OnInit{
     this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
     this.cropperSettings.cropperDrawSettings.strokeWidth = 2;
     this.cropperSettings.noFileInput = true;
-    this.imageData = {}
    }
 
   ngOnInit() {
-    var image: HTMLImageElement = new Image();
-    image.src = this.data.imageUrl;
-    image.crossOrigin = "Anonymous";
-    image.onload = ()=> {
-      this.cropper.setImage(image);
+    var imageData: HTMLImageElement = new Image();
+    imageData.src = this.data.imageUrl;
+    imageData.crossOrigin = "Anonymous";
+    imageData.onload = ()=> {
+      this.cropper.setImage(imageData);
     };
   }
 
   fileChangeListener($event) {
     var image:any = new Image();
-    var file:File = $event.target.files[0];
+    this.imageData = $event.target.files[0];
     var myReader:FileReader = new FileReader();
     var that = this;
     myReader.onloadend = function (loadEvent:any) {
@@ -53,10 +55,23 @@ export class CropperComponent implements OnInit{
       that.cropper.setImage(image);
      };
 
-    myReader.readAsDataURL(file);
+    myReader.readAsDataURL(this.imageData);
   }
 
   uploadImage() {
-    console.log("SAVED!");
+    const base64: any = Object.values(this.cropper.image)[1];
+    this.cropedImageBlob = this.dataURItoBlob(base64);
+    this.dialogRef.close();
+  }
+
+  dataURItoBlob(dataURI) {
+    const binary = atob(dataURI.split(',')[1]);
+    const array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], {
+      type: 'image/png'
+    });
   }
 }

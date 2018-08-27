@@ -75,9 +75,27 @@ span
     background-color: #f5f5f5
     cursor: pointer
 
-h5
-    margin-bottom: 10px
-    margin-top: 15px
+.project 
+    padding-top: 15px
+    padding-left: 8px
+
+.team
+    padding-top: 15px
+    padding-left: 8px
+
+.team:hover
+    background-color: #f5f5f5
+    cursor: pointer
+    
+.team-card
+    display: flex
+    justify-content: space-between
+    align-items: center
+.team-leave-btn
+    margin-right: 10px
+.team-list
+    overflow-y: scroll
+    height: 295px
 
 .projects-container
     padding: 15px
@@ -92,4 +110,8 @@ h5
     .project-button-wrapper
         display: inline-block;
         margin-left: 0px;
-  
+
+@media screen and (min-width: 600px) and (max-width: 1115px)
+    .team-card
+        display: inline-block;
+        margin-left: 0px;

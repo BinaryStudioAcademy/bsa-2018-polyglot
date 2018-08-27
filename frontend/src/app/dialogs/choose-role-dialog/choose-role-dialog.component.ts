@@ -16,15 +16,13 @@ export class ChooseRoleDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private snotify: SnotifyService,
               public dialogRef: MatDialogRef<ChooseRoleDialogComponent>,
-              private userService: UserService) { 
-                
+              private userService: UserService) {  
               }
 
-
-  selectedOption: string = "translator";
+  buttonDisable: boolean;
+  selectedOption: string = 'Translator';
   userToReceive: UserProfile;
   error: string;
-  loaded: boolean = false;
 
   @Output() onRoleChoose: EventEmitter<any> = new EventEmitter<any>(true);
 
@@ -33,23 +31,24 @@ export class ChooseRoleDialogComponent implements OnInit {
 
   onSubmit(){
     this.onRoleChoose.emit(null);
+    this.buttonDisable = true;
   }
 
   saveDataInDb(){
-    
     let role: Role;
-    if(this.selectedOption === "translator"){
+    if(this.selectedOption === 'Translator'){
       role = Role.Translator;
     }
-    if(this.selectedOption === "manager"){
+    if(this.selectedOption === 'Manager'){
       role = Role.Manager;
     }
 
     this.userToReceive = {
       fullName: this.data.fullName,
-      userRole: role,
-      
+      userRole: role
     }
+
+    console.log(this.userToReceive);
 
     return this.userService.create(this.userToReceive);
   }

@@ -1,4 +1,7 @@
-﻿using Polyglot.DataAccess.Entities;
+﻿using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.DataAccess.SqlRepository
@@ -10,5 +13,9 @@ namespace Polyglot.DataAccess.SqlRepository
        // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
 
         TEntity Update(TEntity entity);
+
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
+
+        bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
     }
 }

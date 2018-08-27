@@ -24,13 +24,15 @@ import { UserSettingsComponent } from '../../components/user-settings/user-setti
 import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
 import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
 import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
+import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
+
 
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'profile', canActivate: [AuthGuard], component: ManagerProfileComponent},
+  { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent},
   { path: 'profile/newproject', canActivate: [AuthGuard], component: NewProjectComponent },
   { path: 'profile/newteam', canActivate: [AuthGuard], component: NewTeamComponent },
   { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
@@ -61,7 +63,7 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'translator', canActivate: [AuthGuard], component: TranslatorProfileComponent },
+  { path: 'translator/:translatorId', canActivate: [AuthGuard], component: TranslatorProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

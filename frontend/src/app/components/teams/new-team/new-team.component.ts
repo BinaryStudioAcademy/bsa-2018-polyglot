@@ -16,10 +16,10 @@ import { Router } from '@angular/router';
 export class NewTeamComponent implements OnInit {
 
   IsLoad: boolean = true;
-  managerId: number = 1;
   allTranslators: Translator[] = [];
   teamTranslators: Translator[] = [];
   public defaultAvatar: String = "/assets/images/anonymus.jpg"
+  public name : string;
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
 
@@ -50,10 +50,11 @@ export class NewTeamComponent implements OnInit {
   getAllTranslators() {
     this.teamService.getAllTranslators()
       .subscribe((translators: Translator[]) => {
-       
+
         this.IsLoad = false;
-        if (translators && translators.length > 0)
+        if (translators && translators.length > 0){
           this.allTranslators = translators;
+        }
         else {
           this.allTranslators = [];
           this.snotifyService.info("No translators found!", "Ooops!")
@@ -67,20 +68,27 @@ export class NewTeamComponent implements OnInit {
   }
 
   addTranslator(translator: Translator) {
+
+    if (this.teamTranslators.length < 9) { 
+      this.teamTranslators.push(translator);
+      this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
+    }
+    else {
+      this.snotifyService.error("Ohh we are sorry!, the team can not have more than 9 players", "Error!") 
+    }
     
-    this.teamTranslators.push(translator);
-    this.allTranslators = this.allTranslators.filter(t => t.id != translator.id);
+    
   }
 
   removeTranslator(translator: Translator) {
-    
+
     this.allTranslators.push(translator);
-    this.teamTranslators = this.teamTranslators.filter(t => t.id != translator.id);
+    this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
   }
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.id))
+      this.teamService.formTeam(this.teamTranslators.map(t => t.userId),this.name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
@@ -94,7 +102,7 @@ export class NewTeamComponent implements OnInit {
           err => {
             this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
           })
-    }
+    } 
   }
 
   applyFilter(filterValue: string) {
@@ -103,8 +111,8 @@ export class NewTeamComponent implements OnInit {
     // this.dataSource.filter = filterValue;
   }
   getAvatarUrl(person): String {
-    debugger;
-    if (person.avatarUrl!==" ")
+
+    if (person.avatarUrl !== " ")
       return person.avatarUrl;
     else
       return this.defaultAvatar;

@@ -2,7 +2,7 @@
 	
 	<div class="d-flex align-items-center py-0 px-1 justify-space-between">
 		<h2>{{project.name}}</h2>
-		<button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/workspace', project.id]">Workspace</button>
+		<button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/workspace', project.id]">Go to Workspace</button>
 	
 	</div>
 
@@ -26,13 +26,11 @@
 		</mat-tab>
 
 		<mat-tab label="Reports">
-			<h1>Reports content</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id ante pellentesque, dictum erat in, vehicula tortor. Phasellus velit odio, semper sit amet nibh id, porta fermentum neque. Nam vel dapibus magna. Cras ac posuere lectus, sed efficitur lacus. Duis porta scelerisque sapien vel facilisis. Nunc at convallis nisi, ut mollis velit. Curabitur nec mattis urna. Nunc massa nisi, posuere sed massa nec, volutpat tincidunt mi. Mauris tincidunt nisi sed ipsum ultricies, non faucibus ante tempus. Mauris non libero ut mi consequat tempus eu ac enim. Fusce bibendum sodales ullamcorper. Mauris molestie dui non neque sagittis convallis. Sed a ultrices nunc. In a elit eros. Phasellus quis mattis augue. Aenean eu metus sollicitudin, varius lacus quis, imperdiet metus.</p>
+			<app-reports [projectId]="project.id"></app-reports>
 		</mat-tab>
 
 		<mat-tab label="Activities">
-			<h1>Some more tab content</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id ante pellentesque, dictum erat in, vehicula tortor. Phasellus velit odio, semper sit amet nibh id, porta fermentum neque. Nam vel dapibus magna. Cras ac posuere lectus, sed efficitur lacus. Duis porta scelerisque sapien vel facilisis. Nunc at convallis nisi, ut mollis velit. Curabitur nec mattis urna. Nunc massa nisi, posuere sed massa nec, volutpat tincidunt mi. Mauris tincidunt nisi sed ipsum ultricies, non faucibus ante tempus. Mauris non libero ut mi consequat tempus eu ac enim. Fusce bibendum sodales ullamcorper. Mauris molestie dui non neque sagittis convallis. Sed a ultrices nunc. In a elit eros. Phasellus quis mattis augue. Aenean eu metus sollicitudin, varius lacus quis, imperdiet metus.</p>
+			<app-project-activities [projectId] = "project.id"></app-project-activities>
 		</mat-tab>
 
 		<mat-tab label="Languagues">
@@ -48,8 +46,11 @@
 			<app-project-edit [project]="project" ></app-project-edit>
 		</mat-tab>
 
-		<mat-tab label="Uploads">			
-			<app-upload-file></app-upload-file>		
+		<mat-tab label="Files">
+			<div class="file-container">
+				<app-upload-file></app-upload-file>
+				<app-download-file [project]="project"></app-download-file>
+			</div>					
 		</mat-tab>
 
 	</mat-tab-group>

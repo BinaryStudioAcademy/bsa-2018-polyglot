@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace Polyglot.Authentication.Extensions
+namespace Polyglot.Core.Authentication
 {
     public static class IdentityExtensions
     {

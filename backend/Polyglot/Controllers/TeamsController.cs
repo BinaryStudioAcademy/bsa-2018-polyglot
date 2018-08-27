@@ -5,6 +5,8 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
 using System.Collections.Generic;
+using Polyglot.Core.Authentication;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -13,18 +15,19 @@ namespace Polyglot.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService service;
+        private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
-        public TeamsController(ITeamService service, IMapper mapper)
+        public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper)
         {
             this.service = service;
+            this.teamTranslatorService = teamTranslatorService;
         }
 
         // GET: Teams
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-#warning ??? наверное GetAllTeamsAsync должен возвращать только команды определенного менеджера
-            var teams = await service.GetAllTeamsAsync();
+            var teams = await service.GetAllTeamsAsync(); 
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
@@ -81,13 +84,12 @@ namespace Polyglot.Controllers
 
         // POST: Teams
         [HttpPost]
-        public async Task<IActionResult> FormTeam([FromBody]int[] translatorsIds)
+        public async Task<IActionResult> FormTeam([FromBody]ReceiveTeamDTO translatorIds)
         {
             if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
+                return BadRequest();
 
-#warning у команды пока что нет менеджера
-            var entity = await service.FormTeamAsync(translatorsIds, -1);
+            var entity = await service.FormTeamAsync(translatorIds);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
                 entity);
@@ -105,12 +107,45 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
+        [HttpDelete("translators")]
+        public async Task<IActionResult> RemoveTeamTranslators([FromBody]int[] teamTranslatorIds)
+        {
+            foreach (int id in teamTranslatorIds)
+            {
+                var entity = await teamTranslatorService.TryDeleteAsync(id);
+                if (!entity)
+                    return BadRequest();
+            }
+
+            return Ok();
+        }
+
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DisbandTeam(int id)
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        [HttpPut("{teamId}/addTranslatorRight/{userId}")]
+        public async Task<IActionResult> AddRightToTranslator(int teamId, int userId, [FromBody]int definition)
+        {
+            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
+
+            var entity = await service.SetTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{teamId}/removeTranslatorRight/{userId}")]
+        public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]int definition)
+        {
+            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
+
+            var entity = await service.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

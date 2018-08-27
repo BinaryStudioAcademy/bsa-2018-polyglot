@@ -1,4 +1,4 @@
-﻿//using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 //using Polyglot.DataAccess.Entities;
 //using Polyglot.DataAccess.Helpers;
 //using Polyglot.DataAccess.SqlRepository;
@@ -737,4 +737,3 @@
 //        }
 //    }
 //}
-

@@ -4,11 +4,10 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.SqlRepository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -22,29 +21,35 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
-            var teams = await uow.GetRepository<Team>().GetAllAsync();
+            var user = await CurrentUser.GetCurrentUserProfile();
+            IEnumerable<Team> result = new List<Team>();
 
-            if (teams != null && teams.Count > 0)
-                return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
+            if (user.UserRole == Role.Translator)
+            {
+                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
+                var allTeams = await uow.GetRepository<Team>().GetAllAsync();
+                result = allTeams.Where(x => translatorTeams.Any(y => y.TeamId == x.Id));
+            }
             else
-                return new List<TeamPrevDTO>();
+            {
+                 result = await uow.GetRepository<Team>().GetAllAsync(x => x.CreatedBy == user);
+            }
+
+            return mapper.Map<IEnumerable<TeamPrevDTO>>(result);
         }   
         
-        public async Task<TeamDTO> FormTeamAsync(int[] translatorIds, int managerId)
+        public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
         {
             var userRepo = uow.GetRepository<UserProfile>();
-       //     UserProfile manager = await userRepo.GetAsync(managerId);
-       //     if (manager == null || manager.UserRole != UserProfile.Role.Manager)
-       //         return null;
-       
+
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
-            foreach (var id in translatorIds)
+            foreach (var id in receivedTeam.TranslatorIds)
             {
                 currentTranslator = await userRepo.GetAsync(id);
                 if (currentTranslator != null && currentTranslator.UserRole == Role.Translator)
                 {
-                    translators.Add(new TeamTranslator()
+                    translators.Add(new TeamTranslator
                     {
                         UserProfile = currentTranslator
                     });
@@ -54,15 +59,24 @@ namespace Polyglot.BusinessLogic.Services
             if (translators.Count < 1)
                 return null;
 
-#warning неизвестно что делать с менеджером
-            Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team());
-            await uow.SaveAsync();
+            var manager = await CurrentUser.GetCurrentUserProfile();
 
-            newTeam.TeamTranslators = translators;
-            newTeam = uow.GetRepository<Team>().Update(newTeam);
-            await uow.SaveAsync();
+            if (manager.UserRole == Role.Manager)
+            {
 
-            return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
+                Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team());
+                await uow.SaveAsync();
+
+                newTeam.TeamTranslators = translators;
+                newTeam.CreatedBy = manager;
+                newTeam.Name = receivedTeam.Name;
+                newTeam = uow.GetRepository<Team>().Update(newTeam);
+                await uow.SaveAsync();
+
+                return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
+            }
+
+            return null;
         }
 
         public async Task<bool> TryDisbandTeamAsync(int teamId)
@@ -103,7 +117,7 @@ namespace Polyglot.BusinessLogic.Services
                     var translatorsList = dest.ToList();
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                     }
 
                 }));
@@ -116,6 +130,21 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
                 return null;
+        }
+
+        public override async Task<TeamDTO> PutAsync(TeamDTO entity)
+        {
+            if (uow != null)
+            {
+                var teamRepository = uow.GetRepository<Team>();
+                var target = teamRepository.Update(mapper.Map<Team>(entity));
+                if (target != null)
+                {
+                    await uow.SaveAsync();
+                    return mapper.Map<TeamDTO>(target);
+                }
+            }
+            return null;
         }
 
         #endregion Overrides
@@ -155,9 +184,9 @@ namespace Polyglot.BusinessLogic.Services
                     IEnumerable<TranslatorLanguage> translatorLanguages;
                     for (int i = 0; i < translatorsList.Count; i++)
                     {
-                        translatorsList[i].Rating = ratings[translatorsList[i].Id];
+                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
                         // добавляем инфо о языках
-                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].Id);
+                        translatorLanguages = tLanguages.Where(tl => tl.TranslatorId == translatorsList[i].UserId);
                         if (translatorLanguages != null && translatorLanguages.Count() > 0)
                             translatorsList[i].TranslatorLanguages = mapper.Map<IEnumerable<TranslatorLanguageDTO>>(translatorLanguages);
                     }
@@ -210,6 +239,43 @@ namespace Polyglot.BusinessLogic.Services
         {
 // TODO IMPLEMENT
             throw new System.NotImplementedException();
+        }
+
+        public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            translator.TranslatorRights.Add(new TranslatorRight()
+            {
+                RightId = right.Id,
+                TeamTranslatorId = translator.Id
+            });
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
+        }
+
+        public async Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+            var translatorRight = translator.TranslatorRights
+                .FirstOrDefault(tr => tr.RightId == right.Id &&  tr.TeamTranslatorId == translator.Id);
+
+            translator.TranslatorRights.Remove(translatorRight);
+
+            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            await uow.SaveAsync();
+
+            return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
         }
 
         #endregion Translators

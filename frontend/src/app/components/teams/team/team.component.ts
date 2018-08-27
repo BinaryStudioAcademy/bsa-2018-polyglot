@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { MatSort, MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatSort, MatPaginator, MatTableDataSource, MatDialog } from '@angular/material';
 import { FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatTable } from '@angular/material';
 import { Translator } from '../../../models/Translator';
@@ -7,6 +7,9 @@ import { TeamService } from '../../../services/teams.service';
 import { SearchService } from '../../../services/search.service';
 import { ActivatedRoute } from '@angular/router';
 import { Team } from '../../../models';
+import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
+import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -30,14 +33,22 @@ export class TeamComponent implements OnInit {
   public pageSize: number  = 5;
   displayNoRecords: boolean = false;
 
+  desc: string = "Are you sure you want to remove this team?";
+  btnOkText: string = "Delete";
+  btnCancelText: string = "Cancel";
+  answer: boolean;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
 
   constructor(
-    private teamService: TeamService, 
+    private teamService: TeamService,
+    private snotifyService: SnotifyService,
+    private router: Router,
     private searchService: SearchService,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.getTranslators();
     
@@ -47,7 +58,7 @@ export class TeamComponent implements OnInit {
     this.teamTranslators = [];
     this.teamService.getTeam(this.id)
         .subscribe((data: Team) => {
-          debugger;
+          
           this.teamTranslators = data.teamTranslators;
           this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;
@@ -93,11 +104,11 @@ export class TeamComponent implements OnInit {
         });
   }
 
-  checkTranslatorRight(id: number, rightName: string) : boolean{
+  checkTranslatorRight(id: number, rightDefinition: number) : boolean{
     if(!this.teamTranslators)
       return false;
 
-    let teammate = this.teamTranslators.find(t => t.id === id);
+    let teammate = this.teamTranslators.find(t => t.userId === id);
     if(!teammate)
       return false;
       
@@ -106,19 +117,22 @@ export class TeamComponent implements OnInit {
         return false;
       }
       return teammate.rights
-        .find(r => r.definition.trim().toLowerCase() === rightName.trim().toLowerCase())
+        .find(r => r.definition == rightDefinition)
         != null;
       
   }
 
-  changeTranslatorRight(e, id){
-    if(e.checked)
-      {
-        // add right
+  changeTranslatorRight(e, id, rightDefinition: number){
+    if(e.checked){
+        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;
+        });
       }
-    else
-      {
-        //remove right
+    else{
+        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+          let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
+          this.teamTranslators[teammateIndex] = teammate;});
       }
   }
 
@@ -132,5 +146,28 @@ export class TeamComponent implements OnInit {
     }
     else
       this.IsPagenationNeeded = false;
+  }
+
+  delete(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {description: this.desc, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (dialogRef.componentInstance.data.answer){
+        debugger;
+        this.teamService.delete(id)
+        .subscribe(
+          (response => {
+            debugger;
+            this.snotifyService.success("Team was deleted", "Success!");
+            setTimeout(() => (this.router.navigate(['/dashboard/teams'])), 3000);
+          }),
+          err => {
+            this.snotifyService.error("Team wasn`t deleted", "Error!");
+          });
+        }
+      }
+    );
   }
 }
