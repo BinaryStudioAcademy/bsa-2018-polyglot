@@ -240,6 +240,36 @@ namespace Polyglot.Controllers
                 : Ok(complexStrings);
         }
 
+
+        // GET: Projects/5/glossaries
+        [HttpGet("{id}/glossaries")]
+        public async Task<IActionResult> GetAssignedGlossaries(int id)
+        {
+            var project = await service.GetProjectLanguages(id);
+            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
+                : Ok(project);
+
+        }
+
+        // PUT: Projects/:id/glossaries
+        [HttpPut("{projectId}/glossaries")]
+        public async Task<IActionResult> AssignGlossariesToProject(int projectId, [FromBody]int[] glossaryIds)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+            var entity = await service.AssignGlossaries(projectId, glossaryIds);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        //DELETE: projects/:id/glossaries/:id
+        [HttpDelete("{projId}/glossaries/{glossaryId}")]
+        public async Task<IActionResult> DismissProjectGlossary(int projId, int glossaryId)
+        {
+            var success = await service.TryDismissGlossary(projId, glossaryId);
+            return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+        
         [HttpGet("{projectId}/activities")]
         public async Task<IActionResult> GetAllActivities(int projectId)
         {
@@ -276,6 +306,7 @@ namespace Polyglot.Controllers
             var temp = File(test, ex);
             return temp;
         }
+
 
 
     }
