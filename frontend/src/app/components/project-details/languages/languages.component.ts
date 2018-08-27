@@ -25,6 +25,7 @@ import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-s
 export class LanguagesComponent implements OnInit {
     @Input()
     projectId: number;
+    mainLang: Language;
     public langs: LanguageStatistic[] = [];
     public IsLoad: boolean = true;
     public IsLangLoad: boolean = false;
@@ -58,6 +59,9 @@ export class LanguagesComponent implements OnInit {
                     this.IsLoad = false;
                 }
             );
+        this.projectService.getById(this.projectId).subscribe((proj)=>{ 
+            this.mainLang = proj.mainLanguage
+        });
     }
 
     ngOnDestroy() {
@@ -199,8 +203,13 @@ export class LanguagesComponent implements OnInit {
         this.langService.getAll().subscribe(langs => {
             let langsToSelect = langs.filter(function(language) {
                 let l = thisLangs.find(t => t.id === language.id);
-                if (l) return language.id !== l.id;
+                if (l) return (language.id !== l.id && language.id != this.mainLang.id);
                 return true;
+            });
+
+            langsToSelect = langsToSelect.filter(lang => {
+                return lang.id !== this.mainLang.id
+
             });
 
             this.IsLangLoad = false;
