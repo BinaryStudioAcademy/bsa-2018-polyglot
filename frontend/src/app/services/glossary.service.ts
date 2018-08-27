@@ -32,14 +32,14 @@ export class GlossaryService {
   }
 
   addString(id : number, string : GlossaryString) : Observable<any>{
-    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${id}/strings`, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${id}/strings`, undefined, string);
   }
 
   editString(id : number, string : GlossaryString) : Observable<any>{
-    return this.dataService.sendRequest(RequestMethod.Put, this.api + `/${id}/strings`, undefined, undefined);
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + `/${id}/strings`, undefined, string);
   }
 
-  deleteString(id : number, string : GlossaryString) : Observable<any>{
-    return this.dataService.sendRequest(RequestMethod.Delete, this.api + `/${id}/strings`, undefined, undefined);
+  deleteString(id : number, stringId : number) : Observable<any>{
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + `/${id}/strings/${stringId}`, undefined, undefined);
   }
 }

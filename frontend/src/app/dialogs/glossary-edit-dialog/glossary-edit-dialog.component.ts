@@ -59,14 +59,14 @@ export class GlossaryEditDialogComponent implements OnInit {
         }
         else
         {
-          this.snotifyService.success("Glossary wasn`t deleted", "Error!");
+          this.snotifyService.error("Glossary wasn`t deleted", "Error!");
           this.dialogRef.close();   
         }
             
       },
       err => {
         console.log('err', err);
-        this.snotifyService.success("Glossary wasn`t deleted", "Error!");
+        this.snotifyService.error("Glossary wasn`t deleted", "Error!");
         this.dialogRef.close();     
       });
   }

@@ -44,14 +44,14 @@ export class GlossaryCreateDialogComponent implements OnInit {
           }
           else
           {
-            this.snotifyService.success("Glossary wasn`t created", "Error!");
+            this.snotifyService.error("Glossary wasn`t created", "Error!");
             this.dialogRef.close();   
           }
               
         },
         err => {
           console.log('err', err);
-          this.snotifyService.success("Glossary wasn`t created", "Error!");
+          this.snotifyService.error("Glossary wasn`t created", "Error!");
           this.dialogRef.close();     
         });
   }

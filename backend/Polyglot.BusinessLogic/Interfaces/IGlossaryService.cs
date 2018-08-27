@@ -11,6 +11,6 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         Task<GlossaryDTO> AddString(int glossaryId, GlossaryStringDTO glossaryString);
         Task<GlossaryDTO> UpdateString(int glossaryId, GlossaryStringDTO glossaryString);
-        Task<bool> DeleteString(int glossaryId, GlossaryStringDTO glossaryString);
+        Task<bool> DeleteString(int glossaryId, int glossaryStringId);
     }
 }

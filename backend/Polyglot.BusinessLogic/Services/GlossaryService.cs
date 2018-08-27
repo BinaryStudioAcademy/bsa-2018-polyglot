@@ -21,33 +21,33 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<GlossaryDTO> AddString(int glossaryId, GlossaryStringDTO glossaryString)
         {
             var glossary = await uow.GetRepository<Glossary>().GetAsync(glossaryId);
-
             if (glossary == null)
                 return null;
             glossary.GlossaryStrings.Add(mapper.Map<GlossaryString>(glossaryString));
-            return mapper.Map<GlossaryDTO>(uow.GetRepository<Glossary>().Update(glossary));
+            uow.GetRepository<Glossary>().Update(glossary);
+            await uow.SaveAsync();
+            return mapper.Map<GlossaryDTO>(await uow.GetRepository<Glossary>().GetAsync(glossaryId));
+
         }
 
-        public async Task<bool> DeleteString(int glossaryId, GlossaryStringDTO glossaryString)
+        public async Task<bool> DeleteString(int glossaryId, int glossaryStringId)
         {
             var glossary = await uow.GetRepository<Glossary>().GetAsync(glossaryId);
 
             if (glossary == null)
                 return false;
-            glossary.GlossaryStrings.Remove(mapper.Map<GlossaryString>(glossaryString));
-            return uow.GetRepository<Glossary>().Update(glossary) != null;
+            var target = glossary.GlossaryStrings.FirstOrDefault(s => s.Id == glossaryStringId);
+            glossary.GlossaryStrings.Remove(target);
+            uow.GetRepository<Glossary>().Update(glossary);
+            return await uow.SaveAsync() != 0;
+
         }
 
         public async Task<GlossaryDTO> UpdateString(int glossaryId, GlossaryStringDTO glossaryString)
         {
-            var glossary = await uow.GetRepository<Glossary>().GetAsync(glossaryId);
-
-            if (glossary == null)
-                return null;
-            var target = glossary.GlossaryStrings.FirstOrDefault(s => s.Id == glossaryString.Id);
-            glossary.GlossaryStrings.Remove(target);
-            glossary.GlossaryStrings.Add(mapper.Map<GlossaryString>(glossaryString));
-            return mapper.Map<GlossaryDTO>(uow.GetRepository<Glossary>().Update(glossary));
+            var str = uow.GetRepository<GlossaryString>().Update(mapper.Map<GlossaryString>(glossaryString));
+            await uow.SaveAsync();
+            return mapper.Map<GlossaryDTO>(await uow.GetRepository<Glossary>().GetAsync(glossaryId));
         }
     }
 }

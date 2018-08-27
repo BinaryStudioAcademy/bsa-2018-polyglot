@@ -80,6 +80,7 @@ import { GlossaryService } from './services/glossary.service';
 import { GlossaryCreateDialogComponent } from './dialogs/glossary-create-dialog/glossary-create-dialog.component';
 import { GlossaryEditDialogComponent } from './dialogs/glossary-edit-dialog/glossary-edit-dialog.component';
 import { GlossaryComponent } from './components/glossaries/glossary/glossary.component';
+import { GlossaryStringDialogComponent } from './dialogs/glossary-string-dialog/glossary-string-dialog.component';
 
 
 
@@ -136,7 +137,8 @@ import { GlossaryComponent } from './components/glossaries/glossary/glossary.com
     TabCommentsComponent,
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
-    GlossaryComponent
+    GlossaryComponent,
+    GlossaryStringDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -184,7 +186,8 @@ import { GlossaryComponent } from './components/glossaries/glossary/glossary.com
     TeamAssignComponent,
     SaveStringConfirmComponent,
     GlossaryCreateDialogComponent,
-    GlossaryEditDialogComponent
+    GlossaryEditDialogComponent,
+    GlossaryStringDialogComponent
   ],
   providers: [HttpService, AuthService, AuthGuard,
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},

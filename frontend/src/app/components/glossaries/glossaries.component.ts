@@ -25,6 +25,7 @@ export class GlossariesComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  
   ngOnInit() {
     this.glossaryService.getAll().subscribe((data : Glossary[]) =>{
       this.glossaries = data;

@@ -92,13 +92,13 @@ namespace Polyglot.Controllers
         }
 
         // DELETE: Glossaries/5/strings
-        [HttpDelete("{id}/strings")]
-        public async Task<IActionResult> DeleteString(int id, [FromBody]GlossaryStringDTO glossaryString)
+        [HttpDelete("{id}/strings/{stringId}")]
+        public async Task<IActionResult> DeleteString(int id, int stringId)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.DeleteString(id, glossaryString);
+            var entity = await service.DeleteString(id, stringId);
             return entity == false ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
