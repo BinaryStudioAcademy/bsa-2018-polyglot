@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 export class TeamComponent implements OnInit {
 
   @Input() id: number;
+  teamName: string;
   teamTranslators: Translator[];
   emailToSearch: string;
   displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
@@ -58,7 +59,7 @@ export class TeamComponent implements OnInit {
     this.teamTranslators = [];
     this.teamService.getTeam(this.id)
         .subscribe((data: Team) => {
-          
+          this.teamName = data.name;
           this.teamTranslators = data.teamTranslators;
           this.dataSource = new MatTableDataSource(this.teamTranslators);
           this.dataSource.sort = this.sort;
