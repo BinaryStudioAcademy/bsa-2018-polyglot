@@ -12,6 +12,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.Hubs;
+using Polyglot.Hubs.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -71,7 +72,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await signalrService.ChangedTranslation(id.ToString(), entity);
+                await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
@@ -86,7 +87,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await signalrService.ChangedTranslation(id.ToString(), entity);
+                await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
@@ -115,9 +116,15 @@ namespace Polyglot.Controllers
                 complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
             var entity = await dataProvider.AddComplexString(complexString);
-            return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ComplexStringDTO>(entity));
+            if(entity != null)
+            {
+                await signalrService.ComplexStringAdded($"{Group.project}{entity.ProjectId}", entity.Id);
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(409) as IActionResult;
+            }
         }
 
         // PUT: ComplexStrings/5
@@ -138,8 +145,18 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComplexString(int id)
         {
+            var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
             var success = await dataProvider.DeleteComplexString(id);
-            return success ? Ok() : StatusCode(304);
+
+            if (success)
+            {
+                await this.signalrService.ComplexStringRemoved($"{Group.project}{targetProjectId}", id);
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(304);
+            }
         }
 
         // GET: ComplexStrings/5/comments
@@ -162,7 +179,7 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await signalrService.CommentAdded(id.ToString(), entity);
+                await signalrService.CommentAdded($"{Group.complexString}{id}", entity);
             }
 
             return entity == null ? StatusCode(304) as IActionResult
