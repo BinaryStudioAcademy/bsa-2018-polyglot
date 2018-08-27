@@ -9,7 +9,7 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         Task<UserProfileDTO> GetByUidAsync();
 
-        Task<bool> IsExistByUidAsync(string uid);
+        Task<bool> IsExistByUidAsync();
 
         Task<bool> PutUserBool(UserProfileDTO userProfileDTO);
     }

@@ -49,5 +49,24 @@ namespace Polyglot.BusinessLogic.Services
             await uow.SaveAsync();
             return mapper.Map<GlossaryDTO>(await uow.GetRepository<Glossary>().GetAsync(glossaryId));
         }
+
+        public override async Task<bool> TryDeleteAsync(int identifier)
+        {
+            if (uow != null)
+            {
+                var glossary = await uow.GetRepository<Glossary>().GetAsync(identifier);
+
+                if (glossary == null)
+                    return false;
+                glossary.GlossaryStrings.Clear();
+                uow.GetRepository<Glossary>().Update(glossary);
+                await uow.SaveAsync();
+                await uow.GetRepository<Glossary>().DeleteAsync(identifier);
+                await uow.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

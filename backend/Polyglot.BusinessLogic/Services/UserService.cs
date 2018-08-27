@@ -32,7 +32,7 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<UserProfile, UserProfileDTO>(user);
         }
 
-        public async Task<bool> IsExistByUidAsync(string uid)
+        public async Task<bool> IsExistByUidAsync()
         {
             var user = await CurrentUser.GetCurrentUserProfile();
             return user != null;
