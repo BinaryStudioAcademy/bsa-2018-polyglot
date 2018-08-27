@@ -181,7 +181,27 @@ namespace Polyglot.BusinessLogic.Services
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
             var user = await CurrentUser.GetCurrentUserProfile();
-            return mapper.Map<List<ProjectDTO>>(await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id));
+            List<Project> result = new List<Project>();
+            if (user.UserRole == Role.Manager)
+            {
+                result = await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id);
+            }
+            else
+            {
+                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
+                var allTeams = await uow.GetRepository<Team>().GetAllAsync();
+                var selectedTeam = allTeams.Where(x => translatorTeams.Any(y => y.TeamId == x.Id));
+                var projects = await uow.GetRepository<Project>().GetAllAsync();
+                foreach (var p in projects)
+                {
+                    foreach (var team in selectedTeam)
+                    {
+                        if (p.Teams.Contains(team))
+                            result.Add(p);
+                    }
+                }
+            }
+            return mapper.Map<List<ProjectDTO>>(result);
         }
 
 
