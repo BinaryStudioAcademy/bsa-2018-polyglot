@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -173,6 +174,15 @@ namespace Polyglot.Controllers
 
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
+        }
+
+        [HttpGet("{id}/history/{translationId}")]
+        public async Task<IActionResult> GetHistory(int id, Guid translationId)
+        {
+            var response = await dataProvider.GetHistoryAsync(id, translationId);
+
+            return response == null ? StatusCode(400) as IActionResult
+                : Ok(response);
         }
     }
 }

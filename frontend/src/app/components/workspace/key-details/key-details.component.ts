@@ -151,7 +151,7 @@ export class KeyDetailsComponent implements OnInit {
             index
         ].translationValue;
 
-        this.history.showHistory(this.keyDetails.translations[index].id);
+        this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
     }
 
     setNewValueTranslation(translation: any) {
@@ -219,7 +219,7 @@ export class KeyDetailsComponent implements OnInit {
                                 isOpened: false,
                                 oldValue: ""
                             };
-                            this.history.showHistory(index);
+                            this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
                         },
                         err => {
                             this.snotifyService.error(err);
@@ -235,7 +235,7 @@ export class KeyDetailsComponent implements OnInit {
                                 isOpened: false,
                                 oldValue: ""
                             };
-                            this.history.showHistory(index);
+                            this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
                         },
                         err => {
                             console.log("err", err);

@@ -55,4 +55,7 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/comments', undefined);
   }
 
+  getTranslationHistory(id: number, translationId: string) {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, undefined);
+  };
 }
