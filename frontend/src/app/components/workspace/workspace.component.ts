@@ -105,6 +105,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             );
             });
             this.currentPage++;
+            this.isLoad=false;
         });
     }
 
