@@ -15,5 +15,9 @@ namespace Polyglot.Hubs
         Task ComplexStringAdded(string groupName, int complexStringId);
 
         Task ComplexStringRemoved(string groupName, int complexStringId);
+
+        Task LanguageRemoved(string groupName, int languageId);
+
+        Task LanguagesAdded(string groupName, int[] languagesIds);
     }
 }

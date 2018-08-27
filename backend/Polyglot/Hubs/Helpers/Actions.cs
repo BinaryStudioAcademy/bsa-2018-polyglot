@@ -5,6 +5,8 @@
         commentAdded,
         changedTranslation,
         complexStringAdded,
-        complexStringRemoved
+        complexStringRemoved,
+        languagesAdded,
+        languageRemoved
     }
 }

@@ -32,5 +32,15 @@ namespace Polyglot.Hubs
         {
             await _hubContext.Clients.Group(groupName).SendAsync(Action.complexStringRemoved.ToString(), complexStringId);
         }
+
+        public async Task LanguageRemoved(string groupName, int languageId)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.languageRemoved.ToString(), languageId);
+        }
+
+        public async Task LanguagesAdded(string groupName, int[] languagesIds)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.languagesAdded.ToString(), languagesIds);
+        }
     }
 }
