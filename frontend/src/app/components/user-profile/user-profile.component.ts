@@ -46,7 +46,7 @@ export class UserProfileComponent implements OnInit {
     }
 
     isOwnersProfile(){
-        return this.userService.getCurrentUser().id = this.SelectedUser.id;
+        return this.userService.getCurrentUser().id == this.SelectedUser.id;
     }
 
 }
