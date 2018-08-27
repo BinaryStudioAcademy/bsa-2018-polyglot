@@ -32,19 +32,6 @@
         fxLayout.xs="column"
         fxLayoutGap="20px">
         <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" class="left-card" >   
-            <div class="item" fxFlex>
-                <div>
-                    <h2 class="title"> Experience </h2>
-                    <hr>
-                        <mat-card-header>
-                            <mat-card-title>Position</mat-card-title>
-                            <mat-card-subtitle>Company</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            Responsibilities
-                        </mat-card-content>
-                </div>
-            </div>
             <div class="item left-card" fxFlex>
                 <div>
                           <h2 class="title">Teams</h2>
@@ -108,19 +95,24 @@
                             <hr>
                             <br>
                             <mat-card-header>
-                                <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
-                            <mat-card-title>{{review.createdBy.fullName}}</mat-card-title>
+                                    <a [routerLink]="['/user', review.createdById]" >
+                                        <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                                    </a>
+                            <mat-card-title>
+                                <a [routerLink]="['/user', review.createdById]" >{{review.createdBy.fullName}}</a>
+                            </mat-card-title>
                             </mat-card-header>
                             <br>
                             <mat-card-content>
-                                <mat-card-subtitle>Comment : <span> "{{review.comment}}"              
+                                <mat-card-subtitle>
+                                    <span>{{review.comment}}</span>
+                                </mat-card-subtitle>
+                                <mat-card-subtitle>
+                                <span>
+                                    {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
                                 </span>
                                 </mat-card-subtitle>
-                                <mat-card-subtitle>Rating :<span>{{review.rate}} / 5
-                                    <i class="material-icons" style="color: orange ;">star</i>
-                                </span>
-                                </mat-card-subtitle>
-                                <mat-card-subtitle>Created: <span>{{review.createdAt | date: 'medium'}}</span>
+                                <mat-card-subtitle><span>{{review.createdAt | date: 'medium'}}</span>
                                 </mat-card-subtitle>
                             </mat-card-content>
                         </div>

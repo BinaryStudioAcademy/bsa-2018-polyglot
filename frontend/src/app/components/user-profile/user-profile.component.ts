@@ -27,6 +27,9 @@ export class UserProfileComponent implements OnInit {
                         this.router.navigate(['/404']);
                     }
                     this.SelectedUser = user;
+                    if(this.isOwnersProfile()){
+                        this.router.navigate(['/profile']);
+                    }
                 },
                 err=>{
                     this.router.navigate(['/404']);
@@ -40,6 +43,10 @@ export class UserProfileComponent implements OnInit {
 
     isSelectedUserManager(){
         return this.SelectedUser.userRole == 1;
+    }
+
+    isOwnersProfile(){
+        return this.userService.getCurrentUser().id = this.SelectedUser.id;
     }
 
 }

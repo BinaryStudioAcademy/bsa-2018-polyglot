@@ -96,27 +96,29 @@ export class TranslatorProfileComponent implements OnInit{
     }
 
     editPhoto(){
-        const dialogRef = this.dialog.open(CropperComponent, {
-            data: {imageUrl: this.userProfile.avatarUrl}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (dialogRef.componentInstance.cropedImageBlob){
-                let formData = new FormData();
-                formData.append("image", dialogRef.componentInstance.cropedImageBlob);
-                this.userService.updatePhoto(formData).subscribe(
-                    (d) => {
-                        setTimeout(() => {
-                            this.snotifyService.success("Photo updated.", "Success!");
-                            }, 100);
-                            this.userProfile = d;
-                        },
-                        err => {
-                            this.snotifyService.error("Photo failed to update!", "Error!");
-                        }
-                    );
+        if(this.isOwnersProfile()){
+            const dialogRef = this.dialog.open(CropperComponent, {
+                data: {imageUrl: this.userProfile.avatarUrl}
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (dialogRef.componentInstance.cropedImageBlob){
+                    let formData = new FormData();
+                    formData.append("image", dialogRef.componentInstance.cropedImageBlob);
+                    this.userService.updatePhoto(formData).subscribe(
+                        (d) => {
+                            setTimeout(() => {
+                                this.snotifyService.success("Photo updated.", "Success!");
+                                }, 100);
+                                this.userProfile = d;
+                            },
+                            err => {
+                                this.snotifyService.error("Photo failed to update!", "Error!");
+                            }
+                        );
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
 }
