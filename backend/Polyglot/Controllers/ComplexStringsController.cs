@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.Hubs;
@@ -66,6 +67,9 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            var user = await CurrentUser.GetCurrentUserProfile();
+            translation.UserId = user.Id;
+
             var entity = await dataProvider.SetStringTranslation(id, translation);
 
 
@@ -81,6 +85,8 @@ namespace Polyglot.Controllers
         [HttpPut("{id}/translations")]
         public async Task<IActionResult> EditStringTranslation(int id, [FromBody]TranslationDTO translation)
         {
+            var user = await CurrentUser.GetCurrentUserProfile();
+            translation.UserId = user.Id;
 
             var entity = await dataProvider.EditStringTranslation(id, translation);
 

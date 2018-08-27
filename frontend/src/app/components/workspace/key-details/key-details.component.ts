@@ -150,7 +150,8 @@ export class KeyDetailsComponent implements OnInit {
         this.currentTranslation = this.keyDetails.translations[
             index
         ].translationValue;
-        this.history.showHistory(index);
+
+        this.history.showHistory(this.keyDetails.translations[index].id);
     }
 
     setNewValueTranslation(translation: any) {
