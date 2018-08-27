@@ -112,14 +112,13 @@ namespace Polyglot.Controllers
                     byteArr = ms.ToArray();
                 }
 
-
                 complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
             var entity = await dataProvider.AddComplexString(complexString);
             if(entity != null)
             {
                 await signalrService.ComplexStringAdded($"{Group.project}{entity.ProjectId}", entity.Id);
-                return Ok();
+                return Ok(entity);
             }
             else
             {
