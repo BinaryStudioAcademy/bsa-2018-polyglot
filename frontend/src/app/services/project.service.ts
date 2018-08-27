@@ -107,6 +107,19 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
   }
 
+
+  assignGlossariesToProject(projectId: number, glossaryIds: Array<number>) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/glossaries', undefined, glossaryIds);
+  }
+
+  dismissProjectGlossary(projectId: number, glossaryId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/glossaries/' + glossaryId, undefined, undefined);
+  }
+
+  getetAssignedGlossaries(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/glossaries', undefined, undefined);
+  }
+  
   getProjectStringsWithPagination(projectId: number, itemsOnPage: number, page: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/','paginatedStrings?itemsOnPage='+itemsOnPage+'&page='+page);
   }
@@ -117,5 +130,6 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
 
   getProjectReports(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
+
   }
 }

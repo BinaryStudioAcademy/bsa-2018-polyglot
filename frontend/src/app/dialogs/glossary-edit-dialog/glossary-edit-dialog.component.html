@@ -1,0 +1,31 @@
+<mat-dialog-content>
+  <form (submit)="onSubmit()">
+    <h4>Edit Glossary </h4>
+      <mat-form-field>
+        <input id="key" name="key" type="text" [(ngModel)]="glossary.name" required matInput placeholder="Name"
+                #key="ngModel" autocomplete="yes">
+        <mat-error *ngIf="key.errors">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>  
+        <input id="base" name="base" type="text" [(ngModel)]="glossary.originLanguage" required matInput placeholder="Origin Language"
+                #base="ngModel" autocomplete="yes">
+        <mat-error *ngIf="base.errors">
+          Origin Language is required
+        </mat-error>
+      </mat-form-field>
+
+      <button 
+        type="submit" 
+        mat-raised-button color="primary">
+        Edit
+      </button>
+      <button 
+      (click) = 'onDelete()'
+      mat-raised-button color="warn">
+      Delete
+    </button>
+  </form>
+</mat-dialog-content>

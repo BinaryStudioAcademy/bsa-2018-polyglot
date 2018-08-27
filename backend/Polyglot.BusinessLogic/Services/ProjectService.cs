@@ -16,6 +16,7 @@ using System.Text;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
@@ -181,7 +182,27 @@ namespace Polyglot.BusinessLogic.Services
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
             var user = await CurrentUser.GetCurrentUserProfile();
-            return mapper.Map<List<ProjectDTO>>(await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id));
+            List<Project> result = new List<Project>();
+            if (user.UserRole == Role.Manager)
+            {
+                result = await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id);
+            }
+            else
+            {
+                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
+                var allTeams = await uow.GetRepository<Team>().GetAllAsync();
+                var selectedTeam = allTeams.Where(x => translatorTeams.Any(y => y.TeamId == x.Id));
+                var projects = await uow.GetRepository<Project>().GetAllAsync();
+                foreach (var p in projects)
+                {
+                    foreach (var team in selectedTeam)
+                    {
+                        if (p.Teams.Contains(team))
+                            result.Add(p);
+                    }
+                }
+            }
+            return mapper.Map<List<ProjectDTO>>(result);
         }
 
 
@@ -634,6 +655,75 @@ namespace Polyglot.BusinessLogic.Services
 
         #endregion
 
+
+        #region Glossary
+
+        public async Task<ProjectDTO> AssignGlossaries(int projectId, int[] glossaryIds)
+        {
+            if (glossaryIds.Length < 1)
+                return null;
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            if (project == null)
+                return null;
+
+            var glossaryRepo = uow.GetRepository<Glossary>();
+            Glossary currentGlossary;
+            glossaryIds = glossaryIds.Except(project.ProjectGlossaries?.Select(pl => pl.Glossary.Id)).ToArray();
+
+            if (glossaryIds.Length < 1)
+                return null;
+
+            foreach (var glossaryId in glossaryIds)
+            {
+                currentGlossary = await glossaryRepo.GetAsync(glossaryId);
+                if (currentGlossary != null)
+                {
+                    project.ProjectGlossaries.Add(new ProjectGlossary()
+                    {
+                        Glossary = currentGlossary
+                    });
+                }
+            }
+
+            if (project.ProjectGlossaries.Count < 1)
+                return null;
+
+            uow.GetRepository<Project>().Update(project);
+            await uow.SaveAsync();
+            return mapper.Map<ProjectDTO>(project);
+        }
+
+        public async Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(projectId);
+            if (proj != null && proj.ProjectGlossaries.Count > 0)
+            {
+                var glossaries = proj.ProjectGlossaries?.Select(p => p.Glossary);
+                return mapper.Map<IEnumerable<Glossary>, IEnumerable<GlossaryDTO>>(glossaries);
+            }
+            return null;
+        }
+
+        public async Task<bool> TryDismissGlossary(int projectId, int glossaryId)
+        {
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+
+            if (project != null)
+            {
+                var targetProdGlossary = project.ProjectGlossaries
+                    .Where(pl => pl.GlossaryId == glossaryId)
+                    .FirstOrDefault();
+
+                if (targetProdGlossary != null)
+                    if (project.ProjectGlossaries.Remove(targetProdGlossary))
+                        if (uow.GetRepository<Project>().Update(project) != null)
+                            return await uow.SaveAsync() > 0;
+            }
+            return false;
+        }
+
+        #endregion
+
         #region private members
 
         private async Task<IEnumerable<LanguageStatisticDTO>> GetLanguagesStatistic(int projectId, IEnumerable<Language> targetLanguages)
@@ -753,6 +843,7 @@ namespace Polyglot.BusinessLogic.Services
             }
             return allActivities.OrderByDescending(act => act.DateTime);
         }
+
 
     }
 
