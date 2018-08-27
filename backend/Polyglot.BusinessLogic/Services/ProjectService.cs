@@ -16,6 +16,7 @@ using System.Text;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
