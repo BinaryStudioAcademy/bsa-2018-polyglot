@@ -74,19 +74,6 @@ namespace Polyglot
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-                context.Database.Migrate();
-                //serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
-            }
-
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetRequiredService<IMongoDataContext>();
-            //    MongoDbSeedsInitializer.MongoSeedAsync(context);
-            //}
-
             BusinessLogicModule.ConfigureMiddleware(app);
             CommonModule.ConfigureMiddleware(app);
             CoreModule.ConfigureMiddleware(app);
