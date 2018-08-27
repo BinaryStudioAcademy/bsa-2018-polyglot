@@ -35,7 +35,7 @@
           <div mat-card-image >
             <div  class="img-container" >    
 
-              <a *ngFor="let p of t.persons"  [routerLink]="['/translator', p.id]"><img height="60" src="{{p.avatarUrl}}"  onError="this.src='/assets/images/default-avatar.jpg'" ></a>
+              <a *ngFor="let p of t.persons"  [routerLink]="['/user', p.id]"><img height="60" src="{{p.avatarUrl}}"  onError="this.src='/assets/images/default-avatar.jpg'" ></a>
             </div>
           </div>  
         
