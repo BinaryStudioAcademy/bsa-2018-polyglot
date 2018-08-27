@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CropperComponent } from '../../../dialogs/cropper-dialog/cropper.component';
 import { UserService } from '../../../services/user.service';
@@ -30,28 +30,19 @@ export class TranslatorProfileComponent implements OnInit{
               private activatedRoute: ActivatedRoute,
               private router: Router) { }
 
-    public userProfile : any;
+    @Input() public userProfile : any;
     public Comments: Comment[];
     Languages: Language[];
     private routeSub: Subscription;
 
     ngOnInit(): void {
-
-            this.routeSub = this.activatedRoute.params.subscribe((params) => {
-                this.userService.getOne(params.translatorId).subscribe((user)=>{
-                    if(user.userRole == 1){
-                        this.router.navigate(['/404']);
-                    }
-                    this.userProfile = user;
-                    this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
-                        this.userProfile.ratings = ratings;
-                        this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
-                            this.teams = t;
-                        });
-                    });
-                });
+        this.userService.getUserRatings(this.userProfile.id).subscribe(ratings => {
+            this.userProfile.ratings = ratings;
+            this.userService.getUserTeams(this.userProfile.id).subscribe(t => {
+                this.teams = t;
             });
-    
+        });
+                    
         this.Languages = [
             {Name : "French",Proficiency : 47},
             {Name : "Spanish",Proficiency : 77},
@@ -105,27 +96,29 @@ export class TranslatorProfileComponent implements OnInit{
     }
 
     editPhoto(){
-        const dialogRef = this.dialog.open(CropperComponent, {
-            data: {imageUrl: this.userProfile.avatarUrl}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (dialogRef.componentInstance.cropedImageBlob){
-                let formData = new FormData();
-                formData.append("image", dialogRef.componentInstance.cropedImageBlob);
-                this.userService.updatePhoto(formData).subscribe(
-                    (d) => {
-                        setTimeout(() => {
-                            this.snotifyService.success("Photo updated.", "Success!");
-                            }, 100);
-                            this.userProfile = d;
-                        },
-                        err => {
-                            this.snotifyService.error("Photo failed to update!", "Error!");
-                        }
-                    );
+        if(this.isOwnersProfile()){
+            const dialogRef = this.dialog.open(CropperComponent, {
+                data: {imageUrl: this.userProfile.avatarUrl}
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (dialogRef.componentInstance.cropedImageBlob){
+                    let formData = new FormData();
+                    formData.append("image", dialogRef.componentInstance.cropedImageBlob);
+                    this.userService.updatePhoto(formData).subscribe(
+                        (d) => {
+                            setTimeout(() => {
+                                this.snotifyService.success("Photo updated.", "Success!");
+                                }, 100);
+                                this.userProfile = d;
+                            },
+                            err => {
+                                this.snotifyService.error("Photo failed to update!", "Error!");
+                            }
+                        );
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
 }

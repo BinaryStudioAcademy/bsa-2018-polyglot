@@ -63,7 +63,8 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'translator/:translatorId', canActivate: [AuthGuard], component: TranslatorProfileComponent },
+  { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
+  { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
