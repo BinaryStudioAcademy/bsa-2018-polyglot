@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Polyglot.Common.DTOs.NoSQL;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Polyglot.Hubs.Helpers;
 
 namespace Polyglot.Hubs
 {
@@ -15,12 +15,22 @@ namespace Polyglot.Hubs
 
         public async Task ChangedTranslation(string groupName, TranslationDTO entity)
         {
-            await _hubContext.Clients.Group(groupName).SendAsync(SignalrSubscribeActions.changedTranslation.ToString(), entity);
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.changedTranslation.ToString(), entity);
         }
 
         public async Task CommentAdded(string groupName, IEnumerable<CommentDTO> comments)
         {
-            await _hubContext.Clients.Group(groupName).SendAsync(SignalrSubscribeActions.commentAdded.ToString(), comments);
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), comments);
+        }
+
+        public async Task ComplexStringAdded(string groupName, int complexStringId)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.complexStringAdded.ToString(), complexStringId);
+        }
+
+        public async Task ComplexStringRemoved(string groupName, int complexStringId)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.complexStringRemoved.ToString(), complexStringId);
         }
     }
 }

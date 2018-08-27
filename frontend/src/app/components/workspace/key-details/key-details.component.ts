@@ -25,6 +25,7 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { TabGlossaryComponent } from "./tab-glossary/tab-glossary.component";
 import { Location as location } from "@angular/common";
+import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -86,7 +87,7 @@ export class KeyDetailsComponent implements OnInit {
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
                 this.signalrService.createConnection(
-                    this.keyDetails.id,
+                    `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`,
                     "workspaceHub"
                 );
                 this.subscribeProjectChanges();
@@ -102,7 +103,7 @@ export class KeyDetailsComponent implements OnInit {
 
     ngOnDestroy() {
         if (this.dataIsLoaded) {
-            this.signalrService.closeConnection(this.keyDetails.id);
+            this.signalrService.closeConnection(`${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`);
         }
     }
 

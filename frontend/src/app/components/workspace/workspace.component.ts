@@ -12,6 +12,9 @@ import * as signalR from "@aspnet/signalr";
 import { environment } from "../../../environments/environment";
 import { UserService } from "../../services/user.service";
 import { ComplexStringService } from "../../services/complex-string.service";
+import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
+import { SignalrService } from "../../services/signalr.service";
+import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
 
 @Component({
     selector: "app-workspace",
@@ -51,7 +54,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private snotifyService: SnotifyService,
         private appState: AppStateService,
         private userService: UserService,
-        private complexStringService: ComplexStringService
+        private complexStringService: ComplexStringService,
+        private signalrService: SignalrService
     ) {
         this.user = userService.getCurrentUser();
     }
@@ -62,13 +66,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        this.searchQuery = '';
-        this.routeSub = this.activatedRoute.params.subscribe((params) => {
+        this.searchQuery = "";
+        this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             this.getProjById(params.projectId);
-            this.basicPath = 'workspace/' + params.projectId;
-            this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+            this.basicPath = "workspace/" + params.projectId;
+            this.currentPath = "workspace/" + params.projectId + "/key";
+            this.dataProvider
+                .getProjectStringsWithPagination(
+                    params.projectId,
+                    this.elementsOnPage,
+                    0
+                )
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -84,7 +93,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
 
-    onAdvanceSearchClick() { }
+    onAdvanceSearchClick() {}
 
     ngDoCheck() {
         if (
@@ -123,11 +132,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
+        if (this.project) {
+            this.signalrService.closeConnection(
+                `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
+            );
+        }
     }
 
     getProjById(id: number) {
         this.dataProvider.getById(id).subscribe(proj => {
             this.project = proj;
+            this.signalrService.createConnection(
+                `${SignalrGroups[SignalrGroups.project]}${
+                    this.project.id
+                }`,
+                "workspaceHub"
+            );
+            this.subscribeProjectChanges();
             this.projectService.getProjectLanguages(this.project.id).subscribe(
                 (d: Language[]) => {
                     const workspaceState = {
@@ -178,51 +199,77 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.basicPath]);
         }
     }
+
+    subscribeProjectChanges() {
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
+            (newStringId: number) => {
+                this.complexStringService
+                    .getById(newStringId)
+                    .subscribe(newStr => {
+                        if (newStr) {
+                            this.keys.push(newStr);
+                        }
+                    });
+            }
+        );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.complexStringRemoved
+            ],
+            (deletedStringId: number) => {
+                debugger;
+                this.receiveId(deletedStringId);
+            }
+        );
+    }
+
     OnSelectOption() {
         //If the filters сontradict each other
         this.ContradictoryСhoise(["Translated", "Untranslated"]);
         this.ContradictoryСhoise(["Human Translation", "Machine Translation"]);
 
-        this.dataProvider.getProjectStringsByFilter(this.project.id, this.options.value)
+        this.dataProvider
+            .getProjectStringsByFilter(this.project.id, this.options.value)
             .subscribe(res => {
                 this.keys = res;
-            })
+            });
         console.log(this.options.value);
     }
 
-
     public onScrollUp(): void {
-        this.getKeys(
-            this.currentPage,
-            (keys) => {
-                this.keys = keys.concat(this.keys);
-            });
+        this.getKeys(this.currentPage, keys => {
+            this.keys = keys.concat(this.keys);
+        });
     }
 
     public onScrollDown(): void {
-        this.getKeys(
-            this.currentPage,
-            (keys) => {
-                this.keys = this.keys.concat(keys);
-            });
+        this.getKeys(this.currentPage, keys => {
+            this.keys = this.keys.concat(keys);
+        });
     }
 
     getKeys(page: number = 1, saveResultsCallback: (keys) => void) {
-        return this.dataProvider.getProjectStringsWithPagination(this.project.id, this.elementsOnPage, this.currentPage)
+        return this.dataProvider
+            .getProjectStringsWithPagination(
+                this.project.id,
+                this.elementsOnPage,
+                this.currentPage
+            )
             .subscribe((keys: any) => {
                 this.currentPage++;
                 saveResultsCallback(keys);
-
             });
-
     }
 
-
     ContradictoryСhoise(options: string[]) {
-        if (this.options.value.includes(options[0]) && this.options.value.includes(options[1])) {
+        if (
+            this.options.value.includes(options[0]) &&
+            this.options.value.includes(options[1])
+        ) {
             options.forEach(element => {
                 let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1)
+                this.options.value.splice(index, 1);
             });
         }
     }
