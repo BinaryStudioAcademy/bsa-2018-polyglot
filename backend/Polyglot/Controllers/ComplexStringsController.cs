@@ -76,11 +76,16 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
+                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
+                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
                 await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-            }
 
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+                return Ok(entity);
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
         [HttpPut("{id}/translations")]
@@ -93,11 +98,16 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
+                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
+                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
                 await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-            }
 
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+                return Ok(entity);
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
 

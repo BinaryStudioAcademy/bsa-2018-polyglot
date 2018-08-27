@@ -4,5 +4,6 @@ export enum SignalrSubscribeActions {
     complexStringAdded,
     complexStringRemoved,
     languageRemoved,
-    LanguagesAdded
+    languagesAdded,
+    languageTranslationCommitted
 }
