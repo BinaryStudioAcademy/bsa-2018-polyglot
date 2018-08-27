@@ -11,5 +11,13 @@ namespace Polyglot.Hubs
         Task ChangedTranslation(string groupName, TranslationDTO entity);
 
         Task CommentAdded(string groupName, IEnumerable<CommentDTO> comments);
+
+        Task ComplexStringAdded(string groupName, int complexStringId);
+
+        Task ComplexStringRemoved(string groupName, int complexStringId);
+
+        Task LanguageRemoved(string groupName, int languageId);
+
+        Task LanguagesAdded(string groupName, int[] languagesIds);
     }
 }

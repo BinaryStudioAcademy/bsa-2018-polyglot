@@ -12,6 +12,8 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.Core.Authentication;
+using Polyglot.Hubs;
+using Polyglot.Hubs.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -22,11 +24,12 @@ namespace Polyglot.Controllers
 	public class ProjectsController : ControllerBase
 	{
 		private IProjectService service;
-
-		public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
+        private readonly ISignalrWorkspaceService signalrService;
+        public IFileStorageProvider fileStorageProvider;
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, ISignalrWorkspaceService signalrService)
 		{
 			this.service = projectService;
+            this.signalrService = signalrService;
 			fileStorageProvider = provider;
 		}
 
@@ -127,9 +130,16 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.AddLanguagesToProject(projectId, languageIds);
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+            var project = await service.AddLanguagesToProject(projectId, languageIds);
+            if(project != null)
+            {
+                await signalrService.LanguagesAdded($"{Group.project}{project.Id}", languageIds);
+                return Ok(project);
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
         //DELETE: projects/:id/languages/:id
@@ -137,7 +147,16 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> DeleteProjectLanguage(int projId, int langId)
         {
             var success = await service.TryRemoveProjectLanguage(projId, langId);
-            return success ? Ok() : StatusCode(304) as IActionResult;
+
+            if (success)
+            {
+                await signalrService.LanguageRemoved($"{Group.project}{projId}", langId);
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
         // Get: Projects/5/complexString

@@ -7,43 +7,66 @@ import { HubConnection } from "@aspnet/signalr";
     providedIn: "root"
 })
 export class SignalrService {
-    connection: HubConnection;
+    connection: any;
+    isWorking: boolean = true;
 
     constructor() {}
 
     public createConnection(groupName: string, hubUrl: string) {
-        this.connect(
-            groupName,
-            hubUrl
-        ).then(() => {
-            this.connection.onclose(err => {
-                console.log(`SignalR hub ${hubUrl} disconnected.`);
-                this.createConnection(groupName, hubUrl);
+        if (
+            (!this.connection ||
+                this.connection.connection.connectionState === 2) &&
+            this.isWorking
+        ) {
+            this.connect(
+                groupName,
+                hubUrl
+            ).then(data => {
+                console.log(`SignalR hub ${hubUrl} connected.`);
+                debugger;
+                if (this.connection.connection.connectionState === 1) {
+                    console.log(`Connecting to group ${groupName}`);
+                    this.connection.send("joinProjectGroup", groupName);
+                }
             });
-        });
+        } else {
+            if (this.connection.connection.connectionState === 1) {
+                console.log(`Connecting to group ${groupName}`);
+                this.connection.send("joinProjectGroup", groupName);
+            }
+        }
     }
 
     public closeConnection(groupName: string) {
-        if (this.connection) {
+        this.isWorking = false;
+        if (
+            this.connection &&
+            this.connection.connection.connectionState === 1
+        ) {
+            console.log(`Disconnecting from group ${groupName}`);
             this.connection.send("leaveProjectGroup", groupName);
+            console.log(`Stoping SignalR connection`);
             this.connection.stop();
         }
     }
 
     connect(groupName: string, hubUrl: string): Promise<void> {
         if (!this.connection) {
-            console.log(`SignalR hub ${hubUrl} connection is corrupted.Creating new one...`);
+            console.log(
+                `SignalR hub ${hubUrl} connection is corrupted.Creating new one...`
+            );
             this.connection = new signalR.HubConnectionBuilder()
                 .withUrl(`${environment.apiUrl}/${hubUrl}`)
                 .build();
+
+            this.connection.onclose(err => {
+                console.log(`SignalR hub ${hubUrl} disconnected.`);
+                this.createConnection(groupName, hubUrl);
+            });
         }
         console.log(`SignalR hub ${hubUrl} reconnection started...`);
         return this.connection
             .start()
-            .catch(err => console.log("SignalR ERROR " + err))
-            .then(data => {
-                console.log(`SignalR hub ${hubUrl} connected.Creating group ${groupName}.`);
-                this.connection.send("joinProjectGroup", groupName);
-            });
+            .catch(err => console.log("SignalR ERROR " + err));
     }
 }
