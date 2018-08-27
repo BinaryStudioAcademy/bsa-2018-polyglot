@@ -125,6 +125,7 @@ namespace Polyglot.BusinessLogic.Services
                 return new TeamDTO()
                 {
                     Id = team.Id,
+					Name = team.Name,
                     TeamTranslators = teamTranslators.ToList()
                 };
             }
