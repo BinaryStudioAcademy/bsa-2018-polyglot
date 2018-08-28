@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180828154919_added nullable ability for birthday in userprofile")]
+    partial class addednullableabilityforbirthdayinuserprofile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,15 +67,11 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("MainLanguageId");
-
                     b.Property<string>("Name");
 
-                    b.Property<int?>("OriginLanguageId");
+                    b.Property<string>("OriginLanguage");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OriginLanguageId");
 
                     b.ToTable("Glossaries");
                 });
@@ -380,13 +378,6 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UploadedBy")
                         .WithMany()
                         .HasForeignKey("UploadedById");
-                });
-
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Glossary", b =>
-                {
-                    b.HasOne("Polyglot.DataAccess.Entities.Language", "OriginLanguage")
-                        .WithMany("Glossaries")
-                        .HasForeignKey("OriginLanguageId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>
