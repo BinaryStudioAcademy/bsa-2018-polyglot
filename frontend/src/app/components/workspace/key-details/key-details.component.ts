@@ -176,7 +176,9 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
-        if (!index) return;
+        if (index === undefined) {
+            return;
+        } 
         this.expandedArray[index] = {
             isOpened: true,
             oldValue: this.keyDetails.translations[index].translationValue
