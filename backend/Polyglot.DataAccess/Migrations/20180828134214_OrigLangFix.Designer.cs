@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180828134214_OrigLangFix")]
+    partial class OrigLangFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +75,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OriginLanguageId");
+                    b.HasIndex("MainLanguageId");
 
                     b.ToTable("Glossaries");
                 });
@@ -385,8 +387,8 @@ namespace Polyglot.DataAccess.Migrations
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Glossary", b =>
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.Language", "OriginLanguage")
-                        .WithMany("Glossaries")
-                        .HasForeignKey("OriginLanguageId");
+                        .WithMany()
+                        .HasForeignKey("MainLanguageId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>

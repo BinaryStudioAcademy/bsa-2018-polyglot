@@ -264,9 +264,9 @@ namespace Polyglot.Controllers
         [HttpGet("{id}/glossaries")]
         public async Task<IActionResult> GetAssignedGlossaries(int id)
         {
-            var project = await service.GetProjectLanguages(id);
-            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-                : Ok(project);
+            var glossaries = await service.GetAssignedGlossaries(id);
+            return glossaries == null ? NotFound($"Project with id = {id} has got no glossaries!") as IActionResult
+                : Ok(glossaries);
 
         }
 

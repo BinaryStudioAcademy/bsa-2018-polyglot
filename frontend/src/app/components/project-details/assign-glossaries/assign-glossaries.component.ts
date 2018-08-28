@@ -14,7 +14,6 @@ export class AssignGlossariesComponent implements OnInit {
   @Input() projectId: number;
   public AssignedGlossaries: Glossary[] = [];
   public AllGlossaries: Glossary[] = [];
-  public Project: Project;
   displayedColumns: string[] = ['name','originLanguage', 'action_btn'];
   assignedDataSource : MatTableDataSource<Glossary>;
   allDataSource : MatTableDataSource<Glossary>;
@@ -33,11 +32,8 @@ export class AssignGlossariesComponent implements OnInit {
       this.AllGlossaries = data;
       this.allDataSource = new MatTableDataSource(this.AllGlossaries);
     });
-    this.projectService.getById(this.projectId).subscribe(data =>{
-      this.Project = data;
-      this.Project.projectGlossaries.forEach(i => {
-        this.AssignedGlossaries.push(i.glossary);
-      });
+    this.projectService.getAssignedGlossaries(this.projectId).subscribe((data) => {
+      this.AssignedGlossaries = data;
       this.assignedDataSource = new MatTableDataSource(this.AssignedGlossaries);
     })
   }
@@ -55,12 +51,16 @@ export class AssignGlossariesComponent implements OnInit {
   onAction(item : Glossary){
     if(this.isAssigned(item)){
       this.AssignedGlossaries.splice(this.AssignedGlossaries.indexOf(item), 1);
-      this.projectService.dismissProjectGlossary(this.projectId, item.id);
+      this.projectService.dismissProjectGlossary(this.projectId, item.id).subscribe(() =>{
+        this.refresh();
+      });
     } else {
       this.AssignedGlossaries.push(item);
-      this.projectService.assignGlossariesToProject(this.projectId, [item.id]);
+      this.projectService.assignGlossariesToProject(this.projectId, [item.id]).subscribe(() =>{
+        this.refresh();
+      });
     }
-    this.refresh();
+    
   }
 
 }

@@ -473,37 +473,37 @@ namespace Polyglot.DataAccess.Seeds
                 context.SaveChanges();
             }
 
-            if (!context.Rights.Any())
-            {
-                var rights = new List<Right> {
-                    new Right { Id = 1, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 2, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 3, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 4, Definition = RightDefinition.AddNewKey },
-                    new Right { Id = 5, Definition = RightDefinition.AddNewKey }
-                };
-                context.AddRange(rights);
-                context.SaveChanges();
-            }
+            //if (!context.Rights.Any())
+            //{
+            //    var rights = new List<Right> {
+            //        new Right { Id = 1, Definition = RightDefinition.AddNewKey },
+            //        new Right { Id = 2, Definition = RightDefinition.AddNewKey },
+            //        new Right { Id = 3, Definition = RightDefinition.AddNewKey },
+            //        new Right { Id = 4, Definition = RightDefinition.AddNewKey },
+            //        new Right { Id = 5, Definition = RightDefinition.AddNewKey }
+            //    };
+            //    context.AddRange(rights);
+            //    context.SaveChanges();
+            //}
 
-            if (!context.Ratings.Any())
-            {
-                var users = context.UserProfiles.ToList();
-                var ratings = new List<Rating> {
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
-                   new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
-                   };
-                context.AddRange(ratings);
-                context.SaveChanges();
-            }
+            //if (!context.Ratings.Any())
+            //{
+            //    var users = context.UserProfiles.ToList();
+            //    var ratings = new List<Rating> {
+            //       new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 1), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 2), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 60.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 80.0,  Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 4), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 100.0, Comment = "awsome!", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 50.0,  Comment = "not bad", CreatedBy = users.FirstOrDefault(u=>u.Id== 5), CreatedAt = DateTime.Now },
+            //       new Rating { Rate = 90.0, Comment = "good job!", CreatedBy = users.FirstOrDefault(u=>u.Id== 3), CreatedAt = DateTime.Now }
+            //       };
+            //    context.AddRange(ratings);
+            //    context.SaveChanges();
+            //}
 
             if (!context.TranslatorLanguages.Any())
             {
@@ -563,63 +563,63 @@ namespace Polyglot.DataAccess.Seeds
                 context.SaveChanges();
             }
 
-            if (!context.Teams.Any())
-            {
-                var teams = new List<Team> {
-                    new Team {
-                        TeamTranslators = new List<TeamTranslator> {
-                           new TeamTranslator {
-                               TranslatorId = 1,
-                               TeamId = 1,
-                               TranslatorRights = new List<TranslatorRight> {
-                               new TranslatorRight { RightId = 1 },
-                               new TranslatorRight { RightId = 2 },
-                               new TranslatorRight { RightId = 3 }
-                               }
-                           },
-                           new TeamTranslator {
-                               TranslatorId = 2,
-                               TeamId = 1,
-                               TranslatorRights = new List<TranslatorRight> {
-                               new TranslatorRight { RightId = 1 },
-                               new TranslatorRight { RightId = 2 },
-                               new TranslatorRight { RightId = 3 }
-                               }
-                           },
+            //if (!context.Teams.Any())
+            //{
+            //    var teams = new List<Team> {
+            //        new Team {
+            //            TeamTranslators = new List<TeamTranslator> {
+            //               new TeamTranslator {
+            //                   TranslatorId = 1,
+            //                   TeamId = 1,
+            //                   TranslatorRights = new List<TranslatorRight> {
+            //                   new TranslatorRight { RightId = 1 },
+            //                   new TranslatorRight { RightId = 2 },
+            //                   new TranslatorRight { RightId = 3 }
+            //                   }
+            //               },
+            //               new TeamTranslator {
+            //                   TranslatorId = 2,
+            //                   TeamId = 1,
+            //                   TranslatorRights = new List<TranslatorRight> {
+            //                   new TranslatorRight { RightId = 1 },
+            //                   new TranslatorRight { RightId = 2 },
+            //                   new TranslatorRight { RightId = 3 }
+            //                   }
+            //               },
 
 
-                        }
-                    },
-                    new Team {
-                        TeamTranslators = new List<TeamTranslator> {
-                           new TeamTranslator {
-                               TranslatorId = 4,
-                               TeamId = 1,
-                               TranslatorRights = new List<TranslatorRight> {
-                               new TranslatorRight { RightId = 1 },
-                               new TranslatorRight { RightId = 2 },
-                               new TranslatorRight { RightId = 3 }
-                               }
-                           },
-                           new TeamTranslator {
-                               TranslatorId = 5,
-                               TeamId = 1,
-                               TranslatorRights = new List<TranslatorRight> {
-                               new TranslatorRight { RightId = 1 },
-                               new TranslatorRight { RightId = 2 },
-                               new TranslatorRight { RightId = 3 }
-                               }
-                           },
+            //            }
+            //        },
+            //        new Team {
+            //            TeamTranslators = new List<TeamTranslator> {
+            //               new TeamTranslator {
+            //                   TranslatorId = 4,
+            //                   TeamId = 1,
+            //                   TranslatorRights = new List<TranslatorRight> {
+            //                   new TranslatorRight { RightId = 1 },
+            //                   new TranslatorRight { RightId = 2 },
+            //                   new TranslatorRight { RightId = 3 }
+            //                   }
+            //               },
+            //               new TeamTranslator {
+            //                   TranslatorId = 5,
+            //                   TeamId = 1,
+            //                   TranslatorRights = new List<TranslatorRight> {
+            //                   new TranslatorRight { RightId = 1 },
+            //                   new TranslatorRight { RightId = 2 },
+            //                   new TranslatorRight { RightId = 3 }
+            //                   }
+            //               },
 
 
-                        }
-                    }
+            //            }
+            //        }
 
 
-               };
-                context.AddRange(teams);
-                context.SaveChanges();
-            }
+            //   };
+            //    context.AddRange(teams);
+            //    context.SaveChanges();
+            //}
 
             if (!context.Projects.Any())
             {
@@ -633,10 +633,7 @@ namespace Polyglot.DataAccess.Seeds
                    CreatedOn = DateTime.Now,
                    Technology ="films",
                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                   Teams = {
-                           context.Teams.FirstOrDefault(team => team.Id == 1),
-                           context.Teams.FirstOrDefault(team => team.Id == 2)
-                   },
+                   Teams = new List<Team>(),
                    ProjectTags = {
                            new ProjectTag { TagId = 1, ProjectId = 1 },
                            new ProjectTag { TagId = 2, ProjectId = 1 },
@@ -646,10 +643,7 @@ namespace Polyglot.DataAccess.Seeds
                            new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
                            new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
                    },
-                   ProjectGlossaries = {
-                           new ProjectGlossary { GlossaryId = 1, ProjectId = 1 },
-                           new ProjectGlossary { GlossaryId = 2, ProjectId = 1 },
-                   },
+                   ProjectGlossaries = new List<ProjectGlossary>(),
                    MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
                    },
 
@@ -719,19 +713,19 @@ namespace Polyglot.DataAccess.Seeds
                 context.SaveChanges();
             }
 
-            if (!context.ComplexStrings.Any())
-            {
-                var complexStrings = new List<ComplexString> {
-                   new ComplexString { ProjectId = 3, TranslationKey = "title" },
-                   new ComplexString { ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
-                   new ComplexString { ProjectId = 4, TranslationKey = "Perspectives" },
-                   new ComplexString { ProjectId = 1, TranslationKey = "Production" },
-                   new ComplexString { ProjectId = 2, TranslationKey = "article" }
-               };
+            //if (!context.ComplexStrings.Any())
+            //{
+            //    var complexStrings = new List<ComplexString> {
+            //       new ComplexString { ProjectId = 3, TranslationKey = "title" },
+            //       new ComplexString { ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
+            //       new ComplexString { ProjectId = 4, TranslationKey = "Perspectives" },
+            //       new ComplexString { ProjectId = 1, TranslationKey = "Production" },
+            //       new ComplexString { ProjectId = 2, TranslationKey = "article" }
+            //   };
 
-                context.AddRange(complexStrings);
-                context.SaveChanges();
-            }
+            //    context.AddRange(complexStrings);
+            //    context.SaveChanges();
+            //}
 
 
         }
