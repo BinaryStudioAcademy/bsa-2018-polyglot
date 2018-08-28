@@ -11,7 +11,7 @@ import { ComplexStringService } from '../../../../services/complex-string.servic
 
 export class TabHistoryComponent implements OnInit {
 
-  private history: Array<any>;
+  public history: Array<any>;
 
   constructor(
     private dataProvider: ComplexStringService,
