@@ -167,15 +167,4 @@ export class ProjectTeamComponent implements OnInit {
       return 1;
     return 0;
   }
-
-  redirectById(id: number){
-    if(this.userService.getCurrentUser().id == id){
-      this.router.navigate(['/profile']);
-    }
-    else{
-    this.router.navigate(['/user', id]);
-    }
-  }
-
-
 }
