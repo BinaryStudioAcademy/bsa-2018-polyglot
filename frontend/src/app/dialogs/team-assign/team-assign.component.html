@@ -17,7 +17,7 @@
           <mat-checkbox  class="team-card-item" *ngFor="let t of teams" (change)="change($event, t)">
               <mat-card class="example-card">
                   <mat-card-header>            
-                      <img (click)="redirectById(t.createdBy.id)" mat-card-avatar class="manager-img" src="{{t.createdBy.avatarUrl}}">
+                      <img (click)="redirectById(t.createdBy.id)" mat-card-avatar class="manager-img" src="{{t.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
                     
                       <div class="title">
                           <mat-card-title  class="card-title">Team {{t.name}}</mat-card-title>
@@ -33,7 +33,7 @@
                   
                   <div class="card-content">
                         <div mat-card-image class="img-container">
-                          <img (click)="redirectById(p.id)" height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
+                          <img (click)="redirectById(p.id)" height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}" onError="this.src='/assets/images/default-avatar.jpg'">
                         </div>
                       </div>     
               </mat-card> 
