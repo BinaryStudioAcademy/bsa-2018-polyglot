@@ -6,6 +6,7 @@ import { ContainerComponent, DraggableComponent, IDropResult } from 'ngx-smooth-
 import { applyDrag, generateItems } from '../../../models';
 import { Translator } from '../../../models/Translator';
 import { Router } from '@angular/router';
+import { UserService } from '../../../services/user.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class NewTeamComponent implements OnInit {
   constructor(
     private router: Router,
     private teamService: TeamService,
-    private snotifyService: SnotifyService
+    private snotifyService: SnotifyService,
+    private userService: UserService
   ) {
 
 

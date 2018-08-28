@@ -99,11 +99,11 @@
                                 <hr>
                                 <br>
                                 <mat-card-header>
-                                        <a [routerLink]="['/user', review.createdById]" >
+                                        <a (click)="userService.redirectById(review.createdById)" >
                                             <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
                                         </a>
                                 <mat-card-title>
-                                    <a [routerLink]="['/user', review.createdById]" >{{review.createdBy.fullName}}</a>
+                                    <a (click)="userService.redirectById(review.createdById)" >{{review.createdBy.fullName}}</a>
                                 </mat-card-title>
                                 </mat-card-header>
                                 <br>

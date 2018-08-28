@@ -1,5 +1,7 @@
 import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '../../../../node_modules/@angular/material';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-team-assign',
@@ -15,7 +17,9 @@ export class TeamAssignComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<TeamAssignComponent>
+    public dialogRef: MatDialogRef<TeamAssignComponent>,
+    public router: Router,
+    private userService: UserService
   ) {
     
     if (data && data.teams)
@@ -50,6 +54,16 @@ export class TeamAssignComponent implements OnInit {
       this.onAssign.emit(this.selectedTeams);
     }
     this.dialogRef.close();
+  }
+
+  redirectById(id: number){
+    this.dialogRef.close();
+    if(this.userService.getCurrentUser().id == id){
+      this.router.navigate(['/profile']);
+    }
+    else{
+    this.router.navigate(['/user', id]);
+    }
   }
 
   getAvatarUrl(person): String {
