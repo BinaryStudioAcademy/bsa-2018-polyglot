@@ -26,15 +26,15 @@
 
     <mat-card class="example-card" *ngFor="let t of assignedTeams">
       <mat-card-header>
-        <a class="manager-img" [routerLink]="['/profile']" style="border-radius: 50%">
-          <img mat-card-avatar src="/assets/images/anonymus.jpg">
+        <a class="manager-img" (click)="userService.redirectById(t?.createdBy?.id)">
+            <img mat-card-avatar src="{{t.createdBy.avatarUrl}}">
         </a>
 
         <div class="title">
             <mat-card-title class="card-title">
                 <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
             </mat-card-title>
-          <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
+          <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
         <div class="action-btn-container">
           <button mat-icon-button>
@@ -54,12 +54,11 @@
 
       <div class="card-content">
         <div mat-card-image class="img-container">
-          <a class="translator-img" *ngFor="let p of t.persons" routerLink="/user/{{p.id}}">
+          <a class="translator-img" *ngFor="let p of t.persons" (click)="userService.redirectById(p?.id)">
             <img height="60" src="{{getAvatarUrl(p)}}" onError="this.src='/assets/images/default-avatar.jpg'">
           </a>
         </div>
       </div>
     </mat-card>
   </div>
-  <ng-snotify></ng-snotify>
 </div>

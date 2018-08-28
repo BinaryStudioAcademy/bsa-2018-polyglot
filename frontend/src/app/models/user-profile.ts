@@ -17,4 +17,5 @@ export interface UserProfile {
     fullName?: string;
     ratings?: Array<Rating>;
     userRole? : Role;
+    uid?: string;
 }

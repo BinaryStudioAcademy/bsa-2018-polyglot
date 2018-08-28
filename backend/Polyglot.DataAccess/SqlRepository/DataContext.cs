@@ -128,11 +128,16 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasOne(tr => tr.TeamTranslator)
                 .WithMany(teamTr => teamTr.TranslatorRights)
                 .HasForeignKey(tr => tr.TeamTranslatorId);
-            
+
+            modelBuilder.Entity<Glossary>()
+                .HasOne(p => p.OriginLanguage)
+                .WithMany(l => l.Glossaries)
+                .HasForeignKey(p => p.OriginLanguageId);
+
             //new feature in EF Core 2.1
             //modelBuilder.Seed();
-            
-            
+
+
 
         }
     }

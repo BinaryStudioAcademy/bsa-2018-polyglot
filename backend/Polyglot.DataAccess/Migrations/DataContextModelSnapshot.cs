@@ -65,11 +65,15 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("MainLanguageId");
+
                     b.Property<string>("Name");
 
-                    b.Property<string>("OriginLanguage");
+                    b.Property<int?>("OriginLanguageId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OriginLanguageId");
 
                     b.ToTable("Glossaries");
                 });
@@ -334,7 +338,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("AvatarUrl");
 
-                    b.Property<DateTime>("BirthDate");
+                    b.Property<DateTime?>("BirthDate");
 
                     b.Property<string>("City");
 
@@ -376,6 +380,13 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UploadedBy")
                         .WithMany()
                         .HasForeignKey("UploadedById");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Glossary", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Language", "OriginLanguage")
+                        .WithMany("Glossaries")
+                        .HasForeignKey("OriginLanguageId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>

@@ -10,7 +10,7 @@ namespace Polyglot.DataAccess.Entities
 
         public string Uid { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public DateTime RegistrationDate { get; set; }
 

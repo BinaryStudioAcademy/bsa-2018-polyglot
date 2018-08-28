@@ -35,11 +35,12 @@ export class NavigationComponent implements OnDestroy {
     private userService: UserService,
     private appState: AppStateService,
     private router: Router,
-    private eventService: EventService
+    private eventService: EventService,
+    private appStateService: AppStateService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener); 
+    this.mobileQuery.addListener(this._mobileQueryListener);
     this.eventService.listen().subscribe(
       (event) => {
         switch(event) {
@@ -56,6 +57,9 @@ export class NavigationComponent implements OnDestroy {
 
   ngOnInit(): void {
     this.updateCurrentUser();
+    this.appStateService.getDatabaseUser().subscribe(data => {
+        this.manager = data;
+    });
   }
 
   onLoginClick() {
@@ -92,7 +96,7 @@ export class NavigationComponent implements OnDestroy {
   isLoggedIn() {
     return this.appState.LoginStatus;
   }
-  
+
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
@@ -102,7 +106,7 @@ export class NavigationComponent implements OnDestroy {
       if (!this.userService.getCurrentUser()) {
         this.userService.getUser().subscribe(
           (user: UserProfile)=> {
-            this.userService.updateCurrentUser(user);   
+            this.userService.updateCurrentUser(user);
             this.manager = this.userService.getCurrentUser();
             this.role = this.roleToString(this.manager.userRole);
           },
@@ -112,17 +116,20 @@ export class NavigationComponent implements OnDestroy {
         );
         // this.email = this.appState.currentFirebaseUser.email;
       }
+      else {
+        this.manager = this.userService.getCurrentUser();
+      }
     } else {
-      this.manager = { 
+      this.manager = {
         fullName: "",
         avatarUrl: "",
-        lastName: "" 
+        lastName: ""
       };
       // this.email = '';
       this.role = '';
     }
   }
-  
+
   roleToString(roleId: number) {
     let roleStr: string;
     switch(roleId) {
