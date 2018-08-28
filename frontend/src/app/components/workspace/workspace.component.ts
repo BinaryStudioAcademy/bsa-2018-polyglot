@@ -35,7 +35,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private elementsOnPage = 7;
     public isLoad: boolean;
 
-    public projectTags : any[] = [] ;
+    public projectTags: string[] = [];
 
     private routeSub: Subscription;
 
@@ -112,14 +112,21 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
                             this.router.navigate([this.currentPath, keyId]);
-                        
+
                         }
                         else {
                             this.isLoad = true;
                         }
-                        
+
                     }
-                    console.log(this.keys);
+                    this.keys.forEach(element => {
+                        if (element.tags.length > 0) {
+                            element.tags.forEach(tag => {
+                                this.projectTags.push(tag);
+                            });
+                        }
+                    });
+                    console.log(this.projectTags);
                 });
 
             this.currentPage++;
@@ -267,6 +274,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
         }
     }
+
+    test($event,index){
+        console.log(index);
+        console.log($event);
+    }
+
+/*     test(id){
+    var checkbox = document.getElementById("mat-checkbox-"+id);
+    console.log(checkbox.classList.contains("mat-checkbox-checked"));
+    } */
 
 
     // subscribeProjectChanges() {

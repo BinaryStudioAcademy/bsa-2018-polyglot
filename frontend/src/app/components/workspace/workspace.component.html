@@ -22,24 +22,21 @@
                   <div>
                     <h4>Filters</h4>
                     <hr>
-                    <div style="display: grid;
-                    grid-template-columns: auto auto auto;
-                    grid-gap: 10px;
-                    padding: 10px;min-width: 450px!important;">
-                      <div *ngFor="let opt of filterOptions">
-                        <mat-checkbox>{{opt}}</mat-checkbox>
+                    <div class="fiter-content">
+                      <div (click)="$event.stopPropagation();" *ngFor="let opt of filterOptions;let i = index">
+                        <mat-checkbox (indeterminateChange)="test($event)" (change)="test($event,i)">{{opt}}</mat-checkbox>
                       </div>
                     </div>
                     </div>
                   <div>
                      <h4>Tags</h4>
                      <hr>
-                     <div style="display: grid;
-                    grid-template-columns: auto auto auto;
-                    grid-gap: 10px;
-                    padding: 10px;min-width: 450px!important;">
-                      <div *ngFor="let opt of project.projectTags">
-                        <mat-checkbox>{{opt}}</mat-checkbox>
+                     <div class="fiter-content">
+                      <div *ngFor="let opt of projectTags" (click)="$event.stopPropagation();">
+                        <mat-checkbox (click)="test($event)">{{opt}}</mat-checkbox>
+                      </div>
+                      <div *ngIf="projectTags.length === 0">
+                        No strings with tags
                       </div>
                     </div>
                    </div>
