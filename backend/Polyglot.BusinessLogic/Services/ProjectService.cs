@@ -748,11 +748,7 @@ namespace Polyglot.BusinessLogic.Services
             // если строк для перевода нет тогда ничего вычислять не нужно
             if (projectStrings.Count() < 1)
                 return mapper.Map<IEnumerable<LanguageStatisticDTO>>(targetLanguages);
-
-            var projectTranslations = projectStrings
-                ?.SelectMany(css => css.Translations)
-                .ToList();
-
+            
             // мапим языки проекта, а затем добавляем TranslatedStrings и ComplexStringsCount по каждому языку
             return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageStatisticDTO>>(targetLanguages, opt => opt.AfterMap((src, dest) =>
             {
@@ -762,9 +758,8 @@ namespace Polyglot.BusinessLogic.Services
                 for (int i = 0; i < languageDTOs.Count; i++)
                 {
                     // ищем переводы по каждому языку
-                    translatedCount = projectTranslations
-                        ?.Where(t => t.LanguageId == languageDTOs[i].Id && !String.IsNullOrWhiteSpace(t.TranslationValue))
-                        ?.Count();
+                    translatedCount = projectStrings?.Count(complexString =>
+                        complexString.Translations.Any(x => x.LanguageId == languageDTOs[i].Id));
 
                     languageDTOs[i].ComplexStringsCount = projectStrings.Count();
 
