@@ -31,6 +31,9 @@ export class AppStateService {
         this.currentDatabaseUserSubject.next(v);
     }
 
+    getDatabaseUser(){
+        return this.currentDatabaseUserSubject.asObservable();
+    }
     // Firebase token
     private currentFirebaseTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
 

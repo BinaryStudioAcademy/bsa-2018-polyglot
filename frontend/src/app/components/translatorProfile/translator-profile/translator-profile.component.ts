@@ -9,6 +9,7 @@ import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-translator-profile',
@@ -28,7 +29,8 @@ export class TranslatorProfileComponent implements OnInit{
               private teamService: TeamService,
               private snotifyService: SnotifyService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private appStateService: AppStateService) { }
 
     @Input() public userProfile : any;
     public Comments: Comment[];
@@ -42,7 +44,7 @@ export class TranslatorProfileComponent implements OnInit{
                 this.teams = t;
             });
         });
-                    
+
         this.Languages = [
             {Name : "French",Proficiency : 47},
             {Name : "Spanish",Proficiency : 77},
@@ -51,13 +53,13 @@ export class TranslatorProfileComponent implements OnInit{
             {Name : "OtherLang",Proficiency : 50},
             {Name : "OtherLang",Proficiency : 50},
             {Name : "OtherLang",Proficiency : 50}
-          ];      
+          ];
     }
 
     isOwnersProfile(){
         return this.userProfile.id == this.userService.getCurrentUser().id;
     }
-    
+
     leaveTeam(team: Team)
     {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -110,6 +112,7 @@ export class TranslatorProfileComponent implements OnInit{
                                 this.snotifyService.success("Photo updated.", "Success!");
                                 }, 100);
                                 this.userProfile = d;
+                                this.appStateService.currentDatabaseUser = d;
                             },
                             err => {
                                 this.snotifyService.error("Photo failed to update!", "Error!");

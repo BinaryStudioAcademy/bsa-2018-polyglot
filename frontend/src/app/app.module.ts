@@ -97,7 +97,13 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
+<<<<<<< HEAD
 import { ChatComponent } from './components/chat/chat.component';
+=======
+import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
+import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
+
+>>>>>>> develop
 
 
 @NgModule({
@@ -168,7 +174,13 @@ import { ChatComponent } from './components/chat/chat.component';
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
+<<<<<<< HEAD
     UserProfileComponent, TabGlossaryComponent, ChatComponent
+=======
+    UserProfileComponent, 
+    TabGlossaryComponent,
+    AssignGlossariesComponent
+>>>>>>> develop
   ],
   imports: [
     BrowserModule,
@@ -226,7 +238,10 @@ import { ChatComponent } from './components/chat/chat.component';
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
-    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    { 
+      provide: 'SnotifyToastConfig',
+      useValue: SnotifyGlobalConfig
+    },
     SnotifyService, GlossaryService],
 
   bootstrap: [AppComponent]

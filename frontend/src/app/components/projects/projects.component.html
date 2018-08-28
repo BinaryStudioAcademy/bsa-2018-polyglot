@@ -21,14 +21,14 @@
   <mat-card class="example-card" *ngFor="let card of cards">
     <mat-card-header>
       <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.userProfile.id)">
-        <img mat-card-avatar class="manager-img" src="{{manager.avatarUrl}}">
+        <img mat-card-avatar class="manager-img" src="{{card.userProfile.avatarUrl}}">
       </a>
       <div class="title">
         <mat-card-title class="card-title">
           <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
         </mat-card-title>
 
-        <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{manager.fullName}}</mat-card-subtitle>
+        <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
       </div>
     </mat-card-header>
     <div class="img-container">
@@ -61,10 +61,10 @@
     <div class="list-item" *ngFor="let card of cards">
       <div class="row-manager">
         <a (click)="userService.redirectById(card.userProfile.id)">
-          <img mat-card-avatar class="row-manager-img" src="{{manager.avatarUrl}}">
+          <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
         </a>
           <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
-            {{manager.fullName}}
+            {{card.userProfile.fullName}}
           </strong>
       </div>
       <div class="row-name">

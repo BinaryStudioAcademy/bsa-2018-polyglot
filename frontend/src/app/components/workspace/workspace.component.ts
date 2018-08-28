@@ -162,11 +162,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        if (this.project) {
-            this.signalrService.closeConnection(
-                `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
-            );
-        }
+        this.signalrService.closeConnection(
+            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`);
     }
 
     getProjById(id: number) {
@@ -209,7 +206,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             SignalrSubscribeActions.complexStringRemoved
             ],
             (deletedStringId: number) => {
-                debugger;
                 this.receiveId(deletedStringId);
             }
         );
