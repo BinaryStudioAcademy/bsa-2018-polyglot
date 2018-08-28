@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Polyglot.DataAccess.Entities
 {
@@ -9,8 +10,10 @@ namespace Polyglot.DataAccess.Entities
 
         public string Name { get; set; }
 
-        public string OriginLanguage { get; set; }
-        
+        [ForeignKey("OriginLanguageId")]
+        public virtual Language OriginLanguage { get; set; }
+        public int? OriginLanguageId { get; set; }
+
         public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
 
         public Glossary()
