@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -76,11 +77,16 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
+                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
+                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
                 await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-            }
 
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+                return Ok(entity);
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
         [HttpPut("{id}/translations")]
@@ -93,11 +99,16 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
+                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
+                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
                 await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-            }
 
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+                return Ok(entity);
+            }
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
 
@@ -118,14 +129,13 @@ namespace Polyglot.Controllers
                     byteArr = ms.ToArray();
                 }
 
-
                 complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
             var entity = await dataProvider.AddComplexString(complexString);
             if(entity != null)
             {
                 await signalrService.ComplexStringAdded($"{Group.project}{entity.ProjectId}", entity.Id);
-                return Ok();
+                return Ok(entity);
             }
             else
             {
@@ -190,6 +200,15 @@ namespace Polyglot.Controllers
 
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
+        }
+
+        [HttpGet("{id}/history/{translationId}")]
+        public async Task<IActionResult> GetHistory(int id, Guid translationId)
+        {
+            var response = await dataProvider.GetHistoryAsync(id, translationId);
+
+            return response == null ? StatusCode(400) as IActionResult
+                : Ok(response);
         }
     }
 }

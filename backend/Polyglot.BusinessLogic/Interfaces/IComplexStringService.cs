@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.BusinessLogic.Services;
 using Polyglot.Common.DTOs.NoSQL;
@@ -26,5 +27,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier);
 
         Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation);
+
+        Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId);
     }
 }

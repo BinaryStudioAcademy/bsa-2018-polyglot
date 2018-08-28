@@ -32,6 +32,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     user: UserProfile;
     private currentPage = 0;
     private elementsOnPage = 7;
+    public isLoad: boolean;
 
     private routeSub: Subscription;
 
@@ -69,38 +70,67 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
-            this.getProjById(params.projectId);
-            this.basicPath = "workspace/" + params.projectId;
-            this.currentPath = "workspace/" + params.projectId + "/key";
-            this.dataProvider
-                .getProjectStringsWithPagination(
-                    params.projectId,
-                    this.elementsOnPage,
-                    0
-                )
+            this.dataProvider.getById(params.projectId).subscribe(proj => {
+                this.project = proj;
+
+                this.projectService.getProjectLanguages(this.project.id).subscribe(
+                    (d: Language[]) => {
+                        const workspaceState = {
+                            projectId: this.project.id,
+                            languages: d
+                        };
+
+                        this.appState.setWorkspaceState = workspaceState;
+                        this.signalrService.createConnection(
+                            `${SignalrGroups[SignalrGroups.project]}${
+                            this.project.id
+                            }`,
+                            "workspaceHub"
+                        );
+                        this.subscribeProjectChanges();
+                    },
+                    err => {
+                        this.keys = null;
+                        this.isLoad = false;
+                        console.log("err", err);
+                    },
+                );
+
+
+            });
+            this.basicPath = 'workspace/' + params.projectId;
+            this.currentPath = 'workspace/' + params.projectId + '/key';
+            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
+                        this.isLoad = true;
                         this.onSelect(this.keys[0]);
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
                             this.router.navigate([this.currentPath, keyId]);
+                        
                         }
+                        else {
+                            this.isLoad = true;
+                        }
+                        
                     }
                 });
+
             this.currentPage++;
         });
     }
 
-    onAdvanceSearchClick() {}
+    onAdvanceSearchClick() { }
 
     ngDoCheck() {
         if (
             this.project &&
             this.keys &&
             this.router.url == `/workspace/${this.project.id}` &&
-            this.keys.length != 0
+            this.keys.length !== 0
         ) {
             this.router.navigate([this.currentPath, this.keys[0].id]);
         }
@@ -132,61 +162,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        if (this.project) {
-            this.signalrService.closeConnection(
-                `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
-            );
-        }
+        this.signalrService.closeConnection(
+            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`);
     }
 
     getProjById(id: number) {
         this.dataProvider.getById(id).subscribe(proj => {
             this.project = proj;
-            this.signalrService.createConnection(
-                `${SignalrGroups[SignalrGroups.project]}${
-                    this.project.id
-                }`,
-                "workspaceHub"
-            );
-            this.subscribeProjectChanges();
-            this.projectService.getProjectLanguages(this.project.id).subscribe(
-                (d: Language[]) => {
-                    const workspaceState = {
-                        projectId: this.project.id,
-                        languages: d
-                    };
-                    this.appState.setWorkspaceState = workspaceState;
-                    this.basicPath = "workspace/" + this.project.id;
-                    this.currentPath = "workspace/" + this.project.id + "/key";
-                    this.dataProvider
-                        .getProjectStrings(this.project.id)
-                        .subscribe((data: any) => {
-                            if (data) {
-                                this.onSelect(data[0]);
-                                this.keys = data;
-                                this.isEmpty =
-                                    this.keys.length == 0 ? true : false;
-                                let keyId: number;
-                                if (!this.isEmpty) {
-                                    keyId = this.keys[0].id;
-                                    this.router.navigate([
-                                        this.currentPath,
-                                        keyId
-                                    ]);
-                                }
-                            }
-                        });
-                },
-                err => {
-                    console.log("err", err);
-                }
-            );
         });
     }
 
     receiveId($event) {
         let temp = this.keys.findIndex(x => x.id === $event);
-        if (this.selectedKey.id == this.keys[temp].id)
+        if (this.selectedKey.id === this.keys[temp].id)
             this.selectedKey = this.keys[temp - 1]
                 ? this.keys[temp - 1]
                 : this.keys[temp + 1];
@@ -215,10 +203,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         );
         this.signalrService.connection.on(
             SignalrSubscribeActions[
-                SignalrSubscribeActions.complexStringRemoved
+            SignalrSubscribeActions.complexStringRemoved
             ],
             (deletedStringId: number) => {
-                debugger;
                 this.receiveId(deletedStringId);
             }
         );
@@ -273,64 +260,4 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
         }
     }
-
-    // subscribeProjectChanges() {
-
-    //     this.connection.send("joinProjectGroup", `${this.project.id}`);
-
-    //     this.connection.on("stringDeleted", (deletedStringId: number) => {
-    //         if (deletedStringId) {
-    //             debugger;
-    //             this.snotifyService.info(
-    //                 `Key ${deletedStringId} deleted`,
-    //                 "String deleted"
-    //             );
-    //             this.receiveId(deletedStringId);
-    //         }
-    //     });
-
-    //     this.connection.on("stringAdded", (newStringId: number) => {
-    //         if (!this.keys.find(s => s.id == newStringId)) {
-    //             if (!this.keys.find(s => s.id == newStringId)) {
-    //                 this.complexStringService
-    //                     .getById(newStringId)
-    //                     .subscribe(newStr => {
-    //                         if (newStr) {
-    //                             this.snotifyService.info(
-    //                                 `New key added`,
-    //                                 "String added"
-    //                             );
-    //                             this.keys.push(newStr);
-    //                         }
-    //                     });
-    //             }
-    //         }
-    //     });
-
-    //     this.connection.on(
-    //         "stringTranslated",
-    //         (complexStringId: number, languageId: number) => {
-    //             // получить строку с сервера, вывести уведомление
-    //             this.snotifyService.info("String translated", "Translated");
-    //         }
-    //     );
-
-    //     this.connection.on("languageAdded", (languagesIds: Array<number>) => {
-    //         // обновить строку
-    //         console.log(languagesIds);
-    //         this.snotifyService.info(languagesIds.join(", "), "Language added");
-    //     });
-
-    //     this.connection.on("languageDeleted", (languageId: number) => {
-    //         // обновить строку
-    //         this.snotifyService.info(
-    //             `lang with id =${languageId} removed`,
-    //             "Language removed"
-    //         );
-    //     });
-    // }
-
-    // connectSignalR(){
-    //   this.connection.start().catch(err => console.log("ERROR " + err));
-    // }
 }

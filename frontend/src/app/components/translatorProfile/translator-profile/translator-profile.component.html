@@ -17,10 +17,14 @@
                 </mat-card-subtitle>
             </div>
             <div class="user-rating" fxFlex="50%">
-                <mat-card-subtitle>Rating
+                <mat-card-subtitle *ngIf="userProfile.ratings && userProfile.ratings.length != 0">Rating                    
                     <span>  {{calculateAvarageRating()}}/5
                         <i class="material-icons" style="color: orange ;">star</i>
                     </span>
+                </mat-card-subtitle>
+
+                <mat-card-subtitle *ngIf="!userProfile.ratings || userProfile.ratings.length === 0">No Rating                   
+                    
                 </mat-card-subtitle>
             </div>
         </div>
@@ -32,19 +36,6 @@
         fxLayout.xs="column"
         fxLayoutGap="20px">
         <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" class="left-card" >   
-            <div class="item" fxFlex>
-                <div>
-                    <h2 class="title"> Experience </h2>
-                    <hr>
-                        <mat-card-header>
-                            <mat-card-title>Position</mat-card-title>
-                            <mat-card-subtitle>Company</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            Responsibilities
-                        </mat-card-content>
-                </div>
-            </div>
             <div class="item left-card" fxFlex>
                 <div>
                           <h2 class="title">Teams</h2>
@@ -98,33 +89,39 @@
                     <mat-card-title>Contacts</mat-card-title><hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                
-                <mat-card *ngIf="!isOwnersProfile()">
-                    <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
-                </mat-card>
-                <mat-card class="review-card" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
-                        <h2>Reviews: </h2>
-                        <div *ngFor="let review of userProfile.ratings">
-                            <hr>
-                            <br>
-                            <mat-card-header>
-                                <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
-                            <mat-card-title>{{review.createdBy.fullName}}</mat-card-title>
-                            </mat-card-header>
-                            <br>
-                            <mat-card-content>
-                                <mat-card-subtitle>Comment : <span> "{{review.comment}}"              
-                                </span>
-                                </mat-card-subtitle>
-                                <mat-card-subtitle>Rating :<span>{{review.rate}} / 5
-                                    <i class="material-icons" style="color: orange ;">star</i>
-                                </span>
-                                </mat-card-subtitle>
-                                <mat-card-subtitle>Created: <span>{{review.createdAt | date: 'medium'}}</span>
-                                </mat-card-subtitle>
-                            </mat-card-content>
-                        </div>
-                </mat-card>
+                <div class="review">
+                    <mat-card *ngIf="!isOwnersProfile()">
+                        <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
+                    </mat-card>
+                    <mat-card class="review-card" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
+                            <h2>Reviews: </h2>
+                            <div *ngFor="let review of userProfile.ratings">
+                                <hr>
+                                <br>
+                                <mat-card-header>
+                                        <a (click)="userService.redirectById(review.createdById)" >
+                                            <img mat-card-avatar src="{{review.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                                        </a>
+                                <mat-card-title>
+                                    <a (click)="userService.redirectById(review.createdById)" >{{review.createdBy.fullName}}</a>
+                                </mat-card-title>
+                                </mat-card-header>
+                                <br>
+                                <mat-card-content>
+                                    <mat-card-subtitle>
+                                        <span>{{review.comment}}</span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle>
+                                    <span>
+                                        {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
+                                    </span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle><span>{{review.createdAt | date: 'medium'}}</span>
+                                    </mat-card-subtitle>
+                                </mat-card-content>
+                            </div>
+                    </mat-card>
+                </div>
             </div>
         </div>
     </div>

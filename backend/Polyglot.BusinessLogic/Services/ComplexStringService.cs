@@ -6,6 +6,7 @@ using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -141,6 +142,8 @@ namespace Polyglot.BusinessLogic.Services
             var savedEntity = await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
             await _uow.SaveAsync();
             entity.Id = savedEntity.Id;
+            entity.CreatedOn = DateTime.Now;
+            entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
             var target = await _repository
                 .CreateAsync(_mapper.Map<ComplexString>(entity));
             if (target != null)
@@ -186,5 +189,70 @@ namespace Polyglot.BusinessLogic.Services
             return comments;
         }
 
+        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId)
+        {
+            var complexString = await GetComplexString(identifier);
+            var translation = complexString.Translations.FirstOrDefault(t => t.Id == translationId);
+
+            if (translation == null || complexString == null)
+                return null;
+
+            var history = new List<HistoryDTO>();
+
+            if (translation.History.Count == 0)
+            {
+                var user = await _userSevice.GetOneAsync(translation.UserId);
+                history.Add(new HistoryDTO {
+                    UserName = user.FullName,
+                    AvatarUrl = user.AvatarUrl,
+                    Action = "translated",
+                    From = $"{complexString.OriginalValue}",
+                    To = $"{translation.TranslationValue}",
+                    When = translation.CreatedOn
+                });
+            }
+            else
+            {
+                var first = await _userSevice.GetOneAsync(translation.History[0].UserId);
+                history.Add(new HistoryDTO
+                {
+                    UserName = first.FullName,
+                    AvatarUrl = first.AvatarUrl,
+                    Action = "translated",
+                    From = $"{complexString.OriginalValue}",
+                    To = $"{translation.History[0].TranslationValue}",
+                    When = translation.History[0].CreatedOn
+                });
+
+                for (int i = 1; i < translation.History.Count; i++)
+                {
+                    var user = await _userSevice.GetOneAsync(translation.History[i].UserId);
+                    history.Add(new HistoryDTO
+                    {
+                        UserName = user.FullName,
+                        AvatarUrl = user.AvatarUrl,
+                        Action = "changed",
+                        From = $"{translation.History[i-1].TranslationValue}",
+                        To = $"{translation.History[i].TranslationValue}",
+                        When = translation.History[i].CreatedOn
+                    });
+                }
+
+                var last = await _userSevice.GetOneAsync(translation.UserId);
+                history.Add(new HistoryDTO
+                {
+                    UserName = last.FullName,
+                    AvatarUrl = last.AvatarUrl,
+                    Action = "changed",
+                    From = $"{translation.History[translation.History.Count - 1].TranslationValue}",
+                    To = $"{translation.TranslationValue}",
+                    When = translation.CreatedOn
+                });
+            }
+
+            history.Reverse();
+
+            return history;
+        }
     }
 }

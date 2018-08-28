@@ -60,8 +60,9 @@ export class StringDialogComponent implements OnInit {
       tags: [],
       projectId: this.data.projectId,
       translations: [],
-      comments: []
-      
+      comments: [],
+      createdBy: 0,
+      createdOn: new Date()
     };
     this.image = undefined;
   }
@@ -79,19 +80,19 @@ export class StringDialogComponent implements OnInit {
           {
             this.onAddString.emit(d);
             this.snotifyService.success("ComplexString created", "Success!");
-            this.dialogRef.close();     
+            this.dialogRef.close();
           }
           else
           {
             this.snotifyService.success("ComplexString wasn`t created", "Error!");
-            this.dialogRef.close();   
+            this.dialogRef.close();
           }
-              
+
         },
         err => {
           console.log('err', err);
           this.snotifyService.success("ComplexString wasn`t created", "Error!");
-          this.dialogRef.close();     
+          this.dialogRef.close();
         });
   }
 }
