@@ -7,6 +7,7 @@
         complexStringAdded,
         complexStringRemoved,
         languagesAdded,
-        languageRemoved
+        languageRemoved,
+        languageTranslationCommitted
     }
 }
