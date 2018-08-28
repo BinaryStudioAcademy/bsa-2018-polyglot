@@ -444,7 +444,14 @@ namespace Polyglot.BusinessLogic.Services
 
             if (target.ImageUrl != null && source.ImageUrl != null)
             {
-                await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+				try
+				{
+					await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+				}
+				catch (Exception)
+				{
+
+				}                
             }
             if (source.ImageUrl != null)
             {
@@ -473,8 +480,14 @@ namespace Polyglot.BusinessLogic.Services
             {
 
                 Project toDelete = await uow.GetRepository<Project>().GetAsync(identifier);
-                if (toDelete.ImageUrl != null)
-                    await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+				try
+				{
+					await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+				}
+				catch (Exception)
+				{
+
+				}                   
 
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
                 await uow.SaveAsync();

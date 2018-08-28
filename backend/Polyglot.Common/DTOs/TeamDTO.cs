@@ -6,7 +6,7 @@ namespace Polyglot.Common.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-#warning нужно добавить manager-a
+        public UserProfileDTO CreatedBy { get; set; }
         
         public List<TranslatorDTO> TeamTranslators { get; set; }
 
