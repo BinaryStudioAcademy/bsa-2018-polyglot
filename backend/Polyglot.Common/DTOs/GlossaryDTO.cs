@@ -10,7 +10,7 @@ namespace Polyglot.Common.DTOs
 
         public virtual ICollection<GlossaryStringDTO> GlossaryStrings { get; set; }
 
-        public string OriginLanguage { get; set; }
+        public LanguageDTO OriginLanguage { get; set; }
         
         public List<ProjectDTO> ProjectGlossaries { get; set; }
 

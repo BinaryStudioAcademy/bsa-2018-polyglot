@@ -20,15 +20,15 @@
 <div *ngIf="toggle.checked" class="container">
   <mat-card class="example-card" *ngFor="let card of cards">
     <mat-card-header>
-      <a class="manager-img" style="text-decoration: none; color:black" [routerLink]="['/user', card.userProfile.id]">
-        <img mat-card-avatar  src="{{manager.avatarUrl}}">
+      <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.userProfile.id)">
+        <img mat-card-avatar class="manager-img" src="{{card.userProfile.avatarUrl}}">
       </a>
       <div class="title">
         <mat-card-title class="card-title">
           <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
         </mat-card-title>
 
-        <mat-card-subtitle [routerLink]="['/user', card.userProfile.id]" class="card-subtitle manager-name">{{manager.fullName}}</mat-card-subtitle>
+        <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
       </div>
     </mat-card-header>
     <div class="img-container">
@@ -60,11 +60,11 @@
   <mat-list>
     <div class="list-item" *ngFor="let card of cards">
       <div class="row-manager">
-        <a [routerLink]="['/user', card.userProfile.id]">
-          <img mat-card-avatar class="row-manager-img" src="{{manager.avatarUrl}}">
+        <a (click)="userService.redirectById(card.userProfile.id)">
+          <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
         </a>
-          <strong class="manager-name" [routerLink]="['/user', card.userProfile.id]" >
-            {{manager.fullName}}
+          <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
+            {{card.userProfile.fullName}}
           </strong>
       </div>
       <div class="row-name">
