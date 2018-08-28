@@ -174,7 +174,9 @@ export class SignupDialogComponent implements OnInit {
                 if (is) {
                   this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
                   this.router.navigate(['/dashboard/projects']);
-                  this.reloadEvent.emit(null);
+                  setTimeout(() => {
+                    this.reloadEvent.emit(null);
+                  }, 300);
                 } else {
                   dialogRef = this.dialog.open(ChooseRoleDialogComponent, {
                     data: {
@@ -189,7 +191,9 @@ export class SignupDialogComponent implements OnInit {
                           dialogRef.close();
                           this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true);
                           this.router.navigate(['/profile/settings']);
-                          this.reloadEvent.emit(null);
+                          setTimeout(() => {
+                            this.reloadEvent.emit(null);
+                          }, 300);
                         },
                         (err) => {
                           dialogRef.componentInstance.error = err.message;

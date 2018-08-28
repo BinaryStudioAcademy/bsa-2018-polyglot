@@ -1,31 +1,20 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    OnDestroy,
-    ViewChild,
-    Output,
-    EventEmitter
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
-import { ProjectService } from "../../../services/project.service";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Translation, Language } from "../../../models";
+import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
 import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
-import { environment } from "../../../../environments/environment";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
 import { TranslationState } from "../../../models/translation-state";
 import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
-import { TabGlossaryComponent } from "./tab-glossary/tab-glossary.component";
-import { Location as location } from "@angular/common";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
+import { ProjectService } from "../../../services/project.service";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -69,11 +58,9 @@ export class KeyDetailsComponent implements OnInit {
         public dialog: MatDialog,
         private snotifyService: SnotifyService,
         private appState: AppStateService,
-        private router: Router,
         private signalrService: SignalrService,
-        private projectService: ProjectService,
         private service: TranslationService,
-        private _location: location
+        private projectService: ProjectService
     ) {}
 
     ngOnInit() {
@@ -82,12 +69,15 @@ export class KeyDetailsComponent implements OnInit {
 
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
+            this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
                 this.signalrService.createConnection(
-                    `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`,
+                    `${SignalrGroups[SignalrGroups.complexString]}${
+                        this.keyDetails.id
+                    }`,
                     "workspaceHub"
                 );
                 this.subscribeProjectChanges();
@@ -102,9 +92,9 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        if (this.dataIsLoaded) {
-            this.signalrService.closeConnection(`${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`);
-        }
+        this.signalrService.closeConnection(
+            `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
+        );
     }
 
     ngOnChanges() {
@@ -135,10 +125,101 @@ export class KeyDetailsComponent implements OnInit {
                 this.comments = comments;
             }
         );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
+            (languageId: number) => {
+                if (
+                    languageId &&
+                    this.keyDetails &&
+                    this.keyDetails.translations
+                ) {
+                    let langName: string;
+                    const currentState = this.appState.getWorkspaceState;
+                    const deletedLanguage = currentState.languages.filter(
+                        l => l.id === languageId
+                    );
+                    if (!deletedLanguage || deletedLanguage.length < 1) {
+                        return;
+                    }
+
+                    langName = deletedLanguage[0].name;
+                    this.appState.setWorkspaceState = {
+                        projectId: currentState.projectId,
+                        languages: currentState.languages.filter(
+                            l => l.id !== languageId
+                        )
+                    };
+                    this.languages = this.appState.getWorkspaceState.languages;
+                    this.keyDetails.translations = this.keyDetails.translations.filter(
+                        t => t.languageId !== languageId
+                    );
+                    this.snotifyService.info(
+                        `${langName} was deleted`,
+                        "Language deleted"
+                    );
+                }
+            }
+        );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
+            (languagesIds: number[]) => {
+                this.isLoad = true;
+                this.projectService
+                    .getProjectLanguages(this.projectId)
+                    .subscribe(
+                        languages => {
+                            const currentState = this.appState
+                                .getWorkspaceState;
+                            const currentLanguages = currentState.languages;
+                            const newLanguages = languages.filter(function(
+                                language
+                            ) {
+                                return (
+                                    currentLanguages.filter(
+                                        l => l.id === language.id
+                                    ).length < 1 &&
+                                    languagesIds.filter(l => l === language.id)
+                                        .length > 0
+                                );
+                            });
+                            currentState.languages = languages;
+                            this.languages = languages;
+                            this.appState.setWorkspaceState = currentState;
+                            for (var i = 0; i < newLanguages.length; i++) {
+                                this.expandedArray.push({
+                                    isOpened: false,
+                                    oldValue: ""
+                                });
+                            }
+                            Array.prototype.push.apply(
+                                this.keyDetails.translations,
+                                newLanguages.map(element => {
+                                    return {
+                                        languageName: element.name,
+                                        languageId: element.id,
+                                        languageCode: element.code,
+                                        ...this.getProp(element.id)
+                                    };
+                                })
+                            );
+                            this.isLoad = false;
+                        },
+                        err => {
+                            this.snotifyService.error(
+                                "Languages update failed",
+                                "Error"
+                            );
+                            this.isLoad = false;
+                        }
+                    );
+            }
+        );
     }
 
     setStep(index: number) {
-        if (!index) return;
+        if (index === undefined) {
+            return;
+        }
         this.expandedArray[index] = {
             isOpened: true,
             oldValue: this.keyDetails.translations[index].translationValue
@@ -152,7 +233,10 @@ export class KeyDetailsComponent implements OnInit {
             index
         ].translationValue;
 
-        this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
+        this.history.showHistory(
+            this.keyId,
+            this.keyDetails.translations[index].id
+        );
     }
 
     setNewValueTranslation(translation: any) {
@@ -172,7 +256,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     getLanguages() {
-        if(!this.appState.getWorkspaceState || !this.appState.getWorkspaceState.languages)
+        if (
+            !this.appState.getWorkspaceState ||
+            !this.appState.getWorkspaceState.languages
+        )
             return;
 
         this.languages = this.appState.getWorkspaceState.languages;
@@ -220,7 +307,10 @@ export class KeyDetailsComponent implements OnInit {
                                 isOpened: false,
                                 oldValue: ""
                             };
-                            this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
+                            this.history.showHistory(
+                                this.keyId,
+                                this.keyDetails.translations[index].id
+                            );
                         },
                         err => {
                             this.snotifyService.error(err);
@@ -236,7 +326,10 @@ export class KeyDetailsComponent implements OnInit {
                                 isOpened: false,
                                 oldValue: ""
                             };
-                            this.history.showHistory(this.keyId, this.keyDetails.translations[index].id);
+                            this.history.showHistory(
+                                this.keyId,
+                                this.keyDetails.translations[index].id
+                            );
                         },
                         err => {
                             console.log("err", err);
@@ -320,53 +413,3 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 }
-
-// this.signalrService.connection.on(
-//   "addedFirstTranslation",
-//   (translation: any) => {
-//     debugger
-//     const lang = this.languages.filter(el => el.id === translation.languageId)[0];
-//     this.keyDetails.translations.filter(el => el.languageId === translation.languageId)[0]
-//       = {
-//         languageName: lang.name,
-//         languageId: lang.id,
-//         ...translation
-//       };
-//     // получить строку с сервера, вывести уведомление
-//     this.snotifyService.info("String translated", "Translated");
-//   }
-// );
-// this.connection.on("stringDeleted", (deletedStringId: number) => {
-
-//     // ================> проверить id если та строка
-//     // ================> на которой мы сейачас находимся то перенаправить на воркспейс
-//     if (deletedStringId === this.keyId) {
-//         this.snotifyService.info(
-//             `This string(id:${deletedStringId}) is deleted!`,
-//             "String deleted"
-//         );
-//         // ===============>
-//     }
-// });
-
-// this.connection.on(
-//     "stringTranslated",
-//     (complexStringId: number, languageId: number) => {
-//         // получить строку с сервера, вывести уведомление
-//         this.snotifyService.info("String translated", "Translated");
-//     }
-// );
-
-// this.connection.on("languageAdded", (languagesIds: Array<number>) => {
-//     // обновить строку
-//     console.log(languagesIds);
-//     this.snotifyService.info(languagesIds.join(", "), "Language added");
-// });
-
-// this.connection.on("languageDeleted", (languageId: number) => {
-//     // обновить строку
-//     this.snotifyService.info(
-//         `lang with id =${languageId} removed`,
-//         "Language removed"
-//     );
-// });

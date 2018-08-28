@@ -3,6 +3,7 @@ import { HttpService, RequestMethod } from './http.service';
 import { Observable } from 'rxjs';
 import { UserProfile, Rating, Team } from '../models';
 import { AppStateService } from './app-state.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class UserService {
 
   api: string;
   private endpoint: string = "userprofiles";
-  constructor(private dataService: HttpService, private appState: AppStateService) {
+  constructor(private dataService: HttpService, private appState: AppStateService,
+              private router: Router) {
     this.api = "userprofiles";
    }
 
@@ -94,5 +96,14 @@ export class UserService {
 
   delete(id: number) : Observable<UserProfile>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
+  }
+
+  redirectById(id: number){
+    if(this.getCurrentUser().id == id){
+      this.router.navigate(['/profile']);
+    }
+    else{
+    this.router.navigate(['/user', id]);
+    }
   }
 }
