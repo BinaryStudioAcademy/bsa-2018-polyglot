@@ -59,8 +59,8 @@ export class LanguagesComponent implements OnInit {
                     this.IsLoad = false;
                 }
             );
-        this.projectService.getById(this.projectId).subscribe((proj)=>{ 
-            this.mainLang = proj.mainLanguage
+        this.projectService.getById(this.projectId).subscribe(proj => {
+            this.mainLang = proj.mainLanguage;
         });
     }
 
@@ -168,15 +168,15 @@ export class LanguagesComponent implements OnInit {
                 SignalrSubscribeActions.languageTranslationCommitted
             ],
             (languageId: number) => {
-
                 this.IsLoading[languageId] = true;
 
                 this.projectService
                     .getProjectLanguageStatistic(this.projectId, languageId)
                     .subscribe(
                         (langStatistic: LanguageStatistic) => {
-                            let langsTemp = this.langs
-                            .filter(l => l.id !== languageId);
+                            let langsTemp = this.langs.filter(
+                                l => l.id !== languageId
+                            );
                             langsTemp.push(langStatistic);
                             this.langs = langsTemp;
                             this.langs.sort(this.compareProgress);
@@ -202,14 +202,18 @@ export class LanguagesComponent implements OnInit {
 
         this.langService.getAll().subscribe(langs => {
             let langsToSelect = langs.filter(function(language) {
-                let l = thisLangs.find(t => t.id === language.id);
-                if (l) return (language.id !== l.id && language.id != this.mainLang.id);
-                return true;
+                if (
+                    thisLangs.find(t => t.id === language.id)
+                ) {
+                    return false;
+                } else {
+                    return true;
+                }
             });
 
             langsToSelect = langsToSelect.filter(lang => {
                 return lang.id !== this.mainLang.id
-
+            
             });
 
             this.IsLangLoad = false;
