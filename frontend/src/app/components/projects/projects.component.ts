@@ -35,7 +35,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     IsLoad: boolean = true;
     OnPage: boolean;
 
-    manager: UserProfile = this.userService.getCurrentUser();
     ngOnInit() {
         this.OnPage = true;
 
@@ -50,6 +49,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
 
         this.projectService.getAll().subscribe(pr => {
+            debugger;
             this.cards = pr;
             if (this.cards.length === 0 && this.OnPage === true && this.isCurrentUserManager()) {
                 setTimeout(() => this.openDialog());

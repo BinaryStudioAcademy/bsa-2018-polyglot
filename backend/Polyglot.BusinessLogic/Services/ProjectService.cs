@@ -107,16 +107,18 @@ namespace Polyglot.BusinessLogic.Services
 
                 var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
                 await uow.SaveAsync();
-                await stringsProvider.CreateAsync(
-                    new DataAccess.MongoModels.ComplexString()
-                    {
-                        Id = savedEntity.Id,
-                        Key = i.Key,
-                        OriginalValue = i.Value,
-                        ProjectId = id,
-                        Translations = new List<Translation>(),
-                        Comments = new List<Comment>(),
-                        Tags = new List<string>()
+				await stringsProvider.CreateAsync(
+					new DataAccess.MongoModels.ComplexString()
+					{
+						Id = savedEntity.Id,
+						Key = i.Key,
+						OriginalValue = i.Value,
+						ProjectId = id,
+						Translations = new List<Translation>(),
+						Comments = new List<Comment>(),
+						Tags = new List<string>(),
+						CreatedOn = DateTime.Now,
+						CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
                     });
             }
 
