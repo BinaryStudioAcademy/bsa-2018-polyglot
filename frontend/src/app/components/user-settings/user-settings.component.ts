@@ -6,6 +6,7 @@ import { CropperComponent } from '../../dialogs/cropper-dialog/cropper.component
 import { MatDialog } from '@angular/material';
 import { UserService } from '../../services/user.service';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -19,12 +20,14 @@ export class UserSettingsComponent implements OnInit {
   profileForm: FormGroup;
   minDate = new Date(1903, 2, 1);
   maxDate = new Date();
- 
+
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private  dialog: MatDialog,
     private userService: UserService,
-    private snotifyService: SnotifyService
+    private snotifyService: SnotifyService,
+    private appStateService: AppStateService,
+    private router: Router
   ) {
     //GET Id here
     //console.log(router.snapshot.params.id);
@@ -36,7 +39,6 @@ export class UserSettingsComponent implements OnInit {
       var arrayOfStrings = this.manager.fullName.split(' ');
       this.manager.firstName = arrayOfStrings[0];
       this.manager.lastName = arrayOfStrings[1];
-     
     }
     this.createProjectForm();
   }
@@ -55,6 +57,7 @@ export class UserSettingsComponent implements OnInit {
                         this.snotifyService.success("Photo updated.", "Success!");
                         }, 100);
                         this.manager = d;
+                        this.appStateService.currentDatabaseUser = d;
                     },
                     err => {
                         this.snotifyService.error("Photo failed to update!", "Error!");
@@ -66,9 +69,12 @@ export class UserSettingsComponent implements OnInit {
   }
 
   createProjectForm(): void {
-    
+
     this.profileForm = this.fb.group({
-      firstName:[this.manager.firstName, [Validators.required]], 
+      id:[this.manager.id],
+      uid:[this.manager.uid],
+      userRole:[this.manager.userRole],
+      firstName:[this.manager.firstName, [Validators.required]],
       lastName: [this.manager.lastName, [Validators.required]],
       birthDate : [this.manager.birthDate],
       country : [this.manager.country],
@@ -84,9 +90,18 @@ export class UserSettingsComponent implements OnInit {
 
   saveChanges(userProfile : UserProfile) {
     console.log(userProfile);
+    userProfile.fullName = `${userProfile.firstName} ${userProfile.lastName}`;
+    this.userService.update(userProfile.id, userProfile).subscribe(
+        (d) => {
+            this.appStateService.currentDatabaseUser = d;
+            this.manager = d;
+            this.snotifyService.success("Saved changes");
+            this.router.navigate(['/']);
+        }
+    );
   }
 
-  
+
   get firstName() {
     return this.profileForm.get('firstName');
   }
