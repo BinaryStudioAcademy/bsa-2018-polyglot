@@ -98,7 +98,7 @@ import { MachineTranslationMenuComponent } from './dialogs/machine-translation-m
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
-
+import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 
 
 
@@ -170,7 +170,9 @@ import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
-    UserProfileComponent, TabGlossaryComponent
+    UserProfileComponent, 
+    TabGlossaryComponent,
+    AssignGlossariesComponent
   ],
   imports: [
     BrowserModule,

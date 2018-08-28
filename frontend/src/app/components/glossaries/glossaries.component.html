@@ -15,7 +15,7 @@
           <a mat-button routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]"><h3>{{glossary.name}}</h3></a>
       </div>
       <div class="row-info">                
-        <span class="row-description" >{{glossary.originLanguage}}</span>     
+        <span class="row-description" >{{glossary.originLanguage.name}}</span>     
       </div>
       <div class="row-buttons">
         <button mat-button color="primary"  (click)='onEdit(glossary)'> Edit Glossary</button>        

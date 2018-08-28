@@ -67,7 +67,7 @@ export class HttpService {
                 request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, httpOptions);
                 break;
         }
-
+        
         return request.pipe(
             catchError((res: HttpErrorResponse) => this.handleError(res))
         );

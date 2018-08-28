@@ -116,8 +116,8 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/glossaries/' + glossaryId, undefined, undefined);
   }
 
-  getetAssignedGlossaries(projectId: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/glossaries', undefined, undefined);
+  getAssignedGlossaries(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/glossaries', undefined, undefined);
   }
   
   getProjectStringsWithPagination(projectId: number, itemsOnPage: number, page: number) : Observable<any> {

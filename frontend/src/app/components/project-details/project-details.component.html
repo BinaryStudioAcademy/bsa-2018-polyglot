@@ -27,6 +27,7 @@
 			</ng-template>
 		</mat-tab>
 
+
 		<mat-tab label="Reports">
 			<ng-template matTabContent>
 				<app-reports [projectId]="project.id"></app-reports>
@@ -43,6 +44,10 @@
 			<ng-template matTabContent>
 				<app-languages [projectId]="project.id"></app-languages>
 			</ng-template>
+		</mat-tab>
+
+		<mat-tab label="Glossaries">
+			<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
 		</mat-tab>
 
 		<mat-tab label="Api">
