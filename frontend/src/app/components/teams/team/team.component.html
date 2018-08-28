@@ -36,7 +36,7 @@
   </ng-container>
   <ng-container matColumnDef="fullName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-    <td mat-cell *matCellDef="let element"> <a [routerLink]="['/user', element.userId]">{{element.fullName}}</a> </td>
+    <td mat-cell *matCellDef="let element"> <a (click)="userService.redirectById(element.userId)" style="cursor: pointer;">{{element.fullName}}</a> </td>
   </ng-container>
   <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>

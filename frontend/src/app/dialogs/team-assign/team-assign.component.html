@@ -17,11 +17,11 @@
           <mat-checkbox  class="team-card-item" *ngFor="let t of teams" (change)="change($event, t)">
               <mat-card class="example-card">
                   <mat-card-header>            
-                      <img mat-card-avatar class="manager-img" src="https://pbs.twimg.com/profile_images/988775660163252226/XpgonN0X_400x400.jpg">
+                      <img (click)="redirectById(t.createdBy.id)" mat-card-avatar class="manager-img" src="{{t.createdBy.avatarUrl}}">
                     
                       <div class="title">
-                          <mat-card-title class="card-title">Team {{t.id}}</mat-card-title>
-                          <mat-card-subtitle class="card-subtitle">Bill Gates</mat-card-subtitle>
+                          <mat-card-title  class="card-title">Team {{t.name}}</mat-card-title>
+                          <mat-card-subtitle (click)="redirectById(t.createdBy.id)" class="card-subtitle">{{t.createdBy.fullName}}</mat-card-subtitle>
                       </div>
                       <div class="action-btn-container">
                             <button mat-icon-button [mat-dialog-close]="true" routerLink="/dashboard/teams/{{t.id}}">
@@ -33,7 +33,7 @@
                   
                   <div class="card-content">
                         <div mat-card-image class="img-container">
-                          <img height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
+                          <img (click)="redirectById(p.id)" height="60" width="60" *ngFor="let p of t.persons" src="{{getAvatarUrl(p)}}">
                         </div>
                       </div>     
               </mat-card> 
