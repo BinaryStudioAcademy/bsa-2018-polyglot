@@ -49,8 +49,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
 
         this.projectService.getAll().subscribe(pr => {
-            debugger;
             this.cards = pr;
+            for (let i = 0; i < this.cards.length; i++)
+            {
+                this.projectService.getProjectTranslationStatistics(this.cards[i].id).subscribe(projectStatistics => {
+                    this.cards[i].projectStatistics = projectStatistics;
+                })
+            }
             if (this.cards.length === 0 && this.OnPage === true && this.isCurrentUserManager()) {
                 setTimeout(() => this.openDialog());
             }
