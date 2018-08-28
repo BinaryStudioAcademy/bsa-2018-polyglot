@@ -10,6 +10,7 @@ import { Team } from '../../../models';
 import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { Router } from '@angular/router';
+import { UserService } from '../../../services/user.service';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class TeamComponent implements OnInit {
     private router: Router,
     private searchService: SearchService,
     private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private userService: UserService) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.getTranslators();
     

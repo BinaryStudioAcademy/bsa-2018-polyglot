@@ -11,8 +11,8 @@
 <div *ngFor="let com of comments" class="comments-container">
     <mat-card  class="comment-card">
         <div class="author-info">
-            <a [routerLink]="['/user', com?.user?.id]"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
-            <strong class="comment-author" [routerLink]="['/user', com?.user?.id]">{{com?.user?.fullName}}</strong>
+            <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
+            <strong class="comment-author" (click)="userService.redirectById(com.user.id)">{{com?.user?.fullName}}</strong>
         </div>
         <div class ="text">{{com?.text}}</div>
         <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
