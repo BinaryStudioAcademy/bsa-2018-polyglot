@@ -78,7 +78,6 @@ export class LanguagesComponent implements OnInit {
                     l => l.id === languageId
                 );
                 if (removedLanguage && removedLanguage.length > 0) {
-                    debugger;
                     this.snotifyService.info(
                         `${removedLanguage[0].name} removed`,
                         "Language removed"
@@ -349,7 +348,6 @@ export class LanguagesComponent implements OnInit {
     }
 
     deleteLanguage(languageId: number) {
-        debugger;
         this.IsLoading[languageId] = true;
         this.projectService
             .deleteProjectLanguage(this.projectId, languageId)

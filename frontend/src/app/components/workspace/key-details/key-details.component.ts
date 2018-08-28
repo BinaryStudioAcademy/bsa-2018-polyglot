@@ -92,14 +92,12 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        debugger;
         this.signalrService.closeConnection(
             `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
         );
     }
 
     ngOnChanges() {
-        debugger;
         if (this.keyDetails && this.keyDetails.translations) {
             this.IsPagenationNeeded =
                 this.keyDetails.translations.length > this.pageSize;
@@ -130,7 +128,6 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (languageId: number) => {
-                debugger;
                 if (
                     languageId &&
                     this.keyDetails &&
@@ -185,7 +182,6 @@ export class KeyDetailsComponent implements OnInit {
                                         .length > 0
                                 );
                             });
-                            debugger;
                             currentState.languages = languages;
                             this.languages = languages;
                             this.appState.setWorkspaceState = currentState;

@@ -206,7 +206,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             SignalrSubscribeActions.complexStringRemoved
             ],
             (deletedStringId: number) => {
-                debugger;
                 this.receiveId(deletedStringId);
             }
         );
