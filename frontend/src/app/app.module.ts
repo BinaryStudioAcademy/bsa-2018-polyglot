@@ -167,7 +167,8 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
     TabReviewComponent,
     DownloadFileComponent,
     StarRatingComponent,  
-    UserProfileComponent, TabGlossaryComponent
+    UserProfileComponent,
+    TabGlossaryComponent
   ],
   imports: [
     BrowserModule,

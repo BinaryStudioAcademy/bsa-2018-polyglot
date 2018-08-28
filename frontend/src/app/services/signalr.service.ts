@@ -23,7 +23,6 @@ export class SignalrService {
                 hubUrl
             ).then(data => {
                 console.log(`SignalR hub ${hubUrl} connected.`);
-                debugger;
                 if (this.connection.connection.connectionState === 1) {
                     console.log(`Connecting to group ${groupName}`);
                     this.connection.send("joinProjectGroup", groupName);

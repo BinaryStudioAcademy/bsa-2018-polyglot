@@ -15,6 +15,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
+import { IString } from "../../models/string";
 
 @Component({
     selector: "app-workspace",
@@ -33,6 +34,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private currentPage = 0;
     private elementsOnPage = 7;
     public isLoad: boolean;
+
+    public projectTags : any[] = [] ;
 
     private routeSub: Subscription;
 
@@ -72,7 +75,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             //making api call using service service.get(params.projectId); ..
             this.dataProvider.getById(params.projectId).subscribe(proj => {
                 this.project = proj;
-
                 this.projectService.getProjectLanguages(this.project.id).subscribe(
                     (d: Language[]) => {
                         const workspaceState = {
@@ -117,6 +119,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         }
                         
                     }
+                    console.log(this.keys);
                 });
 
             this.currentPage++;
@@ -264,6 +267,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
         }
     }
+
 
     // subscribeProjectChanges() {
 
