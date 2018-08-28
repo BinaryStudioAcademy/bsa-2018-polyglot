@@ -82,6 +82,7 @@ export class KeyDetailsComponent implements OnInit {
 
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
+            this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
