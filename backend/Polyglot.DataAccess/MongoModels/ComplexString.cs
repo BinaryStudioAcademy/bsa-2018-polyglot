@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using Nest;
+using Polyglot.DataAccess.Elasticsearch;
+using Polyglot.DataAccess.ElasticsearchModels;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoModels
 {
-    public class ComplexString : Entity
+    [ElasticsearchType(Name = "attributed_project")]
+    public class ComplexString : Entity, ISearcheable<ComplexString>
     {
 		public string Key { get; set; }
 		public int ProjectId { get; set; }
@@ -19,6 +23,15 @@ namespace Polyglot.DataAccess.MongoModels
         public ComplexString()
         {
 
+        }
+
+        public ComplexString GetIndexObject()
+        {
+            return new ComplexString
+            {
+                Id = Id,
+                LanguageId = LanguageId
+            };
         }
     }
 }

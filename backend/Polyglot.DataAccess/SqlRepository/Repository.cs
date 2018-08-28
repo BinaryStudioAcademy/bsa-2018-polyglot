@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity, new()
     {
         protected DbContext context;
         protected DbSet<TEntity> DbSet;
@@ -23,8 +24,24 @@ namespace Polyglot.DataAccess.SqlRepository
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)
-         {
-            return (await DbSet.AddAsync(entity)).Entity;
+        {
+            var result = (await DbSet.AddAsync(entity)).Entity;
+            await ElasticsearchExtensions.UpdateSearchIndex(result, CrudAction.Create);
+            //if (result is ISearcheable)
+            //{
+            //    var elastic = ElasticsearchExtensions.GetElasticClient();
+            //    var ent = result as Project;
+            //    var test = new Project
+            //    {
+            //        Id = ent.Id,
+            //        CreatedOn = ent.CreatedOn,
+            //        Description = ent.Description,
+            //        Name = ent.Name
+            //    };
+            //    await elastic.IndexDocumentAsync(test);
+            //}
+
+            return result;
         }
 
         public async Task<TEntity> DeleteAsync(int id)
