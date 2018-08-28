@@ -24,12 +24,14 @@
             <mat-card class="teammate-card">
               <div class="temmate-header">
                 <div class="teammate-header-image">
-                  <a [routerLink]="['/user', t.userId]">
+                  <a (click)="userService.redirectById(t.userId)">
                     <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
                   </a>
                 </div>
                 <div class="teammate-name">
-                  <a style="text-decoration: none; color:black" [routerLink]="['/user', t.userId]">{{t.fullName}}</a>
+                  <a style="text-decoration: none; color:black; cursor: pointer;" (click)="userService.redirectById(t.userId)">
+                    {{t.fullName}}
+                  </a>
                 </div>
                 <div class="rating">
                   <mat-icon aria-label="icon-button">star_rate</mat-icon>
@@ -79,12 +81,12 @@
           <mat-card class="teammate-card">
             <div class="temmate-header">
               <div class="teammate-header-image">
-                <a [routerLink]="['/user', t.userId]">
+                <a (click)="userService.redirectById(t.userId)">
                   <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
                 </a>
               </div>
               <div class="teammate-name">
-                <a style="text-decoration: none; color:black" [routerLink]="['/user', t.userId]">{{t.fullName}}</a>
+                <a style="text-decoration: none; color:black; cursor: pointer" (click)="userService.redirectById(t.userId)">{{t.fullName}}</a>
               </div>
               <div class="rating">
                 <mat-icon aria-label="icon-button">star_rate</mat-icon>
