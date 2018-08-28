@@ -89,7 +89,6 @@ export class UserSettingsComponent implements OnInit {
   }
 
   saveChanges(userProfile : UserProfile) {
-    console.log(userProfile);
     userProfile.fullName = `${userProfile.firstName} ${userProfile.lastName}`;
     this.userService.update(userProfile.id, userProfile).subscribe(
         (d) => {
