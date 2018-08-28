@@ -130,16 +130,19 @@ export class KeyDetailsComponent implements OnInit {
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (languageId: number) => {
                 debugger;
-                if (languageId && this.keyDetails && this.keyDetails.translations) {
+                if (
+                    languageId &&
+                    this.keyDetails &&
+                    this.keyDetails.translations
+                ) {
                     let langName: string;
                     const currentState = this.appState.getWorkspaceState;
                     const deletedLanguage = currentState.languages.filter(
                         l => l.id === languageId
                     );
-                    if(!deletedLanguage || deletedLanguage.length < 1)
-                        {
-                            return;
-                        }
+                    if (!deletedLanguage || deletedLanguage.length < 1) {
+                        return;
+                    }
 
                     langName = deletedLanguage[0].name;
                     this.appState.setWorkspaceState = {
@@ -148,6 +151,7 @@ export class KeyDetailsComponent implements OnInit {
                             l => l.id !== languageId
                         )
                     };
+                    this.languages = this.appState.getWorkspaceState.languages;
                     this.keyDetails.translations = this.keyDetails.translations.filter(
                         t => t.languageId !== languageId
                     );
@@ -162,15 +166,55 @@ export class KeyDetailsComponent implements OnInit {
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (languagesIds: number[]) => {
                 this.isLoad = true;
-                debugger;
-
                 this.projectService
                     .getProjectLanguages(this.projectId)
-                    .subscribe(languages => {
-                        const currentState = this.appState.getWorkspaceState;
-                        currentState.languages = languages;
-                        this.appState.setWorkspaceState = currentState;
-                    });
+                    .subscribe(
+                        languages => {
+                            const currentState = this.appState
+                                .getWorkspaceState;
+                            const currentLanguages = currentState.languages;
+                            const newLanguages = languages.filter(function(
+                                language
+                            ) {
+                                return (
+                                    currentLanguages.filter(
+                                        l => l.id === language.id
+                                    ).length < 1 &&
+                                    languagesIds.filter(l => l === language.id)
+                                        .length > 0
+                                );
+                            });
+                            debugger;
+                            currentState.languages = languages;
+                            this.languages = languages;
+                            this.appState.setWorkspaceState = currentState;
+                            for (var i = 0; i < newLanguages.length; i++) {
+                                this.expandedArray.push({
+                                    isOpened: false,
+                                    oldValue: ""
+                                });
+                            }
+                            Array.prototype.push.apply(
+                                this.keyDetails.translations,
+                                newLanguages.map(element => {
+                                    return {
+                                        languageName: element.name,
+                                        languageId: element.id,
+                                        languageCode: element.code,
+                                        ...this.getProp(element.id)
+                                    };
+                                })
+                            );
+                            this.isLoad = false;
+                        },
+                        err => {
+                            this.snotifyService.error(
+                                "Languages update failed",
+                                "Error"
+                            );
+                            this.isLoad = false;
+                        }
+                    );
             }
         );
     }
@@ -178,7 +222,7 @@ export class KeyDetailsComponent implements OnInit {
     setStep(index: number) {
         if (index === undefined) {
             return;
-        } 
+        }
         this.expandedArray[index] = {
             isOpened: true,
             oldValue: this.keyDetails.translations[index].translationValue
