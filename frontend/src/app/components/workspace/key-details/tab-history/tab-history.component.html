@@ -2,7 +2,8 @@
   <div class="story" *ngFor="let story of history">
     <mat-card class="story-card">
       <div class="head">
-        <img src="{{story.avatarUrl}}" class="story-image">
+        <img *ngIf="story.avatarUrl" src="{{story.avatarUrl}}" class="story-image">
+        <img *ngIf="!story.avatarUrl" src="/assets/images/default-avatar.jpg" class="story-image">
         <h4 style="margin-left: 10px">{{story.userName}}</h4>
       </div>
       <p>{{story.action}} <i style="color: brown; font-size: 15px;">"{{story.from}}"</i>  to <i style="color: green; font-size: 15px;">"{{story.to}}"</i></p>
