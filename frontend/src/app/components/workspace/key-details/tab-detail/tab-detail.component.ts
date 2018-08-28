@@ -55,6 +55,8 @@ export class TabDetailComponent implements OnInit {
         if(this.userService.getCurrentUser().id == id){
           this.router.navigate(['/profile']);
         }
-        this.router.navigate(['/user', id]);
+        else {
+            this.router.navigate(['/user', id]);
+        }
       }
 }
