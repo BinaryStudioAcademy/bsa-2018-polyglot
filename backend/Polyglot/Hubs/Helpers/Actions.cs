@@ -8,6 +8,11 @@
         complexStringRemoved,
         languagesAdded,
         languageRemoved,
-        languageTranslationCommitted
+        languageTranslationCommitted,
+        chatMessageReceived,
+        chatPing,
+        messageRead,
+        personConnected,
+        personDisconnected
     }
 }
