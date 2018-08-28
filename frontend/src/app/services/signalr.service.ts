@@ -9,6 +9,8 @@ import { HubConnection } from "@aspnet/signalr";
 export class SignalrService {
     connection: any;
 
+    connectionClosedByUser: boolean = false;
+
     constructor() {}
 
     public createConnection(groupName: string, hubUrl: string) {
@@ -21,8 +23,7 @@ export class SignalrService {
                 hubUrl
             ).then(data => {
                 console.log(`SignalR hub ${hubUrl} connected.`);
-                debugger;
-                if (this.connection.connection.connectionState === 1) {
+                if (this.connection.connection.connectionState === 1 && !this.connectionClosedByUser) {
                     console.log(`Connecting to group ${groupName}`);
                     this.connection.send("joinGroup", groupName);
                 }
@@ -36,15 +37,15 @@ export class SignalrService {
     }
 
     public closeConnection(groupName: string) {
+        this.connectionClosedByUser = true;
         if (
             this.connection &&
             this.connection.connection.connectionState === 1
         ) {
             console.log(`Disconnecting from group ${groupName}`);
             this.connection.send("leaveGroup", groupName);
-            this.connection.onclose(err => {});
-          //  console.log(`Stoping SignalR connection`);
-          //  this.connection.stop();
+         //   console.log(`Stoping SignalR connection`);
+         //   this.connection.stop();
         }
     }
 
@@ -59,7 +60,10 @@ export class SignalrService {
 
             this.connection.onclose(err => {
                 console.log(`SignalR hub ${hubUrl} disconnected.`);
-                this.createConnection(groupName, hubUrl);
+                if(this.connectionClosedByUser)
+                {
+                    this.createConnection(groupName, hubUrl);
+                }
             });
         }
         console.log(`SignalR hub ${hubUrl} reconnection started...`);
