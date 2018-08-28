@@ -25,6 +25,7 @@ import { ProjectDetailsComponent } from '../../components/project-details/projec
 import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
 import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
+import { ChatComponent } from '../../components/chat/chat.component';
 
 
   
@@ -64,6 +65,7 @@ const routes: Routes = [
     ]
   },
   { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
+  { path: 'chat', component: ChatComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
