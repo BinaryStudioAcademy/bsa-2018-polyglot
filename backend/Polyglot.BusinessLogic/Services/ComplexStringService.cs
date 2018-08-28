@@ -6,6 +6,7 @@ using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -141,6 +142,8 @@ namespace Polyglot.BusinessLogic.Services
             var savedEntity = await _uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
             await _uow.SaveAsync();
             entity.Id = savedEntity.Id;
+            entity.CreatedOn = DateTime.Now;
+            entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
             var target = await _repository
                 .CreateAsync(_mapper.Map<ComplexString>(entity));
             if (target != null)
