@@ -146,5 +146,11 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
+        [HttpGet("{teamId}/user/{userId}/right/{rightDefinition}")]
+        public async Task<bool> CheckIfUserCan(int teamId, int userId, RightDefinition rightDefinition)
+        {
+            return await rightService.CheckIfUserCan(userId, teamId, rightDefinition);
+        }
     }
 }

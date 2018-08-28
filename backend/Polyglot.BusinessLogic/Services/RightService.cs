@@ -57,5 +57,22 @@ namespace Polyglot.BusinessLogic.Services
 
             return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
         }
+
+        public async Task<bool> CheckIfUserCan(int userId, int teamId, RightDefinition definition)
+        {
+            var team = await uow.GetRepository<Team>().GetAsync(teamId);
+            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+
+            var right = (await uow.GetRepository<Right>().GetAllAsync())
+                    .FirstOrDefault(r => r.Definition == definition);
+
+            var translatorRight = translator.TranslatorRights
+                .FirstOrDefault(tr => tr.RightId == right.Id && tr.TeamTranslatorId == translator.Id);
+            if(translatorRight != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
