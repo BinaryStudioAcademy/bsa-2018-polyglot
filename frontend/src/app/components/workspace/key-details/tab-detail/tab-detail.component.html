@@ -1,9 +1,8 @@
 <div class="content" *ngIf="keyDetails">
     <div class="creater-wrapper">
-        <img src="{{user.avatarUrl}}" alt="ava" class="avatar">
+        <img src="{{user.avatarUrl}}" alt="ava" class="avatar" (click) = "redirectById(keyDetails.createdBy)">
         <div class="key-user-data">
-            <div>{{user.fullName}}</div>
-            <!-- [routerLink]="['/user', keyDetails.createdBy]" -->
+            <div (click) = "redirectById(keyDetails.createdBy)" class="key-user-name">{{user.fullName}}</div>
             <div class="key-created-on">Created on: {{keyDetails.createdOn | date:'medium'}}</div>
         </div>
     </div>

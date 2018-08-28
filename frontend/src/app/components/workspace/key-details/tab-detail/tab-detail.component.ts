@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { IString } from '../../../../models/string';
 import { UserService } from '../../../../services/user.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserProfile } from '../../../../models';
 
 @Component({
@@ -20,11 +20,12 @@ export class TabDetailComponent implements OnInit {
 
     constructor(public dialog: MatDialog,
         private userService: UserService,
-        private route: ActivatedRoute) { }
+        private activatedRouter: ActivatedRoute,
+        private router: Router) { }
 
     ngOnInit() {
         this.user = { fullName: '', avatarUrl: '' };
-        this.route.params.subscribe(
+        this.activatedRouter.params.subscribe(
             value => {
                 this.userService.getOne(this.keyDetails.createdBy).subscribe(
                     (user: UserProfile) => {
@@ -50,4 +51,10 @@ export class TabDetailComponent implements OnInit {
         }
     }
 
+    redirectById(id: number){
+        if(this.userService.getCurrentUser().id == id){
+          this.router.navigate(['/profile']);
+        }
+        this.router.navigate(['/user', id]);
+      }
 }
