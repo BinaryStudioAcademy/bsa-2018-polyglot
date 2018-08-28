@@ -25,7 +25,7 @@
 								</button>
 								<button mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
 									<mat-icon style="font-size: 22px">translate</mat-icon>
-								</button>	
+								</button>
 								<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
 									<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
 										<mat-form-field class="textarea-translation">
@@ -37,10 +37,10 @@
 										<button mat-raised-button color="primary">Suggest</button>
 									</div>
 								</mat-menu>
-							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">							  
+							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
 								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
-							</mat-expansion-panel-header>		  
+							</mat-expansion-panel-header>
 						   <div >
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
@@ -81,7 +81,7 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Detail" matTooltipPosition="above">details</mat-icon>
 			</ng-template>
-			<app-tab-detail [(keyDetails)]="keyDetails"></app-tab-detail>
+			<app-tab-detail [(keyDetails)]="keyDetails"  *ngIf="isLoad"></app-tab-detail>
 		</mat-tab>
 		<mat-tab label="History" >
 			<ng-template mat-tab-label>
@@ -101,7 +101,7 @@
 		<mat-tab label="O_Translation" >
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
-			</ng-template>			
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Glossary" >

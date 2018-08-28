@@ -1,10 +1,19 @@
 <div class="content" *ngIf="keyDetails">
-    <div *ngIf="keyDetails.pictureLink" class="img-container">
-        <img class="content-img" (click)="onImageClick(keyDetails)" mat-card-image src={{keyDetails.pictureLink}} alt="Photo of a project" onError="this.src='/assets/images/default.jpg';">
+    <div class="creater-wrapper">
+        <img src="{{user.avatarUrl}}" alt="ava" class="avatar">
+        <div class="key-user-data">
+            <div>{{user.fullName}}</div>
+            <!-- [routerLink]="['/user', keyDetails.createdBy]" -->
+            <div class="key-created-on">Created on: {{keyDetails.createdOn | date:'medium'}}</div>
+        </div>
     </div>
-  <h3>{{keyDetails.key}}</h3>
-  <h4 *ngIf="keyDetails.description != null && keyDetails.description != ''">Description:</h4>
-  <div>{{keyDetails.description}}</div>
-  <h4>Base:</h4>
-  <div>{{keyDetails.base}}</div>
+    <div *ngIf="keyDetails.pictureLink" class="img-container">
+        <img class="content-img" (click)="onImageClick(keyDetails)" mat-card-image src={{keyDetails.pictureLink}} alt="Photo of a project"
+            onError="this.src='/assets/images/default.jpg';">
+    </div>
+    <h3>{{keyDetails.key}}</h3>
+    <h4 *ngIf="keyDetails.description != null && keyDetails.description != ''">Description:</h4>
+    <div>{{keyDetails.description}}</div>
+    <h4>Base:</h4>
+    <div>{{keyDetails.base}}</div>
 </div>
