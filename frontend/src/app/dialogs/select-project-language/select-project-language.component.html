@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Available languages</h2>
+<h2 mat-dialog-title>Coose project languages:</h2>
 <mat-dialog-content>
     <ul>
         <li *ngFor="let l of langs">
@@ -11,7 +11,7 @@
         </li>
     </ul>
 </mat-dialog-content>
-  <mat-dialog-actions class="p-1 mt-2">
-      <button style="float: left" mat-raised-button color="primary" (click)="submit()" mat-button>Ok</button>
-      <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
+  <mat-dialog-actions class="p-1 mt-2 buttons">
+      <button  mat-raised-button color="primary" (click)="submit()" mat-button>Ok</button>
+      <button  mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
   </mat-dialog-actions>
