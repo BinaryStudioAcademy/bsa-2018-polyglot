@@ -97,7 +97,9 @@ import { StarRatingComponent } from './components/translatorProfile/star-rating/
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
+import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
+
 
 
 @NgModule({
@@ -228,7 +230,10 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
-    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    { 
+      provide: 'SnotifyToastConfig',
+      useValue: SnotifyGlobalConfig
+    },
     SnotifyService, GlossaryService],
 
   bootstrap: [AppComponent]
