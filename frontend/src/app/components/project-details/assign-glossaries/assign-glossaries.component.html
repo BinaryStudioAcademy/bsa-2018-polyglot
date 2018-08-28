@@ -1,0 +1,58 @@
+<h2 *ngIf="AssignedGlossaries.length != 0">Assigned Glossaries</h2>
+
+<table mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="originLanguage">
+    <th mat-header-cell *matHeaderCellDef>Language</th>
+    <td mat-cell *matCellDef="let element">{{element.originLanguage}}</td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="action_btn">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">
+      <a *ngIf="isAssigned(element)" mat-button color="warn" routerLinkActive="active" (click)='onAction(element)'><i class="fas fa-ban"></i> Remove</a>
+      <a *ngIf="!isAssigned(element)" mat-button color="success" routerLinkActive="active" (click)='onAction(element)'><i class="fas fa-plus"></i> Assign</a>
+    </td>
+
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+
+<h2>All Glossaries</h2>
+
+<table mat-table [dataSource]="allDataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="originLanguage">
+    <th mat-header-cell *matHeaderCellDef>Language</th>
+    <td mat-cell *matCellDef="let element">{{element.originLanguage}}</td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="action_btn">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">
+      <a *ngIf="isAssigned(element)" mat-button color="warn" routerLinkActive="active" (click)='onAction(element)'><i class="fas fa-ban"></i> Remove</a>
+      <a *ngIf="!isAssigned(element)" mat-button color="success" routerLinkActive="active" (click)='onAction(element)'><i class="fas fa-plus"></i> Assign</a>
+    </td>
+
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
