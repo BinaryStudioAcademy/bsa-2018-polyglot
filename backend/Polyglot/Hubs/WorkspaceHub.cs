@@ -9,12 +9,12 @@ namespace Polyglot.Hubs
 {
     public class WorkspaceHub : Microsoft.AspNetCore.SignalR.Hub
     {
-        public async Task JoinProjectGroup(string groupName)
+        public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        public async Task LeaveProjectGroup(string groupName)
+        public async Task LeaveGroup(string groupName)
         {
             try
             {
