@@ -1,7 +1,9 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.SqlRepository;
@@ -15,10 +17,13 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class RightService : CRUDService<Right, RightDTO>, IRightService
     {
-        public RightService(IUnitOfWork uow, IMapper mapper)
+        IUserService userService;
+        IProjectService projectService;
+        public RightService(IUnitOfWork uow, IMapper mapper, IUserService userService, IProjectService projectService)
             : base(uow, mapper)
         {
-
+            this.userService = userService;
+            this.projectService = projectService;
         }
 
         public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
@@ -73,6 +78,24 @@ namespace Polyglot.BusinessLogic.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
+        {
+            var userId = (await CurrentUser.GetCurrentUserProfile()).Id;
+            var projectTeams = (await uow.GetRepository<Project>().GetAsync(projectId)).Teams;
+            var teamTranslators = projectTeams.SelectMany(pt => pt.TeamTranslators).Where(tt => tt.TranslatorId == userId);
+            var translatorRights = teamTranslators.SelectMany(tt => tt.TranslatorRights);
+
+            var translatorRight = translatorRights.FirstOrDefault(r => r.Right.Definition == definition);
+
+            if(translatorRight == null)
+            {
+                return false;
+            }
+            return true;
+
+
         }
     }
 }

@@ -16,5 +16,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition);
 
         Task<bool> CheckIfUserCan(int userId, int teamId, RightDefinition definition);
+
+        Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId);
     }
 }

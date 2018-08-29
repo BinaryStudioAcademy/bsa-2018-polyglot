@@ -24,4 +24,9 @@ export class RightService {
     checkIfTranslatorCan(teamId: number, translatorId: number, rightDefinition: RightDefinition): Observable<boolean>{
         return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + teamId + "/user/", translatorId + '/right/' + rightDefinition);
     }
+
+    checkIfTranslatorCanInProj(projId: number, rightDefinition: RightDefinition){
+        return this.dataService.sendRequest(RequestMethod.Get, 'projects/' + projId + '/right/' + rightDefinition);
+    }
+
 }
