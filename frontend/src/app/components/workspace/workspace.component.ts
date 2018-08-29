@@ -34,6 +34,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private currentPage = 0;
     private elementsOnPage = 7;
     public isLoad: boolean;
+    public projectLanguagesCount: number;
 
     private routeSub: Subscription;
 
@@ -76,6 +77,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
                 this.projectService.getProjectLanguages(this.project.id).subscribe(
                     (d: Language[]) => {
+                        this.projectLanguagesCount = d.length;
                         const workspaceState = {
                             projectId: this.project.id,
                             languages: d
@@ -96,8 +98,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         console.log("err", err);
                     },
                 );
-
-
             });
             this.basicPath = 'workspace/' + params.projectId;
             this.currentPath = 'workspace/' + params.projectId + '/key';
@@ -110,8 +110,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
-                            this.router.navigate([this.currentPath, keyId]);
-                        
+                            this.router.navigate([this.currentPath, keyId]);   
                         }
                         else {
                             this.isLoad = true;
@@ -260,5 +259,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.options.value.splice(index, 1);
             });
         }
+    }
+
+    highlightStringStatus(key) {
+        if (key.translations.length === 0) {
+            return '7px solid #a91818'; // not started
+        } else if (key.translations.length < this.projectLanguagesCount) {
+            return '7px solid #ffcc00'; // partially
+        } else if (key.translations.length === this.projectLanguagesCount) {
+            return '7px solid #00b300'; // completed
+        }
+    }
+
+    isStringInProgress(key) {
+        // check if somebody is working on this string
+        return false;
     }
 }
