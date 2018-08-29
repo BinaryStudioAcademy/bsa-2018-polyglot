@@ -1,16 +1,12 @@
-﻿using Polyglot.Common.DTOs.NoSQL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Polyglot.Hubs
+namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ISignalrWorkspaceService
+    public interface ISignalRWorkspaceService
     {
-        Task ChangedTranslation(string groupName, TranslationDTO entity);
+        Task ChangedTranslation(string groupName, int translationId);
 
-        Task CommentAdded(string groupName, IEnumerable<CommentDTO> comments);
+        Task CommentAdded(string groupName, int commentId);
 
         Task ComplexStringAdded(string groupName, int complexStringId);
 

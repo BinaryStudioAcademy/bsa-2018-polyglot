@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
@@ -13,8 +12,6 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.Hubs;
-using Polyglot.Hubs.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -25,14 +22,12 @@ namespace Polyglot.Controllers
         private readonly IMapper mapper;
         private readonly IComplexStringService dataProvider;
         public IFileStorageProvider fileStorageProvider;
-        private readonly ISignalrWorkspaceService signalrService;
 
-        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider, ISignalrWorkspaceService signalrService)
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
             fileStorageProvider = provider;
-            this.signalrService = signalrService;
         }
 
         // GET: ComplexStrings
@@ -77,10 +72,6 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
-                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
-                await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-
                 return Ok(entity);
             }
             else
@@ -99,10 +90,6 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
-                await signalrService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", entity.LanguageId);
-                await signalrService.ChangedTranslation($"{Group.complexString}{id}", entity);
-
                 return Ok(entity);
             }
             else
@@ -134,7 +121,6 @@ namespace Polyglot.Controllers
             var entity = await dataProvider.AddComplexString(complexString);
             if(entity != null)
             {
-                await signalrService.ComplexStringAdded($"{Group.project}{entity.ProjectId}", entity.Id);
                 return Ok(entity);
             }
             else
@@ -161,12 +147,10 @@ namespace Polyglot.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComplexString(int id)
         {
-            var targetProjectId = (await dataProvider.GetComplexString(id)).ProjectId;
             var success = await dataProvider.DeleteComplexString(id);
 
             if (success)
             {
-                await this.signalrService.ComplexStringRemoved($"{Group.project}{targetProjectId}", id);
                 return Ok();
             }
             else
@@ -195,11 +179,12 @@ namespace Polyglot.Controllers
 
             if (entity != null)
             {
-                await signalrService.CommentAdded($"{Group.complexString}{id}", entity);
+                return Ok(entity);
             }
-
-            return entity == null ? StatusCode(304) as IActionResult
-                : Ok(entity);
+            else
+            {
+                return StatusCode(304) as IActionResult;
+            }
         }
 
         [HttpGet("{id}/history/{translationId}")]
