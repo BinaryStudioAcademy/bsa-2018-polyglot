@@ -20,7 +20,7 @@
             <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false" class="no-menu-scroll">
                 <div style="padding: 20px!important;padding-top:0px!important;"> 
                   <div>
-                    <h4>Filters</h4>
+                    <h4>Filters <i class="fas fa-filter filter-icon"></i></h4>
                     <hr>
                     <div class="fiter-content">
                       <div (click)="$event.stopPropagation();" *ngFor="let opt of filterOptions;let i = index">
@@ -29,7 +29,7 @@
                     </div>
                     </div>
                   <div>
-                     <h4>Tags</h4>
+                     <h4>Tags <i class="fas fa-tags filter-icon"></i></h4>
                      <hr>
                      <div class="fiter-content" style="grid-template-columns: auto auto auto auto">
                       <div *ngFor="let opt of projectTags;let i = index" (click)="$event.stopPropagation();">
