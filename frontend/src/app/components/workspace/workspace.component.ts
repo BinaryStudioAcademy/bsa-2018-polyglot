@@ -39,7 +39,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     private routeSub: Subscription;
 
-    options = new FormControl();
+    filters : Array<string>
 
     filterOptions: string[] = [
         "Translated",
@@ -70,6 +70,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
+        this.filters = [];
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
@@ -126,7 +127,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             });
                         }
                     });
-                    console.log(this.projectTags);
                 });
 
             this.currentPage++;
@@ -225,18 +225,50 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         );
     }
 
-    OnSelectOption() {
+    OnFilterApply() {
         //If the filters сontradict each other
-        this.ContradictoryСhoise(["Translated", "Untranslated"]);
-        this.ContradictoryСhoise(["Human Translation", "Machine Translation"]);
-
+        /* this.ContradictoryСhoise(["Translated", "Untranslated"]);
+        this.ContradictoryСhoise(["Human Translation", "Machine Translation"]); */
+        console.log(this.filters);
+        /*      
         this.dataProvider
             .getProjectStringsByFilter(this.project.id, this.options.value)
             .subscribe(res => {
                 this.keys = res;
             });
-        console.log(this.options.value);
+        console.log(this.options.value); */
     }
+
+   /*  ContradictoryСhoise(options: string[]) {
+        if (
+            this.options.value.includes(options[0]) &&
+            this.options.value.includes(options[1])
+        ) {
+            options.forEach(element => {
+                let index = this.options.value.indexOf(element);
+                this.options.value.splice(index, 1);
+            });
+        }
+    } */
+
+    selectFilterOption($event,index){
+        if($event.checked){
+            this.filters.push("filter/"+this.filterOptions[index])
+        }
+        else{
+            this.filters = this.filters.filter( x => { return x !== "filter/" + this.filterOptions[index];});
+        }
+    }
+
+    selectTag($event,index){
+        if($event.checked){
+            this.filters.push("tags/" + this.projectTags[index])
+        }
+        else{
+            this.filters = this.filters.filter( x => { return x !== "tags/" + this.projectTags[index];});
+        } 
+    }
+
 
     public onScrollUp(): void {
         this.getKeys(this.currentPage, keys => {
@@ -261,23 +293,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.currentPage++;
                 saveResultsCallback(keys);
             });
-    }
-
-    ContradictoryСhoise(options: string[]) {
-        if (
-            this.options.value.includes(options[0]) &&
-            this.options.value.includes(options[1])
-        ) {
-            options.forEach(element => {
-                let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1);
-            });
-        }
-    }
-
-    test($event,index){
-        console.log(index);
-        console.log($event);
     }
 
 /*     test(id){

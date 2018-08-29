@@ -24,7 +24,7 @@
                     <hr>
                     <div class="fiter-content">
                       <div (click)="$event.stopPropagation();" *ngFor="let opt of filterOptions;let i = index">
-                        <mat-checkbox (indeterminateChange)="test($event)" (change)="test($event,i)">{{opt}}</mat-checkbox>
+                        <mat-checkbox (indeterminateChange)="test($event)" (change)="selectFilterOption($event,i)">{{opt}}</mat-checkbox>
                       </div>
                     </div>
                     </div>
@@ -32,8 +32,8 @@
                      <h4>Tags</h4>
                      <hr>
                      <div class="fiter-content">
-                      <div *ngFor="let opt of projectTags" (click)="$event.stopPropagation();">
-                        <mat-checkbox (click)="test($event)">{{opt}}</mat-checkbox>
+                      <div *ngFor="let opt of projectTags;let i = index" (click)="$event.stopPropagation();">
+                        <mat-checkbox (change)="selectTag($event,i)">{{opt}}</mat-checkbox>
                       </div>
                       <div *ngIf="projectTags.length === 0">
                         No strings with tags
@@ -41,7 +41,7 @@
                     </div>
                    </div>
                    <hr>
-                   <button style="margin-right:10px;margin-bottom:10px;float:right;"mat-flat-button>Apply</button>
+                   <button style="margin-right:10px;margin-bottom:10px;float:right;"mat-flat-button (click)="OnFilterApply();$event.stopPropagation();">Apply</button>
                  </div>
               </mat-menu>
 <!--             <mat-form-field class="filter">
