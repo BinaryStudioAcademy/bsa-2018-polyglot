@@ -44,28 +44,29 @@ export class UserSettingsComponent implements OnInit {
   }
 
   editPhoto(){
-    const dialogRef = this.dialog.open(CropperComponent, {
-      data: {imageUrl: this.manager.avatarUrl}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-        if (dialogRef.componentInstance.cropedImageBlob){
-            let formData = new FormData();
-            formData.append("image", dialogRef.componentInstance.cropedImageBlob);
-            this.userService.updatePhoto(formData).subscribe(
-                (d) => {
-                    setTimeout(() => {
-                        this.snotifyService.success("Photo updated.", "Success!");
-                        }, 100);
-                        this.manager = d;
-                        this.appStateService.currentDatabaseUser = d;
-                    },
-                    err => {
-                        this.snotifyService.error("Photo failed to update!", "Error!");
-                    }
-                );
+        const dialogRef = this.dialog.open(CropperComponent, {
+            data: {imageUrl: this.manager.avatarUrl}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (dialogRef.componentInstance.cropedImageBlob){
+                let formData = new FormData();
+                formData.append("image", dialogRef.componentInstance.cropedImageBlob);
+                this.userService.updatePhoto(formData).subscribe(
+                    (d) => {
+                        setTimeout(() => {
+                            this.snotifyService.success("Photo updated.", "Success!");
+                            }, 100);
+                            this.manager = d;
+                            this.appStateService.currentDatabaseUser = d;
+                        },
+                        err => {
+                            this.snotifyService.error("Photo failed to update!", "Error!");
+                        }
+                    );
+                }
             }
-        }
-    );
+        );
+
   }
 
   createProjectForm(): void {
@@ -90,6 +91,7 @@ export class UserSettingsComponent implements OnInit {
 
   saveChanges(userProfile : UserProfile) {
     userProfile.fullName = `${userProfile.firstName} ${userProfile.lastName}`;
+    userProfile.avatarUrl = this.manager.avatarUrl;
     this.userService.update(userProfile.id, userProfile).subscribe(
         (d) => {
             this.appStateService.currentDatabaseUser = d;
