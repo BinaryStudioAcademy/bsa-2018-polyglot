@@ -40,6 +40,10 @@ h1.example-app-name
 .mat-accordion
   margin-top: 0
 
+mat-panel-description.mat-expansion-panel-header-description
+  justify-content: flex-end !important
+
+
 .mat-expansion-panel-body
   padding: 24px 0 !important
 
@@ -48,6 +52,22 @@ li,
   margin: 0
   padding: 0
   list-style: none
+
+.person-card
+  position: relative
+  padding-left: 60px
+  padding-bottom: 0
+
+.person-card:hover
+    background-color: #C1C1C1
+
+.person-img
+    height: 25px
+    width: 25px
+    position: absolute
+    top: 20%
+    left: 5%
+    cursor: pointer
 
 .mat-card
   box-sizing: border-box
@@ -60,3 +80,36 @@ li,
 .chat-message-form,
 .chat-form-field
   width: 100%
+
+.message-actions-container
+  display: flex
+  flex-direction: row
+
+.message-card
+  width: 80%
+  margin: 1.5%
+  margin-left: 30px
+  background-color: #D0D0D0
+
+.message-card:hover
+    background-color: #C1C1C1
+
+
+.message-card:after
+	content: ''
+	position: absolute
+	left: 0
+	top: 50%
+	width: 0
+	height: 0
+	border: 29px solid transparent
+	border-right-color: #D0D0D0
+	border-left: 0
+	border-bottom: 0
+	margin-top: -14.5px
+	margin-left: -29px
+
+.typing-users-container
+  font-size: 12px
+  ul li
+    display: inline-block

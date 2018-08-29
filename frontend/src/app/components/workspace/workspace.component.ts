@@ -15,6 +15,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
+import { Hub } from "../../models/signalrModels/hub";
 
 @Component({
     selector: "app-workspace",
@@ -85,7 +86,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             `${SignalrGroups[SignalrGroups.project]}${
                             this.project.id
                             }`,
-                            "workspaceHub"
+                            Hub[Hub.workspaceHub]
                         );
                         this.subscribeProjectChanges();
                     },

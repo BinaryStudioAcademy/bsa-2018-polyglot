@@ -91,6 +91,7 @@ namespace Polyglot
             app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
+                options.MapHub<ChatHub>("/chatHub");
             });
 
         }

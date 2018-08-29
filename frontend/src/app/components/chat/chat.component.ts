@@ -1,56 +1,370 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Renderer2 } from "@angular/core";
+import { Observable, of } from "rxjs";
+import { MediaMatcher } from "@angular/cdk/layout";
+import { SignalrService } from "../../services/signalr.service";
+import { ChatActions } from "../../models/signalrModels/chat-actions";
+import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
+import { Hub } from "../../models/signalrModels/hub";
+import { ProjectService } from "../../services/project.service";
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.sass']
+    selector: "app-chat",
+    templateUrl: "./chat.component.html",
+    styleUrls: ["./chat.component.sass"]
 })
 export class ChatComponent implements OnInit {
-  mobileQuery: MediaQueryList;
+    @ViewChild('mainwindow') mainWindow: ElementRef;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    step = 2;
+    teamBadge = true;
+    projectBadge = true;
+    personBadge = false;
 
-  fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
+    private users: any;
+    private projects: any;
+    private teams: any;
 
-  fillerContent = Array.from({length: 50}, () =>
-      `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-       labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-       laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-       voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-       cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`);
+    public currentMessage: string = "";
 
-  private _mobileQueryListener: () => void;
+    messages = [];
 
-  items = [1,2,3,4,5,6,7,8,9,10]
-  step = 2;
-  teamBadge = true;
-  projectBadge = true;
-  personBadge = false;
+    constructor(
+        private renderer: Renderer2,
+        private changeDetectorRef: ChangeDetectorRef,
+        private media: MediaMatcher,
+        private projectService: ProjectService,
+        private signalRService: SignalrService
+    ) {
+        this.mobileQuery = media.matchMedia("(max-width: 600px)");
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+        //this.renderer.setStyle(this.el.nativeElement, 'color', 'blue');
+        
+    }
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-  }
+    ngOnInit() {
+        this.signalRService.createConnection(
+            SignalrGroups[SignalrGroups.chatShared],
+            Hub[Hub.chatHub]
+        );
+        this.subscribeChatEvents();
+        this.messages = MOCK_MESSAGES;
+        this.users = MOCK_USERS;
+    }
 
-  ngOnInit(){
+    ngOnDestroy() {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+        this.signalRService.closeConnection(
+            SignalrGroups[SignalrGroups.chatShared]
+        );
+    }
 
-  }
+    subscribeChatEvents() {
+        this.signalRService.connection.on(
+            ChatActions[ChatActions.messageReceived],
+            (message: string) => {
+                this.messages.push({
+                    body: message,
+                    date: "21.2.2018",
+                    user: {
+                        fullName: "Julia Louis-Dreyfus",
+                        avatarUrl:
+                            "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
+                        isOnline: true
+                    }
+                });
+              this.renderer.setProperty(this.mainWindow.nativeElement, 'scrollTop', '99999');
+            }
+        );
+    }
 
-  ngOnDestroy() {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
-  }
+    sendMessage() {
+        if (this.currentMessage.length > 0) {
+            this.signalRService.sendMessage("", this.currentMessage);
+        }
+    }
 
-  
-  setStep(index: number) {
-    this.step = index;
-  }
+    getProjects() {
+      return;
+      debugger;
+        if (this.projects) {
+            return this.projects;
+        }
+        else {
+          this.projectService.getAll().subscribe((projects) => {
+            if(projects)
+              {
+                this.projects = projects;
+              }
+          });
+        }
+    }
 
-  nextStep() {
-    this.step++;
-  }
+    getTeams() {
+      return;
+      debugger;
+        if (this.teams) {
+            return this.teams;
+        }
+        else {
+          if(this.projects){
+            for(let i = 0; i < this.projects.length; i++) {
+              this.projectService.getProjectTeams(this.projects[i].id).subscribe((teams) => {
+                if(teams)
+                  {
+                    Array.prototype.push.apply(this.teams, teams);
+                  }
+              })
+            }
+          }
+          
+        }
+    }
 
-  prevStep() {
-    this.step--;
-  }
+    setStep(index: number) {
+        this.step = index;
+    }
+
+    nextStep() {
+        this.step++;
+    }
+
+    prevStep() {
+        this.step--;
+    }
 }
+
+const MOCK_MESSAGES = [
+    {
+        body:
+            "Do you know the difference between education and experience? Education is what you get when you read the fine print; experience is what you get when you don't",
+        date: "21.2.2018",
+        user: {
+            fullName: "Julia Louis-Dreyfus",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
+            isOnline: false
+        }
+    },
+    {
+        body: "No wonder you're tired! You understood so much today. ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Jennifer Love Hewitt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body:
+            "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it.'",
+        date: "21.2.2018",
+        user: {
+            fullName: "Natalya Rudakova",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body:
+            "If truth is beauty, how come no one has their hair done in the library?",
+        date: "21.2.2018",
+        user: {
+            fullName: "Natalya Rudakova",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body:
+            "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.",
+        date: "21.2.2018",
+        user: {
+            fullName: "Jennifer Love Hewitt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body: "the high school after high school!",
+        date: "21.2.2018",
+        user: {
+            fullName: "Natalya Rudakova",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body: "A professor is one who talks in someone else's sleep. ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Natalya Rudakova",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body: "Never let your schooling interfere with your education. ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Jennifer Love Hewitt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body:
+            "About all some men accomplish in life is to send a son to Harvard. ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Jennifer Love Hewitt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body: " He that teaches himself has a fool for a master",
+        date: "21.2.2018",
+        user: {
+            fullName: "Hugh Jackman",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
+            isOnline: false
+        }
+    },
+    {
+        body:
+            "You may have heard that a dean is to faculty as a hydrant is to a dog",
+        date: "21.2.2018",
+        user: {
+            fullName: "Natalya Rudakova",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body:
+            "The world is coming to an end! Repent and return those library books!",
+        date: "21.2.2018",
+        user: {
+            fullName: "Jennifer Love Hewitt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+            isOnline: true
+        }
+    },
+    {
+        body: "This is the sort of English up with which I will not put",
+        date: "21.2.2018",
+        user: {
+            fullName: "Hugh Jackman",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
+            isOnline: false
+        }
+    },
+    {
+        body:
+            "So, is the glass half empty, half full, or just twice as large as it needs to be? ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Julia Louis-Dreyfus",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
+            isOnline: false
+        }
+    },
+    {
+        body: "OK, now let's look at four dimensions on the blackboard.",
+        date: "21.2.2018",
+        user: {
+            fullName: "Hugh Jackman",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
+            isOnline: false
+        }
+    },
+    {
+        body: "Having a wonderful wine, wish you were beer. ",
+        date: "21.2.2018",
+        user: {
+            fullName: "Theodore Roosevelt",
+            avatarUrl:
+                "https://www.randomlists.com/img/people/theodore_roosevelt.jpg",
+            isOnline: false
+        }
+    }
+];
+
+const MOCK_USERS = [
+    {
+        fullName: "Theodore Roosevelt",
+        avatarUrl:
+            "https://www.randomlists.com/img/people/theodore_roosevelt.jpg",
+        isOnline: false
+    },
+    {
+        fullName: "Jennifer Love Hewitt",
+        avatarUrl:
+            "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "Hugh Jackman",
+        avatarUrl: "https://www.randomlists.com/img/people/hugh_jackman.jpg",
+        isOnline: false
+    },
+    {
+        fullName: "George Pal",
+        avatarUrl: "https://www.randomlists.com/img/people/george_pal.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "Tina Fey",
+        avatarUrl: "https://www.randomlists.com/img/people/tina_fey.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "Owen Wilson",
+        avatarUrl: "https://www.randomlists.com/img/people/owen_wilson.jpg",
+        isOnline: false
+    },
+    {
+        fullName: "Robert De Niro",
+        avatarUrl: "https://www.randomlists.com/img/people/robert_de_niro.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "Julia Louis-Dreyfus",
+        avatarUrl:
+            "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
+        isOnline: false
+    },
+    {
+        fullName: "Natalya Rudakova",
+        avatarUrl:
+            "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "Jennifer Love Hewitt",
+        avatarUrl:
+            "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
+        isOnline: true
+    },
+    {
+        fullName: "William Shatner",
+        avatarUrl: "https://www.randomlists.com/img/people/william_shatner.jpg",
+        isOnline: false
+    }
+];

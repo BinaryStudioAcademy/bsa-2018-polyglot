@@ -1,107 +1,142 @@
 <div class="example-container">
-  <mat-toolbar color="primary" class="example-toolbar">
-    <button mat-icon-button (click)="snav.toggle()">
-      <mat-icon matBadge="88" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon></button>
-    <h1 class="example-app-name">Chat</h1>
-  </mat-toolbar>
+    <mat-toolbar color="primary" class="example-toolbar">
+        <button mat-icon-button (click)="snav.toggle()">
+            <mat-icon matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
+        </button>
+        <h1 class="example-app-name">Chat</h1>
+    </mat-toolbar>
 
-  <mat-sidenav-container class="example-sidenav-container">
-    <mat-sidenav #snav [mode]="'side'">
-      <mat-nav-list>
-          <mat-accordion class="example-headers-align">
-              <a class="channel-btn" mat-button routerLink=".">Channel</a>
+    <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav #snav [mode]="'side'">
+            <mat-nav-list>
+                <mat-accordion class="example-headers-align">
+                    <a class="channel-btn" mat-button routerLink=".">Channel</a>
 
-              <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Projects
-                  </mat-panel-title>
-                  <mat-panel-description>
-                      <mat-icon matBadge="6" matBadgeColor="warn" [matBadgeHidden]="projectBadge" matBadgeSize="medium">home</mat-icon>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                
-                <ng-template matExpansionPanelContent>
-                    <ul>
-                        <li *ngFor="let i of items">
-                            <mat-card>project {{i}}</mat-card>
-                        </li>
-                      </ul>
-                  </ng-template>
-                
+                    <mat-expansion-panel  [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Projects
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon matBadge="6" matBadgeColor="warn" [matBadgeHidden]="projectBadge" matBadgeSize="medium">business_center</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
 
-                <mat-action-row>
-                  <button mat-button color="primary" (click)="nextStep()">Next</button>
-                </mat-action-row>
-              </mat-expansion-panel>
-            
-              <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Teams
-                  </mat-panel-title>
-                  <mat-panel-description>
-                      <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="teamBadge" matBadgeSize="medium">home</mat-icon>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-            
-                <ng-template matExpansionPanelContent>
+                        <ng-template matExpansionPanelContent>
+                            <ul>
+                                <li *ngFor="let p of getProjects()">
+                                    <mat-card>project {{p.id}}</mat-card>
+                                </li>
+                            </ul>
+                        </ng-template>
+
+
+                        <mat-action-row>
+                            <button mat-button color="primary" (click)="nextStep()">Next</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel  [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Teams
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="teamBadge" matBadgeSize="medium">group</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <ng-template matExpansionPanelContent>
+                            <ul>
+                                <li *ngFor="let t of getTeams()">
+                                    <mat-card>team {{t.id}}</mat-card>
+                                </li>
+                            </ul>
+                        </ng-template>
+
+                        <mat-action-row>
+                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                            <button mat-button color="primary" (click)="nextStep()">Next</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Persons
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon matBadge="15" matBadgeColor="warn" [matBadgeHidden]="personBadge" matBadgeSize="medium">person</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <ng-template matExpansionPanelContent>
+                            <ul>
+                                <li *ngFor="let u of users">
+                                    <mat-card class="person-card">
+                                        <mat-card-header>
+                                            <a class="person-img">
+                                                <img mat-card-avatar src="{{u.avatarUrl}}">
+                                            </a>
+                                            <mat-card-title>{{u.fullName}}</mat-card-title>
+                                            <mat-card-subtitle>translator</mat-card-subtitle>
+                                        </mat-card-header>
+                                    </mat-card>
+                                </li>
+                            </ul>
+                        </ng-template>
+
+                        <mat-action-row>
+                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                            <button mat-button color="primary" (click)="nextStep()">End</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <div class="chat-content-container" #mainwindow>
+
                 <ul>
-                    <li *ngFor="let i of items">
-                        <mat-card>team {{i}}</mat-card>
+                    <li *ngFor="let m of messages">
+                        <mat-card class="message-card">
+                            <mat-card-header>
+                                <mat-card-title>{{m.user.fullName}}</mat-card-title>
+                            </mat-card-header>
+                            {{m.body}}
+                        </mat-card>
                     </li>
-                  </ul>
-                </ng-template>
-            
-                <mat-action-row>
-                  <button mat-button color="warn" (click)="prevStep()">Previous</button>
-                  <button mat-button color="primary" (click)="nextStep()">Next</button>
-                </mat-action-row>
-              </mat-expansion-panel>
-            
-              <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Persons
-                  </mat-panel-title>
-                  <mat-panel-description>
-                      <mat-icon matBadge="15" matBadgeColor="warn" [matBadgeHidden]="personBadge" matBadgeSize="medium">home</mat-icon>
-                  </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <ng-template matExpansionPanelContent>
-                <ul>
-                  <li *ngFor="let i of items">
-                      <mat-card>person {{i}}</mat-card>
-                  </li>
                 </ul>
-              </ng-template>
 
-                <mat-action-row>
-                  <button mat-button color="warn" (click)="prevStep()">Previous</button>
-                  <button mat-button color="primary" (click)="nextStep()">End</button>
-                </mat-action-row>
-              </mat-expansion-panel>
-            
-            </mat-accordion>
-      </mat-nav-list>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <div class="chat-content-container">
-        <router-outlet></router-outlet>
-      </div>
-      <footer class="chat-input-container">
-          <mat-card>
-              <form class="chat-message-form">
-                  <mat-form-field class="chat-form-field" appearance="outline">
-                      <mat-icon matPrefix>mode_edit</mat-icon>
-                      <input matInput placeholder="Message polyglot">
-                      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                    </mat-form-field>
-                </form>
-          </mat-card>
-        </footer>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+            </div>
+            <footer class="chat-input-container">
+                <mat-card>
+                    <div class="typing-users-container">
+                        <ul>
+                            <li>Grisha</li>
+                            &nbsp;is typing...
+                        </ul>
+                    </div>
+                    <form class="chat-message-form">
+                        <mat-form-field class="chat-form-field" appearance="outline">
+                            <button mat-icon-button matPrefix>
+                                <mat-icon aria-label="">add</mat-icon>
+                            </button>
+                            <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
+                            <span matSuffix class="message-actions-container">
+                                <button mat-icon-button>
+                                    <mat-icon aria-label="">sentiment_very_satisfied</mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="sendMessage()">
+                                    <mat-icon aria-label="">send</mat-icon>
+                                </button>
+                            </span>
+                        </mat-form-field>
+                    </form>
+                </mat-card>
+            </footer>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>

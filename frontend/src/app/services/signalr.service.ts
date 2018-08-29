@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../environments/environment";
 import { HubConnection } from "@aspnet/signalr";
+import { ChatActions } from "../models/signalrModels/chat-actions";
 
 @Injectable({
     providedIn: "root"
@@ -47,6 +48,10 @@ export class SignalrService {
          //   console.log(`Stoping SignalR connection`);
          //   this.connection.stop();
         }
+    }
+
+    public sendMessage(groupName: string, message: string) {
+        this.connection.send(ChatActions[ChatActions.sendMessage], "",  message);
     }
 
     connect(groupName: string, hubUrl: string): Promise<void> {
