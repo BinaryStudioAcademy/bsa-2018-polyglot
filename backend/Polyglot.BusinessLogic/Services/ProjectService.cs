@@ -557,7 +557,7 @@ namespace Polyglot.BusinessLogic.Services
                 finalFilter = AndAlso(finalFilter, x => x.Translations.Count == 0);
 
             if (criteriaFilters.Contains(FilterType.HumanTranslation))
-                finalFilter = AndAlso(finalFilter, x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine));
+                finalFilter = AndAlso(finalFilter, x => x.Translations.Any(t => t.Type == Translation.TranslationType.Human));
 
             if (criteriaFilters.Contains(FilterType.MachineTranslation))
                 finalFilter = AndAlso(finalFilter, x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine));
