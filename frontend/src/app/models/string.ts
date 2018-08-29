@@ -10,4 +10,7 @@ export interface IString {
     comments: Comment[];
     projectId: number;
     translations: Translation[];
+    createdBy: number;
+    createdOn: Date;
 }
+

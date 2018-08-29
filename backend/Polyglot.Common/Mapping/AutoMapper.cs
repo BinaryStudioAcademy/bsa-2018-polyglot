@@ -80,7 +80,7 @@ namespace Polyglot.Common.Mapping
 					.ForMember(p => p.UserProfile, opt => opt.MapFrom(po => po.UserProfile))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))				
                     .ForMember(p => p.ProjectGlossaries, opt => opt.MapFrom(po => po.ProjectGlossaries))
-                    .ForMember(p => p.ProjectLanguageses, opt => opt.MapFrom(po => po.ProjectLanguageses))
+                    .ForMember(p => p.ProjectLanguageses, opt => opt.Ignore())
                     .ForMember(p => p.ProjectTags, opt => opt.MapFrom(po => po.ProjectTags))
                     .ForMember(p => p.Teams, opt => opt.MapFrom(po => po.Teams))
                     .ForMember(p => p.Technology, opt => opt.MapFrom(po => po.Technology))
@@ -92,10 +92,10 @@ namespace Polyglot.Common.Mapping
 					.ForMember(p => p.Description, opt => opt.MapFrom(pt => pt.Description))
 					.ForMember(p => p.ImageUrl, opt => opt.MapFrom(pt => pt.ImageUrl))
 					.ForMember(p => p.MainLanguage, opt => opt.MapFrom(pt => pt.MainLanguage))
-					.ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile))
+                    .ForMember(p => p.UserProfile, opt => opt.MapFrom(pt => pt.UserProfile))
 					.ForMember(p => p.Name, opt => opt.MapFrom(pt => pt.Name))				
                     .ForMember(p => p.ProjectGlossaries, opt => opt.Ignore())
-                    .ForMember(p => p.ProjectLanguageses, opt => opt.Ignore())
+                    .ForMember(p => p.ProjectLanguageses, opt => opt.MapFrom(pt => pt.ProjectLanguageses.Select(l => l.Language)))
                     .ForMember(p => p.ProjectTags, opt => opt.Ignore())
                     .ForMember(p => p.Teams, opt => opt.Ignore())
                     .ForMember(p => p.Technology, opt => opt.MapFrom(pt => pt.Technology))
@@ -212,8 +212,8 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<Team, TeamPrevDTO>()
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                    .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name))
+                    .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Persons, opt => opt.MapFrom(po => 
                         po.TeamTranslators
                         .Select(t => t.UserProfile)));
@@ -291,7 +291,11 @@ namespace Polyglot.Common.Mapping
 				  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
 				  .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
 				  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
-				  .ForMember(p => p.Key, opt => opt.MapFrom(po => po.Key));
+				  .ForMember(p => p.Key, opt => opt.MapFrom(po => po.Key))
+                  .ForMember(p => p.CreatedBy, opt => opt.MapFrom(po => po.CreatedBy))
+				  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn));
+
+
                 cfg.CreateMap<ComplexString, ComplexStringDTO>()
                   .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                   .ForMember(p => p.Comments, opt => opt.Ignore())
@@ -301,7 +305,9 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
                   .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
                   .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
-                  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations));
+                  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
+                  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
+                  .ForMember(p => p.CreatedBy, opt => opt.MapFrom(po => po.CreatedBy));
 
                 cfg.CreateMap<Polyglot.Common.DTOs.NoSQL.TranslationDTO, Polyglot.DataAccess.MongoModels.Translation>()
                   .ForMember(p => p.History, opt => opt.MapFrom(po => po.History))

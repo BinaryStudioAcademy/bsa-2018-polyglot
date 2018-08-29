@@ -13,37 +13,43 @@
 <div *ngIf="IsLoad" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
-<div class="container">
-      <mat-card class="example-card" *ngFor="let t of teams; let i = index">
-          <mat-card-header>            
-              <a class="manager-img" [routerLink]="['/user', t.createdBy.id]">
-                <img mat-card-avatar src="{{t.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
-              </a> 
-              <div class="title">
-                  <mat-card-title class="card-title">
-                     <!--  <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">Team №{{t.id}}</a>
-                      <a *ngIf="t.name !== null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">{{t.name}}</a> -->
-                      <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
-                  </mat-card-title>
-                 
+<div *ngIf="teams.length > 0">
+  <div class="container">
+        <mat-card class="example-card" *ngFor="let t of teams; let i = index">
+            <mat-card-header>            
+                <a class="manager-img" (click)="userService.redirectById(t.createdBy.id)">
+                  <img mat-card-avatar src="{{t.createdBy.avatarUrl}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                </a> 
+                <div class="title">
+                    <mat-card-title class="card-title">
+                      <!--  <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">Team №{{t.id}}</a>
+                        <a *ngIf="t.name !== null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">{{t.name}}</a> -->
+                        <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
+                    </mat-card-title>
+                  
 
-                  <mat-card-subtitle class="card-subtitle" [routerLink]="['/user', t.createdBy.id]">{{t.createdBy.fullName}}</mat-card-subtitle>
+                    <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t.createdBy.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
+                </div>
+            </mat-card-header>
+            
+            
+            <div mat-card-image >
+              <div  class="img-container" >    
+
+                <a *ngFor="let p of t.persons"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"  onError="this.src='/assets/images/default-avatar.jpg'" ></a>
               </div>
-          </mat-card-header>
+            </div>  
           
-          
-          <div mat-card-image >
-            <div  class="img-container" >    
-
-              <a *ngFor="let p of t.persons"  [routerLink]="['/user', p.id]"><img height="60" src="{{p.avatarUrl}}"  onError="this.src='/assets/images/default-avatar.jpg'" ></a>
-            </div>
-          </div>  
         
-      
-          <mat-card-actions class="card-buttons">        
-            <button mat-raised-button color="primary" routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
-          </mat-card-actions>      
-        </mat-card>  
+            <mat-card-actions class="card-buttons">        
+              <button mat-raised-button color="primary" routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
+            </mat-card-actions>      
+          </mat-card>  
+  </div>
+</div>
+
+<div *ngIf="teams.length === 0" class="no-teams">
+  No Teams
 </div>
 
 <ng-snotify></ng-snotify>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoModels
@@ -11,6 +12,8 @@ namespace Polyglot.DataAccess.MongoModels
         public string OriginalValue { get; set; }
         public string Description { get; set; }
         public string PictureLink { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int CreatedBy { get; set; }
 
         public List<Translation> Translations { get; set; }
         public List<Comment> Comments { get; set; }

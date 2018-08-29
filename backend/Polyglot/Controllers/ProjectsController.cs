@@ -14,6 +14,7 @@ using Polyglot.DataAccess.Interfaces;
 using Polyglot.Core.Authentication;
 using Polyglot.Hubs;
 using Polyglot.Hubs.Helpers;
+using System.Linq;
 
 namespace Polyglot.Controllers
 {
@@ -179,9 +180,9 @@ namespace Polyglot.Controllers
 
         // POST: Projects
         [HttpPost]
-		public async Task<IActionResult> AddProject(IFormFile formFile)
-		{
-			Request.Form.TryGetValue("project", out StringValues res);
+        public async Task<IActionResult> AddProject(IFormFile formFile)
+        {
+            Request.Form.TryGetValue("project", out StringValues res);
             ProjectDTO project = JsonConvert.DeserializeObject<ProjectDTO>(res);
 
             if (Request.Form.Files.Count != 0)
@@ -198,8 +199,10 @@ namespace Polyglot.Controllers
                 project.ImageUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
 
-			var entity = await service.PostAsync(project);
-            entity = await service.AddLanguagesToProject(entity.Id, new int[] { project.MainLanguage.Id });
+            var langIds = project.ProjectLanguageses.Select(l => l.Id);
+            var entity = await service.PostAsync(project);
+            entity = await service.AddLanguagesToProject(entity.Id, langIds.ToArray());
+           
             return entity == null ? StatusCode(409) as IActionResult
 				: Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
 				entity);
@@ -264,9 +267,9 @@ namespace Polyglot.Controllers
         [HttpGet("{id}/glossaries")]
         public async Task<IActionResult> GetAssignedGlossaries(int id)
         {
-            var project = await service.GetProjectLanguages(id);
-            return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
-                : Ok(project);
+            var glossaries = await service.GetAssignedGlossaries(id);
+            return glossaries == null ? NotFound($"Project with id = {id} has got no glossaries!") as IActionResult
+                : Ok(glossaries);
 
         }
 

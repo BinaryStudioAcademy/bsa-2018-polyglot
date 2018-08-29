@@ -8,44 +8,44 @@ import { HubConnection } from "@aspnet/signalr";
 })
 export class SignalrService {
     connection: any;
-    isWorking: boolean = true;
+
+    connectionClosedByUser: boolean = false;
 
     constructor() {}
 
     public createConnection(groupName: string, hubUrl: string) {
         if (
-            (!this.connection ||
-                this.connection.connection.connectionState === 2) &&
-            this.isWorking
+            !this.connection ||
+                this.connection.connection.connectionState === 2
         ) {
             this.connect(
                 groupName,
                 hubUrl
             ).then(data => {
                 console.log(`SignalR hub ${hubUrl} connected.`);
-                if (this.connection.connection.connectionState === 1) {
+                if (this.connection.connection.connectionState === 1 && !this.connectionClosedByUser) {
                     console.log(`Connecting to group ${groupName}`);
-                    this.connection.send("joinProjectGroup", groupName);
+                    this.connection.send("joinGroup", groupName);
                 }
             });
         } else {
             if (this.connection.connection.connectionState === 1) {
                 console.log(`Connecting to group ${groupName}`);
-                this.connection.send("joinProjectGroup", groupName);
+                this.connection.send("joinGroup", groupName);
             }
         }
     }
 
     public closeConnection(groupName: string) {
-        this.isWorking = false;
+        this.connectionClosedByUser = true;
         if (
             this.connection &&
             this.connection.connection.connectionState === 1
         ) {
             console.log(`Disconnecting from group ${groupName}`);
-            this.connection.send("leaveProjectGroup", groupName);
-            console.log(`Stoping SignalR connection`);
-            this.connection.stop();
+            this.connection.send("leaveGroup", groupName);
+         //   console.log(`Stoping SignalR connection`);
+         //   this.connection.stop();
         }
     }
 
@@ -60,7 +60,10 @@ export class SignalrService {
 
             this.connection.onclose(err => {
                 console.log(`SignalR hub ${hubUrl} disconnected.`);
-                this.createConnection(groupName, hubUrl);
+                if(this.connectionClosedByUser)
+                {
+                    this.createConnection(groupName, hubUrl);
+                }
             });
         }
         console.log(`SignalR hub ${hubUrl} reconnection started...`);

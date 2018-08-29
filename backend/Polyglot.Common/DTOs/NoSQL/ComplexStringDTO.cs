@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Polyglot.Common.DTOs.NoSQL
@@ -19,7 +20,10 @@ namespace Polyglot.Common.DTOs.NoSQL
         public string Description { get; set; }
 		public string PictureLink { get; set; }
 
-		public List<TranslationDTO> Translations { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int CreatedBy { get; set; }
+
+        public List<TranslationDTO> Translations { get; set; }
 		public List<CommentDTO> Comments { get; set; }
 		public List<string> Tags { get; set; }
 

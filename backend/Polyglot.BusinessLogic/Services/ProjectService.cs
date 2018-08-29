@@ -107,16 +107,18 @@ namespace Polyglot.BusinessLogic.Services
 
                 var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
                 await uow.SaveAsync();
-                await stringsProvider.CreateAsync(
-                    new DataAccess.MongoModels.ComplexString()
-                    {
-                        Id = savedEntity.Id,
-                        Key = i.Key,
-                        OriginalValue = i.Value,
-                        ProjectId = id,
-                        Translations = new List<Translation>(),
-                        Comments = new List<Comment>(),
-                        Tags = new List<string>()
+				await stringsProvider.CreateAsync(
+					new DataAccess.MongoModels.ComplexString()
+					{
+						Id = savedEntity.Id,
+						Key = i.Key,
+						OriginalValue = i.Value,
+						ProjectId = id,
+						Translations = new List<Translation>(),
+						Comments = new List<Comment>(),
+						Tags = new List<string>(),
+						CreatedOn = DateTime.Now,
+						CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
                     });
             }
 
@@ -444,7 +446,14 @@ namespace Polyglot.BusinessLogic.Services
 
             if (target.ImageUrl != null && source.ImageUrl != null)
             {
-                await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+				try
+				{
+					await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+				}
+				catch (Exception)
+				{
+
+				}                
             }
             if (source.ImageUrl != null)
             {
@@ -473,9 +482,15 @@ namespace Polyglot.BusinessLogic.Services
             {
 
                 Project toDelete = await uow.GetRepository<Project>().GetAsync(identifier);
-                if (toDelete.ImageUrl != null)
-                    await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+				try
+				{
+					await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+				}
+				catch (Exception)
+				{
 
+				}
+				await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
@@ -758,11 +773,7 @@ namespace Polyglot.BusinessLogic.Services
             // если строк для перевода нет тогда ничего вычислять не нужно
             if (projectStrings.Count() < 1)
                 return mapper.Map<IEnumerable<LanguageStatisticDTO>>(targetLanguages);
-
-            var projectTranslations = projectStrings
-                ?.SelectMany(css => css.Translations)
-                .ToList();
-
+            
             // мапим языки проекта, а затем добавляем TranslatedStrings и ComplexStringsCount по каждому языку
             return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageStatisticDTO>>(targetLanguages, opt => opt.AfterMap((src, dest) =>
             {
@@ -772,9 +783,8 @@ namespace Polyglot.BusinessLogic.Services
                 for (int i = 0; i < languageDTOs.Count; i++)
                 {
                     // ищем переводы по каждому языку
-                    translatedCount = projectTranslations
-                        ?.Where(t => t.LanguageId == languageDTOs[i].Id && !String.IsNullOrWhiteSpace(t.TranslationValue))
-                        ?.Count();
+                    translatedCount = projectStrings?.Count(complexString =>
+                        complexString.Translations.Any(x => x.LanguageId == languageDTOs[i].Id));
 
                     languageDTOs[i].ComplexStringsCount = projectStrings.Count();
 

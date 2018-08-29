@@ -68,5 +68,16 @@ namespace Polyglot.BusinessLogic.Services
             else
                 return false;
         }
+
+        public override async Task<GlossaryDTO> PostAsync(GlossaryDTO entity)
+        {
+
+            var ent = mapper.Map<Glossary>(entity);
+            ent.OriginLanguage = null;
+            var target = await uow.GetRepository<Glossary>().CreateAsync(ent);
+            await uow.SaveAsync();
+
+            return mapper.Map<GlossaryDTO>(target);
+        }
     }
 }

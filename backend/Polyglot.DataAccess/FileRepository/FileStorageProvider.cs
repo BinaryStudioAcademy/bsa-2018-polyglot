@@ -53,8 +53,9 @@ namespace Polyglot.DataAccess.FileRepository
             ICloudBlob blob = null;
             try
             {
-                blob = await client.GetBlobReferenceFromServerAsync(path);
-            }
+				blob = await client.GetBlobReferenceFromServerAsync(path);
+				await blob.DeleteIfExistsAsync();
+			}
             catch (Exception)
             {
                 throw new Exception("No such file");
