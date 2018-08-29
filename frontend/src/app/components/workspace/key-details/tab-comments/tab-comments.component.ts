@@ -66,6 +66,7 @@ export class TabCommentsComponent implements OnInit {
 
     addComment(commentBody: string) {
         this.comments.unshift({
+            id: '',
             user: this.userService.getCurrentUser(),
             text: commentBody,
             createdOn: new Date(Date.now())
@@ -86,4 +87,8 @@ export class TabCommentsComponent implements OnInit {
                     this.snotifyService.error("Comment added", "Error!");
                 });
     }
+
+    // public deleteComment(commentId: string): void {
+    //     this.commentsService.deleteComment(commentId); // тебе нужен вот этот сервис. где он?
+    // }
 }

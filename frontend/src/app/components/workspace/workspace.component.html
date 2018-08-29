@@ -57,7 +57,7 @@
 
           <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
             <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
-              <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
+              <app-workspace-key (idEvent)="removeKeyById($event)" [key]="key"></app-workspace-key>
             </div>
             <mat-divider></mat-divider>
           </a>

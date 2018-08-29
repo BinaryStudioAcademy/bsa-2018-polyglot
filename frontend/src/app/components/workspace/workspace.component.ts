@@ -8,8 +8,6 @@ import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog
 import { SnotifyService } from "ng-snotify";
 import { FormControl } from "../../../../node_modules/@angular/forms";
 import { AppStateService } from "../../services/app-state.service";
-import * as signalR from "@aspnet/signalr";
-import { environment } from "../../../environments/environment";
 import { UserService } from "../../services/user.service";
 import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
@@ -96,7 +94,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     },
                 );
 
-
             });
             this.basicPath = 'workspace/' + params.projectId;
             this.currentPath = 'workspace/' + params.projectId + '/key';
@@ -110,12 +107,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
                             this.router.navigate([this.currentPath, keyId]);
-                        
                         }
                         else {
                             this.isLoad = true;
                         }
-                        
                     }
                 });
 
@@ -172,7 +167,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
 
-    receiveId($event) {
+    removeKeyById($event) {
         let temp = this.keys.findIndex(x => x.id === $event);
         if (this.selectedKey.id === this.keys[temp].id)
             this.selectedKey = this.keys[temp - 1]
@@ -206,7 +201,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             SignalrSubscribeActions.complexStringRemoved
             ],
             (deletedStringId: number) => {
-                this.receiveId(deletedStringId);
+                this.removeKeyById(deletedStringId);
             }
         );
     }
