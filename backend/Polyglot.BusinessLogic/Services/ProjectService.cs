@@ -474,8 +474,8 @@ namespace Polyglot.BusinessLogic.Services
                 catch (Exception)
                 {
 
-                }
-
+				}
+				await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
