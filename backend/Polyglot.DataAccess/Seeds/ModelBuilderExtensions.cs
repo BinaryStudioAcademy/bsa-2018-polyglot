@@ -634,7 +634,7 @@ namespace Polyglot.DataAccess.Seeds
                    CreatedOn = DateTime.Now,
                    Technology ="films",
                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                   Teams = new List<Team>(),
+                   ProjectTeams =  new List<ProjectTeam>(),
                    ProjectTags = {
                            new ProjectTag { TagId = 1, ProjectId = 1 },
                            new ProjectTag { TagId = 2, ProjectId = 1 },
