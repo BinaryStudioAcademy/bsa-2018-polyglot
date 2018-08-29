@@ -227,29 +227,27 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     OnFilterApply() {
         //If the filters сontradict each other
-        /* this.ContradictoryСhoise(["Translated", "Untranslated"]);
-        this.ContradictoryСhoise(["Human Translation", "Machine Translation"]); */
+        this.ContradictoryСhoise(["filter/Translated", "filter/Untranslated"]);
+        this.ContradictoryСhoise(["filter/Human Translation", "filter/Machine Translation"]); 
         console.log(this.filters);
-        /*      
+         
         this.dataProvider
-            .getProjectStringsByFilter(this.project.id, this.options.value)
+            .getProjectStringsByFilter(this.project.id, this.filters)
             .subscribe(res => {
                 this.keys = res;
             });
-        console.log(this.options.value); */
     }
 
-   /*  ContradictoryСhoise(options: string[]) {
+     ContradictoryСhoise(options: string[]) {
         if (
-            this.options.value.includes(options[0]) &&
-            this.options.value.includes(options[1])
+            this.filters.includes(options[0]) &&
+            this.filters.includes(options[1])
         ) {
             options.forEach(element => {
-                let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1);
+                this.filters = this.filters.filter( x => { return x !== element})
             });
         }
-    } */
+    } 
 
     selectFilterOption($event,index){
         if($event.checked){
