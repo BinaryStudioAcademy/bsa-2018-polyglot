@@ -579,6 +579,10 @@ namespace Polyglot.BusinessLogic.Services
                 }
 
             }
+            else
+            {
+                result = criteriaResult;
+            }
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
         }
@@ -589,14 +593,8 @@ namespace Polyglot.BusinessLogic.Services
         {
             var parameter = Expression.Parameter(typeof(T));
 
-            var leftVisitor = new Filter.ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
-            var left = leftVisitor.Visit(expr1.Body);
-
-            var rightVisitor = new Filter.ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
-            var right = rightVisitor.Visit(expr2.Body);
-
             return Expression.Lambda<Func<T, bool>>(
-                Expression.AndAlso(left, right), parameter);
+                Expression.AndAlso(expr1, expr2), parameter);
         }
 
         #region Statistic

@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic;
 using Polyglot.Hubs;
-using mapper = Polyglot.Common.Mapping.AutoMapper;
 using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
@@ -46,7 +45,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR();
 
             services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
@@ -80,7 +79,7 @@ namespace Polyglot
 
             app.UseMvc();
 
-            app.UseSignalR(options =>
+            app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
             });
