@@ -1,14 +1,14 @@
 <div class="container">
     <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
         <mat-form-field class="field-full-width">
-            <textarea [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500"></textarea>
+            <input [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500">
         </mat-form-field>
         <div class="button-container">
             <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>
         </div>
     </form>
     <div *ngFor="let com of comments" class="comments-container">
-     
+
         <mat-card class="comment-card">
             <div class="author-info">
                 <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
@@ -23,9 +23,8 @@
             </mat-menu>
             <div class="text">{{com?.text}}</div>
             <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
-            
         </mat-card>
-    
+
     </div>
     <div *ngIf="!comments" class="spinner">
         <mat-spinner></mat-spinner>
