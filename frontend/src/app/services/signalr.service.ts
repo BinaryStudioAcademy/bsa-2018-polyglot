@@ -53,12 +53,13 @@ export class SignalrService {
         }
     }
 
-    public validateResponce(responce: any): boolean {
+    public validateResponse(responce: any): boolean {
+        debugger;
         if (
-            responce.result.ids &&
-            responce.result.ids.length > 0 &&
-            responce.result.senderId &&
-            responce.result.senderId !== this.appState.currentDatabaseUser.id
+            responce.ids &&
+            responce.ids.length > 0 &&
+            responce.senderId &&
+            responce.senderId !== this.appState.currentDatabaseUser.id
         ) {
             return true;
         } else {

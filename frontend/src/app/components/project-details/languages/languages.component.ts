@@ -73,9 +73,9 @@ export class LanguagesComponent implements OnInit {
     subscribeProjectChanges() {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
-            (response: any) => {
+            response => {
                 if (this.signalrService.validateResponse(response)) {
-                    const languageId = response.result.ids.pop();
+                    const languageId = response.ids.pop();
                     let removedLanguage = this.langs.filter(
                         l => l.id === languageId
                     );
@@ -170,8 +170,8 @@ export class LanguagesComponent implements OnInit {
                 SignalrSubscribeActions.languageTranslationCommitted
             ],
             (response: any) => {
-                if (this.signalrService.validateResponse(response)) {
-                    const languageId = response.result.ids.pop();
+                if (response.ids && response.ids.length > 0) {
+                    const languageId = response.ids.pop();
                     this.IsLoading[languageId] = true;
 
                     this.projectService

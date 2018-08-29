@@ -139,7 +139,7 @@ export class KeyDetailsComponent implements OnInit {
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     if (this.keyDetails && this.keyDetails.translations) {
-                        const removedLanguageId = response.result.ids.pop();
+                        const removedLanguageId = response.ids.pop();
                         let langName: string;
                         const currentState = this.appState.getWorkspaceState;
                         const deletedLanguage = currentState.languages.filter(
@@ -171,8 +171,9 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
+                debugger;
                 if (this.signalrService.validateResponse(response)) {
-                    const languagesIds = response.result.ids;
+                    const languagesIds = response.ids;
                     this.isLoad = true;
                     this.projectService
                         .getProjectLanguages(this.projectId)

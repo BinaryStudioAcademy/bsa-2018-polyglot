@@ -199,7 +199,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     this.complexStringService
-                        .getById(response.result.ids.pop())
+                        .getById(response.ids.pop())
                         .subscribe(newStr => {
                             if (newStr) {
                                 this.keys.push(newStr);
@@ -214,7 +214,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             ],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
-                    this.receiveId(response.result.ids.pop());
+                    this.receiveId(response.ids.pop());
                 }
             }
         );
