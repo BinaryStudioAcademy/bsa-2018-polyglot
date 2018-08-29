@@ -73,23 +73,26 @@ export class LanguagesComponent implements OnInit {
     subscribeProjectChanges() {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
-            (languageId: number) => {
-                let removedLanguage = this.langs.filter(
-                    l => l.id === languageId
-                );
-                if (removedLanguage && removedLanguage.length > 0) {
-                    this.snotifyService.info(
-                        `${removedLanguage[0].name} removed`,
-                        "Language removed"
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    const languageId = response.result.ids.pop();
+                    let removedLanguage = this.langs.filter(
+                        l => l.id === languageId
                     );
-                    this.langs = this.langs.filter(l => l.id != languageId);
+                    if (removedLanguage && removedLanguage.length > 0) {
+                        this.snotifyService.info(
+                            `${removedLanguage[0].name} removed`,
+                            "Language removed"
+                        );
+                        this.langs = this.langs.filter(l => l.id != languageId);
+                    }
                 }
             }
         );
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
-            (languagesIds: number[]) => {
-                if (languagesIds && languagesIds.length > 0) {
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
                     this.snotifyService.info(
                         `Some new languages were added to project`,
                         "Language added"
@@ -115,7 +118,7 @@ export class LanguagesComponent implements OnInit {
 
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
-            (complexStringId: number) => {
+            (response: any) => {
                 this.snotifyService.info(
                     "New complex string added",
                     "String added"
@@ -134,7 +137,7 @@ export class LanguagesComponent implements OnInit {
             SignalrSubscribeActions[
                 SignalrSubscribeActions.complexStringRemoved
             ],
-            (complexStringId: number) => {
+            (response: any) => {
                 this.snotifyService.info(
                     "Complex string removed, updating language statistic",
                     "String removed"
@@ -166,29 +169,32 @@ export class LanguagesComponent implements OnInit {
             SignalrSubscribeActions[
                 SignalrSubscribeActions.languageTranslationCommitted
             ],
-            (languageId: number) => {
-                this.IsLoading[languageId] = true;
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    const languageId = response.result.ids.pop();
+                    this.IsLoading[languageId] = true;
 
-                this.projectService
-                    .getProjectLanguageStatistic(this.projectId, languageId)
-                    .subscribe(
-                        (langStatistic: LanguageStatistic) => {
-                            let langsTemp = this.langs.filter(
-                                l => l.id !== languageId
-                            );
-                            langsTemp.push(langStatistic);
-                            this.langs = langsTemp;
-                            this.langs.sort(this.compareProgress);
-                            this.IsLoading[languageId] = false;
-                        },
-                        err => {
-                            this.IsLoading[languageId] = false;
-                            this.snotifyService.error(
-                                "Complex string update failed!",
-                                "Error"
-                            );
-                        }
-                    );
+                    this.projectService
+                        .getProjectLanguageStatistic(this.projectId, languageId)
+                        .subscribe(
+                            (langStatistic: LanguageStatistic) => {
+                                let langsTemp = this.langs.filter(
+                                    l => l.id !== languageId
+                                );
+                                langsTemp.push(langStatistic);
+                                this.langs = langsTemp;
+                                this.langs.sort(this.compareProgress);
+                                this.IsLoading[languageId] = false;
+                            },
+                            err => {
+                                this.IsLoading[languageId] = false;
+                                this.snotifyService.error(
+                                    "Complex string update failed!",
+                                    "Error"
+                                );
+                            }
+                        );
+                }
             }
         );
     }
@@ -201,9 +207,7 @@ export class LanguagesComponent implements OnInit {
 
         this.langService.getAll().subscribe(langs => {
             let langsToSelect = langs.filter(function(language) {
-                if (
-                    thisLangs.find(t => t.id === language.id)
-                ) {
+                if (thisLangs.find(t => t.id === language.id)) {
                     return false;
                 } else {
                     return true;
@@ -211,8 +215,7 @@ export class LanguagesComponent implements OnInit {
             });
 
             langsToSelect = langsToSelect.filter(lang => {
-                return lang.id !== this.mainLang.id
-            
+                return lang.id !== this.mainLang.id;
             });
 
             this.IsLangLoad = false;

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../environments/environment";
 import { HubConnection } from "@aspnet/signalr";
+import { AppStateService } from "./app-state.service";
 
 @Injectable({
     providedIn: "root"
@@ -11,19 +12,22 @@ export class SignalrService {
 
     connectionClosedByUser: boolean = false;
 
-    constructor() {}
+    constructor(private appState: AppStateService) {}
 
     public createConnection(groupName: string, hubUrl: string) {
         if (
             !this.connection ||
-                this.connection.connection.connectionState === 2
+            this.connection.connection.connectionState === 2
         ) {
             this.connect(
                 groupName,
                 hubUrl
             ).then(data => {
                 console.log(`SignalR hub ${hubUrl} connected.`);
-                if (this.connection.connection.connectionState === 1 && !this.connectionClosedByUser) {
+                if (
+                    this.connection.connection.connectionState === 1 &&
+                    !this.connectionClosedByUser
+                ) {
                     console.log(`Connecting to group ${groupName}`);
                     this.connection.send("joinGroup", groupName);
                 }
@@ -44,11 +48,23 @@ export class SignalrService {
         ) {
             console.log(`Disconnecting from group ${groupName}`);
             this.connection.send("leaveGroup", groupName);
-         //   console.log(`Stoping SignalR connection`);
-         //   this.connection.stop();
+            //   console.log(`Stoping SignalR connection`);
+            //   this.connection.stop();
         }
     }
 
+    public validateResponce(responce: any): boolean {
+        if (
+            responce.result.ids &&
+            responce.result.ids.length > 0 &&
+            responce.result.senderId &&
+            responce.result.senderId !== this.appState.currentDatabaseUser.id
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     connect(groupName: string, hubUrl: string): Promise<void> {
         if (!this.connection) {
             console.log(
@@ -60,8 +76,7 @@ export class SignalrService {
 
             this.connection.onclose(err => {
                 console.log(`SignalR hub ${hubUrl} disconnected.`);
-                if(this.connectionClosedByUser)
-                {
+                if (this.connectionClosedByUser) {
                     this.createConnection(groupName, hubUrl);
                 }
             });

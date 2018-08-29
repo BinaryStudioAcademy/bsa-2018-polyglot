@@ -74,33 +74,40 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.dataProvider.getById(params.projectId).subscribe(proj => {
                 this.project = proj;
 
-                this.projectService.getProjectLanguages(this.project.id).subscribe(
-                    (d: Language[]) => {
-                        this.projectLanguagesCount = d.length;
-                        const workspaceState = {
-                            projectId: this.project.id,
-                            languages: d
-                        };
+                this.projectService
+                    .getProjectLanguages(this.project.id)
+                    .subscribe(
+                        (d: Language[]) => {
+                            this.projectLanguagesCount = d.length;
+                            const workspaceState = {
+                                projectId: this.project.id,
+                                languages: d
+                            };
 
-                        this.appState.setWorkspaceState = workspaceState;
-                        this.signalrService.createConnection(
-                            `${SignalrGroups[SignalrGroups.project]}${
-                            this.project.id
-                            }`,
-                            "workspaceHub"
-                        );
-                        this.subscribeProjectChanges();
-                    },
-                    err => {
-                        this.keys = null;
-                        this.isLoad = false;
-                        console.log("err", err);
-                    },
-                );
+                            this.appState.setWorkspaceState = workspaceState;
+                            this.signalrService.createConnection(
+                                `${SignalrGroups[SignalrGroups.project]}${
+                                    this.project.id
+                                }`,
+                                "workspaceHub"
+                            );
+                            this.subscribeProjectChanges();
+                        },
+                        err => {
+                            this.keys = null;
+                            this.isLoad = false;
+                            console.log("err", err);
+                        }
+                    );
             });
-            this.basicPath = 'workspace/' + params.projectId;
-            this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+            this.basicPath = "workspace/" + params.projectId;
+            this.currentPath = "workspace/" + params.projectId + "/key";
+            this.dataProvider
+                .getProjectStringsWithPagination(
+                    params.projectId,
+                    this.elementsOnPage,
+                    0
+                )
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -109,12 +116,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
-                            this.router.navigate([this.currentPath, keyId]);   
-                        }
-                        else {
+                            this.router.navigate([this.currentPath, keyId]);
+                        } else {
                             this.isLoad = true;
                         }
-                        
                     }
                 });
 
@@ -122,7 +127,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
 
-    onAdvanceSearchClick() { }
+    onAdvanceSearchClick() {}
 
     ngDoCheck() {
         if (
@@ -162,7 +167,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     ngOnDestroy() {
         this.routeSub.unsubscribe();
         this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`);
+            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
+        );
     }
 
     getProjById(id: number) {
@@ -190,22 +196,26 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     subscribeProjectChanges() {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
-            (newStringId: number) => {
-                this.complexStringService
-                    .getById(newStringId)
-                    .subscribe(newStr => {
-                        if (newStr) {
-                            this.keys.push(newStr);
-                        }
-                    });
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    this.complexStringService
+                        .getById(response.result.ids.pop())
+                        .subscribe(newStr => {
+                            if (newStr) {
+                                this.keys.push(newStr);
+                            }
+                        });
+                }
             }
         );
         this.signalrService.connection.on(
             SignalrSubscribeActions[
-            SignalrSubscribeActions.complexStringRemoved
+                SignalrSubscribeActions.complexStringRemoved
             ],
-            (deletedStringId: number) => {
-                this.receiveId(deletedStringId);
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    this.receiveId(response.result.ids.pop());
+                }
             }
         );
     }
@@ -262,11 +272,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     highlightStringStatus(key) {
         if (key.translations.length === 0) {
-            return '7px solid #a91818'; // not started
+            return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
-            return '7px solid #ffcc00'; // partially
+            return "7px solid #ffcc00"; // partially
         } else if (key.translations.length === this.projectLanguagesCount) {
-            return '7px solid #00b300'; // completed
+            return "7px solid #00b300"; // completed
         }
     }
 
