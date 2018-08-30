@@ -151,7 +151,7 @@ namespace Polyglot.Controllers
 
             if (success)
             {
-                return Ok();
+                return Ok(success);
             }
             else
             {

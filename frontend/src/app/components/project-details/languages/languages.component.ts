@@ -1,21 +1,15 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { ProjectService } from "../../../services/project.service";
 import { LanguageService } from "../../../services/language.service";
-import {
-    SnotifyService,
-    SnotifyPosition,
-    SnotifyToastConfig
-} from "ng-snotify";
+import { SnotifyService } from "ng-snotify";
 import { DeleteProjectLanguageComponent } from "../../../dialogs/delete-project-language/delete-project-language.component";
 import { MatDialog } from "@angular/material";
 import { SelectProjectLanguageComponent } from "../../../dialogs/select-project-language/select-project-language.component";
 import { LanguageStatistic } from "../../../models/languageStatistic";
 import { Language } from "../../../models";
-import * as signalR from "../../../../../node_modules/@aspnet/signalr";
-import { environment } from "../../../../environments/environment";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
-import { SignalrService } from "../../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
+import { SignalrService } from "../../../services/signalr.service";
 
 @Component({
     selector: "app-languages",
@@ -382,40 +376,3 @@ export class LanguagesComponent implements OnInit {
         return 0;
     }
 }
-
-// subscribeProjectChanges(){
-
-//     this.connection.send("joinProjectGroup", `${this.projectId}`)
-
-//     this.connection.on("languageAdded", (languagesIds: Array<number>) =>
-//       {
-//         console.log(languagesIds);
-//         this.snotifyService.info(languagesIds.join(", ") + " added" , "Language added")
-//         this.IsLoad = true;
-// // ==============================================================================
-// // ==============> Загрузить с сервера только те языки которые были добавленны
-//         this.projectService.getProjectLanguagesStatistic(this.projectId)
-//         .subscribe(langs => {
-//           this.IsLoad = false;
-//           this.langs = langs;
-//           this.langs.sort(this.compareProgress);
-//         },
-//         err => {
-//           this.IsLoad = false;
-//         });
-//       });
-//       this.connection.on("languageDeleted", (languageId: number) =>
-//       {
-//         this.langs = this.langs.filter(l => l.id != languageId);
-//         this.snotifyService.info(`lang with id =${languageId} removed`  , "Language removed")
-//       });
-
-//       this.connection.on("stringTranslated", (complexStringId: number, languageId: number) =>
-//       {
-//         this.projectService.getProjectLanguageStatistic(this.projectId, languageId)
-//           .subscribe(lang => {
-//             let targetId = this.langs.findIndex(l => l.id === languageId);
-//             this.langs[targetId] = lang;
-//           });
-//       });
-//   }

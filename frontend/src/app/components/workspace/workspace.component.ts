@@ -177,8 +177,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
 
-    receiveId($event) {
-        let temp = this.keys.findIndex(x => x.id === $event);
+    removeComplexString(complexStringId: number) {
+        let temp = this.keys.findIndex(x => x.id === complexStringId);
         if (this.selectedKey.id === this.keys[temp].id)
             this.selectedKey = this.keys[temp - 1]
                 ? this.keys[temp - 1]
@@ -199,7 +199,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     this.complexStringService
-                        .getById(response.ids.pop())
+                        .getById(response.ids[0])
                         .subscribe(newStr => {
                             if (newStr) {
                                 this.keys.push(newStr);
@@ -214,7 +214,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             ],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
-                    this.receiveId(response.ids.pop());
+                    this.removeComplexString(response.ids[0]);
                 }
             }
         );

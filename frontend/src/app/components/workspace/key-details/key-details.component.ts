@@ -34,6 +34,7 @@ export class KeyDetailsComponent implements OnInit {
     public pageSize: number = 5;
     public Id: string;
     public isEmpty: boolean;
+
     projectId: number;
     languages: Language[];
     expandedArray: TranslationState[];
@@ -44,7 +45,7 @@ export class KeyDetailsComponent implements OnInit {
     btnNoText: string = "No";
     btnCancelText: string = "Cancel";
     answer: number;
-    keyId: number;
+    currentKeyId: number;
     isDisabled: boolean;
     dataIsLoaded: boolean = false;
     isMachineTranslation: boolean;
@@ -68,23 +69,35 @@ export class KeyDetailsComponent implements OnInit {
         this.isMachineTranslation = false;
 
         this.route.params.subscribe(value => {
-            this.keyId = value.keyId;
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
+
+                if (this.currentKeyId && this.currentKeyId !== data.id) {
+                    this.signalrService.closeConnection(
+                        `${SignalrGroups[SignalrGroups.complexString]}${
+                            this.currentKeyId
+                        }`
+                    );
+                } else {
+                    this.subscribeProjectChanges();
+                }
+
+                
+                this.currentKeyId = data.id;
                 this.signalrService.createConnection(
                     `${SignalrGroups[SignalrGroups.complexString]}${
-                        this.keyDetails.id
+                        this.currentKeyId
                     }`,
                     "workspaceHub"
                 );
-                this.subscribeProjectChanges();
+
                 this.getLanguages();
             });
             this.dataProvider
-                .getCommentsByStringId(this.keyId)
+                .getCommentsByStringId(this.currentKeyId)
                 .subscribe(comments => {
                     this.comments = comments;
                 });
@@ -118,7 +131,7 @@ export class KeyDetailsComponent implements OnInit {
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     this.dataProvider
-                        .getStringTranslations(this.keyId)
+                        .getStringTranslations(this.currentKeyId)
                         .subscribe(translations => {
                             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         });
@@ -171,7 +184,6 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
-                debugger;
                 if (this.signalrService.validateResponse(response)) {
                     const languagesIds = response.ids;
                     this.isLoad = true;
@@ -247,7 +259,7 @@ export class KeyDetailsComponent implements OnInit {
         ].translationValue;
 
         this.history.showHistory(
-            this.keyId,
+            this.currentKeyId,
             this.keyDetails.translations[index].id
         );
     }
@@ -321,7 +333,7 @@ export class KeyDetailsComponent implements OnInit {
 
             if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
                 this.dataProvider
-                    .editStringTranslation(t, this.keyId)
+                    .editStringTranslation(t, this.currentKeyId)
                     .subscribe(
                         (d: any[]) => {
                             //console.log(this.keyDetails.translations);
@@ -330,7 +342,7 @@ export class KeyDetailsComponent implements OnInit {
                                 oldValue: ""
                             };
                             this.history.showHistory(
-                                this.keyId,
+                                this.currentKeyId,
                                 this.keyDetails.translations[index].id
                             );
                         },
@@ -341,7 +353,7 @@ export class KeyDetailsComponent implements OnInit {
             } else {
                 t.createdOn = new Date();
                 this.dataProvider
-                    .createStringTranslation(t, this.keyId)
+                    .createStringTranslation(t, this.currentKeyId)
                     .subscribe(
                         (d: any) => {
                             this.expandedArray[index] = {
@@ -349,7 +361,7 @@ export class KeyDetailsComponent implements OnInit {
                                 oldValue: ""
                             };
                             this.history.showHistory(
-                                this.keyId,
+                                this.currentKeyId,
                                 this.keyDetails.translations[index].id
                             );
                         },
