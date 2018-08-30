@@ -54,7 +54,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR();
 
             services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
@@ -79,16 +79,16 @@ namespace Polyglot
             CoreModule.ConfigureMiddleware(app);
             DataAccessModule.ConfigureMiddleware(app);
 
-            // if (env.IsDevelopment())
-            //  {
-            app.UseCors("AllowAll");
-            // }
+           // if (env.IsDevelopment())
+          //  {
+                app.UseCors("AllowAll");
+           // }
 
             app.UseAuthentication();
 
             app.UseMvc();
 
-            app.UseSignalR(options =>
+            app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
             });
