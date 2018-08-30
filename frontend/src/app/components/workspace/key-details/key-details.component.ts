@@ -306,13 +306,13 @@ export class KeyDetailsComponent implements OnInit {
             return;
         }
 
-
+        /*
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
             this.isMachineTranslation = false;
         } else {
             t.Type = TranslationType.Human;
-        }
+        }*/
 
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider
