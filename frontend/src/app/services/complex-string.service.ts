@@ -62,4 +62,8 @@ export class ComplexStringService {
   addOptionalTranslation(stringId, translationId, value) {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + stringId + '/' + translationId, '/?value=' + value);
   }
+
+  getOptionalTranslation(stringId, translationId) {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + stringId + '/' + translationId, 'optional' );
+  }
 }

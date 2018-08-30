@@ -128,7 +128,7 @@ namespace Polyglot.Controllers
 			}
 		}
 
-		[HttpGet("{stringId}/optional/{translationId}")]
+		[HttpGet("{stringId}/{translationId}/optional")]
 		public async Task<IActionResult> GetOptionalTranslations(int stringId, Guid translationId)
 		{
 			var result = await dataProvider.GetOptionalTranslations(stringId, translationId);
