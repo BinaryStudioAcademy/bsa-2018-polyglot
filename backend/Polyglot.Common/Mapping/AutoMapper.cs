@@ -264,13 +264,11 @@ namespace Polyglot.Common.Mapping
 				cfg.CreateMap<AdditionalTranslationDTO, AdditionalTranslation>()
 				  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
 				  .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
-				  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId))
-				  .ForMember(p => p.Type, opt => opt.MapFrom(po => po.Type));
+				  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
 				cfg.CreateMap<AdditionalTranslation, AdditionalTranslationDTO>()
 				  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))
 				  .ForMember(p => p.TranslationValue, opt => opt.MapFrom(pt => pt.TranslationValue))
-				  .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId))
-				  .ForMember(p => p.Type, opt => opt.MapFrom(pt => pt.Type));
+				  .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId));
 
                 cfg.CreateMap<CommentDTO, Comment>()
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))

@@ -116,8 +116,8 @@ namespace Polyglot.BusinessLogic.Services
 				new AdditionalTranslation() {
 					TranslationValue = value,
 					UserId = (await CurrentUser.GetCurrentUserProfile()).Id,
-					CreatedOn = DateTime.Now,
-					Type = Translation.TranslationType.Human
+					CreatedOn = DateTime.Now
+					//Type = Translation.TranslationType.Human
 				});
 
 			var result = await _repository.Update(targetString);
