@@ -21,8 +21,6 @@ namespace Polyglot.Common.DTOs
 
         public LanguageDTO MainLanguage { get; set; }
 		
-        public List<TeamDTO> Teams { get; set; }
-
         public List<TranslationDTO> Translations { get; set; }
 
         public List<LanguageDTO> ProjectLanguageses { get; set; }
@@ -30,11 +28,13 @@ namespace Polyglot.Common.DTOs
         public List<GlossaryDTO> ProjectGlossaries { get; set; }
 
         public List<TagDTO> ProjectTags { get; set; }
-		
+
+        public virtual List<TeamDTO> ProjectTeams { get; set; }
+
         public ProjectDTO()
         {
-			
-            Teams = new List<TeamDTO>();
+
+            ProjectTeams = new List<TeamDTO>();
             Translations = new List<TranslationDTO>();
             ProjectLanguageses = new List<LanguageDTO>();
             ProjectGlossaries = new List<GlossaryDTO>();
