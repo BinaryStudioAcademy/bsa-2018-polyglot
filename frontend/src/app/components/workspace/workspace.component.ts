@@ -1,21 +1,19 @@
 import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription } from "rxjs";
-import { Project, Language, UserProfile } from "../../models";
+import { Subscription, forkJoin } from "rxjs";
+import { Project,  UserProfile } from "../../models";
 import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
 import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog.component";
 import { SnotifyService } from "ng-snotify";
-import { FormControl } from "../../../../node_modules/@angular/forms";
 import { AppStateService } from "../../services/app-state.service";
-import * as signalR from "@aspnet/signalr";
-import { environment } from "../../../environments/environment";
 import { UserService } from "../../services/user.service";
 import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
 import { Hub } from "../../models/signalrModels/hub";
+
 
 @Component({
     selector: "app-workspace",
@@ -36,22 +34,22 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public isLoad: boolean;
     public projectLanguagesCount: number;
 
+    public projectTags: string[] = [];
+
     private routeSub: Subscription;
 
-    options = new FormControl();
+    filters : Array<string>
 
     filterOptions: string[] = [
         "Translated",
         "Untranslated",
-        "Human Translation",
-        "Machine Translation",
-        "With Tags"
+        "With Tags",
+        "With Photo"
     ];
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        private dataProvider: ProjectService,
         private dialog: MatDialog,
         private projectService: ProjectService,
         private snotifyService: SnotifyService,
@@ -69,18 +67,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
+        this.filters = [];
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
-            this.dataProvider.getById(params.projectId).subscribe(proj => {
-                this.project = proj;
+            forkJoin(this.projectService.getById(params.projectId),
+            this.projectService.getProjectLanguages(params.projectId)
+            ).subscribe(result => {
+                this.project = result[0];
 
-                this.projectService.getProjectLanguages(this.project.id).subscribe(
-                    (d: Language[]) => {
-                        this.projectLanguagesCount = d.length;
+                this.projectLanguagesCount = result[1].length;
                         const workspaceState = {
                             projectId: this.project.id,
-                            languages: d
+                            languages: result[1]
                         };
 
                         this.appState.setWorkspaceState = workspaceState;
@@ -91,17 +90,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             Hub[Hub.workspaceHub]
                         );
                         this.subscribeProjectChanges();
-                    },
-                    err => {
-                        this.keys = null;
-                        this.isLoad = false;
-                        console.log("err", err);
-                    },
-                );
-            });
+                },
+                err => {
+                    this.keys = null;
+                    this.isLoad = false;
+                    console.log("err", err);
+                }
+            )
             this.basicPath = 'workspace/' + params.projectId;
             this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+            this.projectService.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -115,15 +113,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         else {
                             this.isLoad = true;
                         }
-                        
+
                     }
+                    let list = this.keys.filter(x => x.tags.length > 0);
+                    this.projectTags = [].concat.apply([], list.map(x => x.tags));
                 });
 
             this.currentPage++;
         });
     }
-
-    onAdvanceSearchClick() { }
 
     ngDoCheck() {
         if (
@@ -167,7 +165,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     getProjById(id: number) {
-        this.dataProvider.getById(id).subscribe(proj => {
+        this.projectService.getById(id).subscribe(proj => {
             this.project = proj;
         });
     }
@@ -211,18 +209,45 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         );
     }
 
-    OnSelectOption() {
+    onFilterApply() {
         //If the filters сontradict each other
-        this.ContradictoryСhoise(["Translated", "Untranslated"]);
-        this.ContradictoryСhoise(["Human Translation", "Machine Translation"]);
-
-        this.dataProvider
-            .getProjectStringsByFilter(this.project.id, this.options.value)
+        this.contradictoryСhoise(["filter/Translated", "filter/Untranslated"]);         
+        this.projectService
+            .getProjectStringsByFilter(this.project.id, this.filters)
             .subscribe(res => {
                 this.keys = res;
             });
-        console.log(this.options.value);
     }
+
+     contradictoryСhoise(options: string[]) {
+        if (
+            this.filters.includes(options[0]) &&
+            this.filters.includes(options[1])
+        ) {
+            options.forEach(element => {
+                this.filters = this.filters.filter( x => { return x !== element})
+            });
+        }
+    } 
+
+    selectFilterOption($event,index){
+        if($event.checked){
+            this.filters.push("filter/"+this.filterOptions[index])
+        }
+        else{
+            this.filters = this.filters.filter( x => { return x !== "filter/" + this.filterOptions[index];});
+        }
+    }
+
+    selectTag($event,index){
+        if($event.checked){
+            this.filters.push("tags/" + this.projectTags[index])
+        }
+        else{
+            this.filters = this.filters.filter( x => { return x !== "tags/" + this.projectTags[index];});
+        } 
+    }
+
 
     public onScrollUp(): void {
         this.getKeys(this.currentPage, keys => {
@@ -237,7 +262,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     getKeys(page: number = 1, saveResultsCallback: (keys) => void) {
-        return this.dataProvider
+        return this.projectService
             .getProjectStringsWithPagination(
                 this.project.id,
                 this.elementsOnPage,
@@ -249,17 +274,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
     }
 
-    ContradictoryСhoise(options: string[]) {
-        if (
-            this.options.value.includes(options[0]) &&
-            this.options.value.includes(options[1])
-        ) {
-            options.forEach(element => {
-                let index = this.options.value.indexOf(element);
-                this.options.value.splice(index, 1);
-            });
-        }
-    }
+/*     test(id){
+    var checkbox = document.getElementById("mat-checkbox-"+id);
+    console.log(checkbox.classList.contains("mat-checkbox-checked"));
+    } */
+
 
     highlightStringStatus(key) {
         if (key.translations.length === 0) {

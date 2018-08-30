@@ -26,6 +26,7 @@ import { NewTeamComponent } from '../../components/teams/new-team/new-team.compo
 import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { ChatComponent } from '../../components/chat/chat.component';
+import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
 
 
   
@@ -34,8 +35,8 @@ const routes: Routes = [
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent},
-  { path: 'profile/newproject', canActivate: [AuthGuard], component: NewProjectComponent },
-  { path: 'profile/newteam', canActivate: [AuthGuard], component: NewTeamComponent },
+  { path: 'newproject', canActivate: [AuthGuard, TranslatorGuardService], component: NewProjectComponent },
+  { path: 'newteam', canActivate: [AuthGuard, TranslatorGuardService], component: NewTeamComponent },
   { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
 
   {

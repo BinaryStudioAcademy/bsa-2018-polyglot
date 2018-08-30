@@ -6,7 +6,6 @@ import { Language } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
@@ -15,6 +14,7 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -26,6 +26,8 @@ export class KeyDetailsComponent implements OnInit {
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
     history: TabHistoryComponent;
+    @ViewChild(TabOptionalComponent)
+    optional: TabOptionalComponent;
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -51,6 +53,7 @@ export class KeyDetailsComponent implements OnInit {
     public MachineTranslation: string;
     public previousTranslation: string;
     currentTranslation: string;
+    currentSuggestion: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -237,6 +240,10 @@ export class KeyDetailsComponent implements OnInit {
             this.keyId,
             this.keyDetails.translations[index].id
         );
+        this.optional.showOptional(
+            this.keyId,
+            this.keyDetails.translations[index].id
+        );
     }
 
     setNewValueTranslation(translation: any) {
@@ -292,64 +299,69 @@ export class KeyDetailsComponent implements OnInit {
         this.currentTranslation = "";
 
         // 'Save' button not work if nothing has been changed
-        if (!t.translationValue || (this.expandedArray[index].oldValue === t.translationValue)) {
+        if (!t.translationValue || (this.expandedArray[index].oldValue === t.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             return;
         }
 
+        /*
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
             this.isMachineTranslation = false;
         } else {
             t.Type = TranslationType.Human;
+        }*/
 
-            if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
-                this.dataProvider
-                    .editStringTranslation(t, this.keyId)
-                    .subscribe(
-                        (d: any[]) => {
-                            //console.log(this.keyDetails.translations);
-                            this.expandedArray[index] = {
-                                isOpened: false,
-                                oldValue: ""
-                            };
-                            this.history.showHistory(
-                                this.keyId,
-                                this.keyDetails.translations[index].id
-                            );
-                        },
-                        err => {
-                            this.snotifyService.error(err);
-                        }
-                    );
-            } else {
-                t.createdOn = new Date();
-                this.dataProvider
-                    .createStringTranslation(t, this.keyId)
-                    .subscribe(
-                        (d: any) => {
-                            this.expandedArray[index] = {
-                                isOpened: false,
-                                oldValue: ""
-                            };
-                            this.history.showHistory(
-                                this.keyId,
-                                this.keyDetails.translations[index].id
-                            );
-                        },
-                        err => {
-                            console.log("err", err);
-                        }
-                    );
-            }
+        if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
+            this.dataProvider
+                .editStringTranslation(t, this.keyId)
+                .subscribe(
+                    (d: any[]) => {
+                        //console.log(this.keyDetails.translations);
+                        this.expandedArray[index] = {
+                            isOpened: false,
+                            oldValue: ""
+                        };
+                        this.history.showHistory(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                    },
+                    err => {
+                        this.snotifyService.error(err);
+                    }
+                );
+        } else {
+            t.createdOn = new Date();
+            this.dataProvider
+                .createStringTranslation(t, this.keyId)
+                .subscribe(
+                    (d: any) => {
+                        this.expandedArray[index] = {
+                            isOpened: false,
+                            oldValue: ""
+                        };
+                        this.history.showHistory(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                    },
+                    err => {
+                        console.log("err", err);
+                    }
+                );
         }
     }
     onClose(index: number, translation: any) {
-        if (
-            this.expandedArray[index].oldValue ==
-                translation.translationValue &&
-            !this.isMachineTranslation
-        ) {
+        if (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             return;
@@ -395,6 +407,7 @@ export class KeyDetailsComponent implements OnInit {
     toggle() {
         this.IsEdit = !this.IsEdit;
     }
+
     selectTranslation($event) {
         this.previousTranslation = this.keyDetails.translations[
             $event.keyId
@@ -418,4 +431,20 @@ export class KeyDetailsComponent implements OnInit {
         }
         return "";
     }
+
+    suggestTranslation(index, TranslationId, Suggestion) {
+        this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
+        .subscribe(
+            (res) => {
+                this.snotifyService.success('Your suggestion was added');
+                this.optional.showOptional(
+                    this.keyId,
+                    this.keyDetails.translations[index].id
+                );
+            }, err => {
+                this.snotifyService.error('Your suggestion wasn`t added');
+            });
+        this.currentSuggestion = '';
+    }
+
 }
