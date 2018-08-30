@@ -5,20 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.BusinessLogic.Services;
-using Polyglot.BusinessLogic.TranslationServices;
-using Polyglot.DataAccess.FileRepository;
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.MongoRepository;
-using Polyglot.DataAccess.Seeds;
-using Polyglot.DataAccess.SqlRepository;
 using Polyglot.Hubs;
-using mapper = Polyglot.Common.Mapping.AutoMapper;
 using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
-using Microsoft.EntityFrameworkCore;
+
 namespace Polyglot
 {
     public class Startup

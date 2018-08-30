@@ -6,7 +6,6 @@ import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
@@ -306,6 +305,7 @@ export class KeyDetailsComponent implements OnInit {
             this.expandedArray[index].isOpened = false;
             return;
         }
+
 
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
