@@ -69,14 +69,12 @@ export class KeyDetailsComponent implements OnInit {
     ngOnInit() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
-        debugger;
 
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
-                debugger;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
                 this.signalrService.createConnection(
@@ -435,12 +433,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     suggestTranslation(index, TranslationId, Suggestion) {
-        debugger;
         this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
         .subscribe(
             (res) => {
                 this.snotifyService.success('Your suggestion was added');
-                debugger;
                 this.optional.showOptional(
                     this.keyId,
                     this.keyDetails.translations[index].id
