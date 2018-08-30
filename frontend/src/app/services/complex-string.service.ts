@@ -57,5 +57,13 @@ export class ComplexStringService {
 
   getTranslationHistory(id: number, translationId: string) {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, undefined);
-  };
+  }
+
+  addOptionalTranslation(stringId, translationId, value) {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + stringId + '/' + translationId, '/?value=' + value);
+  }
+
+  getOptionalTranslation(stringId, translationId) {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + stringId + '/' + translationId, 'optional' );
+  }
 }

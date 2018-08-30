@@ -158,11 +158,9 @@ export class TeamComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (dialogRef.componentInstance.data.answer){
-        debugger;
         this.teamService.delete(id)
         .subscribe(
           (response => {
-            debugger;
             this.snotifyService.success("Team was deleted", "Success!");
             setTimeout(() => (this.router.navigate(['/dashboard/teams'])), 3000);
           }),

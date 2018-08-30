@@ -107,7 +107,47 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
+		public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
+		{
+			var targetString = await _repository.GetAsync(stringId);
+			var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
+
+			targetTranslation.OptionalTranslations.Add(
+				new AdditionalTranslation() {
+					TranslationValue = value,
+					UserId = (await CurrentUser.GetCurrentUserProfile()).Id,
+					CreatedOn = DateTime.Now
+					//Type = Translation.TranslationType.Human
+				});
+
+			var result = await _repository.Update(targetString);
+			return _mapper.Map<AdditionalTranslationDTO>
+				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
+		}
+
+		public async Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId)
+		{
+			List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
+
+			var source = (await _repository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
+
+			foreach(var opt in source)
+			{
+				var user = await _uow.GetRepository<UserProfile>().GetAsync(opt.UserId);
+
+				target.Add(
+					new OptionalTranslationDTO() {
+						UserPictureURL = user.AvatarUrl,
+						UserName = user.FullName,
+						DateTime = opt.CreatedOn,
+						TranslationValue = opt.TranslationValue
+					});
+			}
+			target.Reverse();
+			return target;
+		}
+
+		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
             var target = await _repository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
