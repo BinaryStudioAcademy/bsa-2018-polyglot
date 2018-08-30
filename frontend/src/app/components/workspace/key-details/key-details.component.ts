@@ -67,12 +67,14 @@ export class KeyDetailsComponent implements OnInit {
     ngOnInit() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
+        debugger;
 
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
+                debugger;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
                 this.signalrService.createConnection(
