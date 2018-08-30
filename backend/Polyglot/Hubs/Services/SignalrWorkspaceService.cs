@@ -18,11 +18,12 @@ namespace Polyglot.Hubs
             await _hubContext.Clients.Group(groupName).SendAsync(Action.changedTranslation.ToString(), entity);
         }
 
-        public async Task CommentAdded(string groupName, IEnumerable<CommentDTO> comments)
+        public async Task CommentAdded(string groupName, IEnumerable<CommentDTO> comment)
         {
-            await _hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), comments);
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), comment);
         }
 
+        
         public async Task ComplexStringAdded(string groupName, int complexStringId)
         {
             await _hubContext.Clients.Group(groupName).SendAsync(Action.complexStringAdded.ToString(), complexStringId);

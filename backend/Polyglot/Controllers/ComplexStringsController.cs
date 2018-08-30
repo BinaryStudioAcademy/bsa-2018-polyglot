@@ -184,15 +184,16 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<CommentDTO>>(comments));
         }
 
+                     
         // PUT: ComplexStrings/5/comments
         [HttpPut("{id}/comments")]
-        public async Task<IActionResult> SetStringComments(int id, [FromBody]IEnumerable<CommentDTO> comments)
+        public async Task<IActionResult> SetStringComment(int id, [FromBody]CommentDTO comment)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.SetComments(id, comments);
-
+            var entity = await dataProvider.SetComment(id, comment);
+            
             if (entity != null)
             {
                 await signalrService.CommentAdded($"{Group.complexString}{id}", entity);

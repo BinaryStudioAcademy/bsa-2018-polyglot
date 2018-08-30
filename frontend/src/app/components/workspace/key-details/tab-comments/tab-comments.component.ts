@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import * as signalR from '@aspnet/signalr';
 import { environment } from '../../../../../environments/environment';
 import { SignalrService } from '../../../../services/signalr.service';
+import { CommaExpr } from '@angular/compiler';
 
 @Component({
     selector: 'app-tab-comments',
@@ -23,7 +24,7 @@ export class TabCommentsComponent implements OnInit {
     @Input()  comments: Comment[];
     @ViewChild('textarea') textarea: ElementRef;
 
-
+    newComment : any;
     routeSub: Subscription;
     keyId: number;
     private url: string = environment.apiUrl;
@@ -65,19 +66,20 @@ export class TabCommentsComponent implements OnInit {
     }
 
     addComment(commentBody: string) {
-        this.comments.unshift({
-            id: '',
+        this.newComment = {
             user: this.userService.getCurrentUser(),
             text: commentBody,
             createdOn: new Date(Date.now())
-        });
-
-        this.complexStringService.updateStringComments(this.comments, this.keyId)
+        };
+        
+        this.complexStringService.createStringComment(this.newComment, this.keyId)
             .subscribe(
                 (comments) => {
                     if (comments) {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
+                        this.comments=comments;
+                        
                     }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
@@ -88,7 +90,9 @@ export class TabCommentsComponent implements OnInit {
                 });
     }
 
-    // public deleteComment(commentId: string): void {
-    //     this.commentsService.deleteComment(commentId); // тебе нужен вот этот сервис. где он?
-    // }
+
+    public deleteComment(comment: Comment): void {
+        // this.comment
+        this.complexStringService.deleteStringComment(comment, this.keyId); 
+    }
 }

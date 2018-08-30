@@ -22,7 +22,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation);
 
-        Task<IEnumerable<CommentDTO>> SetComments(int identifier, IEnumerable<CommentDTO> comments);
+        Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment);
 
         Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier);
 

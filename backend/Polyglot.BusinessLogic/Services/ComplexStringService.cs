@@ -154,19 +154,23 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<IEnumerable<CommentDTO>> SetComments(int identifier, IEnumerable<CommentDTO> comments)
+        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment)
         {
             var target = await _repository.GetAsync(identifier);
             if (target != null)
             {
-                target.Comments = _mapper.Map<List<Comment>>(comments);
+                var currentComment = _mapper.Map<Comment>(comment);
+                currentComment.Id = Guid.NewGuid();
+                target.Comments.Add(currentComment);
                 var result = await _repository.Update(_mapper.Map<ComplexString>(target));
-
-                var res = (await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments)));
-                return res;
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                
+                return commentsWithUsers;
             }
             return null;
+
         }
+        
 
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {

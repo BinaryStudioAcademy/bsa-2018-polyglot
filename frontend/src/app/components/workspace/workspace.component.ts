@@ -122,7 +122,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngDoCheck() {
         if (
-            this.project &&
+            this.project && 
             this.keys &&
             this.router.url == `/workspace/${this.project.id}` &&
             this.keys.length !== 0
