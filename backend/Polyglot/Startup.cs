@@ -69,10 +69,10 @@ namespace Polyglot
             CoreModule.ConfigureMiddleware(app);
             DataAccessModule.ConfigureMiddleware(app);
 
-            // if (env.IsDevelopment())
-            //  {
-            app.UseCors("AllowAll");
-            // }
+           // if (env.IsDevelopment())
+          //  {
+                app.UseCors("AllowAll");
+           // }
 
             app.UseAuthentication();
 

@@ -85,7 +85,6 @@ export class KeyDetailsComponent implements OnInit {
                     this.subscribeProjectChanges();
                 }
 
-                
                 this.currentKeyId = data.id;
                 this.signalrService.createConnection(
                     `${SignalrGroups[SignalrGroups.complexString]}${
@@ -319,7 +318,8 @@ export class KeyDetailsComponent implements OnInit {
         // 'Save' button not work if nothing has been changed
         if (
             !t.translationValue ||
-            this.expandedArray[index].oldValue === t.translationValue
+            (this.expandedArray[index].oldValue === t.translationValue &&
+                !this.isMachineTranslation)
         ) {
             this.expandedArray[index].isOpened = false;
             return;
@@ -330,51 +330,50 @@ export class KeyDetailsComponent implements OnInit {
             this.isMachineTranslation = false;
         } else {
             t.Type = TranslationType.Human;
-
-            if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
-                this.dataProvider
-                    .editStringTranslation(t, this.currentKeyId)
-                    .subscribe(
-                        (d: any[]) => {
-                            //console.log(this.keyDetails.translations);
-                            this.expandedArray[index] = {
-                                isOpened: false,
-                                oldValue: ""
-                            };
-                            this.history.showHistory(
-                                this.currentKeyId,
-                                this.keyDetails.translations[index].id
-                            );
-                        },
-                        err => {
-                            this.snotifyService.error(err);
-                        }
-                    );
-            } else {
-                t.createdOn = new Date();
-                this.dataProvider
-                    .createStringTranslation(t, this.currentKeyId)
-                    .subscribe(
-                        (d: any) => {
-                            this.expandedArray[index] = {
-                                isOpened: false,
-                                oldValue: ""
-                            };
-                            this.history.showHistory(
-                                this.currentKeyId,
-                                this.keyDetails.translations[index].id
-                            );
-                        },
-                        err => {
-                            console.log("err", err);
-                        }
-                    );
-            }
+        }
+        if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
+            this.dataProvider
+                .editStringTranslation(t, this.currentKeyId)
+                .subscribe(
+                    (d: any[]) => {
+                        //console.log(this.keyDetails.translations);
+                        this.expandedArray[index] = {
+                            isOpened: false,
+                            oldValue: ""
+                        };
+                        this.history.showHistory(
+                            this.currentKeyId,
+                            this.keyDetails.translations[index].id
+                        );
+                    },
+                    err => {
+                        this.snotifyService.error(err);
+                    }
+                );
+        } else {
+            t.createdOn = new Date();
+            this.dataProvider
+                .createStringTranslation(t, this.currentKeyId)
+                .subscribe(
+                    (d: any) => {
+                        this.expandedArray[index] = {
+                            isOpened: false,
+                            oldValue: ""
+                        };
+                        this.history.showHistory(
+                            this.currentKeyId,
+                            this.keyDetails.translations[index].id
+                        );
+                    },
+                    err => {
+                        console.log("err", err);
+                    }
+                );
         }
     }
     onClose(index: number, translation: any) {
         if (
-            this.expandedArray[index].oldValue ==
+            this.expandedArray[index].oldValue ===
                 translation.translationValue &&
             !this.isMachineTranslation
         ) {
@@ -423,6 +422,7 @@ export class KeyDetailsComponent implements OnInit {
     toggle() {
         this.IsEdit = !this.IsEdit;
     }
+
     selectTranslation($event) {
         this.previousTranslation = this.keyDetails.translations[
             $event.keyId
