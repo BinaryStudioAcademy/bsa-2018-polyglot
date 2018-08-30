@@ -412,4 +412,8 @@ export class KeyDetailsComponent implements OnInit {
         }
         return "";
     }
+
+    addComment(){
+        
+    }
 }
