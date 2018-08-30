@@ -25,6 +25,7 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<GlossaryString> GlossaryStrings { get; set; }
         public DbSet<TeamTranslator> TeamTranslators { get; set; }
+        public DbSet<ProjectTeam> ProjectTeams { get; set; }
 
 
 
