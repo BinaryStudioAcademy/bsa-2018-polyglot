@@ -67,14 +67,13 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
         {
             int userId = (await CurrentUser.GetCurrentUserProfile()).Id;
-            var userRights = (await uow.GetUserRights())
-                .FirstOrDefault(ur => ur.ProjectId == projectId && ur.UserId == userId && ur.RightDefinition == definition);
-            
-            if(userRights != null)
+            var rightInProject = (await uow.GetViewData<UserRights>()
+                .GetAsync(ur => ur.ProjectId == projectId && ur.UserId == userId && ur.RightDefinition == definition));
+            if(rightInProject == null)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }
