@@ -77,7 +77,15 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var currentTranslation = mapper.Map<Translation>(translation);
                 currentTranslation.Id = Guid.NewGuid();
-                target.Translations.Add(currentTranslation);
+                var targetTranslationDublicateIndex = target.Translations.FindIndex(t => t.LanguageId == translation.LanguageId);
+                if (targetTranslationDublicateIndex >= 0)
+                {
+                    target.Translations[targetTranslationDublicateIndex] = currentTranslation;
+                }
+                else
+                {
+                    target.Translations.Add(currentTranslation);
+                }
                 var result = await repository.Update(mapper.Map<ComplexString>(target));
 
 
@@ -121,7 +129,47 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
+		public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
+		{
+			var targetString = await repository.GetAsync(stringId);
+			var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
+
+			targetTranslation.OptionalTranslations.Add(
+				new AdditionalTranslation() {
+					TranslationValue = value,
+					UserId = (await CurrentUser.GetCurrentUserProfile()).Id,
+					CreatedOn = DateTime.Now
+					//Type = Translation.TranslationType.Human
+				});
+
+			var result = await repository.Update(targetString);
+			return mapper.Map<AdditionalTranslationDTO>
+				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
+		}
+
+		public async Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId)
+		{
+			List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
+
+			var source = (await repository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
+
+			foreach(var opt in source)
+			{
+				var user = await uow.GetRepository<UserProfile>().GetAsync(opt.UserId);
+
+				target.Add(
+					new OptionalTranslationDTO() {
+						UserPictureURL = user.AvatarUrl,
+						UserName = user.FullName,
+						DateTime = opt.CreatedOn,
+						TranslationValue = opt.TranslationValue
+					});
+			}
+			target.Reverse();
+			return target;
+		}
+
+		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
             var target = await repository.Update(mapper.Map<ComplexString>(entity));
             if (target != null)

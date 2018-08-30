@@ -6,15 +6,14 @@ import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
-import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
 import { TranslationState } from "../../../models/translation-state";
 import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -26,6 +25,8 @@ export class KeyDetailsComponent implements OnInit {
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
     history: TabHistoryComponent;
+    @ViewChild(TabOptionalComponent)
+    optional: TabOptionalComponent;
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -52,6 +53,7 @@ export class KeyDetailsComponent implements OnInit {
     public MachineTranslation: string;
     public previousTranslation: string;
     currentTranslation: string;
+    currentSuggestion: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -81,25 +83,33 @@ export class KeyDetailsComponent implements OnInit {
                             this.currentKeyId
                         }`
                     );
+
+                    this.currentKeyId = data.id;
+                    this.signalrService.createConnection(
+                        `${SignalrGroups[SignalrGroups.complexString]}${
+                            this.currentKeyId
+                        }`,
+                        "workspaceHub"
+                    );
                 } else {
+                    this.currentKeyId = data.id;
+                    this.signalrService.createConnection(
+                        `${SignalrGroups[SignalrGroups.complexString]}${
+                            this.currentKeyId
+                        }`,
+                        "workspaceHub"
+                    );
+
                     this.subscribeProjectChanges();
                 }
 
-                this.currentKeyId = data.id;
-                this.signalrService.createConnection(
-                    `${SignalrGroups[SignalrGroups.complexString]}${
-                        this.currentKeyId
-                    }`,
-                    "workspaceHub"
-                );
-
                 this.getLanguages();
+                this.dataProvider
+                    .getCommentsByStringId(this.currentKeyId)
+                    .subscribe(comments => {
+                        this.comments = comments;
+                    });
             });
-            this.dataProvider
-                .getCommentsByStringId(this.currentKeyId)
-                .subscribe(comments => {
-                    this.comments = comments;
-                });
         });
     }
 
@@ -134,47 +144,18 @@ export class KeyDetailsComponent implements OnInit {
                         .subscribe(translations => {
                             if (translations && translations.length > 0) {
                                 if (
-                                    this.keyDetails.translations &&
+                                    !this.keyDetails.translations ||
                                     this.keyDetails.translations < 1
                                 ) {
                                     this.keyDetails.translations = translations;
                                 } else {
-                                    let targetTranslationIndex = -1;
-                                    let currentKeyDetailsTranslation;
-                                    for (
-                                        let i = 0;
-                                        i < translations.length;
-                                        i++
-                                    ) {
-                                        targetTranslationIndex = this.keyDetails.translations
-                                            .map(function(t) {
-                                                return t.languageId;
-                                            })
-                                            .indexOf(translations[i].languageId);
-                                        if(targetTranslationIndex < 0)
-                                        {
-                                            continue;
-                                        }
-
-                                        currentKeyDetailsTranslation = this.keyDetails.translations[targetTranslationIndex];
-                                        if(this.currentTranslation !== "" && currentKeyDetailsTranslation.translationValue === this.currentTranslation)
-                                        {
-                                            this.keyDetails.translations[targetTranslationIndex].translationValue = 
-                                            `Your work  ==========>                                            
-                                            ${this.currentTranslation}                          
-                                            <========= ${response.senderFullName}'s changes                               
-                                            =========>                                       
-                                            ${translations[i].translationValue}`;
-                                        }
-                                        else 
-                                        {
-                                            this.keyDetails.translations[targetTranslationIndex].translationValue = translations[i].translationValue;
-                                        }
-                                    }
+                                    this.setNewTranslations(
+                                        translations,
+                                        response.senderFullName
+                                    );
                                 }
                             }
                         });
-                    //this.setNewValueTranslation(translation);
                 }
             }
         );
@@ -228,60 +209,99 @@ export class KeyDetailsComponent implements OnInit {
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
-                    const languagesIds = response.ids;
-                    this.isLoad = true;
-                    this.projectService
-                        .getProjectLanguages(this.projectId)
-                        .subscribe(
-                            languages => {
-                                const currentState = this.appState
-                                    .getWorkspaceState;
-                                const currentLanguages = currentState.languages;
-                                const newLanguages = languages.filter(function(
-                                    language
-                                ) {
-                                    return (
-                                        currentLanguages.filter(
-                                            l => l.id === language.id
-                                        ).length < 1 &&
-                                        languagesIds.filter(
-                                            l => l === language.id
-                                        ).length > 0
-                                    );
-                                });
-                                currentState.languages = languages;
-                                this.languages = languages;
-                                this.appState.setWorkspaceState = currentState;
-                                for (var i = 0; i < newLanguages.length; i++) {
-                                    this.expandedArray.push({
-                                        isOpened: false,
-                                        oldValue: ""
-                                    });
-                                }
-                                Array.prototype.push.apply(
-                                    this.keyDetails.translations,
-                                    newLanguages.map(element => {
-                                        return {
-                                            languageName: element.name,
-                                            languageId: element.id,
-                                            languageCode: element.code,
-                                            ...this.getProp(element.id)
-                                        };
-                                    })
-                                );
-                                this.isLoad = false;
-                            },
-                            err => {
-                                this.snotifyService.error(
-                                    "Languages update failed",
-                                    "Error"
-                                );
-                                this.isLoad = false;
-                            }
-                        );
+                    this.handleNewLanguagesAdded(response.ids);
                 }
             }
         );
+    }
+
+    handleNewLanguagesAdded(languagesIds) {
+        this.isLoad = true;
+        this.projectService.getProjectLanguages(this.projectId).subscribe(
+            languages => {
+                const currentState = this.appState.getWorkspaceState;
+                const currentLanguages = currentState.languages;
+                const newLanguages = languages.filter(function(language) {
+                    return (
+                        currentLanguages.filter(l => l.id === language.id)
+                            .length < 1 &&
+                        languagesIds.filter(l => l === language.id).length > 0
+                    );
+                });
+                currentState.languages = languages;
+                this.languages = languages;
+                this.appState.setWorkspaceState = currentState;
+                for (var i = 0; i < newLanguages.length; i++) {
+                    this.expandedArray.push({
+                        isOpened: false,
+                        oldValue: ""
+                    });
+                }
+                Array.prototype.push.apply(
+                    this.keyDetails.translations,
+                    newLanguages.map(element => {
+                        return {
+                            languageName: element.name,
+                            languageId: element.id,
+                            languageCode: element.code,
+                            ...this.getProp(element.id)
+                        };
+                    })
+                );
+                this.isLoad = false;
+            },
+            err => {
+                this.snotifyService.error("Languages update failed", "Error");
+                this.isLoad = false;
+            }
+        );
+    }
+
+    setNewTranslations(translations, callerName) {
+        debugger;
+        let targetTranslationIndex = -1;
+        let targetExpandedArrayItem;
+        let newTranslationValue;
+
+        for (let i = 0; i < translations.length; i++) {
+            targetTranslationIndex = this.keyDetails.translations
+                .map(function(t) {
+                    return t.languageId;
+                })
+                .indexOf(translations[i].languageId);
+
+            if (targetTranslationIndex < 0) {
+                targetTranslationIndex = this.keyDetails.translations.length;
+            }
+
+            targetExpandedArrayItem = this.expandedArray[
+                targetTranslationIndex
+            ];
+
+            if (
+                targetExpandedArrayItem &&
+                targetExpandedArrayItem.isOpened &&
+                targetExpandedArrayItem.oldValue &&
+                targetExpandedArrayItem.oldValue !== "" &&
+                targetExpandedArrayItem.oldValue !== this.currentTranslation
+            ) {
+                newTranslationValue = `Your work  ==========>                                            
+                                            ${
+                                                this.currentTranslation
+                                            }                          
+                                            <========= ${callerName}'s changes                               
+                                            =========>                                       
+                                            ${
+                                                translations[i].translationValue
+                                            }`;
+            } else {
+                newTranslationValue = translations[i].translationValue;
+            }
+
+            this.keyDetails.translations[
+                targetTranslationIndex
+            ].translationValue = newTranslationValue;
+        }
     }
 
     setStep(index: number) {
@@ -290,7 +310,7 @@ export class KeyDetailsComponent implements OnInit {
         }
         this.expandedArray[index] = {
             isOpened: true,
-            oldValue: this.keyDetails.translations[index].translationValue
+            oldValue: this.keyDetails.translations[index].translationValue ? this.keyDetails.translations[index].translationValue : ""
         };
         for (let i = 0; i < this.expandedArray.length; i++) {
             if (i != index) {
@@ -302,6 +322,10 @@ export class KeyDetailsComponent implements OnInit {
         ].translationValue;
 
         this.history.showHistory(
+            this.currentKeyId,
+            this.keyDetails.translations[index].id
+        );
+        this.optional.showOptional(
             this.currentKeyId,
             this.keyDetails.translations[index].id
         );
@@ -369,12 +393,14 @@ export class KeyDetailsComponent implements OnInit {
             return;
         }
 
+        /*
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
             this.isMachineTranslation = false;
         } else {
             t.Type = TranslationType.Human;
-        }
+        }*/
+
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider
                 .editStringTranslation(t, this.currentKeyId)
@@ -386,6 +412,10 @@ export class KeyDetailsComponent implements OnInit {
                             oldValue: ""
                         };
                         this.history.showHistory(
+                            this.currentKeyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
                             this.currentKeyId,
                             this.keyDetails.translations[index].id
                         );
@@ -405,6 +435,10 @@ export class KeyDetailsComponent implements OnInit {
                             oldValue: ""
                         };
                         this.history.showHistory(
+                            this.currentKeyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
                             this.currentKeyId,
                             this.keyDetails.translations[index].id
                         );
@@ -489,5 +523,27 @@ export class KeyDetailsComponent implements OnInit {
             return "2px ridge #6495ED";
         }
         return "";
+    }
+
+    suggestTranslation(index, TranslationId, Suggestion) {
+        this.dataProvider
+            .addOptionalTranslation(
+                this.currentKeyId,
+                TranslationId,
+                Suggestion
+            )
+            .subscribe(
+                res => {
+                    this.snotifyService.success("Your suggestion was added");
+                    this.optional.showOptional(
+                        this.currentKeyId,
+                        this.keyDetails.translations[index].id
+                    );
+                },
+                err => {
+                    this.snotifyService.error("Your suggestion wasn`t added");
+                }
+            );
+        this.currentSuggestion = "";
     }
 }
