@@ -16,71 +16,74 @@
   <mat-spinner></mat-spinner>
 </div>
 
-
-<div *ngIf="toggle.checked" class="container">
-  <mat-card class="example-card" *ngFor="let card of cards">
-    <mat-card-header>
-      <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.userProfile.id)">
-        <img mat-card-avatar class="manager-img" src="{{card.userProfile.avatarUrl}}">
-      </a>
-      <div class="title">
-        <mat-card-title class="card-title">
-          <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
-        </mat-card-title>
-
-        <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
-      </div>
-    </mat-card-header>
-    <div class="img-container">
-      <a [routerLink]="['/workspace', card.id]">
-        <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
-      </a>
-      <a [routerLink]="['/workspace', card.id]">
-        <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
-      </a>
-    </div>
-
-    <div class="description">
-      <mat-card-content *ngIf="card.description !== null && card.description!=='' ">
-        {{card.description}}
-      </mat-card-content>
-      <mat-card-content *ngIf="card.description == null || card.description=='' ">
-        No description
-      </mat-card-content>
-    </div>
-    <mat-card-actions class="card-buttons">
-      <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-      <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
-    </mat-card-actions>
-  </mat-card>
-</div>
-
-
-<div *ngIf="!toggle.checked" class="row-container">
-  <mat-list>
-    <div class="list-item" *ngFor="let card of cards">
-      <div class="row-manager">
-        <a (click)="userService.redirectById(card.userProfile.id)">
-          <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
+<div *ngIf="cards.length > 0">
+  <div *ngIf="toggle.checked" class="container">
+    <mat-card class="example-card" *ngFor="let card of cards">
+      <mat-card-header>
+        <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.userProfile.id)">
+          <img mat-card-avatar class="manager-img" src="{{card.userProfile.avatarUrl}}">
         </a>
-          <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
-            {{card.userProfile.fullName}}
-          </strong>
+        <div class="title">
+          <mat-card-title class="card-title">
+            <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
+          </mat-card-title>
+
+          <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <div class="img-container">
+        <a [routerLink]="['/workspace', card.id]">
+          <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
+        </a>
+        <a [routerLink]="['/workspace', card.id]">
+          <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
+        </a>
       </div>
-      <div class="row-name">
-        <h3>{{card.name}}</h3>
+
+      <div class="description">
+        <mat-card-content *ngIf="card.description !== null && card.description!=='' ">
+          {{card.description}}
+        </mat-card-content>
+        <mat-card-content *ngIf="card.description == null || card.description=='' ">
+          No description
+        </mat-card-content>
       </div>
-      <div class="row-info">
-        <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
-        <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
-      </div>
-      <div class="row-buttons">
+      <mat-card-actions class="card-buttons">
         <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
         <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
-      </div>
-    </div>
-  </mat-list>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 
+
+  <div *ngIf="!toggle.checked" class="row-container">
+    <mat-list>
+      <div class="list-item" *ngFor="let card of cards">
+        <div class="row-manager">
+          <a (click)="userService.redirectById(card.userProfile.id)">
+            <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
+          </a>
+            <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
+              {{card.userProfile.fullName}}
+            </strong>
+        </div>
+        <div class="row-name">
+          <h3>{{card.name}}</h3>
+        </div>
+        <div class="row-info">
+          <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
+          <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
+        </div>
+        <div class="row-buttons">
+          <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+          <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+        </div>
+      </div>
+    </mat-list>
+  </div>
+</div>
+<div *ngIf="cards.length === 0" class="no-projects">
+  No Projects
 </div>
 
 <ng-snotify></ng-snotify>
