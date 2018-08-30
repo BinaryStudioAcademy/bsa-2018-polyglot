@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { Subscription, forkJoin } from "rxjs";
 import { Project, Language, UserProfile } from "../../models";
 import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
@@ -45,15 +45,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     filterOptions: string[] = [
         "Translated",
         "Untranslated",
-        "Human Translation",
-        "Machine Translation",
-        "With Tags"
+        "With Tags",
+        "With Photo"
     ];
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        private dataProvider: ProjectService,
         private dialog: MatDialog,
         private projectService: ProjectService,
         private snotifyService: SnotifyService,
@@ -75,14 +73,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
-            this.dataProvider.getById(params.projectId).subscribe(proj => {
-                this.project = proj;
-                this.projectService.getProjectLanguages(this.project.id).subscribe(
-                    (d: Language[]) => {
-                        this.projectLanguagesCount = d.length;
+            forkJoin(this.projectService.getById(params.projectId),
+            this.projectService.getProjectLanguages(params.projectId)
+            ).subscribe(result => {
+                this.project = result[0];
+
+                this.projectLanguagesCount = result[1].length;
                         const workspaceState = {
                             projectId: this.project.id,
-                            languages: d
+                            languages: result[1]
                         };
 
                         this.appState.setWorkspaceState = workspaceState;
@@ -93,17 +92,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             "workspaceHub"
                         );
                         this.subscribeProjectChanges();
-                    },
-                    err => {
-                        this.keys = null;
-                        this.isLoad = false;
-                        console.log("err", err);
-                    },
-                );
-            });
+                },
+                err => {
+                    this.keys = null;
+                    this.isLoad = false;
+                    console.log("err", err);
+                }
+            )
             this.basicPath = 'workspace/' + params.projectId;
             this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.dataProvider.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+            this.projectService.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -119,20 +117,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         }
 
                     }
-                    this.keys.forEach(element => {
-                        if (element.tags.length > 0) {
-                            element.tags.forEach(tag => {
-                                this.projectTags.push(tag);
-                            });
-                        }
-                    });
+                    let list = this.keys.filter(x => x.tags.length > 0);
+                    this.projectTags = [].concat.apply([], list.map(x => x.tags));
                 });
 
             this.currentPage++;
         });
     }
-
-    onAdvanceSearchClick() { }
 
     ngDoCheck() {
         if (
@@ -176,7 +167,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     getProjById(id: number) {
-        this.dataProvider.getById(id).subscribe(proj => {
+        this.projectService.getById(id).subscribe(proj => {
             this.project = proj;
         });
     }
@@ -220,20 +211,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         );
     }
 
-    OnFilterApply() {
+    onFilterApply() {
         //If the filters сontradict each other
-        this.ContradictoryСhoise(["filter/Translated", "filter/Untranslated"]);
-        this.ContradictoryСhoise(["filter/Human Translation", "filter/Machine Translation"]); 
-        console.log(this.filters);
-         
-        this.dataProvider
+        this.contradictoryСhoise(["filter/Translated", "filter/Untranslated"]);         
+        this.projectService
             .getProjectStringsByFilter(this.project.id, this.filters)
             .subscribe(res => {
                 this.keys = res;
             });
     }
 
-     ContradictoryСhoise(options: string[]) {
+     contradictoryСhoise(options: string[]) {
         if (
             this.filters.includes(options[0]) &&
             this.filters.includes(options[1])
@@ -276,7 +264,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     getKeys(page: number = 1, saveResultsCallback: (keys) => void) {
-        return this.dataProvider
+        return this.projectService
             .getProjectStringsWithPagination(
                 this.project.id,
                 this.elementsOnPage,

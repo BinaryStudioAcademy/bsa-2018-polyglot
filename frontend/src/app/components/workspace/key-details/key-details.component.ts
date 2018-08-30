@@ -6,7 +6,6 @@ import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
@@ -297,12 +296,6 @@ export class KeyDetailsComponent implements OnInit {
             return;
         }
 
-        if (this.isMachineTranslation) {
-            t.Type = TranslationType.Machine;
-            this.isMachineTranslation = false;
-        } else {
-            t.Type = TranslationType.Human;
-
             if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
                 this.dataProvider
                     .editStringTranslation(t, this.keyId)
@@ -340,8 +333,7 @@ export class KeyDetailsComponent implements OnInit {
                         err => {
                             console.log("err", err);
                         }
-                    );
-            }
+                    );  
         }
     }
     onClose(index: number, translation: any) {

@@ -24,7 +24,7 @@
                     <hr>
                     <div class="fiter-content">
                       <div (click)="$event.stopPropagation();" *ngFor="let opt of filterOptions;let i = index">
-                        <mat-checkbox (indeterminateChange)="test($event)" (change)="selectFilterOption($event,i)">{{opt}}</mat-checkbox>
+                        <mat-checkbox (change)="selectFilterOption($event,i)">{{opt}}</mat-checkbox>
                       </div>
                     </div>
                     </div>
@@ -41,7 +41,7 @@
                     </div>
                    </div>
                    <hr>
-                   <button style="margin-right:10px;margin-bottom:10px;float:right;"mat-flat-button (click)="OnFilterApply();$event.stopPropagation();">Apply</button>
+                   <button style="margin-right:10px;margin-bottom:10px;float:right;"mat-flat-button (click)="onFilterApply();">Apply</button>
                  </div>
               </mat-menu>
 <!--             <mat-form-field class="filter">

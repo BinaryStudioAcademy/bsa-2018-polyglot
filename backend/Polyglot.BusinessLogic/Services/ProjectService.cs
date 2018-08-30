@@ -556,14 +556,11 @@ namespace Polyglot.BusinessLogic.Services
             if (criteriaFilters.Contains(FilterType.Untranslated))
                 finalFilter = AndAlso(finalFilter, x => x.Translations.Count == 0);
 
-            if (criteriaFilters.Contains(FilterType.HumanTranslation))
-                finalFilter = AndAlso(finalFilter, x => x.Translations.Any(t => t.Type == Translation.TranslationType.Human));
-
-            if (criteriaFilters.Contains(FilterType.MachineTranslation))
-                finalFilter = AndAlso(finalFilter, x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine));
-
             if (criteriaFilters.Contains(FilterType.WithTags))
                 finalFilter = AndAlso(finalFilter, x => x.Tags.Count != 0);
+
+            if (criteriaFilters.Contains(FilterType.WithPhoto))
+                finalFilter = AndAlso(finalFilter, x => x.PictureLink != null);
 
             var criteriaResult = await stringsProvider.GetAllAsync(finalFilter);
 
@@ -690,9 +687,8 @@ namespace Polyglot.BusinessLogic.Services
         {
             Translated,
             Untranslated,
-            HumanTranslation,
-            MachineTranslation,
-            WithTags
+            WithTags,
+            WithPhoto
         }
 
         #endregion
