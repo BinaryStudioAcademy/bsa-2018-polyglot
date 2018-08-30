@@ -15,6 +15,7 @@ using Polyglot.Core.Authentication;
 using Polyglot.Hubs;
 using Polyglot.Hubs.Helpers;
 using System.Linq;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.Controllers
 {
@@ -26,10 +27,12 @@ namespace Polyglot.Controllers
 	{
 		private IProjectService service;
         private readonly ISignalrWorkspaceService signalrService;
+        private readonly IRightService rightService;
         public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, ISignalrWorkspaceService signalrService)
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, ISignalrWorkspaceService signalrService, IRightService rightService)
 		{
 			this.service = projectService;
+            this.rightService = rightService;
             this.signalrService = signalrService;
 			fileStorageProvider = provider;
 		}
@@ -329,7 +332,11 @@ namespace Polyglot.Controllers
             return temp;
         }
 
-
+        [HttpGet("{projectId}/right/{rightDefinition}")]
+        public async Task<bool> CheckIfUserCan(int projectId, RightDefinition rightDefinition)
+        {
+            return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
+        }
 
     }
 
