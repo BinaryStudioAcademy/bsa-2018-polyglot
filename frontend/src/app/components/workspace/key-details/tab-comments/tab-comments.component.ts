@@ -81,7 +81,7 @@ export class TabCommentsComponent implements OnInit {
                         this.comments = comments;
                         console.log(this.comments);
 
-                    } 
+                    }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
                     }
@@ -92,22 +92,64 @@ export class TabCommentsComponent implements OnInit {
     }
 
     public deleteComment(comment: Comment): void {
-        
-        this.complexStringService.deleteStringComment(comment.id, this.keyId)
-            .subscribe(
-                (comments) => {
-                    if (comments) {
-                        this.snotifyService.success("Comment delete", "Success!");
-                        this.commentForm.reset();
-                        this.comments = comments;
-                        console.log(this.comments);
-                    }
-                    else {
-                        this.snotifyService.error("Comment wasn't delete", "Error!");
-                    }
-                },
-                err => {
-                    this.snotifyService.error("Comment delete", "Error!");
-                });
+        if (this.userService.isCurrentUserManager()) {
+            this.complexStringService.deleteStringComment(comment.id, this.keyId)
+                .subscribe(
+                    (comments) => {
+                        if (comments) {
+                            this.snotifyService.success("Comment delete", "Success!");
+                            this.commentForm.reset();
+                            this.comments = comments;
+                            console.log(this.comments);
+                        }
+                        else {
+                            this.snotifyService.error("Comment wasn't delete", "Error!");
+                        }
+                    },
+                    err => {
+                        this.snotifyService.error("Comment delete", "Error!");
+                    });
+        }
+        else {
+            this.snotifyService.error("Action is prohibited!", "Error!");
+        }
     }
+
+    public startEdittingComment(comment: Comment): void {
+        comment.isEditting = true;
+    }
+
+    public cancelEditting(comment: Comment): void {
+        comment.isEditting = false;
+    }
+
+    public editComment(comment: Comment, edittedText: string): void {
+        if (this.userService.isCurrentUserManager()) {
+            comment.text = edittedText;
+            this.complexStringService.editStringComment(comment, this.keyId)
+                .subscribe(
+                    (comments) => {
+                        if (comments) {
+                            this.snotifyService.success("Comment delete", "Success!");
+                            this.comments = comments;
+                            //comment.isEditting = false;
+
+                        }
+                        else {
+                            this.snotifyService.error("Comment wasn't delete", "Error!");
+                        }
+                    },
+                    err => {
+                        this.snotifyService.error("Comment delete", "Error!");
+                    });
+        }
+        else {
+            this.snotifyService.error("Action is prohibited!", "Error!");
+        }
+    }
+
+
+
+
+
 }

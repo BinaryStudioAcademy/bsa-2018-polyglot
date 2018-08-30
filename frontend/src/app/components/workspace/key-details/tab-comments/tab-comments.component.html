@@ -19,9 +19,21 @@
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
                 <button (click)="deleteComment(com)" mat-menu-item>Delete</button>
-                <button (click)="editComment(com)" mat-menu-item>Edit</button>
+                <button (click)="startEdittingComment(com)" mat-menu-item>Edit</button>
             </mat-menu>
-            <div class="text">{{com?.text}}</div>
+            <ng-container *ngIf="com.isEditting">
+                <div class="edit-container">
+                    <textarea #comText>{{com?.text}}</textarea>
+                    <button (click)="editComment(com, comText.value)">Save</button>
+                    <button (click)="cancelEditting(com)">Cancel</button>
+                </div>
+
+
+            </ng-container>
+            <ng-container *ngIf="!com.isEditting">
+                <div class="text">{{com?.text}}</div>
+            </ng-container>
+
             <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
         </mat-card>
 

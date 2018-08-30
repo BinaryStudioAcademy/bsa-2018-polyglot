@@ -5,5 +5,5 @@ export interface Comment {
     user: UserProfile;
     text: string;
     createdOn: Date;
-    
+    isEditting?: boolean;
 }
