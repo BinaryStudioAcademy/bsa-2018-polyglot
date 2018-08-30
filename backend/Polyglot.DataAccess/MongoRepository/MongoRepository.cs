@@ -132,5 +132,11 @@ namespace Polyglot.DataAccess.MongoRepository
         {
             Collection.InsertMany(entities);
         }
-    }
+
+		public async Task DeleteAll(Expression<Func<TEntity, bool>> predicate)
+		{
+			await Collection.DeleteManyAsync(predicate);
+		}
+
+	}
 }

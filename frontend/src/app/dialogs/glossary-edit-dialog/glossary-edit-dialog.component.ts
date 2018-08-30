@@ -3,6 +3,8 @@ import { Glossary } from '../../models';
 import { GlossaryService } from '../../services/glossary.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SnotifyService } from 'ng-snotify';
+import { LanguageService } from '../../services/language.service';
+import { Language } from '../../components/translatorProfile/translator-profile/translator-profile.component';
 
 @Component({
   selector: 'app-glossary-edit-dialog',
@@ -13,15 +15,26 @@ export class GlossaryEditDialogComponent implements OnInit {
 
 
   public glossary: Glossary;
+  languages: Language[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Glossary,
     private glossaryService: GlossaryService,
     public dialogRef: MatDialogRef<GlossaryEditDialogComponent>,
-    private snotifyService: SnotifyService) { }
+    private snotifyService: SnotifyService,
+    private languageService: LanguageService) { }
 
 
   ngOnInit() {
+    this.languageService.getAll()
+    .subscribe(
+    (d: Language[])=> {
+      this.languages = d.map(x => Object.assign({}, x));
+    },
+    err => {
+      console.log('err', err);
+    }
+  );  
     this.glossary = this.data;
   }
 

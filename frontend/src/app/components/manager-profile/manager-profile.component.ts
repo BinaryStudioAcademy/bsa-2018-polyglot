@@ -10,6 +10,7 @@ import { TeamService } from '../../services/teams.service';
 import { Team } from '../../models';
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-manager-profile',
@@ -17,7 +18,7 @@ import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dia
   styleUrls: ['./manager-profile.component.sass']
 })
 export class ManagerProfileComponent implements OnInit {
-  
+
   fullName : string;
   @Input() public manager : UserProfile
   projects : Project[]
@@ -28,14 +29,15 @@ export class ManagerProfileComponent implements OnInit {
   answer: boolean;
 
   constructor(
-    public dialog: MatDialog, 
-    private router: Router, 
+    public dialog: MatDialog,
+    private router: Router,
     private userService: UserService,
     private projectService: ProjectService,
     private teamService: TeamService,
-    private snotifyService: SnotifyService) {
+    private snotifyService: SnotifyService,
+    private appStateService: AppStateService) {
   }
-  
+
 
   ngOnInit(): void {
 
@@ -66,6 +68,7 @@ export class ManagerProfileComponent implements OnInit {
                           this.snotifyService.success("Photo updated.", "Success!");
                           }, 100);
                           this.manager = d;
+                          this.appStateService.currentDatabaseUser = d;
                       },
                       err => {
                           this.snotifyService.error("Photo failed to update!", "Error!");

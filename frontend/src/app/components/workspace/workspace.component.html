@@ -3,7 +3,7 @@
         <h2>{{project?.name}}</h2>
     </div>
 </header>
-
+<mat-sidenav-container>
 <section class="project-main">
     <mat-card class="d-flex align-items-center py-0 px-1 justify-space-between search-bar">
         <div>
@@ -16,13 +16,41 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <mat-form-field class="filter">
+            <button style="margin-left:10px"mat-flat-button color="primary" [matMenuTriggerFor]="filters">Advansed search</button>
+            <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false" class="no-menu-scroll">
+                <div style="padding: 20px!important;padding-top:0px!important;"> 
+                  <div>
+                    <h4>Filters <i class="fas fa-filter filter-icon"></i></h4>
+                    <hr>
+                    <div class="fiter-content">
+                      <div (click)="$event.stopPropagation();" *ngFor="let opt of filterOptions;let i = index">
+                        <mat-checkbox (change)="selectFilterOption($event,i)">{{opt}}</mat-checkbox>
+                      </div>
+                    </div>
+                    </div>
+                  <div>
+                     <h4>Tags <i class="fas fa-tags filter-icon"></i></h4>
+                     <hr>
+                     <div class="fiter-content" style="grid-template-columns: auto auto auto auto">
+                      <div *ngFor="let opt of projectTags;let i = index" (click)="$event.stopPropagation();">
+                        <mat-checkbox (change)="selectTag($event,i)">{{opt}}</mat-checkbox>
+                      </div>
+                      <div *ngIf="projectTags.length === 0">
+                        No strings with tags
+                      </div>
+                    </div>
+                   </div>
+                   <hr>
+                   <button style="margin-right:10px;margin-bottom:10px;float:right;"mat-flat-button (click)="onFilterApply();">Apply</button>
+                 </div>
+              </mat-menu>
+<!--             <mat-form-field class="filter">
                 <mat-select multiple placeholder="Filter" [formControl]="options">
                     <mat-option *ngFor="let filter of filterOptions" [value]="filter" (click)="OnSelectOption(this)">
                         {{filter}}
                     </mat-option>
                 </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
         </div>
 
         <div *ngIf="project">
@@ -37,12 +65,11 @@
     </mat-card> 
   </div>  -->
 
-  <div class="mt-1 mb-1" *ngIf="isLoad&&keys.length===0">
+  <div class="mt-1 mb-1" *ngIf="isLoad && keys.length===0">
     <mat-card class="no-string-div">
       <p>No strings</p>
     </mat-card> 
   </div> 
- 
 
   <!-- <div *ngIf="!isLoad&&!keys" class="spinner key-details my-1 px-0 grow-1 mr-0 ml-1">
 		<mat-spinner></mat-spinner>
@@ -55,7 +82,7 @@
       
         <mat-nav-list class="keys-list__nav key-list-style" ngxInfiniteScroller horizontal="false" (onScrollUp)="onScrollUp()" (onScrollDown)="onScrollDown()">
 
-          <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys">
+          <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys" [ngStyle]="{'border-left': highlightStringStatus(key)}" [ngClass]="{'in-progress': isStringInProgress(key)}">
             <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
               <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
             </div>

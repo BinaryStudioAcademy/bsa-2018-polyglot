@@ -19,5 +19,7 @@ namespace Polyglot.Hubs
         Task LanguageRemoved(string groupName, int languageId);
 
         Task LanguagesAdded(string groupName, int[] languagesIds);
+
+        Task LanguageTranslationCommitted(string groupName, int languageId);
     }
 }

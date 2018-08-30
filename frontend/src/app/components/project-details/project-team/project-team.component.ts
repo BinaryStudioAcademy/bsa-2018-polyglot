@@ -4,6 +4,8 @@ import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify'
 import { ProjectService } from '../../../services/project.service';
 import { TeamService } from '../../../services/teams.service';
 import { TeamAssignComponent } from '../../../dialogs/team-assign/team-assign.component';
+import { Router } from '@angular/router';
+import { UserService } from '../../../services/user.service';
 
 
 @Component({
@@ -23,7 +25,9 @@ export class ProjectTeamComponent implements OnInit {
     private projectService: ProjectService,
     private teamsService: TeamService,
     private snotifyService: SnotifyService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -163,5 +167,4 @@ export class ProjectTeamComponent implements OnInit {
       return 1;
     return 0;
   }
-
 }
