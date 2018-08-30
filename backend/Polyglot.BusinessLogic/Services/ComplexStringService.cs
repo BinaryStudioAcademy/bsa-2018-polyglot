@@ -107,7 +107,25 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
+		public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
+		{
+			var targetString = await _repository.GetAsync(stringId);
+			var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
+
+			targetTranslation.OptionalTranslations.Add(
+				new AdditionalTranslation() {
+					TranslationValue = value,
+					UserId = CurrentUser.GetCurrentUserProfile().Id,
+					CreatedOn = DateTime.Now,
+					Type = Translation.TranslationType.Human
+				});
+
+			var result = await _repository.Update(targetString);
+			return _mapper.Map<AdditionalTranslationDTO>
+				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
+		}
+
+		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
             var target = await _repository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
