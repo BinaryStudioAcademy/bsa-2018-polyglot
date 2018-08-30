@@ -1,89 +1,113 @@
 <mat-sidenav-container class="all-wrap" [class.example-is-mobile]="mobileQuery.matches">
 
-  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches">
-    <div fxLayout="column">
-      <button mat-mini-fab mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
-        <img src="{{manager?.avatarUrl}}" class="profile-small-image">
-      </button>
-      <a mat-button routerLinkActive="active" routerLink="/about-us">
-        <mat-icon mat-list-icon>home</mat-icon> About us</a>
-      <a mat-button routerLinkActive="active" routerLink="/dashboard">
-        <mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
-      <a mat-button routerLinkActive="active" routerLink="/contact">
-        <mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
-      <mat-divider></mat-divider>
+	<mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches">
+		<div fxLayout="column">
+			<button mat-mini-fab mdePopoverTriggerOn="click" class="profile-button no-hover-effect aside-button" *ngIf="isLoggedIn() && mobileQuery.matches">
+				<img src="{{manager?.avatarUrl}}" class="profile-small-image">
+			</button>
+			<a mat-button routerLinkActive="active" routerLink="/about-us">
+				<mat-icon mat-list-icon>home</mat-icon> About us</a>
+			<a mat-button routerLinkActive="active" routerLink="/dashboard">
+				<mat-icon mat-list-icon>home</mat-icon> Dashboard</a>
+			<a mat-button routerLinkActive="active" routerLink="/contact">
+				<mat-icon mat-list-icon>contacts</mat-icon> Contacts</a>
+			<mat-divider></mat-divider>
 
-      <a mat-button routerLinkActive="active" routerLink="/profile/settings">
-        <mat-icon mat-list-icon>settings</mat-icon> Settings</a>
-      <a mat-button routerLinkActive="active" routerLink="/profile">
-        <mat-icon mat-list-icon>account_box</mat-icon> Profile</a>
-      <a mat-button routerLinkActive="active">
-        <mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
-      <mat-divider></mat-divider>
+			<a mat-button routerLinkActive="active" routerLink="/profile/settings">
+				<mat-icon mat-list-icon>settings</mat-icon> Settings</a>
+			<a mat-button routerLinkActive="active" routerLink="/profile">
+				<mat-icon mat-list-icon>account_box</mat-icon> Profile</a>
+			<a mat-button routerLinkActive="active">
+				<mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+			<mat-divider></mat-divider>
 
-      <a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
-        <mat-icon mat-list-icon>block</mat-icon> Logout</a>
-    </div>
-  </mat-sidenav>
+			<a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
+				<mat-icon mat-list-icon>block</mat-icon> Logout</a>
+		</div>
+	</mat-sidenav>
 
-  <div class="page-wrap">
+	<div class="page-wrap">
 
-    <mat-toolbar class="header-toolbar">
-      <button mat-icon-button fxHide fxShow.lt-md="true" (click)="snav.toggle()" *ngIf="isLoggedIn()">
-        <mat-icon>menu</mat-icon>
-      </button>
+		<mat-toolbar class="header-toolbar">
+			<button mat-icon-button fxHide fxShow.lt-md="true" (click)="snav.toggle()" *ngIf="isLoggedIn()">
+				<mat-icon>menu</mat-icon>
+			</button>
 
-      <label class="companyName" routerLink="/">Polyglot</label>
+			<label class="companyName" routerLink="/">Polyglot</label>
 
-      <span class="example-spacer"></span>
-      <div fxShow="true" fxHide.lt-md="true">
-        <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-        <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-        <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
-        <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
-        <a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
-        <button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="profile-button no-hover-effect"
-          *ngIf="isLoggedIn()">
-          <img *ngIf="manager && manager.avatarUrl != ''" src="{{manager?.avatarUrl}}" class="profile-small-image">
-        </button>
+			<span class="example-spacer"></span>
+			<div fxShow="true" fxHide.lt-md="true">
+				<a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+				<a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+				<a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
+				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
+				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
+				<button mat-mini-fab [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" class="menu-button no-hover-effect"
+					*ngIf="isLoggedIn()">
+					<i class="far fa-bell"></i>
+				</button>
+				<button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="menu-button no-hover-effect"
+					*ngIf="isLoggedIn()">
+					<img *ngIf="manager && manager.avatarUrl != ''" src="{{manager?.avatarUrl}}" class="profile-small-image">
+				</button>
 
-        <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
-          <mat-card class="profile-card">
-            <mat-card-header>
-              <mat-card-title class="profile-card-main">
-                <img src="{{manager?.avatarUrl}}" class="profile-big-image">
-                <div style="margin-left: 30px;">
-                  <h4>{{manager?.fullName}}</h4>
-                  <!-- <mat-card-subtitle>{{email}}</mat-card-subtitle> -->
-                  <p>
-                    <i>{{role}}</i>
-                  </p>
-                </div>
-              </mat-card-title>
-            </mat-card-header>
-            <hr>
-            <mat-card-content class="profile-card-navigation">
-              <a mat-button color="primary" class="profile-card-navigation-button" routerLink="/profile">Profile</a>
-              <a mat-button color="primary" class="profile-card-navigation-button" routerLink="/profile/settings">Settings</a>
-              <a mat-button color="warn" (click)="onLogoutClick()" class="profile-card-navigation-button">Logout</a>
-            </mat-card-content>
-          </mat-card>
-        </mde-popover>
+				<mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
+					<mat-card class="card">
+						<mat-card-header>
+							<mat-card-title class="card-main">
+								<div>
+									<h4>Some notification</h4>
+									<p>
+										<i>notification body</i>
+									</p>
+								</div>
+							</mat-card-title>
+						</mat-card-header>
+						<hr>
+						<mat-card-content class="card-navigation">
+							<a mat-button color="primary" class="card-navigation-button" routerLink="/profile">Action</a>
+							<a mat-button color="warn" (click)="onLogoutClick()" class="card-navigation-button">Action</a>
+						</mat-card-content>
+					</mat-card>
+				</mde-popover>
+
+				<mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
+						<mat-card class="card">
+							<mat-card-header>
+								<mat-card-title class="card-main">
+									<img src="{{manager?.avatarUrl}}" class="profile-big-image">
+									<div style="margin-left: 30px;">
+										<h4>{{manager?.fullName}}</h4>
+										<!-- <mat-card-subtitle>{{email}}</mat-card-subtitle> -->
+										<p>
+											<i>{{role}}</i>
+										</p>
+									</div>
+								</mat-card-title>
+							</mat-card-header>
+							<hr>
+							<mat-card-content class="card-navigation">
+								<a mat-button color="primary" class="card-navigation-button" routerLink="/profile">Profile</a>
+								<a mat-button color="primary" class="card-navigation-button" routerLink="/profile/settings">Settings</a>
+								<a mat-button color="warn" (click)="onLogoutClick()" class="card-navigation-button">Logout</a>
+							</mat-card-content>
+						</mat-card>
+					</mde-popover>
 
 
-        <span class="toolbar-spacer"></span>
+				<span class="toolbar-spacer"></span>
 
-      </div>
-    </mat-toolbar>
+			</div>
+		</mat-toolbar>
 
-    <main (click)="snav.close()" class="content">
-      <router-outlet></router-outlet>
-    </main>
-    
-    <footer class="footer">
-      <app-footer></app-footer>
-    </footer>
-  
-  </div>
+		<main (click)="snav.close()" class="content">
+			<router-outlet></router-outlet>
+		</main>
+		
+		<footer class="footer">
+			<app-footer></app-footer>
+		</footer>
+	
+	</div>
 
 </mat-sidenav-container>

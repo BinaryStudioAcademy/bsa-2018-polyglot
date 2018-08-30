@@ -291,6 +291,12 @@ export class KeyDetailsComponent implements OnInit {
     onSave(index: number, t: any) {
         this.currentTranslation = "";
 
+        // 'Save' button not work if nothing has been changed
+        if (!t.translationValue || (this.expandedArray[index].oldValue === t.translationValue)) {
+            this.expandedArray[index].isOpened = false;
+            return;
+        }
+
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
             this.isMachineTranslation = false;
