@@ -112,18 +112,18 @@ namespace Polyglot.BusinessLogic.Services
 
                 var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
                 await uow.SaveAsync();
-				await stringsProvider.CreateAsync(
-					new DataAccess.MongoModels.ComplexString()
-					{
-						Id = savedEntity.Id,
-						Key = i.Key,
-						OriginalValue = i.Value,
-						ProjectId = id,
-						Translations = new List<Translation>(),
-						Comments = new List<Comment>(),
-						Tags = new List<string>(),
-						CreatedOn = DateTime.Now,
-						CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
+                await stringsProvider.CreateAsync(
+                    new DataAccess.MongoModels.ComplexString()
+                    {
+                        Id = savedEntity.Id,
+                        Key = i.Key,
+                        OriginalValue = i.Value,
+                        ProjectId = id,
+                        Translations = new List<Translation>(),
+                        Comments = new List<Comment>(),
+                        Tags = new List<string>(),
+                        CreatedOn = DateTime.Now,
+                        CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
                     });
             }
 
@@ -184,7 +184,7 @@ namespace Polyglot.BusinessLogic.Services
             return arr;
 
         }
-
+        
         #region Teams
 
         public async Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId)
@@ -195,7 +195,11 @@ namespace Polyglot.BusinessLogic.Services
             if (project == null)
                 return null;
 
-            var teams = project.Teams;
+            var projectTeams = project.ProjectTeams;
+            var teams = new List<Team>();
+
+            projectTeams.ToList().ForEach(projectTeam => teams.Add(projectTeam.Team));
+
             return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
         }
 
@@ -204,51 +208,34 @@ namespace Polyglot.BusinessLogic.Services
             if (teamIds.Length < 1)
                 return null;
 
-            var project = await uow.GetRepository<Project>()
-                .GetAsync(projectId);
+            var teamsIdInDB = (await uow.GetRepository<ProjectTeam>().GetAllAsync(x => x.ProjectId == projectId))
+                .Select(x => x.TeamId);
 
-            if (project == null)
-                return null;
+            var idForAdd = teamIds.Except(teamsIdInDB);
 
-            var teamIdsToAdd = teamIds.Except(project.Teams.Select(t => t.Id));
-
-            Team currentTeam;
-            foreach (var id in teamIdsToAdd)
+            foreach (var item in idForAdd)
             {
-
-                currentTeam = await uow.GetRepository<Team>()
-                .GetAsync(id);
-                project.Teams.Add(currentTeam);
+                await uow.GetRepository<ProjectTeam>().CreateAsync(new ProjectTeam() { ProjectId = projectId, TeamId = item });
             }
 
-            project = uow.GetRepository<Project>()
-                    .Update(project);
             await uow.SaveAsync();
-            return project != null ? mapper.Map<ProjectDTO>(project) : null;
 
+            var project = await uow.GetRepository<Project>().GetAsync(projectId);
+            return project != null ? mapper.Map<ProjectDTO>(project) : null;
         }
 
         public async Task<bool> TryDismissProjectTeam(int projectId, int teamId)
         {
-            var project = await uow.GetRepository<Project>()
-                .GetAsync(projectId);
+            var projectTeam = (await uow.GetRepository<ProjectTeam>()
+                .GetAllAsync(x => x.ProjectId == projectId && x.TeamId == teamId))
+                .FirstOrDefault();
 
-            if (project == null)
+            if (projectTeam == null)
                 return false;
 
-            if (project.Teams?.Count() > 0)
-            {
-                var targetTeam = project.Teams.FirstOrDefault(t => t.Id == teamId);
-                if (targetTeam == null)
-                    return false;
+            await uow.GetRepository<ProjectTeam>().DeleteAsync(projectTeam.Id);
 
-                project.Teams.Remove(targetTeam);
-                project = uow.GetRepository<Project>()
-                    .Update(project);
-                return await uow.SaveAsync() > 0 && project != null;
-            }
-
-            return false;
+            return await uow.SaveAsync() > 0;
         }
 
         #endregion Teams
@@ -302,11 +289,11 @@ namespace Polyglot.BusinessLogic.Services
                 if (lang == null)
                     return null;
 
-               return
-                    (
-                    await GetLanguagesStatistic(projectId, new List<Language>() { lang })
-                    )
-                    ?.FirstOrDefault() ?? null;
+                return
+                     (
+                     await GetLanguagesStatistic(projectId, new List<Language>() { lang })
+                     )
+                     ?.FirstOrDefault() ?? null;
             }
             {
                 return null;
@@ -372,7 +359,7 @@ namespace Polyglot.BusinessLogic.Services
                     .Where(pl => pl.LanguageId == languageId)
                     .FirstOrDefault();
 
-                if (targetProdLang != null 
+                if (targetProdLang != null
                     && project.ProjectLanguageses.Remove(targetProdLang)
                     && uow.GetRepository<Project>().Update(project) != null
                     && (await uow.SaveAsync()) > 0)
@@ -412,17 +399,11 @@ namespace Polyglot.BusinessLogic.Services
             else
             {
                 var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
-                var allTeams = await uow.GetRepository<Team>().GetAllAsync();
-                var selectedTeam = allTeams.Where(x => translatorTeams.Any(y => y.TeamId == x.Id));
-                var projects = await uow.GetRepository<Project>().GetAllAsync();
-                foreach (var p in projects)
-                {
-                    foreach (var team in selectedTeam)
-                    {
-                        if (p.Teams.Contains(team))
-                            result.Add(p);
-                    }
-                }
+
+                translatorTeams.ForEach(team => team.Team.ProjectTeams.ToList()
+                    .ForEach(project => result.Add(project.Project)));
+
+                result = result.Distinct().ToList();
             }
             return mapper.Map<List<ProjectDTO>>(result);
         }
@@ -452,14 +433,14 @@ namespace Polyglot.BusinessLogic.Services
 
             if (target.ImageUrl != null && source.ImageUrl != null)
             {
-				try
-				{
-					await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
-				}
-				catch (Exception)
-				{
+                try
+                {
+                    await fileStorageProvider.DeleteFileAsync(target.ImageUrl);
+                }
+                catch (Exception)
+                {
 
-				}                
+                }
             }
             if (source.ImageUrl != null)
             {
@@ -488,15 +469,15 @@ namespace Polyglot.BusinessLogic.Services
             {
 
                 Project toDelete = await uow.GetRepository<Project>().GetAsync(identifier);
-				try
-				{
-					await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
-				}
-				catch (Exception)
-				{
+                try
+                {
+                    await fileStorageProvider.DeleteFileAsync(toDelete.ImageUrl);
+                }
+                catch (Exception)
+                {
 
-				}
-				await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
+                }
+                await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
@@ -756,7 +737,7 @@ namespace Polyglot.BusinessLogic.Services
             // если строк для перевода нет тогда ничего вычислять не нужно
             if (projectStrings.Count() < 1)
                 return mapper.Map<IEnumerable<LanguageStatisticDTO>>(targetLanguages);
-            
+
             // мапим языки проекта, а затем добавляем TranslatedStrings и ComplexStringsCount по каждому языку
             return mapper.Map<IEnumerable<Language>, IEnumerable<LanguageStatisticDTO>>(targetLanguages, opt => opt.AfterMap((src, dest) =>
             {

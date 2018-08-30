@@ -9,8 +9,11 @@ namespace Polyglot.DataAccess.Entities
 
         public virtual ICollection<TeamTranslator> TeamTranslators { get; set; }
 
+        public virtual ICollection<ProjectTeam> ProjectTeams { get; set; }
+
         public Team()
         {
+            ProjectTeams = new List<ProjectTeam>();
             TeamTranslators = new List<TeamTranslator>();
         }    
     }
