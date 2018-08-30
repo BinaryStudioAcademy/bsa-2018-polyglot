@@ -17,12 +17,6 @@ namespace Polyglot.DataAccess.SqlRepository
 		{
 			context = c;
             repositories = new Dictionary<Type, object>();
-            /*context.Database.ExecuteSqlCommand(@"CREATE VIEW View_UserRights AS
-                                                    SELECT TranslatorId AS UserId, Definition AS RightDefinition, ProjectId FROM TeamTranslators
-                                                    INNER JOIN TranslatorRight ON TeamTranslatorId = TeamTranslators.Id
-                                                    INNER JOIN Rights On RightId = Rights.id
-                                                    INNER JOIN ProjectTeams on TeamTranslators.TeamId = ProjectTeams.TeamId");*/
-
         }
 
         public IRepository<T> GetRepository<T>() 
