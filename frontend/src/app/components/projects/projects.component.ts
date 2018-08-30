@@ -32,11 +32,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     ) {}
 
     public cards: Project[];
-    IsLoad: boolean = true;
-    OnPage: boolean;
+    isLoad: boolean = true;
+    onPage: boolean;
 
     ngOnInit() {
-        this.OnPage = true;
+        this.onPage = true;
 
         if (
             this.appStateService.Layout === null ||
@@ -49,17 +49,18 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
 
         this.projectService.getAll().subscribe(pr => {
-            debugger;
+            if(pr){
             this.cards = pr;
-            if (this.cards.length === 0 && this.OnPage === true && this.isCurrentUserManager()) {
+            if (this.cards.length === 0 && this.onPage === true && this.isCurrentUserManager()) {
                 setTimeout(() => this.openDialog());
             }
-            this.IsLoad = false;
+            this.isLoad = false;
+        }
         });
     }
 
     ngOnDestroy() {
-        this.OnPage = false;
+        this.onPage = false;
     }
 
     openDialog(): void {

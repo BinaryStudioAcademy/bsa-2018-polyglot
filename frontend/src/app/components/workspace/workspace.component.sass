@@ -54,8 +54,10 @@ header
     justify-content: space-between
 
 .active
-  border-left: 5px solid #3f51b5!important
   background: rgb(248,248,248)!important
+
+.in-progress
+  animation: anim 3s infinite linear
 
 .no-string-div
   font-size: 70px
@@ -76,7 +78,24 @@ header
   justify-content: center 
   padding: 30px !important
   
+.fiter-content
+  display: grid
+  grid-template-columns: auto auto auto
+  grid-gap: 10px
+  padding: 10px
+  min-width: 450px!important
+@keyframes anim
+  0%
+    border-left: 7px solid #ffffff
+  25%
+    border-left: 7px solid #b366ff
+  50%
+    border-left: 7px solid #6600cc
+  75%
+    border-left: 7px solid #b366ff
+  100%
+    border-left: 7px solid #ffffff
 
-
-
-
+.filter-icon
+  margin-left: 5px
+  font-size: 15px

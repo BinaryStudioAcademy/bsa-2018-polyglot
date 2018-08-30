@@ -18,10 +18,26 @@
                 <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
-                <button (click)="onDeleteComment()" mat-menu-item>Delete</button>
-                <button (click)="onEditComment()" mat-menu-item>Edit</button>
+                <button (click)="deleteComment(com)" mat-menu-item>Delete</button>
+                <button (click)="startEdittingComment(com)" mat-menu-item>Edit</button>
             </mat-menu>
-            <div class="text">{{com?.text}}</div>
+            <ng-container *ngIf="com.isEditting">
+
+                <mat-form-field class="edit-container">
+                    <input matInput class="edit-input" #comText type="text" [ngModel]="commentText">
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Clear" (click)="cancelEditting(com)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Save" (click)="editComment(com, comText.value)">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                </mat-form-field>
+
+            </ng-container>
+            <ng-container *ngIf="!com.isEditting">
+                <div class="text">{{com?.text}}</div>
+            </ng-container>
+
             <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
         </mat-card>
 
