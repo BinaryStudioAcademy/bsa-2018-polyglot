@@ -1,0 +1,31 @@
+<form (submit)="onSubmit()">
+  <h4>Edit String</h4>
+    <div>
+      <mat-form-field>
+        <input id="key" name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
+                #key="ngModel" maxlength="25" autocomplete="yes">
+        <mat-error *ngIf="key.errors">
+          Key is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>  
+        <input id="base" name="base" type="text" [(ngModel)]="str.base" required matInput placeholder="Base Translation"
+                #base="ngModel" autocomplete="yes">
+        <mat-error *ngIf="base.errors">
+          Base Translation is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea id="description" name="description" type="text" [(ngModel)]="str.description" matInput placeholder="Description"
+                  #description="ngModel" maxlength="500" autocomplete="yes"></textarea>
+        <mat-hint align="end">{{description.value ? description.value.length : 0}} / 500</mat-hint>
+      </mat-form-field>
+    </div>
+    <button 
+      type="submit" 
+      [disabled] = "str.key == '' || str.base == ''" 
+      mat-raised-button color="primary">
+      Edit
+    </button>
+</form>

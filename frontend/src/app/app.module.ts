@@ -100,6 +100,7 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
+import { EditStringDialogComponent } from './dialogs/edit-string-dialog/edit-string-dialog.component';
 
 
 
@@ -173,7 +174,8 @@ import { TranslatorGuardService } from './services/guards/translator-guard.servi
     StarRatingComponent,  
     UserProfileComponent, 
     TabGlossaryComponent,
-    AssignGlossariesComponent
+    AssignGlossariesComponent,
+    EditStringDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -227,7 +229,8 @@ import { TranslatorGuardService } from './services/guards/translator-guard.servi
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    EditStringDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
