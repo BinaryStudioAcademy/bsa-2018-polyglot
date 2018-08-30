@@ -1,0 +1,15 @@
+<div class="chat-content-container" #mainwindow>
+
+    <ul>
+        <li *ngFor="let m of messages">
+          <span>{{m.time}}</span>
+            <mat-card class="message-card">
+                <mat-card-header>
+                    <mat-card-title>{{m.user.fullName}}</mat-card-title>
+                </mat-card-header>
+                {{m.body}}
+            </mat-card>
+        </li>
+    </ul>
+
+</div>
