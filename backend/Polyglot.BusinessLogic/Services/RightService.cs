@@ -6,6 +6,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Helpers;
+using Polyglot.DataAccess.QueryTypes;
 using Polyglot.DataAccess.SqlRepository;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,8 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
         {
-            var team = await uow.GetRepository<Team>().GetAsync(teamId);
-            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+            var translator = (await uow.GetRepository<Team>().GetAsync(teamId))
+                .TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
 
             var right = (await uow.GetRepository<Right>().GetAllAsync())
                     .FirstOrDefault(r => r.Definition == definition);
@@ -47,8 +48,8 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition)
         {
-            var team = await uow.GetRepository<Team>().GetAsync(teamId);
-            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+            var translator = (await uow.GetRepository<Team>().GetAsync(teamId)).
+                TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
 
             var right = (await uow.GetRepository<Right>().GetAllAsync())
                     .FirstOrDefault(r => r.Definition == definition);
@@ -63,39 +64,17 @@ namespace Polyglot.BusinessLogic.Services
             return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
         }
 
-        public async Task<bool> CheckIfUserCan(int userId, int teamId, RightDefinition definition)
+        public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
         {
-            var team = await uow.GetRepository<Team>().GetAsync(teamId);
-            var translator = team.TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
-
-            var right = (await uow.GetRepository<Right>().GetAllAsync())
-                    .FirstOrDefault(r => r.Definition == definition);
-
-            var translatorRight = translator.TranslatorRights
-                .FirstOrDefault(tr => tr.RightId == right.Id && tr.TeamTranslatorId == translator.Id);
-            if(translatorRight != null)
+            int userId = (await CurrentUser.GetCurrentUserProfile()).Id;
+            var userRights = (await uow.GetUserRights())
+                .FirstOrDefault(ur => ur.ProjectId == projectId && ur.UserId == userId && ur.RightDefinition == definition);
+            
+            if(userRights != null)
             {
                 return true;
             }
             return false;
-        }
-
-        public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
-        {
-            var userId = (await CurrentUser.GetCurrentUserProfile()).Id;
-            var projectTeams = (await uow.GetRepository<Project>().GetAsync(projectId)).Teams;
-            var teamTranslators = projectTeams.SelectMany(pt => pt.TeamTranslators).Where(tt => tt.TranslatorId == userId);
-            var translatorRights = teamTranslators.SelectMany(tt => tt.TranslatorRights);
-
-            var translatorRight = translatorRights.FirstOrDefault(r => r.Right.Definition == definition);
-
-            if(translatorRight == null)
-            {
-                return false;
-            }
-            return true;
-
-
         }
     }
 }

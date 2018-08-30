@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.QueryTypes;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
@@ -16,6 +17,11 @@ namespace Polyglot.DataAccess.SqlRepository
 		{
 			context = c;
             repositories = new Dictionary<Type, object>();
+            /*context.Database.ExecuteSqlCommand(@"CREATE VIEW View_UserRights AS
+                                                    SELECT TranslatorId AS UserId, Definition AS RightDefinition, ProjectId FROM TeamTranslators
+                                                    INNER JOIN TranslatorRight ON TeamTranslatorId = TeamTranslators.Id
+                                                    INNER JOIN Rights On RightId = Rights.id
+                                                    INNER JOIN ProjectTeams on TeamTranslators.TeamId = ProjectTeams.TeamId");*/
 
         }
 
@@ -35,7 +41,12 @@ namespace Polyglot.DataAccess.SqlRepository
             }
         }
 
-		public async Task<int> SaveAsync()
+        public async Task<List<UserRights>> GetUserRights()
+        {
+            return await context.Query<UserRights>().ToListAsync();
+        }
+
+        public async Task<int> SaveAsync()
 		{
 			return await context.SaveChangesAsync();
 		}

@@ -147,10 +147,5 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-        [HttpGet("{teamId}/user/{userId}/right/{rightDefinition}")]
-        public async Task<bool> CheckIfUserCan(int teamId, int userId, RightDefinition rightDefinition)
-        {
-            return await rightService.CheckIfUserCan(userId, teamId, rightDefinition);
-        }
     }
 }

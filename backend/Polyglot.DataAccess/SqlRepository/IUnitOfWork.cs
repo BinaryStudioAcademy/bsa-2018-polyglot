@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
+using Polyglot.DataAccess.QueryTypes;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
@@ -11,5 +13,8 @@ namespace Polyglot.DataAccess.SqlRepository
 
 
         Task<int> SaveAsync();
-	}
+
+        Task<List<UserRights>> GetUserRights();
+
+    }
 }
