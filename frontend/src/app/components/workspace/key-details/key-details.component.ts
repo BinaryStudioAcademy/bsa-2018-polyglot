@@ -51,6 +51,7 @@ export class KeyDetailsComponent implements OnInit {
     public MachineTranslation: string;
     public previousTranslation: string;
     currentTranslation: string;
+    currentSuggestion: string;
 
     constructor(
         private route: ActivatedRoute,
