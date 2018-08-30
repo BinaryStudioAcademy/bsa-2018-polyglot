@@ -67,18 +67,22 @@
             {{card.userProfile.fullName}}
           </strong>
       </div>
-      <div class="row-name">
-        <h3>{{card.name}}</h3>
-      </div>
-      <div class="row-info">
-        <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
-        <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
-      </div>
+      <div class="description-buttons">
+      <div class="description-column box-padding">
+          <div class="row-name">
+              <h3>{{card.name}}</h3>
+            </div>
+            <div class="row-info">
+              <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
+              <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
+            </div>
+      </div>     
       <div class="row-buttons">
-        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+        <button id="workspace" mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+        <button id="details" mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </div>
     </div>
+  </div>
   </mat-list>
 
 </div>
