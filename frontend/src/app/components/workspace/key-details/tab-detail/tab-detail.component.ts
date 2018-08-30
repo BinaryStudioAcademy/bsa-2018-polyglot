@@ -63,15 +63,5 @@ export class TabDetailComponent implements OnInit {
 		}
 	}
 
-	onEditStringClick() {
-        this.dialog.open(EditStringDialogComponent, {
-            data: {
-                string: this.keyDetails
-            }
-        }).afterClosed().subscribe(() => {
-			this.stringService.getById(this.keyDetails.id).subscribe(data => {
-				this.keyDetails = data;
-			})
-		});
-    }
+
 }
