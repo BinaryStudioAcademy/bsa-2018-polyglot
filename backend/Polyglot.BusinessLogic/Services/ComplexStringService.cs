@@ -125,6 +125,28 @@ namespace Polyglot.BusinessLogic.Services
 				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
 		}
 
+		public async Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId)
+		{
+			List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
+
+			var source = (await _repository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
+
+			foreach(var opt in source)
+			{
+				var user = await _uow.GetRepository<UserProfile>().GetAsync(opt.UserId);
+
+				target.Add(
+					new OptionalTranslationDTO() {
+						UserPictureURL = user.AvatarUrl,
+						UserName = user.FullName,
+						DateTime = opt.CreatedOn,
+						TranslationValue = opt.TranslationValue
+					});
+			}
+
+			return target;
+		}
+
 		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
             var target = await _repository.Update(_mapper.Map<ComplexString>(entity));

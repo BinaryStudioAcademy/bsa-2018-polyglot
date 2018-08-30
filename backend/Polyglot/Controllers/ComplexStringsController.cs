@@ -128,9 +128,24 @@ namespace Polyglot.Controllers
 			}
 		}
 
+		[HttpGet("{stringId}/optional/{translationId}")]
+		public async Task<IActionResult> GetOptionalTranslations(int stringId, Guid translationId)
+		{
+			var result = await dataProvider.GetOptionalTranslations(stringId, translationId);
 
-        // POST: ComplexStrings
-        [HttpPost]
+			if (result != null)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return StatusCode(404) as IActionResult;
+			}
+		}
+
+
+		// POST: ComplexStrings
+		[HttpPost]
         public async Task<IActionResult> AddComplexString(IFormFile formFile)
         {
             Request.Form.TryGetValue("str", out StringValues res);
