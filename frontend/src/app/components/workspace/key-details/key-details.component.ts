@@ -6,7 +6,6 @@ import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
@@ -15,6 +14,7 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -26,6 +26,8 @@ export class KeyDetailsComponent implements OnInit {
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
     history: TabHistoryComponent;
+    @ViewChild(TabOptionalComponent)
+    optional: TabOptionalComponent;
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -51,6 +53,7 @@ export class KeyDetailsComponent implements OnInit {
     public MachineTranslation: string;
     public previousTranslation: string;
     currentTranslation: string;
+    currentSuggestion: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -237,6 +240,10 @@ export class KeyDetailsComponent implements OnInit {
             this.keyId,
             this.keyDetails.translations[index].id
         );
+        this.optional.showOptional(
+            this.keyId,
+            this.keyDetails.translations[index].id
+        );
     }
 
     setNewValueTranslation(translation: any) {
@@ -297,12 +304,13 @@ export class KeyDetailsComponent implements OnInit {
             return;
         }
 
+        /*
         if (this.isMachineTranslation) {
             t.Type = TranslationType.Machine;
             this.isMachineTranslation = false;
         } else {
             t.Type = TranslationType.Human;
-        }
+        }*/
 
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider
@@ -315,6 +323,10 @@ export class KeyDetailsComponent implements OnInit {
                             oldValue: ""
                         };
                         this.history.showHistory(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
                             this.keyId,
                             this.keyDetails.translations[index].id
                         );
@@ -334,6 +346,10 @@ export class KeyDetailsComponent implements OnInit {
                             oldValue: ""
                         };
                         this.history.showHistory(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
                             this.keyId,
                             this.keyDetails.translations[index].id
                         );
@@ -415,4 +431,20 @@ export class KeyDetailsComponent implements OnInit {
         }
         return "";
     }
+
+    suggestTranslation(index, TranslationId, Suggestion) {
+        this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
+        .subscribe(
+            (res) => {
+                this.snotifyService.success('Your suggestion was added');
+                this.optional.showOptional(
+                    this.keyId,
+                    this.keyDetails.translations[index].id
+                );
+            }, err => {
+                this.snotifyService.error('Your suggestion wasn`t added');
+            });
+        this.currentSuggestion = '';
+    }
+
 }

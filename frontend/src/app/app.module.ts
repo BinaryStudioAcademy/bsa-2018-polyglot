@@ -101,6 +101,8 @@ import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { EditStringDialogComponent } from './dialogs/edit-string-dialog/edit-string-dialog.component';
+import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
+
 
 
 
@@ -176,6 +178,7 @@ import { EditStringDialogComponent } from './dialogs/edit-string-dialog/edit-str
     TabGlossaryComponent,
     AssignGlossariesComponent,
     EditStringDialogComponent
+    TabOptionalComponent
   ],
   imports: [
     BrowserModule,

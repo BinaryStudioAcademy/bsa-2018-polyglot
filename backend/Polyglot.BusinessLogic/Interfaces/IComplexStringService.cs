@@ -29,5 +29,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation);
 
         Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId);
+
+		Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value);
+
+		Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId);
     }
 }

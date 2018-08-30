@@ -1,5 +1,3 @@
-import { TranslationType } from "./TranslationType";
-
 import { AdditionalTranslation } from "./additionalTranslation";
 
 export interface Translation {
@@ -12,8 +10,5 @@ export interface Translation {
 
   history: AdditionalTranslation[];
   optionalTranslations: AdditionalTranslation[]
-
-  Type : TranslationType
-
 }
 
