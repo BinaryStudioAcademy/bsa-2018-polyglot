@@ -6,7 +6,7 @@ using Polyglot.DataAccess.ElasticsearchModels;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Project : Entity, ISearcheable<Project>
+    public class Project : Entity, ISearcheable
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -36,11 +36,11 @@ namespace Polyglot.DataAccess.Entities
             ProjectTags = new List<ProjectTag>();
         }
 
-        public Project GetIndexObject()
+        public IIndexObject GetIndexObject()
         {
-            return new Project
+            return new ProjectIndex
             {
-                Id = Id,
+                Id = Id.ToString(),
                 Name = Name
             };
         }

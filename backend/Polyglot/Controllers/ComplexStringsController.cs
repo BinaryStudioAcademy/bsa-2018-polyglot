@@ -4,19 +4,15 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Core.Authentication;
-using Polyglot.DataAccess.Elasticsearch;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.Hubs;
 using Polyglot.Hubs.Helpers;
-using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.Controllers
 {
@@ -192,19 +188,6 @@ namespace Polyglot.Controllers
 
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
-        }
-
-        [HttpGet("getall")]
-        public async Task<IActionResult> Get()
-        {
-            var result = ElasticsearchExtensions.GetElasticClient<ComplexString>().Search<ComplexString>();
-            return Ok(result.Documents);
-        }
-        [HttpGet("getall1")]
-        public IActionResult Get1()
-        {
-            var result = ElasticsearchExtensions.GetElasticClient<Project>().Search<Project>();
-            return Ok(result.Documents);
         }
     }
 }

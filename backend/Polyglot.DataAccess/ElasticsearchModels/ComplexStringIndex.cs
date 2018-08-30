@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Polyglot.DataAccess.Elasticsearch;
+using Polyglot.DataAccess.MongoModels;
 
 namespace Polyglot.DataAccess.ElasticsearchModels
 {
-    //public class ComplexStringIndex: IIndexObject
-    //{
-    //    public int Id { get; set; }
-    //    public DateTime UpdatedAt { get; set; }
-    //    public DateTime CreatedAt { get; set; }
+    public class ComplexStringIndex : IIndexObject
+    {
+        public ComplexStringIndex()
+        {
+            
+        }
 
-    //    public int Language { get; set; }
-    //}
-
-    //public class ProjectIndex: IIndexObject
-    //{
-    //    public int Id { get; set; }
-    //    public DateTime UpdatedAt { get; set; }
-    //    public DateTime CreatedAt { get; set; }
-    //    public string Name { get; set; }
-    //}
+        public string Id { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Key { get; set; }
+        public int ProjectId { get; set; }
+        public int LanguageId { get; set; }
+        public string OriginalValue { get; set; }
+        public string Description { get; set; }
+        public string PictureLink { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Translation> Translations { get; set; }
+    }
 }

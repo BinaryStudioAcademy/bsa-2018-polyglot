@@ -97,7 +97,7 @@ namespace Polyglot.DataAccess.MongoRepository
                 DeleteResult actionResult
                     = await Collection.DeleteOneAsync(
                         Builders<TEntity>.Filter.Eq("Id", id));
-                //await ElasticsearchExtensions.UpdateSearchIndex(item, CrudAction.Delete);
+                await ElasticsearchExtensions.UpdateSearchIndex(new TEntity { Id = id }, CrudAction.Delete);
                 return null;
             }
             catch (Exception ex)

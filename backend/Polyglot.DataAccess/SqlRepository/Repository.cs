@@ -9,7 +9,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity, new()
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
     {
         protected DbContext context;
         protected DbSet<TEntity> DbSet;

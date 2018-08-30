@@ -4,7 +4,7 @@ using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 namespace Polyglot.DataAccess.MongoRepository
 {
-    public interface IMongoRepository<TEntity> : IBaseRepository<TEntity> where TEntity : Entity
+    public interface IMongoRepository<TEntity> : IBaseRepository<TEntity> where TEntity : Entity, new()
     {
        Task<TEntity> Update(TEntity entity);
 

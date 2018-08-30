@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using Polyglot.DataAccess.ElasticsearchModels;
 using Polyglot.DataAccess.Entities;
-using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.DataAccess.Elasticsearch
 {
     public static class ElasticsearchExtensions
     {
-        private static Dictionary<Type, IElasticClient> elasticClients = new Dictionary<Type, IElasticClient>();
 
-        private static IElasticClient elasticClient;
+        private static IElasticClient _elasticClient;
 
-        private static ConnectionSettings settings;
+        private static IElasticLowLevelClient _lowlevelClient;
+
+        private static ConnectionSettings _settings;
 
         private static bool _updateSearchService;
 
@@ -27,103 +27,78 @@ namespace Polyglot.DataAccess.Elasticsearch
             var defaultIndex = configuration["elasticsearch:index"];
             _updateSearchService = Boolean.Parse(configuration["elasticsearch:updateIndex"]);
 
-            settings = new ConnectionSettings(new Uri(url))
+            _settings = new ConnectionSettings(new Uri(url))
                 .DefaultIndex(defaultIndex)
-                .DefaultMappingFor<ComplexString>(m => m
-                    .IndexName("complex-string")
-                    .TypeName("complex-string")
-                    //.RelationName("ComplexString")
+                .DefaultMappingFor<ComplexStringIndex>(m => m
+                    .IndexName("complexstring")
+                    .TypeName("complexstring")
                 )
-                .DefaultMappingFor<Project>(m => m
-                    .IndexName("complex-string")
+                .DefaultMappingFor<ProjectIndex>(m => m
+                    .IndexName("project")
                     .TypeName("project")
-                    //.RelationName("Project")
                 );
-            //.DefaultMappingFor<Post>(m => m
-            //    .Ignore(p => p.IsPublished)
-            //    .PropertyName(p => p.ID, "id")
-            //)
-            //.DefaultMappingFor<Comment>(m => m
-            //    .Ignore(c => c.Email)
-            //    .Ignore(c => c.IsAdmin)
-            //    .PropertyName(c => c.ID, "id")
-            //);
-            //var resolver = new TypeNameResolver(settings);
-            //var type = resolver.Resolve<ComplexString>();
-            //type.s().Be("attributed_project");
 
-            elasticClient = new ElasticClient(settings);
+            _elasticClient = new ElasticClient(_settings);
 
-            services.AddSingleton<IElasticClient>(elasticClient);
+            services.AddSingleton<IElasticClient>(_elasticClient);
+
+
+            var settingslow = new ConnectionConfiguration(new Uri(url))
+                .RequestTimeout(TimeSpan.FromMinutes(2));
+
+            _lowlevelClient = new ElasticLowLevelClient(settingslow);
         }
 
-        //public static IElasticClient GetElasticClient()
-        //{
-        //    return elasticClient;
-        //}
-
-        public static IElasticClient GetElasticClient<T>()
-            where T : DbEntity, new()
+        public static IElasticClient GetElasticClient<T>() where T : Entity, new()
         {
-            var targetType = typeof(T);
-            if (elasticClients.ContainsKey(targetType))
-            {
-                return elasticClients[targetType];
-            }
-            else
-            {
-                //var newSettings = settings.DefaultIndex(targetType.Name)
-                //    .DefaultMappingFor<ComplexStringIndex>(m => m
-                //    .IndexName("ComplexString")
-                //    .TypeName("ComplexString")
-                //);
-                var repoInstance = new ElasticClient(settings);
-                elasticClients.Add(targetType, repoInstance);
-                return repoInstance;
-            }
-            //return elasticClient;
+            return _elasticClient;
         }
 
-        public static async Task UpdateSearchIndex<T>(T entityToUpdate, CrudAction action) where T : DbEntity, new()
+        public static async Task UpdateSearchIndex<T>(T entityToUpdate, CrudAction action) where T : Entity, new()
         {
             if (_updateSearchService)
             {
-                if (entityToUpdate is ISearcheable<T> searchable)
+                if (entityToUpdate is ISearcheable searchable)
                 {
                     var indexObject = searchable.GetIndexObject();
                     if (indexObject != null)
                     {
-                        //var elasticClient = GetElasticClient<T>();
-                        var targetType = typeof(T);
-                        switch (action)
+                        var targetType = typeof(T).Name.ToLower();
+                        try
                         {
-                            case CrudAction.Create:
-                                //var result = await elasticClient.IndexDocumentAsync(indexObject);
-                                await elasticClient.IndexAsync(indexObject, idx => idx.Index(targetType.Name.ToLower()));
-                                break;
-                            case CrudAction.Update:
+                            StringResponse response;
+                            switch (action)
                             {
-                                //var updateRequest = new UpdateRequest<IIndexObject, IIndexObject>(indexName, "people", docId)
-                                //var path = new DocumentPath<IIndexObject>(indexObject
-                                var result1 = await elasticClient.UpdateAsync<T>(new DocumentPath<T>(indexObject), e =>e.Doc(indexObject));
-                                break;
-                            }
-                            case CrudAction.Delete:
-                            {
-                                await elasticClient.DeleteAsync<T>(new DocumentPath<T>(indexObject));
+                                case CrudAction.Create:
+                                    {
+                                        indexObject.CreatedAt = DateTime.Now;
+                                        response = await _lowlevelClient.IndexAsync<StringResponse>(targetType, targetType,
+                                            indexObject.Id, PostData.Serializable(indexObject));
+                                    }
                                     break;
+                                case CrudAction.Update:
+                                    {
+                                        indexObject.UpdatedAt = DateTime.Now;
+                                        response =
+                                        await _lowlevelClient.IndexPutAsync<StringResponse>(targetType, targetType,
+                                            indexObject.Id, PostData.Serializable(indexObject));
+                                        break;
+                                    }
+                                case CrudAction.Delete:
+                                    {
+                                        response =
+                                            await _lowlevelClient.DeleteAsync<StringResponse>(targetType, targetType,
+                                                indexObject.Id);
+                                        break;
+                                    }
                             }
+                        }
+                        catch (Exception e)
+                        {
                         }
                     }
                 }
             }
         }
-    }
-
-    public enum CrudAction
-    {
-        Create,
-        Update,
-        Delete
     }
 }
