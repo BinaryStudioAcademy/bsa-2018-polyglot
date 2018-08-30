@@ -192,13 +192,10 @@ namespace Polyglot.BusinessLogic.Services
             else
             {
                 var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
-                foreach (var team in translatorTeams)
-                {
-                    foreach (var project in team.Team.ProjectTeams)
-                    {
-                        result.Add(project.Project);
-                    }
-                }
+
+                translatorTeams.ForEach(team => team.Team.ProjectTeams.ToList()
+                    .ForEach(project => result.Add(project.Project)));
+
                 result = result.Distinct().ToList();
             }
             return mapper.Map<List<ProjectDTO>>(result);
@@ -217,10 +214,9 @@ namespace Polyglot.BusinessLogic.Services
 
             var projectTeams = project.ProjectTeams;
             var teams = new List<Team>();
-            foreach (var projectTeam in projectTeams)
-            {
-                teams.Add(projectTeam.Team);
-            }
+
+            projectTeams.ToList().ForEach(projectTeam => teams.Add(projectTeam.Team));
+
             return mapper.Map<IEnumerable<TeamPrevDTO>>(teams);
         }
 
@@ -474,8 +470,8 @@ namespace Polyglot.BusinessLogic.Services
                 catch (Exception)
                 {
 
-				}
-				await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
+                }
+                await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
