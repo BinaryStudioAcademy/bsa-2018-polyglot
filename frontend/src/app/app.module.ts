@@ -99,6 +99,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
+import { TranslatorGuardService } from './services/guards/translator-guard.service';
+import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
 
 
 
@@ -172,7 +174,8 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
     StarRatingComponent,  
     UserProfileComponent, 
     TabGlossaryComponent,
-    AssignGlossariesComponent
+    AssignGlossariesComponent,
+    TabOptionalComponent
   ],
   imports: [
     BrowserModule,
@@ -234,7 +237,7 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
       provide: 'SnotifyToastConfig',
       useValue: SnotifyGlobalConfig
     },
-    SnotifyService, GlossaryService],
+    SnotifyService, GlossaryService, TranslatorGuardService],
 
   bootstrap: [AppComponent]
 
