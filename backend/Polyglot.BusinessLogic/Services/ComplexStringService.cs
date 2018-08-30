@@ -170,8 +170,47 @@ namespace Polyglot.BusinessLogic.Services
             return null;
 
         }
-        
 
+        public async Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, CommentDTO comment)
+        {
+            var target = await _repository.GetAsync(identifier);
+            if (target != null)
+            {
+                var currentComment = target.Comments.FirstOrDefault(x => x.Id == comment.Id);
+
+                var comments = target.Comments;
+                comments.Remove(currentComment);
+                target.Comments = comments;
+                
+                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                
+                return commentsWithUsers;
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<CommentDTO>> EditComment(int identifier, CommentDTO comment)
+        {
+            var target = await _repository.GetAsync(identifier);
+            if (target != null)
+            {
+                var comments = _mapper.Map<List<Comment>>(target.Comments);
+                var currentComment = comments.FirstOrDefault(x => x.Id == comment.Id);
+                
+                currentComment.Text = comment.Text;
+                currentComment.CreatedOn = DateTime.Now;;
+                target.Comments = comments;
+
+                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                return commentsWithUsers;
+            }
+            return null;
+
+        }
+        
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {
             var target = await _repository.GetAsync(identifier);
@@ -258,5 +297,7 @@ namespace Polyglot.BusinessLogic.Services
 
             return history;
         }
+
+       
     }
 }

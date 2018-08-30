@@ -60,7 +60,7 @@ export class ComplexStringService {
   }
 
   deleteStringComment(comment: Comment, id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comment);
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments', undefined, comment);
   }
 
   getTranslationHistory(id: number, translationId: string) {

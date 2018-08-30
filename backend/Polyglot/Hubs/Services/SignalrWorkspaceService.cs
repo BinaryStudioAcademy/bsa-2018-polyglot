@@ -23,7 +23,16 @@ namespace Polyglot.Hubs
             await _hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), comment);
         }
 
-        
+        public async Task CommentDeleted(string groupName, IEnumerable<CommentDTO> comment)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.commentDeleted.ToString(), comment);
+        }
+
+        public async Task CommentEdited(string groupName, IEnumerable<CommentDTO> comment)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync(Action.commentEdited.ToString(), comment);
+        }
+
         public async Task ComplexStringAdded(string groupName, int complexStringId)
         {
             await _hubContext.Clients.Group(groupName).SendAsync(Action.complexStringAdded.ToString(), complexStringId);

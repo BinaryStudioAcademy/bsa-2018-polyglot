@@ -183,10 +183,9 @@ namespace Polyglot.Controllers
             return comments == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<CommentDTO>>(comments));
         }
-
-                     
-        // PUT: ComplexStrings/5/comments
-        [HttpPut("{id}/comments")]
+                             
+        // POST: ComplexStrings/5/comments
+        [HttpPost("{id}/comments")]
         public async Task<IActionResult> SetStringComment(int id, [FromBody]CommentDTO comment)
         {
             if (!ModelState.IsValid)
@@ -202,6 +201,48 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
+        // DELETE: ComplexStrings/5/comments
+        [HttpDelete("{id}/comments")]
+        public async Task<IActionResult> DeleteStringComment(int id, [FromBody]CommentDTO comment)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.DeleteComment(id, comment);
+
+            if (entity != null)
+            {
+                await signalrService.CommentDeleted($"{Group.complexString}{id}", entity);
+            }
+
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        // PUT: ComplexStrings/5/comments
+        [HttpPut("{id}/comments")]
+        public async Task<IActionResult> EditStringComment(int id, [FromBody]CommentDTO comment)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.EditComment(id, comment);
+
+            if (entity != null)
+            {
+                await signalrService.CommentEdited($"{Group.complexString}{id}", entity);
+            }
+
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+
+
+
 
         [HttpGet("{id}/history/{translationId}")]
         public async Task<IActionResult> GetHistory(int id, Guid translationId)

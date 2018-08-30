@@ -21,10 +21,10 @@ import { CommaExpr } from '@angular/compiler';
 })
 export class TabCommentsComponent implements OnInit {
 
-    @Input()  comments: Comment[];
+    @Input() comments: Comment[];
     @ViewChild('textarea') textarea: ElementRef;
 
-    newComment : any;
+    newComment: any;
     routeSub: Subscription;
     keyId: number;
     private url: string = environment.apiUrl;
@@ -71,15 +71,16 @@ export class TabCommentsComponent implements OnInit {
             text: commentBody,
             createdOn: new Date(Date.now())
         };
-        
+
         this.complexStringService.createStringComment(this.newComment, this.keyId)
             .subscribe(
                 (comments) => {
                     if (comments) {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
-                        this.comments=comments;
-                        
+                        this.comments = comments;
+                        console.log(this.comments);
+
                     }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
@@ -93,6 +94,21 @@ export class TabCommentsComponent implements OnInit {
 
     public deleteComment(comment: Comment): void {
         // this.comment
-        this.complexStringService.deleteStringComment(comment, this.keyId); 
+        this.complexStringService.deleteStringComment(comment, this.keyId)
+            .subscribe(
+                (comments) => {
+                    if (comments) {
+                        this.snotifyService.success("Comment delete", "Success!");
+                        this.commentForm.reset();
+                        this.comments = comments;
+                        console.log(this.comments);
+                    }
+                    else {
+                        this.snotifyService.error("Comment wasn't delete", "Error!");
+                    }
+                },
+                err => {
+                    this.snotifyService.error("Comment delete", "Error!");
+                });
     }
 }
