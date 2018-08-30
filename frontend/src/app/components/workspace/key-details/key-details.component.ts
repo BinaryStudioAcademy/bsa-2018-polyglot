@@ -416,4 +416,9 @@ export class KeyDetailsComponent implements OnInit {
         }
         return "";
     }
+
+    suggestTranslation(TranslationId, Suggestion) {
+
+    }
+
 }
