@@ -22,12 +22,16 @@
                 <button (click)="startEdittingComment(com)" mat-menu-item>Edit</button>
             </mat-menu>
             <ng-container *ngIf="com.isEditting">
-                <div class="edit-container">
-                    <textarea #comText>{{com?.text}}</textarea>
-                    <button (click)="editComment(com, comText.value)">Save</button>
-                    <button (click)="cancelEditting(com)">Cancel</button>
-                </div>
 
+                <mat-form-field class="edit-container">
+                    <input matInput class="edit-input" #comText type="text" [ngModel]="commentText">
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Clear" (click)="cancelEditting(com)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Save" (click)="editComment(com, comText.value)">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                </mat-form-field>
 
             </ng-container>
             <ng-container *ngIf="!com.isEditting">

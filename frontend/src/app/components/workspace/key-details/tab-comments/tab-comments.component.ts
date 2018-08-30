@@ -25,6 +25,7 @@ export class TabCommentsComponent implements OnInit {
     @ViewChild('textarea') textarea: ElementRef;
 
     newComment: any;
+    public commentText: string;
     routeSub: Subscription;
     keyId: number;
     private url: string = environment.apiUrl;
@@ -116,7 +117,9 @@ export class TabCommentsComponent implements OnInit {
     }
 
     public startEdittingComment(comment: Comment): void {
+        this.commentText = comment.text;
         comment.isEditting = true;
+        
     }
 
     public cancelEditting(comment: Comment): void {
