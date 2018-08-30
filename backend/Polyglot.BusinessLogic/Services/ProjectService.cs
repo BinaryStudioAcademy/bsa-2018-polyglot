@@ -510,33 +510,57 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId)
         {
-            List<FilterType> filters = new List<FilterType>();
-            options.ToList().ForEach(x => filters.Add((FilterType)Enum.Parse(typeof(FilterType), x.Replace(" ", string.Empty))));
+            List<FilterType> criteriaFilters = new List<FilterType>();
+            List<string> tagFilters = new List<string>();
+            List<ComplexString> result = new List<ComplexString>();
+
+            foreach (var opt in options)
+            {
+                if (opt.StartsWith("filter/"))
+                {
+                    criteriaFilters.Add((FilterType)Enum.Parse(typeof(FilterType),
+                        opt
+                            .Replace("filter/", "")
+                            .Replace(" ", string.Empty)));
+                }
+                else
+                {
+                    tagFilters.Add(opt.Replace("tags/",""));
+                }
+            }
 
             Expression<Func<ComplexString, bool>> finalFilter = x => x.ProjectId == projectId;
 
-            Expression<Func<ComplexString, bool>> translatedFilter = x => x.Translations.Count != 0;
-            Expression<Func<ComplexString, bool>> untranslatedFilter = x => x.Translations.Count == 0;
-            Expression<Func<ComplexString, bool>> withTagsFilter = x => x.Tags.Count != 0;
-            Expression<Func<ComplexString, bool>> machineTranslationFilter = x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine);
-            Expression<Func<ComplexString, bool>> humanTranslationFilter = x => x.Translations.Any(t => t.Type == Translation.TranslationType.Machine);
+            if (criteriaFilters.Contains(FilterType.Translated))
+                finalFilter = AndAlso(finalFilter, x => x.Translations.Count != 0);
 
-            if (filters.Contains(FilterType.Translated))
-                finalFilter = AndAlso(finalFilter, translatedFilter);
+            if (criteriaFilters.Contains(FilterType.Untranslated))
+                finalFilter = AndAlso(finalFilter, x => x.Translations.Count == 0);
 
-            if (filters.Contains(FilterType.Untranslated))
-                finalFilter = AndAlso(finalFilter, untranslatedFilter);
+            if (criteriaFilters.Contains(FilterType.WithTags))
+                finalFilter = AndAlso(finalFilter, x => x.Tags.Count != 0);
 
-            if (filters.Contains(FilterType.HumanTranslation))
-                finalFilter = AndAlso(finalFilter, humanTranslationFilter);
+            if (criteriaFilters.Contains(FilterType.WithPhoto))
+                finalFilter = AndAlso(finalFilter, x => x.PictureLink != null);
 
-            if (filters.Contains(FilterType.MachineTranslation))
-                finalFilter = AndAlso(finalFilter, machineTranslationFilter);
+            var criteriaResult = await stringsProvider.GetAllAsync(finalFilter);
 
-            if (filters.Contains(FilterType.WithTags))
-                finalFilter = AndAlso(finalFilter, withTagsFilter);
+            if (tagFilters.Count != 0)
+            {
+                foreach (var tag in tagFilters)
+                {
+                    foreach (var res in criteriaResult)
+                    {
+                        if(res.Tags.Contains(tag))
+                            result.Add(res);
+                    }
+                }
 
-            var result = await stringsProvider.GetAllAsync(finalFilter);
+            }
+            else
+            {
+                result = criteriaResult;
+            }
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
         }
@@ -644,9 +668,8 @@ namespace Polyglot.BusinessLogic.Services
         {
             Translated,
             Untranslated,
-            HumanTranslation,
-            MachineTranslation,
-            WithTags
+            WithTags,
+            WithPhoto
         }
 
         #endregion

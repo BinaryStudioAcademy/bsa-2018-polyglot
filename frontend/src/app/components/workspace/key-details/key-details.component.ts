@@ -6,7 +6,6 @@ import { Language, Translation } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
-import { TranslationType } from "../../../models/TranslationType";
 import { AppStateService } from "../../../services/app-state.service";
 import * as signalR from "../../../../../node_modules/@aspnet/signalr";
 import { SignalrService } from "../../../services/signalr.service";
@@ -297,51 +296,44 @@ export class KeyDetailsComponent implements OnInit {
             return;
         }
 
-        if (this.isMachineTranslation) {
-            t.Type = TranslationType.Machine;
-            this.isMachineTranslation = false;
-        } else {
-            t.Type = TranslationType.Human;
-        }
-
-        if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
-            this.dataProvider
-                .editStringTranslation(t, this.keyId)
-                .subscribe(
-                    (d: any[]) => {
-                        //console.log(this.keyDetails.translations);
-                        this.expandedArray[index] = {
-                            isOpened: false,
-                            oldValue: ""
-                        };
-                        this.history.showHistory(
-                            this.keyId,
-                            this.keyDetails.translations[index].id
-                        );
-                    },
-                    err => {
-                        this.snotifyService.error(err);
-                    }
-                );
-        } else {
-            t.createdOn = new Date();
-            this.dataProvider
-                .createStringTranslation(t, this.keyId)
-                .subscribe(
-                    (d: any) => {
-                        this.expandedArray[index] = {
-                            isOpened: false,
-                            oldValue: ""
-                        };
-                        this.history.showHistory(
-                            this.keyId,
-                            this.keyDetails.translations[index].id
-                        );
-                    },
-                    err => {
-                        console.log("err", err);
-                    }
-                );
+            if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
+                this.dataProvider
+                    .editStringTranslation(t, this.keyId)
+                    .subscribe(
+                        (d: any[]) => {
+                            //console.log(this.keyDetails.translations);
+                            this.expandedArray[index] = {
+                                isOpened: false,
+                                oldValue: ""
+                            };
+                            this.history.showHistory(
+                                this.keyId,
+                                this.keyDetails.translations[index].id
+                            );
+                        },
+                        err => {
+                            this.snotifyService.error(err);
+                        }
+                    );
+            } else {
+                t.createdOn = new Date();
+                this.dataProvider
+                    .createStringTranslation(t, this.keyId)
+                    .subscribe(
+                        (d: any) => {
+                            this.expandedArray[index] = {
+                                isOpened: false,
+                                oldValue: ""
+                            };
+                            this.history.showHistory(
+                                this.keyId,
+                                this.keyDetails.translations[index].id
+                            );
+                        },
+                        err => {
+                            console.log("err", err);
+                        }
+                    );  
         }
     }
     onClose(index: number, translation: any) {
