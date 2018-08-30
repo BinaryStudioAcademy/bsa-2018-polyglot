@@ -115,7 +115,7 @@ namespace Polyglot.BusinessLogic.Services
 			targetTranslation.OptionalTranslations.Add(
 				new AdditionalTranslation() {
 					TranslationValue = value,
-					UserId = CurrentUser.GetCurrentUserProfile().Id,
+					UserId = (await CurrentUser.GetCurrentUserProfile()).Id,
 					CreatedOn = DateTime.Now,
 					Type = Translation.TranslationType.Human
 				});

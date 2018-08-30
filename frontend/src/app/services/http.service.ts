@@ -55,7 +55,7 @@ export class HttpService {
                 }
                 break;
             case RequestMethod.Post:
-                request = this.httpClient.post(`${this.url}/${endpoint}/`, body, { headers });
+                request = this.httpClient.post(`${this.url}/${endpoint}/${params}`, body, { headers });
                 break;
             case RequestMethod.Put:
                 request = this.httpClient.put(`${this.url}/${endpoint}/${params}`, body, { headers });

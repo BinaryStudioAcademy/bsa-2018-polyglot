@@ -418,7 +418,16 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     suggestTranslation(TranslationId, Suggestion) {
-
+        debugger;
+        this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
+        .subscribe(
+            (res) => {
+                this.snotifyService.success('Your suggestion was added');
+                debugger;
+            }, err => {
+                this.snotifyService.error('Your suggestion wasn`t added');
+            });
+        
     }
 
 }

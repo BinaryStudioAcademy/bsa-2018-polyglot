@@ -36,8 +36,7 @@
 										</mat-form-field>
 										<button [disabled]="!currentSuggestion || currentSuggestion.length<1"
 										 	mat-raised-button color="primary"
-										 	(click)="suggestTranslation(t.id, currentSuggestion)"
-										 >Suggest</button>
+										 	(click)="suggestTranslation(t.id, currentSuggestion)">Suggest</button>
 									</div>
 								</mat-menu>
 							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">

@@ -112,7 +112,7 @@ namespace Polyglot.Controllers
         }
 
 		[HttpPost("{stringId}/{translationId}")]
-		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, [FromBody]string value)
+		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);
 
