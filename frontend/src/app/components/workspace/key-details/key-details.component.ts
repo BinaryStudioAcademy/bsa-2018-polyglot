@@ -291,7 +291,7 @@ export class KeyDetailsComponent implements OnInit {
         this.currentTranslation = "";
 
         // 'Save' button not work if nothing has been changed
-        if (!t.translationValue || (this.expandedArray[index].oldValue === t.translationValue)) {
+        if (!t.translationValue || (this.expandedArray[index].oldValue === t.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             return;
         }
@@ -337,11 +337,7 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     onClose(index: number, translation: any) {
-        if (
-            this.expandedArray[index].oldValue ==
-                translation.translationValue &&
-            !this.isMachineTranslation
-        ) {
+        if (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             return;
@@ -387,6 +383,7 @@ export class KeyDetailsComponent implements OnInit {
     toggle() {
         this.IsEdit = !this.IsEdit;
     }
+
     selectTranslation($event) {
         this.previousTranslation = this.keyDetails.translations[
             $event.keyId

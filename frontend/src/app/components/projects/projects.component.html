@@ -12,11 +12,11 @@
   </form>
 </div>
 
-<div *ngIf="IsLoad" class="spinner">
+<div *ngIf="isLoad" class="spinner">
   <mat-spinner></mat-spinner>
 </div>
 
-<div *ngIf="cards.length > 0">
+<div *ngIf="!isLoad&&cards">
   <div *ngIf="toggle.checked" class="container">
     <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>
@@ -63,30 +63,34 @@
           <a (click)="userService.redirectById(card.userProfile.id)">
             <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
           </a>
-            <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
+          <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)" >
               {{card.userProfile.fullName}}
             </strong>
         </div>
-        <div class="row-name">
-          <h3>{{card.name}}</h3>
-        </div>
-        <div class="row-info">
-          <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
-          <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
-        </div>
+        <div class="description-buttons">
+        <div class="description-column box-padding">
+            <div class="row-name">
+                <h3>{{card.name}}</h3>
+              </div>
+              <div class="row-info">
+                <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
+                <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
+              </div>
+        </div>     
         <div class="row-buttons">
-          <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-          <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+          <button id="workspace" mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+          <button id="details" mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
         </div>
       </div>
+    </div>
     </mat-list>
   </div>
 </div>
-<div *ngIf="cards.length === 0" class="no-projects">
+<div *ngIf="!isLoad&&cards.length === 0" class="no-projects">
   No Projects
 </div>
 
 <ng-snotify></ng-snotify>
-<button *ngIf="isCurrentUserManager()" routerLink="/profile/newproject" mat-fab color="primary" class="button-add">
+<button *ngIf="isCurrentUserManager()" routerLink="/newproject" mat-fab color="primary" class="button-add">
   <mat-icon aria-label="Add button">add</mat-icon>
 </button>
