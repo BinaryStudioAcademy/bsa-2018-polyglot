@@ -132,7 +132,47 @@ export class KeyDetailsComponent implements OnInit {
                     this.dataProvider
                         .getStringTranslations(this.currentKeyId)
                         .subscribe(translations => {
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            if (translations && translations.length > 0) {
+                                if (
+                                    this.keyDetails.translations &&
+                                    this.keyDetails.translations < 1
+                                ) {
+                                    this.keyDetails.translations = translations;
+                                } else {
+                                    let targetTranslationIndex = -1;
+                                    let currentKeyDetailsTranslation;
+                                    for (
+                                        let i = 0;
+                                        i < translations.length;
+                                        i++
+                                    ) {
+                                        targetTranslationIndex = this.keyDetails.translations
+                                            .map(function(t) {
+                                                return t.languageId;
+                                            })
+                                            .indexOf(translations[i].languageId);
+                                        if(targetTranslationIndex < 0)
+                                        {
+                                            continue;
+                                        }
+
+                                        currentKeyDetailsTranslation = this.keyDetails.translations[targetTranslationIndex];
+                                        if(this.currentTranslation !== "" && currentKeyDetailsTranslation.translationValue === this.currentTranslation)
+                                        {
+                                            this.keyDetails.translations[targetTranslationIndex].translationValue = 
+                                            `Your work  ==========>                                            
+                                            ${this.currentTranslation}                          
+                                            <========= ${response.senderFullName}'s changes                               
+                                            =========>                                       
+                                            ${translations[i].translationValue}`;
+                                        }
+                                        else 
+                                        {
+                                            this.keyDetails.translations[targetTranslationIndex].translationValue = translations[i].translationValue;
+                                        }
+                                    }
+                                }
+                            }
                         });
                     //this.setNewValueTranslation(translation);
                 }
@@ -142,7 +182,11 @@ export class KeyDetailsComponent implements OnInit {
             SignalrSubscribeActions[SignalrSubscribeActions.commentAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    this.dataProvider
+                        .getCommentsByStringId(this.currentKeyId)
+                        .subscribe(comments => {
+                            this.comments = comments;
+                        });
                 }
             }
         );
@@ -151,7 +195,7 @@ export class KeyDetailsComponent implements OnInit {
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     if (this.keyDetails && this.keyDetails.translations) {
-                        const removedLanguageId = response.ids.pop();
+                        const removedLanguageId = response.ids[0];
                         let langName: string;
                         const currentState = this.appState.getWorkspaceState;
                         const deletedLanguage = currentState.languages.filter(

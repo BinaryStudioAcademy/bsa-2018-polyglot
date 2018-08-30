@@ -69,7 +69,7 @@ export class LanguagesComponent implements OnInit {
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             response => {
                 if (this.signalrService.validateResponse(response)) {
-                    const languageId = response.ids.pop();
+                    const languageId = response.ids[0];
                     let removedLanguage = this.langs.filter(
                         l => l.id === languageId
                     );
@@ -78,7 +78,7 @@ export class LanguagesComponent implements OnInit {
                             `${removedLanguage[0].name} removed`,
                             "Language removed"
                         );
-                        this.langs = this.langs.filter(l => l.id != languageId);
+                        this.langs = this.langs.filter(l => l.id !== languageId);
                     }
                 }
             }
@@ -92,8 +92,6 @@ export class LanguagesComponent implements OnInit {
                         "Language added"
                     );
                     this.IsLoad = true;
-                    // ==============================================================================
-                    // ==============> Загрузить с сервера только те языки которые были добавленны
                     this.projectService
                         .getProjectLanguagesStatistic(this.projectId)
                         .subscribe(
@@ -165,7 +163,7 @@ export class LanguagesComponent implements OnInit {
             ],
             (response: any) => {
                 if (response.ids && response.ids.length > 0) {
-                    const languageId = response.ids.pop();
+                    const languageId = response.ids[0];
                     this.IsLoading[languageId] = true;
 
                     this.projectService
