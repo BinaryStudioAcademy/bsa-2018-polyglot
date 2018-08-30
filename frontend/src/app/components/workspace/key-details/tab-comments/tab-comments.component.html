@@ -18,8 +18,8 @@
                 <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
-                <button (click)="onDeleteComment()" mat-menu-item>Delete</button>
-                <button (click)="onEditComment()" mat-menu-item>Edit</button>
+                <button (click)="deleteComment(com)" mat-menu-item>Delete</button>
+                <button (click)="editComment(com)" mat-menu-item>Edit</button>
             </mat-menu>
             <div class="text">{{com?.text}}</div>
             <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>

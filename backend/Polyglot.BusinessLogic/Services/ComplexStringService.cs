@@ -171,12 +171,13 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, CommentDTO comment)
+        public async Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, Guid commentId)
         {
             var target = await _repository.GetAsync(identifier);
             if (target != null)
             {
-                var currentComment = target.Comments.FirstOrDefault(x => x.Id == comment.Id);
+                
+                var currentComment = target.Comments.FirstOrDefault(x => x.Id == commentId);
 
                 var comments = target.Comments;
                 comments.Remove(currentComment);

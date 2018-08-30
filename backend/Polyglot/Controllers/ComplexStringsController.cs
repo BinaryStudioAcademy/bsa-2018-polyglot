@@ -203,13 +203,13 @@ namespace Polyglot.Controllers
         }
 
         // DELETE: ComplexStrings/5/comments
-        [HttpDelete("{id}/comments")]
-        public async Task<IActionResult> DeleteStringComment(int id, [FromBody]CommentDTO comment)
+        [HttpDelete("{id}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteStringComment(int id, Guid commentId)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.DeleteComment(id, comment);
+            var entity = await dataProvider.DeleteComment(id, commentId);
 
             if (entity != null)
             {

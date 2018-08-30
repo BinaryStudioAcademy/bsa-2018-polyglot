@@ -65,7 +65,7 @@ export class TabCommentsComponent implements OnInit {
         }
     }
 
-    addComment(commentBody: string) {
+    public addComment(commentBody: string) {
         this.newComment = {
             user: this.userService.getCurrentUser(),
             text: commentBody,
@@ -81,7 +81,7 @@ export class TabCommentsComponent implements OnInit {
                         this.comments = comments;
                         console.log(this.comments);
 
-                    }
+                    } 
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
                     }
@@ -91,10 +91,9 @@ export class TabCommentsComponent implements OnInit {
                 });
     }
 
-
     public deleteComment(comment: Comment): void {
-        // this.comment
-        this.complexStringService.deleteStringComment(comment, this.keyId)
+        
+        this.complexStringService.deleteStringComment(comment.id, this.keyId)
             .subscribe(
                 (comments) => {
                     if (comments) {

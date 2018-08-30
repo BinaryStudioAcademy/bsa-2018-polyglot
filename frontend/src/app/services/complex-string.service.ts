@@ -52,15 +52,15 @@ export class ComplexStringService {
   }
 
   createStringComment(comment: Comment, id: number): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comment)
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id + '/comments', undefined, comment)
   }
 
   getCommentsByStringId(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/comments', undefined);
   }
 
-  deleteStringComment(comment: Comment, id: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments', undefined, comment);
+  deleteStringComment(commentId: string, id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments/' + commentId, undefined);
   }
 
   getTranslationHistory(id: number, translationId: string) {

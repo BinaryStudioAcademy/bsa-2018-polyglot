@@ -24,7 +24,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment);
         
-        Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, CommentDTO comment);
+        Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, Guid commentId);
 
         Task<IEnumerable<CommentDTO>> EditComment(int identifier, CommentDTO comment);
 
