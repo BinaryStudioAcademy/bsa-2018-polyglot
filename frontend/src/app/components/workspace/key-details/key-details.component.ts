@@ -15,6 +15,7 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -26,6 +27,8 @@ export class KeyDetailsComponent implements OnInit {
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
     history: TabHistoryComponent;
+    @ViewChild(TabOptionalComponent)
+    optional: TabOptionalComponent;
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -240,6 +243,10 @@ export class KeyDetailsComponent implements OnInit {
             this.keyId,
             this.keyDetails.translations[index].id
         );
+        this.optional.showOptional(
+            this.keyId,
+            this.keyDetails.translations[index].id
+        );
     }
 
     setNewValueTranslation(translation: any) {
@@ -321,6 +328,10 @@ export class KeyDetailsComponent implements OnInit {
                             this.keyId,
                             this.keyDetails.translations[index].id
                         );
+                        this.optional.showOptional(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
                     },
                     err => {
                         this.snotifyService.error(err);
@@ -337,6 +348,10 @@ export class KeyDetailsComponent implements OnInit {
                             oldValue: ""
                         };
                         this.history.showHistory(
+                            this.keyId,
+                            this.keyDetails.translations[index].id
+                        );
+                        this.optional.showOptional(
                             this.keyId,
                             this.keyDetails.translations[index].id
                         );
@@ -419,17 +434,21 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
-    suggestTranslation(TranslationId, Suggestion) {
+    suggestTranslation(index, TranslationId, Suggestion) {
         debugger;
         this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
         .subscribe(
             (res) => {
                 this.snotifyService.success('Your suggestion was added');
                 debugger;
+                this.optional.showOptional(
+                    this.keyId,
+                    this.keyDetails.translations[index].id
+                );
             }, err => {
                 this.snotifyService.error('Your suggestion wasn`t added');
             });
-        
+        this.currentSuggestion = '';
     }
 
 }

@@ -143,7 +143,7 @@ namespace Polyglot.BusinessLogic.Services
 						TranslationValue = opt.TranslationValue
 					});
 			}
-
+			target.Reverse();
 			return target;
 		}
 
