@@ -125,8 +125,6 @@ export class TabCommentsComponent implements OnInit {
         }
     }
 
-
-
     public editComment(comment: Comment, edittedText: string): void {
         comment.text = edittedText;
         this.complexStringService.editStringComment(comment, this.keyId)
