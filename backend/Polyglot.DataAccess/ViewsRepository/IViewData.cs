@@ -10,6 +10,9 @@ namespace Polyglot.DataAccess.ViewsRepository
     public interface IViewData<QueryEntity> where QueryEntity : QueryType
     {
         Task<List<QueryEntity>> GetAllAsync();
+
         Task<QueryEntity> GetAsync(Expression<Func<QueryEntity, bool>> predicate);
+
+        Task<List<QueryEntity>> GetAllAsync(Expression<Func<QueryEntity, bool>> predicate);
     }
 }

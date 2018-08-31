@@ -2,6 +2,7 @@
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Helpers;
+using Polyglot.DataAccess.QueryTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,5 +17,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition);
 
         Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId);
+
+        Task<List<RightDefinition>> GetUserRightsInProject(int projectId);
+
+        Task<List<UserRights>> GetUserRights();
     }
 }

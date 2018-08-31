@@ -29,11 +29,9 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
         {
-            var translator = (await uow.GetRepository<Team>().GetAsync(teamId))
-                .TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+            var translator = (await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TeamId == teamId && t.TranslatorId == userId));
 
-            var right = (await uow.GetRepository<Right>().GetAllAsync())
-                    .FirstOrDefault(r => r.Definition == definition);
+            var right = (await uow.GetRepository<Right>().GetAsync(r => r.Definition == definition));
             translator.TranslatorRights.Add(new TranslatorRight()
             {
                 RightId = right.Id,
@@ -48,11 +46,11 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition)
         {
-            var translator = (await uow.GetRepository<Team>().GetAsync(teamId)).
-                TeamTranslators.FirstOrDefault(t => t.UserProfile.Id == userId);
+            var translator = (await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TeamId == teamId && t.TranslatorId == userId));
 
-            var right = (await uow.GetRepository<Right>().GetAllAsync())
-                    .FirstOrDefault(r => r.Definition == definition);
+
+            var right = (await uow.GetRepository<Right>().GetAsync(r => r.Definition == definition));
+
             var translatorRight = translator.TranslatorRights
                 .FirstOrDefault(tr => tr.RightId == right.Id && tr.TeamTranslatorId == translator.Id);
 
@@ -66,12 +64,24 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
         {
-            var userRights = await CurrentUser.GetRightsInProject(projectId);
+            var userRights = (await CurrentUser.GetRightsInProject(projectId)).Select(r => r.RightDefinition).Distinct();
             if(userRights.Contains(definition))
             {
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<RightDefinition>> GetUserRightsInProject(int projectId)
+        {
+            var userRights = await CurrentUser.GetRightsInProject(projectId);
+            return userRights.Select(r => r.RightDefinition).Distinct().ToList();
+        }
+
+        public async Task<List<UserRights>> GetUserRights()
+        {
+            var userRights = await CurrentUser.GetRights();
+            return userRights.ToList();
         }
     }
 }

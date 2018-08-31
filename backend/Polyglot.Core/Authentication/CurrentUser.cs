@@ -25,25 +25,20 @@ namespace Polyglot.Core.Authentication
          return result;
         }
 
-        public static async Task<List<RightDefinition>> GetRightsInProject(int projId)
+        public static async Task<List<UserRights>> GetRightsInProject(int projId)
         {
             IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
             int userId = (await GetCurrentUserProfile()).Id;
-            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync())
-                .Where(r => r.ProjectId == projId && r.UserId == userId)
-                .Select(r => r.RightDefinition);
+            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync(r => r.ProjectId == projId && r.UserId == userId));
 
             return userRights.ToList();
         }
 
-        public static async Task<List<RightDefinition>> GetRights()
+        public static async Task<List<UserRights>> GetRights()
         {
             IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
             int userId = (await GetCurrentUserProfile()).Id;
-            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync())
-                .Where(r => r.UserId == userId)
-                .Select(r => r.RightDefinition)
-                .Distinct();
+            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync(r => r.UserId == userId));
 
             return userRights.ToList();
         }

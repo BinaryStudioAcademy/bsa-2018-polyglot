@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.QueryTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace Polyglot.DataAccess.ViewsRepository
         public async Task<List<QueryEntity>> GetAllAsync()
         {
             return await DbQuery.ToListAsync();
+        }
+
+        public async Task<List<QueryEntity>> GetAllAsync(Expression<Func<QueryEntity, bool>> predicate)
+        {
+            return await DbQuery.Where(predicate).ToListAsync();
         }
 
         public async Task<QueryEntity> GetAsync(Expression<Func<QueryEntity, bool>> predicate)

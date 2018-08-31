@@ -25,4 +25,11 @@ export class RightService {
         return this.dataService.sendRequest(RequestMethod.Get, 'projects/' + projId + '/right/' + rightDefinition);
     }
 
+    getUserRights(){
+        return this.dataService.sendRequest(RequestMethod.Get, 'userprofiles/rights');
+    }
+
+    getUserRightsInProject(projId: number){
+        return this.dataService.sendRequest(RequestMethod.Get, 'userprofiles' + '/rights/' + projId);
+    }
 }
