@@ -1,15 +1,38 @@
-<div class="chat-content-container" #mainwindow>
+<div class="chat-container">
 
-    <ul>
-        <li *ngFor="let m of messages">
-          <span>{{m.time}}</span>
-            <mat-card class="message-card">
-                <mat-card-header>
-                    <mat-card-title>{{m.user.fullName}}</mat-card-title>
-                </mat-card-header>
-                {{m.body}}
-            </mat-card>
-        </li>
-    </ul>
+    <mat-toolbar>Toolbar -----------</mat-toolbar>
+
+    <div class="chat-messages-container" #mainwindow>
+
+        <ul>
+            <li *ngFor="let m of messages" (click)="toggleSelection(m)">
+                <mat-card class="message-card">
+                    {{m.body}}
+                    <span class="message-time">{{ m.date | date:'shortTime' }}</span>
+                </mat-card>
+            </li>
+        </ul>
+    </div>
+
+    <footer class="chat-input-container">
+        <mat-card class="new-message-notification">
+            <span>New message recieved</span>
+            <mat-icon aria-label="">send</mat-icon>
+        </mat-card>
+        <mat-form-field class="chat-form-field" appearance="outline">
+            <button mat-icon-button matPrefix>
+                <mat-icon aria-label="">add</mat-icon>
+            </button>
+            <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
+            <span matSuffix class="message-actions-container">
+                <button mat-icon-button>
+                    <mat-icon aria-label="">sentiment_very_satisfied</mat-icon>
+                </button>
+                <button mat-icon-button (click)="sendMessage()">
+                    <mat-icon aria-label="">send</mat-icon>
+                </button>
+            </span>
+        </mat-form-field>
+    </footer>
 
 </div>

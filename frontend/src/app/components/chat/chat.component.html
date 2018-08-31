@@ -1,4 +1,4 @@
-<div class="example-container">
+ <!--<div class="example-container">
     <mat-toolbar color="primary" class="example-toolbar">
         <button mat-icon-button (click)="snav.toggle()">
             <mat-icon matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
@@ -10,52 +10,18 @@
         <mat-sidenav class="contacts-list" #snav [mode]="'side'">
             <mat-nav-list>
 
-                   <app-chat-contacts></app-chat-contacts>
+                <app-chat-contacts></app-chat-contacts>
 
             </mat-nav-list>
         </mat-sidenav>
 
-        <mat-sidenav-content>
-            <div class="chat-content-container" #mainwindow>
+        <mat-sidenav-content class="chat-messages-window">
 
-                <ul>
-                    <li *ngFor="let m of messages">
-                        <mat-card class="message-card">
-                            <mat-card-header>
-                                <mat-card-title>{{m.user.fullName}}</mat-card-title>
-                            </mat-card-header>
-                            {{m.body}}
-                        </mat-card>
-                    </li>
-                </ul>
+                <app-chat-window></app-chat-window>
 
-            </div>
-            <footer class="chat-input-container">
-                <mat-card>
-                    <div class="typing-users-container">
-                        <ul>
-                            <li>Grisha</li>
-                            &nbsp;is typing...
-                        </ul>
-                    </div>
-                    <form class="chat-message-form">
-                        <mat-form-field class="chat-form-field" appearance="outline">
-                            <button mat-icon-button matPrefix>
-                                <mat-icon aria-label="">add</mat-icon>
-                            </button>
-                            <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
-                            <span matSuffix class="message-actions-container">
-                                <button mat-icon-button>
-                                    <mat-icon aria-label="">sentiment_very_satisfied</mat-icon>
-                                </button>
-                                <button mat-icon-button (click)="sendMessage()">
-                                    <mat-icon aria-label="">send</mat-icon>
-                                </button>
-                            </span>
-                        </mat-form-field>
-                    </form>
-                </mat-card>
-            </footer>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>
+
+-->
+<app-chat-window></app-chat-window>

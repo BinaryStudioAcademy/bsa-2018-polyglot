@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { ProjectService } from '../../../services/project.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-chat-window',
@@ -7,10 +9,13 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/co
 })
 export class ChatWindowComponent implements OnInit {
   @ViewChild('mainwindow') mainWindow: ElementRef;
-  
+  public currentMessage: string = "";
+
   messages = [];
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private projectService: ProjectService,
+    public snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -18,6 +23,23 @@ export class ChatWindowComponent implements OnInit {
     this.messages = MOCK_MESSAGES;
     this.renderer.setProperty(this.mainWindow.nativeElement, 'scrollTop', '99999');
   }
+
+  sendMessage() {
+  //  if (this.currentMessage.length > 0) {
+ //       this.signalRService.sendMessage("", this.currentMessage);
+    }
+
+    toggleSelection(message)
+    {
+        console.log("1111111111111111111111111111111111");
+        this.openSnackBar();
+    }
+
+    openSnackBar() {
+        this.snackBar.open("mmmmmmmm", 'fuck', {
+          duration: 2000,
+        });
+      }
 
 }
 
