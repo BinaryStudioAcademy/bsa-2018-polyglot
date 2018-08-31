@@ -3,11 +3,7 @@ import { ComplexStringService } from "../../../services/complex-string.service";
 import { MatDialog } from "@angular/material";
 import { ImgDialogComponent } from "../../../dialogs/img-dialog/img-dialog.component";
 import { ConfirmDialogComponent } from "../../../dialogs/confirm-dialog/confirm-dialog.component";
-import {
-    SnotifyService,
-    SnotifyPosition,
-    SnotifyToastConfig
-} from "ng-snotify";
+import { SnotifyService } from "ng-snotify";
 
 @Component({
     selector: "app-workspace-key",

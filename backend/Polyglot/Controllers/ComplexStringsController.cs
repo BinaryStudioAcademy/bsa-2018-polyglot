@@ -68,16 +68,8 @@ namespace Polyglot.Controllers
             translation.UserId = user.Id;
 
             var entity = await dataProvider.SetStringTranslation(id, translation);
-
-
-            if (entity != null)
-            {
-                return Ok(entity);
-            }
-            else
-            {
-                return StatusCode(304) as IActionResult;
-            }
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
 
         [HttpPut("{id}/translations")]
@@ -87,50 +79,27 @@ namespace Polyglot.Controllers
             translation.UserId = user.Id;
 
             var entity = await dataProvider.EditStringTranslation(id, translation);
-
-            if (entity != null)
-            {
-                return Ok(entity);
-            }
-            else
-            {
-                return StatusCode(304) as IActionResult;
-            }
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
 
 		[HttpPost("{stringId}/{translationId}")]
 		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);
-
-			if(entity != null)
-			{
-				return Ok(entity);
-
-				// TODO: SignalR
-			}
-			else
-			{
-				return StatusCode(304) as IActionResult;
-			}
-		}
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
 
 		[HttpGet("{stringId}/{translationId}/optional")]
 		public async Task<IActionResult> GetOptionalTranslations(int stringId, Guid translationId)
 		{
 			var result = await dataProvider.GetOptionalTranslations(stringId, translationId);
 
-			if (result != null)
-			{
-				return Ok(result);
-			}
-			else
-			{
-				return StatusCode(404) as IActionResult;
-			}
-		}
-
-
+            return result == null ? NotFound("No optional translations found!") as IActionResult
+                : Ok(result);
+        }
+        
 		// POST: ComplexStrings
 		[HttpPost]
         public async Task<IActionResult> AddComplexString(IFormFile formFile)
@@ -151,14 +120,9 @@ namespace Polyglot.Controllers
                 complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
             }
             var entity = await dataProvider.AddComplexString(complexString);
-            if(entity != null)
-            {
-                return Ok(entity);
-            }
-            else
-            {
-                return StatusCode(409) as IActionResult;
-            }
+
+            return entity == null ? StatusCode(409) as IActionResult
+                : Ok(entity);
         }
 
         // PUT: ComplexStrings/5
@@ -181,14 +145,8 @@ namespace Polyglot.Controllers
         {
             var success = await dataProvider.DeleteComplexString(id);
 
-            if (success)
-            {
-                return Ok(success);
-            }
-            else
-            {
-                return StatusCode(304);
-            }
+            return success ? StatusCode(304) as IActionResult
+                : Ok(success);
         }
 
         // GET: ComplexStrings/5/comments
@@ -199,31 +157,49 @@ namespace Polyglot.Controllers
             return comments == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<CommentDTO>>(comments));
         }
-
-        // PUT: ComplexStrings/5/comments
-        [HttpPut("{id}/comments")]
-        public async Task<IActionResult> SetStringComments(int id, [FromBody]IEnumerable<CommentDTO> comments)
+                             
+        // POST: ComplexStrings/5/comments
+        [HttpPost("{id}/comments")]
+        public async Task<IActionResult> SetStringComment(int id, [FromBody]CommentDTO comment)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var entity = await dataProvider.SetComments(id, comments);
+            var entity = await dataProvider.SetComment(id, comment);
 
-            if (entity != null)
-            {
-                return Ok(entity);
-            }
-            else
-            {
-                return StatusCode(304) as IActionResult;
-            }
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
 
+        // DELETE: ComplexStrings/5/comments
+        [HttpDelete("{id}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteStringComment(int id, Guid commentId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.DeleteComment(id, commentId);
+
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+        
+        // PUT: ComplexStrings/5/comments
+        [HttpPut("{id}/comments")]
+        public async Task<IActionResult> EditStringComment(int id, [FromBody]CommentDTO comment)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.EditComment(id, comment);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+        
         [HttpGet("{id}/history/{translationId}")]
         public async Task<IActionResult> GetHistory(int id, Guid translationId)
         {
             var response = await dataProvider.GetHistoryAsync(id, translationId);
-
             return response == null ? StatusCode(400) as IActionResult
                 : Ok(response);
         }

@@ -22,6 +22,18 @@ namespace Polyglot.BusinessLogic.Services.SignalR
             await hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), await GetIdsResponce(complexStringId));
         }
 
+        public Task CommentDeleted(string groupName, int commentId)
+        {
+#warning реализовать !!!!!1111111111
+            throw new System.NotImplementedException();
+        }
+
+        public Task CommentEdited(string groupName, int commentId)
+        {
+#warning реализовать !!!!!1111111111
+            throw new System.NotImplementedException();
+        }
+
         public async Task ComplexStringAdded(string groupName, int complexStringId)
         {
             await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringAdded.ToString(), await GetIdsResponce(complexStringId));
