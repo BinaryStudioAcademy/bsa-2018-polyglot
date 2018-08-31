@@ -202,7 +202,7 @@ namespace Polyglot.BusinessLogic.Services
                 var currentComment = _mapper.Map<Comment>(comment);
                 currentComment.Id = Guid.NewGuid();
                 target.Comments.Add(currentComment);
-                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                var result = await _repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
                 return commentsWithUsers;
@@ -223,7 +223,7 @@ namespace Polyglot.BusinessLogic.Services
                 comments.Remove(currentComment);
                 target.Comments = comments;
                 
-                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                var result = await _repository.Update(target);
                 
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
@@ -244,7 +244,7 @@ namespace Polyglot.BusinessLogic.Services
                 currentComment.CreatedOn = DateTime.Now;;
                 target.Comments = comments;
 
-                var result = await _repository.Update(_mapper.Map<ComplexString>(target));
+                var result = await _repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 return commentsWithUsers;
             }

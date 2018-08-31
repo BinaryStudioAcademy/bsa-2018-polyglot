@@ -1,11 +1,10 @@
 import { Component, OnInit, Output, Inject } from '@angular/core';
-import { Glossary } from '../../models';
+import { Glossary, Language } from '../../models';
 import { EventEmitter } from 'protractor';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { GlossaryService } from '../../services/glossary.service';
 import { SnotifyService } from 'ng-snotify';
 import { LanguageService } from '../../services/language.service';
-import { Language } from '../../components/translatorProfile/translator-profile/translator-profile.component';
 
 @Component({
   selector: 'app-glossary-create-dialog',

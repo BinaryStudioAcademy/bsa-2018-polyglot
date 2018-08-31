@@ -432,10 +432,13 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
+<<<<<<< HEAD
     addComment(){
         
     }
 
+=======
+>>>>>>> 1b4307f5cebbef7cf6975f9ec4f0f9678a3a11d3
     suggestTranslation(index, TranslationId, Suggestion) {
         this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
         .subscribe(
@@ -448,4 +451,8 @@ export class KeyDetailsComponent implements OnInit {
             });
         this.currentSuggestion = '';
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1b4307f5cebbef7cf6975f9ec4f0f9678a3a11d3
 }

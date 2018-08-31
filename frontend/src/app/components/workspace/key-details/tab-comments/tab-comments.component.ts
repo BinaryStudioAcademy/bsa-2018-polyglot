@@ -1,18 +1,14 @@
 import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { UserService } from '../../../../services/user.service';
 import { ComplexStringService } from '../../../../services/complex-string.service';
-import { AppStateService } from '../../../../services/app-state.service';
-import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { SnotifyService } from 'ng-snotify';
 import { Comment } from '../../../../models/comment';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import * as signalR from '@aspnet/signalr';
 import { environment } from '../../../../../environments/environment';
-import { SignalrService } from '../../../../services/signalr.service';
-import { CommaExpr } from '@angular/compiler';
 
 @Component({
     selector: 'app-tab-comments',
@@ -80,8 +76,6 @@ export class TabCommentsComponent implements OnInit {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
                         this.comments = comments;
-                        console.log(this.comments);
-
                     }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
@@ -93,66 +87,59 @@ export class TabCommentsComponent implements OnInit {
     }
 
     public deleteComment(comment: Comment): void {
-        if (this.userService.isCurrentUserManager()) {
-            this.complexStringService.deleteStringComment(comment.id, this.keyId)
-                .subscribe(
-                    (comments) => {
-                        if (comments) {
-                            this.snotifyService.success("Comment delete", "Success!");
-                            this.commentForm.reset();
-                            this.comments = comments;
-                            console.log(this.comments);
-                        }
-                        else {
-                            this.snotifyService.error("Comment wasn't delete", "Error!");
-                        }
-                    },
-                    err => {
-                        this.snotifyService.error("Comment delete", "Error!");
-                    });
-        }
-        else {
-            this.snotifyService.error("Action is prohibited!", "Error!");
-        }
+        this.complexStringService.deleteStringComment(comment.id, this.keyId)
+            .subscribe(
+                (comments) => {
+                    if (comments) {
+                        this.snotifyService.success("Comment delete", "Success!");
+                        this.commentForm.reset();
+                        this.comments = comments;
+                    }
+                    else {
+                        this.snotifyService.error("Comment wasn't delete", "Error!");
+                    }
+                },
+                err => {
+                    this.snotifyService.error("Comment delete", "Error!");
+                });
     }
 
     public startEdittingComment(comment: Comment): void {
         this.commentText = comment.text;
         comment.isEditting = true;
-        
     }
 
     public cancelEditting(comment: Comment): void {
         comment.isEditting = false;
     }
 
-    public editComment(comment: Comment, edittedText: string): void {
-        if (this.userService.isCurrentUserManager()) {
-            comment.text = edittedText;
-            this.complexStringService.editStringComment(comment, this.keyId)
-                .subscribe(
-                    (comments) => {
-                        if (comments) {
-                            this.snotifyService.success("Comment delete", "Success!");
-                            this.comments = comments;
-                            //comment.isEditting = false;
-
-                        }
-                        else {
-                            this.snotifyService.error("Comment wasn't delete", "Error!");
-                        }
-                    },
-                    err => {
-                        this.snotifyService.error("Comment delete", "Error!");
-                    });
+    public showCommentMenu(userId: number): boolean {
+        if (this.userService.getCurrentUser().userRole === 1) {
+            return true;
+        }
+        else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+            return true;
         }
         else {
-            this.snotifyService.error("Action is prohibited!", "Error!");
+            return false;
         }
     }
 
-
-
-
-
+    public editComment(comment: Comment, edittedText: string): void {
+        comment.text = edittedText;
+        this.complexStringService.editStringComment(comment, this.keyId)
+            .subscribe(
+                (comments) => {
+                    if (comments) {
+                        this.snotifyService.success("Comment edited", "Success!");
+                        this.comments = comments;
+                    }
+                    else {
+                        this.snotifyService.error("Comment wasn't edited", "Error!");
+                    }
+                },
+                err => {
+                    this.snotifyService.error("Comment edited", "Error!");
+                });
+    }
 }
