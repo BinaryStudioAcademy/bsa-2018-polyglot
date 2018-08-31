@@ -119,6 +119,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     }
                     let list = this.keys.filter(x => x.tags.length > 0);
                     this.projectTags = [].concat.apply([], list.map(x => x.tags));
+                    this.projectTags = Array.from(new Set(this.projectTags));
                 });
 
             this.currentPage++;
@@ -145,6 +146,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
                 this.keys.push(result);
+                result.tags.forEach(element => {
+                    if(!this.projectTags.includes(element)){
+                        this.projectTags.push(element);
+                    }
+                });
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
                 this.router.navigate([this.currentPath, keyId]);
