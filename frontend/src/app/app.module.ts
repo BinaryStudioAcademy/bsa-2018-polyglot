@@ -111,6 +111,8 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
 import { ChatComponent } from "./components/chat/chat.component";
+import { ChatContactsComponent } from './components/chat/chat-contacts/chat-contacts.component';
+import { ChatWindowComponent } from './components/chat/chat-window/chat-window.component';
 
 @NgModule({
   exports: [
@@ -185,6 +187,8 @@ import { ChatComponent } from "./components/chat/chat.component";
     AssignGlossariesComponent,
     TabOptionalComponent,
     ChatComponent,
+    ChatContactsComponent,
+    ChatWindowComponent
   ],
   imports: [
     BrowserModule,

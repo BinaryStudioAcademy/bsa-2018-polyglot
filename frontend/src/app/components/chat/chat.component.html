@@ -7,92 +7,11 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container">
-        <mat-sidenav #snav [mode]="'side'">
+        <mat-sidenav class="contacts-list" #snav [mode]="'side'">
             <mat-nav-list>
-                <mat-accordion class="example-headers-align">
-                    <a class="channel-btn" mat-button routerLink=".">Channel</a>
 
-                    <mat-expansion-panel  [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                Projects
-                            </mat-panel-title>
-                            <mat-panel-description>
-                                <mat-icon matBadge="6" matBadgeColor="warn" [matBadgeHidden]="projectBadge" matBadgeSize="medium">business_center</mat-icon>
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
+                   <app-chat-contacts></app-chat-contacts>
 
-                        <ng-template matExpansionPanelContent>
-                            <ul>
-                                <li *ngFor="let p of getProjects()">
-                                    <mat-card>project {{p.id}}</mat-card>
-                                </li>
-                            </ul>
-                        </ng-template>
-
-
-                        <mat-action-row>
-                            <button mat-button color="primary" (click)="nextStep()">Next</button>
-                        </mat-action-row>
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel  [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                Teams
-                            </mat-panel-title>
-                            <mat-panel-description>
-                                <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="teamBadge" matBadgeSize="medium">group</mat-icon>
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-
-                        <ng-template matExpansionPanelContent>
-                            <ul>
-                                <li *ngFor="let t of getTeams()">
-                                    <mat-card>team {{t.id}}</mat-card>
-                                </li>
-                            </ul>
-                        </ng-template>
-
-                        <mat-action-row>
-                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-                            <button mat-button color="primary" (click)="nextStep()">Next</button>
-                        </mat-action-row>
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                Persons
-                            </mat-panel-title>
-                            <mat-panel-description>
-                                <mat-icon matBadge="15" matBadgeColor="warn" [matBadgeHidden]="personBadge" matBadgeSize="medium">person</mat-icon>
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-
-                        <ng-template matExpansionPanelContent>
-                            <ul>
-                                <li *ngFor="let u of users">
-                                    <mat-card class="person-card">
-                                        <mat-card-header>
-                                            <a class="person-img">
-                                                <img mat-card-avatar src="{{u.avatarUrl}}">
-                                            </a>
-                                            <mat-card-title>{{u.fullName}}</mat-card-title>
-                                            <mat-card-subtitle>translator</mat-card-subtitle>
-                                        </mat-card-header>
-                                    </mat-card>
-                                </li>
-                            </ul>
-                        </ng-template>
-
-                        <mat-action-row>
-                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-                            <button mat-button color="primary" (click)="nextStep()">End</button>
-                        </mat-action-row>
-                    </mat-expansion-panel>
-
-                </mat-accordion>
             </mat-nav-list>
         </mat-sidenav>
 

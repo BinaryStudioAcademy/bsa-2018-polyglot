@@ -1,0 +1,87 @@
+.mat-drawer
+  height: 70vh
+
+.mat-drawer .mat-icon
+  position: absolute
+
+ul, 
+li
+    margin: 0
+    padding: 0
+
+ul
+    list-style: none
+
+li
+    display: flex
+    flex-direction: column
+    // align-self: flex-end
+
+.example-headers-align .mat-expansion-panel-header-title, 
+.example-headers-align .mat-expansion-panel-header-description 
+  flex-basis: 0
+
+
+.example-headers-align .mat-expansion-panel-header-description 
+  justify-content: space-between
+  align-items: center
+
+.mat-expansion-panel,
+.mat-accordion
+  margin-top: 0
+
+mat-panel-description.mat-expansion-panel-header-description
+  justify-content: flex-end !important
+
+
+.mat-expansion-panel-body
+  padding: 24px 0 !important
+
+ul,
+li,
+  margin: 0
+  padding: 0
+  list-style: none
+
+.person-card
+  padding: 5px
+  padding-left: 0
+  cursor: pointer
+  .mat-card-header
+    display: flex
+    flex-direction: row
+    justify-content: flex-start
+    //padding: 5% 0
+
+
+.person-card-text
+    padding: 10px 0
+    padding-left: 10px
+    max-width: 60%
+
+.person-name,
+.person-message-prev
+    font-size: 12px
+    font-weight: 600
+    white-space: nowrap
+    text-overflow: ellipsis
+    overflow: hidden
+
+.person-name
+    margin-bottom: 5px
+
+.person-message-prev
+    font-weight: 500
+    
+.person-img
+    display: flex
+    align-items: center
+
+.person-card:hover
+    background-color: #C1C1C1
+
+    
+
+.mat-card
+  box-sizing: border-box
+  width: 100%
