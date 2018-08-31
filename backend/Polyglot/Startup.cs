@@ -45,7 +45,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR().AddAzureSignalR();
+            services.AddSignalR();
             
 
             BusinessLogicModule.ConfigureServices(services, Configuration);

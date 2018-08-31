@@ -110,7 +110,7 @@ export class KeyDetailsComponent implements OnInit {
 
                 this.getLanguages();
                 this.dataProvider
-                    .getCommentsByStringId(this.currentKeyId)
+                    .getCommentsWithPagination(this.currentKeyId, this.elementsOnPage, this.currentPage)
                     .subscribe(comments => {
                         this.comments = comments;
                     });
