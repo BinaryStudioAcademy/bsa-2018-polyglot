@@ -49,13 +49,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
 
         this.projectService.getAll().subscribe(pr => {
-            if(pr){
-            this.cards = pr;
-            if (this.cards.length === 0 && this.onPage === true && this.isCurrentUserManager()) {
-                setTimeout(() => this.openDialog());
+            if (pr) {
+                this.cards = pr;
+                if (
+                    this.cards.length === 0 &&
+                    this.onPage === true &&
+                    this.isCurrentUserManager()
+                ) {
+                    setTimeout(() => this.openDialog());
+                }
+                this.isLoad = false;
             }
-            this.isLoad = false;
-        }
         });
     }
 
@@ -76,8 +80,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             this.checked = true;
         }
     }
-    
-    isCurrentUserManager(){
+
+    isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
     }
 }

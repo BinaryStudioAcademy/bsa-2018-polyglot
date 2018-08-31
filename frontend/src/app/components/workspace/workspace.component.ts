@@ -6,14 +6,12 @@ import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
 import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog.component";
 import { SnotifyService } from "ng-snotify";
-import { FormControl } from "../../../../node_modules/@angular/forms";
 import { AppStateService } from "../../services/app-state.service";
 import { UserService } from "../../services/user.service";
 import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
-import { IString } from "../../models/string";
 
 @Component({
     selector: "app-workspace",
@@ -75,31 +73,39 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.projectService.getProjectLanguages(params.projectId)
             ).subscribe(result => {
                 this.project = result[0];
-
-                this.projectLanguagesCount = result[1].length;
+                this.projectService
+                .getProjectLanguages(this.project.id)
+                .subscribe(
+                    (d: Language[]) => {
+                        this.projectLanguagesCount = d.length;
                         const workspaceState = {
                             projectId: this.project.id,
-                            languages: result[1]
+                            languages: d
                         };
 
                         this.appState.setWorkspaceState = workspaceState;
                         this.signalrService.createConnection(
                             `${SignalrGroups[SignalrGroups.project]}${
-                            this.project.id
+                                this.project.id
                             }`,
                             "workspaceHub"
                         );
                         this.subscribeProjectChanges();
-                },
-                err => {
-                    this.keys = null;
-                    this.isLoad = false;
-                    console.log("err", err);
-                }
-            )
-            this.basicPath = 'workspace/' + params.projectId;
-            this.currentPath = 'workspace/' + params.projectId + '/key';
-            this.projectService.getProjectStringsWithPagination(params.projectId, this.elementsOnPage, 0)
+                    },
+                    err => {
+                        this.keys = null;
+                        this.isLoad = false;
+                        console.log("err", err);
+                    }
+                );
+        });
+        this.basicPath = "workspace/" + params.projectId;
+        this.currentPath = "workspace/" + params.projectId + "/key";
+        this.projectService
+            .getProjectStringsWithPagination(
+                params.projectId,
+                this.elementsOnPage,
+                0)
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -108,9 +114,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
-                            this.router.navigate([this.currentPath, keyId]);   
-                        }
-                        else {
+                            this.router.navigate([this.currentPath, keyId]);
+                        } else {
                             this.isLoad = true;
                         }
                     }
@@ -166,7 +171,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     ngOnDestroy() {
         this.routeSub.unsubscribe();
         this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`);
+            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
+        );
     }
 
     getProjById(id: number) {
@@ -175,8 +181,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         });
     }
 
-    removeKeyById($event) {
-        let temp = this.keys.findIndex(x => x.id === $event);
+    removeComplexString(complexStringId: number) {
+        let temp = this.keys.findIndex(x => x.id === complexStringId);
+
         if (this.selectedKey.id === this.keys[temp].id)
             this.selectedKey = this.keys[temp - 1]
                 ? this.keys[temp - 1]
@@ -198,22 +205,26 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     subscribeProjectChanges() {
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
-            (newStringId: number) => {
-                this.complexStringService
-                    .getById(newStringId)
-                    .subscribe(newStr => {
-                        if (newStr) {
-                            this.keys.push(newStr);
-                        }
-                    });
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    this.complexStringService
+                        .getById(response.ids[0])
+                        .subscribe(newStr => {
+                            if (newStr) {
+                                this.keys.push(newStr);
+                            }
+                        });
+                }
             }
         );
         this.signalrService.connection.on(
             SignalrSubscribeActions[
-            SignalrSubscribeActions.complexStringRemoved
+                SignalrSubscribeActions.complexStringRemoved
             ],
-            (deletedStringId: number) => {
-                this.removeKeyById(deletedStringId);
+            (response: any) => {
+                if (this.signalrService.validateResponse(response)) {
+                    this.removeComplexString(response.ids[0]);
+                }
             }
         );
     }
@@ -291,11 +302,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     highlightStringStatus(key) {
         if (key.translations.length === 0) {
-            return '7px solid #a91818'; // not started
+            return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
-            return '7px solid #ffcc00'; // partially
+            return "7px solid #ffcc00"; // partially
         } else if (key.translations.length === this.projectLanguagesCount) {
-            return '7px solid #00b300'; // completed
+            return "7px solid #00b300"; // completed
         }
     }
 

@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-
 import {SnotifyService, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { RightService } from '../../../services/right.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class TeamComponent implements OnInit {
     private searchService: SearchService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private userService: UserService) {
+    private userService: UserService,
+    private rightService: RightService) {
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.getTranslators();
     
@@ -127,13 +129,13 @@ export class TeamComponent implements OnInit {
 
   changeTranslatorRight(e, id, rightDefinition: number){
     if(e.checked){
-        this.teamService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+        this.rightService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
           let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
           this.teamTranslators[teammateIndex] = teammate;
         });
       }
     else{
-        this.teamService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+        this.rightService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
           let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
           this.teamTranslators[teammateIndex] = teammate;});
       }
