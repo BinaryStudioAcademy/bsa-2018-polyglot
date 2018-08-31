@@ -1,24 +1,49 @@
 <div class="container">
-<form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
-    <mat-form-field class="field-full-width">
-        <textarea [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" 
-            maxlength="500"></textarea>
-    </mat-form-field>
-    <div class="button-container">
-        <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>
-    </div>
-</form>
-<div *ngFor="let com of comments" class="comments-container">
-    <mat-card  class="comment-card">
-        <div class="author-info">
-            <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
-            <strong class="comment-author" (click)="userService.redirectById(com.user.id)">{{com?.user?.fullName}}</strong>
+    <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
+        <mat-form-field class="field-full-width">
+            <input [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500">
+        </mat-form-field>
+        <div class="button-container">
+            <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>
         </div>
-        <div class ="text">{{com?.text}}</div>
-        <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
-    </mat-card>
-</div>
-<div *ngIf="!comments" class="spinner">
-    <mat-spinner></mat-spinner>
-</div>
+    </form>
+    <div *ngFor="let com of comments" class="comments-container">
+
+        <mat-card class="comment-card">
+            <div class="author-info">
+                <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
+                <strong class="comment-author" (click)="userService.redirectById(com.user.id)">{{com?.user?.fullName}}</strong>
+            </div>
+            <button *ngIf="showCommentMenu(com?.user?.id)" mat-button [matMenuTriggerFor]="menu">
+                <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu" xPosition="before">
+                <button (click)="deleteComment(com)" mat-menu-item>Delete</button>
+                <button (click)="startEdittingComment(com)" mat-menu-item>Edit</button>
+            </mat-menu>
+
+            <ng-container *ngIf="com.isEditting">
+                <mat-form-field class="edit-container">
+                    <input matInput class="edit-input" #comText type="text" [ngModel]="commentText">
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Clear" (click)="cancelEditting(com)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Save" (click)="editComment(com, comText.value)">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                </mat-form-field>
+
+            </ng-container>
+            <ng-container *ngIf="!com.isEditting">
+                <div class="text">{{com?.text}}</div>
+            </ng-container>
+
+            <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>
+        </mat-card>
+
+    </div>
+    <div *ngIf="!comments" class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
 </div>
