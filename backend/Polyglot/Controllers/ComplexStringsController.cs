@@ -156,7 +156,6 @@ namespace Polyglot.Controllers
                 byte[] byteArr;
                 using (var ms = new MemoryStream())
                 {
-                    file.CopyTo(ms);
                     await file.CopyToAsync(ms);
                     byteArr = ms.ToArray();
                 }
