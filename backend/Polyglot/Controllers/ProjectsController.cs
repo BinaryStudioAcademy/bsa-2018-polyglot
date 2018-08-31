@@ -11,11 +11,6 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-<<<<<<< HEAD
-using Polyglot.Hubs;
-using Polyglot.Hubs.Helpers;
-=======
->>>>>>> develop
 using System.Linq;
 using Polyglot.DataAccess.Helpers;
 
@@ -28,22 +23,13 @@ namespace Polyglot.Controllers
 	public class ProjectsController : ControllerBase
 	{
 		private IProjectService service;
-<<<<<<< HEAD
-        private readonly ISignalrWorkspaceService signalrService;
-        private readonly IRightService rightService;
         public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, ISignalrWorkspaceService signalrService, IRightService rightService)
+        private readonly IRightService rightService;
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IRightService rightService)
 		{
 			this.service = projectService;
             this.rightService = rightService;
-            this.signalrService = signalrService;
-=======
-        public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
-		{
-			this.service = projectService;
->>>>>>> develop
-			fileStorageProvider = provider;
+            fileStorageProvider = provider;
 		}
 
 
