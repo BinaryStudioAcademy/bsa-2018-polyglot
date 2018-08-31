@@ -123,6 +123,12 @@ namespace Polyglot.Controllers
                 user.FullName = HttpContext.User.GetName();
                 user.AvatarUrl = HttpContext.User.GetProfilePicture();
             }
+
+            if (user.AvatarUrl == null || user.AvatarUrl == "")
+            {
+                user.AvatarUrl = "/assets/images/default-avatar.jpg";
+            }
+
             user.RegistrationDate = DateTime.UtcNow;
             var entity = await service.PostAsync(user);
             return entity == null ? StatusCode(409) as IActionResult

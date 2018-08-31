@@ -10,7 +10,6 @@ namespace Polyglot.DataAccess.MongoModels
         public string TranslationValue { get; set; }
         public int UserId { get; set; }
         public DateTime CreatedOn { get; set; }
-        public TranslationType Type { get; set; }
 
         public List<AdditionalTranslation> History { get; set; }
         public List<AdditionalTranslation> OptionalTranslations { get; set; }
@@ -20,10 +19,5 @@ namespace Polyglot.DataAccess.MongoModels
 
         }
 
-        public enum TranslationType
-        {
-            Human,
-            Machine
-        }
     }
 }

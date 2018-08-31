@@ -10,14 +10,11 @@
       </mat-form-field>
 
       <mat-form-field class="mat-select-wraper">
-          <mat-select  id="lang" name="lang" class="mat-select" #lang="ngModel" placeholder="Origin language"  [(ngModel)]="glossary.originLanguage" required>
+          <mat-select [compareWith]="compareFn" id="lang" name="lang" class="mat-select" #lang="ngModel" placeholder="Origin language" [(ngModel)]="glossary.originLanguage" required>
              <mat-option *ngFor="let originLanguage of languages" [value]="originLanguage">
                   {{originLanguage.name}}
               </mat-option>
           </mat-select>
-          <mat-error *ngIf="lang.errors">
-            Origin language is required.
-          </mat-error>
       </mat-form-field>
 
       <button 

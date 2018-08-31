@@ -23,18 +23,21 @@
 								<button  mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
 									<mat-icon class="icon-size">g_translate</mat-icon>
 								</button>
-								<button mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+								<button [disabled]="!t.translationValue"  mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
 									<mat-icon style="font-size: 22px">translate</mat-icon>
 								</button>
 								<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
 									<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
 										<mat-form-field class="textarea-translation">
-											<textarea matInput cdkTextareaAutosize
+											<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize
 												cdkAutosizeMinRows="1"
 												placeholder="Write here your optional translation"
-												cdkAutosizeMaxRows="10"></textarea>
+												cdkAutosizeMaxRows="10">					
+											</textarea>
 										</mat-form-field>
-										<button mat-raised-button color="primary">Suggest</button>
+										<button [disabled]="!currentSuggestion || currentSuggestion.length<1"
+										 	mat-raised-button color="primary"
+										 	(click)="suggestTranslation(i, t.id, currentSuggestion)">Suggest</button>
 									</div>
 								</mat-menu>
 							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
@@ -44,7 +47,8 @@
 						   <div >
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea matInput
+										<textarea (contextmenu)="onRightClick($event)"
+												(keyup)="isCanSave(i, t)"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
@@ -52,6 +56,11 @@
 													  placeholder="Write here to start translating"
 													  cdkAutosizeMaxRows="10"></textarea>
 								</mat-form-field>
+								<mat-menu  #appMenu="matMenu" class=".context-menu" yPosition="below" xPosition="before">
+									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
+											Add comment for selection
+									</button>
+							</mat-menu>	
 								<div [hidden]="!someOneTranslating" class="state-container">
 										<span *ngFor="let u of editingUsers">
 											<a [routerLink]="['/']" [routerLinkActive]="'active'">
@@ -63,9 +72,10 @@
 								</div>
 								<div class="button-translation">
 									<div>
-									<button mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
+									<button [(disabled)]="isSaveDisabled" mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
 									</div>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
+									<!-- <button [matMenuTriggerFor]="appMenu">openContextMenu</button> -->
 								</div>
 
 						  </div>
@@ -102,6 +112,7 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
 			</ng-template>
+			<app-tab-optional></app-tab-optional>
 		</mat-tab>
 
 		<mat-tab label="Glossary" >
