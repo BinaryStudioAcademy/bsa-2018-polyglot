@@ -181,6 +181,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
         this.keys.splice(temp, 1);
 
+        this.getKeys(this.currentPage, keys => {
+            this.keys = this.keys.concat(keys);
+        });
+
         if (this.keys.length > 0) {
             this.router.navigate([this.currentPath, this.selectedKey.id]);
         } else {
