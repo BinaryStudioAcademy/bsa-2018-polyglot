@@ -14,15 +14,16 @@
                 <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
                 <strong class="comment-author" (click)="userService.redirectById(com.user.id)">{{com?.user?.fullName}}</strong>
             </div>
-            <button (click)="$event.preventDefault(); $event.stopPropagation();" mat-button [matMenuTriggerFor]="menu">
+            <button *ngIf="showCommentMenu(com?.user?.id)" mat-button [matMenuTriggerFor]="menu">
                 <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
             </button>
+
             <mat-menu #menu="matMenu" xPosition="before">
                 <button (click)="deleteComment(com)" mat-menu-item>Delete</button>
                 <button (click)="startEdittingComment(com)" mat-menu-item>Edit</button>
             </mat-menu>
-            <ng-container *ngIf="com.isEditting">
 
+            <ng-container *ngIf="com.isEditting">
                 <mat-form-field class="edit-container">
                     <input matInput class="edit-input" #comText type="text" [ngModel]="commentText">
                     <button mat-button *ngIf="commentText" matSuffix mat-icon-button aria-label="Clear" (click)="cancelEditting(com)">
