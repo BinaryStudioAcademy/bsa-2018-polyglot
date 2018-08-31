@@ -215,7 +215,17 @@ namespace Polyglot.Controllers
             return comments == null ? NotFound($"ComplexString with id = {id} not found!") as IActionResult
                 : Ok(mapper.Map<IEnumerable<CommentDTO>>(comments));
         }
-                             
+
+        // GET: ComplexStrings/5/comments
+        [HttpGet("{id}/paginatedComments", Name = "GetCommentsPaginated")]
+        public async Task<IActionResult> GetCommentsPaginated(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
+        {
+            var comments = await dataProvider.GetCommentsWithPaginationAsync(id, itemsOnPage, page);
+            return comments == null ? NotFound("No project strings found!") as IActionResult
+                : Ok(comments);
+        }
+
+
         // POST: ComplexStrings/5/comments
         [HttpPost("{id}/comments")]
         public async Task<IActionResult> SetStringComment(int id, [FromBody]CommentDTO comment)
@@ -270,11 +280,7 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
-
-
-
-
-
+               
 
         [HttpGet("{id}/history/{translationId}")]
         public async Task<IActionResult> GetHistory(int id, Guid translationId)

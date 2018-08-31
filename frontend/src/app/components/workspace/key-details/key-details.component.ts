@@ -34,6 +34,10 @@ export class KeyDetailsComponent implements OnInit {
     public IsEdit: boolean = false;
     public IsPagenationNeeded: boolean = true;
     public pageSize: number = 5;
+
+    private currentPage = 0;
+    private elementsOnPage = 7;
+
     public Id: string;
     public isEmpty: boolean;
     projectId: number;
@@ -87,7 +91,7 @@ export class KeyDetailsComponent implements OnInit {
                 this.getLanguages();
             });
             this.dataProvider
-                .getCommentsByStringId(this.keyId)
+                .getCommentsWithPagination(this.keyId, this.elementsOnPage, this.currentPage)
                 .subscribe(comments => {
                     this.comments = comments;
                 });
@@ -98,6 +102,32 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.closeConnection(
             `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
         );
+    }
+
+
+    public onScrollUp(): void {
+        this.getKeys(this.currentPage, comments => {
+            this.comments = comments.concat(this.comments);
+        });
+    }
+
+    public onScrollDown(): void {
+        this.getKeys(this.currentPage, comments => {
+            this.comments = this.comments.concat(comments);
+        });
+    }
+
+    getKeys(page: number = 1, saveResultsCallback: (comments) => void) {
+        return this.dataProvider
+            .getCommentsWithPagination(
+                this.keyId,
+                this.elementsOnPage,
+                this.currentPage
+            )
+            .subscribe((comments: any) => {
+                this.currentPage++;
+                saveResultsCallback(comments);
+            });
     }
 
     ngOnChanges() {

@@ -63,6 +63,10 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/comments', undefined);
   }
 
+  getCommentsWithPagination(id: number, itemsOnPage: number, page: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/','paginatedComments?itemsOnPage='+itemsOnPage+'&page='+page);
+  }
+
   deleteStringComment(commentId: string, id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments/' + commentId, undefined);
   }

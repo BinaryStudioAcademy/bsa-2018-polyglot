@@ -205,7 +205,7 @@ namespace Polyglot.BusinessLogic.Services
                 var result = await _repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
-                return commentsWithUsers;
+                return commentsWithUsers.Reverse();
             }
             return null;
 
@@ -227,7 +227,7 @@ namespace Polyglot.BusinessLogic.Services
                 
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
-                return commentsWithUsers;
+                return commentsWithUsers.Reverse();
             }
             return null;
         }
@@ -246,24 +246,40 @@ namespace Polyglot.BusinessLogic.Services
 
                 var result = await _repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-                return commentsWithUsers;
+                return commentsWithUsers.Reverse();
             }
             return null;
 
         }
-        
+
+                
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {
             var target = await _repository.GetAsync(identifier);
             if (target != null)
             {
-                return await GetFullUserInComments(
-                     _mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
+                return await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
             }
 
             return null;
         }
+        
+        public async Task<IEnumerable<CommentDTO>> GetCommentsWithPaginationAsync(int identifier, int itemsOnPage, int page)
+        {
+            var skipItems = itemsOnPage * page;
 
+            var target = await _repository.GetAsync(identifier);
+
+            if (target != null)
+            {
+                var paginatedComments = target.Comments.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+                return await GetFullUserInComments (_mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
+            }
+
+            return null;
+
+        }
+        
         private async Task<IEnumerable<CommentDTO>> GetFullUserInComments(IEnumerable<CommentDTO> comments)
         {
             foreach(var com in comments)
