@@ -272,8 +272,9 @@ namespace Polyglot.BusinessLogic.Services
 
             if (target != null)
             {
-                var paginatedComments = target.Comments.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
-                return await GetFullUserInComments (_mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
+                
+                var paginatedComments = target.Comments.OrderByDescending(x => x.CreatedOn).Skip(skipItems).Take(itemsOnPage);
+                return await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
             }
 
             return null;

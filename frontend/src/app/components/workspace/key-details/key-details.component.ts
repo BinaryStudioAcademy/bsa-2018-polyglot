@@ -104,32 +104,6 @@ export class KeyDetailsComponent implements OnInit {
         );
     }
 
-
-    public onScrollUp(): void {
-        this.getKeys(this.currentPage, comments => {
-            this.comments = comments.concat(this.comments);
-        });
-    }
-
-    public onScrollDown(): void {
-        this.getKeys(this.currentPage, comments => {
-            this.comments = this.comments.concat(comments);
-        });
-    }
-
-    getKeys(page: number = 1, saveResultsCallback: (comments) => void) {
-        return this.dataProvider
-            .getCommentsWithPagination(
-                this.keyId,
-                this.elementsOnPage,
-                this.currentPage
-            )
-            .subscribe((comments: any) => {
-                this.currentPage++;
-                saveResultsCallback(comments);
-            });
-    }
-
     ngOnChanges() {
         if (this.keyDetails && this.keyDetails.translations) {
             this.IsPagenationNeeded =

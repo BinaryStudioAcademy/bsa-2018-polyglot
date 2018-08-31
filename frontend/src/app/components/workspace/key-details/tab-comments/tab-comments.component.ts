@@ -29,6 +29,8 @@ export class TabCommentsComponent implements OnInit {
         commentBody: ['',]
     });
     body: string;
+    private currentPage = 0;
+    private elementsOnPage = 7;
 
     constructor(private userService: UserService,
         private fb: FormBuilder,
@@ -141,5 +143,31 @@ export class TabCommentsComponent implements OnInit {
                 err => {
                     this.snotifyService.error("Comment edited", "Error!");
                 });
+    }
+    
+    
+    public onScrollUp(): void {
+        this.getComments(this.currentPage, comments => {
+            this.comments = comments.concat(this.comments);
+        });
+    }
+
+    public onScrollDown(): void {
+        this.getComments(this.currentPage, comments => {
+            this.comments = this.comments.concat(comments);
+        });
+    }
+
+    getComments(page: number = 1, saveResultsCallback: (comments) => void) {
+        return this.complexStringService
+            .getCommentsWithPagination(
+                this.keyId,
+                this.elementsOnPage,
+                this.currentPage + 1
+            )
+            .subscribe((comments: any) => {
+                this.currentPage++;
+                saveResultsCallback(comments);
+            });
     }
 }
