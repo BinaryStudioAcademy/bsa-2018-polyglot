@@ -21,16 +21,8 @@ export class UserService {
     return this.getCurrentUser().userRole == 1;
    }
 
-  getCurrentUser(){
-    let user = this.appState.currentDatabaseUser;
-
-    if (user) {
-      if (!user.avatarUrl || user.avatarUrl == '') {
-        user.avatarUrl = '/assets/images/default-avatar.jpg';
-      }
-    }
-    
-    return user;
+  getCurrentUser(){    
+    return this.appState.currentDatabaseUser;
   }
 
   getAndUpdate() {
@@ -49,12 +41,7 @@ export class UserService {
     this.appState.currentDatabaseUser = undefined;
   }
 
-  updateCurrentUser (userProfile: any) {
-    if (userProfile.avatarUrl == undefined || userProfile.avatarUrl == null || userProfile.avatarUrl == '') {
-      userProfile.avatarUrl = '/assets/images/default-avatar.jpg';
-    }
-    // can add more default values
-    
+  updateCurrentUser (userProfile: any) { 
     this.appState.currentDatabaseUser = userProfile;
   }
 
