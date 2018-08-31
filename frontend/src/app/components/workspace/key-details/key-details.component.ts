@@ -54,6 +54,7 @@ export class KeyDetailsComponent implements OnInit {
     public previousTranslation: string;
     currentTranslation: string;
     currentSuggestion: string;
+    isSaveDisabled: boolean;
 
     constructor(
         private route: ActivatedRoute,
@@ -320,6 +321,8 @@ export class KeyDetailsComponent implements OnInit {
             index
         ].translationValue;
 
+        this.isCanSave(index, this.keyDetails.translations[index]);
+
         this.history.showHistory(
             this.currentKeyId,
             this.keyDetails.translations[index].id
@@ -377,6 +380,14 @@ export class KeyDetailsComponent implements OnInit {
             el => el.languageId === id
         );
         return searchedElement.length > 0 ? searchedElement[0] : null;
+    }
+
+    isCanSave(i, t) {
+        if (!t.translationValue || (this.expandedArray[i].oldValue === t.translationValue && !this.isMachineTranslation)){
+            this.isSaveDisabled = true;
+        } else {
+            this.isSaveDisabled = false;
+        }
     }
 
     onSave(index: number, t: any) {
@@ -449,11 +460,7 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     onClose(index: number, translation: any) {
-        if (
-            this.expandedArray[index].oldValue ===
-                translation.translationValue &&
-            !this.isMachineTranslation
-        ) {
+        if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             return;
