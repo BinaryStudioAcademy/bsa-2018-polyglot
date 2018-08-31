@@ -15,12 +15,15 @@ namespace Polyglot.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService service;
+        private readonly IRightService rightService;
         private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
-        public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper)
+        public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper,
+                                IRightService rightService)
         {
             this.service = service;
             this.teamTranslatorService = teamTranslatorService;
+            this.rightService = rightService;
         }
 
         // GET: Teams
@@ -129,23 +132,20 @@ namespace Polyglot.Controllers
         }
 
         [HttpPut("{teamId}/addTranslatorRight/{userId}")]
-        public async Task<IActionResult> AddRightToTranslator(int teamId, int userId, [FromBody]int definition)
+        public async Task<IActionResult> AddRightToTranslator(int teamId, int userId, [FromBody]RightDefinition rightDefinition)
         {
-            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
-
-            var entity = await service.SetTranslatorRight(userId, teamId, rightDefinition);
+            var entity = await rightService.SetTranslatorRight(userId, teamId, rightDefinition);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
 
         [HttpPut("{teamId}/removeTranslatorRight/{userId}")]
-        public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]int definition)
+        public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]RightDefinition rightDefinition)
         {
-            RightDefinition rightDefinition = (RightDefinition)definition;  //get right definition from number
-
-            var entity = await service.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            var entity = await rightService.RemoveTranslatorRight(userId, teamId, rightDefinition);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
     }
 }

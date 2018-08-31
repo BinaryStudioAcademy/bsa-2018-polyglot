@@ -12,10 +12,11 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using System.Linq;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.Controllers
 {
-	[Produces("application/json")]
+    [Produces("application/json")]
 	[Route("[controller]")]
 	[ApiController]
 	[Authorize]
@@ -23,10 +24,12 @@ namespace Polyglot.Controllers
 	{
 		private IProjectService service;
         public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider)
+        private readonly IRightService rightService;
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IRightService rightService)
 		{
 			this.service = projectService;
-			fileStorageProvider = provider;
+            this.rightService = rightService;
+            fileStorageProvider = provider;
 		}
 
 
@@ -322,7 +325,11 @@ namespace Polyglot.Controllers
             return temp;
         }
 
-
+        [HttpGet("{projectId}/right/{rightDefinition}")]
+        public async Task<bool> CheckIfUserCan(int projectId, RightDefinition rightDefinition)
+        {
+            return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
+        }
 
     }
 

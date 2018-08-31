@@ -4,6 +4,9 @@ using System;
 using Microsoft.AspNetCore.Http;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.SqlRepository;
+using Polyglot.DataAccess.QueryTypes;
+using Polyglot.DataAccess.Helpers;
+using System.Linq;
 
 namespace Polyglot.Core.Authentication
 {
@@ -20,6 +23,24 @@ namespace Polyglot.Core.Authentication
             }
             var result = RequestLevelCache["CurrentServiceProfile"] as UserProfile;
          return result;
+        }
+
+        public static async Task<List<UserRights>> GetRightsInProject(int projId)
+        {
+            IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
+            int userId = (await GetCurrentUserProfile()).Id;
+            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync(r => r.ProjectId == projId && r.UserId == userId));
+
+            return userRights.ToList();
+        }
+
+        public static async Task<List<UserRights>> GetRights()
+        {
+            IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
+            int userId = (await GetCurrentUserProfile()).Id;
+            var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync(r => r.UserId == userId));
+
+            return userRights.ToList();
         }
 
         private static async Task<UserProfile> CurrentUserProfileContainer()
