@@ -28,7 +28,7 @@ namespace Polyglot.Core.Authentication
         public static async Task<List<RightDefinition>> GetRightsInProject(int projId)
         {
             IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
-            int userId = (await unitOfWork.GetRepository<UserProfile>().GetAsync(x => x.Uid == CurrentContext.User.GetUid())).Id;
+            int userId = (await GetCurrentUserProfile()).Id;
             var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync())
                 .Where(r => r.ProjectId == projId && r.UserId == userId)
                 .Select(r => r.RightDefinition);
@@ -39,7 +39,7 @@ namespace Polyglot.Core.Authentication
         public static async Task<List<RightDefinition>> GetRights()
         {
             IUnitOfWork unitOfWork = (IUnitOfWork)CurrentContext?.RequestServices?.GetService(typeof(IUnitOfWork));
-            int userId = (await unitOfWork.GetRepository<UserProfile>().GetAsync(x => x.Uid == CurrentContext.User.GetUid())).Id;
+            int userId = (await GetCurrentUserProfile()).Id;
             var userRights = (await unitOfWork.GetViewData<UserRights>().GetAllAsync())
                 .Where(r => r.UserId == userId)
                 .Select(r => r.RightDefinition)
