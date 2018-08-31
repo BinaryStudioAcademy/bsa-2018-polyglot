@@ -432,6 +432,11 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
+<<<<<<< HEAD
+    addComment(){
+        
+    }
+=======
     suggestTranslation(index, TranslationId, Suggestion) {
         this.dataProvider.addOptionalTranslation(this.keyId, TranslationId, Suggestion)
         .subscribe(
@@ -447,4 +452,5 @@ export class KeyDetailsComponent implements OnInit {
         this.currentSuggestion = '';
     }
 
+>>>>>>> a467a0b85af44fc87d9498b530833d35350d8fe4
 }

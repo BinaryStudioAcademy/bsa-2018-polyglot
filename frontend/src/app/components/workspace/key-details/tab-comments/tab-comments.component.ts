@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import * as signalR from '@aspnet/signalr';
 import { environment } from '../../../../../environments/environment';
 import { SignalrService } from '../../../../services/signalr.service';
+import { CommaExpr } from '@angular/compiler';
 
 @Component({
     selector: 'app-tab-comments',
@@ -20,10 +21,11 @@ import { SignalrService } from '../../../../services/signalr.service';
 })
 export class TabCommentsComponent implements OnInit {
 
-    @Input()  comments: Comment[];
+    @Input() comments: Comment[];
     @ViewChild('textarea') textarea: ElementRef;
 
-
+    newComment: any;
+    public commentText: string;
     routeSub: Subscription;
     keyId: number;
     private url: string = environment.apiUrl;
@@ -64,19 +66,22 @@ export class TabCommentsComponent implements OnInit {
         }
     }
 
-    addComment(commentBody: string) {
-        this.comments.unshift({
+    public addComment(commentBody: string) {
+        this.newComment = {
             user: this.userService.getCurrentUser(),
             text: commentBody,
             createdOn: new Date(Date.now())
-        });
+        };
 
-        this.complexStringService.updateStringComments(this.comments, this.keyId)
+        this.complexStringService.createStringComment(this.newComment, this.keyId)
             .subscribe(
                 (comments) => {
                     if (comments) {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
+                        this.comments = comments;
+                        console.log(this.comments);
+
                     }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
@@ -86,4 +91,68 @@ export class TabCommentsComponent implements OnInit {
                     this.snotifyService.error("Comment added", "Error!");
                 });
     }
+
+    public deleteComment(comment: Comment): void {
+        if (this.userService.isCurrentUserManager()) {
+            this.complexStringService.deleteStringComment(comment.id, this.keyId)
+                .subscribe(
+                    (comments) => {
+                        if (comments) {
+                            this.snotifyService.success("Comment delete", "Success!");
+                            this.commentForm.reset();
+                            this.comments = comments;
+                            console.log(this.comments);
+                        }
+                        else {
+                            this.snotifyService.error("Comment wasn't delete", "Error!");
+                        }
+                    },
+                    err => {
+                        this.snotifyService.error("Comment delete", "Error!");
+                    });
+        }
+        else {
+            this.snotifyService.error("Action is prohibited!", "Error!");
+        }
+    }
+
+    public startEdittingComment(comment: Comment): void {
+        this.commentText = comment.text;
+        comment.isEditting = true;
+        
+    }
+
+    public cancelEditting(comment: Comment): void {
+        comment.isEditting = false;
+    }
+
+    public editComment(comment: Comment, edittedText: string): void {
+        if (this.userService.isCurrentUserManager()) {
+            comment.text = edittedText;
+            this.complexStringService.editStringComment(comment, this.keyId)
+                .subscribe(
+                    (comments) => {
+                        if (comments) {
+                            this.snotifyService.success("Comment delete", "Success!");
+                            this.comments = comments;
+                            //comment.isEditting = false;
+
+                        }
+                        else {
+                            this.snotifyService.error("Comment wasn't delete", "Error!");
+                        }
+                    },
+                    err => {
+                        this.snotifyService.error("Comment delete", "Error!");
+                    });
+        }
+        else {
+            this.snotifyService.error("Action is prohibited!", "Error!");
+        }
+    }
+
+
+
+
+
 }
