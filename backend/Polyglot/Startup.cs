@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic;
-using Polyglot.Hubs;
+using Polyglot.BusinessLogic.Hubs;
 using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
@@ -46,8 +46,7 @@ namespace Polyglot
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
             services.AddSignalR().AddAzureSignalR();
-
-            services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
+            
 
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);

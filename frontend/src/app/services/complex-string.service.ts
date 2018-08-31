@@ -43,7 +43,7 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translation);
   }
 
-  delete(id: number): Observable<IString> {
+  delete(id: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 
