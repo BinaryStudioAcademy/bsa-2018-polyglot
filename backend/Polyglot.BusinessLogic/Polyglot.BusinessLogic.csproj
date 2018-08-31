@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
@@ -13,12 +14,6 @@
     <ProjectReference Include="..\Polyglot.Common\Polyglot.Common.csproj" />
     <ProjectReference Include="..\Polyglot.Core\Polyglot.Core.csproj" />
     <ProjectReference Include="..\Polyglot.DataAccess\Polyglot.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.SignalR.Core">
-      <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.signalr.core\1.0.1\lib\netstandard2.0\Microsoft.AspNetCore.SignalR.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
