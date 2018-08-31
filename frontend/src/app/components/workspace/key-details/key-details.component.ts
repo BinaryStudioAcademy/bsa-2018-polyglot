@@ -536,6 +536,7 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     suggestTranslation(index, TranslationId, Suggestion) {
+
         this.dataProvider
             .addOptionalTranslation(
                 this.currentKeyId,
@@ -555,5 +556,7 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
-    }
+    
+        }
+
 }
