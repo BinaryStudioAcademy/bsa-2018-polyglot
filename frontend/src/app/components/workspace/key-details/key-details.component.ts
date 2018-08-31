@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language, Translation } from "../../../models";
+import { Language } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -33,6 +33,10 @@ export class KeyDetailsComponent implements OnInit {
     public IsEdit: boolean = false;
     public IsPagenationNeeded: boolean = true;
     public pageSize: number = 5;
+
+    private currentPage = 0;
+    private elementsOnPage = 7;
+
     public Id: string;
     public isEmpty: boolean;
 
@@ -106,7 +110,7 @@ export class KeyDetailsComponent implements OnInit {
 
                 this.getLanguages();
                 this.dataProvider
-                    .getCommentsByStringId(this.currentKeyId)
+                    .getCommentsWithPagination(this.currentKeyId, this.elementsOnPage, this.currentPage)
                     .subscribe(comments => {
                         this.comments = comments;
                     });
@@ -551,5 +555,7 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
-    }
+    
+        }
+
 }

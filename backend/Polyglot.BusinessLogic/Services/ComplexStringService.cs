@@ -219,7 +219,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment)
+        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment , int itemsOnPage)
         {
             var target = await repository.GetAsync(identifier);
             if (target != null)
@@ -229,9 +229,11 @@ namespace Polyglot.BusinessLogic.Services
                 target.Comments.Add(currentComment);
                 var result = await repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                
                 await signalRService.CommentAdded($"{Group.complexString}{identifier}", identifier);
+                
+                return commentsWithUsers.OrderByDescending(x => x.CreatedOn).Take(itemsOnPage);
 
-                return commentsWithUsers;
             }
             return null;
 
@@ -248,13 +250,12 @@ namespace Polyglot.BusinessLogic.Services
                 var comments = target.Comments;
                 comments.Remove(currentComment);
                 target.Comments = comments;
-                
-                var result = await repository.Update(target);
-                var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-#warning пробросить событие удаления комментария
-                //   await signalRService.CommentDeleted($"{Group.complexString}{identifier}", identifier);
 
-                return commentsWithUsers;
+                var result = await repository.Update(target);
+                
+                var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                await signalRService.CommentDeleted($"{Group.complexString}{identifier}", identifier);
+                return commentsWithUsers.Reverse();
 
             }
             return null;
@@ -274,26 +275,45 @@ namespace Polyglot.BusinessLogic.Services
 
                 var result = await repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-#warning пробросить событие изменения комментария
-                //   await signalRService.CommentEddited($"{Group.complexString}{identifier}", identifier);
-                return commentsWithUsers;
+
+                await signalRService.CommentEdited($"{Group.complexString}{identifier}", identifier);
+
+                return commentsWithUsers.Reverse();
+
             }
             return null;
 
         }
-        
+
+                
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {
             var target = await repository.GetAsync(identifier);
             if (target != null)
             {
-                return await GetFullUserInComments(
-                     mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
+                return await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
             }
 
             return null;
         }
+        
+        public async Task<IEnumerable<CommentDTO>> GetCommentsWithPaginationAsync(int identifier, int itemsOnPage, int page)
+        {
+            var skipItems = itemsOnPage * page;
 
+            var target = await repository.GetAsync(identifier);
+
+            if (target != null)
+            {
+                
+                var paginatedComments = target.Comments.OrderByDescending(x => x.CreatedOn).Skip(skipItems).Take(itemsOnPage);
+                return await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
+            }
+
+            return null;
+
+        }
+        
         private async Task<IEnumerable<CommentDTO>> GetFullUserInComments(IEnumerable<CommentDTO> comments)
         {
             foreach(var com in comments)
