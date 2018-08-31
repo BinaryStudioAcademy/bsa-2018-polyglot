@@ -5,12 +5,24 @@
     <div class="chat-messages-container" #mainwindow>
 
         <ul>
+            <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner> 
             <li *ngFor="let m of messages" (click)="toggleSelection(m)">
+                <a class="person-img">
+                    <img class="person-avatar" mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
+                </a>
+                <div class="sender-name">{{m.user.fullName}}</div>
                 <mat-card class="message-card">
                     {{m.body}}
                     <span class="message-time">{{ m.date | date:'shortTime' }}</span>
                 </mat-card>
             </li>
+
+            <li *ngFor="let m of messages" (click)="toggleSelection(m)">
+                    <mat-card class="message-card">
+                        {{m.body}}
+                        <span class="message-time">{{ m.date | date:'shortTime' }}</span>
+                    </mat-card>
+                </li>
         </ul>
     </div>
 
@@ -26,10 +38,10 @@
             <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
             <span matSuffix class="message-actions-container">
                 <button mat-icon-button>
-                    <mat-icon aria-label="">sentiment_very_satisfied</mat-icon>
+                    <mat-icon class="smilles-icon" aria-label="">sentiment_very_satisfied</mat-icon>
                 </button>
                 <button mat-icon-button (click)="sendMessage()">
-                    <mat-icon aria-label="">send</mat-icon>
+                    <mat-icon class="send-icon" aria-label="">send</mat-icon>
                 </button>
             </span>
         </mat-form-field>

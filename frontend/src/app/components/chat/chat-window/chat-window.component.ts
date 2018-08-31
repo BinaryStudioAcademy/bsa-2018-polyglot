@@ -21,7 +21,12 @@ export class ChatWindowComponent implements OnInit {
   ngOnInit() {
     
     this.messages = MOCK_MESSAGES;
-    this.renderer.setProperty(this.mainWindow.nativeElement, 'scrollTop', '99999');
+    
+  }
+
+  ngAfterViewInit() {
+    let scrollHeight = this.mainWindow.nativeElement.scrollHeight;
+    this.renderer.setProperty(this.mainWindow.nativeElement, 'scrollTop', scrollHeight);
   }
 
   sendMessage() {
@@ -31,7 +36,7 @@ export class ChatWindowComponent implements OnInit {
 
     toggleSelection(message)
     {
-        console.log("1111111111111111111111111111111111");
+    
         this.openSnackBar();
     }
 
