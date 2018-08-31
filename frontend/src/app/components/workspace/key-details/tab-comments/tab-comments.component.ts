@@ -144,8 +144,7 @@ export class TabCommentsComponent implements OnInit {
                     this.snotifyService.error("Comment edited", "Error!");
                 });
     }
-    
-    
+        
     public onScrollUp(): void {
         this.getComments(this.currentPage, comments => {
             this.comments = comments.concat(this.comments);
