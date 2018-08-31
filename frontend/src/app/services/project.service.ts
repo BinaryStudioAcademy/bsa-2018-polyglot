@@ -137,4 +137,8 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
   getProjectTranslationStatistics(id: number): Observable<ProjectTranslationStatistics> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/statistics', undefined, undefined);
   }
+
+  getProjectsTranslationStatistics(projectIds: Array<number>): Observable<Array<ProjectTranslationStatistics>> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/statistics', undefined, projectIds);
+  }
 }

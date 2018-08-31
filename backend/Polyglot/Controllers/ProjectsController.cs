@@ -305,14 +305,22 @@ namespace Polyglot.Controllers
 	    [HttpGet("{projectId}/statistics")]
 	    public async Task<IActionResult> GetStatistics(int projectId)
 	    {
-	        if (!ModelState.IsValid)
-	            return BadRequest() as IActionResult;
-
-	        var activities = await service.GetProjectLanguageStatistic(projectId);
-	        return activities == null ? StatusCode(404) as IActionResult
-	            : Ok(activities);
+	        var statistics = await service.GetProjectLanguageStatistic(projectId);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
         }
-        
+
+	    [HttpPost("statistics")]
+	    public async Task<IActionResult> GetStatistics([FromBody]List<int> projectIds)
+	    {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var statistics = await service.GetProjectLanguageStatistics(projectIds);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
+        }
+
         [HttpGet]
         [Route("{id}/export")]
         public async Task<IActionResult> GetFile(int id, int langId, string extension)

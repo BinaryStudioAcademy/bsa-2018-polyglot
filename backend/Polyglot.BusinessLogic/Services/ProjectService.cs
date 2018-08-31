@@ -868,7 +868,7 @@ namespace Polyglot.BusinessLogic.Services
                 var totalTranslationsDone = projectStrings.Count(x =>
                     x.Translations.Any(y => langs.Any(lang => lang.Id == y.LanguageId)));
 
-                var progress = (100 / totalTranslationsNeeded) * totalTranslationsDone;
+                var progress = totalTranslationsNeeded == 0 ? 0 : (100 / totalTranslationsNeeded) * totalTranslationsDone;
 
                 return new ProjectTranslationStatisticsDTO
                 {
@@ -880,6 +880,17 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             return null;
+        }
+
+        public async Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds)
+        {
+            var projectsStatistics = new List<ProjectTranslationStatisticsDTO>();
+            foreach (var projectId in projectIds)
+            {
+                projectsStatistics.Add(await GetProjectLanguageStatistic(projectId));
+            }
+
+            return projectsStatistics;
         }
     }
 
