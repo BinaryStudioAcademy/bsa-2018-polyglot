@@ -13,7 +13,7 @@
                         <mat-card class="person-card">
                             <mat-card-header>
                                 <a class="person-img">
-                                    <img mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
+                                    <img class="person-avatar" mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
                                 </a>
                                 <div class="person-card-text">
                                     <div class="person-name">Grzegosz Brzeczyszczykiewicz</div>
@@ -24,14 +24,15 @@
                                         can do this using the ::ng-deep combinator as such
                                     </div>
                                 </div>
-                                <div class="person-options-container">
-                                    <mat-icon>more_vert</mat-icon>
-                                </div>
                                 <div class="online-status-container">
-                                    <mat-icon class="online-status-icon">radio_button_checked</mat-icon>
-                                    <!--  <div class="online-status-text">last seen recently</div>  -->
+                                    <span class="online-status-text">last seen recently</span>
+                                    <mat-icon class="online-status-icon">brightness_1</mat-icon>
                                 </div>
                             </mat-card-header>
+                        <!--    <div class="person-options-container">
+                                    <mat-icon>more_vert</mat-icon>
+                                </div>
+                            -->
                         </mat-card>
                     </li>
 
@@ -40,20 +41,21 @@
                         <mat-card class="person-card">
                             <mat-card-header>
                                 <a class="person-img">
-                                    <img mat-card-avatar src="{{u.avatarUrl}}">
+                                    <img class="person-avatar" mat-card-avatar src="{{u.avatarUrl}}">
                                 </a>
                                 <div class="person-card-text">
                                     <div class="person-name">{{u.fullName}}</div>
                                     <div class="person-message-prev">last message .....</div>
                                 </div>
-                                <div class="person-options-container">
-                                    <mat-icon>more_vert</mat-icon>
-                                </div>
                                 <div class="online-status-container">
-                                    <mat-icon class="online-status-icon">radio_button_checked</mat-icon>
-                                    <!--  <div class="online-status-text">last seen recently</div>  -->
+                                        <span class="online-status-text">last seen recently</span>
+                                        <mat-icon class="online-status-icon">brightness_1</mat-icon>
                                 </div>
                             </mat-card-header>
+                        <!--    <div class="person-options-container">
+                                    <mat-icon>more_vert</mat-icon>
+                            </div>
+                        -->
                         </mat-card>
                     </li>
                 </ul>
