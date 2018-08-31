@@ -51,8 +51,8 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comments);
   }
 
-  createStringComment(comment: Comment, id: number): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id + '/comments', undefined, comment)
+  createStringComment(comment: Comment, id: number, itemsOnPage: number, page: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id + '/comments?itemsOnPage='+ itemsOnPage+'&page='+page, undefined, comment)
   }
 
   editStringComment(comment: Comment, id: number): Observable<any> {

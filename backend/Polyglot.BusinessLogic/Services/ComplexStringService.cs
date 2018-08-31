@@ -219,7 +219,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment)
+        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment , int itemsOnPage)
         {
             var target = await repository.GetAsync(identifier);
             if (target != null)
@@ -232,7 +232,7 @@ namespace Polyglot.BusinessLogic.Services
                 
                 await signalRService.CommentAdded($"{Group.complexString}{identifier}", identifier);
                 
-                return commentsWithUsers.Reverse();
+                return commentsWithUsers.OrderByDescending(x => x.CreatedOn).Take(itemsOnPage);
 
             }
             return null;

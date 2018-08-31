@@ -70,8 +70,8 @@ export class TabCommentsComponent implements OnInit {
             text: commentBody,
             createdOn: new Date(Date.now())
         };
-
-        this.complexStringService.createStringComment(this.newComment, this.keyId)
+        this.currentPage = 0;
+        this.complexStringService.createStringComment(this.newComment, this.keyId, this.elementsOnPage, this.currentPage)
             .subscribe(
                 (comments) => {
                     if (comments) {
@@ -144,7 +144,7 @@ export class TabCommentsComponent implements OnInit {
                     this.snotifyService.error("Comment edited", "Error!");
                 });
     }
-        
+
     public onScrollUp(): void {
         this.getComments(this.currentPage, comments => {
             this.comments = comments.concat(this.comments);
@@ -165,8 +165,11 @@ export class TabCommentsComponent implements OnInit {
                 this.currentPage + 1
             )
             .subscribe((comments: any) => {
-                this.currentPage++;
-                saveResultsCallback(comments);
+                
+                    this.currentPage++;
+                    saveResultsCallback(comments);
+                
+
             });
     }
 }
