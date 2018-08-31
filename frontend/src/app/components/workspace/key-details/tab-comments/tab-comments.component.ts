@@ -5,7 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { SnotifyService } from 'ng-snotify';
 import { Comment } from '../../../../models/comment';
 import { ImgDialogComponent } from '../../../../dialogs/img-dialog/img-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatList } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
@@ -18,17 +18,18 @@ import { environment } from '../../../../../environments/environment';
 export class TabCommentsComponent implements OnInit {
 
     @Input() comments: Comment[];
-    @ViewChild('textarea') textarea: ElementRef;
+    @ViewChild(MatList, { read: ElementRef }) matList: ElementRef;
 
-    newComment: any;
+    public newComment: Comment;
     public commentText: string;
-    routeSub: Subscription;
-    keyId: number;
-    private url: string = environment.apiUrl;
-    commentForm = this.fb.group({
-        commentBody: ['',]
+    public routeSub: Subscription;
+    public keyId: number;
+    public commentForm = this.fb.group({
+        commentBody: ['']
     });
-    body: string;
+    public body: string;
+    
+    private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;
 
@@ -78,6 +79,10 @@ export class TabCommentsComponent implements OnInit {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
                         this.comments = comments;
+
+                        setTimeout(() => {
+                            this.matList.nativeElement.scrollTop = 0;
+                        }, 100);
                     }
                     else {
                         this.snotifyService.error("Comment wasn't add", "Error!");
@@ -157,6 +162,10 @@ export class TabCommentsComponent implements OnInit {
         });
     }
 
+    public commentId(index, comment: Comment): string {
+        return comment.id;
+    }
+
     getComments(page: number = 1, saveResultsCallback: (comments) => void) {
         return this.complexStringService
             .getCommentsWithPagination(
@@ -168,7 +177,7 @@ export class TabCommentsComponent implements OnInit {
                 
                     this.currentPage++;
                     saveResultsCallback(comments);
-                
+              
 
             });
     }

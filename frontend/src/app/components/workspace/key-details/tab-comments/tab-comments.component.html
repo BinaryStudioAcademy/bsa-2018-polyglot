@@ -9,7 +9,7 @@
     </form>
 
     <mat-list class="comments-container" ngxInfiniteScroller horizontal="false" (onScrollUp)="onScrollUp()" (onScrollDown)="onScrollDown()">
-        <mat-card *ngFor="let com of comments" class="comment-card">
+        <mat-card *ngFor="let com of comments; trackBy: commentId" class="comment-card">
             <div class="author-info">
                 <a (click)="userService.redirectById(com.user.id)"><img class="comment-avatar" src="{{com?.user?.avatarUrl}}"></a>
                 <strong class="comment-author" (click)="userService.redirectById(com.user.id)">{{com?.user?.fullName}}</strong>
