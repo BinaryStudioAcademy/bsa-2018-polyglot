@@ -258,7 +258,6 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setNewTranslations(translations, callerName) {
-        debugger;
         let targetTranslationIndex = -1;
         let targetExpandedArrayItem;
         let newTranslationValue;

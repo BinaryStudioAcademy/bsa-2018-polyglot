@@ -145,8 +145,8 @@ namespace Polyglot.Controllers
         {
             var success = await dataProvider.DeleteComplexString(id);
 
-            return success ? StatusCode(304) as IActionResult
-                : Ok(success);
+            return success ? Ok(success)
+                : StatusCode(304) as IActionResult;
         }
 
         // GET: ComplexStrings/5/comments

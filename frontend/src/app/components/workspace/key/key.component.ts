@@ -42,7 +42,6 @@ export class KeyComponent implements OnInit {
             if (dialogRef.componentInstance.data.answer) {
                 this.dataProvider.delete(this.key.id).subscribe(
                     response => {
-                        debugger;
                         if (response) {
                             this.snotifyService.success(
                                 "String deleted",
