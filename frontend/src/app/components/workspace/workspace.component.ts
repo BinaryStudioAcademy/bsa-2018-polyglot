@@ -180,15 +180,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     receiveId($event) {
         let temp = this.keys.findIndex(x => x.id === $event);
-        if (this.selectedKey.id === this.keys[temp].id)
-            this.selectedKey = this.keys[temp - 1]
-                ? this.keys[temp - 1]
-                : this.keys[temp + 1];
 
-        this.keys.splice(temp, 1);
+        this.complexStringService.getById($event).subscribe(d =>{
+            if(!d){
+                if (this.selectedKey.id === this.keys[temp].id)
+                    this.selectedKey = this.keys[temp - 1]
+                        ? this.keys[temp - 1]
+                        : this.keys[temp + 1];
 
-        this.getKeys(this.currentPage, keys => {
-            this.keys = this.keys.concat(keys);
+                this.keys.splice(temp, 1);
+                this.getKeys(this.currentPage, keys => {
+                    this.keys = this.keys.concat(keys);
+                });
+            } else {
+                this.keys[temp] = d;
+                this.router.navigate([this.basicPath]);   //костыль
+                
+            }
         });
 
         if (this.keys.length > 0) {
