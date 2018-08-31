@@ -2,8 +2,7 @@
   <div class="opt" *ngFor="let opt of optional">
     <mat-card class="story-card">
       <div class="head">
-        <img *ngIf="opt.userPictureURL" src="{{opt.userPictureURL}}" class="story-image">
-        <img *ngIf="!opt.userPictureURL" src="/assets/images/default-avatar.jpg" class="story-image">
+        <img src="{{opt.userPictureURL}}" class="story-image">
         <h4 style="margin-left: 10px">{{opt.userName}}</h4>
       </div>
       <p>suggested: "{{opt.translationValue}}"</p>
