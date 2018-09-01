@@ -15,6 +15,8 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
+import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -51,7 +53,8 @@ export class KeyDetailsComponent implements OnInit {
     public MachineTranslation: string;
     public previousTranslation: string;
     currentTranslation: string;
-
+    users: UserProfilePrev[]= [];
+    currentUserId: number;
     constructor(
         private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
@@ -60,13 +63,14 @@ export class KeyDetailsComponent implements OnInit {
         private appState: AppStateService,
         private signalrService: SignalrService,
         private service: TranslationService,
-        private projectService: ProjectService
-    ) {}
+        private projectService: ProjectService,
+        private translatorsService: ProjecttranslatorsService
+    ) { }
 
     ngOnInit() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
-
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         this.route.params.subscribe(value => {
             this.keyId = value.keyId;
             this.isLoad = false;
@@ -74,6 +78,9 @@ export class KeyDetailsComponent implements OnInit {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
+                this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
+                    this.users = data;
+                });
                 this.signalrService.createConnection(
                     `${SignalrGroups[SignalrGroups.complexString]}${
                         this.keyDetails.id
@@ -417,5 +424,55 @@ export class KeyDetailsComponent implements OnInit {
             return "2px ridge #6495ED";
         }
         return "";
+    }
+
+    onAssign() {
+    }
+
+    chooseUser($event) {
+        if(!$event.translationId) {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].languageId === $event.langId) {
+                    if(!$event.user) {
+                        $event.user = { };
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.createStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                        .subscribe(
+                            (d: any[]) => {
+                                this.keyDetails.translations[i] = d;
+                            },
+                            err => {
+                                this.snotifyService.error('User wasn`t assigned!');
+                            }
+                        );
+                    break;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].id === $event.translationId) {
+                    if(!$event.user) {
+                        $event.user = {};
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.editStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                    .subscribe(
+                        (d: any) => {
+                            this.keyDetails.translations[i] = d;
+                        },
+                        err => {
+                            this.snotifyService.error('User wasn`t assigned!');
+                        }
+                    );
+                    break;
+                }
+            }
+        }
     }
 }

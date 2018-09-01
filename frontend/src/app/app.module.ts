@@ -99,6 +99,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
+import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
 
 
 
@@ -169,10 +170,11 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
-    StarRatingComponent,  
-    UserProfileComponent, 
+    StarRatingComponent,
+    UserProfileComponent,
     TabGlossaryComponent,
-    AssignGlossariesComponent
+    AssignGlossariesComponent,
+    ListTranslatorsComponent,
   ],
   imports: [
     BrowserModule,
@@ -210,11 +212,11 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
     InfiniteScrollModule
   ],
   entryComponents: [
-    LoginDialogComponent, 
-    SignupDialogComponent, 
-    CropperComponent, 
+    LoginDialogComponent,
+    SignupDialogComponent,
+    CropperComponent,
     StringDialogComponent,
-    ProjectMessageComponent, 
+    ProjectMessageComponent,
     SelectProjectLanguageComponent,
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
@@ -230,7 +232,7 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
-    { 
+    {
       provide: 'SnotifyToastConfig',
       useValue: SnotifyGlobalConfig
     },
@@ -240,7 +242,7 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
 
 
 })
-export class AppModule { 
+export class AppModule {
   constructor(private dateAdapter:DateAdapter<Date>) {
 		dateAdapter.setLocale('en-in'); // DD/MM/YYYY
 	}

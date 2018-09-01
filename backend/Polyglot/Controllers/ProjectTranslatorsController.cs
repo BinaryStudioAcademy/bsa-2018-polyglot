@@ -11,19 +11,27 @@ using Polyglot.Hubs;
 
 namespace Polyglot.Controllers
 {
-    [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class ProjectTranslatorsController : Controller
+    public class ProjectTranslatorsController : ControllerBase
     {
-        private IProjectService service;
+        private IProjectTranslatorsService service;
         private readonly ISignalrWorkspaceService signalrService;
 
-        public ProjectTranslatorsController(IProjectService projectService, ISignalrWorkspaceService signalrService)
+        public ProjectTranslatorsController(IProjectTranslatorsService projectTranslatorsService, ISignalrWorkspaceService signalrService)
         {
-            this.service = projectService;
+            this.service = projectTranslatorsService;
             this.signalrService = signalrService;
+        }
+
+        // GET: ProjectTranslators/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProjectTranslators(int id)
+        {
+            var translators = await service.GetProjectTranslators(id);
+            return translators == null ? NotFound($"Translators not found!") as IActionResult
+                : Ok(translators);
         }
     }
 }

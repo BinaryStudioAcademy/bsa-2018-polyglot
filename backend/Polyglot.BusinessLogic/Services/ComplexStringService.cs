@@ -49,7 +49,17 @@ namespace Polyglot.BusinessLogic.Services
             var target = await _repository.GetAsync(identifier);
             if (target != null)
             {
-                return _mapper.Map<ComplexStringDTO>(target);
+                ComplexStringDTO stringDTO = _mapper.Map<ComplexStringDTO>(target);
+                foreach (var translation in stringDTO.Translations)
+                {
+                    if(translation.AssignedTranslatorId != 0)
+                    {
+                        UserProfileDTO user = await _userSevice.GetOneAsync(translation.AssignedTranslatorId);
+                        translation.AssignedTranslatorAvatarUrl = user.AvatarUrl;
+                        translation.AssignedTranslatorName = user.FullName;
+                    }
+                }
+                return stringDTO;
             }
 
             return null;
@@ -74,9 +84,13 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var currentTranslation = _mapper.Map<Translation>(translation);
                 currentTranslation.Id = Guid.NewGuid();
+                currentTranslation.AssignedTranslatorId = translation.AssignedTranslatorId;
                 target.Translations.Add(currentTranslation);
                 var result = await _repository.Update(_mapper.Map<ComplexString>(target));
-                return (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+                var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+                translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
+                translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
+                return translationNew;
             }
             return null;
 
@@ -98,10 +112,16 @@ namespace Polyglot.BusinessLogic.Services
                 currentTranslation.TranslationValue = translation.TranslationValue;
                 currentTranslation.UserId = translation.UserId;
                 currentTranslation.CreatedOn = DateTime.Now;
+                currentTranslation.AssignedTranslatorId = translation.AssignedTranslatorId;
+
                 target.Translations = translationsList;
 
                 var result = await _repository.Update(_mapper.Map<ComplexString>(target));
-                return (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+
+                var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+                translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
+                translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
+                return translationNew;
             }
             return null;
 

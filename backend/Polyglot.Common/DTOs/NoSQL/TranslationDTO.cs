@@ -13,8 +13,11 @@ namespace Polyglot.Common.DTOs.NoSQL
 		public int UserId { get; set; }
 		public DateTime CreatedOn { get; set; }
         public Translation.TranslationType Type { get; set; }
+        public int AssignedTranslatorId { get; set; }
+        public string AssignedTranslatorName { get; set; }
+        public string AssignedTranslatorAvatarUrl { get; set; }
 
-		public List<AdditionalTranslationDTO> History { get; set; }
+        public List<AdditionalTranslationDTO> History { get; set; }
 		public List<AdditionalTranslationDTO> OptionalTranslations { get; set; }
 
 		public TranslationDTO()

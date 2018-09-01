@@ -4,16 +4,19 @@ import { AdditionalTranslation } from "./additionalTranslation";
 
 export interface Translation {
 
-  id: string;
-  userId: number;
-  translationValue: string;
-  languageId: number;
-  createdOn: Date;
+    id: string;
+    userId: number;
+    translationValue: string;
+    languageId: number;
+    createdOn: Date;
 
-  history: AdditionalTranslation[];
-  optionalTranslations: AdditionalTranslation[]
+    history: AdditionalTranslation[];
+    optionalTranslations: AdditionalTranslation[]
 
-  Type : TranslationType
+    Type: TranslationType
 
+    assignedTranslatorId: number;
+    assignedTranslatorName: string;
+    assignedTranslatorAvatarUrl: string;
 }
 

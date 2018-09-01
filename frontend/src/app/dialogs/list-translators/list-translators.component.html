@@ -1,0 +1,17 @@
+<div (click)="$event.stopPropagation();">
+    <div class="note">Available translators</div>
+    <form class="main-form">
+        <mat-form-field class="input-wrapper">
+            <input type="text" placeholder="Assignee" aria-label="Assignee" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option" class="option-wrapper">
+                    <div class="wrapper-name-ava">
+                        <img src="{{option.avatarUrl}}" alt="ava" class="avatar">
+                        <div>{{option.fullName}}</div>
+                    </div>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click) ="onSave()">Save</button>
+    </form>
+</div>
