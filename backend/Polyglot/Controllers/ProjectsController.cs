@@ -119,7 +119,6 @@ namespace Polyglot.Controllers
             var project = await service.GetProjectLanguages(id);
             return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
                 : Ok(project);
-
         }
 
         // PUT: Projects/:id/languages
@@ -299,7 +298,24 @@ namespace Polyglot.Controllers
                 : Ok(activities);
         }
 
+	    [HttpGet("{projectId}/statistics")]
+	    public async Task<IActionResult> GetStatistics(int projectId)
+	    {
+	        var statistics = await service.GetProjectLanguageStatistic(projectId);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
+        }
 
+	    [HttpPost("statistics")]
+	    public async Task<IActionResult> GetStatistics([FromBody]List<int> projectIds)
+	    {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var statistics = await service.GetProjectLanguageStatistics(projectIds);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
+        }
 
         [HttpGet]
         [Route("{id}/export")]
