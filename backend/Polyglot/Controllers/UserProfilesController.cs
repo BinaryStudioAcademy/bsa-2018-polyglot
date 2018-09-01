@@ -28,14 +28,17 @@ namespace Polyglot.Controllers
         private readonly ITeamService teamService;
         private readonly IFileStorageProvider fileStorageProvider;
         private readonly IMapper mapper;
+        private readonly IRightService rightService;
 
 
-        public UserProfilesController(IUserService service, IRatingService ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider, IMapper mapper)
+        public UserProfilesController(IUserService service, IRatingService ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider, IMapper mapper,
+                                      IRightService rightService)
         {
             this.service = service;
             this.ratingService = ratingService;
             this.teamService = teamService;
             this.fileStorageProvider = fileStorageProvider;
+            this.rightService = rightService;
             this.mapper = mapper;
         }
 
@@ -120,6 +123,12 @@ namespace Polyglot.Controllers
                 user.FullName = HttpContext.User.GetName();
                 user.AvatarUrl = HttpContext.User.GetProfilePicture();
             }
+
+            if (user.AvatarUrl == null || user.AvatarUrl == "")
+            {
+                user.AvatarUrl = "/assets/images/default-avatar.jpg";
+            }
+
             user.RegistrationDate = DateTime.UtcNow;
             var entity = await service.PostAsync(user);
             return entity == null ? StatusCode(409) as IActionResult
@@ -162,6 +171,22 @@ namespace Polyglot.Controllers
         public async Task<bool> IsUserInDb()
         {
             return await service.IsExistByUidAsync();
+        }
+
+        [HttpGet("rights")]
+        public async Task<IActionResult> GetAllRights()
+        {
+            var rights = (await rightService.GetUserRights());
+            return rights == null ? NotFound($"Rights not found!") as IActionResult
+               : Ok(rights);
+        }
+
+        [HttpGet("rights/{projectId}")]
+        public async Task<IActionResult> GetRightsByProject(int projectId)
+        {
+            var rights = (await rightService.GetUserRightsInProject(projectId));
+            return rights == null ? NotFound($"Rights not found!") as IActionResult
+               : Ok(rights);
         }
     }
 }

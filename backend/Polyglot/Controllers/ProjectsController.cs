@@ -11,27 +11,25 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.Core.Authentication;
-using Polyglot.Hubs;
-using Polyglot.Hubs.Helpers;
 using System.Linq;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.Controllers
 {
-	[Produces("application/json")]
+    [Produces("application/json")]
 	[Route("[controller]")]
 	[ApiController]
 	[Authorize]
 	public class ProjectsController : ControllerBase
 	{
 		private IProjectService service;
-        private readonly ISignalrWorkspaceService signalrService;
         public IFileStorageProvider fileStorageProvider;
-		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, ISignalrWorkspaceService signalrService)
+        private readonly IRightService rightService;
+		public ProjectsController(IProjectService projectService, IFileStorageProvider provider, IRightService rightService)
 		{
 			this.service = projectService;
-            this.signalrService = signalrService;
-			fileStorageProvider = provider;
+            this.rightService = rightService;
+            fileStorageProvider = provider;
 		}
 
 
@@ -133,7 +131,6 @@ namespace Polyglot.Controllers
             var project = await service.AddLanguagesToProject(projectId, languageIds);
             if(project != null)
             {
-                await signalrService.LanguagesAdded($"{Group.project}{project.Id}", languageIds);
                 return Ok(project);
             }
             else
@@ -150,7 +147,6 @@ namespace Polyglot.Controllers
 
             if (success)
             {
-                await signalrService.LanguageRemoved($"{Group.project}{projId}", langId);
                 return Ok();
             }
             else
@@ -344,6 +340,13 @@ namespace Polyglot.Controllers
             var temp = File(test, ex);
             return temp;
         }
+
+        [HttpGet("{projectId}/right/{rightDefinition}")]
+        public async Task<bool> CheckIfUserCan(int projectId, RightDefinition rightDefinition)
+        {
+            return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
+        }
+
     }
 
 }

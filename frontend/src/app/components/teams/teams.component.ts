@@ -3,32 +3,31 @@ import { TeamService } from "../../services/teams.service";
 import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'app-teams',
-  templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.sass']
+    selector: 'app-teams',
+    templateUrl: './teams.component.html',
+    styleUrls: ['./teams.component.sass']
 })
 export class TeamsComponent implements OnInit {
 
-  IsLoad : boolean = true;
-  teams: any;
+    isLoad: boolean = true;
+    teams: any = [];
 
-  constructor(private teamsService: TeamService,
-              private userService: UserService) { }
+    constructor(private teamsService: TeamService,
+        private userService: UserService) { }
 
-  ngOnInit() {
-    this.getAllTeams();
-  }
+    ngOnInit() {
+        this.getAllTeams();
+    }
 
-  getAllTeams(){
-    this.teamsService.getAllTeams()
-      .subscribe((teams) => {       
-        this.teams = teams;
-        this.IsLoad = false;
-      })
-  }
+    getAllTeams() {
+        this.teamsService.getAllTeams()
+            .subscribe((teams) => {
+                this.teams = teams;
+                this.isLoad = false;
+            });
+    }
 
-  isCurrentUserManager(){
-    return this.userService.isCurrentUserManager();
-  }
-
+    isCurrentUserManager() {
+        return this.userService.isCurrentUserManager();
+    }
 }

@@ -1,0 +1,12 @@
+<div class="content" *ngIf="optional">
+  <div class="opt" *ngFor="let opt of optional">
+    <mat-card class="story-card">
+      <div class="head">
+        <img src="{{opt.userPictureURL}}" class="story-image">
+        <h4 style="margin-left: 10px">{{opt.userName}}</h4>
+      </div>
+      <p>suggested: "{{opt.translationValue}}"</p>
+      <p class="date">{{opt.dateTime | date:'medium'}}</p>
+    </mat-card>
+  </div>
+</div>

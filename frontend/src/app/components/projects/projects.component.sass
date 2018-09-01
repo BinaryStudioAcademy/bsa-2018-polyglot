@@ -114,13 +114,13 @@ mat-card-content
 
 
 .spinner
-  max-width: 100px
-  margin: 0 auto
-  padding-top: calc((55vh - 270px))
-  height: calc(100vh - 270px)
+  margin-left: auto
+  margin-right: auto
+  margin-top: 100px
 
 
-
+.box-padding
+  padding: 0 5% 0 0;
 
 .row-container
   margin-top: 30px
@@ -139,6 +139,7 @@ mat-card-content
 
 .row-buttons
   display: grid
+  padding: 10px 0
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
   grid-gap: 5px
   button
@@ -147,31 +148,40 @@ mat-card-content
     justify-self: center
     align-self: center
     text-align: center
+    margin-top: 10px
   
-
+.description-buttons
+  grid-template-columns: 66% 34%
+  display: grid;
 
 .row-info
   align-self: center
   .row-description
-    display: block
     overflow: hidden
-    white-space: nowrap
     text-overflow: ellipsis
-    vertical-align: middle
+    display: -webkit-box
+    text-align: justify
+    -webkit-line-clamp: 3
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    
     
 
 .list-item
   margin: 10px
   padding: 5px
   display: grid
-  grid-template-columns: 15% 22% 38% 25%
+  grid-gap: 2%
+  box-sizing: border-box
+  grid-template-columns: 20% 78%
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
   max-height: 150px
   img    
     justify-self: center
 
-.row-info
-  padding-left: 10px
+.description-columns
+
 
 .row-name
   align-self: center
@@ -195,3 +205,52 @@ mat-card-content
 
 .lang-progress
   margin-top: 10px
+  
+.no-projects
+  margin-top: 50px
+  font-size: 70px
+  text-align: center
+  align-items: center
+  color: #f3f3f3
+
+@media only screen and (max-width: 1010px)
+  ::ng-deep .description-buttons
+      grid-template-columns: 75% 25% !important
+
+@media only screen and (max-width: 748px)
+  ::ng-deep 
+    .row-buttons
+      grid-template-columns: 49% 49%!important
+    .row-buttons button
+      width: 90%!important
+    .description-buttons
+      grid-template-areas: 'a' 'b'!important
+      grid-template-columns: none !important
+    .row-buttons #workspace
+      justify-self: left!important
+    .row-description
+      -webkit-line-clamp: 2!important
+
+@media only screen and (max-width: 690px)
+  ::ng-deep
+    .sub-menu
+      grid-gap: 2%
+      grid-template-columns: 25% 71%!important
+      justify-content: flex-start
+    .mat-slide-toggle-label 
+      display: grid!important
+      grid-template: 'a' 'b'
+    .mat-slide-toggle-bar
+      display: block
+      width: 100%
+    .mat-slide-toggle-content
+      display: block
+      width: 100%
+      margin-top: 18px
+
+@media only screen and (max-width: 500px)
+  ::ng-deep 
+     .list-item
+       grid-gap: 6%!important
+       grid-template-columns: 25% 65%!important
+     

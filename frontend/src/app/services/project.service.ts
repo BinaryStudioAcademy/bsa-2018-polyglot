@@ -3,7 +3,6 @@ import { HttpService, RequestMethod } from './http.service';
 import { Observable, of } from 'rxjs';
 import { Language, Project, LanguageStatistic } from  '../models';
 import { map, filter } from '../../../node_modules/rxjs/operators';
-import { debug } from 'util';
 import { ProjectTranslationStatistics } from '../models/projectTranslationStatistics';
 
 @Injectable({
@@ -122,7 +121,7 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
   }
   
   getProjectStringsWithPagination(projectId: number, itemsOnPage: number, page: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/','paginatedStrings?itemsOnPage='+itemsOnPage+'&page='+page);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId,'paginatedStrings?itemsOnPage='+itemsOnPage+'&page='+page);
   }
 
   getProjectActivitiesById(projectId: number) : Observable<any> {

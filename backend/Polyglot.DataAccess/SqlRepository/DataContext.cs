@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.QueryTypes;
 using Polyglot.DataAccess.Seeds;
 
 namespace Polyglot.DataAccess.SqlRepository
@@ -25,6 +26,8 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<GlossaryString> GlossaryStrings { get; set; }
         public DbSet<TeamTranslator> TeamTranslators { get; set; }
+        public DbSet<ProjectTeam> ProjectTeams { get; set; }
+        public DbQuery<UserRights> UserRights { get; set; }
 
 
 
@@ -134,6 +137,8 @@ namespace Polyglot.DataAccess.SqlRepository
                 .WithMany(l => l.Glossaries)
                 .HasForeignKey(p => p.OriginLanguageId);
 
+            modelBuilder.Query<UserRights>()
+                .ToView("View_UserRights");
             //new feature in EF Core 2.1
             //modelBuilder.Seed();
 
