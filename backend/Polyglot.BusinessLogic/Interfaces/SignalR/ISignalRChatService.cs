@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Polyglot.Hubs.Interfaces
+namespace Polyglot.BusinessLogic.Interfaces.SignalR
 {
-    public class ISignalRChatService
+    public interface ISignalRChatService
     {
     }
 }

@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.BusinessLogic.Services;
+using Polyglot.BusinessLogic.Services.SignalR;
 using Polyglot.BusinessLogic.TranslationServices;
 
 namespace Polyglot.BusinessLogic
@@ -20,7 +22,7 @@ namespace Polyglot.BusinessLogic
             services.AddTransient<IComplexStringService, ComplexStringService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamsService>();
-
+            services.AddTransient<IRightService, RightService>();
             services.AddTransient<IGlossaryService, GlossaryService>();
 
             services.AddTransient<IRatingService, RatingService>();
@@ -28,6 +30,8 @@ namespace Polyglot.BusinessLogic
                 new TranslatorProvider("https://translation.googleapis.com/language/translate/v2",
                     configuration.GetValue<string>("google_translation_key")));
             services.AddTransient(typeof(ICRUDService<,>), typeof(CRUDService<,>));
+            services.AddScoped<ISignalRWorkspaceService, SignalRWorkspaceService>();
+            services.AddScoped<ISignalRChatService, SignalRChatService>();
         }
 
         public static void ConfigureMiddleware(IApplicationBuilder app)

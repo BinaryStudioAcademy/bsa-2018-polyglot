@@ -7,26 +7,82 @@ form
 .field-full-width
     width: 100%
 
+.comments-container
+    overflow-y: auto
+    height: 500px
+    margin-top: 10px
+    display: block
+
 .comment-card
-    margin: 5px
+    
     background-color: #f7f7f7
-    margin-top: 15px
+    display: grid
+    grid-template-rows: 10% auto 25% auto
+    padding: 0
+    padding-bottom: 5px
+    width: 97%
+    margin-bottom: 20px
+    margin-right: 10px
+    
+
+.mat-list-item
+    height: 100px
+    margin: 0
+    margin-bottom: 10px
+    padding: 0
+.mat-list-item-content
+    padding: 0
+    margin: 0
 
 .text
     font-size: 80%
-    margin-bottom: 7px
     word-wrap: break-word
-
+    left: 0
+    grid-column-start: 1
+    grid-column-end: span 2
+    grid-row: 3
+    margin: 5px
+    margin-left: 20px
+    
 
 .date
     float: right
     font-size: 60%
+    margin-right: 10px
+    margin-bottom: 5px
+    margin-left: auto
+    grid-column: 2
+    grid-row: 4
+    
 
 .author-info
-    margin-bottom: 10px
+    grid-row-start: 1
+    grid-row-end: span 2 
+    margin: 5px
+    margin-left: 20px
+
+.mat-button
+    grid-row: 1
+    grid-column: 2
+    min-height: 24px
+    min-width: 24px
+    margin-left: auto
+    margin-right: 0
+    margin-top: 0
+    padding: 0
+.edit-container
+    grid-column-start: 1
+    grid-column-end: span 2 
+    margin-right: 20px
+    margin-left: 20px
+    
+
+.edit-input
+    width: 100%
+    
 
 .comment-avatar
-    width: 30px
+    width: 40px
     height: auto
     margin-right: 15px
     vertical-align: middle

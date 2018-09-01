@@ -43,7 +43,7 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translation);
   }
 
-  delete(id: number): Observable<IString> {
+  delete(id: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
 
@@ -51,8 +51,24 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comments);
   }
 
+  createStringComment(comment: Comment, id: number, itemsOnPage: number, page: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + id + '/comments?itemsOnPage='+ itemsOnPage+'&page='+page, undefined, comment)
+  }
+
+  editStringComment(comment: Comment, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/comments', undefined, comment)
+  }
+
   getCommentsByStringId(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/comments', undefined);
+  }
+
+  getCommentsWithPagination(id: number, itemsOnPage: number, page: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/','paginatedComments?itemsOnPage='+itemsOnPage+'&page='+page);
+  }
+
+  deleteStringComment(commentId: string, id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments/' + commentId, undefined);
   }
 
   getTranslationHistory(id: number, translationId: string) {

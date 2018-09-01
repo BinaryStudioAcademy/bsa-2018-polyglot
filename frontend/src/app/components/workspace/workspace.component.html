@@ -76,7 +76,7 @@
 </div> -->
 
 
-  <div class="d-flex workspace-height" *ngIf="keys.length!==0&&isLoad">
+  <div class="d-flex workspace-height" *ngIf="keys.length !== 0 && isLoad">
     <mat-card class="keys-list d-flex my-1 p-0">
       <div style="width: 100%;">
       
@@ -84,7 +84,9 @@
 
           <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys" [ngStyle]="{'border-left': highlightStringStatus(key)}" [ngClass]="{'in-progress': isStringInProgress(key)}">
             <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
-              <app-workspace-key (idEvent)="receiveId($event)" [key]="key"></app-workspace-key>
+
+              <app-workspace-key (removeEvent)="removeComplexString($event)" [key]="key"></app-workspace-key>
+
             </div>
             <mat-divider></mat-divider>
           </a>

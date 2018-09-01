@@ -32,7 +32,8 @@
 											<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize
 												cdkAutosizeMinRows="1"
 												placeholder="Write here your optional translation"
-												cdkAutosizeMaxRows="10"></textarea>
+												cdkAutosizeMaxRows="10">					
+											</textarea>
 										</mat-form-field>
 										<button [disabled]="!currentSuggestion || currentSuggestion.length<1"
 										 	mat-raised-button color="primary"
@@ -46,7 +47,8 @@
 						   <div >
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea matInput
+										<textarea (contextmenu)="onRightClick($event)"
+												(keyup)="isCanSave(i, t)"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
@@ -54,6 +56,11 @@
 													  placeholder="Write here to start translating"
 													  cdkAutosizeMaxRows="10"></textarea>
 								</mat-form-field>
+								<mat-menu  #appMenu="matMenu" class=".context-menu" yPosition="below" xPosition="before">
+									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
+											Add comment for selection
+									</button>
+							</mat-menu>	
 								<div [hidden]="!someOneTranslating" class="state-container">
 										<span *ngFor="let u of editingUsers">
 											<a [routerLink]="['/']" [routerLinkActive]="'active'">
@@ -65,9 +72,10 @@
 								</div>
 								<div class="button-translation">
 									<div>
-									<button mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
+									<button [(disabled)]="isSaveDisabled" mat-raised-button color="primary" style="margin-right: 35px" (click)="onSave(i, t)">Save</button>
 									</div>
 									<button mat-raised-button color="warn"  (click)="onClose(i, t)">Close</button>
+									<!-- <button [matMenuTriggerFor]="appMenu">openContextMenu</button> -->
 								</div>
 
 						  </div>

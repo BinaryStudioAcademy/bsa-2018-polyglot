@@ -1,38 +1,49 @@
 import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../environments/environment";
-import { HubConnection } from "@aspnet/signalr";
 import { ChatActions } from "../models/signalrModels/chat-actions";
+import { AppStateService } from "./app-state.service";
 
 @Injectable({
     providedIn: "root"
 })
 export class SignalrService {
     connection: any;
-
     connectionClosedByUser: boolean = false;
+    private userGroups: string[] = [];
 
-    constructor() {}
+    constructor(private appState: AppStateService) {}
 
     public createConnection(groupName: string, hubUrl: string) {
         if (
             !this.connection ||
-                this.connection.connection.connectionState === 2
+            this.connection.connection.connectionState === 2
         ) {
             this.connect(
                 groupName,
                 hubUrl
             ).then(data => {
                 console.log(`SignalR hub ${hubUrl} connected.`);
-                if (this.connection.connection.connectionState === 1 && !this.connectionClosedByUser) {
+                
+                if (
+                    this.connection.connection.connectionState === 1 &&
+                    !this.connectionClosedByUser &&
+                    !this.userGroups.includes(groupName)
+                ) {
                     console.log(`Connecting to group ${groupName}`);
                     this.connection.send("joinGroup", groupName);
+                    this.userGroups.push(groupName);
                 }
             });
         } else {
-            if (this.connection.connection.connectionState === 1) {
+
+            if (
+                this.connection.connection.connectionState === 1 &&
+                !this.userGroups.includes(groupName)
+            ) {
                 console.log(`Connecting to group ${groupName}`);
                 this.connection.send("joinGroup", groupName);
+                this.userGroups.push(groupName);
             }
         }
     }
@@ -43,10 +54,25 @@ export class SignalrService {
             this.connection &&
             this.connection.connection.connectionState === 1
         ) {
+            
             console.log(`Disconnecting from group ${groupName}`);
             this.connection.send("leaveGroup", groupName);
-         //   console.log(`Stoping SignalR connection`);
-         //   this.connection.stop();
+            this.userGroups = this.userGroups.filter(g => g !== groupName);
+            //   console.log(`Stoping SignalR connection`);
+            //   this.connection.stop();
+        }
+    }
+
+    public validateResponse(responce: any): boolean {
+        if (
+            responce.ids &&
+            responce.ids.length > 0 &&
+            responce.senderId &&
+            responce.senderId !== this.appState.currentDatabaseUser.id
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -65,8 +91,7 @@ export class SignalrService {
 
             this.connection.onclose(err => {
                 console.log(`SignalR hub ${hubUrl} disconnected.`);
-                if(this.connectionClosedByUser)
-                {
+                if (this.connectionClosedByUser) {
                     this.createConnection(groupName, hubUrl);
                 }
             });

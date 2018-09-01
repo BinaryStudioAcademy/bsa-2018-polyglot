@@ -130,4 +130,4 @@ export class TranslatorProfileComponent implements OnInit{
 export interface Language{
     Name : string,
     Proficiency : number
-  }
+}

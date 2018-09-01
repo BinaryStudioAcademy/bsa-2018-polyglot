@@ -25,7 +25,7 @@
               <div class="temmate-header">
                 <div class="teammate-header-image">
                   <a (click)="userService.redirectById(t.userId)">
-                    <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                    <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
                   </a>
                 </div>
                 <div class="teammate-name">
@@ -82,7 +82,7 @@
             <div class="temmate-header">
               <div class="teammate-header-image">
                 <a (click)="userService.redirectById(t.userId)">
-                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}" onError="this.src='/assets/images/default-avatar.jpg'">
+                  <img class="header-image-small" src="{{getAvatarUrl(t)}}" alt="Photo of a {{t.fullName}}">
                 </a>
               </div>
               <div class="teammate-name">

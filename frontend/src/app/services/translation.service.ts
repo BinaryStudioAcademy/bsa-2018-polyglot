@@ -13,7 +13,7 @@ export class TranslationService {
     this.api = "translation";
   }
 
-  getTransation(item : GoogleTranslation) : Observable<any> {
+  getTranslation(item : GoogleTranslation) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, item);
   }
 }

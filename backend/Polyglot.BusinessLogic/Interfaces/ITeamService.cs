@@ -24,13 +24,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslatorDTO> GetTranslatorAysnc(int id);
 
-        Task<IEnumerable<RightDTO>> GetTranslatorRightsAsync(int translatorId);
-
         Task<double> GetTranslatorRatingValueAsync(int translatorId);
-
-        Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition);
-
-        Task<TranslatorDTO> RemoveTranslatorRight(int userId, int teamId, RightDefinition definition);
 
         #endregion Translators
     }

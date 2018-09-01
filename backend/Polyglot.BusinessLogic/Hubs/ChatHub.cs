@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using Polyglot.Hubs.Helpers;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.SignalR;
+using Polyglot.Common.Helpers.SignalR;
 using System.Threading.Tasks;
 
-namespace Polyglot.Hubs
+namespace Polyglot.BusinessLogic.Hubs
 {
    // [Authorize]
     public class ChatHub : BaseHub

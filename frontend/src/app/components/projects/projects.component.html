@@ -11,11 +11,7 @@
     </mat-form-field>
   </form>
 </div>
-
-<div *ngIf="isLoad" class="spinner">
-  <mat-spinner></mat-spinner>
-</div>
-
+<mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 <div *ngIf="!isLoad&&cards">
   <div *ngIf="toggle.checked" class="container">
     <mat-card class="example-card" *ngFor="let card of cards">
