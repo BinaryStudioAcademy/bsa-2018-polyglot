@@ -442,7 +442,6 @@ export class KeyDetailsComponent implements OnInit {
                     this.dataProvider.createStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
                         .subscribe(
                             (d: any[]) => {
-                                this.keyDetails.translations[i] = d;
                             },
                             err => {
                                 this.snotifyService.error('User wasn`t assigned!');
@@ -464,7 +463,6 @@ export class KeyDetailsComponent implements OnInit {
                     this.dataProvider.editStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
                     .subscribe(
                         (d: any) => {
-                            this.keyDetails.translations[i] = d;
                         },
                         err => {
                             this.snotifyService.error('User wasn`t assigned!');

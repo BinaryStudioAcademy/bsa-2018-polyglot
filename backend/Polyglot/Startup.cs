@@ -54,8 +54,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR();
-            //.AddAzureSignalR();
+            services.AddSignalR().AddAzureSignalR();
 
             services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
@@ -88,8 +87,8 @@ namespace Polyglot
             app.UseAuthentication();
 
             app.UseMvc();
-            //Azure
-            app.UseSignalR(options =>
+
+            app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
             });
