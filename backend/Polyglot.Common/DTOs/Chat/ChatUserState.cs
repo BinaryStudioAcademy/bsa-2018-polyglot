@@ -7,5 +7,7 @@ namespace Polyglot.Common.DTOs.Chat
         public int ChatUserId { get; set; }
 
         public DateTime LastSeen { get; set; }
+
+        public bool IsOnline { get; set; }
     }
 }
