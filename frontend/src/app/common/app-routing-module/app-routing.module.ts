@@ -49,8 +49,7 @@ const routes: Routes = [
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'glossaries/:glossaryId', component: GlossaryComponent },
-      { path: 'strings', component: NoFoundComponent },
-      { path: 'abc', component: TeamComponent }
+      { path: 'strings', component: NoFoundComponent }
     ]
   },
   { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
