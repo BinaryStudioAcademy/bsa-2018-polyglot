@@ -2,9 +2,7 @@
 {
     public enum Action
     {
-        commentAdded,
-        commentDeleted,
-        commentEdited,
+        commentsChanged,
         changedTranslation,
         complexStringAdded,
         complexStringRemoved,
