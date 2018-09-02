@@ -1,8 +1,13 @@
 <div (click)="$event.stopPropagation();">
     <div class="note">Available translators</div>
     <form class="main-form">
-        <mat-form-field class="input-wrapper">
-            <input type="text" placeholder="Assignee" aria-label="Assignee" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <!-- <mat-form-field class="input-wrapper">
+                <mat-chip-list #chipList>
+                        <mat-chip>Chip 1</mat-chip>
+                        <mat-chip>Chip 2</mat-chip>
+                      </mat-chip-list>
+                      <input >
+            <input type="text" [matChipInputFor]="chipList" placeholder="Assignee" aria-label="Assignee" matInput [formControl]="myControl" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option" class="option-wrapper">
                     <div class="wrapper-name-ava">
@@ -11,7 +16,33 @@
                     </div>
                 </mat-option>
             </mat-autocomplete>
-        </mat-form-field>
+        </mat-form-field> -->
+        <mat-form-field class="example-chip-list input-wrapper">
+                <mat-chip-list #chipList>
+                  <mat-chip
+                    *ngFor="let fruit of fruits"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="remove(fruit)">
+                    {{fruit}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="New fruit..."
+                    #fruitInput
+                    [formControl]="fruitCtrl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                    {{fruit.fullName}}
+                  </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
         <button mat-raised-button color="primary" (click) ="onSave()">Save</button>
     </form>
 </div>
