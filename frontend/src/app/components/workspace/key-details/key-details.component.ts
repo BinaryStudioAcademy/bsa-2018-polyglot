@@ -16,6 +16,7 @@ import { ProjectService } from "../../../services/project.service";
 import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
 import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
+import { Comment } from "../../../models/comment";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -172,17 +173,18 @@ export class KeyDetailsComponent implements OnInit {
             }
         );
         this.signalrService.connection.on(
-            SignalrSubscribeActions[SignalrSubscribeActions.commentAdded],
+            SignalrSubscribeActions[SignalrSubscribeActions.commentsChanged],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     this.dataProvider
-                        .getCommentsByStringId(this.currentKeyId)
-                        .subscribe(comments => {
-                            this.comments = comments;
-                        });
+                    .getCommentsWithPagination(this.currentKeyId, this.elementsOnPage, this.currentPage)
+                    .subscribe(comments => {
+                        this.comments = comments;
+                    });
                 }
             }
         );
+
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (response: any) => {
@@ -217,6 +219,9 @@ export class KeyDetailsComponent implements OnInit {
                 }
             }
         );
+
+
+
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
