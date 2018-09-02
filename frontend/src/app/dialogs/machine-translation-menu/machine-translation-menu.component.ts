@@ -18,13 +18,13 @@ export class MachineTranslationMenuComponent implements OnInit,OnChanges{
     constructor() { }
 
     ngOnInit() {
-        if(this.Translation !== this.data){
-        this.isLoading = true;
+      this.isLoading = true;
+        if(this.Translation === this.data){
+        this.isLoading = false;
         }
       }
 
       ngOnChanges(changes:SimpleChanges){
-        console.log(changes);
         if(changes['data']){
            this.Translation = changes.data.currentValue;
            this.isLoading = false;

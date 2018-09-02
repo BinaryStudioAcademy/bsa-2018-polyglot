@@ -5,20 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.Authentication;
 using Polyglot.BusinessLogic;
-using Polyglot.BusinessLogic.Interfaces;
-using Polyglot.BusinessLogic.Services;
-using Polyglot.BusinessLogic.TranslationServices;
-using Polyglot.DataAccess.FileRepository;
-using Polyglot.DataAccess.Interfaces;
-using Polyglot.DataAccess.MongoRepository;
-using Polyglot.DataAccess.Seeds;
-using Polyglot.DataAccess.SqlRepository;
-using Polyglot.Hubs;
-using mapper = Polyglot.Common.Mapping.AutoMapper;
+using Polyglot.BusinessLogic.Hubs;
 using Polyglot.Common;
 using Polyglot.Core;
 using Polyglot.DataAccess;
-using Microsoft.EntityFrameworkCore;
+
 namespace Polyglot
 {
     public class Startup
@@ -56,7 +47,6 @@ namespace Polyglot
 
             services.AddSignalR().AddAzureSignalR();
 
-            services.AddScoped<ISignalrWorkspaceService, SignalrWorkspaceService>();
 
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);
@@ -79,15 +69,15 @@ namespace Polyglot
             CoreModule.ConfigureMiddleware(app);
             DataAccessModule.ConfigureMiddleware(app);
 
-            // if (env.IsDevelopment())
-            //  {
-            app.UseCors("AllowAll");
-            // }
+           // if (env.IsDevelopment())
+          //  {
+                app.UseCors("AllowAll");
+           // }
 
             app.UseAuthentication();
 
             app.UseMvc();
-
+            
             app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");

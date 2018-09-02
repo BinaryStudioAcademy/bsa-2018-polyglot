@@ -100,6 +100,8 @@ import { TabGlossaryComponent } from './components/workspace/key-details/tab-glo
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
+import { TranslatorGuardService } from './services/guards/translator-guard.service';
+import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
 
 
 
@@ -175,6 +177,7 @@ import { ListTranslatorsComponent } from './dialogs/list-translators/list-transl
     TabGlossaryComponent,
     AssignGlossariesComponent,
     ListTranslatorsComponent,
+    TabOptionalComponent
   ],
   imports: [
     BrowserModule,
@@ -236,7 +239,7 @@ import { ListTranslatorsComponent } from './dialogs/list-translators/list-transl
       provide: 'SnotifyToastConfig',
       useValue: SnotifyGlobalConfig
     },
-    SnotifyService, GlossaryService],
+    SnotifyService, GlossaryService, TranslatorGuardService],
 
   bootstrap: [AppComponent]
 
