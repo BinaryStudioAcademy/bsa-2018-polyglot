@@ -24,98 +24,68 @@ export class ListTranslatorsComponent implements OnInit {
     removable = true;
     addOnBlur = false;
     separatorKeysCodes: number[] = [ENTER, COMMA];
-    fruitCtrl = new FormControl();
-    filteredFruits: Observable<UserProfilePrev[]>;
-    fruits: string[] = [];
-    allFruits: UserProfilePrev[] = [{fullName:'Nata', id: 5, avatarUrl: ''}, {fullName:'Nina', id: 3, avatarUrl: ''}, {fullName:'Nina', id: 3, avatarUrl: ''}];
+    translatorCtrl = new FormControl();
+    filteredtranslators: Observable<UserProfilePrev[]>;
+    translators: string[] = [];
 
-    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+    @ViewChild('translatorInput') translatorInput: ElementRef<HTMLInputElement>;
 
     constructor() {
 
     }
 
     ngOnInit() {
-        this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-          startWith(null),
-          map((fruit: UserProfilePrev | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+        this.filteredtranslators = this.translatorCtrl.valueChanges.pipe(
+            startWith(null),
+            map((translator: UserProfilePrev | null) => translator ? this._filter(translator) : this.options.slice()));
     }
 
     add(event: MatChipInputEvent): void {
-      debugger
-      const input = event.input;
-      const value = event.value;
+        const input = event.input;
+        const value = event.value;
 
-      // Add our fruit
-      if ((value || '').trim()) {
-        this.fruits[0] = value;
-      }
+        if ((value || '').trim()) {
+            this.translators[0] = value;
+        }
 
-      // Reset the input value
-      if (input) {
-        input.value = '';
-      }
+        if (input) {
+            input.value = '';
+        }
 
-      this.fruitCtrl.setValue(null);
+        this.translatorCtrl.setValue(null);
     }
 
-    remove(fruit: string): void {
-      const index = this.fruits.indexOf(fruit);
+    remove(translator: string): void {
+        const index = this.translators.indexOf(translator);
 
-      if (index >= 0) {
-        this.fruits.splice(index, 1);
-      }
+        if (index >= 0) {
+            this.translators.splice(index, 1);
+        }
     }
 
     selected(event: MatAutocompleteSelectedEvent): void {
-      this.fruits[0] = event.option.viewValue;
-      this.fruitInput.nativeElement.value = '';
-      this.fruitCtrl.setValue(null);
+        this.translators[0] = event.option.viewValue;
+        this.translatorInput.nativeElement.value = '';
+        this.translatorCtrl.setValue(null);
     }
 
     private _filter(value: UserProfilePrev): UserProfilePrev[] {
-      const filterValue = value.fullName.toLowerCase();
+        const filterValue = value.fullName.toLowerCase();
 
-      return this.allFruits.filter(fruit => fruit.fullName.toLowerCase().indexOf(filterValue) === 0);
+        return this.options.filter(translator => translator.fullName.toLowerCase().indexOf(filterValue) === 0);
     }
 
     onSave() {
-      let user: UserProfilePrev;
-      for (var i = 0; i < this.allFruits.length; i++) {
-        if(this.allFruits[i].fullName === this.fruits[0])
-        {
-          user = this.allFruits[i];
-          break;
+        let user: UserProfilePrev;
+        for (var i = 0; i < this.options.length; i++) {
+            if (this.options[i].fullName === this.translators[0]) {
+                user = this.options[i];
+                break;
+            }
         }
-      }
-      if(!user)
-        {
-          user = null;
+        if (!user) {
+            user = null;
         }
-        console.log(user);
+        this.chooseUserEvent.emit({ user: user, translationId: this.translationId, langId: this.langId });
     }
-    // myControl = new FormControl();
-    // filteredOptions: Observable<UserProfilePrev[]>;
-
-    // ngOnInit() {
-    //   this.filteredOptions = this.myControl.valueChanges
-    //     .pipe(
-    //       startWith<string | UserProfilePrev>(''),
-    //       map(value => typeof value === 'string' ? value : value.fullName),
-    //       map(fullName => fullName ? this._filter(fullName) : this.options.slice())
-    //     );
-    // }
-
-    // displayFn(user?: UserProfilePrev): string | undefined {
-    //   return user ? user.fullName : undefined;
-    // }
-
-    // private _filter(name: string): UserProfilePrev[] {
-    //   const filterValue = name.toLowerCase();
-    //   return this.options.filter(option => option.fullName.toLowerCase().indexOf(filterValue) === 0);
-    // }
-
-    //onSave() {
-        //this.chooseUserEvent.emit( { user: this.myControl.value, translationId: this.translationId, langId: this.langId});
-    //}
- }
+}
