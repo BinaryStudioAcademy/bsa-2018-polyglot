@@ -13,6 +13,8 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
+import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 
 @Component({
@@ -60,6 +62,8 @@ export class KeyDetailsComponent implements OnInit {
     currentSuggestion: string;
     isSaveDisabled: boolean;
 
+    users: UserProfilePrev[]= [];
+    currentUserId: number;
     constructor(
         private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
@@ -68,20 +72,23 @@ export class KeyDetailsComponent implements OnInit {
         private appState: AppStateService,
         private signalrService: SignalrService,
         private service: TranslationService,
-        private projectService: ProjectService
-    ) {}
+        private projectService: ProjectService,
+        private translatorsService: ProjecttranslatorsService
+    ) { }
 
     ngOnInit() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
-
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
-
+                this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
+                    this.users = data;
+                });
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
                     this.signalrService.closeConnection(
                         `${SignalrGroups[SignalrGroups.complexString]}${
@@ -289,12 +296,12 @@ export class KeyDetailsComponent implements OnInit {
                 targetExpandedArrayItem.oldValue !== "" &&
                 targetExpandedArrayItem.oldValue !== this.currentTranslation
             ) {
-                newTranslationValue = `Your work  ==========>                                            
+                newTranslationValue = `Your work  ==========>
                                             ${
                                                 this.currentTranslation
-                                            }                          
-                                            <========= ${callerName}'s changes                               
-                                            =========>                                       
+                                            }
+                                            <========= ${callerName}'s changes
+                                            =========>
                                             ${
                                                 translations[i].translationValue
                                             }`;
@@ -535,6 +542,54 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
+    onAssign() {
+    }
+
+    chooseUser($event) {
+        if(!$event.translationId) {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].languageId === $event.langId) {
+                    if(!$event.user) {
+                        $event.user = { };
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.createStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                        .subscribe(
+                            (d: any[]) => {
+                            },
+                            err => {
+                                this.snotifyService.error('User wasn`t assigned!');
+                            }
+                        );
+                    break;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].id === $event.translationId) {
+                    if(!$event.user) {
+                        $event.user = {};
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.editStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                    .subscribe(
+                        (d: any) => {
+                        },
+                        err => {
+                            this.snotifyService.error('User wasn`t assigned!');
+                        }
+                    );
+                    break;
+                }
+            }
+        }
+    }
+
     suggestTranslation(index, TranslationId, Suggestion) {
         this.dataProvider
             .addOptionalTranslation(
@@ -555,7 +610,7 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
-    
+
         }
 
 }

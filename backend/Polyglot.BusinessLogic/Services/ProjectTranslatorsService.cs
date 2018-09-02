@@ -12,20 +12,11 @@ using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Services
 {
-    public class ProjectTranslatorsService: CRUDService<Project, ProjectDTO>
+    public class ProjectTranslatorsService: CRUDService<Project, ProjectDTO>, IProjectTranslatorsService
     {
-        private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
-        private readonly IComplexStringService _stringService;
-        ICRUDService<UserProfile, UserProfileDTO> _userService;
-
-
-        public ProjectTranslatorsService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-            IComplexStringService stringService, IUserService userService)
+        public ProjectTranslatorsService(IUnitOfWork uow, IMapper mapper)
             : base(uow, mapper)
         {
-            stringsProvider = rep;
-            this._stringService = stringService;
-            this._userService = userService;
         }
 
         public async Task<IEnumerable<UserProfilePrevDTO>> GetProjectTranslators(int projectId)

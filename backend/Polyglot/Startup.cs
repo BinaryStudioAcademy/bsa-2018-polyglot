@@ -77,7 +77,7 @@ namespace Polyglot
             app.UseAuthentication();
 
             app.UseMvc();
-
+            
             app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
