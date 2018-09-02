@@ -3,8 +3,8 @@
     public enum ChatAction
     {
         messageReceived,
-        typing,
         messageRead,
+        typing,
         personConnected,
         personDisconnected
     }
