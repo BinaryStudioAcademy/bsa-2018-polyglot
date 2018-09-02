@@ -10,6 +10,10 @@ import { MatSnackBar } from '@angular/material';
 export class ChatWindowComponent implements OnInit {
   @ViewChild('mainwindow') mainWindow: ElementRef;
   public currentMessage: string = "";
+  interlocutor = { 
+      name: "Ivan Petrov",
+      lastSeen: ""          
+}
 
   messages = [];
   constructor(

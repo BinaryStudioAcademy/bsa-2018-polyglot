@@ -1,11 +1,15 @@
 <div class="chat-container">
 
-    <mat-toolbar>Toolbar -----------</mat-toolbar>
+    <mat-toolbar class="interlocutor-info">
+        <span class="interlocutor-name">{{interlocutor.name}}</span>
+        <span class="last-seen">Last seen 4 days ago</span>
+    </mat-toolbar>
 
     <div class="chat-messages-container" #mainwindow>
 
         <ul>
             <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner> 
+
             <li *ngFor="let m of messages" (click)="toggleSelection(m)">
                 <a class="person-img">
                     <img class="person-avatar" mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
@@ -13,7 +17,17 @@
                 <div class="sender-name">{{m.user.fullName}}</div>
                 <mat-card class="message-card">
                     {{m.body}}
-                    <span class="message-time">{{ m.date | date:'shortTime' }}</span>
+                    <div class="message-info-container">
+                        <span class="recieved-read-container">
+                            <span  class="recieved-icon">
+                                <mat-icon>done</mat-icon>
+                            </span>
+                            <span hidden="true" class="read-icon">
+                                <mat-icon>done_all</mat-icon>
+                            </span>
+                        </span>
+                        <span class="message-time">{{ m.date | date:'shortTime' }}</span>
+                    </div>
                 </mat-card>
             </li>
 

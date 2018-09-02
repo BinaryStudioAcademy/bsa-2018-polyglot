@@ -1,3 +1,12 @@
+.interlocutor-info
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  align-items: flex-start
+  .last-seen
+    font-size: 14px
+    line-height: 14px
+    
 ul, 
 li
   margin: 0
@@ -58,10 +67,29 @@ li
   transition: all 0.5s
   background-color: #D0D0D0
 
-.message-time
+.message-info-container
+  display: flex
+  flex-direction: row
   position: absolute
   right: 25px
   bottom: 10px
+
+.recieved-read-container
+  position: relative
+  height: 12px
+  color: green
+  .recieved-icon,
+  .read-icon
+    position: absolute
+    left: -20px
+    top: -2px
+    height: 12px
+  .mat-icon
+    height: 12px
+    font-size: 16px
+
+  
+.message-time
   font-size: 12px
   color: #AAAAAA
 
