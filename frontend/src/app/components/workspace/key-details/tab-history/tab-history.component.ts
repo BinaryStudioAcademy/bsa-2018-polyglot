@@ -36,13 +36,13 @@ export class TabHistoryComponent implements OnInit {
       if (!this.previousId) {
         this.previousId = this.translationId;
       }
-      else{
-        if(this.previousId!==this.translationId){
-          this.currentPage=0;
-          this.previousId=this.translationId
+      else {
+        if (this.previousId !== this.translationId) {
+          this.currentPage = 0;
+          this.previousId = this.translationId
         }
-        if(this.previousId===this.translationId){
-          this.currentPage=0;
+        if (this.previousId === this.translationId) {
+          this.currentPage = 0;
         }
       }
       this.dataProvider.getTranslationHistory(keyId, translationId, this.elementsOnPage, this.currentPage).subscribe(
