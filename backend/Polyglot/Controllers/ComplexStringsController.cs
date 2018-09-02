@@ -126,12 +126,22 @@ namespace Polyglot.Controllers
 
         // PUT: ComplexStrings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult> ModifyComplexString(int id, IFormFile formFile)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            Request.Form.TryGetValue("str", out StringValues res);
+            ComplexStringDTO complexString = JsonConvert.DeserializeObject<ComplexStringDTO>(res);
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile file = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
 
-            complexString.Id = id;
+                complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+            }
 
             var entity = await dataProvider.ModifyComplexString(complexString);
             return entity == null ? StatusCode(304) as IActionResult
