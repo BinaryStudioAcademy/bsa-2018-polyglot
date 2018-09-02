@@ -171,7 +171,7 @@ export class TabCommentsComponent implements OnInit {
             .getCommentsWithPagination(
                 this.keyId,
                 this.elementsOnPage,
-                this.currentPage + 1
+                this.currentPage
             )
             .subscribe((comments: any) => {
                 
