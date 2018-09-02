@@ -12,6 +12,10 @@ import { ComplexStringService } from '../../../../services/complex-string.servic
 export class TabHistoryComponent implements OnInit {
 
   public history: Array<any>;
+  public currentPage = 0;
+  public elementsOnPage = 7;
+  public keyId: number;
+  public translationId: string;
 
   constructor(
     private dataProvider: ComplexStringService,
@@ -27,13 +31,43 @@ export class TabHistoryComponent implements OnInit {
     this.history = [];
 
     if (keyId && translationId) {
-      this.dataProvider.getTranslationHistory(keyId, translationId).subscribe(
+      this.keyId=keyId;
+      this.translationId=translationId;
+      this.dataProvider.getTranslationHistory(keyId, translationId, this.elementsOnPage, this.currentPage).subscribe(
         (result) => {
           this.history = result;
+          this.currentPage ++;
         }
       );
     } else {
       return;
     }
   }
+
+public onScrollDown(): void {
+    this.getHistory(this.currentPage, history => {
+        this.history = this.history.concat(history);
+    });
+}
+
+
+getHistory(page: number = 1, saveResultsCallback: (history) => void) {
+    return this.dataProvider
+        .getTranslationHistory(
+            this.keyId,
+            this.translationId,
+            this.elementsOnPage,
+            this.currentPage
+        )
+        .subscribe((history: any) => {
+            
+                this.currentPage++;
+                saveResultsCallback(history);
+                if(history.length===0){
+                  this.currentPage=0;
+                }
+          
+
+        });
+}
 }

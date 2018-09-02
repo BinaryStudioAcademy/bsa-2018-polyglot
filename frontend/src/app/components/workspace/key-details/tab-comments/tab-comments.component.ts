@@ -150,12 +150,6 @@ export class TabCommentsComponent implements OnInit {
                 });
     }
 
-    public onScrollUp(): void {
-        this.getComments(this.currentPage, comments => {
-            this.comments = comments.concat(this.comments);
-        });
-    }
-
     public onScrollDown(): void {
         this.getComments(this.currentPage, comments => {
             this.comments = this.comments.concat(comments);
