@@ -7,5 +7,7 @@ namespace Polyglot.Common.DTOs
         public int Id { get; set; }
 
         public string AvatarUrl { get; set; }
+
+        public string FullName { get; set; }
     }
 }
