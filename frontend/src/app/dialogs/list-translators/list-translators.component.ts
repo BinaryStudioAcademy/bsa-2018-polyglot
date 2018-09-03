@@ -88,4 +88,8 @@ export class ListTranslatorsComponent implements OnInit {
         }
         this.chooseUserEvent.emit({ user: user, translationId: this.translationId, langId: this.langId });
     }
+
+    onClose() {
+
+    }
 }
