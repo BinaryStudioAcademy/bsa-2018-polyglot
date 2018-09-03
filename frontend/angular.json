@@ -23,7 +23,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
+              "src/multilingual-512.png",
               "src/assets",
               "src/web.config"
             ],
@@ -87,7 +87,7 @@
             ],
             "scripts": [],
             "assets": [
-              "src/favicon.ico",
+              "src/multilingual-512.png",
               "src/assets",
               "src/web.config"
             ]

@@ -8,6 +8,8 @@
         complexStringRemoved,
         languagesAdded,
         languageRemoved,
-        languageTranslationCommitted
+        languageTranslationCommitted,
+        complexStringTranslatingStarted,
+        complexStringTranslatingFinished
     }
 }

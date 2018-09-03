@@ -213,5 +213,13 @@ namespace Polyglot.Controllers
             return response == null ? StatusCode(400) as IActionResult
                 : Ok(response);
         }
+
+        [HttpGet("{id}/status/{status}")]
+        public async Task<IActionResult> ChangeStringStatus(int id, int status, string groupName)
+        {
+            await dataProvider.ChangeStringStatus(id, status, groupName);
+
+            return Ok();
+        }
     }
 }

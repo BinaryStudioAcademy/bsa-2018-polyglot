@@ -1,4 +1,4 @@
-<h2>{{glossary.name}}</h2>
+<h2 *ngIf="glossary">{{glossary.name}}</h2>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
