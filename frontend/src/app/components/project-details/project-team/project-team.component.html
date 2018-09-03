@@ -28,7 +28,7 @@
 
         <div class="title">
             <mat-card-title class="card-title">
-                <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> Team {{t.name || t.id}}</a>
+                <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> {{t.name || t.id}}</a>
             </mat-card-title>
           <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
@@ -47,7 +47,7 @@
       <div class="action-btn-container">
           
         <button mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
-         Disassign
+         Unassign
         </button>
       </div>
     </mat-card>
