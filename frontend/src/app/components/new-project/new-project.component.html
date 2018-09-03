@@ -2,7 +2,7 @@
 <h2>Create new project</h2>
 <form [formGroup]="projectForm" > 
     <mat-form-field class="field-full-width">
-        <input matInput placeholder="Enter name" formControlName="name" required minlength="4">
+        <input matInput appNoWhiteSpace placeholder="Enter name" formControlName="name" required minlength="4">
         <mat-error class="errors" *ngIf="name.invalid && (name.dirty || name.touched)">
         <div *ngIf="name.errors.required">
             Name is required. 
@@ -12,6 +12,9 @@
         </div>
         <div *ngIf="name.errors.maxlength">
             Name must be not longer than 25 characters long. 
+        </div>
+        <div *ngIf="name.errors?.WhiteSpace">
+            Spaces are not allowed
         </div>
     </mat-error>
 </mat-form-field>

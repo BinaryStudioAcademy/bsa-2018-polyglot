@@ -65,6 +65,7 @@ import { TeamComponent } from "./components/teams/team/team.component";
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
+import { NoWhiteSpaceDirective } from './directives/noWhiteSpace.directive';
 import { ProjectMessageComponent } from "./dialogs/project-message/project-message.component";
 import { SnotifyModule, SnotifyService, ToastDefaults } from "ng-snotify";
 import { ProjectDetailsComponent } from "./components/project-details/project-details.component";
@@ -150,6 +151,7 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
+    NoWhiteSpaceDirective,
     ProjectDetailsComponent,
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
