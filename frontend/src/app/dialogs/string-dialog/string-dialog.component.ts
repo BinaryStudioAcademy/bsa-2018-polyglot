@@ -44,7 +44,6 @@ export class StringDialogComponent implements OnInit {
     }
 
     receiveTags($event) {
-        this.str.tags = [];
         let tags: Tag[] = $event;
         for (let i = 0; i < tags.length; i++) {
             this.str.tags.push(tags[i].name);
