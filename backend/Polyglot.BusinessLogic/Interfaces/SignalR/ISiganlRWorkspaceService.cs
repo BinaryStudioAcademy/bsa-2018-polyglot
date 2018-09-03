@@ -6,13 +6,9 @@ namespace Polyglot.BusinessLogic.Interfaces.SignalR
     {
         Task ChangedTranslation(string groupName, int translationId);
         
-        Task CommentAdded(string groupName, int commentId);
+        Task СommentsChanged(string groupName, int commentId);
         
-        Task CommentDeleted(string groupName, int commentId);
-
-        Task CommentEdited(string groupName, int commentId);
-
-        Task ComplexStringAdded(string groupName, int complexStringId);
+       Task ComplexStringAdded(string groupName, int complexStringId);
 
         Task ComplexStringRemoved(string groupName, int complexStringId);
 

@@ -27,6 +27,7 @@ export class ChatContactsComponent implements OnInit {
     ngOnInit() {
         this.users = MOCK_USERS;
         this.onItemSelect.emit(this.users[0]);
+        
         this.chatService.getContacts(GroupType.users, 1)
         .subscribe((users) => {
             debugger;

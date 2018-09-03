@@ -17,19 +17,9 @@ namespace Polyglot.BusinessLogic.Services.SignalR
             await hubContext.Clients.Group(groupName).SendAsync(Action.changedTranslation.ToString(), await GetIdsResponce(translationId));
         }
 
-        public async Task CommentAdded(string groupName, int complexStringId)
+        public async Task СommentsChanged(string groupName, int complexStringId)
         {
-            await hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), await GetIdsResponce(complexStringId));
-        }
-
-        public async Task CommentDeleted(string groupName, int commentId)
-        {
-           await hubContext.Clients.Group(groupName).SendAsync(Action.commentDeleted.ToString(), await GetIdsResponce(commentId));
-        }
-
-        public async Task CommentEdited(string groupName, int commentId)
-        {
-           await hubContext.Clients.Group(groupName).SendAsync(Action.commentEdited.ToString(), await GetIdsResponce(commentId));
+            await hubContext.Clients.Group(groupName).SendAsync(Action.commentsChanged.ToString(), await GetIdsResponce(complexStringId));
         }
 
         public async Task ComplexStringAdded(string groupName, int complexStringId)

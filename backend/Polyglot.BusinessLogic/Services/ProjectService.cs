@@ -865,7 +865,48 @@ namespace Polyglot.BusinessLogic.Services
             return allActivities.OrderByDescending(act => act.DateTime);
         }
 
+        public async Task<ProjectTranslationStatisticsDTO> GetProjectLanguageStatistic(int projectId)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(projectId);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses?
+                    .Select(p => p.Language).ToList();
 
+                var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == projectId);
+                var totalTranslationsNeeded = projectStrings.Count * langs.Count();
+
+                int totalTranslationsDone = 0;
+
+                foreach (var language in langs)
+                {
+                    totalTranslationsDone += projectStrings.Count(x => x.Translations.Any(y => y.LanguageId == language.Id));
+                }
+
+                var progress = totalTranslationsNeeded == 0 ? 0 : (100 / totalTranslationsNeeded) * totalTranslationsDone;
+
+                return new ProjectTranslationStatisticsDTO
+                {
+                    ProjectId = projectId,
+                    Progress = progress,
+                    TotalComplexStringsTranslationCount = totalTranslationsNeeded,
+                    TranslatedStringsCount = totalTranslationsDone
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds)
+        {
+            var projectsStatistics = new List<ProjectTranslationStatisticsDTO>();
+            foreach (var projectId in projectIds)
+            {
+                projectsStatistics.Add(await GetProjectLanguageStatistic(projectId));
+            }
+
+            return projectsStatistics;
+        }
     }
 
 }

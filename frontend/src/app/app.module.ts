@@ -108,6 +108,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
+import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
 import { ChatComponent } from "./components/chat/chat.component";
@@ -181,14 +182,16 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     ProjectActivitiesComponent,
     TabReviewComponent,
     DownloadFileComponent,
-    StarRatingComponent,  
-    UserProfileComponent, 
+    StarRatingComponent,
+    UserProfileComponent,
     TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
     ChatComponent,
     ChatContactsComponent,
-    ChatWindowComponent
+    ChatWindowComponent,
+    ListTranslatorsComponent,
+    TabOptionalComponent
   ],
   imports: [
     BrowserModule,
@@ -226,11 +229,11 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     InfiniteScrollModule
   ],
   entryComponents: [
-    LoginDialogComponent, 
-    SignupDialogComponent, 
-    CropperComponent, 
+    LoginDialogComponent,
+    SignupDialogComponent,
+    CropperComponent,
     StringDialogComponent,
-    ProjectMessageComponent, 
+    ProjectMessageComponent,
     SelectProjectLanguageComponent,
     DeleteProjectLanguageComponent,
     ForgotPasswordDialogComponent,
@@ -246,7 +249,7 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
-    { 
+    {
       provide: 'SnotifyToastConfig',
       useValue: SnotifyGlobalConfig
     },
