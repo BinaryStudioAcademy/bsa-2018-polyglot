@@ -2,10 +2,10 @@
   <form (submit)="onSubmit()">
     <h4>Create Glossary </h4>
       <mat-form-field>
-        <input id="key" name="key" type="text" [(ngModel)]="glossary.name" required matInput placeholder="Name"
+        <input id="key" appNoWhiteSpace name="key" type="text" [(ngModel)]="glossary.name" required matInput placeholder="Name"
                 #key="ngModel" autocomplete="yes">
         <mat-error >
-          Name is required
+          Error
         </mat-error>
       </mat-form-field>
 
