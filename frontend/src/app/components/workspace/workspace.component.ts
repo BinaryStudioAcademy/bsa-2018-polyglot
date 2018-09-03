@@ -31,6 +31,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private elementsOnPage = 7;
     public isLoad: boolean;
     public projectLanguagesCount: number;
+    public stringsInProgress: number[] = [];
 
     public projectTags: string[] = [];
 
@@ -65,6 +66,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
+        console.log(this.stringsInProgress);
         this.filters = [];
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -227,6 +229,23 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
         );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.complexStringTranslatingStarted
+            ],
+            (response: any) => {
+                console.log(response.ids[0]);
+                this.stringsInProgress.push(response.ids[0]);
+            }
+        );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.complexStringTranslatingFinished
+            ],
+            (response: any) => {
+                console.log(response);
+            }
+        );
     }
 
     onFilterApply() {
@@ -279,6 +298,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.getKeys(this.currentPage, keys => {
             this.keys = this.keys.concat(keys);
         });
+        this.complexStringService.changeStringStatus(this.selectedKey.id, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, 1).subscribe(
+            () => {}
+        );
     }
 
     getKeys(page: number = 1, saveResultsCallback: (keys) => void) {
@@ -311,7 +333,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     isStringInProgress(key) {
-        // check if somebody is working on this string
+        if (this.stringsInProgress.includes(key.id)) {
+            return true;
+        }
         return false;
     }
 }

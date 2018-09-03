@@ -56,5 +56,15 @@ namespace Polyglot.BusinessLogic.Services.SignalR
         {
             await hubContext.Clients.Group(groupName).SendAsync(Action.languageTranslationCommitted.ToString(), await GetIdsResponce(languageId));
         }
+
+        public async Task ComplexStringTranslatingStarted(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingStarted.ToString(), await GetIdsResponce(complexStringId));
+        }
+
+        public async Task ComplexStringTranslatingFinished(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingFinished.ToString(), await GetIdsResponce(complexStringId));
+        }
     }
 }

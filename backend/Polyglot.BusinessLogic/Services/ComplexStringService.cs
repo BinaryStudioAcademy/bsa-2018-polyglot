@@ -389,6 +389,16 @@ namespace Polyglot.BusinessLogic.Services
             return history;
         }
 
-       
+        public async Task ChangeStringStatus(int id, int status, string groupName)
+        {
+            if (status == 1)
+            {
+                await signalRService.ComplexStringTranslatingStarted(groupName, id);
+            }
+            else
+            {
+                await signalRService.ComplexStringTranslatingFinished(groupName, id);
+            }
+        }
     }
 }
