@@ -24,7 +24,7 @@
                           <mat-card-subtitle (click)="redirectById(t.createdBy.id)" class="card-subtitle">{{t.createdBy.fullName}}</mat-card-subtitle>
                       </div>
                       <div class="action-btn-container">
-                            <button mat-icon-button [mat-dialog-close]="true" routerLink="/dashboard/teams/{{t.id}}">
+                            <button mat-icon-button [mat-dialog-close]="true" routerLink="/team/details/{{t.id}}">
                               <mat-icon class="icon team-info-icon" aria-label="team-details">info</mat-icon>
                             </button>
                       </div>

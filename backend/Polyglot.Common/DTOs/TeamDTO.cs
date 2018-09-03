@@ -9,10 +9,12 @@ namespace Polyglot.Common.DTOs
         public UserProfileDTO CreatedBy { get; set; }
         
         public List<TranslatorDTO> TeamTranslators { get; set; }
+        public List<TeamProjectDTO> TeamProjects { get; set; }
 
         public TeamDTO()
         {
             TeamTranslators = new List<TranslatorDTO>();
+            TeamProjects = new List<TeamProjectDTO>();
         }    
     }
 }
