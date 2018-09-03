@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Polyglot.BusinessLogic.Hubs;
-using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.Helpers.SignalR;
 using System.Threading.Tasks;
 

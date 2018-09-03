@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../environments/environment";
-import { HubConnection } from "@aspnet/signalr";
+import { ChatActions } from "../models/signalrModels/chat-actions";
 import { AppStateService } from "./app-state.service";
 
 @Injectable({
@@ -74,6 +74,10 @@ export class SignalrService {
         } else {
             return false;
         }
+    }
+
+    public sendMessage(groupName: string, message: string) {
+        this.connection.send(ChatActions[ChatActions.sendMessage], "",  message);
     }
 
     connect(groupName: string, hubUrl: string): Promise<void> {

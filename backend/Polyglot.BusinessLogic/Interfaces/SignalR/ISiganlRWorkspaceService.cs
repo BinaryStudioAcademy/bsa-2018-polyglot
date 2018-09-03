@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Polyglot.BusinessLogic.Interfaces
+namespace Polyglot.BusinessLogic.Interfaces.SignalR
 {
     public interface ISignalRWorkspaceService
     {
