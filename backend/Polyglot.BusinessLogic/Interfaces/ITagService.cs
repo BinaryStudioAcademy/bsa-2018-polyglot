@@ -1,9 +1,13 @@
-﻿using Polyglot.Common.DTOs;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    interface ITagService : ICRUDService<Tag,TagDTO>
+    public interface ITagService : ICRUDService<Tag,TagDTO>
     {
+        Task<IEnumerable<TagDTO>> GetProjectTags(int projectId);
+        Task<IEnumerable<TagDTO>> AddTagsToProject(IEnumerable<TagDTO> tags);
     }
 }

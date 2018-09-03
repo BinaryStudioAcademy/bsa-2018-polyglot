@@ -29,7 +29,7 @@
         <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <app-tags [allTags] = "getAllTags()"
+    <app-tags [allTags] = "Tags"
     (tagsEvent) = "receiveTags($event)"></app-tags>
     <button 
       type="submit" 

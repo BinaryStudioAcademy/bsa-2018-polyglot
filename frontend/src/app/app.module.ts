@@ -101,6 +101,7 @@ import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
+import { SelectColorDialogComponent } from './dialogs/select-color-dialog/select-color-dialog.component';
 
 
 
@@ -175,7 +176,8 @@ import { TabOptionalComponent } from './components/workspace/key-details/tab-opt
     UserProfileComponent, 
     TabGlossaryComponent,
     AssignGlossariesComponent,
-    TabOptionalComponent
+    TabOptionalComponent,
+    SelectColorDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -229,7 +231,8 @@ import { TabOptionalComponent } from './components/workspace/key-details/tab-opt
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    SelectColorDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

@@ -8,6 +8,7 @@ import { MatDialogRef } from '@angular/material';
 import { SnotifyService, SnotifyPosition, SnotifyToastConfig } from 'ng-snotify';
 import { EventEmitter } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { TagService } from '../../services/tag.service';
 
 @Component({
   selector: 'app-string-dialog',
@@ -20,6 +21,7 @@ export class StringDialogComponent implements OnInit {
   @Output() onAddString = new EventEmitter<IString>(true);
   public str: IString;
   public image: File;
+  public Tags;
 
   public projectId: number;
 
@@ -33,21 +35,14 @@ export class StringDialogComponent implements OnInit {
     for (let i = 0; i < tags.length; i++) {
       this.str.tags.push(tags[i]);
     }
-  }
-
-  getAllTags(): Tag[] {
-    let tags: Tag[] = [
-      { name: 'FirstTag', color: '', id: 0},
-      { name: 'SecondTag', color: '', id: 0},
-      { name: 'ThirdTag', color: '', id: 0}
-    ];
-    return tags;
+    console.log($event);
   }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private complexStringService: ComplexStringService,
     public dialogRef: MatDialogRef<StringDialogComponent>,
+    private tagService : TagService,
     private snotifyService: SnotifyService) { }
 
 
@@ -68,7 +63,8 @@ export class StringDialogComponent implements OnInit {
   }
 
   onSubmit(){
-
+    this.tagService.addTagsToProject(this.str.tags,this.data.projectId).subscribe(res => {
+    this.str.tags = res;
     let formData = new FormData();
     if(this.image)
       formData.append("image", this.image);
@@ -94,6 +90,7 @@ export class StringDialogComponent implements OnInit {
           this.snotifyService.success("ComplexString wasn`t created", "Error!");
           this.dialogRef.close();
         });
+      });
   }
 }
 

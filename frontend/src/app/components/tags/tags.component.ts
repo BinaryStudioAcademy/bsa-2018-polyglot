@@ -1,10 +1,11 @@
 import { Tag } from '../../models/tag';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Component, ElementRef, ViewChild, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
+import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog} from '@angular/material';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { SelectColorDialogComponent } from '../../dialogs/select-color-dialog/select-color-dialog.component';
 
 @Component({
   selector: 'app-tags',
@@ -16,16 +17,18 @@ export class TagsComponent  {
   selectable = true;
   removable = true;
   addOnBlur = false;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
   tagCtrl = new FormControl();
   filteredTags: Observable<Tag[]> = new Observable<Tag[]>();
   tags: Tag[] = new Array<Tag>();
+  colors : string[] = ['#61bd4f','#f2d600','#ff9f1a','#eb5a46','#c377e0',
+                    '#0079bf','#00c2e0','#51e898','#ff78cb','#4d4d4d','#b6bbbf']
   @Output() tagsEvent = new EventEmitter<Tag[]>();
   @Input() allTags: Tag[];
 
   @ViewChild('tagInput') tagInput: ElementRef;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
         startWith(null),
         map((str: any | null) => {
@@ -48,14 +51,22 @@ export class TagsComponent  {
     const input = event.input;
     const value = event.value;
 
+    const dialogRef = this.dialog.open(SelectColorDialogComponent, {
+      width: '420px',height: '360px',
+      data: this.colors});
+    dialogRef.afterClosed().subscribe(res => { 
+
     if (((value || '').trim()) && value.length <= 15) {
-      this.tags.push({name: value.trim(), color: '', id: 0, projectTags:[]});
+      this.tags.push({name: value.trim(), color: res, id: 0});
     }
 
     if (input) {
       input.value = '';
     }
     this.tagCtrl.setValue(null);
+
+    this.updateTags();
+  })
   }
 
   remove(tag: Tag): void {
@@ -68,7 +79,7 @@ export class TagsComponent  {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.tags.push({name: event.option.viewValue, color:'', id: 0, projectTags:[]});
+    this.tags.push({name: event.option.viewValue, color:'', id: 0});
     this.tagInput.nativeElement.value = '';
     this.tagCtrl.setValue(null);
   }

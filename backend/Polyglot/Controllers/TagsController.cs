@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -10,9 +11,9 @@ namespace Polyglot.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private readonly ICRUDService<Tag, TagDTO> service;
+        private readonly ITagService service;
 
-        public TagsController(ICRUDService<Tag, TagDTO> service)
+        public TagsController(ITagService service)
         {
             this.service = service;
         }
@@ -35,18 +36,6 @@ namespace Polyglot.Controllers
                 : Ok(project);
         }
 
-        // POST: Tags
-        public async Task<IActionResult> AddTag([FromBody]TagDTO project)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest() as IActionResult;
-
-            var entity = await service.PostAsync(project);
-            return entity == null ? StatusCode(409) as IActionResult
-                : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                entity);
-        }
-
         // PUT: Tags/5
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyTag(int id, [FromBody]TagDTO project)
@@ -65,6 +54,14 @@ namespace Polyglot.Controllers
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> AddTagsToProject(int id, [FromBody]List<TagDTO> tags)
+        {
+            var entity = await service.AddTagsToProject(tags);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }
