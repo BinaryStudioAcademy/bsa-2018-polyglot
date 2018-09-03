@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.QueryTypes;
+using Polyglot.DataAccess.ViewsRepository;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
@@ -11,12 +13,13 @@ namespace Polyglot.DataAccess.SqlRepository
     {
 		private DbContext context;
         private Dictionary<Type, object> repositories;
+        private Dictionary<Type, object> viewData;
 
-		public UnitOfWork(DbContext c)
+        public UnitOfWork(DbContext c)
 		{
 			context = c;
             repositories = new Dictionary<Type, object>();
-
+            viewData = new Dictionary<Type, object>();
         }
 
         public IRepository<T> GetRepository<T>() where T : Entity, new() 
@@ -34,7 +37,23 @@ namespace Polyglot.DataAccess.SqlRepository
             }
         }
 
-		public async Task<int> SaveAsync()
+        public IViewData<T> GetViewData<T>()
+            where T : QueryType, new()
+        {
+            var targetType = typeof(T);
+            if (viewData.ContainsKey(targetType))
+            {
+                return viewData[targetType] as IViewData<T>;
+            }
+            else
+            {
+                var viewDataInstance = new ViewData<T>(context);
+                viewData.Add(targetType, viewDataInstance);
+                return viewDataInstance;
+            }
+        }
+
+        public async Task<int> SaveAsync()
 		{
 			return await context.SaveChangesAsync();
 		}

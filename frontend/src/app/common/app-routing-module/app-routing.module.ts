@@ -25,7 +25,9 @@ import { ProjectDetailsComponent } from '../../components/project-details/projec
 import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
 import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
+import { ChatComponent } from '../../components/chat/chat.component';
 import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
+import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
 
 
   
@@ -49,8 +51,7 @@ const routes: Routes = [
       { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'glossaries/:glossaryId', component: GlossaryComponent },
-      { path: 'strings', component: NoFoundComponent },
-      { path: 'abc', component: TeamComponent }
+      { path: 'strings', component: NoFoundComponent }
     ]
   },
   { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
@@ -63,6 +64,11 @@ const routes: Routes = [
         component : KeyDetailsComponent
       }
     ]
+  },
+  { 
+    path: 'chat', 
+    canActivate: [AuthGuard], 
+    component: ChatComponent
   },
   { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },

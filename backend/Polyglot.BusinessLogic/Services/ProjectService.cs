@@ -21,7 +21,9 @@ using Polyglot.DataAccess.Helpers;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
-using Language = Polyglot.DataAccess.Entities.Language;
+using Polyglot.Common.Helpers.SignalR;
+using Polyglot.Core.SignalR.Responses;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -29,19 +31,22 @@ namespace Polyglot.BusinessLogic.Services
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
         public IFileStorageProvider fileStorageProvider;
-        private readonly IComplexStringService _stringService;
-        ICRUDService<UserProfile, UserProfileDTO> _userService;
+        private readonly IComplexStringService stringService;
+        private readonly ISignalRWorkspaceService signalrService;
+        ICRUDService<UserProfile, UserProfileDTO> userService;
         private readonly IElasticClient _elasticClient;
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
-            IFileStorageProvider provider, IComplexStringService stringService, IUserService userService, IElasticClient elasticClient)
+            IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
+            ISignalRWorkspaceService signalrService, IElasticClient elasticClient)
             : base(uow, mapper)
         {
             stringsProvider = rep;
             this.fileStorageProvider = provider;
-            this._stringService = stringService;
-            this._userService = userService;
+            this.stringService = stringService;
+            this.userService = userService;
+            this.signalrService = signalrService;
             _elasticClient = elasticClient;
         }
 
@@ -183,29 +188,7 @@ namespace Polyglot.BusinessLogic.Services
             return arr;
 
         }
-
-
-        public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
-        {
-            var user = await CurrentUser.GetCurrentUserProfile();
-            List<Project> result = new List<Project>();
-            if (user.UserRole == Role.Manager)
-            {
-                result = await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id);
-            }
-            else
-            {
-                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
-
-                translatorTeams.ForEach(team => team.Team.ProjectTeams.ToList()
-                    .ForEach(project => result.Add(project.Project)));
-
-                result = result.Distinct().ToList();
-            }
-            return mapper.Map<List<ProjectDTO>>(result);
-        }
-
-
+        
         #region Teams
 
         public async Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId)
@@ -365,6 +348,8 @@ namespace Polyglot.BusinessLogic.Services
 
             await uow.GetRepository<Project>().Update(project);
             await uow.SaveAsync();
+
+            await signalrService.LanguagesAdded($"{Group.project}{project.Id}", languageIds);
             return mapper.Map<ProjectDTO>(project);
         }
 
@@ -396,6 +381,7 @@ namespace Polyglot.BusinessLogic.Services
 
                         await stringsProvider.Update(projectStrings[i]);
                     }
+                    await signalrService.LanguageRemoved($"{Group.project}{projectId}", languageId);
                     return true;
                 }
             }
@@ -405,6 +391,26 @@ namespace Polyglot.BusinessLogic.Services
         #endregion Languages
 
         #region Project overrides
+
+        public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
+        {
+            var user = await CurrentUser.GetCurrentUserProfile();
+            List<Project> result = new List<Project>();
+            if (user.UserRole == Role.Manager)
+            {
+                result = await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id);
+            }
+            else
+            {
+                var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
+
+                translatorTeams.ForEach(team => team.Team.ProjectTeams.ToList()
+                    .ForEach(project => result.Add(project.Project)));
+
+                result = result.Distinct().ToList();
+            }
+            return mapper.Map<List<ProjectDTO>>(result);
+        }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
         {
@@ -810,7 +816,7 @@ namespace Polyglot.BusinessLogic.Services
                     DateTime = DateTime.Now
                 });
 
-                var comments = await this._stringService.GetCommentsAsync(projectString.Id);
+                var comments = await this.stringService.GetCommentsAsync(projectString.Id);
 
                 foreach (var comment in comments)
                 {
@@ -822,10 +828,10 @@ namespace Polyglot.BusinessLogic.Services
                     });
                 }
 
-                var translations = await this._stringService.GetStringTranslationsAsync(projectString.Id);
+                var translations = await this.stringService.GetStringTranslationsAsync(projectString.Id);
                 foreach (var translation in translations)
                 {
-                    var user = await this._userService.GetOneAsync(translation.UserId);
+                    var user = await this.userService.GetOneAsync(translation.UserId);
                     allActivities.Add(new ActivityDTO()
                     {
                         Message = $"New translation was added in string with key {projectString.Key} by {user.FullName}",
@@ -834,7 +840,7 @@ namespace Polyglot.BusinessLogic.Services
                     });
                     foreach (var trans in translation.History)
                     {
-                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        var user2 = await this.userService.GetOneAsync(trans.UserId);
                         allActivities.Add(new ActivityDTO()
                         {
                             Message = $"Translation in string with key {projectString.Key} was added by {user2.FullName}(obsolete)",
@@ -844,7 +850,7 @@ namespace Polyglot.BusinessLogic.Services
                     }
                     foreach (var trans in translation.OptionalTranslations)
                     {
-                        var user2 = await this._userService.GetOneAsync(trans.UserId);
+                        var user2 = await this.userService.GetOneAsync(trans.UserId);
                         allActivities.Add(new ActivityDTO()
                         {
                             Message = $"Optional translation in string with key {projectString.Key} was added by {user2.FullName}",
@@ -875,7 +881,48 @@ namespace Polyglot.BusinessLogic.Services
             return allActivities.OrderByDescending(act => act.DateTime);
         }
 
+        public async Task<ProjectTranslationStatisticsDTO> GetProjectLanguageStatistic(int projectId)
+        {
+            var proj = await uow.GetRepository<Project>().GetAsync(projectId);
+            if (proj != null && proj.ProjectLanguageses.Count > 0)
+            {
+                var langs = proj.ProjectLanguageses?
+                    .Select(p => p.Language).ToList();
 
+                var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == projectId);
+                var totalTranslationsNeeded = projectStrings.Count * langs.Count();
+
+                int totalTranslationsDone = 0;
+
+                foreach (var language in langs)
+                {
+                    totalTranslationsDone += projectStrings.Count(x => x.Translations.Any(y => y.LanguageId == language.Id));
+                }
+
+                var progress = totalTranslationsNeeded == 0 ? 0 : (100 / totalTranslationsNeeded) * totalTranslationsDone;
+
+                return new ProjectTranslationStatisticsDTO
+                {
+                    ProjectId = projectId,
+                    Progress = progress,
+                    TotalComplexStringsTranslationCount = totalTranslationsNeeded,
+                    TranslatedStringsCount = totalTranslationsDone
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds)
+        {
+            var projectsStatistics = new List<ProjectTranslationStatisticsDTO>();
+            foreach (var projectId in projectIds)
+            {
+                projectsStatistics.Add(await GetProjectLanguageStatistic(projectId));
+            }
+
+            return projectsStatistics;
+        }
     }
 
 }

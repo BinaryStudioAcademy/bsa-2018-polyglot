@@ -49,13 +49,22 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
 
         this.projectService.getAll().subscribe(pr => {
-            if(pr){
-            this.cards = pr;
-            if (this.cards.length === 0 && this.onPage === true && this.isCurrentUserManager()) {
-                setTimeout(() => this.openDialog());
+            if (pr) {
+                this.cards = pr;
+                this.projectService.getProjectsTranslationStatistics(this.cards.map(project => project.id)).subscribe(statistics => {
+                    for (let i = 0; i < this.cards.length; i++) {
+                        this.cards[i].projectStatistics = statistics.find(project => project.projectId === this.cards[i].id);
+                        }
+                    });
+                if (
+                    this.cards.length === 0 &&
+                    this.onPage === true &&
+                    this.isCurrentUserManager()
+                ) {
+                    setTimeout(() => this.openDialog());
+                }
+                this.isLoad = false;
             }
-            this.isLoad = false;
-        }
         });
     }
 
@@ -76,8 +85,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             this.checked = true;
         }
     }
-    
-    isCurrentUserManager(){
+
+    isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
     }
 }

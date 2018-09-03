@@ -1,4 +1,8 @@
 export enum SignalrGroups {
     complexString,
-    project
+    project,
+    chatShared,
+    chatTeams,
+    chatProject,
+    chatUser
 }

@@ -12,7 +12,7 @@
   <mat-list>
     <div class="list-item" *ngFor="let glossary of glossaries">
       <div class="row-name">
-          <a mat-button routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]"><h3>{{glossary.name}}</h3></a>
+          <a mat-button routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]">{{glossary.name}}</a>
       </div>
       <div class="row-info">                
         <span class="row-description" >{{glossary.originLanguage.name}}</span>     
