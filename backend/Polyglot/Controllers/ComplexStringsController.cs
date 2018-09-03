@@ -57,6 +57,7 @@ namespace Polyglot.Controllers
                 : Ok(mapper.Map<IEnumerable<TranslationDTO>>(translation));
         }
 
+
         // PUT: ComplexStrings/5/translations
         [HttpPost("{id}/translations")]
         public async Task<IActionResult> SetStringTranslation(int id, [FromBody]TranslationDTO translation)
@@ -206,9 +207,9 @@ namespace Polyglot.Controllers
         }
         
         [HttpGet("{id}/history/{translationId}")]
-        public async Task<IActionResult> GetHistory(int id, Guid translationId)
+        public async Task<IActionResult> GetHistory(int id, Guid translationId, [FromQuery(Name = "itemsOnPage")] int itemsOnPage, [FromQuery(Name = "page")] int page = 0)
         {
-            var response = await dataProvider.GetHistoryAsync(id, translationId);
+            var response = await dataProvider.GetHistoryAsync(id, translationId, itemsOnPage, page);
             return response == null ? StatusCode(400) as IActionResult
                 : Ok(response);
         }

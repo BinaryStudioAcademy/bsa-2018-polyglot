@@ -3,6 +3,7 @@ import { HttpService, RequestMethod } from './http.service';
 import { Observable, of } from 'rxjs';
 import { Language, Project, LanguageStatistic } from  '../models';
 import { map, filter } from '../../../node_modules/rxjs/operators';
+import { ProjectTranslationStatistics } from '../models/projectTranslationStatistics';
 
 @Injectable({
   providedIn: 'root'
@@ -130,5 +131,13 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
   getProjectReports(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
 
+  }
+
+  getProjectTranslationStatistics(id: number): Observable<ProjectTranslationStatistics> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/statistics', undefined, undefined);
+  }
+
+  getProjectsTranslationStatistics(projectIds: Array<number>): Observable<Array<ProjectTranslationStatistics>> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/statistics', undefined, projectIds);
   }
 }

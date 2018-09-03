@@ -1,18 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace Polyglot.BusinessLogic.Interfaces
+namespace Polyglot.BusinessLogic.Interfaces.SignalR
 {
     public interface ISignalRWorkspaceService
     {
         Task ChangedTranslation(string groupName, int translationId);
         
-        Task CommentAdded(string groupName, int commentId);
+        Task СommentsChanged(string groupName, int commentId);
         
-        Task CommentDeleted(string groupName, int commentId);
-
-        Task CommentEdited(string groupName, int commentId);
-
-        Task ComplexStringAdded(string groupName, int complexStringId);
+       Task ComplexStringAdded(string groupName, int complexStringId);
 
         Task ComplexStringRemoved(string groupName, int complexStringId);
 

@@ -69,18 +69,19 @@ namespace Polyglot
             CoreModule.ConfigureMiddleware(app);
             DataAccessModule.ConfigureMiddleware(app);
 
-           // if (env.IsDevelopment())
-          //  {
-                app.UseCors("AllowAll");
-           // }
+            // if (env.IsDevelopment())
+            //  {
+            app.UseCors("AllowAll");
+            // }
 
             app.UseAuthentication();
 
             app.UseMvc();
-
+            
             app.UseAzureSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
+                options.MapHub<ChatHub>("/chatHub");
             });
 
         }

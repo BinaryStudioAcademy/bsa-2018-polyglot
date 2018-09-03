@@ -71,8 +71,8 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + id + '/comments/' + commentId, undefined);
   }
 
-  getTranslationHistory(id: number, translationId: string) {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, undefined);
+  getTranslationHistory(id: number, translationId: string, itemsOnPage: number, page: number) {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage='+itemsOnPage+'&page='+page);
   }
 
   addOptionalTranslation(stringId, translationId, value) {
