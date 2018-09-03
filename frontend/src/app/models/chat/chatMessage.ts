@@ -10,5 +10,5 @@ export interface ChatMessage {
 
     receivedDate: Date;
 
-    IsRead: boolean;
+    isRead: boolean;
 }

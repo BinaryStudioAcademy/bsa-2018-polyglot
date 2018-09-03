@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
@@ -9,16 +10,21 @@ using Polyglot.Common.Helpers;
 
 namespace Polyglot.Controllers
 {
-   // [Authorize]
+    [Produces("application/json")]
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService chatService;
+        private readonly IProjectService projectService;
+        private readonly ITeamService teamService;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService, IProjectService projectService, ITeamService teamService)
         {
             this.chatService = chatService;
+            this.projectService = projectService;
+            this.teamService = teamService;
         }
 
         // GET: /chat/users/:userId/contacts
@@ -52,7 +58,7 @@ namespace Polyglot.Controllers
         [HttpGet("projects")]
         public async Task<IActionResult> GetProjects()
         {
-            var projects = await chatService.GetProjectsAsync();
+            var projects = await projectService.GetListAsync();
             return projects == null ? NotFound("No projects found!") as IActionResult
                 : Ok(projects);
         }
@@ -70,7 +76,7 @@ namespace Polyglot.Controllers
         [HttpGet("teams")]
         public async Task<IActionResult> GetTeams()
         {
-            var contacts = await chatService.GetTeamsAsync();
+            var contacts = await teamService.GetListAsync();
             return contacts == null ? NotFound("No teams found!") as IActionResult
                 : Ok(contacts);
         }

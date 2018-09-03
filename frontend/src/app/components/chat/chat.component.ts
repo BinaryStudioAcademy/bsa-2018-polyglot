@@ -6,6 +6,8 @@ import { ChatActions } from "../../models/signalrModels/chat-actions";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { Hub } from "../../models/signalrModels/hub";
 import { ProjectService } from "../../services/project.service";
+import { ChatService } from "../../services/chat.service";
+import { AppStateService } from "../../services/app-state.service";
 
 @Component({
     selector: "app-chat",
@@ -13,6 +15,10 @@ import { ProjectService } from "../../services/project.service";
     styleUrls: ["./chat.component.sass"]
 })
 export class ChatComponent implements OnInit {
+    selectedUser: any = 
+    {
+        fullName: ""
+    };
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
 
@@ -20,7 +26,9 @@ export class ChatComponent implements OnInit {
         private renderer: Renderer2,
         private changeDetectorRef: ChangeDetectorRef,
         private media: MediaMatcher,
-        private signalRService: SignalrService
+        private signalRService: SignalrService,
+        private chatService: ChatService,
+        private appState: AppStateService
     ) {
         this.mobileQuery = media.matchMedia("(max-width: 600px)");
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -34,6 +42,11 @@ export class ChatComponent implements OnInit {
             SignalrGroups[SignalrGroups.chatShared],
             Hub[Hub.chatHub]
         );
+        this.signalRService.createConnection(
+            `${SignalrGroups[SignalrGroups.chatUser]}
+            ${this.appState.currentDatabaseUser.id}`,
+            Hub[Hub.chatHub]
+        );
         this.subscribeChatEvents();
     }
 
@@ -42,6 +55,11 @@ export class ChatComponent implements OnInit {
         this.signalRService.closeConnection(
             SignalrGroups[SignalrGroups.chatShared]
         );
+    }
+
+    onSelected($event){
+        debugger;
+        this.selectedUser = $event;
     }
 
     subscribeChatEvents() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpService, RequestMethod } from './http.service';
-import { GroupType, ChatContacts } from '../models';
+import { GroupType, ChatContacts, Project, Team, ChatMessage } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -13,23 +13,24 @@ export class ChatService {
     this.api = "chat";
   }
 
-  getContacts(group: GroupType, groupId: number) : Observable<ChatContacts> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${group}`, groupId);
+  getContacts(targetGroup: GroupType, targetGroupId: number) : Observable<ChatContacts> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[targetGroup]}/${targetGroupId}/contacts`);
   }
 
-  getProjectsList() : Observable<any> {
+  getProjectsList() : Observable<Project[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/projects');
   }
 
-  getTeamsList() : Observable<any> {
+  getTeamsList() : Observable<Team[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/teams');
   }
 
-  getMessagesHistory(group: GroupType, targetGroupId: number) : Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${group}/${targetGroupId}/messages`);
+  getMessagesHistory(group: GroupType, targetGroupId: number) : Observable<ChatMessage[]> {
+    debugger;
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/${targetGroupId}/messages`);
   }
 
-  getMessage(group: GroupType, targetGroupId: number, targetMessageId: number) : Observable<any> {
+  getMessage(group: GroupType, targetGroupId: number, targetMessageId: number) : Observable<ChatMessage> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${group}/${targetGroupId}/messages`, targetMessageId);
   }
 

@@ -27,6 +27,7 @@ import { GlossaryComponent } from '../../components/glossaries/glossary/glossary
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { ChatComponent } from '../../components/chat/chat.component';
 import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
+import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
 
 
   
@@ -65,8 +66,12 @@ const routes: Routes = [
       }
     ]
   },
+  { 
+    path: 'chat', 
+    canActivate: [AuthGuard], 
+    component: ChatComponent
+  },
   { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
-  { path: 'chat', component: ChatComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }

@@ -1,5 +1,5 @@
 export enum GroupType {
-    user,
-    project,
-    team
+    users,
+    projects,
+    teams
 }
