@@ -14,41 +14,56 @@ using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Services
 {
-    public class ChatService : IChatService
+    public class ChatService : CRUDService<Project, ProjectDTO>, IChatService
     {
         private readonly IProjectService projectService;
         private readonly ITeamService teamService;
-        private readonly IMapper mapper;
 
         public ChatService(IProjectService projectService,
-            ITeamService teamService, IMapper mapper)
+            ITeamService teamService, IMapper mapper, IUnitOfWork uow)
+            :base(uow, mapper)
         {
             this.projectService = projectService;
             this.teamService = teamService;
-            this.mapper = mapper;
         }
 
         public async Task<ChatContactsDTO> GetContactsAsync(ChatGroup targetGroup, int targetGroupItemId)
         {
-            return null;
-            //var currentUser = CurrentUser.GetCurrentUserProfile();
-            //var user = await CurrentUser.GetCurrentUserProfile();
-            //List<Project> result = new List<Project>();
-            //if (user.UserRole == Role.Manager)
-            //{
-            //    result = await uow.GetRepository<Project>().GetAllAsync(x => x.UserProfile.Id == user.Id);
-            //}
-            //else
-            //{
-            //    var translatorTeams = await uow.GetRepository<TeamTranslator>().GetAllAsync(x => x.TranslatorId == user.Id);
-            //
-            //    translatorTeams.ForEach(team => team.Team.ProjectTeams.ToList()
-            //        .ForEach(project => result.Add(project.Project)));
-            //
-            //    result = result.Distinct().ToList();
-            //}
-            //return mapper.Map<List<ProjectDTO>>(result);
-            //return new ChatContactsDTO();
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            ChatContactsDTO contacts = new ChatContactsDTO()
+            {
+                ChatUserId = targetGroupItemId
+            };
+
+            if (currentUser.UserRole == Role.Manager)
+            {
+                var users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
+                    .SelectMany(p => p.ProjectTeams)
+                    .Select(pt => pt.Team)
+                    .SelectMany(t => t.TeamTranslators)
+                    .Select(tt => tt.UserProfile);
+                
+                contacts.ContactList = mapper.Map<IEnumerable<ChatUserDTO>>(users);
+            }
+            else
+            {
+                var translatorTeams = (await uow.GetRepository<TeamTranslator>()
+                    .GetAllAsync(x => x.TranslatorId == currentUser.Id))
+                    .Select(tt => tt.Team);
+
+                var users = translatorTeams
+                    .SelectMany(t => t.TeamTranslators)
+                    .Select(tt => tt.UserProfile).Where(u => u.Id != currentUser.Id).ToList();
+
+                users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
+                
+                contacts.ContactList = mapper.Map<IEnumerable<ChatUserDTO>>(users);
+
+            }
+            return contacts;
         }
 
         public Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync()

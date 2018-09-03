@@ -28,16 +28,25 @@ export class ChatContactsComponent implements OnInit {
         this.users = MOCK_USERS;
         this.onItemSelect.emit(this.users[0]);
         
-        this.chatService.getContacts(GroupType.users, 1)
+        setTimeout(() => {
+            this.chatService.getProjectsList().subscribe((projects: Project[]) => {
+                if (projects) {
+                    debugger;
+                    this.projects = projects;
+                }
+            });
+        }, 500);
+
+        setTimeout(() => {
+            this.chatService.getContacts(GroupType.users, 1)
         .subscribe((users) => {
             debugger;
-        });
-        this.chatService.getProjectsList().subscribe((projects: Project[]) => {
-            if (projects) {
-                debugger;
-                this.projects = projects;
+            if(users && users.contactList && users.contactList.length){
+                Array.prototype.push.apply(this.users, users.contactList);
             }
         });
+        }, 500);
+        
         this.chatService.getTeamsList().subscribe((teams: Team[]) => {
             if (teams) {
                 debugger;
