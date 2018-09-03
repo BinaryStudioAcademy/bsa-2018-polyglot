@@ -11,12 +11,6 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
-using Polyglot.Core.Authentication;
-using Polyglot.DataAccess.Elasticsearch;
-using Polyglot.DataAccess.ElasticsearchModels;
-using Polyglot.DataAccess.MongoModels;
-using Polyglot.Hubs;
-using Polyglot.Hubs.Helpers;
 using System.Linq;
 using Polyglot.DataAccess.Helpers;
 

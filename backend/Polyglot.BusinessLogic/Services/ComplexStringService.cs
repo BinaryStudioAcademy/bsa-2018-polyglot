@@ -420,7 +420,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<string> ReIndex()
         {
-            var allPosts = (await _repository.GetAllAsync()).ToList();
+            var allPosts = (await repository.GetAllAsync()).ToList();
 
             var res = await ElasticRepository.ReIndex(allPosts);
 
