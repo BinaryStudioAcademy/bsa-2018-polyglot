@@ -1,4 +1,4 @@
-<div class="content" *ngIf="history">
+<mat-list class="content" *ngIf="history" ngxInfiniteScroller horizontal="false" (onScrollDown)="onScrollDown()">
   <div class="story" *ngFor="let story of history">
     <mat-card class="story-card">
       <div class="head">
@@ -9,4 +9,4 @@
       <p class="date">{{story.when | date:'medium'}}</p>
     </mat-card>
   </div>
-</div>
+</mat-list>

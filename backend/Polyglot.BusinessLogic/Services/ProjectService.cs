@@ -875,8 +875,12 @@ namespace Polyglot.BusinessLogic.Services
                 var projectStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == projectId);
                 var totalTranslationsNeeded = projectStrings.Count * langs.Count();
 
-                var totalTranslationsDone = projectStrings.Count(x =>
-                    x.Translations.Any(y => langs.Any(lang => lang.Id == y.LanguageId)));
+                int totalTranslationsDone = 0;
+
+                foreach (var language in langs)
+                {
+                    totalTranslationsDone += projectStrings.Count(x => x.Translations.Any(y => y.LanguageId == language.Id));
+                }
 
                 var progress = totalTranslationsNeeded == 0 ? 0 : (100 / totalTranslationsNeeded) * totalTranslationsDone;
 
