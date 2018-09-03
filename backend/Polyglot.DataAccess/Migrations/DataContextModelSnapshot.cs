@@ -141,7 +141,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("OptionID");
 
-                    b.ToTable("NotificationOptions");
+                    b.ToTable("NotificationOption");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>

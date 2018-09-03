@@ -10,7 +10,7 @@ using Polyglot.DataAccess.SqlRepository;
 namespace Polyglot.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180903144805_AddNotifications")]
+    [Migration("20180903151108_AddNotifications")]
     partial class AddNotifications
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -143,7 +143,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("OptionID");
 
-                    b.ToTable("NotificationOptions");
+                    b.ToTable("NotificationOption");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>

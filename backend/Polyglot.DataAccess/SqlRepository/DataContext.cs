@@ -31,6 +31,8 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<NotificationOption> NotificationOptions { get; set; }
         public DbSet<Option> Options { get; set; }
 
+        public DbQuery<UserRights> UserRights { get; set; }
+
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
