@@ -1,0 +1,58 @@
+<div class="chat-container">
+
+    <mat-toolbar class="interlocutor-info">
+        <span class="interlocutor-name">{{interlocutor.fullName}}</span>
+        <span class="last-seen">Last seen 4 days ago</span>
+    </mat-toolbar>
+
+    <div class="chat-messages-container" #mainwindow>
+
+        <ul>
+            <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner> 
+
+            <li *ngFor="let m of messages" (click)="toggleSelection(m)">
+                <a class="person-img">
+                    <img class="person-avatar" mat-card-avatar src="{{interlocutor.avatarUrl}}">
+                </a>
+                <div class="sender-name">{{interlocutor.fullName}}</div>
+                <mat-card class="message-card">
+                    {{m.body}}
+                    <div class="message-info-container">
+                        <span class="recieved-read-container">
+                            <span [hidden]="m.isRead" class="recieved-icon">
+                                <mat-icon>done</mat-icon>
+                            </span>
+                            <span [hidden]="!m.isRead" class="read-icon">
+                                <mat-icon>done_all</mat-icon>
+                            </span>
+                        </span>
+                        <span class="message-time">{{ m.receivedDate | date:'shortTime' }}</span>
+                    </div>
+                </mat-card>
+            </li>
+
+        </ul>
+    </div>
+
+    <footer class="chat-input-container">
+        <mat-card class="new-message-notification">
+            <span>New message recieved</span>
+            <mat-icon aria-label="">send</mat-icon>
+        </mat-card>
+        <mat-form-field class="chat-form-field" appearance="outline">
+            <button mat-icon-button matPrefix>
+                <mat-icon aria-label="">add</mat-icon>
+            </button>
+            <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
+            <span matSuffix class="message-actions-container">
+                <button mat-icon-button>
+                    <mat-icon class="smilles-icon" aria-label="">sentiment_very_satisfied</mat-icon>
+                </button>
+                <button mat-icon-button (click)="sendMessage()">
+                    <mat-icon class="send-icon" aria-label="">send</mat-icon>
+                </button>
+            </span>
+        </mat-form-field>
+    </footer>
+
+</div>

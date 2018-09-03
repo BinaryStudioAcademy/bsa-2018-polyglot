@@ -22,6 +22,7 @@ using Polyglot.DataAccess.MongoModels;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.SignalR.Responses;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 
 namespace Polyglot.BusinessLogic.Services
 {

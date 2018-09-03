@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
-import { Project, Language, UserProfile } from "../../models";
+import { Project, UserProfile, Language } from "../../models";
 import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
 import { StringDialogComponent } from "../../dialogs/string-dialog/string-dialog.component";
@@ -12,6 +12,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
+import { Hub } from "../../models/signalrModels/hub";
 
 @Component({
     selector: "app-workspace",
@@ -36,7 +37,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     private routeSub: Subscription;
 
-    filters : Array<string>
+    filters: Array<string>;
 
     filterOptions: string[] = [
         "Translated",
@@ -69,43 +70,45 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
-            forkJoin(this.projectService.getById(params.projectId),
-            this.projectService.getProjectLanguages(params.projectId)
+            forkJoin(
+                this.projectService.getById(params.projectId),
+                this.projectService.getProjectLanguages(params.projectId)
             ).subscribe(result => {
                 this.project = result[0];
                 this.projectService
-                .getProjectLanguages(this.project.id)
-                .subscribe(
-                    (d: Language[]) => {
-                        this.projectLanguagesCount = d.length;
-                        const workspaceState = {
-                            projectId: this.project.id,
-                            languages: d
-                        };
+                    .getProjectLanguages(this.project.id)
+                    .subscribe(
+                        (d: Language[]) => {
+                            this.projectLanguagesCount = d.length;
+                            const workspaceState = {
+                                projectId: this.project.id,
+                                languages: d
+                            };
 
-                        this.appState.setWorkspaceState = workspaceState;
-                        this.signalrService.createConnection(
-                            `${SignalrGroups[SignalrGroups.project]}${
-                                this.project.id
-                            }`,
-                            "workspaceHub"
-                        );
-                        this.subscribeProjectChanges();
-                    },
-                    err => {
-                        this.keys = null;
-                        this.isLoad = false;
-                        console.log("err", err);
-                    }
-                );
-        });
-        this.basicPath = "workspace/" + params.projectId;
-        this.currentPath = "workspace/" + params.projectId + "/key";
-        this.projectService
-            .getProjectStringsWithPagination(
-                params.projectId,
-                this.elementsOnPage,
-                0)
+                            this.appState.setWorkspaceState = workspaceState;
+                            this.signalrService.createConnection(
+                                `${SignalrGroups[SignalrGroups.project]}${
+                                    this.project.id
+                                }`,
+                                Hub[Hub.workspaceHub]
+                            );
+                            this.subscribeProjectChanges();
+                        },
+                        err => {
+                            this.keys = null;
+                            this.isLoad = false;
+                            console.log("err", err);
+                        }
+                    );
+            });
+            this.basicPath = "workspace/" + params.projectId;
+            this.currentPath = "workspace/" + params.projectId + "/key";
+            this.projectService
+                .getProjectStringsWithPagination(
+                    params.projectId,
+                    this.elementsOnPage,
+                    0
+                )
                 .subscribe((data: any) => {
                     if (data) {
                         this.keys = data;
@@ -120,7 +123,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         }
                     }
                     let list = this.keys.filter(x => x.tags.length > 0);
-                    this.projectTags = [].concat.apply([], list.map(x => x.tags));
+                    this.projectTags = [].concat.apply(
+                        [],
+                        list.map(x => x.tags)
+                    );
                     this.projectTags = Array.from(new Set(this.projectTags));
                 });
 
@@ -130,7 +136,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngDoCheck() {
         if (
-            this.project && 
+            this.project &&
             this.keys &&
             this.router.url == `/workspace/${this.project.id}` &&
             this.keys.length !== 0
@@ -149,7 +155,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             if (result) {
                 this.keys.push(result);
                 result.tags.forEach(element => {
-                    if(!this.projectTags.includes(element)){
+                    if (!this.projectTags.includes(element)) {
                         this.projectTags.push(element);
                     }
                 });
@@ -231,7 +237,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     onFilterApply() {
         //If the filters сontradict each other
-        this.contradictoryСhoise(["filter/Translated", "filter/Untranslated"]);         
+        this.contradictoryСhoise(["filter/Translated", "filter/Untranslated"]);
         this.projectService
             .getProjectStringsByFilter(this.project.id, this.filters)
             .subscribe(res => {
@@ -239,35 +245,38 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
     }
 
-     contradictoryСhoise(options: string[]) {
+    contradictoryСhoise(options: string[]) {
         if (
             this.filters.includes(options[0]) &&
             this.filters.includes(options[1])
         ) {
             options.forEach(element => {
-                this.filters = this.filters.filter( x => { return x !== element})
+                this.filters = this.filters.filter(x => {
+                    return x !== element;
+                });
             });
         }
-    } 
+    }
 
-    selectFilterOption($event,index){
-        if($event.checked){
-            this.filters.push("filter/"+this.filterOptions[index])
-        }
-        else{
-            this.filters = this.filters.filter( x => { return x !== "filter/" + this.filterOptions[index];});
+    selectFilterOption($event, index) {
+        if ($event.checked) {
+            this.filters.push("filter/" + this.filterOptions[index]);
+        } else {
+            this.filters = this.filters.filter(x => {
+                return x !== "filter/" + this.filterOptions[index];
+            });
         }
     }
 
-    selectTag($event,index){
-        if($event.checked){
-            this.filters.push("tags/" + this.projectTags[index])
+    selectTag($event, index) {
+        if ($event.checked) {
+            this.filters.push("tags/" + this.projectTags[index]);
+        } else {
+            this.filters = this.filters.filter(x => {
+                return x !== "tags/" + this.projectTags[index];
+            });
         }
-        else{
-            this.filters = this.filters.filter( x => { return x !== "tags/" + this.projectTags[index];});
-        } 
     }
-
 
     public onScrollUp(): void {
         this.getKeys(this.currentPage, keys => {
@@ -294,11 +303,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             });
     }
 
-/*     test(id){
+    /*     test(id){
     var checkbox = document.getElementById("mat-checkbox-"+id);
     console.log(checkbox.classList.contains("mat-checkbox-checked"));
     } */
-
 
     highlightStringStatus(key) {
         if (key.translations.length === 0) {

@@ -3,6 +3,10 @@
     public enum Group
     {
         complexString,
-        project
+        project,
+        chatShared,
+        chatTeams,
+        chatProject,
+        chatUser
     }
 }
