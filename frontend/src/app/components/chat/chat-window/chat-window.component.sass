@@ -1,0 +1,122 @@
+.interlocutor-info
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  align-items: flex-start
+  .last-seen
+    font-size: 14px
+    line-height: 14px
+    
+ul, 
+li
+  margin: 0
+  padding: 0
+
+ul
+  display: flex
+  flex-direction: column
+  padding-top: 15px
+  list-style: none
+
+li
+  position: relative
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  padding: 0 15px
+  padding-left: 60px
+  margin-bottom: 1px
+  // align-self: flex-end
+
+.messages-spinner
+  align-self: center
+  margin: 30px 0
+
+.chat-messages-container
+  height: 64.2vh
+  overflow-y: scroll
+  z-index: 10
+
+.chat-form-field
+  width: 100%
+  z-index: 20
+
+.message-actions-container
+  display: flex
+  flex-direction: row
+
+.person-img
+  position: absolute
+  left: 15px
+  top: 0
+  .person-avatar
+    width: 35px
+    height: 35px  
+
+.sender-name
+  font-size: 14px
+  font-weight: 600
+  padding: 5px 0
+
+.message-card
+  position: relative
+  min-width: 100px
+  margin-top: 3px
+  padding: 16px
+  padding-bottom: 32px
+  border-radius: 0 10px 10px 0
+  transition: all 0.5s
+  background-color: #D0D0D0
+
+.message-info-container
+  display: flex
+  flex-direction: row
+  position: absolute
+  right: 25px
+  bottom: 10px
+
+.recieved-read-container
+  position: relative
+  height: 12px
+  color: green
+  .recieved-icon,
+  .read-icon
+    position: absolute
+    left: -20px
+    top: -2px
+    height: 12px
+  .mat-icon
+    height: 12px
+    font-size: 16px
+
+  
+.message-time
+  font-size: 12px
+  color: #AAAAAA
+
+
+.message-card:hover
+  background-color: #C1C1C1
+
+.chat-input-container
+  position: relative
+  padding: 1% 2%
+  margin-bottom: -1.34375em
+
+
+.new-message-notification
+  display: none
+  position: absolute
+  top: -70px
+  left: calc(50% - 167.953px / 2)
+  padding: 18px 60px
+  padding-bottom: 150px
+  z-index: 15
+  border-radius: 7px
+  font-size: 14px
+
+.smilles-icon:hover
+  color: #FFCC00
+
+.send-icon:hover
+  color: #56B68B

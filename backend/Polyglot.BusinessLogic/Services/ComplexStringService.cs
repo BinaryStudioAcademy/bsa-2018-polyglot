@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Common.Helpers.SignalR;
@@ -80,6 +81,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
+      
         public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
             var target = await repository.GetAsync(identifier);
@@ -344,7 +346,7 @@ namespace Polyglot.BusinessLogic.Services
             return comments;
         }
 
-        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId)
+        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId,int itemsOnPage, int page)
         {
             var complexString = await GetComplexString(identifier);
             var translation = complexString.Translations.FirstOrDefault(t => t.Id == translationId);
@@ -406,8 +408,10 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             history.Reverse();
+            var skipItems = itemsOnPage * page;
+            var paginatedHistory = history.Skip(skipItems).Take(itemsOnPage);
 
-            return history;
+            return paginatedHistory;
         }
 
        
