@@ -75,11 +75,7 @@
             <div class="row-info">
               <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
               <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
-            </div>
-            <div *ngIf="card.projectStatistics" class="progress-container">
-              <span>Progress: {{card.projectStatistics.progress | number:'1.0-1'}}%</span>
-              <mat-progress-bar class="lang-progress" mode="determinate" value="{{card.projectStatistics.progress}}"></mat-progress-bar>
-            </div>
+            </div>            
           </div>
           <div class="row-buttons">
             <button id="workspace" mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
