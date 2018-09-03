@@ -17,6 +17,7 @@ import { ProjecttranslatorsService } from "../../../services/projecttranslators.
 import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 import { Comment } from "../../../models/comment";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -74,7 +75,8 @@ export class KeyDetailsComponent implements OnInit {
         private signalrService: SignalrService,
         private service: TranslationService,
         private projectService: ProjectService,
-        private translatorsService: ProjecttranslatorsService
+        private translatorsService: ProjecttranslatorsService,
+        private userService: UserService
     ) { }
 
     ngOnInit() {
@@ -615,7 +617,24 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
+    }
 
+    public showAssignButton(userId: number): boolean {
+        var result = false;
+        if (this.userService.getCurrentUser().userRole === 1) {
+            result = false;
         }
+        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+        //     result = false;
+        // }
+        // else if (!userId) {
+        //     result = false;
+        // }
+        else {
+           result = true;
+        }
+        return result || !this.users.length;
+    }
+
 
 }
