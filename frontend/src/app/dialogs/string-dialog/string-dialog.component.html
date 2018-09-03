@@ -4,18 +4,24 @@
     <mat-grid-tile>
       <div>
         <mat-form-field>
-          <input id="key" name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
+          <input id="key" appNoWhiteSpace name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
                  #key="ngModel" maxlength="25" autocomplete="yes">
-          <mat-error *ngIf="key.errors">
+          <mat-error *ngIf="key.errors?.required">
             Key is required
+          </mat-error>
+          <mat-error *ngIf="key.errors?.WhiteSpace && !key.errors?.required">
+            Only spaces are not allowed
           </mat-error>
         </mat-form-field>
 
         <mat-form-field>  
-          <input id="base" name="base" type="text" [(ngModel)]="str.base" required matInput placeholder="Base Translation"
+          <input id="base" appNoWhiteSpace name="base" type="text" [(ngModel)]="str.base" required matInput placeholder="Base Translation"
                  #base="ngModel" autocomplete="yes">
-          <mat-error *ngIf="base.errors">
+          <mat-error *ngIf="base.errors?.required">
             Base Translation is required
+          </mat-error>
+          <mat-error *ngIf="base.errors?.WhiteSpace && !base.errors?.required">
+            Only spaces are not allowed
           </mat-error>
         </mat-form-field>
         <mat-form-field>

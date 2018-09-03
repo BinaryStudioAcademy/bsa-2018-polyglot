@@ -45,7 +45,7 @@ namespace Polyglot
 
             services.AddFirebaseAuthentication(Configuration.GetValue<string>("Firebase:ProjectId"));
 
-            services.AddSignalR().AddAzureSignalR();
+            services.AddSignalR();
 
 
             BusinessLogicModule.ConfigureServices(services, Configuration);
@@ -78,7 +78,7 @@ namespace Polyglot
 
             app.UseMvc();
             
-            app.UseAzureSignalR(options =>
+            app.UseSignalR(options =>
             {
                 options.MapHub<WorkspaceHub>("/workspaceHub");
                 options.MapHub<ChatHub>("/chatHub");
