@@ -36,14 +36,15 @@ export class AssignGlossariesComponent implements OnInit {
                 this.assignedDataSource = new MatTableDataSource(this.AssignedGlossaries);
                 this.glossariesService.getAll().subscribe(data => {
                     this.AllGlossaries = data;
-                    var glossaries = this.AllGlossaries.filter(x => {
-                        this.AssignedGlossaries.forEach(function (element) {
-                            if (x.id === element.id)
-                                return true;
-                        });
-                        return false;
-                    });
-                    //!this.AssignedGlossaries.includes(x));
+                    var glossaries = this.AllGlossaries;
+                    //TODO: Add filter here
+                    // .filter(x => {
+                    //     this.AssignedGlossaries.forEach(function (element) {
+                    //         if (x.id === element.id)
+                    //             return true;
+                    //     });
+                    //     return false;
+                    // });
                     this.allDataSource = new MatTableDataSource(glossaries);
                 });
             },
