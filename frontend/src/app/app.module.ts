@@ -64,6 +64,7 @@ import { MatSortModule } from "@angular/material/sort";
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
+import { NoWhiteSpaceDirective } from './directives/noWhiteSpace.directive';
 import { ProjectMessageComponent } from "./dialogs/project-message/project-message.component";
 import { SnotifyModule, SnotifyService, ToastDefaults } from "ng-snotify";
 import { ProjectDetailsComponent } from "./components/project-details/project-details.component";
@@ -151,6 +152,7 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     CropperComponent,
     UserSettingsComponent,
     ConfirmEqualValidatorDirective,
+    NoWhiteSpaceDirective,
     ProjectDetailsComponent,
     ProjectMessageComponent,
     ForgotPasswordDialogComponent,
