@@ -176,18 +176,10 @@ namespace Polyglot.Controllers
        [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
 	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
 	    {
-            //var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
-            var result = ElasticsearchExtensions.GetElasticClient<ComplexString>().Search<ComplexStringIndex>((x) =>
-                x.Query(q => q
-                    .Match(m => m
-                        .Field(f => f.ProjectId)
-                        .Query(id.ToString())
-                        )
-                    )
-                );
-            return Ok(result.Documents);
-            //return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
-            // : Ok(projectsStrings);
+            var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+
+            return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+             : Ok(projectsStrings);
         }
 
         // POST: Projects

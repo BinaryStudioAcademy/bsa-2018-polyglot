@@ -12,10 +12,8 @@ namespace Polyglot.DataAccess.SqlRepository
 
        // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
 
-        TEntity Update(TEntity entity);
-
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
-        bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
+        Task<bool> UpdateBool(TEntity entity); // Workaroud for Entity being tracked
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Polyglot.BusinessLogic.Services;
 using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Interfaces
@@ -29,5 +28,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation);
 
         Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId);
+
+        Task<string> ReIndex();
     }
 }

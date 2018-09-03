@@ -209,5 +209,12 @@ namespace Polyglot.Controllers
             return response == null ? StatusCode(400) as IActionResult
                 : Ok(response);
         }
+
+        [Route("/search/reindex")]
+        public async Task<IActionResult> ReIndex()
+        {
+            var result = await dataProvider.ReIndex();
+            return Ok(result);
+        }
     }
 }

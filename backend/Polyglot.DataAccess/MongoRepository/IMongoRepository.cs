@@ -9,8 +9,6 @@ namespace Polyglot.DataAccess.MongoRepository
 {
     public interface IMongoRepository<TEntity> : IBaseRepository<TEntity> where TEntity : Entity, new()
     {
-       Task<TEntity> Update(TEntity entity);
-
         long CountDocuments();
 
         void InsertMany(List<TEntity> entities);

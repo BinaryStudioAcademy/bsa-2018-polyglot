@@ -34,7 +34,7 @@ namespace Polyglot.DataAccess.MongoRepository
             try
             {
                 await Collection.InsertOneAsync(item);
-                await ElasticsearchExtensions.UpdateSearchIndex(item, CrudAction.Create);
+                await ElasticRepository.UpdateSearchIndex(item, CrudAction.Create);
                 return item;
             }
             catch (Exception ex)
@@ -97,7 +97,7 @@ namespace Polyglot.DataAccess.MongoRepository
                 DeleteResult actionResult
                     = await Collection.DeleteOneAsync(
                         Builders<TEntity>.Filter.Eq("Id", id));
-                await ElasticsearchExtensions.UpdateSearchIndex(new TEntity { Id = id }, CrudAction.Delete);
+                await ElasticRepository.UpdateSearchIndex(new TEntity { Id = id }, CrudAction.Delete);
                 return null;
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace Polyglot.DataAccess.MongoRepository
             {
                 var updateResult = await Collection
                     .ReplaceOneAsync<TEntity>(filter: g => g.Id == entity.Id, replacement: entity);
-                await ElasticsearchExtensions.UpdateSearchIndex(entity, CrudAction.Update);
+                await ElasticRepository.UpdateSearchIndex(entity, CrudAction.Update);
                 return entity;
             }
             catch (Exception ex)

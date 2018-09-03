@@ -26,20 +26,7 @@ namespace Polyglot.DataAccess.SqlRepository
         public async Task<TEntity> CreateAsync(TEntity entity)
         {
             var result = (await DbSet.AddAsync(entity)).Entity;
-            await ElasticsearchExtensions.UpdateSearchIndex(result, CrudAction.Create);
-            //if (result is ISearcheable)
-            //{
-            //    var elastic = ElasticsearchExtensions.GetElasticClient();
-            //    var ent = result as Project;
-            //    var test = new Project
-            //    {
-            //        Id = ent.Id,
-            //        CreatedOn = ent.CreatedOn,
-            //        Description = ent.Description,
-            //        Name = ent.Name
-            //    };
-            //    await elastic.IndexDocumentAsync(test);
-            //}
+            await ElasticRepository.UpdateSearchIndex(result, CrudAction.Create);
 
             return result;
         }
@@ -49,6 +36,7 @@ namespace Polyglot.DataAccess.SqlRepository
             TEntity temp = await DbSet.FindAsync(id);
             if (temp != null)
             {
+                await Elasticsearch.ElasticRepository.UpdateSearchIndex(temp, CrudAction.Delete);
                 return DbSet.Remove(temp).Entity;
             }
             return null;
@@ -76,12 +64,15 @@ namespace Polyglot.DataAccess.SqlRepository
             //  return await ApplyIncludes().ToListAsync();
         }
 
-        public TEntity Update(TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            return DbSet.Update(entity).Entity;
+
+            var result = DbSet.Update(entity).Entity;
+            await ElasticRepository.UpdateSearchIndex(result, CrudAction.Update);
+            return result;
         }
 
-        public bool UpdateBool(TEntity entity)
+        public async Task<bool> UpdateBool(TEntity entity)
         {
             var entityDb = entity as Entity;
             if (entityDb != null)
@@ -91,6 +82,7 @@ namespace Polyglot.DataAccess.SqlRepository
                     return false;
 
                 context.Entry(existingEntity).State = EntityState.Detached;
+                await ElasticRepository.UpdateSearchIndex(existingEntity, CrudAction.Update);
             }
 
             context.Entry(entity).State = EntityState.Modified;

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Nest;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Core.Authentication;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -24,16 +26,18 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IMapper _mapper;
         private readonly IFileStorageProvider _provider;
         private readonly ICRUDService<UserProfile, UserProfileDTO> _userSevice;
+        private readonly IElasticClient _elasticClient;
 
 
         public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow, IFileStorageProvider provider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService)
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, IElasticClient elasticClient)
         {
             _uow = uow;
             _repository = repository;
             _mapper = mapper;
             _provider = provider;
             _userSevice = userService;
+            _elasticClient = elasticClient;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -253,6 +257,15 @@ namespace Polyglot.BusinessLogic.Services
             history.Reverse();
 
             return history;
+        }
+
+        public async Task<string> ReIndex()
+        {
+            var allPosts = (await _repository.GetAllAsync()).ToList();
+
+            var res = await ElasticRepository.ReIndex(allPosts);
+
+            return res;
         }
     }
 }

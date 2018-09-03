@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,7 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.Elasticsearch
 {
-    public static class ElasticsearchExtensions
+    public static class ElasticRepository
     {
 
         private static IElasticClient _elasticClient;
@@ -49,7 +50,7 @@ namespace Polyglot.DataAccess.Elasticsearch
             _lowlevelClient = new ElasticLowLevelClient(settingslow);
         }
 
-        public static IElasticClient GetElasticClient<T>() where T : Entity, new()
+        public static IElasticClient GetElasticClient()
         {
             return _elasticClient;
         }
@@ -99,6 +100,21 @@ namespace Polyglot.DataAccess.Elasticsearch
                     }
                 }
             }
+        }
+
+        public static async Task<string> ReIndex<T>(List<T> data) where T : Entity, ISearcheable, new()
+        {
+            var targetType = typeof(T).Name.ToLower();
+            await _lowlevelClient.IndicesDeleteAsync<StringResponse>(targetType);
+
+            foreach (var post in data)
+            {
+                var indexObject = post.GetIndexObject();
+                await _lowlevelClient.IndexAsync<StringResponse>(targetType, targetType,
+                    indexObject.Id, PostData.Serializable(indexObject));
+            }
+
+            return $"{data.Count} reindexed";
         }
     }
 }
