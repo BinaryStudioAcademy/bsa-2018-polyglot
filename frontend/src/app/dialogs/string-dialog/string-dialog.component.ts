@@ -31,15 +31,15 @@ export class StringDialogComponent implements OnInit {
     this.str.tags = [];
     let tags: Tag[] = $event;
     for (let i = 0; i < tags.length; i++) {
-      this.str.tags.push(tags[i].name);
+      this.str.tags.push(tags[i]);
     }
   }
 
   getAllTags(): Tag[] {
     let tags: Tag[] = [
-      { name: 'FirstTag', color: '', id: 0, projectTags: [] },
-      { name: 'SecondTag', color: '', id: 0, projectTags: [] },
-      { name: 'ThirdTag', color: '', id: 0, projectTags: [] }
+      { name: 'FirstTag', color: '', id: 0},
+      { name: 'SecondTag', color: '', id: 0},
+      { name: 'ThirdTag', color: '', id: 0}
     ];
     return tags;
   }

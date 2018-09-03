@@ -121,7 +121,7 @@ namespace Polyglot.BusinessLogic.Services
                         ProjectId = id,
                         Translations = new List<Translation>(),
                         Comments = new List<Comment>(),
-                        Tags = new List<string>(),
+                        Tags = new List<int>(),
                         CreatedOn = DateTime.Now,
                         CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
                     });
@@ -551,14 +551,18 @@ namespace Polyglot.BusinessLogic.Services
 
             var criteriaResult = await stringsProvider.GetAllAsync(finalFilter);
 
+            //
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+
             if (tagFilters.Count != 0)
             {
                 foreach (var tag in tagFilters)
                 {
                     foreach (var res in criteriaResult)
                     {
-                        if(res.Tags.Contains(tag))
-                            result.Add(res);
+                        //TODO
+                        //if(res.Contains(tag))
+                        //    result.Add(res);
                     }
                 }
 

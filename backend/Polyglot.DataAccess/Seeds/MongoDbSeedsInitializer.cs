@@ -2,6 +2,7 @@
 using Polyglot.DataAccess.MongoRepository;
 using System;
 using System.Collections.Generic;
+using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.DataAccess.Seeds
 {
@@ -81,7 +82,7 @@ namespace Polyglot.DataAccess.Seeds
                             CreatedOn= DateTime.Now
                         }*/
                     },
-                    Tags = new List<string> { "WW2", "title", "test" }
+                    Tags = new List<int> {}
 
                 },
                 new ComplexString {
@@ -145,7 +146,7 @@ namespace Polyglot.DataAccess.Seeds
                             CreatedOn= DateTime.Now
                         }*/
                     },
-                    Tags = new List<string> { "angular", "scope", "component" }
+                    Tags = new List<int> {1,2}
 
                 },
                 new ComplexString {
@@ -214,7 +215,7 @@ namespace Polyglot.DataAccess.Seeds
                             CreatedOn= DateTime.Now
                         }*/
                     },
-                    Tags = new List<string> { "net core", "announce", "framework" }
+                    Tags = new List<int> { }
 
                 },
                 new ComplexString {
@@ -283,7 +284,7 @@ namespace Polyglot.DataAccess.Seeds
                             CreatedOn= DateTime.Now
                         }*/
                     },
-                    Tags = new List<string> { "crew", "film", "marocco" }
+                    Tags = new List<int> {  }
 
                 },
                 new ComplexString {
@@ -359,7 +360,7 @@ namespace Polyglot.DataAccess.Seeds
                             CreatedOn= DateTime.Now
                         }*/
                     },
-                    Tags = new List<string> { "germany", "ussr", "ww2" }
+                    Tags = new List<int> { }
 
                 }
 

@@ -209,8 +209,11 @@ namespace Polyglot.BusinessLogic.Services
             entity.Id = savedEntity.Id;
             entity.CreatedOn = DateTime.Now;
             entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
-            var target = await repository
-                .CreateAsync(mapper.Map<ComplexString>(entity));
+
+            var mappedItem = mapper.Map<ComplexString>(entity);
+            mappedItem.Tags = entity.Tags.Select(x => x.Id).ToList();
+
+            var target = await repository.CreateAsync(mappedItem);
             if (target != null)
             {
                 await signalRService.ComplexStringAdded($"{Group.project}{target.ProjectId}", target.Id);
