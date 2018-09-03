@@ -61,7 +61,6 @@ import {
     MatProgressSpinnerModule
 } from "@angular/material";
 import { MatSortModule } from "@angular/material/sort";
-import { TeamComponent } from "./components/teams/team/team.component";
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
@@ -114,6 +113,9 @@ import { TabOptionalComponent } from './components/workspace/key-details/tab-opt
 import { ChatComponent } from "./components/chat/chat.component";
 import { ChatContactsComponent } from './components/chat/chat-contacts/chat-contacts.component';
 import { ChatWindowComponent } from './components/chat/chat-window/chat-window.component';
+import { TeamProjectComponent } from "./components/team-details/team-project/team-project.component";
+import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
+import { TeamDetailsComponent } from "./components/team-details/team-details.component";
 
 @NgModule({
   exports: [
@@ -144,7 +146,6 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     TagsComponent,
     NewProjectComponent,
     ManagerProfileComponent,
-    TeamComponent,
     NewTeamComponent,
     SearchComponent,
     CropperComponent,
@@ -165,6 +166,7 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     TabHistoryComponent,
     ChooseRoleDialogComponent,
     ProjectTeamComponent,
+    TeamProjectComponent,
     TeamAssignComponent,
     SaveStringConfirmComponent,
     TabHistoryComponent,
@@ -187,6 +189,8 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
     TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
+    TeamDetailsComponent,
+    TeamMembersComponent,
     ChatComponent,
     ChatContactsComponent,
     ChatWindowComponent,

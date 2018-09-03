@@ -32,13 +32,13 @@
 
         <div class="title">
             <mat-card-title class="card-title">
-                <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
+                <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> Team {{t.name || t.id}}</a>
             </mat-card-title>
           <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
         <div class="action-btn-container">
           <button mat-icon-button>
-            <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/dashboard/teams/{{t.id}}">info</mat-icon>
+            <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/team/details/{{t.id}}">info</mat-icon>
           </button>
           <div (click)="dismissTeam(t.id)">
             <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner">
