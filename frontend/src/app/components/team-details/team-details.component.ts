@@ -12,7 +12,7 @@ import { TeamService } from '../../services/teams.service';
 export class TeamDetailsComponent implements OnInit {
 
   private routeSub: Subscription;
-  private team: Team;
+  public team: Team;
 
   constructor(
     private activatedRoute: ActivatedRoute,
