@@ -12,6 +12,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
+import { EventService } from "../../services/event.service";
 
 @Component({
     selector: "app-workspace",
@@ -55,9 +56,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private appState: AppStateService,
         private userService: UserService,
         private complexStringService: ComplexStringService,
-        private signalrService: SignalrService
+        private signalrService: SignalrService,
+        private eventService: EventService
     ) {
         this.user = userService.getCurrentUser();
+        this.eventService.listen().subscribe(
+            (result) => {
+                this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+            }
+        );
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -140,6 +147,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.currentPath, this.keys[0].id]);
         }
     }
+
+    // sendStringStatusMessage(keyId: number) {
+    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, 1).subscribe(() => {});
+    //     setTimeout(() => { 
+    //         if (this.stringsInProgress.includes(keyId)) {
+    //             this.sendStringStatusMessage(keyId);
+    //         }
+    //     }, 5000);
+    // }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
@@ -235,7 +251,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             ],
             (response: any) => {
                 console.log(response.ids[0]);
-                this.stringsInProgress.push(response.ids[0]);
+                if (!this.stringsInProgress.includes(response.ids[0])) {
+                    this.stringsInProgress.push(response.ids[0]);
+                }            
             }
         );
         this.signalrService.connection.on(
@@ -244,6 +262,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             ],
             (response: any) => {
                 console.log(response);
+                if (this.stringsInProgress.includes(response.ids[0])) {
+                    this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
+                }
             }
         );
     }
@@ -298,9 +319,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.getKeys(this.currentPage, keys => {
             this.keys = this.keys.concat(keys);
         });
-        this.complexStringService.changeStringStatus(this.selectedKey.id, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, 1).subscribe(
-            () => {}
-        );
     }
 
     getKeys(page: number = 1, saveResultsCallback: (keys) => void) {

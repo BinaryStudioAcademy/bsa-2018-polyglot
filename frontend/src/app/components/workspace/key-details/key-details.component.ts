@@ -14,6 +14,7 @@ import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-s
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
+import { EventService } from "../../../services/event.service";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -68,7 +69,8 @@ export class KeyDetailsComponent implements OnInit {
         private appState: AppStateService,
         private signalrService: SignalrService,
         private service: TranslationService,
-        private projectService: ProjectService
+        private projectService: ProjectService,
+        private eventService: EventService
     ) {}
 
     ngOnInit() {
@@ -309,6 +311,11 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: 1
+        });
+
         if (index === undefined) {
             return;
         }
@@ -464,6 +471,11 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     onClose(index: number, translation: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: 0
+        });
+
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";

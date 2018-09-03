@@ -12,7 +12,7 @@ export class EventService {
     return this._listners.asObservable();
   }
 
-  filter(filterBy: string) {
+  filter(filterBy: any) {
     this._listners.next(filterBy);
   }
 }
