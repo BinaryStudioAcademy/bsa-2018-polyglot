@@ -16,6 +16,7 @@ import { ProjectService } from "../../../services/project.service";
 import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
 import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
+import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { UserService } from "../../../services/user.service";
 
@@ -75,6 +76,7 @@ export class KeyDetailsComponent implements OnInit {
         private signalrService: SignalrService,
         private service: TranslationService,
         private projectService: ProjectService,
+        private eventService: EventService,
         private translatorsService: ProjecttranslatorsService,
         private userService: UserService
     ) { }
@@ -323,6 +325,11 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: 1
+        });
+
         if (index === undefined) {
             return;
         }
@@ -478,6 +485,11 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     onClose(index: number, translation: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: 0
+        });
+
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";

@@ -82,4 +82,8 @@ export class ComplexStringService {
   getOptionalTranslation(stringId, translationId) {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + stringId + '/' + translationId, 'optional' );
   }
+
+  changeStringStatus(id: number, groupName: string, status: number) {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/status/' + status, '/?groupName=' + groupName);
+  }
 }

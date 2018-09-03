@@ -17,5 +17,9 @@ namespace Polyglot.BusinessLogic.Interfaces.SignalR
         Task LanguagesAdded(string groupName, int[] languagesIds);
 
         Task LanguageTranslationCommitted(string groupName, int languageId);
+
+        Task ComplexStringTranslatingStarted(string groupName, int complexStringId);
+
+        Task ComplexStringTranslatingFinished(string groupName, int complexStringId);
     }
 }

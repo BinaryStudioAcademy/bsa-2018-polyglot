@@ -39,5 +39,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 		Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value);
 
 		Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId);
+
+        Task ChangeStringStatus(int id, int status, string groupName);
     }
 }
