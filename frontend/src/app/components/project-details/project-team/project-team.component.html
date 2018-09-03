@@ -32,23 +32,7 @@
             </mat-card-title>
           <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
-<<<<<<< HEAD
       
-=======
-        <div class="action-btn-container">
-          <button mat-icon-button>
-            <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/team/details/{{t.id}}">info</mat-icon>
-          </button>
-          <div (click)="dismissTeam(t.id)">
-            <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner">
-              <mat-spinner diameter="18"></mat-spinner>
-            </span>
-            <span [hidden]="IsLoading[t.id]" class="dismiss-spinner">
-              <mat-icon class="icon dismiss-team-icon" aria-label="dismiss-team">clear</mat-icon>
-            </span>
-          </div>
-        </div>
->>>>>>> 261f718783ba9ea34a20f81bee57013021a0e868
       </mat-card-header>
 
 
