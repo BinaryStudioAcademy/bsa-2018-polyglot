@@ -1,22 +1,27 @@
 <button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" class="no-hover-effect">
-  <mat-icon class="bell" aria-label="Notification icon">notifications_none</mat-icon>
+    <mat-icon *ngIf="!userNotifications" class="bell" aria-label="Notification icon">
+        notifications_none
+    </mat-icon>
+    <mat-icon *ngIf="userNotifications" class="bell" aria-label="Notification icon">
+            notifications_active
+    </mat-icon>
 </button>
 <mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
-  <mat-card class="card">
-    <mat-card-header>
-      <mat-card-title class="card-main">
-        <div>
-          <h4>Some notification</h4>
-          <p>
-            <i>notification body</i>
-          </p>
-        </div>
-      </mat-card-title>
-    </mat-card-header>
-    <hr>
-    <mat-card-content class="card-navigation">
-      <a mat-button color="primary" class="card-navigation-button" routerLink="/profile">Action</a>
-      <a mat-button color="warn" (click)="onLogoutClick()" class="card-navigation-button">Action</a>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="card" *ngFor="let notification of userNotifications">
+        <mat-card-header>
+        <mat-card-title class="card-main">
+            <div>
+                <h4>From: {{notification.receiver.fullName}}</h4>
+                <p>
+                    <i>{{notification.message}}</i>
+                </p>
+            </div>
+        </mat-card-title>
+        </mat-card-header>
+        <hr>
+        <mat-card-content class="card-navigation">
+            <a mat-button color="primary" class="card-navigation-button" routerLink="/profile">Action</a>
+            <a mat-button color="warn" (click)="onLogoutClick()" class="card-navigation-button">Action</a>
+        </mat-card-content>
+    </mat-card>
 </mde-popover>
