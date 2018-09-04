@@ -12,6 +12,7 @@ import { ComplexStringService } from "../../services/complex-string.service";
 import { SignalrGroups } from "../../models/signalrModels/signalr-groups";
 import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
+import { EventService } from "../../services/event.service";
 import { Hub } from "../../models/signalrModels/hub";
 
 @Component({
@@ -32,9 +33,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private elementsOnPage = 7;
     public isLoad: boolean;
     public projectLanguagesCount: number;
-
+    public stringsInProgress: number[] = [];
     public projectTags: string[] = [];
-
     private routeSub: Subscription;
 
     filters: Array<string>;
@@ -55,9 +55,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private appState: AppStateService,
         private userService: UserService,
         private complexStringService: ComplexStringService,
-        private signalrService: SignalrService
+        private signalrService: SignalrService,
+        private eventService: EventService
     ) {
         this.user = userService.getCurrentUser();
+        this.eventService.listen().subscribe(
+            (result) => {
+                this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+            }
+        );
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -66,6 +72,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
+        console.log(this.stringsInProgress);
         this.filters = [];
         this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -144,6 +151,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.currentPath, this.keys[0].id]);
         }
     }
+
+    // sendStringStatusMessage(keyId: number) {
+    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+    //     setInterval(() => { 
+    //         if (this.sendMessages) {
+    //             console.log('hi');
+    //             this.sendStringStatusMessage(keyId);
+    //         }
+    //     }, 2000);
+    // }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
@@ -233,6 +250,28 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
         );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.complexStringTranslatingStarted
+            ],
+            (response: any) => {
+                console.log(response.ids[0]);
+                if (!this.stringsInProgress.includes(response.ids[0])) {
+                    this.stringsInProgress.push(response.ids[0]);
+                }            
+            }
+        );
+        this.signalrService.connection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.complexStringTranslatingFinished
+            ],
+            (response: any) => {
+                console.log(response);
+                if (this.stringsInProgress.includes(response.ids[0])) {
+                    this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
+                }
+            }
+        );
     }
 
     onFilterApply() {
@@ -309,7 +348,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     } */
 
     highlightStringStatus(key) {
-        if (key.translations.length === 0) {
+        if (this.stringsInProgress.includes(key.id)) {
+            return '';
+        } else if (key.translations.length === 0) {
             return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
             return "7px solid #ffcc00"; // partially
@@ -319,7 +360,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     isStringInProgress(key) {
-        // check if somebody is working on this string
-        return false;
+        return this.stringsInProgress.includes(key.id);
     }
 }

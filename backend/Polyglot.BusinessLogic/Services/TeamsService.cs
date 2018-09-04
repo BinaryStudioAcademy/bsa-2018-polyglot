@@ -93,44 +93,48 @@ namespace Polyglot.BusinessLogic.Services
         public override async Task<TeamDTO> GetOneAsync(int teamId)
         {
             var team = await uow.GetRepository<Team>().GetAsync(teamId);
-            if (team != null && team.TeamTranslators != null && team.TeamTranslators.Count > 0)
-            {
-                var translators = team.TeamTranslators;
-                // вычисляем рейтинги переводчиков
-                Dictionary<int, double> ratings = new Dictionary<int, double>();
-                IEnumerable<double> ratingRatesSequence;
-                double? currentRating;
 
-                foreach (var t in translators)
-                {
-                    ratingRatesSequence = t.UserProfile?.Ratings.Select(r => r.Rate);
-                    if (ratingRatesSequence.Count() < 1)
-                        currentRating = 0.0d;
-                    else
-                        currentRating = ratingRatesSequence.Average();
-
-                    ratings.Add(t.UserProfile.Id, currentRating.HasValue ? currentRating.Value : 0.0d);
-                }
-                //маппим и после маппинга заполняем рейтинг
-                var teamTranslators = mapper.Map<IEnumerable<TeamTranslator>, IEnumerable<TranslatorDTO>>(translators, opt => opt.AfterMap((src, dest) =>
-                {
-                    var translatorsList = dest.ToList();
-                    for (int i = 0; i < translatorsList.Count; i++)
-                    {
-                        translatorsList[i].Rating = ratings[translatorsList[i].UserId];
-                    }
-
-                }));
-
-                return new TeamDTO()
-                {
-                    Id = team.Id,
-					Name = team.Name,
-                    TeamTranslators = teamTranslators.ToList()
-                };
-            }
-            else
+            if (team?.TeamTranslators?.Any() != true)
                 return null;
+
+            
+            var translators = team.TeamTranslators;
+            // вычисляем рейтинги переводчиков
+            Dictionary<int, double> ratings = new Dictionary<int, double>();
+            IEnumerable<double> ratingRatesSequence;
+            double? currentRating;
+
+            foreach (var t in translators)
+            {
+                ratingRatesSequence = t.UserProfile?.Ratings.Select(r => r.Rate);
+                if (ratingRatesSequence.Count() < 1)
+                    currentRating = 0.0d;
+                else
+                    currentRating = ratingRatesSequence.Average();
+
+                ratings.Add(t.UserProfile.Id, currentRating.HasValue ? currentRating.Value : 0.0d);
+            }
+            //маппим и после маппинга заполняем рейтинг
+            var teamTranslators = mapper.Map<IEnumerable<TeamTranslator>, IEnumerable<TranslatorDTO>>(translators, opt => opt.AfterMap((src, dest) =>
+            {
+                var translatorsList = dest.ToList();
+                for (int i = 0; i < translatorsList.Count; i++)
+                {
+                    translatorsList[i].Rating = ratings[translatorsList[i].UserId];
+                }
+
+            }));
+
+            var teamsProjects = mapper.Map<IEnumerable<TeamProjectDTO>>(team.ProjectTeams);
+
+            return new TeamDTO()
+            {
+                Id = team.Id,
+				Name = team.Name,
+                TeamTranslators = teamTranslators.ToList(),
+                TeamProjects = teamsProjects.ToList()
+            };
+           
         }
 
         public override async Task<TeamDTO> PutAsync(TeamDTO entity)
