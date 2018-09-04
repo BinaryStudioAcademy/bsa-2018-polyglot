@@ -177,6 +177,7 @@ export class KeyDetailsComponent implements OnInit {
                                         translations,
                                         response.senderFullName
                                     );
+                                    this.history.showHistory( this.currentKeyId,this.keyDetails.translations[this.index].id)
                                 }
                             }
                         });
@@ -332,6 +333,7 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.index=index;
         if (index === undefined) {
             return;
         }
