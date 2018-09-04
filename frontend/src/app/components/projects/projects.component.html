@@ -91,9 +91,7 @@
     </mat-list>
   </div>
 </div>
-<div *ngIf="!isLoad&&cards.length === 0" class="no-projects">
-  No Projects
-</div>
+
 
 <ng-snotify></ng-snotify>
 <button *ngIf="isCurrentUserManager()" routerLink="/newproject" mat-fab color="primary" class="button-add">
