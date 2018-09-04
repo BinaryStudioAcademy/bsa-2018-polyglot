@@ -5,24 +5,25 @@
 <p>You may find it helpful to use a glossary if your translation contains special or uncommon terms, or is part of a set of
 	documents that should have consistent terminology.</p>
 
+
 <div class="no-items-div mt-1 mb-1" *ngIf="glossaries.length === 0">
 	<p>No glossaries</p>
 </div>
 
 <div class="row-container" *ngIf="glossaries.length !== 0">
-	<mat-list>
-		<div class="list-item" *ngFor="let glossary of glossaries">
-			<div class="row-name">
-					<a mat-button routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]">{{glossary.name}}</a>
-			</div>
-			<div class="row-info">                
-				<span class="row-description" >{{glossary.originLanguage.name}}</span>     
-			</div>
-			<div class="row-buttons">
-				<button mat-button color="primary"  (click)='onEdit(glossary)'> Edit Glossary</button>        
-			</div>      
-		</div>    
-	</mat-list>
+  <mat-list>
+    <div class="list-item" *ngFor="let glossary of glossaries">
+      <div class="row-name">
+          <a mat-button routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]">{{glossary.name}}</a>
+      </div>
+      <div class="row-info">                
+        <span class="row-description" >{{glossary.originLanguage.name}}</span>     
+      </div>
+      <div class="row-buttons">
+        <button mat-button color="primary"  (click)='onEdit(glossary)'> Edit Glossary</button>        
+      </div>      
+    </div>    
+  </mat-list>
 </div>
 
 <button mat-fab color="primary" class="button-add" (click)='onCreate()'>

@@ -1,5 +1,6 @@
 <h2 *ngIf="glossary">{{glossary.name}}</h2>
 
+
 <div class="no-items-div mt-1 mb-1" *ngIf="strings.length === 0">
     <p>No terms</p>
 </div>
@@ -40,6 +41,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
+
 
 <button mat-fab color="primary" class="button-add" (click)='onCreate()'>
   <mat-icon  aria-label="Add button">add</mat-icon>
