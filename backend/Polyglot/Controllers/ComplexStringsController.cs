@@ -84,7 +84,19 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-		[HttpPost("{stringId}/{translationId}")]
+        [HttpPut("{id}/translations/revert", Name = "RevertHistory")]
+        public async Task<IActionResult> RevertTranslationHistory(int id, [FromQuery(Name = "translationId")] Guid translationId, [FromQuery(Name = "historyId")] Guid historyId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.RevertTranslationHistory(id, translationId, historyId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        [HttpPost("{stringId}/{translationId}")]
 		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);

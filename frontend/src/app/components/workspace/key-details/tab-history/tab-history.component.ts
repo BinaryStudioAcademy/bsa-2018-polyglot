@@ -1,7 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserService } from '../../../../services/user.service';
 import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
 import { ComplexStringService } from '../../../../services/complex-string.service';
+import { AdditionalTranslation } from '../../../../models/additionalTranslation';
+import { KeyDetailsComponent } from '../key-details.component';
+import { EventService } from '../../../../services/event.service';
 
 @Component({
   selector: 'app-tab-history',
@@ -10,15 +13,16 @@ import { ComplexStringService } from '../../../../services/complex-string.servic
 })
 
 export class TabHistoryComponent implements OnInit {
-
-  public history: Array<any>;
+  public history: any[];
   public currentPage = 0;
   public elementsOnPage = 7;
   public keyId: number;
   public translationId: string;
   public previousId: string;
+  public historyIsShown: boolean = false;
 
   constructor(
+    private eventService: EventService,
     private dataProvider: ComplexStringService,
     private userService: UserService,
     private route: ActivatedRoute
@@ -54,6 +58,7 @@ export class TabHistoryComponent implements OnInit {
     } else {
       return;
     }
+    this.historyIsShown = true;
   }
 
   public onScrollDown(): void {
@@ -76,5 +81,29 @@ export class TabHistoryComponent implements OnInit {
         this.currentPage++;
         saveResultsCallback(history);
       });
+  }
+
+
+  public revertHistory(history: AdditionalTranslation): void {
+    this.dataProvider.revertTranslationHistory(this.keyId, this.translationId, history.id)
+      .subscribe(
+        (translation) => {
+          if (translation) {
+            this.eventService.filter(this.translationId);
+          }
+        });
+  }
+
+  public hideHistory() {
+    this.historyIsShown = false;
+  }
+
+  public showHistoryMenu(userId: number): boolean {
+    if (this.userService.getCurrentUser().userRole === 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

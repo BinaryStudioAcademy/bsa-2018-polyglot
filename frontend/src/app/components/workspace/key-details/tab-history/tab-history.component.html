@@ -1,9 +1,15 @@
-<mat-list class="content" *ngIf="history" ngxInfiniteScroller horizontal="false" (onScrollDown)="onScrollDown()">
+<mat-list class="content" *ngIf="historyIsShown&&history" ngxInfiniteScroller horizontal="false" (onScrollDown)="onScrollDown()">
   <div class="story" *ngFor="let story of history">
     <mat-card class="story-card">
       <div class="head">
         <img src="{{story.avatarUrl}}" class="story-image">
         <h4 style="margin-left: 10px">{{story.userName}}</h4>
+        <mat-menu #menu="matMenu" xPosition="before">
+            <button (click)="revertHistory(story)" mat-menu-item>Revert</button>
+        </mat-menu>
+        <button *ngIf="showHistoryMenu(story?.user?.id)" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
+        </button>
       </div>
       <p>{{story.action}} <i style="color: brown; font-size: 15px;">"{{story.from}}"</i>  to <i style="color: green; font-size: 15px;">"{{story.to}}"</i></p>
       <p class="date">{{story.when | date:'medium'}}</p>

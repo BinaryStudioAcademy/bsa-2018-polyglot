@@ -22,6 +22,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation);
 
+        Task<TranslationDTO> RevertTranslationHistory(int identifier, Guid translationId, Guid historyId);
+
         Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment, int itemsOnPage);
         
         Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, Guid commentId);
