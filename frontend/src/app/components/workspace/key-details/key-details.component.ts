@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language } from "../../../models";
+import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -648,5 +648,18 @@ export class KeyDetailsComponent implements OnInit {
         return result || !this.users.length;
     }
 
+    public OnSelfAssign(translation: Translation){
+        this.chooseUser({ user: this.appState.currentDatabaseUser, translationId: translation.id, langId: translation.languageId })
+    }
+
+    public CanSelfAssign(translation: Translation) : boolean{
+        const user = this.appState.currentDatabaseUser;
+        if(!translation.assignedTranslatorName){
+            if(user.userRole === Role.Translator){
+                return true;
+            }
+        } 
+        return false;
+    }
 
 }
