@@ -22,30 +22,18 @@ export class TeamAssignComponent implements OnInit {
     private userService: UserService
   ) {
     
-    if (data && data.teams)
-      {
-        this.teams = data.teams;
-        this.teams.sort(this.compareId);
-      }
+    if (data && data.teams) {
+      this.teams = data.teams;
+      this.teams.sort(this.compareId);
+    }
   }
 
   ngOnInit() {
   }
 
-  change($event, team) {
-  
-
-    let inArray = this.selectedTeams.find(t => t.id === team.id);
-
-    if ($event.checked && !inArray){
-      this.disabled = false;
-      this.selectedTeams.push(team);
-    }
-    else if (!$event.checked && inArray) {
-      this.selectedTeams = this.selectedTeams.filter(t => t.id != team.id);
-      if (this.selectedTeams.length == 0)
-      this.disabled = true;
-    }
+  change(e, teams) {
+    this.selectedTeams = teams.selectedOptions.selected.map(item => item.value);
+    this.disabled = !this.selectedTeams.length;
   }
 
   assign() {

@@ -1,41 +1,21 @@
+.mat-selection-list .mat-list-item, .mat-selection-list .mat-list-option
+  height: 70px
 
-
-.container
-    display: flex
-    flex-direction: row
-    flex-wrap: wrap
-    justify-content: center
-    margin-bottom: 5px
-
-.example-card  
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
-    margin: 0
-    display: grid
-    grid-template-rows: 70px auto
-    padding: 0
-    width: 250px
-    margin-top: 20px
-
-.team-card-item
-    margin-left: 1.5%
-    margin-top: 0
 
 .manager-img
     height: 50px
     width: 50px
-    border: 3px solid #fff
-    position: absolute
-    top: 10%
-    left: 3%
-
+    border-radius: 50px
+    margin: 0
+   
+.mat-selection-list .mat-list-text
+    display: flex
+    flex-direction: row
 .card-title
-  font-size: 23px
   margin: 0
-
 .card-subtitle
-    padding-left: 15px
-    font-size: 15px
-    margin-bottom: 10px
+  font-size: 12px
+  margin: 0
 
 .button-add
  position: fixed
@@ -44,87 +24,32 @@
  width: 72px
  height: 72px
 
-.card-buttons
-  margin: 0
-  padding: 0
-  justify-self: center
-  button
-    margin: 0
-    margin: 10px auto
-    padding: 0px 10px
-    height: 35px
-    justify-self: center
-
-.mat-raised-button
-  padding: 0
 
 .title
   display: grid
   grid-template-columns: minmax(170px, 1fr)
+  width: 150px
+  margin-right: 40px
+  margin-left: 20px
 
-mat-card-title
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
+.manager-img 
+  margin-right: 20px
 
-
-mat-card-header.mat-card-header
-    position: relative
-    margin: 0
-    padding-top: 14px
-    padding-left: 60px
-    -ms-grid-row: 1
-    grid-row-start: 1
-    -ms-grid-row-span: 1
-    grid-row-end: 2
-    background: linear-gradient(-135deg, rgba(47,47,166,0.8) 0%, rgba(47,47,166,0.8) 72%, rgba(2,0,36,1) 65%)
-
-.action-btn-container
-    position: absolute
-    right: 2px
-    top: 0
-    padding: 0
-    .mat-icon-button
-        display: inline-block
-        width: 25px
-        height: 25px
-        .icon
-            font-size: 20px
-            vertical-align: initial
-
-
-.team-img
-  height: 60px
-  width: 60px
-
-.card-content
-    box-sizing: border-box
-    padding: 0 15px
-
-.card-content-placeholder
-    min-height: 150px
-
-
-.img-container
+.item-container
   display: flex
   flex-direction: row
   flex-wrap: wrap
-  justify-content: space-around
+  justify-content: flex-start 
   margin: 0
   width: 100%
-  height: 100%
-  padding: 15px 0
+  padding: 0
   align-content: center
   align-items: center
   img
     border-radius: 50px
-    margin-bottom: 5%
+    margin-right: 5px
+    
 
-.card-content-placeholder
-    display: flex
-    flex-direction: row
-    justify-content: center
-    align-items: center
     
 .team-assign-icon
     font-size: 150px

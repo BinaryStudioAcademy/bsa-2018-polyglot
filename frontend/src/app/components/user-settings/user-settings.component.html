@@ -7,19 +7,25 @@
 
         <div class="line-block margin-top-20px">
             <mat-form-field class="name-field form-input float-left">
-                <input matInput placeholder="Enter first name" formControlName="firstName" required>
+                <input appNoWhiteSpace matInput placeholder="Enter first name" formControlName="firstName" required>
                 <mat-error class="errors" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
                     <div *ngIf="firstName.errors && firstName.errors.required">
                         First name is required.
+                    </div>
+                    <div *ngIf="firstName.errors && firstName.errors?.WhiteSpace">
+                        Only spaces are not allowed
                     </div>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field class="name-field form-input left-margin-3">
-                <input matInput placeholder="Enter last name" formControlName="lastName" required>
+                <input appNoWhiteSpace matInput placeholder="Enter last name" formControlName="lastName" required>
                 <mat-error class="errors" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
                     <div *ngIf="lastName.errors && lastName.errors.required">
                         Last name is required.
+                    </div>
+                    <div *ngIf="lastName.errors && lastName.errors?.WhiteSpace">
+                        Only spaces are not allowed
                     </div>
                 </mat-error>
             </mat-form-field>
