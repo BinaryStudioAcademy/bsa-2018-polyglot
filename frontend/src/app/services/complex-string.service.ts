@@ -83,7 +83,7 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + stringId + '/' + translationId, 'optional' );
   }
 
-  changeStringStatus(id: number, groupName: string, status: number) {
+  changeStringStatus(id: number, groupName: string, status: boolean) {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/status/' + status, '/?groupName=' + groupName);
   }
 }
