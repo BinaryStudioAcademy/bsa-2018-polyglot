@@ -214,12 +214,11 @@ namespace Polyglot.Controllers
                 : Ok(response);
         }
 
-        [HttpGet("{id}/status/{status}")]
-        public async Task<IActionResult> ChangeStringStatus(int id, int status, string groupName)
+        [Route("/search/reindex")]
+        public async Task<IActionResult> ReIndex()
         {
-            await dataProvider.ChangeStringStatus(id, status, groupName);
-
-            return Ok();
+            var result = await dataProvider.ReIndex();
+            return Ok(result);
         }
     }
 }

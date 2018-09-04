@@ -70,7 +70,7 @@ namespace Polyglot.BusinessLogic.Services
                 newTeam.TeamTranslators = translators;
                 newTeam.CreatedBy = manager;
                 newTeam.Name = receivedTeam.Name;
-                newTeam = uow.GetRepository<Team>().Update(newTeam);
+                newTeam = await uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
 
                 return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
@@ -142,7 +142,7 @@ namespace Polyglot.BusinessLogic.Services
             if (uow != null)
             {
                 var teamRepository = uow.GetRepository<Team>();
-                var target = teamRepository.Update(mapper.Map<Team>(entity));
+                var target = await teamRepository.Update(mapper.Map<Team>(entity));
                 if (target != null)
                 {
                     await uow.SaveAsync();
