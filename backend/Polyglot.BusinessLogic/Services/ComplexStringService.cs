@@ -425,6 +425,16 @@ namespace Polyglot.BusinessLogic.Services
             var res = await ElasticRepository.ReIndex(allPosts);
 
             return res;
+        public async Task ChangeStringStatus(int id, bool status, string groupName)
+        {
+            if (status)
+            {
+                await signalRService.ComplexStringTranslatingStarted(groupName, id);
+            }
+            else
+            {
+                await signalRService.ComplexStringTranslatingFinished(groupName, id);
+            }
         }
     }
 }

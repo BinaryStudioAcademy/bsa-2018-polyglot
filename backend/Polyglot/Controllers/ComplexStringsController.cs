@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -219,6 +220,18 @@ namespace Polyglot.Controllers
         {
             var result = await dataProvider.ReIndex();
             return Ok(result);
+        [HttpGet("{id}/status/{status}")]
+        public async Task<IActionResult> ChangeStringStatus(int id, bool status, string groupName)
+        {
+            try
+            {
+                await dataProvider.ChangeStringStatus(id, status, groupName);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

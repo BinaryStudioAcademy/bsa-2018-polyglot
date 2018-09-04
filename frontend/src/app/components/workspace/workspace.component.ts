@@ -34,9 +34,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public isLoad: boolean;
     public projectLanguagesCount: number;
     public stringsInProgress: number[] = [];
-
     public projectTags: string[] = [];
-
     private routeSub: Subscription;
 
     filters: Array<string>;
@@ -155,12 +153,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     // sendStringStatusMessage(keyId: number) {
-    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, 1).subscribe(() => {});
-    //     setTimeout(() => { 
-    //         if (this.stringsInProgress.includes(keyId)) {
+    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+    //     setInterval(() => { 
+    //         if (this.sendMessages) {
+    //             console.log('hi');
     //             this.sendStringStatusMessage(keyId);
     //         }
-    //     }, 5000);
+    //     }, 2000);
     // }
 
     onAddNewStringClick() {
@@ -349,7 +348,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     } */
 
     highlightStringStatus(key) {
-        if (key.translations.length === 0) {
+        if (this.stringsInProgress.includes(key.id)) {
+            return '';
+        } else if (key.translations.length === 0) {
             return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
             return "7px solid #ffcc00"; // partially
@@ -359,9 +360,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     isStringInProgress(key) {
-        if (this.stringsInProgress.includes(key.id)) {
-            return true;
-        }
-        return false;
+        return this.stringsInProgress.includes(key.id);
     }
 }
