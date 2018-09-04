@@ -8,13 +8,13 @@
   </ng-container>
 
 
-  <ng-container matColumnDef="explanationText">
+  <ng-container class="column" matColumnDef="explanationText">
     <th mat-header-cell *matHeaderCellDef> Explanation </th>
     <td mat-cell *matCellDef="let element"> {{element.explanationText}} </td>
 
   </ng-container>
 
-  <ng-container matColumnDef="edit_btn">
+  <ng-container class="column" matColumnDef="edit_btn">
     <th mat-header-cell *matHeaderCellDef> Edit String </th>
     <td mat-cell *matCellDef="let element">
       <a mat-button routerLinkActive="active" (click)='onEdit(element)'><i class="fas fa-edit"></i> Edit</a>
