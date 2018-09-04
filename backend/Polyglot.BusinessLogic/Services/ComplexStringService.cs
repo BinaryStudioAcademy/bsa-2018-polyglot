@@ -417,7 +417,7 @@ namespace Polyglot.BusinessLogic.Services
 
             return paginatedHistory;
         }
-
+        
         public async Task<string> ReIndex()
         {
             var allPosts = (await repository.GetAllAsync()).ToList();
@@ -425,6 +425,8 @@ namespace Polyglot.BusinessLogic.Services
             var res = await ElasticRepository.ReIndex(allPosts);
 
             return res;
+        }
+        
         public async Task ChangeStringStatus(int id, bool status, string groupName)
         {
             if (status)

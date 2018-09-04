@@ -220,6 +220,7 @@ namespace Polyglot.Controllers
         {
             var result = await dataProvider.ReIndex();
             return Ok(result);
+        }
         [HttpGet("{id}/status/{status}")]
         public async Task<IActionResult> ChangeStringStatus(int id, bool status, string groupName)
         {
