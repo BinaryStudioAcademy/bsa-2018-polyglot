@@ -7,6 +7,8 @@ namespace Polyglot.Common.DTOs
 {
     public class NotificationDTO
     {
+        public int Id { get; set; }
+
         public int SenderId { get; set; }
 
         public int ReceiverId { get; set; }

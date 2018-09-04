@@ -35,9 +35,17 @@ namespace Polyglot.Controllers
         // POST: Notifications
         public async Task<IActionResult> SendNotification([FromBody]NotificationDTO notification)
         {
-            var notifications = await service.SendNotification(notification);
-            return notifications == null ? NotFound("No notification send!") as IActionResult
-                : Ok(notifications);
+            var entity = await service.SendNotification(notification);
+            return entity == null ? StatusCode(409) as IActionResult
+                : Ok(entity);
+        }
+
+        // Ву: Notifications
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNotification(int id)
+        {
+            bool isDeleted = await service.TryDeleteAsync(id);
+            return isDeleted ? Ok() : StatusCode(304) as IActionResult;
         }
     }
 }

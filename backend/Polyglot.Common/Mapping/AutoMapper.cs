@@ -260,6 +260,8 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Projects, opt => opt.Ignore());
 
                 cfg.CreateMap<Notification, NotificationDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
                     .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
                     .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
                     .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
@@ -268,6 +270,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
 
                 cfg.CreateMap<NotificationDTO, Notification>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
                     .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
                     .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))

@@ -1,8 +1,8 @@
 import { UserProfile } from ".";
-import { OptionDefinition } from "./optionDefinition";
 import { Option } from "./option";
 
 export class Notification{
+    id?: number;
     receiver?: UserProfile;
     receiverId: number;
     SenderId?: number;

@@ -11,7 +11,7 @@
         <mat-card-header>
         <mat-card-title class="card-main">
             <div>
-                <h4>From: {{notification.receiver.fullName}}</h4>
+                <div>From: <strong>{{notification.sender.fullName}}</strong></div>
                 <p>
                     <i>{{notification.message}}</i>
                 </p>
@@ -20,8 +20,12 @@
         </mat-card-header>
         <hr>
         <mat-card-content class="card-navigation">
-            <a mat-button color="primary" class="card-navigation-button" routerLink="/profile">Action</a>
-            <a mat-button color="warn" (click)="onLogoutClick()" class="card-navigation-button">Action</a>
+            <a *ngFor="let notificationOption of notification.options" mat-button color="primary" class="card-navigation-button" routerLink="/profile">
+                {{getStringEnum(notificationOption.optionDefinition)}}
+            </a>
+            <a mat-button color="danger" class="card-navigation-button" (click)="deleteNotification(notification.id)">
+                Close
+            </a>
         </mat-card-content>
     </mat-card>
 </mde-popover>
