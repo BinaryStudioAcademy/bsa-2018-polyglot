@@ -52,7 +52,7 @@ namespace Polyglot.DataAccess.Migrations
                     SenderId = table.Column<int>(nullable: false),
                     Body = table.Column<string>(nullable: true),
                     ReceivedDate = table.Column<DateTime>(nullable: false),
-                    IsRead = table.Column<bool>(nullable: true),
+                    IsRead = table.Column<bool>(nullable: false, defaultValue: false),
                     DialogId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

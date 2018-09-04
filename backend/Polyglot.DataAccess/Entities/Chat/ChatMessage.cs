@@ -12,7 +12,7 @@ namespace Polyglot.DataAccess.Entities.Chat
 
         public DateTime ReceivedDate { get; set; }
 
-        public bool? IsRead { get; set; }
+        public bool IsRead { get; set; }
 
         public virtual ChatDialog Dialog { get; set; }
 

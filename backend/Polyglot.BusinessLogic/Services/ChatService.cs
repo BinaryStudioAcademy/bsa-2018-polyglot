@@ -53,26 +53,42 @@ namespace Polyglot.BusinessLogic.Services
             if (dialogs == null || dialogs.Count < 1)
                 return null;
 
-            return mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest)));
+            return mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest, currentUser)));
         }
 
-        public void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest)
+        public void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {
-          //  List<ChatDialogDTO> result = (List<ChatDialogDTO>)dest;
-          //  result.ForEach(d =>
-          //  {
-          //      var accordingDialog = ((List<ChatDialog>)src).Find(dialog => dialog.Id == d.Id);
-          //      var interlocator = accordingDialog.Participants.Where(p => p.Id != currentUser.Id).FirstOrDefault();
-          //      if (interlocator != null)
-          //      {
-          //          interlocator.LastMessageText = accordingDialog.Messages
-          //              .Where(message => message.SenderId == interlocator.Id)
-          //              .FirstOrDefault()
-          //              ?.Body.Substring(0, 50);
-          //
-          //          d.Participants = new List<ChatUserDTO>();
-          //      }
-          //  });
+            List<ChatDialogDTO> result = dest;
+            result.ForEach(d =>
+            {
+                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
+                var interlocator = accordingSourceDialog
+                    .DialogParticipants
+                    .Select(dp => dp.Participant)
+                    .Where(p => p.Id != currentUser.Id)
+                    .FirstOrDefault();
+            
+                if (interlocator != null)
+                {
+                    d.LastMessageText = accordingSourceDialog
+                        .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
+                        ?.Body;
+
+                    if(d.LastMessageText.Length > 155)
+                    {
+                        d.LastMessageText = d.LastMessageText.Substring(0, 150);
+                    }
+
+                    d.UnreadMessagesCount = accordingSourceDialog.Messages
+                        .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
+                        .Count();
+
+                    d.Participants = new List<ChatUserDTO>()
+                    {
+                        mapper.Map<ChatUserDTO>(interlocator)
+                    };
+                }
+            });
         }
 
         //private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
