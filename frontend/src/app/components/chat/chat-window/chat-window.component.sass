@@ -18,55 +18,60 @@ ul
   padding-top: 15px
   list-style: none
 
-li
+.message
   position: relative
   display: flex
   flex-direction: column
-  align-items: flex-start
+  align-items: flex-end
   padding: 0 15px
-  padding-left: 60px
+  margin-top: 10px
   margin-bottom: 1px
-  // align-self: flex-end
+  .person-img,
+  .sender-name
+    display: none
+  .message-card
+    border-radius: 30px 0 30px 30px
+    max-width: 85%
 
-.messages-spinner
-  align-self: center
-  margin: 30px 0
+.message-from-user
+  align-self: flex-start
+  align-items: flex-start
+  padding-left: 60px
+  .person-img
+    display: block
+    position: absolute
+    left: 15px
+    top: 0
+    .person-avatar
+      width: 35px
+      height: 35px  
+  .sender-name
+    display: block
+    align-self: flex-start
+    font-size: 14px
+    font-weight: 600
+    padding: 5px 0
+  .message-card
+    border-radius: 0 30px 30px 30px
+    background-color: #F6F7FB
+    &:hover
+      background-color: #D9E8FA
+  .recieved-read-container
+    display: none
 
-.chat-messages-container
-  height: 64.2vh
-  overflow-y: scroll
-  z-index: 10
-
-.chat-form-field
-  width: 100%
-  z-index: 20
-
-.message-actions-container
-  display: flex
-  flex-direction: row
-
-.person-img
-  position: absolute
-  left: 15px
-  top: 0
-  .person-avatar
-    width: 35px
-    height: 35px  
-
-.sender-name
-  font-size: 14px
-  font-weight: 600
-  padding: 5px 0
 
 .message-card
   position: relative
-  min-width: 100px
+  min-width: 80px
   margin-top: 3px
   padding: 16px
   padding-bottom: 32px
-  border-radius: 0 10px 10px 0
   transition: all 0.5s
-  background-color: #D0D0D0
+  background-color: #FFF
+
+.message-card:hover
+  background-color: #D9E8FA
+  
 
 .message-info-container
   display: flex
@@ -94,9 +99,22 @@ li
   font-size: 12px
   color: #AAAAAA
 
+.messages-spinner
+  align-self: center
+  margin: 30px 0
 
-.message-card:hover
-  background-color: #C1C1C1
+.chat-messages-container
+  height: 64.2vh
+  overflow-y: scroll
+  z-index: 10
+
+.chat-form-field
+  width: 100%
+  z-index: 20
+
+.message-actions-container
+  display: flex
+  flex-direction: row
 
 .chat-input-container
   position: relative
@@ -120,3 +138,10 @@ li
 
 .send-icon:hover
   color: #56B68B
+
+.interlocutor-info,
+.chat-input-container
+  background-color: #FFFFFF
+
+.chat-messages-container
+  background-color: #E8EDF3

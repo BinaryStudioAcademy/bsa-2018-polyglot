@@ -27,6 +27,7 @@ export class ChatWindowComponent implements OnInit {
     mainWindow: ElementRef;
     @Input() interlocutor: any;
     public currentMessage: string = "";
+    public currentUserId: number;
 
     messages = [];
     constructor(
@@ -38,10 +39,10 @@ export class ChatWindowComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         //  this.messages = MOCK_MESSAGES;
         this.signalRService.createConnection(
-            `${SignalrGroups[SignalrGroups.chatUser]}
-            ${this.appState.currentDatabaseUser.id}`,
+            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`,
             Hub[Hub.chatHub]
         );
         this.subscribeChatEvents();
@@ -61,8 +62,18 @@ export class ChatWindowComponent implements OnInit {
                 if(this.interlocutor.id == message.senderId){
                     this.messages.push(message);
                 }
-                console.log("message received");
-                console.log(message);
+            }
+        );
+
+        this.signalRService.connection.on(
+            ChatActions[ChatActions.messageRead],
+            (userId: number) => {
+                debugger;
+                if(this.interlocutor.id == userId){
+                    for(let i = 0; i < this.messages.length; i++){
+                        this.messages[i].isRead = true;
+                    }
+                }
             }
         );
     }
@@ -71,7 +82,7 @@ export class ChatWindowComponent implements OnInit {
         this.getMessagesHistory();
     }
 
-    ngAfterViewInit() {
+    ngAfterViewChecked() {
         let scrollHeight = this.mainWindow.nativeElement.scrollHeight;
         this.renderer.setProperty(
             this.mainWindow.nativeElement,
@@ -80,8 +91,9 @@ export class ChatWindowComponent implements OnInit {
         );
     }
 
+
     getMessagesHistory() {
-        if (this.interlocutor) {
+        if (this.interlocutor && this.interlocutor.id) {
             debugger;
             this.chatService
                 .getMessagesHistory(GroupType.users, this.interlocutor.id)
@@ -89,6 +101,7 @@ export class ChatWindowComponent implements OnInit {
                     if (messages) {
                         debugger;
                         this.messages = messages;
+                        this.signalRService.readMessage(this.interlocutor.id);
                     }
                 });
         }
@@ -103,6 +116,7 @@ export class ChatWindowComponent implements OnInit {
             this.chatService.sendMessage(GroupType.users, this.interlocutor.id, 
                 message).subscribe((message: ChatMessage) => {
                     debugger;
+                    let a = this.currentUserId == message.senderId;
                     if(message){
                         this.messages.push(message);
                         this.currentMessage = "";

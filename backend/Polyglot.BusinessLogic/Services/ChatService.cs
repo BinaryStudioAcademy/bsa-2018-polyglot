@@ -16,21 +16,24 @@ using Polyglot.BusinessLogic.Interfaces.SignalR;
 
 namespace Polyglot.BusinessLogic.Services
 {
-    public class ChatService : CRUDService<Project, ProjectDTO>, IChatService
+    public class ChatService : IChatService
     {
         private readonly IProjectService projectService;
         private readonly ITeamService teamService;
         private readonly ISignalRChatService signalRChatService;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork uow;
 
         public ChatService(
             ISignalRChatService signalRChatService,
             IProjectService projectService,
             ITeamService teamService, IMapper mapper, IUnitOfWork uow)
-            :base(uow, mapper)
         {
             this.signalRChatService = signalRChatService;
             this.projectService = projectService;
             this.teamService = teamService;
+            this.mapper = mapper;
+            this.uow = uow;
         }
 
         public async Task<ChatContactsDTO> GetContactsAsync(ChatGroup targetGroup, int targetGroupItemId)
@@ -73,7 +76,9 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
         {
             List<ChatMessageDTO> messages = new List<ChatMessageDTO>();
-            var currentUser = CurrentUser.GetCurrentUserProfile();
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
             switch (targetGroup)
             {
                 case ChatGroup.chatUser:
@@ -86,7 +91,7 @@ namespace Polyglot.BusinessLogic.Services
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
                                 RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                SenderId = targetGroupItemId,
                                 Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
                             },
                             new ChatMessageDTO()
@@ -95,7 +100,7 @@ namespace Polyglot.BusinessLogic.Services
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
                                 RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                SenderId = targetGroupItemId,
                                 Body = "If truth is beauty, how come no one has their hair done in the library?"
                             },
                             new ChatMessageDTO()
@@ -103,7 +108,7 @@ namespace Polyglot.BusinessLogic.Services
                                 Id = 2,
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
-                                RecipientId = 1,
+                                RecipientId = targetGroupItemId,
                                 SenderId = currentUser.Id,
                                 Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
                             },
@@ -113,7 +118,7 @@ namespace Polyglot.BusinessLogic.Services
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
                                 RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                SenderId = targetGroupItemId,
                                 Body = "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
                             },
                             new ChatMessageDTO()
@@ -122,7 +127,7 @@ namespace Polyglot.BusinessLogic.Services
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
                                 RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                SenderId = targetGroupItemId,
                                 Body = "the high school after high school!"
                             },
                             new ChatMessageDTO()
@@ -130,7 +135,7 @@ namespace Polyglot.BusinessLogic.Services
                                 Id = 5,
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
-                                RecipientId = 1,
+                                RecipientId = targetGroupItemId,
                                 SenderId = currentUser.Id,
                                 Body = "A professor is one who talks in someone else's sleep."
                             },
@@ -139,33 +144,33 @@ namespace Polyglot.BusinessLogic.Services
                                 Id = 6,
                                 IsRead = true,
                                 ReceivedDate = DateTime.Now,
-                                RecipientId = 1,
+                                RecipientId = targetGroupItemId,
                                 SenderId = currentUser.Id,
                                 Body = "About all some men accomplish in life is to send a son to Harvard. My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
                             },new ChatMessageDTO()
                             {
                                 Id = 7,
-                                IsRead = true,
+                                IsRead = false,
                                 ReceivedDate = DateTime.Now,
                                 RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                SenderId = targetGroupItemId,
                                 Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
                             },
                             new ChatMessageDTO()
                             {
                                 Id = 8,
-                                IsRead = true,
+                                IsRead = false,
                                 ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = 1,
+                                RecipientId = targetGroupItemId,
+                                SenderId = currentUser.Id,
                                 Body = "The world is coming to an end! Repent and return those library books!"
                             },
                             new ChatMessageDTO()
                             {
                                 Id = 9,
-                                IsRead = true,
+                                IsRead = false,
                                 ReceivedDate = DateTime.Now,
-                                RecipientId = 1,
+                                RecipientId = targetGroupItemId,
                                 SenderId = currentUser.Id,
                                 Body = "So, is the glass half empty, half full, or just twice as large as it needs to be?."
                             }
@@ -186,21 +191,21 @@ namespace Polyglot.BusinessLogic.Services
         {
             throw new NotImplementedException();
         }
-
-        public async Task<IEnumerable<ProjectDTO>> GetProjectsAsync()
-        {
-            return await projectService.GetListAsync();
-        }
-
-        public async Task<IEnumerable<TeamPrevDTO>> GetTeamsAsync()
-        {
-            return await teamService.GetAllTeamsAsync();
-        }
-
         public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<ProjectDTO>> GetProjectsAsync()
+        {
+            return await projectService.GetListAsync() ?? null; 
+        }
+
+        public async Task<IEnumerable<TeamPrevDTO>> GetTeamsAsync()
+        {
+            return await teamService.GetAllTeamsAsync() ?? null;
+        }
+
 
         public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
         {
@@ -212,7 +217,8 @@ namespace Polyglot.BusinessLogic.Services
             {
                 case ChatGroup.chatUser:
                     {
-                        message.IsRead = true;
+                        // сохранить в бд
+                        message.IsRead = false;
                         message.ReceivedDate = DateTime.Now;
                         message.SenderId = currentUser.Id;
                         await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
@@ -232,15 +238,15 @@ namespace Polyglot.BusinessLogic.Services
         private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
         {
             IEnumerable<ChatUserDTO> contacts = null;
+            List<UserProfile> users = null;
             if (currentUser.UserRole == Role.Manager)
             {
-                var users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
+                users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
                     .SelectMany(p => p.ProjectTeams)
                     .Select(pt => pt.Team)
                     .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile);
-
-                contacts = mapper.Map<IEnumerable<ChatUserDTO>>(users);
+                    .Select(tt => tt.UserProfile)
+                    .ToList();
             }
             else
             {
@@ -248,14 +254,26 @@ namespace Polyglot.BusinessLogic.Services
                     .GetAllAsync(x => x.TranslatorId == currentUser.Id))
                     .Select(tt => tt.Team);
 
-                var users = translatorTeams
+                users = translatorTeams
                     .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile).Where(u => u.Id != currentUser.Id).ToList();
+                    .Select(tt => tt.UserProfile)
+                    .Where(u => u.Id != currentUser.Id)
+                    .ToList();
 
                 users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
-
-                contacts = mapper.Map<IEnumerable<ChatUserDTO>>(users);
             }
+
+            // достать из базы userState, последнее сообщение и примапить
+            contacts = mapper.Map <List<UserProfile>, List<ChatUserDTO>>(users, opt => opt.AfterMap((src, dest) =>
+            {
+                List<ChatUserDTO> result = dest;
+                result.ForEach(u => 
+                {
+                    u.LastMessageText = "Last message text from server, hell yeah!!1111";
+                    u.LastSeen = DateTime.Now;
+                    u.IsOnline = true;
+                });
+            }));
 
             return contacts;
         }

@@ -19,5 +19,6 @@ namespace Polyglot.Common.DTOs.Chat
 
         public bool IsOnline { get; set; }
 
+        public string LastMessageText { get; set; }
     }
 }
