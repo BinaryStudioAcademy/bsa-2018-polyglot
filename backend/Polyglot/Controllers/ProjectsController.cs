@@ -268,6 +268,16 @@ namespace Polyglot.Controllers
 
         }
 
+        // GET: Projects/5/notAssigned
+        [HttpGet("{id}/notassigned")]
+        public async Task<IActionResult> GetNotAssignedGlossaries(int id)
+        {
+            var glossaries = await service.GetNotAssignedGlossaries(id);
+            return glossaries == null ? NotFound() as IActionResult
+                : Ok(glossaries);
+
+        }
+
         // PUT: Projects/:id/glossaries
         [HttpPut("{projectId}/glossaries")]
         public async Task<IActionResult> AssignGlossariesToProject(int projectId, [FromBody]int[] glossaryIds)

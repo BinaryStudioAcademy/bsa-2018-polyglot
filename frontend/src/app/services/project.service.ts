@@ -112,6 +112,10 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/glossaries', undefined, glossaryIds);
   }
 
+  getNotAssignedGlossaries(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/notassigned', undefined, undefined);
+  }
+
   dismissProjectGlossary(projectId: number, glossaryId: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/glossaries/' + glossaryId, undefined, undefined);
   }

@@ -33,11 +33,12 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IComplexStringService stringService;
         private readonly ISignalRWorkspaceService signalrService;
         ICRUDService<UserProfile, UserProfileDTO> userService;
+        private readonly IGlossaryService glossaryService;
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
-            ISignalRWorkspaceService signalrService)
+            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -45,6 +46,7 @@ namespace Polyglot.BusinessLogic.Services
             this.stringService = stringService;
             this.userService = userService;
             this.signalrService = signalrService;
+            this.glossaryService = glossaryService;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -722,10 +724,21 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(projectId);
-            if (proj != null && proj.ProjectGlossaries.Count > 0)
+            if (proj != null)
             {
                 var glossaries = proj.ProjectGlossaries?.Select(p => p.Glossary);
                 return mapper.Map<IEnumerable<Glossary>, IEnumerable<GlossaryDTO>>(glossaries);
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<GlossaryDTO>> GetNotAssignedGlossaries(int projectId)
+        {
+            var assignedGlossaries = await this.GetAssignedGlossaries(projectId);
+            var allGlossaries = await this.glossaryService.GetListAsync();
+            if(assignedGlossaries != null && allGlossaries != null)
+            {
+                return allGlossaries.Where(g => !assignedGlossaries.Select(ag => ag.Id).Contains(g.Id));
             }
             return null;
         }
