@@ -8,7 +8,8 @@ import { ChatUser, Project, Team, GroupType } from "../../../models";
     styleUrls: ["./chat-contacts.component.sass"]
 })
 export class ChatContactsComponent implements OnInit {
-    @Output() onItemSelect = new EventEmitter<any>(true);
+    @Output()
+    onItemSelect = new EventEmitter<any>(true);
     step = 2;
     unreadProject: number[];
     unreadTeam: number[];
@@ -27,17 +28,36 @@ export class ChatContactsComponent implements OnInit {
     ngOnInit() {
         this.users = MOCK_USERS;
         this.onItemSelect.emit(this.users[0]);
-        
-        this.chatService.getContacts(GroupType.users, 1)
-        .subscribe((users) => {
-            debugger;
-        });
-        this.chatService.getProjectsList().subscribe((projects: Project[]) => {
-            if (projects) {
-                debugger;
-                this.projects = projects;
-            }
-        });
+
+        setTimeout(() => {
+            this.chatService
+                .getProjectsList()
+                .subscribe((projects: Project[]) => {
+                    if (projects) {
+                        debugger;
+                        this.projects = projects;
+                    }
+                });
+        }, 500);
+
+        setTimeout(() => {
+            this.chatService
+                .getContacts(GroupType.users, 1)
+                .subscribe(users => {
+                    debugger;
+                    if (
+                        users &&
+                        users.contactList &&
+                        users.contactList.length
+                    ) {
+                        Array.prototype.push.apply(
+                            this.users,
+                            users.contactList
+                        );
+                    }
+                });
+        }, 500);
+
         this.chatService.getTeamsList().subscribe((teams: Team[]) => {
             if (teams) {
                 debugger;
@@ -46,8 +66,7 @@ export class ChatContactsComponent implements OnInit {
         });
     }
 
-    selectUser(user: ChatUser)
-    {
+    selectUser(user: ChatUser) {
         this.onItemSelect.emit(user);
     }
 
@@ -70,70 +89,92 @@ const MOCK_USERS = [
         fullName: "Theodore Roosevelt",
         avatarUrl:
             "https://www.randomlists.com/img/people/theodore_roosevelt.jpg",
-        isOnline: false
+        isOnline: true,
+        lastSeen: new Date("February 4, 2016 10:13:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Jennifer Love Hewitt",
         avatarUrl:
             "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-        isOnline: true
+        isOnline: true,
+        lastSeen: new Date("February 4, 2016 10:13:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Hugh Jackman",
         avatarUrl: "https://www.randomlists.com/img/people/hugh_jackman.jpg",
-        isOnline: false
+        isOnline: false,
+        lastSeen: new Date("May 1, 2018 12:17:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "George Pal",
         avatarUrl: "https://www.randomlists.com/img/people/george_pal.jpg",
-        isOnline: true
+        isOnline: false,
+        lastSeen: new Date("February 4, 2016 10:13:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Tina Fey",
         avatarUrl: "https://www.randomlists.com/img/people/tina_fey.jpg",
-        isOnline: true
+        isOnline: false,
+        lastSeen: new Date("May 13, 2017 12:17:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Owen Wilson",
         avatarUrl: "https://www.randomlists.com/img/people/owen_wilson.jpg",
-        isOnline: false
+        isOnline: false,
+        lastSeen: new Date("August 15, 2018 5:17:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Robert De Niro",
         avatarUrl: "https://www.randomlists.com/img/people/robert_de_niro.jpg",
-        isOnline: true
+        isOnline: true,
+        lastSeen: new Date("February 4, 2016 10:13:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Julia Louis-Dreyfus",
         avatarUrl:
             "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
-        isOnline: false
+        isOnline: false,
+        lastSeen: new Date("July 27, 2017 17:26:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Natalya Rudakova",
         avatarUrl:
             "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-        isOnline: true
+        isOnline: false,
+        lastSeen: new Date("July 11, 2018 12:17:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "Jennifer Love Hewitt",
         avatarUrl:
             "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-        isOnline: true
+        isOnline: false,
+        lastSeen: new Date("May 1, 2018 12:17:00"),
+        lastMessageText: "Mock message from front"
     },
     {
         id: 1,
         fullName: "William Shatner",
         avatarUrl: "https://www.randomlists.com/img/people/william_shatner.jpg",
-        isOnline: false
+        isOnline: false,
+        lastSeen: new Date("May 18, 2018 18:45:00"),
+        lastMessageText: "Mock message from front"
     }
 ];

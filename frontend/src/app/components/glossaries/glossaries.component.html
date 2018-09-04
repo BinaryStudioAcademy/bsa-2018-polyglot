@@ -1,14 +1,16 @@
 <h2>Use a glossary</h2>
 <p>
-  A glossary is a set of terms with translations, definitions, and notes.
+	A glossary is a set of terms with translations, definitions, and notes.
 </p>
 <p>You may find it helpful to use a glossary if your translation contains special or uncommon terms, or is part of a set of
-  documents that should have consistent terminology.</p>
-<mat-form-field>
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-</mat-form-field>
+	documents that should have consistent terminology.</p>
 
-<div class="row-container">
+
+<div class="no-items-div mt-1 mb-1" *ngIf="glossaries.length === 0">
+	<p>No glossaries</p>
+</div>
+
+<div class="row-container" *ngIf="glossaries.length !== 0">
   <mat-list>
     <div class="list-item" *ngFor="let glossary of glossaries">
       <div class="row-name">
@@ -24,9 +26,8 @@
   </mat-list>
 </div>
 
-
 <button mat-fab color="primary" class="button-add" (click)='onCreate()'>
-  <mat-icon  aria-label="Add button">add</mat-icon>
+	<mat-icon  aria-label="Add button">add</mat-icon>
 </button>
 
 <ng-snotify></ng-snotify>
