@@ -111,6 +111,9 @@ export class NewProjectComponent implements OnInit {
         return this.languages.map(l => l.name);
     }
 
+    onClose() {
+        this.router.navigate(['../']);
+    }
 
     get name() {
         return this.projectForm.get('name');
