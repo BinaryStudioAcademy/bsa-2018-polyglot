@@ -24,7 +24,7 @@ namespace Polyglot.BusinessLogic.Services
             if (glossary == null)
                 return null;
             glossary.GlossaryStrings.Add(mapper.Map<GlossaryString>(glossaryString));
-            uow.GetRepository<Glossary>().Update(glossary);
+            await uow.GetRepository<Glossary>().Update(glossary);
             await uow.SaveAsync();
             return mapper.Map<GlossaryDTO>(await uow.GetRepository<Glossary>().GetAsync(glossaryId));
 
@@ -38,14 +38,14 @@ namespace Polyglot.BusinessLogic.Services
                 return false;
             var target = glossary.GlossaryStrings.FirstOrDefault(s => s.Id == glossaryStringId);
             glossary.GlossaryStrings.Remove(target);
-            uow.GetRepository<Glossary>().Update(glossary);
+            await uow.GetRepository<Glossary>().Update(glossary);
             return await uow.SaveAsync() != 0;
 
         }
 
         public async Task<GlossaryDTO> UpdateString(int glossaryId, GlossaryStringDTO glossaryString)
         {
-            var str = uow.GetRepository<GlossaryString>().Update(mapper.Map<GlossaryString>(glossaryString));
+            var str = await uow.GetRepository<GlossaryString>().Update(mapper.Map<GlossaryString>(glossaryString));
             await uow.SaveAsync();
             return mapper.Map<GlossaryDTO>(await uow.GetRepository<Glossary>().GetAsync(glossaryId));
         }
@@ -59,7 +59,7 @@ namespace Polyglot.BusinessLogic.Services
                 if (glossary == null)
                     return false;
                 glossary.GlossaryStrings.Clear();
-                uow.GetRepository<Glossary>().Update(glossary);
+                await uow.GetRepository<Glossary>().Update(glossary);
                 await uow.SaveAsync();
                 await uow.GetRepository<Glossary>().DeleteAsync(identifier);
                 await uow.SaveAsync();

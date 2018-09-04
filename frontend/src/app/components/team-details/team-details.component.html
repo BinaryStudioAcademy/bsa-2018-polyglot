@@ -1,0 +1,20 @@
+<div class="content" *ngIf="team">
+
+	<div class="d-flex align-items-center py-0 px-1 justify-space-between">
+		<h2>{{team.name}}</h2>
+	</div>
+
+	<mat-tab-group>
+    <mat-tab label="Members">
+      <ng-template matTabContent>
+        <app-team-members [teamId]="team.id"></app-team-members>
+      </ng-template>
+    </mat-tab>
+		<mat-tab label="Projects">
+			<ng-template matTabContent>
+				<app-team-project [cards]="team.teamProjects"></app-team-project>
+			</ng-template>
+		</mat-tab>
+	</mat-tab-group>
+	<ng-snotify></ng-snotify>
+</div>

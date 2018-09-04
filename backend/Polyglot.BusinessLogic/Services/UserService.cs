@@ -40,7 +40,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> PutUserBool(UserProfileDTO userProfileDTO)
         {
-            var result = uow.GetRepository<UserProfile>().UpdateBool((mapper.Map<UserProfile>(userProfileDTO)));
+            var result = await uow.GetRepository<UserProfile>().UpdateBool((mapper.Map<UserProfile>(userProfileDTO)));
             if (result)
             {
                 await uow.SaveAsync();

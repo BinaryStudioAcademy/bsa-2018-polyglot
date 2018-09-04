@@ -160,11 +160,13 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<TeamDTO, Team>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.ProjectTeams, opt => opt.MapFrom(p => p.TeamProjects))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
                 cfg.CreateMap<Team, TeamDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.TeamProjects, opt => opt.MapFrom(p => p.ProjectTeams))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
 
@@ -257,11 +259,22 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.UserRole, opt => opt.MapFrom(pt => (int)pt.UserRole))
                     .ForMember(p => p.Projects, opt => opt.Ignore());
 
-				#endregion
+                cfg.CreateMap<ProjectTeam, TeamProjectDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
+                    .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId));
 
-				#region NoSQL
+                cfg.CreateMap<TeamProjectDTO, ProjectTeam>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
+                    .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId));
+                #endregion
 
-				cfg.CreateMap<AdditionalTranslationDTO, AdditionalTranslation>()
+                #region NoSQL
+
+                cfg.CreateMap<AdditionalTranslationDTO, AdditionalTranslation>()
 				  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
 				  .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
 				  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
@@ -315,14 +328,17 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
                   .ForMember(p => p.OptionalTranslations, opt => opt.MapFrom(po => po.OptionalTranslations))
                   .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
-                  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
+                  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId))
+                  .ForMember(p => p.AssignedTranslatorId, opt => opt.MapFrom(po => po.AssignedTranslatorId));
+
                 cfg.CreateMap<Polyglot.DataAccess.MongoModels.Translation, Polyglot.Common.DTOs.NoSQL.TranslationDTO>()
                   .ForMember(p => p.History, opt => opt.MapFrom(pt => pt.History))
                   .ForMember(p => p.LanguageId, opt => opt.MapFrom(pt => pt.LanguageId))
                   .ForMember(p => p.CreatedOn, opt => opt.MapFrom(pt => pt.CreatedOn))
                   .ForMember(p => p.OptionalTranslations, opt => opt.MapFrom(pt => pt.OptionalTranslations))
                   .ForMember(p => p.TranslationValue, opt => opt.MapFrom(pt => pt.TranslationValue))
-                  .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId));
+                  .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId))
+                  .ForMember(p => p.AssignedTranslatorId, opt => opt.MapFrom(pt => pt.AssignedTranslatorId));
 
                 #endregion
 

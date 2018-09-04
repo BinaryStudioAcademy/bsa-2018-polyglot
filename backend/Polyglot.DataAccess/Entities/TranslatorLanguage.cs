@@ -1,6 +1,6 @@
 ﻿namespace Polyglot.DataAccess.Entities
 {
-    public class TranslatorLanguage : DbEntity
+    public class TranslatorLanguage : Entity
     {
         public int? TranslatorId { get; set; }
         public virtual UserProfile UserProfile { get; set; }

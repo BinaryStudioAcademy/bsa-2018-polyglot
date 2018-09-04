@@ -1,9 +1,13 @@
 export enum SignalrSubscribeActions {
-    commentAdded,
+    commentsChanged,
+    commentEdited,
+    commentDeleted,
     changedTranslation,
     complexStringAdded,
     complexStringRemoved,
     languageRemoved,
     languagesAdded,
-    languageTranslationCommitted
+    languageTranslationCommitted,
+    complexStringTranslatingStarted,
+    complexStringTranslatingFinished
 }

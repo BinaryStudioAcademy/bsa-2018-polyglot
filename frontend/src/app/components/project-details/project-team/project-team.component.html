@@ -8,12 +8,7 @@
           <div class="text-placeholder subtitle-placeholder"></div>
         </div>
         <div class="action-btn-container">
-          <button disabled mat-icon-button>
-            <mat-icon class="icon team-info-icon">info</mat-icon>
-          </button>
-          <button disabled mat-icon-button>
-            <mat-icon class="icon dismiss-team-icon">clear</mat-icon>
-          </button>
+           
         </div>
       </mat-card-header>
       <div class="card-content card-content-placeholder">
@@ -22,6 +17,7 @@
           <mat-spinner></mat-spinner>
         </div>
       </div>
+     
     </mat-card>
 
     <mat-card class="example-card" *ngFor="let t of assignedTeams">
@@ -32,23 +28,11 @@
 
         <div class="title">
             <mat-card-title class="card-title">
-                <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
+                <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> {{t.name || t.id}}</a>
             </mat-card-title>
           <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
-        <div class="action-btn-container">
-          <button mat-icon-button>
-            <mat-icon class="icon team-info-icon" aria-label="team-details" routerLink="/dashboard/teams/{{t.id}}">info</mat-icon>
-          </button>
-          <div (click)="dismissTeam(t.id)">
-            <span [hidden]="!IsLoading[t.id]" class="dismiss-spinner">
-              <mat-spinner diameter="18"></mat-spinner>
-            </span>
-            <span [hidden]="IsLoading[t.id]" class="dismiss-spinner">
-              <mat-icon class="icon dismiss-team-icon" aria-label="dismiss-team">clear</mat-icon>
-            </span>
-          </div>
-        </div>
+      
       </mat-card-header>
 
 
@@ -58,6 +42,13 @@
             <img height="60" src="{{getAvatarUrl(p)}}">
           </a>
         </div>
+      </div>
+
+      <div class="action-btn-container">
+          
+        <button mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
+         Unassign
+        </button>
       </div>
     </mat-card>
   </div>

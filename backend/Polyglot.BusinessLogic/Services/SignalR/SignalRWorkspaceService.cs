@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Polyglot.BusinessLogic.Hubs;
-using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.Helpers.SignalR;
 using System.Threading.Tasks;
 
@@ -17,19 +17,9 @@ namespace Polyglot.BusinessLogic.Services.SignalR
             await hubContext.Clients.Group(groupName).SendAsync(Action.changedTranslation.ToString(), await GetIdsResponce(translationId));
         }
 
-        public async Task CommentAdded(string groupName, int complexStringId)
+        public async Task СommentsChanged(string groupName, int complexStringId)
         {
-            await hubContext.Clients.Group(groupName).SendAsync(Action.commentAdded.ToString(), await GetIdsResponce(complexStringId));
-        }
-
-        public async Task CommentDeleted(string groupName, int commentId)
-        {
-           await hubContext.Clients.Group(groupName).SendAsync(Action.commentDeleted.ToString(), await GetIdsResponce(commentId));
-        }
-
-        public async Task CommentEdited(string groupName, int commentId)
-        {
-           await hubContext.Clients.Group(groupName).SendAsync(Action.commentEdited.ToString(), await GetIdsResponce(commentId));
+            await hubContext.Clients.Group(groupName).SendAsync(Action.commentsChanged.ToString(), await GetIdsResponce(complexStringId));
         }
 
         public async Task ComplexStringAdded(string groupName, int complexStringId)
@@ -55,6 +45,16 @@ namespace Polyglot.BusinessLogic.Services.SignalR
         public async Task LanguageTranslationCommitted(string groupName, int languageId)
         {
             await hubContext.Clients.Group(groupName).SendAsync(Action.languageTranslationCommitted.ToString(), await GetIdsResponce(languageId));
+        }
+
+        public async Task ComplexStringTranslatingStarted(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingStarted.ToString(), await GetIdsResponce(complexStringId));
+        }
+
+        public async Task ComplexStringTranslatingFinished(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingFinished.ToString(), await GetIdsResponce(complexStringId));
         }
     }
 }
