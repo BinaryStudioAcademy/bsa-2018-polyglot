@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.QueryTypes;
 using Polyglot.DataAccess.Seeds;
 
@@ -27,9 +28,9 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<GlossaryString> GlossaryStrings { get; set; }
         public DbSet<TeamTranslator> TeamTranslators { get; set; }
         public DbSet<ProjectTeam> ProjectTeams { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<UserState> ChatUserStates { get; set; }
         public DbQuery<UserRights> UserRights { get; set; }
-
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
