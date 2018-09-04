@@ -6,7 +6,7 @@ namespace Polyglot.Common.Helpers
 {
     public enum ChatGroup
     {
-        User,
+        chatUser,
         Project,
         Team
     }

@@ -18,6 +18,7 @@ import { CompressFileService } from '../../services/compress-file.service';
 export class StringDialogComponent implements OnInit {
 
     @Output() onAddString = new EventEmitter<IString>(true);
+    @Output() onEditString = new EventEmitter<IString>(true);
     public str: IString;
     public image: File;
 
@@ -32,18 +33,7 @@ export class StringDialogComponent implements OnInit {
 
 
     ngOnInit() {
-        this.str = {
-            id: 0,
-            key: '',
-            base: '',
-            description: '',
-            tags: [],
-            projectId: this.data.projectId,
-            translations: [],
-            comments: [],
-            createdBy: 0,
-            createdOn: new Date()
-        };
+        this.str = this.data.string;
         this.image = undefined;
     }
 
@@ -54,7 +44,6 @@ export class StringDialogComponent implements OnInit {
     }
 
     receiveTags($event) {
-        this.str.tags = [];
         let tags: Tag[] = $event;
         for (let i = 0; i < tags.length; i++) {
             this.str.tags.push(tags[i].name);
@@ -76,7 +65,8 @@ export class StringDialogComponent implements OnInit {
         if (this.image)
             formData.append("image", this.image);
         formData.append("str", JSON.stringify(this.str));
-        this.complexStringService.create(formData)
+        if(this.str.id === 0){
+            this.complexStringService.create(formData)
             .subscribe(
                 (d) => {
                     if (d) {
@@ -95,6 +85,27 @@ export class StringDialogComponent implements OnInit {
                     this.snotifyService.success("ComplexString wasn`t created", "Error!");
                     this.dialogRef.close();
                 });
+        } else {
+            this.complexStringService.update(formData, this.str.id)
+            .subscribe(
+                (d) => {
+                    if (d) {
+                        this.onEditString.emit(d);
+                        this.snotifyService.success("ComplexString edited", "Success!");
+                        this.dialogRef.close();
+                    }
+                    else {
+                        this.snotifyService.success("ComplexString wasn`t edited", "Error!");
+                        this.dialogRef.close();
+                    }
+
+                },
+                err => {
+                    console.log('err', err);
+                    this.snotifyService.success("ComplexString wasn`t edited", "Error!");
+                    this.dialogRef.close();
+                });
+        }
     }
 }
 

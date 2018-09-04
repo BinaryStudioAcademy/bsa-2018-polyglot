@@ -31,7 +31,11 @@ export class ChatService {
   }
 
   getMessage(group: GroupType, targetGroupId: number, targetMessageId: number) : Observable<ChatMessage> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${group}/${targetGroupId}/messages`, targetMessageId);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/${targetGroupId}/messages`, targetMessageId);
+  }
+
+  sendMessage(group: GroupType, targetGroupId: number, message) : Observable<ChatMessage> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${GroupType[group]}/${targetGroupId}/messages`, undefined, message);
   }
 
   //createMessage(project: FormData) : Observable<Project> {

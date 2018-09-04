@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Polyglot.Common.DTOs;
+using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.MongoModels;
@@ -223,6 +224,14 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<UserProfile, UserProfilePrevDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl));
+
+                cfg.CreateMap<UserProfile, ChatUserDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Email, opt => opt.UseValue("NOT MAPPED"))
+                .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.FullName))
+                .ForMember(p => p.Role, opt => opt.MapFrom(po => po.UserRole))
+                .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl));
+
 
                 cfg.CreateMap<UserProfileDTO, UserProfile>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
