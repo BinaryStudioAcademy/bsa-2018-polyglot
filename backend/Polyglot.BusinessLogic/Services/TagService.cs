@@ -30,7 +30,9 @@ namespace Polyglot.BusinessLogic.Services
             {
                 if (tag.Id == 0)
                 {
-                    var newTag = repo.CreateAsync(mapper.Map<Tag>(tag));
+                    await repo.CreateAsync(mapper.Map<Tag>(tag));
+                    await uow.SaveAsync();
+                    var newTag = await repo.GetLastAsync();
                     result.Add(mapper.Map<TagDTO>(newTag));
                 }
                 else

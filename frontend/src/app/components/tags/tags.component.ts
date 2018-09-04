@@ -52,7 +52,7 @@ export class TagsComponent  {
     const value = event.value;
 
     const dialogRef = this.dialog.open(SelectColorDialogComponent, {
-      width: '420px',height: '360px',
+      width: '420px',height: '300px',
       data: this.colors});
     dialogRef.afterClosed().subscribe(res => { 
 

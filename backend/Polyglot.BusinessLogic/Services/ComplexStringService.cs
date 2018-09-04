@@ -41,9 +41,19 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
         {
-
+            List<ComplexStringDTO> result = new List<ComplexStringDTO>();
             var targets = await repository.GetAllAsync();
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(targets);
+            var resultWithoutTags =  mapper.Map<IEnumerable<ComplexStringDTO>>(targets);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            foreach (var complexString in resultWithoutTags)
+            {
+                foreach (var tag in tags)
+                {
+                    var tags1 = targets.Select(x => x.Tags);
+                }
+            }
+            
+            return resultWithoutTags;
         }
 
         public async Task<ComplexStringDTO> GetComplexString(int identifier)

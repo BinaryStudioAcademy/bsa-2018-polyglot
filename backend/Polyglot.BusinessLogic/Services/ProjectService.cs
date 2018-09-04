@@ -499,7 +499,16 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id)
         {
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var map = mapper.Map<List<ComplexStringDTO>>(strings);
+            foreach (var item in map)
+            {
+                foreach (var s in strings)
+                {
+                    item.Tags = mapper.Map<List<TagDTO>>(tags.Where(x => s.Tags.Contains(x.Id)));
+                }
+            }
+            return map;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
@@ -508,7 +517,15 @@ namespace Polyglot.BusinessLogic.Services
 
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
 
-            var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var map = mapper.Map<List<ComplexStringDTO>>(strings);
+
+            for (int i = 0; i < map.Count; i++)
+            {
+                map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+            }
+
+            var paginatedStrings = map.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
 

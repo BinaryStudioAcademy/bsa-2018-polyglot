@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular/material';
+import { Observable } from '../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-select-color-dialog',
@@ -9,6 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '../../../../node_modules/@angular
 export class SelectColorDialogComponent implements OnInit {
 
   selectedColor: string;
+  selectedIndex : number;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   public dialogRef: MatDialogRef<SelectColorDialogComponent>) { }
@@ -22,6 +24,8 @@ export class SelectColorDialogComponent implements OnInit {
   }
 
   selectColor(index : any){
+    this.selectedIndex = index;
+    this.data = this.data;
     this.selectColor = this.data[index];
   }
 

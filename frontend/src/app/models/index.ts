@@ -6,7 +6,6 @@ export * from './language';
 export * from './project-glossary';
 export * from './project-history';
 export * from './project-language';
-export * from './project-tag';
 export * from './project';
 export * from './rating';
 export * from './right';
