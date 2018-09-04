@@ -15,9 +15,6 @@
         <button mat-raised-button color="primary" class="project-btn-width" routerLink="./settings">
           Settings<i class="material-icons" style="margin-left: 5px">settings</i>
         </button>
-        <p class="rating-star">Rating 7.8/10
-            <i class="material-icons" style="color: orange ;">star</i>
-        </p>
     </div>
     </div>
     </div>
@@ -65,8 +62,8 @@
           </div>
     <div fxLayout="column" fxFlex="50%" fxFlex.sm="40%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
     <div fxFlex>
-        <mat-card>
-            <h2>Personal detail</h2>
+        <div class="item" fxFlex>
+            <h2 style="margin: 0px;">Personal detail</h2>
             <hr>
           
             <mat-card-subtitle>Birth : <span>{{manager.birthDate | date:'mediumDate'}}</span></mat-card-subtitle>
@@ -78,7 +75,7 @@
             <mat-card-subtitle>Postal code : <span> {{manager.postalCode}}</span></mat-card-subtitle>
             <mat-card-title>Contacts</mat-card-title><hr>
             <mat-card-subtitle>Phone : <span> {{manager.phone}}</span></mat-card-subtitle>
-        </mat-card>
+        </div>
     </div>
     </div>
     <div fxLayout="column" fxLayoutGap="20px"  fxFlex="25%" fxFlex.sm="30%" fxLayout.xs="column">
