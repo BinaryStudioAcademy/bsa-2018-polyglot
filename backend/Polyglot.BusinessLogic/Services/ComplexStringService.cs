@@ -418,18 +418,6 @@ namespace Polyglot.BusinessLogic.Services
             return paginatedHistory;
         }
 
-<<<<<<< HEAD
-        public async Task ChangeStringStatus(int id, int status, string groupName)
-        {
-            if (status == 1)
-            {
-                await signalRService.ComplexStringTranslatingStarted(groupName, id);
-            }
-            else
-            {
-                await signalRService.ComplexStringTranslatingFinished(groupName, id);
-            }
-=======
         public async Task<string> ReIndex()
         {
             var allPosts = (await repository.GetAllAsync()).ToList();
@@ -437,7 +425,6 @@ namespace Polyglot.BusinessLogic.Services
             var res = await ElasticRepository.ReIndex(allPosts);
 
             return res;
->>>>>>> 1c6470a313f896daba57b09379c6de01cbbe9eb1
         }
     }
 }
