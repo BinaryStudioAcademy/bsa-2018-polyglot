@@ -160,11 +160,13 @@ namespace Polyglot.Common.Mapping
                 cfg.CreateMap<TeamDTO, Team>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.ProjectTeams, opt => opt.MapFrom(p => p.TeamProjects))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
                 cfg.CreateMap<Team, TeamDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
                     .ForMember(p => p.TeamTranslators, opt => opt.MapFrom(p => p.TeamTranslators))
+                    .ForMember(p => p.TeamProjects, opt => opt.MapFrom(p => p.ProjectTeams))
                     .ForMember(p => p.CreatedBy, opt => opt.MapFrom(p => p.CreatedBy))
                     .ForMember(p => p.Name, opt => opt.MapFrom(po => po.Name));
 
@@ -282,6 +284,18 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.NotificationId, opt => opt.MapFrom(po => po.NotificationId))
                     .ForMember(p => p.OptionDefinition, opt => opt.MapFrom(po => po.OptionDefinition));
+
+                cfg.CreateMap<ProjectTeam, TeamProjectDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
+                    .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId));
+
+                cfg.CreateMap<TeamProjectDTO, ProjectTeam>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
+                    .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+                    .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId));
 
                 #endregion
 

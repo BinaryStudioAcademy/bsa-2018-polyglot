@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ProjectsComponent } from '../../components/projects/projects.component';
 import { TeamsComponent } from '../../components/teams/teams.component';
-import { TeamComponent } from '../../components/teams/team/team.component';
 import { GlossariesComponent } from '../../components/glossaries/glossaries.component';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { NoFoundComponent } from '../../components/no-found/no-found.component';
@@ -22,6 +21,7 @@ import { ManagerProfileComponent } from '../../components/manager-profile/manage
 import { LandingGuard } from '../../services/guards/landing-guard.service';
 import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
 import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
+import { TeamDetailsComponent } from '../../components/team-details/team-details.component';
 import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
 import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
@@ -48,12 +48,12 @@ const routes: Routes = [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
-      { path: 'teams/:id', component: TeamComponent },
       { path: 'glossaries', component: GlossariesComponent },
       { path: 'glossaries/:glossaryId', component: GlossaryComponent },
       { path: 'strings', component: NoFoundComponent }
     ]
   },
+  { path: 'team/details/:teamId', canActivate: [AuthGuard], component: TeamDetailsComponent},
   { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
   {
     path: 'workspace/:projectId',
