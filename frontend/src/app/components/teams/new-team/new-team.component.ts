@@ -7,6 +7,8 @@ import { applyDrag, generateItems } from '../../../models';
 import { Translator } from '../../../models/Translator';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { NotificationService } from '../../../services/notification.service';
+import { OptionDefinition } from '../../../models/optionDefinition';
 
 
 @Component({
@@ -39,7 +41,8 @@ export class NewTeamComponent implements OnInit {
     private router: Router,
     private teamService: TeamService,
     private snotifyService: SnotifyService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
 
 
@@ -90,20 +93,14 @@ export class NewTeamComponent implements OnInit {
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.userId),this.name)
-        .subscribe((team) => {
-          if (team) {
-            this.router.navigate(['dashboard/teams']);
-            setTimeout(() => {
-              this.snotifyService.success("Team " + team.id + " successfully created!", "Success!");
-            }, 200);
-          }
-          else
-            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
-        },
-          err => {
-            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
-          })
+      this.teamTranslators.forEach(trans => {
+        this.notificationService.sendNotification({
+          receiverId: trans.userId,
+          message: `you received an invitation in team ${this.name}`,
+          options: [{ optionDefinition: OptionDefinition.Accept },
+                     {optionDefinition: OptionDefinition.Decline}]
+        }).subscribe();
+      });
     } 
   }
 

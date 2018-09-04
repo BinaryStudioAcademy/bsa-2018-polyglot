@@ -257,11 +257,37 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.UserRole, opt => opt.MapFrom(pt => (int)pt.UserRole))
                     .ForMember(p => p.Projects, opt => opt.Ignore());
 
-				#endregion
+                cfg.CreateMap<Notification, NotificationDTO>()
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
+                    .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
+                    .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
+                    .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
+                    .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
 
-				#region NoSQL
+                cfg.CreateMap<NotificationDTO, Notification>()
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
+                    .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
+                    .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
+                    .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
+                    .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
 
-				cfg.CreateMap<AdditionalTranslationDTO, AdditionalTranslation>()
+                cfg.CreateMap<OptionDTO, Option>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.NotificationId, opt => opt.MapFrom(po => po.NotificationId))
+                    .ForMember(p => p.OptionDefinition, opt => opt.MapFrom(po => po.OptionDefinition));
+
+                cfg.CreateMap<Option, OptionDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.NotificationId, opt => opt.MapFrom(po => po.NotificationId))
+                    .ForMember(p => p.OptionDefinition, opt => opt.MapFrom(po => po.OptionDefinition));
+
+                #endregion
+
+                #region NoSQL
+
+                cfg.CreateMap<AdditionalTranslationDTO, AdditionalTranslation>()
 				  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedOn))
 				  .ForMember(p => p.TranslationValue, opt => opt.MapFrom(po => po.TranslationValue))
 				  .ForMember(p => p.UserId, opt => opt.MapFrom(po => po.UserId));
