@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.DataAccess.SqlRepository;
-
 using Polyglot.DataAccess.Entities;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Polyglot.BusinessLogic.Services
 {
+    [Authorize]
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
         public UserService(IUnitOfWork uow, IMapper mapper)

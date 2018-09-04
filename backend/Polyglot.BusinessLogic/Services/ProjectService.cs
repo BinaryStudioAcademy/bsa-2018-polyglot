@@ -23,9 +23,11 @@ using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.SignalR.Responses;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Polyglot.BusinessLogic.Services
 {
+    [Authorize]
     public class ProjectService : CRUDService<Project, ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;

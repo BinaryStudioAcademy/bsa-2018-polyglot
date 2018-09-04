@@ -79,6 +79,7 @@ export class ChatWindowComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        this.messages = [];
         this.getMessagesHistory();
     }
 

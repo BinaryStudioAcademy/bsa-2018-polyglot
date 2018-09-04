@@ -3,6 +3,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.MongoModels;
 using System.Linq;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
@@ -231,6 +232,24 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.FullName))
                 .ForMember(p => p.Role, opt => opt.MapFrom(po => po.UserRole))
                 .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl));
+
+                cfg.CreateMap<ChatMessageDTO, ChatMessage>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
+                .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
+                .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
+                .ForMember(p => p.Recipient, opt => opt.Ignore())
+                .ForMember(p => p.RecipientId, opt => opt.MapFrom(po => po.RecipientId))
+                .ForMember(p => p.Sender, opt => opt.Ignore())
+                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+
+                cfg.CreateMap<ChatMessage, ChatMessageDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
+                .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
+                .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
+                .ForMember(p => p.RecipientId, opt => opt.MapFrom(po => po.RecipientId))
+                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
 
 
                 cfg.CreateMap<UserProfileDTO, UserProfile>()

@@ -13,9 +13,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.BusinessLogic.Services.SignalR;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Microsoft.AspNetCore.Authorization;
+using Polyglot.DataAccess.Entities.Chat;
 
 namespace Polyglot.BusinessLogic.Services
 {
+    [Authorize]
     public class ChatService : IChatService
     {
         private readonly IProjectService projectService;
@@ -68,113 +71,28 @@ namespace Polyglot.BusinessLogic.Services
             return contacts;
         }
 
-        public Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync()
+        public async Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync()
         {
-            throw new NotImplementedException();
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            return null;
         }
 
         public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
         {
-            List<ChatMessageDTO> messages = new List<ChatMessageDTO>();
+            IEnumerable<ChatMessage> messages = null;
             var currentUser = await CurrentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
+
             switch (targetGroup)
             {
                 case ChatGroup.chatUser:
                     {
-                        messages = new List<ChatMessageDTO>
-                        {
-                            new ChatMessageDTO()
-                            {
-                                Id = 0,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 1,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "If truth is beauty, how come no one has their hair done in the library?"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 2,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 3,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 4,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "the high school after high school!"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 5,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "A professor is one who talks in someone else's sleep."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 6,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "About all some men accomplish in life is to send a son to Harvard. My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },new ChatMessageDTO()
-                            {
-                                Id = 7,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 8,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "The world is coming to an end! Repent and return those library books!"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 9,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "So, is the glass half empty, half full, or just twice as large as it needs to be?."
-                            }
-                        };
+                        messages = await uow.GetRepository<ChatMessage>()
+                            .GetAllAsync(m => (m.RecipientId == currentUser.Id && m.SenderId == targetGroupItemId) || (m.RecipientId == targetGroupItemId && m.SenderId == currentUser.Id));
                         break;
                     }
                 case ChatGroup.Project:
@@ -184,13 +102,22 @@ namespace Polyglot.BusinessLogic.Services
                 default:
                     break;
             }
-            return messages;
+
+            return mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
         }
 
-        public Task<ChatMessageDTO> GetMessageAsync(int messageId)
+        public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
         {
-            throw new NotImplementedException();
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            var message = await uow.GetRepository<ChatMessage>()
+                            .GetAsync(m => (m.RecipientId == currentUser.Id || m.SenderId == currentUser.Id) && m.Id == messageId);
+
+            return message != null ? mapper.Map<ChatMessageDTO>(message) : null;
         }
+
         public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
         {
             throw new NotImplementedException();
@@ -210,17 +137,19 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
-            if (currentUser == null)
+            if (currentUser == null || message == null)
                 return null;
+
+            ChatMessage addedMessage = null;
 
             switch (targetGroup)
             {
                 case ChatGroup.chatUser:
                     {
-                        // сохранить в бд
                         message.IsRead = false;
                         message.ReceivedDate = DateTime.Now;
                         message.SenderId = currentUser.Id;
+                        addedMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
                         await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
                         break;
                     }
@@ -232,7 +161,8 @@ namespace Polyglot.BusinessLogic.Services
                 default:
                     break;
             }
-            return message;
+
+            return (await uow.SaveAsync() > 0 && addedMessage != null) ? mapper.Map<ChatMessageDTO>(addedMessage) : null;
         }
 
         private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
@@ -279,3 +209,97 @@ namespace Polyglot.BusinessLogic.Services
         }
     }
 }
+
+
+//messages = new List<ChatMessageDTO>
+//{
+//    new ChatMessageDTO()
+//    {
+//        Id = 0,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = currentUser.Id,
+//        SenderId = targetGroupItemId,
+//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 1,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = currentUser.Id,
+//        SenderId = targetGroupItemId,
+//        Body = "If truth is beauty, how come no one has their hair done in the library?"
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 2,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = targetGroupItemId,
+//        SenderId = currentUser.Id,
+//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 3,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = currentUser.Id,
+//        SenderId = targetGroupItemId,
+//        Body = "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 4,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = currentUser.Id,
+//        SenderId = targetGroupItemId,
+//        Body = "the high school after high school!"
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 5,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = targetGroupItemId,
+//        SenderId = currentUser.Id,
+//        Body = "A professor is one who talks in someone else's sleep."
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 6,
+//        IsRead = true,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = targetGroupItemId,
+//        SenderId = currentUser.Id,
+//        Body = "About all some men accomplish in life is to send a son to Harvard. My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
+//    },new ChatMessageDTO()
+//    {
+//        Id = 7,
+//        IsRead = false,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = currentUser.Id,
+//        SenderId = targetGroupItemId,
+//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 8,
+//        IsRead = false,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = targetGroupItemId,
+//        SenderId = currentUser.Id,
+//        Body = "The world is coming to an end! Repent and return those library books!"
+//    },
+//    new ChatMessageDTO()
+//    {
+//        Id = 9,
+//        IsRead = false,
+//        ReceivedDate = DateTime.Now,
+//        RecipientId = targetGroupItemId,
+//        SenderId = currentUser.Id,
+//        Body = "So, is the glass half empty, half full, or just twice as large as it needs to be?."
+//    }
+//};
