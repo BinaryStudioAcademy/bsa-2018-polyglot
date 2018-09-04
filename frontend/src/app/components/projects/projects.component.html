@@ -13,7 +13,7 @@
 </div>
 <mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 
-<div class="no-items-div mt-1 mb-1" *ngIf="cards.length === 0">
+<div class="no-items-div mt-1 mb-1" *ngIf="cards && !isLoad && cards.length === 0">
     <p>No projects</p>
 </div>
 
