@@ -13,6 +13,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
+using Nest;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
@@ -23,6 +24,7 @@ using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.SignalR.Responses;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Language = Polyglot.DataAccess.Entities.Language;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -34,11 +36,13 @@ namespace Polyglot.BusinessLogic.Services
         private readonly ISignalRWorkspaceService signalrService;
         ICRUDService<UserProfile, UserProfileDTO> userService;
         private readonly IGlossaryService glossaryService;
+        private readonly IElasticClient _elasticClient;
+
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
-            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService)
+            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -47,6 +51,7 @@ namespace Polyglot.BusinessLogic.Services
             this.userService = userService;
             this.signalrService = signalrService;
             this.glossaryService = glossaryService;
+            _elasticClient = elasticClient;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -345,7 +350,7 @@ namespace Polyglot.BusinessLogic.Services
             if (project.ProjectLanguageses.Count < 1)
                 return null;
 
-            uow.GetRepository<Project>().Update(project);
+            await uow.GetRepository<Project>().Update(project);
             await uow.SaveAsync();
 
             await signalrService.LanguagesAdded($"{Group.project}{project.Id}", languageIds);
@@ -364,7 +369,7 @@ namespace Polyglot.BusinessLogic.Services
 
                 if (targetProdLang != null
                     && project.ProjectLanguageses.Remove(targetProdLang)
-                    && uow.GetRepository<Project>().Update(project) != null
+                    && await uow.GetRepository<Project>().Update(project) != null
                     && (await uow.SaveAsync()) > 0)
                 {
                     var projectStrings = await stringsProvider.GetAllAsync(cs => cs.ProjectId == project.Id);
@@ -458,7 +463,7 @@ namespace Polyglot.BusinessLogic.Services
             target.MainLanguage = null;
             target.MainLanguageId = source.MainLanguageId;
 
-            target = uow.GetRepository<Project>().Update(target);
+            target = await uow.GetRepository<Project>().Update(target);
             await uow.SaveAsync();
 
 
@@ -514,6 +519,19 @@ namespace Polyglot.BusinessLogic.Services
             var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+
+            //var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
+            //    x.Query(q => q
+            //            .Match(m => m
+            //                .Field(f => f.ProjectId)
+            //                .Query(id.ToString())
+            //            )
+            //        )
+            //        .From(page * itemsOnPage)
+            //        .Size(itemsOnPage)
+            //);
+
+            //return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
 
         }
 
@@ -716,7 +734,7 @@ namespace Polyglot.BusinessLogic.Services
             if (project.ProjectGlossaries.Count < 1)
                 return null;
 
-            uow.GetRepository<Project>().Update(project);
+            await uow.GetRepository<Project>().Update(project);
             await uow.SaveAsync();
             return mapper.Map<ProjectDTO>(project);
         }
@@ -755,7 +773,7 @@ namespace Polyglot.BusinessLogic.Services
 
                 if (targetProdGlossary != null)
                     if (project.ProjectGlossaries.Remove(targetProdGlossary))
-                        if (uow.GetRepository<Project>().Update(project) != null)
+                        if (await uow.GetRepository<Project>().Update(project) != null)
                             return await uow.SaveAsync() > 0;
             }
             return false;

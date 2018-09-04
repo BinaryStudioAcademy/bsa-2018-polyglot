@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoRepository;
@@ -41,6 +42,8 @@ namespace Polyglot.DataAccess
             services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 
             services.AddScoped<IMongoDataContext, MongoDataContext>();
+
+            services.AddElasticsearch(configuration);
         }
 
 

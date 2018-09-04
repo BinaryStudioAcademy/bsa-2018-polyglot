@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
     {
         protected DbContext context;
         protected DbSet<TEntity> DbSet;
@@ -23,8 +24,11 @@ namespace Polyglot.DataAccess.SqlRepository
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)
-         {
-            return (await DbSet.AddAsync(entity)).Entity;
+        {
+            var result = (await DbSet.AddAsync(entity)).Entity;
+            await ElasticRepository.UpdateSearchIndex(result, CrudAction.Create);
+
+            return result;
         }
 
         public async Task<TEntity> DeleteAsync(int id)
@@ -32,6 +36,7 @@ namespace Polyglot.DataAccess.SqlRepository
             TEntity temp = await DbSet.FindAsync(id);
             if (temp != null)
             {
+                await Elasticsearch.ElasticRepository.UpdateSearchIndex(temp, CrudAction.Delete);
                 return DbSet.Remove(temp).Entity;
             }
             return null;
@@ -59,12 +64,15 @@ namespace Polyglot.DataAccess.SqlRepository
             //  return await ApplyIncludes().ToListAsync();
         }
 
-        public TEntity Update(TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            return DbSet.Update(entity).Entity;
+
+            var result = DbSet.Update(entity).Entity;
+            await ElasticRepository.UpdateSearchIndex(result, CrudAction.Update);
+            return result;
         }
 
-        public bool UpdateBool(TEntity entity)
+        public async Task<bool> UpdateBool(TEntity entity)
         {
             var entityDb = entity as Entity;
             if (entityDb != null)
@@ -74,6 +82,7 @@ namespace Polyglot.DataAccess.SqlRepository
                     return false;
 
                 context.Entry(existingEntity).State = EntityState.Detached;
+                await ElasticRepository.UpdateSearchIndex(existingEntity, CrudAction.Update);
             }
 
             context.Entry(entity).State = EntityState.Modified;
