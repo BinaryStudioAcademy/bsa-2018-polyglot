@@ -1,8 +1,8 @@
 <div class="chat-container">
 
     <mat-toolbar class="interlocutor-info">
-        <span class="interlocutor-name">{{interlocutor.fullName}}</span>
-        <span class="last-seen">{{interlocutor.isOnline ? "Online" : "Offline"}}</span>
+        <span class="interlocutor-name">{{interlocutor?.fullName}}</span>
+        <span class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutor?.isOnline ? "Online" : "Offline"}}</span>
     </mat-toolbar>
 
     <div class="chat-messages-container" #mainwindow>

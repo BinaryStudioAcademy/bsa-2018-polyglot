@@ -25,4 +25,4 @@ export * from './languageStatistic';
 export * from './chat/groupType';
 export * from './chat/chatUser';
 export * from './chat/chatMessage';
-export * from './chat/chatContacts';
+export * from './chat/chatDialog';

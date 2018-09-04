@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Polyglot.DataAccess.Entities.Chat
 {
@@ -10,14 +8,14 @@ namespace Polyglot.DataAccess.Entities.Chat
 
         public virtual UserProfile Sender { get; set; }
 
-        public int RecipientId { get; set; }
-
-        public virtual UserProfile Recipient { get; set; }
-
         public string Body { get; set; }
 
         public DateTime ReceivedDate { get; set; }
 
-        public bool IsRead { get; set; }
+        public bool? IsRead { get; set; }
+
+        public virtual ChatDialog Dialog { get; set; }
+
+        public int? DialogId { get; set; }
     }
 }

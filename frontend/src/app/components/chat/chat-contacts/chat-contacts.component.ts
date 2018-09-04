@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
 import { ChatUser, Project, Team, GroupType } from "../../../models";
+import { ChatDialog } from "../../../models/chat/chatDialog";
 
 @Component({
     selector: "app-chat-contacts",
@@ -19,15 +20,15 @@ export class ChatContactsComponent implements OnInit {
     projectBadge = true;
     personBadge = false;
 
-    private users: any; //ChatUser[];
+    private dialogs: ChatDialog[] = []; //ChatUser[];
     private projects: Project[] = [];
     private teams: Team[] = [];
 
     constructor(private chatService: ChatService) {}
 
     ngOnInit() {
-        this.users = MOCK_USERS;
-        this.onItemSelect.emit(this.users[0]);
+      //  this.dialogs = MOCK_USERS;
+        this.onItemSelect.emit(this.dialogs[0]);
 
         setTimeout(() => {
             this.chatService
@@ -42,18 +43,14 @@ export class ChatContactsComponent implements OnInit {
 
         setTimeout(() => {
             this.chatService
-                .getContacts(GroupType.users, 1)
-                .subscribe(users => {
+                .getDialogs()
+                .subscribe((dialogs: ChatDialog[]) => {
                     debugger;
                     if (
-                        users &&
-                        users.contactList &&
-                        users.contactList.length
+                        dialogs &&
+                        dialogs.length > 0
                     ) {
-                        Array.prototype.push.apply(
-                            this.users,
-                            users.contactList
-                        );
+                        this.dialogs = dialogs.filter(d => d.participants.length > 0);
                     }
                 });
         }, 500);
@@ -66,8 +63,8 @@ export class ChatContactsComponent implements OnInit {
         });
     }
 
-    selectUser(user: ChatUser) {
-        this.onItemSelect.emit(user);
+    selectDialog(dialog: ChatDialog) {
+        this.onItemSelect.emit(dialog);
     }
 
     setStep(index: number) {

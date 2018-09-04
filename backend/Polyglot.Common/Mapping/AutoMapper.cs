@@ -238,8 +238,8 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
                 .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
                 .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
-                .ForMember(p => p.Recipient, opt => opt.Ignore())
-                .ForMember(p => p.RecipientId, opt => opt.MapFrom(po => po.RecipientId))
+                .ForMember(p => p.Dialog, opt => opt.Ignore())
+                .ForMember(p => p.DialogId, opt => opt.MapFrom(po => po.DialogId))
                 .ForMember(p => p.Sender, opt => opt.Ignore())
                 .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
 
@@ -248,8 +248,17 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
                 .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
                 .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
-                .ForMember(p => p.RecipientId, opt => opt.MapFrom(po => po.RecipientId))
+                .ForMember(p => p.DialogId, opt => opt.MapFrom(po => po.DialogId))
                 .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+
+                cfg.CreateMap<ChatDialog, ChatDialogDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Participants, opt => opt.Ignore());
+
+                cfg.CreateMap<ChatDialogDTO, ChatDialog>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.DialogParticipants, opt => opt.Ignore())
+                .ForMember(p => p.Messages, opt => opt.Ignore());
 
 
                 cfg.CreateMap<UserProfileDTO, UserProfile>()

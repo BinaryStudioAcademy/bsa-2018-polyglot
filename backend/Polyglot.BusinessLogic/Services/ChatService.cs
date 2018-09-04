@@ -39,28 +39,149 @@ namespace Polyglot.BusinessLogic.Services
             this.uow = uow;
         }
 
-        public async Task<ChatContactsDTO> GetContactsAsync(ChatGroup targetGroup, int targetGroupItemId)
+
+
+        public async Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync()
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
-            ChatContactsDTO contacts = new ChatContactsDTO()
-            {
-                ChatUserId = targetGroupItemId
-            };
+            var dialogs = await uow.GetRepository<ChatDialog>()
+                .GetAllAsync(d => d.DialogType == ChatGroup.Direct && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
+
+            if (dialogs == null || dialogs.Count < 1)
+                return null;
+
+            return mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest)));
+        }
+
+        public void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest)
+        {
+          //  List<ChatDialogDTO> result = (List<ChatDialogDTO>)dest;
+          //  result.ForEach(d =>
+          //  {
+          //      var accordingDialog = ((List<ChatDialog>)src).Find(dialog => dialog.Id == d.Id);
+          //      var interlocator = accordingDialog.Participants.Where(p => p.Id != currentUser.Id).FirstOrDefault();
+          //      if (interlocator != null)
+          //      {
+          //          interlocator.LastMessageText = accordingDialog.Messages
+          //              .Where(message => message.SenderId == interlocator.Id)
+          //              .FirstOrDefault()
+          //              ?.Body.Substring(0, 50);
+          //
+          //          d.Participants = new List<ChatUserDTO>();
+          //      }
+          //  });
+        }
+
+        //private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
+        //{
+        //    IEnumerable<ChatUserDTO> contacts = null;
+        //    List<UserProfile> users = null;
+        //    if (currentUser.UserRole == Role.Manager)
+        //    {
+        //        users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
+        //            .SelectMany(p => p.ProjectTeams)
+        //            .Select(pt => pt.Team)
+        //            .SelectMany(t => t.TeamTranslators)
+        //            .Select(tt => tt.UserProfile)
+        //            .ToList();
+        //    }
+        //    else
+        //    {
+        //        var translatorTeams = (await uow.GetRepository<TeamTranslator>()
+        //            .GetAllAsync(x => x.TranslatorId == currentUser.Id))
+        //            .Select(tt => tt.Team);
+
+        //        users = translatorTeams
+        //            .SelectMany(t => t.TeamTranslators)
+        //            .Select(tt => tt.UserProfile)
+        //            .Where(u => u.Id != currentUser.Id)
+        //            .ToList();
+
+        //        users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
+        //    }
+
+        //    // достать из базы userState, последнее сообщение и примапить
+        //    contacts = mapper.Map<List<UserProfile>, List<ChatUserDTO>>(users, opt => opt.AfterMap((src, dest) =>
+        //    {
+        //        List<ChatUserDTO> result = dest;
+        //        result.ForEach(u =>
+        //        {
+        //            u.LastMessageText = "Last message text from server, hell yeah!!1111";
+        //            u.LastSeen = DateTime.Now;
+        //            u.IsOnline = true;
+        //        });
+        //    }));
+
+        //    return contacts;
+        //}
+
+        public async Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId)
+        {
+            if (targetGroupDialogId < 0)
+                return null;
+
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            IEnumerable<ChatMessage> messages = null;
+            long dialogIdentifer = -1;
 
             switch (targetGroup)
             {
-                case ChatGroup.chatUser:
+                case ChatGroup.Direct:
                     {
-                        var c = await GetUserContacts(currentUser);
-                        if(c != null)
-                        {
-                            contacts.ContactList = c;
-                        }
+                        dialogIdentifer = currentUser.Id + targetGroupDialogId;
                         break;
                     }
+                case ChatGroup.Project:
+                case ChatGroup.Team:
+                    {
+                        dialogIdentifer = targetGroupDialogId;
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            messages = (await uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.Identifier == dialogIdentifer && d.DialogType == targetGroup))
+                ?.Messages.AsEnumerable();
+
+            return messages != null ? mapper.Map<IEnumerable<ChatMessageDTO>>(messages) : null;
+        }
+
+        public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message)
+        {
+            var targetDialog = await uow.GetRepository<ChatDialog>().GetAsync(message.DialogId);
+            if (targetDialog == null)
+                return null;
+
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null || message == null)
+                return null;
+
+            message.IsRead = false;
+            message.ReceivedDate = DateTime.Now;
+            message.SenderId = currentUser.Id;
+            targetDialog.Messages.Add(mapper.Map<ChatMessage>(message));
+            var affectedRowsCount = await uow.SaveAsync();
+
+            if (affectedRowsCount < 1)
+                return null;
+
+            switch (targetDialog.DialogType)
+            {
+                case ChatGroup.Direct:
+                    {
+#warning выслать оповещение
+                        //  await signalRChatService.MessageReveived($"{ChatGroup.direct.ToString()}{targetGroupItemId}", message);
+                        break;
+                    }
+
                 case ChatGroup.Project:
                     break;
                 case ChatGroup.Team:
@@ -68,10 +189,43 @@ namespace Polyglot.BusinessLogic.Services
                 default:
                     break;
             }
-            return contacts;
+
+            return message;
         }
 
-        public async Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync()
+        //public async Task<ChatContactsDTO> GetDialogsAsync(ChatGroup targetGroup, int targetGroupItemId)
+        //{
+        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
+        //    if (currentUser == null)
+        //        return null;
+
+        //    ChatContactsDTO contacts = new ChatContactsDTO()
+        //    {
+        //        ChatUserId = targetGroupItemId
+        //    };
+
+        //    switch (targetGroup)
+        //    {
+        //        case ChatGroup.chatUser:
+        //            {
+        //                var c = await GetUserContacts(currentUser);
+        //                if(c != null)
+        //                {
+        //                    contacts.ContactList = c;
+        //                }
+        //                break;
+        //            }
+        //        case ChatGroup.Project:
+        //            break;
+        //        case ChatGroup.Team:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    return contacts;
+        //}
+
+        public async Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync()
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
             if (currentUser == null)
@@ -80,42 +234,46 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
-        {
-            IEnumerable<ChatMessage> messages = null;
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
-            if (currentUser == null)
-                return null;
+        //public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
+        //{
+        //    IEnumerable<ChatMessage> messages = null;
+        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
+        //    if (currentUser == null)
+        //        return null;
 
-            switch (targetGroup)
-            {
-                case ChatGroup.chatUser:
-                    {
-                        messages = await uow.GetRepository<ChatMessage>()
-                            .GetAllAsync(m => (m.RecipientId == currentUser.Id && m.SenderId == targetGroupItemId) || (m.RecipientId == targetGroupItemId && m.SenderId == currentUser.Id));
-                        break;
-                    }
-                case ChatGroup.Project:
-                    break;
-                case ChatGroup.Team:
-                    break;
-                default:
-                    break;
-            }
+        //    switch (targetGroup)
+        //    {
+        //        case ChatGroup.direct:
+        //            {
+        //                messages = await uow.GetRepository<ChatMessage>()
+        //                    .GetAllAsync(m => 
+        //                    (m.RecipientId == currentUser.Id && m.SenderId == targetGroupItemId) 
+        //                    || 
+        //                    (m.RecipientId == targetGroupItemId && m.SenderId == currentUser.Id));
+        //                break;
+        //            }
+        //        case ChatGroup.Project:
+        //            break;
+        //        case ChatGroup.Team:
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            return mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
-        }
+        //    return mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
+        //}
 
         public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
-            if (currentUser == null)
-                return null;
-
-            var message = await uow.GetRepository<ChatMessage>()
-                            .GetAsync(m => (m.RecipientId == currentUser.Id || m.SenderId == currentUser.Id) && m.Id == messageId);
-
-            return message != null ? mapper.Map<ChatMessageDTO>(message) : null;
+            return null;
+           // var currentUser = await CurrentUser.GetCurrentUserProfile();
+           // if (currentUser == null)
+           //     return null;
+           //
+           // var message = await uow.GetRepository<ChatMessage>()
+           //                 .GetAsync(m => (m.RecipientId == currentUser.Id || m.SenderId == currentUser.Id) && m.Id == messageId);
+           //
+           // return message != null ? mapper.Map<ChatMessageDTO>(message) : null;
         }
 
         public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
@@ -134,79 +292,36 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
-        public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
-        {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
-            if (currentUser == null || message == null)
-                return null;
+        //public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
+        //{
+        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
+        //    if (currentUser == null || message == null)
+        //        return null;
 
-            ChatMessage addedMessage = null;
+        //    ChatMessage addedMessage = null;
 
-            switch (targetGroup)
-            {
-                case ChatGroup.chatUser:
-                    {
-                        message.IsRead = false;
-                        message.ReceivedDate = DateTime.Now;
-                        message.SenderId = currentUser.Id;
-                        addedMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
-                        await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
-                        break;
-                    }
+        //    switch (targetGroup)
+        //    {
+        //        case ChatGroup.direct:
+        //            {
+        //                message.IsRead = false;
+        //                message.ReceivedDate = DateTime.Now;
+        //                message.SenderId = currentUser.Id;
+        //                addedMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
+        //                await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
+        //                break;
+        //            }
                     
-                case ChatGroup.Project:
-                    break;
-                case ChatGroup.Team:
-                    break;
-                default:
-                    break;
-            }
+        //        case ChatGroup.Project:
+        //            break;
+        //        case ChatGroup.Team:
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            return (await uow.SaveAsync() > 0 && addedMessage != null) ? mapper.Map<ChatMessageDTO>(addedMessage) : null;
-        }
-
-        private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
-        {
-            IEnumerable<ChatUserDTO> contacts = null;
-            List<UserProfile> users = null;
-            if (currentUser.UserRole == Role.Manager)
-            {
-                users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
-                    .SelectMany(p => p.ProjectTeams)
-                    .Select(pt => pt.Team)
-                    .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile)
-                    .ToList();
-            }
-            else
-            {
-                var translatorTeams = (await uow.GetRepository<TeamTranslator>()
-                    .GetAllAsync(x => x.TranslatorId == currentUser.Id))
-                    .Select(tt => tt.Team);
-
-                users = translatorTeams
-                    .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile)
-                    .Where(u => u.Id != currentUser.Id)
-                    .ToList();
-
-                users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
-            }
-
-            // достать из базы userState, последнее сообщение и примапить
-            contacts = mapper.Map <List<UserProfile>, List<ChatUserDTO>>(users, opt => opt.AfterMap((src, dest) =>
-            {
-                List<ChatUserDTO> result = dest;
-                result.ForEach(u => 
-                {
-                    u.LastMessageText = "Last message text from server, hell yeah!!1111";
-                    u.LastSeen = DateTime.Now;
-                    u.IsOnline = true;
-                });
-            }));
-
-            return contacts;
-        }
+        //    return (await uow.SaveAsync() > 0 && addedMessage != null) ? mapper.Map<ChatMessageDTO>(addedMessage) : null;
+        //}
     }
 }
 

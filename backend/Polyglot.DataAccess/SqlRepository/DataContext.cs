@@ -30,6 +30,7 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<ProjectTeam> ProjectTeams { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<UserState> ChatUserStates { get; set; }
+        public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbQuery<UserRights> UserRights { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -137,6 +138,24 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasOne(p => p.OriginLanguage)
                 .WithMany(l => l.Glossaries)
                 .HasForeignKey(p => p.OriginLanguageId);
+
+           modelBuilder.Entity<ChatMessage>()
+               .HasOne(m => m.Dialog)
+               .WithMany(d => d.Messages)
+               .HasForeignKey(m => m.DialogId);
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasKey(dp => new { dp.ChatDialogId, dp.ParticipantId });
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasOne(dp => dp.Participant)
+                .WithMany()
+                .HasForeignKey(dp => dp.ParticipantId);
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasOne(dp => dp.ChatDialog)
+                .WithMany(dp => dp.DialogParticipants)
+                .HasForeignKey(dp => dp.ChatDialogId);
 
             modelBuilder.Query<UserRights>()
                 .ToView("View_UserRights");

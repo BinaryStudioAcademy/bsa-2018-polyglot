@@ -36,21 +36,20 @@
 
                     -->
 
-
-                    <li *ngFor="let u of users" (click)="selectUser(u)">
+                    <li *ngFor="let d of dialogs" (click)="selectDialog(d)">
                         <mat-card class="person-card">
                             <mat-card-header>
                                 <a class="person-img">
-                                    <img class="person-avatar" mat-card-avatar src="{{u.avatarUrl}}">
+                                    <img class="person-avatar" mat-card-avatar src="{{d?.participants[0].avatarUrl}}">
                                 </a>
                                 <div class="person-card-text">
-                                    <div class="person-name">{{u.fullName}}</div>
-                                    <div class="person-message-prev">{{u.lastMessageText}}</div>
+                                    <div class="person-name">{{d?.participants[0].fullName}}</div>
+                                    <div class="person-message-prev">{{d?.lastMessageText}}</div>
                                 </div>
                                 <div class="online-status-container">
-                                    <span [hidden]="u.isOnline" class="online-status-text">last seen {{u.lastSeen | date: 'medium'}}</span>
-                                    <span [hidden]="!u.isOnline" class="online-status-text">online</span>
-                                    <mat-icon class="online-status-icon" [style.color]="u.isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
+                                    <span [hidden]="d?.participants[0].isOnline" class="online-status-text">last seen {{d?.participants[0].lastSeen | date: 'medium'}}</span>
+                                    <span [hidden]="!d?.participants[0].isOnline" class="online-status-text">online</span>
+                                    <mat-icon class="online-status-icon" [style.color]="d?.participants[0].isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
                                 </div>
                             </mat-card-header>
                             <!--    <div class="person-options-container">
