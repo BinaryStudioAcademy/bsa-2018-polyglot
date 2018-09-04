@@ -33,10 +33,10 @@
                 </div>         
                 <hr>
                 <div class="project-list">
-                    <br>
-                    <div class="project-card" mat-list-item [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'" *ngFor="let p of projects">
-                        <h3 class="project">{{p.name}}</h3>
-                        <hr>
+                    <div class="project-card" mat-list-item  *ngFor="let p of projects; let i = index">
+                        <h3  class="project">
+                            {{i+1}}. <a class="project-name" [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'">{{p.name}}</a>
+                        </h3>
                     </div>
                 </div>      
               </div>
