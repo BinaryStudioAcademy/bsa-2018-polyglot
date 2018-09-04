@@ -414,9 +414,9 @@ namespace Polyglot.BusinessLogic.Services
             return paginatedHistory;
         }
 
-        public async Task ChangeStringStatus(int id, int status, string groupName)
+        public async Task ChangeStringStatus(int id, bool status, string groupName)
         {
-            if (status == 1)
+            if (status)
             {
                 await signalRService.ComplexStringTranslatingStarted(groupName, id);
             }
