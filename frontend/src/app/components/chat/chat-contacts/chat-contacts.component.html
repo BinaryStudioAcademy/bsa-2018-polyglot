@@ -9,7 +9,9 @@
             <ng-template matTabContent>
 
                 <ul>
-                    <li>
+                    <!--
+
+                        <li>
                         <mat-card class="person-card">
                             <mat-card-header>
                                 <a class="person-img">
@@ -29,12 +31,10 @@
                                     <mat-icon class="online-status-icon">brightness_1</mat-icon>
                                 </div>
                             </mat-card-header>
-                            <!--    <div class="person-options-container">
-                                    <mat-icon>more_vert</mat-icon>
-                                </div>
-                            -->
                         </mat-card>
                     </li>
+
+                    -->
 
 
                     <li *ngFor="let u of users" (click)="selectUser(u)">
@@ -45,11 +45,12 @@
                                 </a>
                                 <div class="person-card-text">
                                     <div class="person-name">{{u.fullName}}</div>
-                                    <div class="person-message-prev">last message .....</div>
+                                    <div class="person-message-prev">{{u.lastMessageText}}</div>
                                 </div>
                                 <div class="online-status-container">
-                                    <span class="online-status-text">last seen recently</span>
-                                    <mat-icon class="online-status-icon">brightness_1</mat-icon>
+                                    <span [hidden]="u.isOnline" class="online-status-text">last seen {{u.lastSeen | date: 'medium'}}</span>
+                                    <span [hidden]="!u.isOnline" class="online-status-text">online</span>
+                                    <mat-icon class="online-status-icon" [style.color]="u.isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
                                 </div>
                             </mat-card-header>
                             <!--    <div class="person-options-container">

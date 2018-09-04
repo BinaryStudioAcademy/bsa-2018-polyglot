@@ -5,12 +5,12 @@ namespace Polyglot.BusinessLogic.Hubs
 {
     public class BaseHub : Hub
     {
-        public async Task JoinGroup(string groupName)
+        public virtual async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        public async Task LeaveGroup(string groupName)
+        public virtual async Task LeaveGroup(string groupName)
         {
             try
             {
