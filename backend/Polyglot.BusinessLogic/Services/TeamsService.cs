@@ -268,7 +268,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
             teamTranslator.IsActivated = true;
-            teamTranslator =  uow.GetRepository<TeamTranslator>().Update(teamTranslator);
+            teamTranslator =  await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
             await uow.SaveAsync();
             return teamTranslator;
         }

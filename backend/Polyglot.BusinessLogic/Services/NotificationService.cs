@@ -39,7 +39,7 @@ namespace Polyglot.BusinessLogic.Services
                 await uow.GetRepository<Option>().GetAllAsync(o => o.NotificationId == identifier);
                 var notification = await uow.GetRepository<Notification>().GetAsync(identifier);
                 notification.Options = null;
-                notification = uow.GetRepository<Notification>().Update(notification);
+                notification = await uow.GetRepository<Notification>().Update(notification);
                 await uow.GetRepository<Notification>().DeleteAsync(identifier);
                 await uow.SaveAsync();
                 return true;
