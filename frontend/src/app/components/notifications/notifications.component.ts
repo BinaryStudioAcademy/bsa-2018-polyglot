@@ -36,8 +36,6 @@ export class NotificationsComponent implements OnInit {
     }
 
     buttonClick(notification: Notification, notificationOption: number){
-        console.log(notification);
-        console.log(notificationOption);
         switch(notification.notificationAction)
         {
             case NotificationAction.None:
