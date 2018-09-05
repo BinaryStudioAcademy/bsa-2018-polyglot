@@ -18,14 +18,10 @@ namespace Polyglot.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService chatService;
-        private readonly IProjectService projectService;
-        private readonly ITeamService teamService;
 
-        public ChatController(IChatService chatService, IProjectService projectService, ITeamService teamService)
+        public ChatController(IChatService chatService)
         {
             this.chatService = chatService;
-            this.projectService = projectService;
-            this.teamService = teamService;
         }
 
         // GET: /chat/dialogs
@@ -86,13 +82,18 @@ namespace Polyglot.Controllers
         [HttpGet("projects")]
         public async Task<IActionResult> GetProjects()
         {
-            var contacts = await chatService.GetDialogsAsync(DataAccess.Helpers.ChatGroup.chatProject);
-            return contacts == null ? NotFound("No dialogs found!") as IActionResult
-                : Ok(contacts);
+            var projects = await chatService.GetDialogsAsync(DataAccess.Helpers.ChatGroup.chatProject);
+            return projects == null ? NotFound("No projects found!") as IActionResult
+                : Ok(projects);
+        }
 
-         //  var projects = await projectService.GetListAsync();
-         //  return projects == null ? NotFound("No projects found!") as IActionResult
-         //      : Ok(projects);
+        // GET: /chat/teams
+        [HttpGet("teams")]
+        public async Task<IActionResult> GetTeams()
+        {
+            var teams = await chatService.GetDialogsAsync(DataAccess.Helpers.ChatGroup.chatTeam);
+            return teams == null ? NotFound("No teams found!") as IActionResult
+                : Ok(teams);
         }
 
         // GET: /chat/projects/:projectId/contacts
@@ -104,14 +105,7 @@ namespace Polyglot.Controllers
         //: Ok(contacts);
         //}
 
-        // GET: /chat/teams
-        [HttpGet("teams")]
-        public async Task<IActionResult> GetTeams()
-        {
-            var contacts = await teamService.GetListAsync();
-            return contacts == null ? NotFound("No teams found!") as IActionResult
-                : Ok(contacts);
-        }
+
 
         // GET: /chat/teams/:teamId/contacts
         //[HttpGet("teams/{teamId}/contacts")]

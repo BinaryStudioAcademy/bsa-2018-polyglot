@@ -9,6 +9,8 @@ namespace Polyglot.DataAccess.Entities.Chat
 
         public ChatGroup DialogType { get; set; }
 
+        public string DialogName { get; set; }
+
         public virtual ICollection<DialogParticipant> DialogParticipants { get; set; }
 
         public virtual ICollection<ChatMessage> Messages { get; set; }

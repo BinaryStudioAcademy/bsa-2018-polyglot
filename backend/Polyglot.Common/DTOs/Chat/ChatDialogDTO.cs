@@ -15,6 +15,8 @@ namespace Polyglot.Common.DTOs.Chat
 
         public long Identifier { get; set; }
 
+        public string DialogName { get; set; }
+
         public int UnreadMessagesCount { get; set; }
 
         public string LastMessageText { get; set; }
