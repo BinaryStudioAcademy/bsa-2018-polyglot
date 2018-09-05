@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Android", "Polyglot\Polyglot.Android\Polyglot.Android.csproj", "{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot", "Polyglot\Polyglot\Polyglot.csproj", "{F065379C-032C-47B2-B5C9-54253B25018D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4EAA39A-8A11-4F1A-AF6A-74B8C9B68DCE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F065379C-032C-47B2-B5C9-54253B25018D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E37B5AE-50A2-4287-94B8-7D63D3E4A072}
+	EndGlobalSection
+EndGlobal
