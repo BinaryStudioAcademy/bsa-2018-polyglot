@@ -36,6 +36,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public stringsInProgress: number[] = [];
     public projectTags: string[] = [];
     private routeSub: Subscription;
+    private loop: any;
+    private currentKeyId: number;
+    private previousKeyId: number;
 
     filters: Array<string>;
 
@@ -61,7 +64,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                if (result.status && !this.stringsInProgress.includes(result.keyId)) {
+                    this.sendStringStatusMessage(result.keyId);
+                } else {
+                    this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                }            
             }
         );
     }
@@ -124,6 +131,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
+                            this.currentKeyId = keyId;
                             this.router.navigate([this.currentPath, keyId]);
                         } else {
                             this.isLoad = true;
@@ -152,15 +160,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    // sendStringStatusMessage(keyId: number) {
-    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
-    //     setInterval(() => { 
-    //         if (this.sendMessages) {
-    //             console.log('hi');
-    //             this.sendStringStatusMessage(keyId);
-    //         }
-    //     }, 2000);
-    // }
+    sendStringStatusMessage(keyId: number) {
+        this.previousKeyId = this.currentKeyId;
+        this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+        this.loop = setInterval(() => {
+            if (this.previousKeyId !== this.currentKeyId) {
+                this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
+                clearInterval(this.loop);
+            } else {
+                this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+            }   
+        }, 10000);
+    }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
@@ -189,6 +200,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     onSelect(key: any) {
         this.selectedKey = key;
+        this.currentKeyId = this.selectedKey.id;
     }
 
     ngOnDestroy() {
