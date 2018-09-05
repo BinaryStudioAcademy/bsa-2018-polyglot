@@ -6,6 +6,10 @@ import { throwError } from 'rxjs';
 import { SessionStorage } from "ngx-store";
 import { environment } from '../../environments/environment';
 import { AppStateService } from './app-state.service';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
+import { UserService } from './user.service';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable({
     providedIn: 'root'
@@ -13,19 +17,20 @@ import { AppStateService } from './app-state.service';
 export class HttpService {
 
     private url: string = environment.apiUrl;
+    
 
     // private _token: string;
 
     // public set token(v : string) {
     //     this._token = v;
     // }
-    
+
     public get token(): string {
         return `Bearer ${this.appState.currentFirebaseToken}`;
     }
 
 
-    constructor(private httpClient: HttpClient, private appState: AppStateService) { 
+    constructor(private httpClient: HttpClient, private appState: AppStateService, private authService: AuthService) {
     }
 
     sendRequest(
@@ -48,10 +53,10 @@ export class HttpService {
 
         switch (type) {
             case RequestMethod.Get:
-                if(respType === 'json'){
-                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json' , headers });
-                }else if(respType === 'blob'){
-                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob' , headers });
+                if (respType === 'json') {
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'json', headers });
+                } else if (respType === 'blob') {
+                    request = this.httpClient.get(`${this.url}/${endpoint}/${params}`, { responseType: 'blob', headers });
                 }
                 break;
             case RequestMethod.Post:
@@ -67,19 +72,30 @@ export class HttpService {
                 request = this.httpClient.delete(`${this.url}/${endpoint}/${params}`, httpOptions);
                 break;
         }
-        
+
         return request.pipe(
             catchError((res: HttpErrorResponse) => this.handleError(res))
         );
     }
 
+    
+
     protected handleError(error: HttpErrorResponse | any): any {
         let errMsg: string;
+        let errorMsg = 'Error: Unable to complete request.';
         let errorData: any;
         if (error instanceof HttpErrorResponse) {
             errorData = error.error || '';
             const err = errorData || JSON.stringify(errorData);
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+
+            errorMsg = err.message;
+            if (error.status === 401 || errorMsg.indexOf('No JWT') > -1 || errorMsg.indexOf('Unauthorized') > -1) {
+                
+                this.authService.refreshToken();  
+                
+            }
+
         } else {
             errMsg = error.Message ? error.Message : error.toString();
         }

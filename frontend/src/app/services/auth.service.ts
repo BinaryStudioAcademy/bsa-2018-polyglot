@@ -43,4 +43,10 @@ export class AuthService {
     sendResetPasswordConfirmation(email: string) {
         this._firebaseAuth.auth.sendPasswordResetEmail(email);
     }
+
+    async refreshToken() {
+        const firebaseToken = await this._firebaseAuth.auth.currentUser.getIdToken(true);
+        localStorage.removeItem('currentFirebaseToken');
+        localStorage.setItem('currentFirebaseToken', firebaseToken);
+      }
 }
