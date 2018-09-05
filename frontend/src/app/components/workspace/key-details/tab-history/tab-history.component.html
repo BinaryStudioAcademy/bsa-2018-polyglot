@@ -1,4 +1,13 @@
-<mat-list class="content" *ngIf="historyIsShown&&history" ngxInfiniteScroller horizontal="false" (onScrollDown)="onScrollDown()">
+<div *ngIf="!translationSelected" >
+ <p class="message">Select transaltion to view history...</p>
+</div>
+<div class="history-spinner" style="overflow: hidden;" *ngIf="!historyIsLoaded&&translationSelected">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="historyIsLoaded && translationSelected && history.length===0" >
+  <p class="message">There is no history...</p>
+</div>
+<mat-list class="content" *ngIf="historyIsLoaded&&translationSelected&&history.length!==0" ngxInfiniteScroller horizontal="false" (onScrollDown)="onScrollDown()">
   <div class="story" *ngFor="let story of history">
     <mat-card class="story-card">
       <div class="head">

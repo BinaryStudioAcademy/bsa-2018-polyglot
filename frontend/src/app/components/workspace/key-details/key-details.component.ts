@@ -82,7 +82,7 @@ export class KeyDetailsComponent implements OnInit {
         private translatorsService: ProjecttranslatorsService,
         private userService: UserService) {
         eventService.listen().subscribe((data: any) => {
-            if (data) {
+            if (data=="reload") {
                 this.reloadKeyDetails(this.currentKeyId);
             }
         });
@@ -178,7 +178,13 @@ export class KeyDetailsComponent implements OnInit {
                                         translations,
                                         response.senderFullName
                                     );
-                                    this.history.showHistory(this.currentKeyId, this.keyDetails.translations[this.index].id)
+                                    this.history.showHistory(this.currentKeyId, this.keyDetails.translations[this.index].id);
+                                    this.expandedArray[this.index].oldValue=translations[this.index].translationValue;
+                                    if(this.expandedArray[this.index].isOpened===false)
+                                    {
+                                        this.history.translationSelected = false;
+                                    }
+                                   
                                 }
                             }
                         });
@@ -335,11 +341,11 @@ export class KeyDetailsComponent implements OnInit {
 
     setStep(index: number) {
         this.index = index;
-        this.eventService.filter({
+       this.eventService.filter({
             keyId: this.currentKeyId,
             status: true
         });
-
+        this.history.translationSelected=true;
         if (index === undefined) {
             return;
         }
@@ -476,6 +482,7 @@ export class KeyDetailsComponent implements OnInit {
                             isOpened: false,
                             oldValue: ""
                         };
+                        this.keyDetails.translations[index].history=d.history;
                         this.hideHistory();
                         this.optional.showOptional(
                             this.currentKeyId,

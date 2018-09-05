@@ -19,7 +19,9 @@ export class TabHistoryComponent implements OnInit {
   public keyId: number;
   public translationId: string;
   public previousId: string;
-  public historyIsShown: boolean = false;
+  public historyIsLoaded: boolean = false;
+  public translationSelected: boolean = false;
+  public emptyHistory: boolean = true;
 
   constructor(
     private eventService: EventService,
@@ -34,6 +36,7 @@ export class TabHistoryComponent implements OnInit {
 
   showHistory(keyId: number, translationId: string) {
     this.history = [];
+    this.historyIsLoaded=false;
     if (keyId && translationId) {
       this.keyId = keyId;
       this.translationId = translationId;
@@ -53,12 +56,14 @@ export class TabHistoryComponent implements OnInit {
         (result) => {
           this.history = result;
           this.currentPage++;
+          this.historyIsLoaded = true;
         }
+        
       );
     } else {
+      this.historyIsLoaded = true;
       return;
     }
-    this.historyIsShown = true;
   }
 
   public onScrollDown(): void {
@@ -89,13 +94,13 @@ export class TabHistoryComponent implements OnInit {
       .subscribe(
         (translation) => {
           if (translation) {
-            this.eventService.filter(this.translationId);
+            this.eventService.filter("reload");
           }
         });
   }
 
   public hideHistory() {
-    this.historyIsShown = false;
+    this.translationSelected = false;
   }
 
   public showHistoryMenu(userId: number): boolean {
