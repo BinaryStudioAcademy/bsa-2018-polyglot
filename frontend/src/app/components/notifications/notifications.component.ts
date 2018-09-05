@@ -47,7 +47,7 @@ export class NotificationsComponent implements OnInit {
                     this.teamService.activateCurrentUserInTeam(notification.payload).subscribe((trans)=>{
                         this.notificationService.removeNotification(notification.id).subscribe((notifications)=>{
                             this.userNotifications = notifications;
-                            this.snotifyService.success(`You acceptend an invitation`, "Success!");
+                            this.snotifyService.success(`You accepted an invitation`, "Success!");
                         });        
                     });
                     break;
