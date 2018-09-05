@@ -24,7 +24,7 @@
                                 <div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
                                     <img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
 								</div>
-								<button *ngIf="CanSelfAssign(t)" mat-icon-button class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign"  (click)="OnSelfAssign(t)">
+								<button *ngIf="CanSelfAssign(t)" mat-icon-button (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign"  (click)="OnSelfAssign(t)">
 									Self Assign
 								</button>
                                 <button mat-icon-button [matMenuTriggerFor]="translatorsMenu"
