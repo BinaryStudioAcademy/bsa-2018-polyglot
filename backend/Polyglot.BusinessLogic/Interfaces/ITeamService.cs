@@ -26,6 +26,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<double> GetTranslatorRatingValueAsync(int translatorId);
 
+        Task<TeamTranslator> ActivateUserInTeam(int userId, int teamId);
+
         #endregion Translators
     }
 }

@@ -238,8 +238,8 @@ namespace Polyglot.DataAccess.Seeds
 
             modelBuilder.Entity<Right>().HasData(
              new Right { Id = 1, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 2, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 3, Definition = RightDefinition.AddNewKey },
+             new Right { Id = 2, Definition = RightDefinition.AddNewLanguage },
+             new Right { Id = 3, Definition = RightDefinition.SelectNewLanguage },
              new Right { Id = 4, Definition = RightDefinition.AddNewKey },
              new Right { Id = 5, Definition = RightDefinition.AddNewKey }
             );
@@ -335,6 +335,7 @@ namespace Polyglot.DataAccess.Seeds
                new { Id = 5, ProjectId = 2, TranslationKey = "article" }
 
                );
+
 
         }
 

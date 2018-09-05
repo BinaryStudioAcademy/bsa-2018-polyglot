@@ -13,10 +13,11 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
     {
-        public TeamsService(IUnitOfWork uow, IMapper mapper)
+        INotificationService notificationService;
+        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService)
             :base(uow, mapper)
         {
-
+            this.notificationService = notificationService;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
@@ -72,6 +73,29 @@ namespace Polyglot.BusinessLogic.Services
                 newTeam.Name = receivedTeam.Name;
                 newTeam = await uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
+                foreach(var translator in newTeam.TeamTranslators)
+                {
+
+                    await notificationService.SendNotification(new NotificationDTO
+                    {
+                        SenderId = manager.Id,
+                        Message = $"You received an invitation in team {newTeam.Name}",
+                        ReceiverId = translator.TranslatorId,
+                        NotificationAction = NotificationAction.JoinTeam,
+                        Payload = newTeam.Id,  
+                        Options = new List<OptionDTO>()
+                        {
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Accept
+                            },
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Decline
+                            }
+                        }
+                    });
+                }
 
                 return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
             }
@@ -238,6 +262,15 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             return 0.0d;
+        }
+
+        public async Task<TeamTranslator> ActivateUserInTeam(int userId, int teamId)
+        {
+            var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
+            teamTranslator.IsActivated = true;
+            teamTranslator =  await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
+            await uow.SaveAsync();
+            return teamTranslator;
         }
 
 

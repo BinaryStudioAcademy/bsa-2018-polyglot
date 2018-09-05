@@ -265,6 +265,39 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.UserRole, opt => opt.MapFrom(pt => (int)pt.UserRole))
                     .ForMember(p => p.Projects, opt => opt.Ignore());
 
+                cfg.CreateMap<Notification, NotificationDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
+                    .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
+                    .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
+                    .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
+                    .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId))
+                    .ForMember(p => p.NotificationAction, opt => opt.MapFrom(po => po.NotificationAction))
+                    .ForMember(p => p.Payload, opt => opt.MapFrom(po => po.Payload));
+
+                cfg.CreateMap<NotificationDTO, Notification>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.Sender, opt => opt.MapFrom(po => po.Sender))
+                    .ForMember(p => p.Receiver, opt => opt.MapFrom(po => po.Receiver))
+                    .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
+                    .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
+                    .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId))
+                    .ForMember(p => p.NotificationAction, opt => opt.MapFrom(po => po.NotificationAction))
+                    .ForMember(p => p.Payload, opt => opt.MapFrom(po => po.Payload));
+
+                cfg.CreateMap<OptionDTO, Option>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.NotificationId, opt => opt.MapFrom(po => po.NotificationId))
+                    .ForMember(p => p.OptionDefinition, opt => opt.MapFrom(po => po.OptionDefinition));
+
+                cfg.CreateMap<Option, OptionDTO>()
+                    .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                    .ForMember(p => p.NotificationId, opt => opt.MapFrom(po => po.NotificationId))
+                    .ForMember(p => p.OptionDefinition, opt => opt.MapFrom(po => po.OptionDefinition));
+
                 cfg.CreateMap<ProjectTeam, TeamProjectDTO>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
@@ -276,6 +309,7 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Project, opt => opt.MapFrom(po => po.Project))
                     .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
                     .ForMember(p => p.TeamId, opt => opt.MapFrom(po => po.TeamId));
+
                 #endregion
 
                 #region NoSQL

@@ -120,6 +120,7 @@ import { ChatWindowComponent } from './components/chat/chat-window/chat-window.c
 import { TeamProjectComponent } from "./components/team-details/team-project/team-project.component";
 import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
 import { TeamDetailsComponent } from "./components/team-details/team-details.component";
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 @NgModule({
   exports: [
@@ -201,7 +202,8 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     ChatContactsComponent,
     ChatWindowComponent,
     ListTranslatorsComponent,
-    TabOptionalComponent
+    TabOptionalComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
