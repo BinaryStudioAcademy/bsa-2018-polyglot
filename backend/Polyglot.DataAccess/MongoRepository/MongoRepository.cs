@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.MongoRepository
 {
-    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : Entity
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : Entity, new ()
     {
         string _collectionName;
 
@@ -33,6 +34,7 @@ namespace Polyglot.DataAccess.MongoRepository
             try
             {
                 await Collection.InsertOneAsync(item);
+                await ElasticRepository.UpdateSearchIndex(item, CrudAction.Create);
                 return item;
             }
             catch (Exception ex)
@@ -95,7 +97,7 @@ namespace Polyglot.DataAccess.MongoRepository
                 DeleteResult actionResult
                     = await Collection.DeleteOneAsync(
                         Builders<TEntity>.Filter.Eq("Id", id));
-
+                await ElasticRepository.UpdateSearchIndex(new TEntity { Id = id }, CrudAction.Delete);
                 return null;
             }
             catch (Exception ex)
@@ -111,6 +113,7 @@ namespace Polyglot.DataAccess.MongoRepository
             {
                 var updateResult = await Collection
                     .ReplaceOneAsync<TEntity>(filter: g => g.Id == entity.Id, replacement: entity);
+                await ElasticRepository.UpdateSearchIndex(entity, CrudAction.Update);
                 return entity;
             }
             catch (Exception ex)

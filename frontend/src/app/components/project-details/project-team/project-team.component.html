@@ -1,26 +1,6 @@
 <div class="container">
   <div class="teams-container">
-    <mat-card class="example-card assign-card" (click)="assignTeam()">
-      <mat-card-header class="mat-card-header-placeholder">
-        <img mat-card-avatar class="manager-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTsrMId-b7-CLWIw6S80BQZ6Xqd7jX0rmU9S7VSv_ngPOU7NO-6Q">
-        <div class="title">
-          <div class="text-placeholder title-placeholder"></div>
-          <div class="text-placeholder subtitle-placeholder"></div>
-        </div>
-        <div class="action-btn-container">
-           
-        </div>
-      </mat-card-header>
-      <div class="card-content card-content-placeholder">
-        <mat-icon *ngIf="!IsLoad" aria-label="team-assign-button" class="team-assign-icon">add_circle</mat-icon>
-        <div *ngIf="IsLoad" class="spinner">
-          <mat-spinner></mat-spinner>
-        </div>
-      </div>
-     
-    </mat-card>
-
-    <mat-card class="example-card" *ngFor="let t of assignedTeams">
+     <mat-card class="example-card" *ngFor="let t of assignedTeams">
       <mat-card-header>
         <a class="manager-img" (click)="userService.redirectById(t?.createdBy?.id)">
             <img mat-card-avatar src="{{t.createdBy.avatarUrl}}">
@@ -53,3 +33,12 @@
     </mat-card>
   </div>
 </div>
+
+<div *ngIf="assignedTeams.length === 0" class="no-teams">
+    This project has no teams yet...
+  </div>
+
+
+<button *ngIf="isCurrentUserManager()" (click)="assignTeam()" mat-fab color="primary" class="button-add">
+  <mat-icon aria-label="Add button">add</mat-icon>
+</button>

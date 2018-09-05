@@ -31,6 +31,9 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<UserState> ChatUserStates { get; set; }
         public DbSet<ChatDialog> ChatDialogs { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationOption> NotificationOptions { get; set; }
+        public DbSet<Option> Options { get; set; }
         public DbQuery<UserRights> UserRights { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -48,10 +51,22 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<UserProfile>()
+                .HasMany(up => up.Notifications)
+                .WithOne(r => r.UserProfile)
+                .HasForeignKey(r => r.UserProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Rating>()
                 .HasOne(r => r.CreatedBy)
                 .WithMany()
                 .HasForeignKey(r => r.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(r => r.SendFrom)
+                .WithMany()
+                .HasForeignKey(r => r.SendFromId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Project>()
@@ -159,6 +174,19 @@ namespace Polyglot.DataAccess.SqlRepository
 
             modelBuilder.Query<UserRights>()
                 .ToView("View_UserRights");
+
+            modelBuilder.Entity<NotificationOption>()
+                .HasKey(tr => new { tr.NotificationId, tr.OptionID });
+
+            modelBuilder.Entity<NotificationOption>()
+                .HasOne(tr => tr.Notification)
+                .WithMany(r => r.NotificationOptions)
+                .HasForeignKey(tr => tr.NotificationId);
+
+            modelBuilder.Entity<NotificationOption>()
+                .HasOne(tr => tr.Option)
+                .WithMany(tr => tr.NotificationOptions)
+                .HasForeignKey(tr => tr.OptionID);
             //new feature in EF Core 2.1
             //modelBuilder.Seed();
 

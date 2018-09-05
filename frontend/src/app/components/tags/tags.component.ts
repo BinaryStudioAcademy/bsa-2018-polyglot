@@ -21,6 +21,7 @@ export class TagsComponent  {
   filteredTags: Observable<Tag[]> = new Observable<Tag[]>();
   tags: Tag[] = new Array<Tag>();
   @Output() tagsEvent = new EventEmitter<Tag[]>();
+  @Input() existingTags: Tag[];
   @Input() allTags: Tag[];
 
   @ViewChild('tagInput') tagInput: ElementRef;
@@ -42,6 +43,7 @@ export class TagsComponent  {
     this._unique();
     this.tagsEvent.emit(this.tags);
   }
+
 
   add(event: MatChipInputEvent): void {
 

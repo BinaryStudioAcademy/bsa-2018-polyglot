@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Polyglot.DataAccess.Elasticsearch;
+using Polyglot.DataAccess.ElasticsearchModels;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class Project : Entity
+    public class Project : Entity, ISearcheable
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -33,6 +35,15 @@ namespace Polyglot.DataAccess.Entities
             ProjectLanguageses = new List<ProjectLanguage>();
             ProjectGlossaries = new List<ProjectGlossary>();
             ProjectTags = new List<ProjectTag>();
+        }
+
+        public IIndexObject GetIndexObject()
+        {
+            return new ProjectIndex
+            {
+                Id = Id.ToString(),
+                Name = Name
+            };
         }
     }
 }

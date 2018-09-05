@@ -3,7 +3,7 @@
 namespace Polyglot.DataAccess.Entities
 {
 
-    public class Entity : DbEntity, IEquatable<Entity>
+    public class Entity : IEquatable<Entity>
     {
         public int Id { get; set; }
 
