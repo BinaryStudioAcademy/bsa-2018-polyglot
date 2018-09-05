@@ -83,7 +83,7 @@ export class AppStateService {
     }
   
 
-    updateState(user: firebase.User, token: string, loginStatus: boolean, dbUser?: UserProfile) {
+    updateState(user?: firebase.User, token?: string, loginStatus?: boolean, dbUser?: UserProfile) {
         this.currentFirebaseUser = user;
         this.currentFirebaseToken = token;
         this.LoginStatus = loginStatus;
