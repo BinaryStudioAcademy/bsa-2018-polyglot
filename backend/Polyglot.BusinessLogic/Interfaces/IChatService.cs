@@ -24,7 +24,9 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<ChatMessageDTO> SendMessage(ChatMessageDTO message);
 
+        Task<ChatMessageDTO> GetMessageAsync(int messageId);
+
     //    Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId);
-        
+
     }
 }

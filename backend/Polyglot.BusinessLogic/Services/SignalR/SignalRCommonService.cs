@@ -14,14 +14,30 @@ namespace Polyglot.BusinessLogic.Services.SignalR
             this.hubContext = hubContext;
         }
 
-        protected async Task<EntitiesIdsResponse> GetIdsResponce(params int[] ids)
+        protected async Task<EntitiesIdsResponce> GetIdsResponce(params int[] ids)
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
-            return new EntitiesIdsResponse()
+            return new EntitiesIdsResponce()
             {
                 SenderId = currentUser.Id,
                 SenderFullName = currentUser.FullName,
                 Ids = ids
+            };
+        }
+
+        protected async Task<ChatMessageResponce> GetChatMessageResponce(int dialogId, int messageId, string text)
+        {
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (text.Length > 155)
+                text = text.Substring(0, 150);
+
+            return new ChatMessageResponce()
+            {
+                SenderId = currentUser.Id,
+                SenderFullName = currentUser.FullName,
+                DialogId = dialogId,
+                MessageId = messageId,
+                Text = text
             };
         }
     }

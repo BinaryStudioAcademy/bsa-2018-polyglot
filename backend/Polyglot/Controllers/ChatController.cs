@@ -37,11 +37,11 @@ namespace Polyglot.Controllers
                 : Ok(contacts);
         }
 
-        // GET: /chat/dialogs/users/messages
-        [HttpGet("dialogs/users/messages")]
-        public async Task<IActionResult> GetDialogMessages([FromBody]int targetGroupDialogId)
+        // GET: /chat/dialogs/users/{targetGroupDialogId}/messages
+        [HttpGet("dialogs/users/{targetGroupDialogId}/messages")]
+        public async Task<IActionResult> GetDialogMessages(int targetGroupDialogId)
         {
-            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.Direct, targetGroupDialogId);
+            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.direct, targetGroupDialogId);
             return messages == null ? NotFound("No user messages found!") as IActionResult
                 : Ok(messages);
         }
@@ -77,9 +77,9 @@ namespace Polyglot.Controllers
         //[HttpGet("projects/{id}/contacts")]
         //public async Task<IActionResult> GetProjectContacts(int projectId)
         //{
-            //var contacts = await chatService.GetContactsAsync(ChatGroup.Project, projectId);
-            //return contacts == null ? NotFound("No contacts found!") as IActionResult
-                //: Ok(contacts);
+        //var contacts = await chatService.GetContactsAsync(ChatGroup.Project, projectId);
+        //return contacts == null ? NotFound("No contacts found!") as IActionResult
+        //: Ok(contacts);
         //}
 
         // GET: /chat/teams
@@ -95,22 +95,22 @@ namespace Polyglot.Controllers
         //[HttpGet("teams/{teamId}/contacts")]
         //public async Task<IActionResult> GetTeamContacts(int teamId)
         //{
-            //var contacts = await chatService.GetContactsAsync(ChatGroup.Team, teamId);
-            //return contacts == null ? NotFound("No contacts found!") as IActionResult
-                //: Ok(contacts);
+        //var contacts = await chatService.GetContactsAsync(ChatGroup.Team, teamId);
+        //return contacts == null ? NotFound("No contacts found!") as IActionResult
+        //: Ok(contacts);
         //}
 
-        // GET: /chat/messages
-        //[HttpGet("messages/{id}")]
-        //public async Task<IActionResult> GetMessage(int id)
-        //{
-        //    var message = await chatService.GetMessageAsync(id);
-        //    return message == null ? NotFound("Message not found!") as IActionResult
-        //        : Ok(message);
-        //}
+        //GET: /chat/messages/{:id}
+        [HttpGet("messages/{id}")]
+        public async Task<IActionResult> GetMessage(int id)
+        {
+            var message = await chatService.GetMessageAsync(id);
+            return message == null ? NotFound("Message not found!") as IActionResult
+                : Ok(message);
+        }
 
 
-        
+
 
         //// GET: /chat/projects/:projectId/messages
         //[HttpGet("projects/{projectId}/messages")]

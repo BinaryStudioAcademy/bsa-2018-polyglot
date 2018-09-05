@@ -2,8 +2,9 @@
 {
     public enum ChatGroup
     {
-        Direct,
-        Project,
-        Team
+        direct,
+        dialog,
+        chatProject,
+        chatTeam
     }
 }

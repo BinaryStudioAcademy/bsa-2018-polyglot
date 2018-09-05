@@ -4,42 +4,16 @@
     <mat-tab-group mat-stretch-tabs>
         <mat-tab>
             <ng-template mat-tab-label>
-                <mat-icon matBadge="15" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">person</mat-icon>
+                <mat-icon [matBadgeHidden]="isOnPersonsPage && unreadMessagesTotal['persons'] < 1" [matBadge]="unreadMessagesTotal['persons']" matBadgeColor="warn" matBadgeSize="medium">person</mat-icon>
             </ng-template>
             <ng-template matTabContent>
 
                 <ul>
-                    <!--
-
-                        <li>
-                        <mat-card class="person-card">
-                            <mat-card-header>
-                                <a class="person-img">
-                                    <img class="person-avatar" mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
-                                </a>
-                                <div class="person-card-text">
-                                    <div class="person-name">Grzegosz Brzeczyszczykiewicz</div>
-                                    <div class="person-message-prev">
-                                        This extra div is actually quite annoying. As it turns out though,
-                                        you can use shadow-piercing to apply a style to it without changing the CSS
-                                        emulation mode. You
-                                        can do this using the ::ng-deep combinator as such
-                                    </div>
-                                </div>
-                                <div class="online-status-container">
-                                    <span class="online-status-text">last seen recently</span>
-                                    <mat-icon class="online-status-icon">brightness_1</mat-icon>
-                                </div>
-                            </mat-card-header>
-                        </mat-card>
-                    </li>
-
-                    -->
 
                     <li *ngFor="let d of dialogs" (click)="selectDialog(d)">
                         <mat-card class="person-card">
                             <mat-card-header>
-                                <a class="person-img">
+                                <a class="person-img" [matBadgeHidden]="d.unreadMessagesCount < 1" [matBadge]="d.unreadMessagesCount" matBadgeColor="warn" matBadgeSize="medium">
                                     <img class="person-avatar" mat-card-avatar src="{{d?.participants[0].avatarUrl}}">
                                 </a>
                                 <div class="person-card-text">
@@ -58,6 +32,7 @@
                         -->
                         </mat-card>
                     </li>
+
                 </ul>
 
             </ng-template>

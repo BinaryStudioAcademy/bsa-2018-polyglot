@@ -48,7 +48,7 @@ namespace Polyglot.BusinessLogic.Services
                 return null;
 
             var dialogs = await uow.GetRepository<ChatDialog>()
-                .GetAllAsync(d => d.DialogType == ChatGroup.Direct && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
+                .GetAllAsync(d => d.DialogType == ChatGroup.direct && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
 
             if (dialogs == null || dialogs.Count < 1)
                 return null;
@@ -67,14 +67,14 @@ namespace Polyglot.BusinessLogic.Services
                     .Select(dp => dp.Participant)
                     .Where(p => p.Id != currentUser.Id)
                     .FirstOrDefault();
-            
+
                 if (interlocator != null)
                 {
                     d.LastMessageText = accordingSourceDialog
                         .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
                         ?.Body;
 
-                    if(d.LastMessageText.Length > 155)
+                    if (d.LastMessageText.Length > 155)
                     {
                         d.LastMessageText = d.LastMessageText.Substring(0, 150);
                     }
@@ -91,49 +91,6 @@ namespace Polyglot.BusinessLogic.Services
             });
         }
 
-        //private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
-        //{
-        //    IEnumerable<ChatUserDTO> contacts = null;
-        //    List<UserProfile> users = null;
-        //    if (currentUser.UserRole == Role.Manager)
-        //    {
-        //        users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
-        //            .SelectMany(p => p.ProjectTeams)
-        //            .Select(pt => pt.Team)
-        //            .SelectMany(t => t.TeamTranslators)
-        //            .Select(tt => tt.UserProfile)
-        //            .ToList();
-        //    }
-        //    else
-        //    {
-        //        var translatorTeams = (await uow.GetRepository<TeamTranslator>()
-        //            .GetAllAsync(x => x.TranslatorId == currentUser.Id))
-        //            .Select(tt => tt.Team);
-
-        //        users = translatorTeams
-        //            .SelectMany(t => t.TeamTranslators)
-        //            .Select(tt => tt.UserProfile)
-        //            .Where(u => u.Id != currentUser.Id)
-        //            .ToList();
-
-        //        users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
-        //    }
-
-        //    // достать из базы userState, последнее сообщение и примапить
-        //    contacts = mapper.Map<List<UserProfile>, List<ChatUserDTO>>(users, opt => opt.AfterMap((src, dest) =>
-        //    {
-        //        List<ChatUserDTO> result = dest;
-        //        result.ForEach(u =>
-        //        {
-        //            u.LastMessageText = "Last message text from server, hell yeah!!1111";
-        //            u.LastSeen = DateTime.Now;
-        //            u.IsOnline = true;
-        //        });
-        //    }));
-
-        //    return contacts;
-        //}
-
         public async Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId)
         {
             if (targetGroupDialogId < 0)
@@ -148,13 +105,13 @@ namespace Polyglot.BusinessLogic.Services
 
             switch (targetGroup)
             {
-                case ChatGroup.Direct:
+                case ChatGroup.direct:
                     {
                         dialogIdentifer = currentUser.Id + targetGroupDialogId;
                         break;
                     }
-                case ChatGroup.Project:
-                case ChatGroup.Team:
+                case ChatGroup.chatProject:
+                case ChatGroup.chatTeam:
                     {
                         dialogIdentifer = targetGroupDialogId;
                         break;
@@ -180,33 +137,26 @@ namespace Polyglot.BusinessLogic.Services
             if (currentUser == null || message == null)
                 return null;
 
-            message.IsRead = false;
             message.ReceivedDate = DateTime.Now;
             message.SenderId = currentUser.Id;
-            targetDialog.Messages.Add(mapper.Map<ChatMessage>(message));
-            var affectedRowsCount = await uow.SaveAsync();
+            var newMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
+            await uow.SaveAsync();
 
-            if (affectedRowsCount < 1)
+            if (newMessage == null)
                 return null;
 
-            switch (targetDialog.DialogType)
-            {
-                case ChatGroup.Direct:
-                    {
-#warning выслать оповещение
-                        //  await signalRChatService.MessageReveived($"{ChatGroup.direct.ToString()}{targetGroupItemId}", message);
-                        break;
-                    }
+            var dialogId = newMessage.DialogId.Value;
+            var text = newMessage.Body;
+            // отправляем уведомление о сообщении в диалог
+            await signalRChatService.MessageReveived($"{targetDialog.DialogType.ToString()}{dialogId}", dialogId, newMessage.Id, text);
 
-                case ChatGroup.Project:
-                    break;
-                case ChatGroup.Team:
-                    break;
-                default:
-                    break;
+            //отправляем уведомление каждому участнику диалога
+            foreach (var participant in targetDialog.DialogParticipants)
+            {
+                await signalRChatService.MessageReveived($"{ChatGroup.direct.ToString()}{participant.ParticipantId}", dialogId, newMessage.Id, text);
             }
 
-            return message;
+            return mapper.Map<ChatMessageDTO>(newMessage);
         }
 
         //public async Task<ChatContactsDTO> GetDialogsAsync(ChatGroup targetGroup, int targetGroupItemId)
@@ -281,15 +231,24 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
         {
-            return null;
-           // var currentUser = await CurrentUser.GetCurrentUserProfile();
-           // if (currentUser == null)
-           //     return null;
-           //
-           // var message = await uow.GetRepository<ChatMessage>()
-           //                 .GetAsync(m => (m.RecipientId == currentUser.Id || m.SenderId == currentUser.Id) && m.Id == messageId);
-           //
-           // return message != null ? mapper.Map<ChatMessageDTO>(message) : null;
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            var message = await uow.GetRepository<ChatMessage>()
+                            .GetAsync(messageId);
+
+            if (message == null)
+                return null;
+
+            // current user должен принимать участие в диалоге к которому относится искомое сообщение 
+            var targetDialog = message.Dialog
+                ?.DialogParticipants
+                ?.Select(dp => dp.Participant)
+                ?.Where(p => p.Id == currentUser.Id)
+                ?.FirstOrDefault();
+
+            return targetDialog != null ? mapper.Map<ChatMessageDTO>(message) : null;
         }
 
         public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
@@ -299,7 +258,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ProjectDTO>> GetProjectsAsync()
         {
-            return await projectService.GetListAsync() ?? null; 
+            return await projectService.GetListAsync() ?? null;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetTeamsAsync()
@@ -327,7 +286,7 @@ namespace Polyglot.BusinessLogic.Services
         //                await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
         //                break;
         //            }
-                    
+
         //        case ChatGroup.Project:
         //            break;
         //        case ChatGroup.Team:

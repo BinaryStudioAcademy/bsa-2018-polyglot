@@ -78,6 +78,19 @@ export class SignalrService {
         }
     }
 
+    public validateChatResponse(responce: any): boolean {
+        if (
+            responce.senderId &&
+            responce.senderId !== this.appState.currentDatabaseUser.id &&
+            responce.dialogId &&
+            responce.text && responce.text.length > 0
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public readMessage(interlocutorId: number) {
         this.connection.send(ChatActions[ChatActions.messageRead], `${GroupType[GroupType.users]}${interlocutorId}`);
     }

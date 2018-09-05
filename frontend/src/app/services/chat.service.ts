@@ -27,12 +27,12 @@ export class ChatService {
   }
 
   getDialogMessages(group: GroupType, targetGroupDialogId: number) : Observable<ChatMessage[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/messages`, undefined, targetGroupDialogId);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/dialogs/${GroupType[group]}/${targetGroupDialogId}/messages`);
   }
 
- // getMessage(group: GroupType, targetGroupId: number, targetMessageId: number) : Observable<ChatMessage> {
- //   return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/${targetGroupId}/messages`, targetMessageId);
- // }
+  getMessage(targetMessageId: number) : Observable<ChatMessage> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/messages`, targetMessageId);
+  }
 
   sendMessage(group: GroupType, message) : Observable<ChatMessage> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${GroupType[group]}/dialogs/messages`, undefined, message);

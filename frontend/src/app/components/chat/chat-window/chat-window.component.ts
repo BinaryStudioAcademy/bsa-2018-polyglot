@@ -41,33 +41,34 @@ export class ChatWindowComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        debugger;
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         if(this.dialog){
-            this.currentUserId = this.appState.currentDatabaseUser.id;
-            this.interlocutor = this.dialog.participants[0];
-            //  this.messages = MOCK_MESSAGES;
             this.signalRService.createConnection(
-                `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`,
+                `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
                 Hub[Hub.chatHub]
             );
-            this.subscribeChatEvents();
+            this.interlocutor = this.dialog.participants[0];
         }
         
+        this.subscribeChatEvents();
     }
 
     ngOnDestroy() {
         this.signalRService.closeConnection(
-            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`
+            `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`
         );
     }
 
     subscribeChatEvents() {
         this.signalRService.connection.on(
             ChatActions[ChatActions.messageReceived],
-            (message: ChatMessage) => {
-                debugger;
-                if(this.interlocutor.id == message.senderId){
-                    this.messages.push(message);
+            (responce: any) => {
+                if(this.dialog.id == responce.dialogId && this.signalRService.validateChatResponse(responce))
+                {
+                    this.chatService.getMessage(responce.messageId)
+                        .subscribe((message: ChatMessage) => {
+                            this.messages.push(message);
+                        });
                 }
             }
         );
@@ -86,7 +87,22 @@ export class ChatWindowComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        debugger;
         this.messages = [];
+        
+        if(changes.dialog.previousValue) {
+            this.signalRService.closeConnection(
+                `${SignalrGroups[SignalrGroups.dialog]}${changes.dialog.previousValue.id}`
+            );
+        }
+
+        if(this.dialog){
+            this.signalRService.createConnection(
+                `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
+                Hub[Hub.chatHub]
+            );
+            this.interlocutor = this.dialog.participants[0];
+        }
         this.getMessagesHistory();
     }
 
@@ -108,7 +124,9 @@ export class ChatWindowComponent implements OnInit {
                 .subscribe(messages => {
                     if (messages) {
                         debugger;
-                        this.messages = messages;
+                        this.messages = messages.filter(m => m.senderId == this.interlocutor.id || 
+                            m.senderId == this.currentUserId);
+
                         this.signalRService.readMessage(this.interlocutor.id);
                     }
                 });
