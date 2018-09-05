@@ -2,7 +2,7 @@
 
     <mat-toolbar class="interlocutor-info">
         <span class="interlocutor-name">{{interlocutor.fullName}}</span>
-        <span class="last-seen">Last seen 4 days ago</span>
+        <span class="last-seen">{{interlocutor.isOnline ? "Online" : "Offline"}}</span>
     </mat-toolbar>
 
     <div class="chat-messages-container" #mainwindow>
@@ -10,7 +10,7 @@
         <ul>
             <!-- <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner>  -->
 
-            <li *ngFor="let m of messages" (click)="toggleSelection(m)">
+            <li class="message" [ngClass]="{'message-from-user' : currentUserId !== m.senderId}" *ngFor="let m of messages" (click)="toggleSelection(m)">
                 <a class="person-img">
                     <img class="person-avatar" mat-card-avatar src="{{interlocutor.avatarUrl}}">
                 </a>

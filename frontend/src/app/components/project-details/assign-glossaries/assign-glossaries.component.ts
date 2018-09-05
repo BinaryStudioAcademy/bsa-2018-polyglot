@@ -15,9 +15,10 @@ export class AssignGlossariesComponent implements OnInit {
     @Input() projectId: number;
     public AssignedGlossaries: Glossary[] = [];
     public AllGlossaries: Glossary[] = [];
+    public NotAssignedGlossaries: Glossary[] = [];
     displayedColumns: string[] = ['name', 'originLanguage', 'action_btn'];
     assignedDataSource: MatTableDataSource<Glossary>;
-    allDataSource: MatTableDataSource<Glossary>;
+    notAssignedSource: MatTableDataSource<Glossary>;
 
     constructor(
         private projectService: ProjectService,
@@ -34,27 +35,13 @@ export class AssignGlossariesComponent implements OnInit {
             (data) => {
                 this.AssignedGlossaries = data;
                 this.assignedDataSource = new MatTableDataSource(this.AssignedGlossaries);
-                this.glossariesService.getAll().subscribe(data => {
-                    this.AllGlossaries = data;
-                    var glossaries = this.AllGlossaries;
-                    //TODO: Add filter here
-                    // .filter(x => {
-                    //     this.AssignedGlossaries.forEach(function (element) {
-                    //         if (x.id === element.id)
-                    //             return true;
-                    //     });
-                    //     return false;
-                    // });
-                    this.allDataSource = new MatTableDataSource(glossaries);
-                });
-            },
-            (err) => {
-                this.glossariesService.getAll().subscribe(data => {
-                    this.AllGlossaries = data;
-                    this.allDataSource = new MatTableDataSource(this.AllGlossaries);
-                });
-            }
-        );
+            });
+        this.projectService.getNotAssignedGlossaries(this.projectId).subscribe(
+            (data) => {
+                this.NotAssignedGlossaries = data;
+                this.notAssignedSource = new MatTableDataSource(this.NotAssignedGlossaries);
+            });
+
     }
 
     public isAssigned(item: Glossary): boolean {
@@ -69,12 +56,10 @@ export class AssignGlossariesComponent implements OnInit {
 
     onAction(item: Glossary) {
         if (this.isAssigned(item)) {
-            this.AssignedGlossaries.splice(this.AssignedGlossaries.indexOf(item), 1);
             this.projectService.dismissProjectGlossary(this.projectId, item.id).subscribe(() => {
                 this.refresh();
             });
         } else {
-            this.AssignedGlossaries.push(item);
             this.projectService.assignGlossariesToProject(this.projectId, [item.id]).subscribe(() => {
                 this.refresh();
             });

@@ -8,6 +8,7 @@ import { Hub } from "../../models/signalrModels/hub";
 import { ProjectService } from "../../services/project.service";
 import { ChatService } from "../../services/chat.service";
 import { AppStateService } from "../../services/app-state.service";
+import { ChatMessage } from "../../models";
 
 @Component({
     selector: "app-chat",
@@ -38,13 +39,15 @@ export class ChatComponent implements OnInit {
     }
 
     ngOnInit() {
+        setTimeout(() => {
+            this.signalRService.createConnection(
+                SignalrGroups[SignalrGroups.chatShared],
+                Hub[Hub.chatHub]
+            );
+        }, 1000);
+
         this.signalRService.createConnection(
-            SignalrGroups[SignalrGroups.chatShared],
-            Hub[Hub.chatHub]
-        );
-        this.signalRService.createConnection(
-            `${SignalrGroups[SignalrGroups.chatUser]}
-            ${this.appState.currentDatabaseUser.id}`,
+            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`,
             Hub[Hub.chatHub]
         );
         this.subscribeChatEvents();
@@ -55,6 +58,10 @@ export class ChatComponent implements OnInit {
         this.signalRService.closeConnection(
             SignalrGroups[SignalrGroups.chatShared]
         );
+        this.signalRService.closeConnection(
+            `${SignalrGroups[SignalrGroups.chatUser]}
+            ${this.appState.currentDatabaseUser.id}`
+        );
     }
 
     onSelected($event){
@@ -63,22 +70,13 @@ export class ChatComponent implements OnInit {
     }
 
     subscribeChatEvents() {
-        //this.signalRService.connection.on(
-        //    ChatActions[ChatActions.messageReceived],
-        //    (message: string) => {
-        //        this.messages.push({
-        //            body: message,
-        //            date: "21.2.2018",
-        //            user: {
-        //                fullName: "Julia Louis-Dreyfus",
-        //                avatarUrl:
-        //                    "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
-        //                isOnline: true
-        //            }
-        //        });
-        //      this.renderer.setProperty(this.mainWindow.nativeElement, 'scrollTop', '99999');
-        //    }
-        //);
+        this.signalRService.connection.on(
+            ChatActions[ChatActions.messageReceived],
+            (message: ChatMessage) => {
+                console.log("message received");
+                console.log(message);
+            }
+        );
     }
 
     
