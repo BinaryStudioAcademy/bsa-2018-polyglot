@@ -6,6 +6,7 @@ using AutoMapper;
 using Nest;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Polyglot.BusinessLogic.TranslationServices;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Common.Helpers.SignalR;
@@ -30,10 +31,11 @@ namespace Polyglot.BusinessLogic.Services
         private readonly ICRUDService<UserProfile, UserProfileDTO> _userProfileService;
         private readonly ISignalRWorkspaceService _signalRWorkspaceService;
         private readonly IElasticClient _elasticClient;
+        private readonly TranslationTimerService _timerService;
 
 
         public ComplexStringService(IMongoRepository<ComplexString> complexStringRepository, IMapper mapper, IUnitOfWork unitOfWork, IFileStorageProvider fileStorageProvider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspaceWorkspace, IElasticClient elasticClient)
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspaceWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
         {
             this._unitOfWork = unitOfWork;
             this._complexStringRepository = complexStringRepository;
@@ -42,6 +44,7 @@ namespace Polyglot.BusinessLogic.Services
             this._userProfileService = userService;
             this._signalRWorkspaceService = signalRWorkspaceWorkspace;
             this._elasticClient = elasticClient;
+            this._timerService = timerService;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -460,6 +463,14 @@ namespace Polyglot.BusinessLogic.Services
             if (status)
             {
                 await _signalRWorkspaceService.ComplexStringTranslatingStarted(groupName, id);
+                _timerService.TrackTranslatingTime(id);
+                await Task.Delay(10000)
+                    .ContinueWith(r => _timerService.UntrackTranslatingTime(id));
+
+                if (_timerService.IsTranslationFinished(id))
+                {
+                    await _signalRWorkspaceService.ComplexStringTranslatingFinished(groupName, id);
+                }
             }
             else
             {

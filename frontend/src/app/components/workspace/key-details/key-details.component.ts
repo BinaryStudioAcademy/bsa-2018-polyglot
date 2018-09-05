@@ -432,6 +432,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onSave(index: number, t: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: false
+        });
         this.currentTranslation = "";
         this.index = index;
         // 'Save' button not work if nothing has been changed

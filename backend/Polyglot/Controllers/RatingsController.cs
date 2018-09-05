@@ -5,9 +5,11 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class RatingsController : ControllerBase
