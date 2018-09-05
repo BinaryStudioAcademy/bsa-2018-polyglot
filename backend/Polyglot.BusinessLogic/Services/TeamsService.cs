@@ -165,7 +165,7 @@ namespace Polyglot.BusinessLogic.Services
             if (translators != null && translators.Count > 0)
             {
                 
-                var tLanguages = await uow.GetRepository<TranslatorLanguage>()
+                var tLanguages = await uow.GetMidRepository<TranslatorLanguage>()
                     .GetAllAsync();
                 // вычисляем рейтинги переводчиков
                 Dictionary<int, double> ratings = new Dictionary<int, double>();
@@ -207,7 +207,7 @@ namespace Polyglot.BusinessLogic.Services
             var translator = await uow.GetRepository<UserProfile>().GetAsync(id);
             if (translator != null && translator.UserRole == Role.Translator)
             {
-                var translatorLanguages = await uow.GetRepository<TranslatorLanguage>()
+                var translatorLanguages = await uow.GetMidRepository<TranslatorLanguage>()
                     .GetAllAsync(tl => tl.TranslatorId == translator.Id);
 
                 return mapper.Map<UserProfile, TranslatorDTO>(translator, opt => opt.AfterMap((src, dest) =>

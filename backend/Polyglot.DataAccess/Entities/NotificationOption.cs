@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Polyglot.DataAccess.Entities
 {
-    public class NotificationOption
+    public class NotificationOption: MidEntity
     {
         public int? NotificationId { get; set; }
         public virtual Notification Notification { get; set; }

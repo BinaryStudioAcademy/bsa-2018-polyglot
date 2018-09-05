@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Polyglot.DataAccess.Entities;
-using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.QueryTypes;
 using Polyglot.DataAccess.ViewsRepository;
 
@@ -14,6 +12,7 @@ namespace Polyglot.DataAccess.SqlRepository
         IViewData<T> GetViewData<T>()
             where T : QueryType, new();
 
+        IMidRepository<T> GetMidRepository<T>() where T : MidEntity, new();
 
         Task<int> SaveAsync();
     }
