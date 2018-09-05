@@ -19,7 +19,11 @@ namespace Polyglot.Common.DTOs
 
         public string Message { get; set; }
 
-        public IEnumerable<OptionDTO> Options { get; set; }
+        public NotificationAction NotificationAction { get; set; }
+
+        public int Payload { get; set; }
+
+        public List<OptionDTO> Options { get; set; }
 
     }
 }

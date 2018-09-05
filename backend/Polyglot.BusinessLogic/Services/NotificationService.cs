@@ -32,5 +32,20 @@ namespace Polyglot.BusinessLogic.Services
             await uow.SaveAsync();
             return notification != null ? mapper.Map<NotificationDTO>(notification) : null;
         }
+        public override async Task<bool> TryDeleteAsync(int identifier)
+        {
+            if (uow != null)
+            {
+                await uow.GetRepository<Option>().GetAllAsync(o => o.NotificationId == identifier);
+                var notification = await uow.GetRepository<Notification>().GetAsync(identifier);
+                notification.Options = null;
+                notification = uow.GetRepository<Notification>().Update(notification);
+                await uow.GetRepository<Notification>().DeleteAsync(identifier);
+                await uow.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

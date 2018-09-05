@@ -8,22 +8,21 @@ import { Notification } from '../models/notification';
 })
 export class NotificationService {
 
-  api: string;
-  private endpoint: string = "notifications";
-  constructor(private dataService: HttpService) {
-    this.api = "notifications";
-   }
+    api: string;
+    private endpoint: string = "notifications";
+    constructor(private dataService: HttpService) {
+        this.api = "notifications";
+    }
 
-  getCurrenUserNotifications() : Observable<Notification[]> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api);
-  }
+    getCurrenUserNotifications() : Observable<Notification[]> {
+        return this.dataService.sendRequest(RequestMethod.Get, this.api);
+    }
 
-  sendNotification(notification: Notification) : Observable<Notification> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, notification);
-  }
+    sendNotification(notification: Notification) : Observable<Notification> {
+        return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, notification);
+    }
 
-  removeNotification(notificationId:number) : Observable<Notification> {
-    return this.dataService.sendRequest(RequestMethod.Delete, this.api, notificationId);
-  }
-
+    removeNotification(notificationId:number) : Observable<Notification[]> {
+        return this.dataService.sendRequest(RequestMethod.Delete, this.api, notificationId);
+    }
 }

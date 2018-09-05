@@ -267,7 +267,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
                     .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
                     .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
-                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId))
+                    .ForMember(p => p.NotificationAction, opt => opt.MapFrom(po => po.NotificationAction))
+                    .ForMember(p => p.Payload, opt => opt.MapFrom(po => po.Payload));
 
                 cfg.CreateMap<NotificationDTO, Notification>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
@@ -276,7 +278,9 @@ namespace Polyglot.Common.Mapping
                     .ForMember(p => p.Message, opt => opt.MapFrom(po => po.Message))
                     .ForMember(p => p.Options, opt => opt.MapFrom(po => po.Options))
                     .ForMember(p => p.ReceiverId, opt => opt.MapFrom(po => po.ReceiverId))
-                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+                    .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId))
+                    .ForMember(p => p.NotificationAction, opt => opt.MapFrom(po => po.NotificationAction))
+                    .ForMember(p => p.Payload, opt => opt.MapFrom(po => po.Payload));
 
                 cfg.CreateMap<OptionDTO, Option>()
                     .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))

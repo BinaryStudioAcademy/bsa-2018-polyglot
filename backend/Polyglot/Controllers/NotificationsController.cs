@@ -46,7 +46,8 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> DeleteNotification(int id)
         {
             bool isDeleted = await service.TryDeleteAsync(id);
-            return isDeleted ? Ok() : StatusCode(304) as IActionResult;
+            return isDeleted ? Ok(await service.GetNotificationsByUserId((await CurrentUser.GetCurrentUserProfile()).Id))
+                : StatusCode(304) as IActionResult;
         }
     }
 }

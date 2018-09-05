@@ -20,13 +20,9 @@
             </div>
         </mat-card-title>
         </mat-card-header>
-        <hr>
         <mat-card-content class="card-navigation">
-            <a *ngFor="let notificationOption of notification.options" mat-button color="primary" class="card-navigation-button" routerLink="/profile">
+            <a *ngFor="let notificationOption of notification.options" mat-button color="primary" class="card-navigation-button" (click)="buttonClick(notification, notificationOption.optionDefinition)">
                 {{getStringEnum(notificationOption.optionDefinition)}}
-            </a>
-            <a mat-button color="danger" class="card-navigation-button" (click)="deleteNotification(notification.id)">
-                Close
             </a>
         </mat-card-content>
     </mat-card>

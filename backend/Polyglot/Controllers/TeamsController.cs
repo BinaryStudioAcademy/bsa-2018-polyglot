@@ -7,9 +7,11 @@ using AutoMapper;
 using System.Collections.Generic;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class TeamsController : ControllerBase
@@ -143,6 +145,16 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]RightDefinition rightDefinition)
         {
             var entity = await rightService.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        [HttpPut("{teamId}/activate")]
+        public async Task<IActionResult> ActivateCurrentUser(int teamId)
+        {
+            int currentUserId = (await CurrentUser.GetCurrentUserProfile()).Id;
+            var entity = await service.ActivateUserInTeam(currentUserId, teamId);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

@@ -15,6 +15,8 @@ namespace Polyglot.DataAccess.Entities
         public virtual UserProfile Receiver { get; set; }
         public int? ReceiverId { get; set; }
         public string Message { get; set; }
+        public NotificationAction NotificationAction { get; set; }
+        public int Payload { get; set; }
 
         public virtual ICollection<Option> Options { get; set; }
 

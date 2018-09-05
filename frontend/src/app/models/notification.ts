@@ -1,5 +1,7 @@
 import { UserProfile } from ".";
 import { Option } from "./option";
+import { NotificationAction } from "./NotificationAction";
+
 
 export class Notification{
     id?: number;
@@ -9,4 +11,6 @@ export class Notification{
     sender?: UserProfile;
     message: string;
     options?: Option[];
+    payload: number;
+    notificationAction: NotificationAction;
 }

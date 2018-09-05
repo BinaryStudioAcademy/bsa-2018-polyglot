@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { OptionDefinition } from '../../models/optionDefinition';
 import { Notification } from '../../models/notification';
+import { TeamService } from '../../services/teams.service';
+import { SnotifyService } from 'ng-snotify';
+import { NotificationAction } from '../../models/NotificationAction';
 
 @Component({
   selector: 'app-notifications',
@@ -10,13 +13,14 @@ import { Notification } from '../../models/notification';
 })
 export class NotificationsComponent implements OnInit {
 
-    constructor(private notificationService: NotificationService) { }
+    constructor(private notificationService: NotificationService,
+                private teamService: TeamService,
+                private snotifyService: SnotifyService) { }
 
     userNotifications: Notification[];
     ngOnInit() {
         this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
             this.userNotifications = notifications;
-            console.log(this.userNotifications);
         });
     }
 
@@ -29,6 +33,38 @@ export class NotificationsComponent implements OnInit {
             let index = this.userNotifications.findIndex(n => n.id == notificationId);
             this.userNotifications.splice(index, 1);
         });
+    }
+
+    buttonClick(notification: Notification, notificationOption: number){
+        console.log(notification);
+        console.log(notificationOption);
+        switch(notification.notificationAction)
+        {
+            case NotificationAction.None:
+                break; //Do some stuff here if notification havent actions
+
+            case NotificationAction.JoinTeam:
+            switch(notificationOption){
+                case OptionDefinition.Accept:
+                    this.teamService.activateCurrentUserInTeam(notification.payload).subscribe((trans)=>{
+                        this.notificationService.removeNotification(notification.id).subscribe((notifications)=>{
+                            this.userNotifications = notifications;
+                            this.snotifyService.success(`You joined a team ${trans.team.name}`, "Success!");
+                        });        
+                    });
+                    break;
+                    
+                case OptionDefinition.Decline:
+                    this.notificationService.removeNotification(notification.id).subscribe((notifications)=>{
+                        this.userNotifications = notifications;
+                        this.snotifyService.warning(`You declined an invitation`, "Warning!");
+                    }); 
+                    break;  
+                    
+            }
+            break;
+            
+        }
     }
 
 }

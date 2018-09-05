@@ -45,6 +45,10 @@ export class TeamService {
  //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
  // }
 
+  activateCurrentUserInTeam(teamId: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, teamId + "/activate");
+  } 
+
   update(id: number, body){
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
   }
