@@ -51,6 +51,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.projectService.getAll().subscribe(pr => {
             if (pr) {
                 this.cards = pr;
+                this.projectService.getProjectsTranslationStatistics(this.cards.map(project => project.id)).subscribe(statistics => {
+                    for (let i = 0; i < this.cards.length; i++) {
+                        this.cards[i].projectStatistics = statistics.find(project => project.projectId === this.cards[i].id);
+                        }
+                    });
                 if (
                     this.cards.length === 0 &&
                     this.onPage === true &&

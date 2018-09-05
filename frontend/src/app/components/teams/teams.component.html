@@ -9,10 +9,7 @@
   </mat-form-field>
 
 </form>
-
-<div *ngIf="isLoad" class="spinner">
-  <mat-spinner></mat-spinner>
-</div>
+<mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 <div *ngIf="!isLoad && teams.length > 0">
   <div class="container">
         <mat-card class="example-card" *ngFor="let t of teams; let i = index">
@@ -22,9 +19,9 @@
                 </a> 
                 <div class="title">
                     <mat-card-title class="card-title">
-                      <!--  <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">Team №{{t.id}}</a>
-                        <a *ngIf="t.name !== null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/dashboard/teams/{{t.id}}">{{t.name}}</a> -->
-                        <a style="text-decoration: none; color:black" routerLink="/dashboard/teams/{{t.id}}"> Team {{t.name || t.id}}</a>
+                      <!--  <a *ngIf="t.name === null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/team/details/{{t.id}}">Team №{{t.id}}</a>
+                        <a *ngIf="t.name !== null" style="text-decoration: none; color:black;padding-bottom: 5px;" routerLink="/team/details/{{t.id}}">{{t.name}}</a> -->
+                        <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> Team {{t.name || t.id}}</a>
                     </mat-card-title>
                   
 
@@ -42,13 +39,13 @@
           
         
             <mat-card-actions class="card-buttons">        
-              <button mat-raised-button color="primary" routerLink="/dashboard/teams/{{t.id}}">DETAILS</button>
+              <button mat-raised-button color="primary" routerLink="/team/details/{{t.id}}">DETAILS</button>
             </mat-card-actions>      
           </mat-card>  
   </div>
 </div>
 
-<div *ngIf="!isLoad && teams.length === 0" class="no-teams">
+<div *ngIf="!isLoad && teams.length === 0" class="no-items-div">
   No Teams
 </div>
 

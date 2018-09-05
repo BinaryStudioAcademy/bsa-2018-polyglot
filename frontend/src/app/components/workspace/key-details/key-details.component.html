@@ -1,5 +1,5 @@
 <div class="key-details mt-1 mb-1" *ngIf="isEmpty">
-	<mat-card class="no-languages-div">
+	<mat-card class="no-items-div">
 	<p>No languages</p>
 	</mat-card>
 </div>
@@ -10,7 +10,8 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-						<mat-expansion-panel [style.border]="highlightString(i)" [(disabled)]="isDisabled" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+                        <mat-expansion-panel [style.border]="highlightString(i)"
+                        [disabled]="isDisabled || currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
@@ -19,8 +20,19 @@
 								  	<p *ngIf = "t.translationValue">{{t.translationValue}}</p>
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
-								</mat-panel-description>
-								<button  mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+                                </mat-panel-description>
+                                <div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
+                                    <img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
+                                </div>
+                                <button mat-icon-button [matMenuTriggerFor]="translatorsMenu"
+                                (mouseenter)="toggleDisable()" class="optional-btn"  [disabled]="showAssignButton(t.assignedTranslatorId)" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
+                               >
+                                        <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #translatorsMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll list-users">
+                                   <app-list-translators [translationId] = "t.id" [langId] = "t.languageId" [projectId] = "projectId" (chooseUserEvent) = "chooseUser($event)" [options] = "users" *ngIf ="users.length"></app-list-translators>
+                                </mat-menu>
+                                <button  mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
 									<mat-icon class="icon-size">g_translate</mat-icon>
 								</button>
 								<button [disabled]="!t.translationValue"  mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
@@ -32,7 +44,7 @@
 											<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize
 												cdkAutosizeMinRows="1"
 												placeholder="Write here your optional translation"
-												cdkAutosizeMaxRows="10">					
+												cdkAutosizeMaxRows="10">
 											</textarea>
 										</mat-form-field>
 										<button [disabled]="!currentSuggestion || currentSuggestion.length<1"
@@ -60,7 +72,7 @@
 									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
 											Add comment for selection
 									</button>
-							</mat-menu>	
+							</mat-menu>
 								<div [hidden]="!someOneTranslating" class="state-container">
 										<span *ngFor="let u of editingUsers">
 											<a [routerLink]="['/']" [routerLinkActive]="'active'">

@@ -61,6 +61,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId);
 
+        Task<IEnumerable<GlossaryDTO>> GetNotAssignedGlossaries(int projectId);
+
         Task<bool> TryDismissGlossary(int projectId, int glossaryId);
 
         #endregion
@@ -68,6 +70,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ProjectStatisticDTO> GetProjectStatistic(int id);
         Task<ChartDTO> GetTranskatedStringToLanguagesStatistic(int id);
         Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
-
+        Task<ProjectTranslationStatisticsDTO> GetProjectLanguageStatistic(int projectId);
+        Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds);
     }
 }

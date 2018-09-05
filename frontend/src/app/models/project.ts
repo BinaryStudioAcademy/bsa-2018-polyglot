@@ -5,6 +5,7 @@ import { Translation } from "./translation";
 import { Team } from "./team";
 import { UserProfile } from "./user-profile";
 import { Tag } from ".";
+import { ProjectTranslationStatistics } from "./projectTranslationStatistics";
 
 export interface Project {
     id?: number;
@@ -20,4 +21,5 @@ export interface Project {
     projectLanguageses?: Array<ProjectLanguage>;
     projectGlossaries?: Array<ProjectGlossary>;
     tags?: Array<Tag>;
+    projectStatistics?: ProjectTranslationStatistics;
 }

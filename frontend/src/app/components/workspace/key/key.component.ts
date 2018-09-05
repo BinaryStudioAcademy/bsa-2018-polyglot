@@ -4,6 +4,7 @@ import { MatDialog } from "@angular/material";
 import { ImgDialogComponent } from "../../../dialogs/img-dialog/img-dialog.component";
 import { ConfirmDialogComponent } from "../../../dialogs/confirm-dialog/confirm-dialog.component";
 import { SnotifyService } from "ng-snotify";
+import { StringDialogComponent } from "../../../dialogs/string-dialog/string-dialog.component";
 
 @Component({
     selector: "app-workspace-key",
@@ -15,6 +16,8 @@ export class KeyComponent implements OnInit {
     public key: any;
     @Output()
     removeEvent = new EventEmitter<number>();
+    @Output()
+    editKey = new EventEmitter<number>();
     description: string = "Are you sure you want to remove the string?";
     btnOkText: string = "Delete";
     btnCancelText: string = "Cancel";
@@ -65,6 +68,24 @@ export class KeyComponent implements OnInit {
             }
         });
     }
+
+    onEditStringClick() {
+		this.dialog.open(StringDialogComponent, {
+				data: {
+                    projectId: this.key.projectId,
+					string: this.key
+				}
+		}).afterClosed().subscribe(() => {
+			this.dataProvider.getById(this.key.id).subscribe(data => {
+				this.key = data;
+				this.snotifyService.success("String edited", "Success!");
+			}, 
+			err => {
+				this.snotifyService.error("String wasn`t edited", "Error!");
+			});
+			this.editKey.emit(this.key.id);
+		});
+	}
 
     onPictureIconClick(key: any) {
         let dialogRef = this.dialog.open(ImgDialogComponent, {

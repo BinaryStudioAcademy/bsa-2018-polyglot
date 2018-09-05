@@ -11,6 +11,8 @@ namespace Polyglot.DataAccess.MongoModels
         public int UserId { get; set; }
         public DateTime CreatedOn { get; set; }
 
+        public int AssignedTranslatorId { get; set; }
+
         public List<AdditionalTranslation> History { get; set; }
         public List<AdditionalTranslation> OptionalTranslations { get; set; }
 

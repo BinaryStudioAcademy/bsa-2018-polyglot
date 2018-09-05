@@ -3,6 +3,7 @@ import { HttpService, RequestMethod } from './http.service';
 import { Observable, of } from 'rxjs';
 import { Language, Project, LanguageStatistic } from  '../models';
 import { map, filter } from '../../../node_modules/rxjs/operators';
+import { ProjectTranslationStatistics } from '../models/projectTranslationStatistics';
 
 @Injectable({
   providedIn: 'root'
@@ -111,6 +112,10 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + projectId + '/glossaries', undefined, glossaryIds);
   }
 
+  getNotAssignedGlossaries(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/notassigned', undefined, undefined);
+  }
+
   dismissProjectGlossary(projectId: number, glossaryId: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/' + projectId + '/glossaries/' + glossaryId, undefined, undefined);
   }
@@ -130,5 +135,13 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
   getProjectReports(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/reports', undefined, undefined);
 
+  }
+
+  getProjectTranslationStatistics(id: number): Observable<ProjectTranslationStatistics> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/statistics', undefined, undefined);
+  }
+
+  getProjectsTranslationStatistics(projectIds: Array<number>): Observable<Array<ProjectTranslationStatistics>> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/statistics', undefined, projectIds);
   }
 }

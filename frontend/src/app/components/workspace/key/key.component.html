@@ -1,5 +1,6 @@
 <button (click)="$event.preventDefault(); $event.stopPropagation();" mat-button [matMenuTriggerFor]="menu"><mat-icon aria-label="dropdown-menu">more_horiz</mat-icon></button>
     <mat-menu #menu="matMenu" xPosition="before">
+      <button (click)="onEditStringClick()" mat-menu-item>Edit</button>
       <button (click)="onDeleteString()" mat-menu-item>Delete</button>
     </mat-menu>
 <div class="common">

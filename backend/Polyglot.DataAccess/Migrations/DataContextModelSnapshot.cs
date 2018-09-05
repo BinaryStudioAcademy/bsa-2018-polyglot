@@ -110,6 +110,53 @@ namespace Polyglot.DataAccess.Migrations
                     b.ToTable("Languages");
                 });
 
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message");
+
+                    b.Property<int>("SendFromId");
+
+                    b.Property<int>("UserProfileId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SendFromId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.NotificationOption", b =>
+                {
+                    b.Property<int?>("NotificationId");
+
+                    b.Property<int?>("OptionID");
+
+                    b.HasKey("NotificationId", "OptionID");
+
+                    b.HasIndex("OptionID");
+
+                    b.ToTable("NotificationOption");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OptionDefinition");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Options");
+                });
+
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -398,6 +445,32 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.Glossary")
                         .WithMany("GlossaryStrings")
                         .HasForeignKey("GlossaryId");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Notification", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "SendFrom")
+                        .WithMany()
+                        .HasForeignKey("SendFromId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.NotificationOption", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Notification", "Notification")
+                        .WithMany("NotificationOptions")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Polyglot.DataAccess.Entities.Option", "Option")
+                        .WithMany("NotificationOptions")
+                        .HasForeignKey("OptionID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Project", b =>

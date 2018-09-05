@@ -13,7 +13,12 @@ import { TranslationService } from "../../../services/translation.service";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { ProjectService } from "../../../services/project.service";
+import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
+import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
+import { EventService } from "../../../services/event.service";
+import { Comment } from "../../../models/comment";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -60,6 +65,8 @@ export class KeyDetailsComponent implements OnInit {
     currentSuggestion: string;
     isSaveDisabled: boolean;
 
+    users: UserProfilePrev[]= [];
+    currentUserId: number;
     constructor(
         private route: ActivatedRoute,
         private dataProvider: ComplexStringService,
@@ -68,20 +75,25 @@ export class KeyDetailsComponent implements OnInit {
         private appState: AppStateService,
         private signalrService: SignalrService,
         private service: TranslationService,
-        private projectService: ProjectService
-    ) {}
+        private projectService: ProjectService,
+        private eventService: EventService,
+        private translatorsService: ProjecttranslatorsService,
+        private userService: UserService
+    ) { }
 
     ngOnInit() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
-
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
-
+                this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
+                    this.users = data;
+                });
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
                     this.signalrService.closeConnection(
                         `${SignalrGroups[SignalrGroups.complexString]}${
@@ -165,17 +177,18 @@ export class KeyDetailsComponent implements OnInit {
             }
         );
         this.signalrService.connection.on(
-            SignalrSubscribeActions[SignalrSubscribeActions.commentAdded],
+            SignalrSubscribeActions[SignalrSubscribeActions.commentsChanged],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
                     this.dataProvider
-                        .getCommentsByStringId(this.currentKeyId)
-                        .subscribe(comments => {
-                            this.comments = comments;
-                        });
+                    .getCommentsWithPagination(this.currentKeyId, this.elementsOnPage, this.currentPage)
+                    .subscribe(comments => {
+                        this.comments = comments;
+                    });
                 }
             }
         );
+
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (response: any) => {
@@ -210,6 +223,9 @@ export class KeyDetailsComponent implements OnInit {
                 }
             }
         );
+
+
+
         this.signalrService.connection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
@@ -289,12 +305,12 @@ export class KeyDetailsComponent implements OnInit {
                 targetExpandedArrayItem.oldValue !== "" &&
                 targetExpandedArrayItem.oldValue !== this.currentTranslation
             ) {
-                newTranslationValue = `Your work  ==========>                                            
+                newTranslationValue = `Your work  ==========>
                                             ${
                                                 this.currentTranslation
-                                            }                          
-                                            <========= ${callerName}'s changes                               
-                                            =========>                                       
+                                            }
+                                            <========= ${callerName}'s changes
+                                            =========>
                                             ${
                                                 translations[i].translationValue
                                             }`;
@@ -309,6 +325,11 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: true
+        });
+
         if (index === undefined) {
             return;
         }
@@ -395,6 +416,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onSave(index: number, t: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: false
+        });
         this.currentTranslation = "";
 
         // 'Save' button not work if nothing has been changed
@@ -464,6 +489,11 @@ export class KeyDetailsComponent implements OnInit {
         }
     }
     onClose(index: number, translation: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: false
+        });
+
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
@@ -535,6 +565,54 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
+    onAssign() {
+    }
+
+    chooseUser($event) {
+        if(!$event.translationId) {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].languageId === $event.langId) {
+                    if(!$event.user) {
+                        $event.user = { };
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.createStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                        .subscribe(
+                            (d: any[]) => {
+                            },
+                            err => {
+                                this.snotifyService.error('User wasn`t assigned!');
+                            }
+                        );
+                    break;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.keyDetails.translations.length; i++) {
+                if(this.keyDetails.translations[i].id === $event.translationId) {
+                    if(!$event.user) {
+                        $event.user = {};
+                    }
+                    this.keyDetails.translations[i].assignedTranslatorId = $event.user.id;
+                    this.keyDetails.translations[i].assignedTranslatorName = $event.user.fullName;
+                    this.keyDetails.translations[i].assignedTranslatorAvatarUrl = $event.user.avatarUrl;
+                    this.dataProvider.editStringTranslation(this.keyDetails.translations[i], this.keyDetails.id)
+                    .subscribe(
+                        (d: any) => {
+                        },
+                        err => {
+                            this.snotifyService.error('User wasn`t assigned!');
+                        }
+                    );
+                    break;
+                }
+            }
+        }
+    }
+
     suggestTranslation(index, TranslationId, Suggestion) {
         this.dataProvider
             .addOptionalTranslation(
@@ -555,7 +633,24 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
-    
+    }
+
+    public showAssignButton(userId: number): boolean {
+        var result = false;
+        if (this.userService.getCurrentUser().userRole === 1) {
+            result = false;
         }
+        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+        //     result = false;
+        // }
+        // else if (!userId) {
+        //     result = false;
+        // }
+        else {
+           result = true;
+        }
+        return result || !this.users.length;
+    }
+
 
 }

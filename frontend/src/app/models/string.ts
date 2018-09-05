@@ -9,6 +9,7 @@ export interface IString {
     description: string;
     tags: Tag[];
     comments: Comment[];
+    pictureLink: string;
     projectId: number;
     translations: Translation[];
     createdBy: number;

@@ -28,9 +28,9 @@
 </table>
 
 
-<h2>All Glossaries</h2>
+<h2 *ngIf="NotAssignedGlossaries.length != 0">Not Assigned Glossaries</h2>
 
-<table mat-table [dataSource]="allDataSource" class="mat-elevation-z8">
+<table *ngIf="NotAssignedGlossaries.length != 0" mat-table [dataSource]="notAssignedSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>

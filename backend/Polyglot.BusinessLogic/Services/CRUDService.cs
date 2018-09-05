@@ -46,7 +46,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             if (uow != null)
             {
-                var target = uow.GetRepository<TEntity>().Update(mapper.Map<TEntity>(entity));
+                var target = await uow.GetRepository<TEntity>().Update(mapper.Map<TEntity>(entity));
                 if(target != null)
                 {
                     await uow.SaveAsync();

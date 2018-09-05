@@ -119,7 +119,6 @@ namespace Polyglot.Controllers
             var project = await service.GetProjectLanguages(id);
             return project == null ? NotFound($"Project with id = {id} has got no languages!") as IActionResult
                 : Ok(project);
-
         }
 
         // PUT: Projects/:id/languages
@@ -169,10 +168,11 @@ namespace Polyglot.Controllers
        [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
 	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
 	    {
-	        var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
-	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
-	            : Ok(projectsStrings);
-	    }
+            var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+
+            return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+             : Ok(projectsStrings);
+        }
 
         // POST: Projects
         [HttpPost]
@@ -269,6 +269,16 @@ namespace Polyglot.Controllers
 
         }
 
+        // GET: Projects/5/notAssigned
+        [HttpGet("{id}/notassigned")]
+        public async Task<IActionResult> GetNotAssignedGlossaries(int id)
+        {
+            var glossaries = await service.GetNotAssignedGlossaries(id);
+            return glossaries == null ? NotFound() as IActionResult
+                : Ok(glossaries);
+
+        }
+
         // PUT: Projects/:id/glossaries
         [HttpPut("{projectId}/glossaries")]
         public async Task<IActionResult> AssignGlossariesToProject(int projectId, [FromBody]int[] glossaryIds)
@@ -299,7 +309,24 @@ namespace Polyglot.Controllers
                 : Ok(activities);
         }
 
+	    [HttpGet("{projectId}/statistics")]
+	    public async Task<IActionResult> GetStatistics(int projectId)
+	    {
+	        var statistics = await service.GetProjectLanguageStatistic(projectId);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
+        }
 
+	    [HttpPost("statistics")]
+	    public async Task<IActionResult> GetStatistics([FromBody]List<int> projectIds)
+	    {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var statistics = await service.GetProjectLanguageStatistics(projectIds);
+	        return statistics == null ? StatusCode(404) as IActionResult
+	            : Ok(statistics);
+        }
 
         [HttpGet]
         [Route("{id}/export")]

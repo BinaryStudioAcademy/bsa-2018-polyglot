@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Nest;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Polyglot.BusinessLogic.TranslationServices;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.Authentication;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -26,10 +30,12 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IFileStorageProvider provider;
         private readonly ICRUDService<UserProfile, UserProfileDTO> userSevice;
         private readonly ISignalRWorkspaceService signalRService;
+        private readonly IElasticClient _elasticClient;
+        private readonly TranslationTimerService _timerService;
 
 
         public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow, IFileStorageProvider provider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspace)
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
         {
             this.uow = uow;
             this.repository = repository;
@@ -37,6 +43,8 @@ namespace Polyglot.BusinessLogic.Services
             this.provider = provider;
             this.userSevice = userService;
             this.signalRService = signalRWorkspace;
+            this._elasticClient = elasticClient;
+            this._timerService = timerService;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -62,7 +70,17 @@ namespace Polyglot.BusinessLogic.Services
             var target = await repository.GetAsync(identifier);
             if (target != null)
             {
-                return mapper.Map<ComplexStringDTO>(target);
+                ComplexStringDTO stringDTO = mapper.Map<ComplexStringDTO>(target);
+                foreach (var translation in stringDTO.Translations)
+                {
+                    if(translation.AssignedTranslatorId != 0)
+                    {
+                        UserProfileDTO user = await userSevice.GetOneAsync(translation.AssignedTranslatorId);
+                        translation.AssignedTranslatorAvatarUrl = user.AvatarUrl;
+                        translation.AssignedTranslatorName = user.FullName;
+                    }
+                }
+                return stringDTO;
             }
 
             return null;
@@ -80,6 +98,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
+      
         public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
             var target = await repository.GetAsync(identifier);
@@ -87,6 +106,8 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var currentTranslation = mapper.Map<Translation>(translation);
                 currentTranslation.Id = Guid.NewGuid();
+                //currentTranslation.AssignedTranslatorId = translation.AssignedTranslatorId;
+
                 var targetTranslationDublicateIndex = target.Translations.FindIndex(t => t.LanguageId == translation.LanguageId);
                 if (targetTranslationDublicateIndex >= 0)
                 {
@@ -104,6 +125,10 @@ namespace Polyglot.BusinessLogic.Services
                 await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
 
                 return (mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+                //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+                //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
+                //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
+                //return translationNew;
             }
             return null;
 
@@ -125,6 +150,8 @@ namespace Polyglot.BusinessLogic.Services
                 currentTranslation.TranslationValue = translation.TranslationValue;
                 currentTranslation.UserId = translation.UserId;
                 currentTranslation.CreatedOn = DateTime.Now;
+                currentTranslation.AssignedTranslatorId = translation.AssignedTranslatorId;
+
                 target.Translations = translationsList;
 
                 var result = await repository.Update(mapper.Map<ComplexString>(target));
@@ -132,7 +159,10 @@ namespace Polyglot.BusinessLogic.Services
                 var targetProjectId = target.ProjectId;
                 await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
                 await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
-
+                //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+                //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
+                //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
+                //return translationNew;
                 return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
@@ -243,7 +273,7 @@ namespace Polyglot.BusinessLogic.Services
                 var result = await repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
-                await signalRService.CommentAdded($"{Group.complexString}{identifier}", identifier);
+                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
                 
                 return commentsWithUsers.OrderByDescending(x => x.CreatedOn).Take(itemsOnPage);
 
@@ -267,7 +297,7 @@ namespace Polyglot.BusinessLogic.Services
                 var result = await repository.Update(target);
                 
                 var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-                await signalRService.CommentDeleted($"{Group.complexString}{identifier}", identifier);
+                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
                 return commentsWithUsers.Reverse();
 
             }
@@ -283,13 +313,13 @@ namespace Polyglot.BusinessLogic.Services
                 var currentComment = comments.FirstOrDefault(x => x.Id == comment.Id);
                 
                 currentComment.Text = comment.Text;
-                currentComment.CreatedOn = DateTime.Now;;
+                
                 target.Comments = comments;
 
                 var result = await repository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
 
-                await signalRService.CommentEdited($"{Group.complexString}{identifier}", identifier);
+                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
 
                 return commentsWithUsers.Reverse();
 
@@ -336,7 +366,7 @@ namespace Polyglot.BusinessLogic.Services
             return comments;
         }
 
-        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId)
+        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId,int itemsOnPage, int page)
         {
             var complexString = await GetComplexString(identifier);
             var translation = complexString.Translations.FirstOrDefault(t => t.Id == translationId);
@@ -398,10 +428,39 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             history.Reverse();
+            var skipItems = itemsOnPage * page;
+            var paginatedHistory = history.Skip(skipItems).Take(itemsOnPage);
 
-            return history;
+            return paginatedHistory;
         }
+        
+        public async Task<string> ReIndex()
+        {
+            var allPosts = (await repository.GetAllAsync()).ToList();
 
-       
+            var res = await ElasticRepository.ReIndex(allPosts);
+
+            return res;
+        }
+        
+        public async Task ChangeStringStatus(int id, bool status, string groupName)
+        {
+            if (status)
+            {
+                await signalRService.ComplexStringTranslatingStarted(groupName, id);
+                _timerService.TrackTranslatingTime(id);
+                await Task.Delay(10000)
+                    .ContinueWith(r => _timerService.UntrackTranslatingTime(id));
+
+                if (_timerService.IsTranslationFinished(id))
+                {
+                    await signalRService.ComplexStringTranslatingFinished(groupName, id);
+                }
+            }
+            else
+            {
+                await signalRService.ComplexStringTranslatingFinished(groupName, id);
+            }
+        }
     }
 }

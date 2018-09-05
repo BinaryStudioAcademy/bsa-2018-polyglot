@@ -1,0 +1,27 @@
+<div class="example-container">
+    <mat-toolbar color="primary" class="example-toolbar">
+        <button mat-icon-button (click)="snav.toggle()">
+            <mat-icon [matBadgeHidden]="true" matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
+        </button>
+        <h1 class="example-app-name">Chat</h1>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav class="contacts-list" #snav [mode]="'side'">
+            <mat-nav-list>
+
+                <app-chat-contacts (onItemSelect)="onSelected($event)"></app-chat-contacts>
+
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content class="chat-messages-window">
+
+            <app-chat-window [interlocutor]="selectedUser"></app-chat-window>
+
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+ <!--
+<app-chat-window></app-chat-window>
+-->

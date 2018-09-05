@@ -51,20 +51,6 @@ export class GlossaryEditDialogComponent implements OnInit {
 					this.dialogRef.close();     
 				});
 	}
-
-	onDelete(){
-		this.glossaryService.delete(this.glossary.id).subscribe(
-			(d) => {
-				this.snotifyService.success("Glossary deleted", "Success!");
-				this.dialogRef.close(); 
-						
-			},
-			err => {
-				console.log('err', err);
-				this.snotifyService.error("Glossary wasn`t deleted", "Error!");
-				this.dialogRef.close();     
-			});
-	}
 	
 		compareFn(l1: Language, l2: Language): boolean {
 			return l1 && l2 ? l1.id === l2.id : l1 === l2;
