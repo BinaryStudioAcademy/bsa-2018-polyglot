@@ -20,7 +20,7 @@
                 [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="add($event)">
             </mat-chip-list>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-autocomplete  #auto="matAutocomplete" (optionSelected)="selected($event)">
                 <mat-option *ngFor="let translator of filteredtranslators | async" [value]="translator" class="option-wrapper">
                     <div class="wrapper-name-ava">
                         <img src="{{translator.avatarUrl}}" alt="ava" class="avatar">
@@ -30,7 +30,8 @@
             </mat-autocomplete>
     </mat-form-field>
     <div class="button-wraper">
-        <button mat-raised-button color="primary" (click) ="onSave()">Save</button>
+        <button *ngIf="isTranslator()" mat-raised-button color="primary" (click) ="onSelfAssign()">Self Assign</button>
+        <button mat-raised-button color="primary" [disabled]="!isEnoughRigts()" (click) ="onSave()">Save</button>
         <button mat-raised-button color="warn" (click) ="onClose()">Close</button>
     </div>
 </form>
