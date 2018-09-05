@@ -9,6 +9,8 @@ import { MatDialog, MatList } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { UserProfile } from '../../../../models';
+import { MentionDirective, MentionModule } from 'angular2-mentions/mention';
 
 @Component({
     selector: 'app-tab-comments',
@@ -28,7 +30,7 @@ export class TabCommentsComponent implements OnInit {
         commentBody: ['']
     });
     public body: string;
-    
+    public users : UserProfile[] = [];
     private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;
@@ -45,6 +47,10 @@ export class TabCommentsComponent implements OnInit {
         this.routeSub = this.activatedRoute.params.subscribe((params) => {
             this.keyId = params.keyId;
         });
+        this.userService.getAll().subscribe(data => {
+            this.users = data;
+            console.log(this.users);
+        })
     }
 
     ngOnChanges(changes: SimpleChanges) {

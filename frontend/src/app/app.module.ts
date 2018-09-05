@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { MentionModule } from 'angular2-mentions/mention';
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
@@ -232,7 +233,8 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     MatTabsModule,
     NgxChartsModule,
     NgxInfiniteScrollerModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    MentionModule
   ],
   entryComponents: [
     LoginDialogComponent,
