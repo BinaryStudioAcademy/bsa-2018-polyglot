@@ -1,10 +1,14 @@
-﻿namespace Polyglot.DataAccess.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Polyglot.DataAccess.Entities
 {
     public class TranslatorLanguage : MidEntity
     {
+        [ForeignKey("UserProfile")]
         public int? TranslatorId { get; set; }
         public virtual UserProfile UserProfile { get; set; }
 
+        [ForeignKey("Language")]
         public int? LanguageId { get; set; }
         public virtual Language Language { get; set; }
 

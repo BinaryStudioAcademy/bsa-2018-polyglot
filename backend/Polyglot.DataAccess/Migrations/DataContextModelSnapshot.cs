@@ -105,7 +105,13 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("TranslatorLanguageLanguageId");
+
+                    b.Property<int?>("TranslatorLanguageTranslatorId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TranslatorLanguageTranslatorId", "TranslatorLanguageLanguageId");
 
                     b.ToTable("Languages");
                 });
@@ -141,7 +147,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("OptionID");
 
-                    b.ToTable("NotificationOption");
+                    b.ToTable("NotificationOptions");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>
@@ -366,6 +372,8 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<int?>("LanguageId");
 
+                    b.Property<int>("Id");
+
                     b.Property<string>("Proficiency");
 
                     b.HasKey("TranslatorId", "LanguageId");
@@ -454,6 +462,13 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.Glossary")
                         .WithMany("GlossaryStrings")
                         .HasForeignKey("GlossaryId");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Language", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.TranslatorLanguage", "TranslatorLanguage")
+                        .WithMany()
+                        .HasForeignKey("TranslatorLanguageTranslatorId", "TranslatorLanguageLanguageId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Notification", b =>
