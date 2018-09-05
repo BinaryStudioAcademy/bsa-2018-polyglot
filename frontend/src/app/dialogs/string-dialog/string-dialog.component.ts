@@ -35,7 +35,6 @@ export class StringDialogComponent implements OnInit {
     for (let i = 0; i < tags.length; i++) {
       this.str.tags.push(tags[i]);
     }
-    console.log($event);
   }
 
   constructor(
@@ -47,6 +46,7 @@ export class StringDialogComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log(this.data.tags);
     this.str = {
       id: 0,
       key: '',
@@ -74,6 +74,7 @@ export class StringDialogComponent implements OnInit {
         (d) => {
           if(d)
           {
+            d.tags = this.str.tags;
             this.onAddString.emit(d);
             this.snotifyService.success("ComplexString created", "Success!");
             this.dialogRef.close();

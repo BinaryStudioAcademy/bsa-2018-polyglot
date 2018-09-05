@@ -59,7 +59,7 @@ namespace Polyglot.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> AddTagsToProject(int id, [FromBody]List<TagDTO> tags)
         {
-            var entity = await service.AddTagsToProject(tags);
+            var entity = await service.AddTagsToProject(tags,id);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

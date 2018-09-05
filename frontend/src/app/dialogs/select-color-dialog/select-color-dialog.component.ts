@@ -9,24 +9,23 @@ import { Observable } from '../../../../node_modules/rxjs';
 })
 export class SelectColorDialogComponent implements OnInit {
 
-  selectedColor: string;
-  selectedIndex : number;
-
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   public dialogRef: MatDialogRef<SelectColorDialogComponent>) { }
 
   ngOnInit() {
-   this.selectedColor = "blue";
   }
 
   onAccept(){
-    this.dialogRef.close(this.selectColor );
+    this.dialogRef.close(this.selectColor);
   }
 
   selectColor(index : any){
-    this.selectedIndex = index;
-    this.data = this.data;
+    if(index === -1){
+      this.selectColor = <any>"black" ;
+    }
+    else{
     this.selectColor = this.data[index];
+    }
   }
 
 }

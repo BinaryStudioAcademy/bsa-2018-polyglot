@@ -261,7 +261,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("ProjectId");
+                    b.Property<int>("ProjectId");
 
                     b.HasKey("Id");
 

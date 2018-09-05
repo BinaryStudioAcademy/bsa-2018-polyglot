@@ -12,7 +12,7 @@ namespace Polyglot.DataAccess.Migrations
             migrationBuilder.AddColumn<int>(
                 name: "ProjectId",
                 table: "Tags",
-                nullable: true);
+                nullable: false);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_ProjectId",
@@ -25,7 +25,7 @@ namespace Polyglot.DataAccess.Migrations
                 column: "ProjectId",
                 principalTable: "Projects",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

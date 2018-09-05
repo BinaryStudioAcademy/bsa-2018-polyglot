@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,34 +12,37 @@ namespace Polyglot.BusinessLogic.Services
 {
     class TagService : CRUDService<Tag, TagDTO>, ITagService
     {
-        public TagService(IUnitOfWork uow, IMapper mapper) : base(uow,mapper)
-        {
-            
-        }
+        public TagService(IUnitOfWork uow, IMapper mapper) : base(uow,mapper) { }
 
-        public Task<IEnumerable<TagDTO>> GetProjectTags(int projectId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<IEnumerable<TagDTO>> AddTagsToProject(IEnumerable<TagDTO> tags)
+        public async Task<IEnumerable<TagDTO>> AddTagsToProject(IEnumerable<TagDTO> tags,int projectId)
         {
             List<TagDTO> result = new List<TagDTO>();
-            var repo = uow.GetRepository<Tag>();
+            var tagRepository = uow.GetRepository<Tag>();
+            int countOfNewTags = 0;
+            var projectRepo =  uow.GetRepository<Project>();
+            var project = await projectRepo.GetAsync(projectId);
+
             foreach (var tag in tags)
             {
                 if (tag.Id == 0)
                 {
-                    await repo.CreateAsync(mapper.Map<Tag>(tag));
-                    await uow.SaveAsync();
-                    var newTag = await repo.GetLastAsync();
-                    result.Add(mapper.Map<TagDTO>(newTag));
+                    project.Tags.Add(mapper.Map<Tag>(tag));
+                    countOfNewTags++;
                 }
                 else
                 {
                     result.Add(tag);
                 }
             }
+
+            var target = uow.GetRepository<Project>().Update(project);
+            if (target != null)
+            {
+                await uow.SaveAsync();
+            }
+
+            result.AddRange(mapper.Map<List<TagDTO>>(target.Tags.Skip(Math.Max(0, target.Tags.Count - countOfNewTags))));
+
             return result;
         }
     }

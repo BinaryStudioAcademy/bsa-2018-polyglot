@@ -7,7 +7,6 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface ITagService : ICRUDService<Tag,TagDTO>
     {
-        Task<IEnumerable<TagDTO>> GetProjectTags(int projectId);
-        Task<IEnumerable<TagDTO>> AddTagsToProject(IEnumerable<TagDTO> tags);
+        Task<IEnumerable<TagDTO>> AddTagsToProject(IEnumerable<TagDTO> tags,int projectId);
     }
 }
