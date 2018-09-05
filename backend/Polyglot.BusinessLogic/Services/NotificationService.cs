@@ -27,7 +27,6 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<NotificationDTO> SendNotification(NotificationDTO notificationDTO)
         {
-            notificationDTO.SenderId = CurrentUser.GetCurrentUserProfile().Id;
             var notification = await uow.GetRepository<Notification>().CreateAsync(mapper.Map<Notification>(notificationDTO));
 
             await uow.SaveAsync();

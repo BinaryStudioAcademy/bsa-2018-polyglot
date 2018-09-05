@@ -35,6 +35,7 @@ namespace Polyglot.Controllers
         // POST: Notifications
         public async Task<IActionResult> SendNotification([FromBody]NotificationDTO notification)
         {
+            notification.SenderId = (await CurrentUser.GetCurrentUserProfile()).Id;
             var entity = await service.SendNotification(notification);
             return entity == null ? StatusCode(409) as IActionResult
                 : Ok(entity);

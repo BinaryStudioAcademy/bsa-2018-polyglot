@@ -1,9 +1,11 @@
-<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" class="no-hover-effect">
-    <mat-icon *ngIf="!userNotifications" class="bell" aria-label="Notification icon">
+<button mat-icon-button class="no-hover-effect" *ngIf="!userNotifications || userNotifications.length == 0">
+    <mat-icon class="bell" aria-label="Notification icon">
         notifications_none
     </mat-icon>
-    <mat-icon *ngIf="userNotifications" class="bell" aria-label="Notification icon">
-            notifications_active
+</button>
+<button *ngIf="userNotifications && userNotifications.length > 0" mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" class="no-hover-effect">
+    <mat-icon class="bell" aria-label="Notification icon">
+        notifications_active
     </mat-icon>
 </button>
 <mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">

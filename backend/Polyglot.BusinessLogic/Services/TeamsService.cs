@@ -13,10 +13,11 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
     {
-        public TeamsService(IUnitOfWork uow, IMapper mapper)
+        INotificationService notificationService;
+        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService)
             :base(uow, mapper)
         {
-
+            this.notificationService = notificationService;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
@@ -72,6 +73,16 @@ namespace Polyglot.BusinessLogic.Services
                 newTeam.Name = receivedTeam.Name;
                 newTeam = uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
+                foreach(var translator in newTeam.TeamTranslators)
+                {
+
+                    await notificationService.SendNotification(new NotificationDTO
+                    {
+                        SenderId = manager.Id,
+                        Message = $"You received an invitation in {newTeam.Name}",
+                        ReceiverId = translator.TranslatorId
+                    });
+                }
 
                 return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
             }

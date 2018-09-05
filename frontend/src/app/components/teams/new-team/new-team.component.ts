@@ -93,14 +93,20 @@ export class NewTeamComponent implements OnInit {
 
   formTeam() {
     if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamTranslators.forEach(trans => {
-        this.notificationService.sendNotification({
-          receiverId: trans.userId,
-          message: `you received an invitation in team ${this.name}`,
-          options: [{ optionDefinition: OptionDefinition.Accept },
-                     {optionDefinition: OptionDefinition.Decline}]
-        }).subscribe();
-      });
+      this.teamService.formTeam(this.teamTranslators.map(t => t.userId),this.name)
+        .subscribe((team) => {
+          if (team) {
+            this.router.navigate(['dashboard/teams']);
+            setTimeout(() => {
+              this.snotifyService.success("Team " + team.id + " successfully created!", "Success!");
+            }, 200);
+          }
+          else
+            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
+        },
+          err => {
+            this.snotifyService.error("An error occurred, team not created, please try again later!", "Error!")
+          })
     } 
   }
 
