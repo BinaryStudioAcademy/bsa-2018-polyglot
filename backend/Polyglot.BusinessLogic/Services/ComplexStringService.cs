@@ -448,7 +448,7 @@ namespace Polyglot.BusinessLogic.Services
         
         public async Task<string> ReIndex()
         {
-            var allPosts = (await repository.GetAllAsync()).ToList();
+            var allPosts = (await _complexStringRepository.GetAllAsync()).ToList();
 
             var res = await ElasticRepository.ReIndex(allPosts);
 
@@ -459,11 +459,11 @@ namespace Polyglot.BusinessLogic.Services
         {
             if (status)
             {
-                await signalRService.ComplexStringTranslatingStarted(groupName, id);
+                await _signalRWorkspaceService.ComplexStringTranslatingStarted(groupName, id);
             }
             else
             {
-                await signalRService.ComplexStringTranslatingFinished(groupName, id);
+                await _signalRWorkspaceService.ComplexStringTranslatingFinished(groupName, id);
             }
         }
     }

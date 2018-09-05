@@ -18,7 +18,6 @@ import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
-import { EventService } from "../../../services/event.service";
 import { UserService } from "../../../services/user.service";
 
 @Component({
