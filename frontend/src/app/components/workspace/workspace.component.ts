@@ -23,7 +23,7 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string = "";
+    public searchQuery: string = ' ';
     public selectedKey: any;
     public isEmpty;
     public currentPath;
@@ -124,7 +124,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     params.projectId,
                     this.elementsOnPage,
                     0,
-                    this.searchQuery
+                    this.searchQuery.trim()
                 )
                 .subscribe((data: any) => {
                     if (data) {
@@ -373,7 +373,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.project.id,
                 this.elementsOnPage,
                 this.currentPage,
-                this.searchQuery
+                this.searchQuery.trim()
             )
             .subscribe((keys: any) => {
                 this.currentPage++;
@@ -408,7 +408,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     this.projectId,
                     this.elementsOnPage,
                     0,
-                    this.searchQuery
+                    this.searchQuery.trim()
                 )
                 .subscribe((data: any) => {
                     if (data) {

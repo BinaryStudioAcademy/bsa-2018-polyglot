@@ -527,36 +527,43 @@ namespace Polyglot.BusinessLogic.Services
 
 
 
-			// returns 10 latest complex string from all projects
-			// works well
-			var result0 = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(); 
 
 
-			// should return only string from {id} project that match {search}
-			// doesn`t work at all
-			var result = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
-				.Query(q => q
-					.Match(m => m
-						.Field(f => f.ProjectId)
-						.Query(id.ToString())
-					)
-				)
+			// check if search is used and if Elastic is connected
+			// if true use elastic else use mongo
+			if(search.Length != 0)
+			{
+				// returns 10 random complex strings from all projects
+				// works well
+				var result0 = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>();
+
+
+				// should return only string from {id} project that match {search}
+				// doesn`t work at all
+				var result = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
 					.Query(q => q
-						.MultiMatch(m => m			
-							.Fields(f => f
-								.Fields(f1 => f1.OriginalValue, f2 => f2.Key))
-								.Query(search)
-						)					
+						.Match(m => m
+							.Field(f => f.ProjectId.ToString())
+							.Query(id.ToString())
+						)
 					)
-					.From(page * itemsOnPage)
-					.Size(itemsOnPage)
+						.Query(q => q
+							.MultiMatch(m => m
+								.Fields(f => f
+									.Fields(f1 => f1.OriginalValue, f2 => f2.Key))
+									.Query(search)
+							)
+						)
+						.From(page * itemsOnPage)
+						.Size(itemsOnPage)
 				);
-			// return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
+				// return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
+			}
+			else
+			{
+				// for now data is always returned from mongo
+			}
 
-
-
-
-			// taking data from Mongo
 			var skipItems = itemsOnPage * page;
 			var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
 			var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
