@@ -1,31 +1,30 @@
 <mat-dialog-content>
-  <form (submit)="onSubmit()">
-    <h4>Edit Glossary </h4>
-      <mat-form-field>
-        <input id="key" name="key" type="text" [(ngModel)]="glossary.name" required matInput placeholder="Name"
-                #key="ngModel" autocomplete="yes">
-        <mat-error *ngIf="key.errors">
-          Name is required
-        </mat-error>
-      </mat-form-field>
+	<form (submit)="onSubmit()">
+		<h4>Edit Glossary </h4>
+		<mat-form-field>
+			<input id="name" appNoWhiteSpace name="name" type="text" [(ngModel)]="glossary.name" required matInput placeholder="Name"
+							#name="ngModel" autocomplete="yes" maxlength="50">
+			<mat-error *ngIf="name && name.errors">
+				Name is required.
+			</mat-error>
+		</mat-form-field>
 
-      <mat-form-field class="mat-select-wraper">
-          <mat-select [compareWith]="compareFn" id="lang" name="lang" class="mat-select" #lang="ngModel" placeholder="Origin language" [(ngModel)]="glossary.originLanguage" required>
-             <mat-option *ngFor="let originLanguage of languages" [value]="originLanguage">
-                  {{originLanguage.name}}
-              </mat-option>
-          </mat-select>
-      </mat-form-field>
+		<mat-form-field class="mat-select-wraper">
+			<mat-select [compareWith]="compareFn" id="lang" name="lang" class="mat-select" #lang="ngModel" placeholder="Origin language" [(ngModel)]="glossary.originLanguage" required>
+					<mat-option *ngFor="let originLanguage of languages" [value]="originLanguage">
+							{{originLanguage.name}}
+					</mat-option>
+			</mat-select>
+			<mat-error *ngIf="lang && lang.errors">
+				Origin language is required.
+			</mat-error>
+		</mat-form-field>
 
-      <button 
-        type="submit" 
-        mat-raised-button color="primary">
-        Edit
-      </button>
-      <button 
-      (click) = 'onDelete()'
-      mat-raised-button color="warn">
-      Delete
-    </button>
-  </form>
+		<button 
+			type="submit" 
+			mat-raised-button color="primary"
+			[disabled]="glossary.originLanguage.id === 0 || (name && name.errors)">
+			Save
+		</button>
+	</form>
 </mat-dialog-content>

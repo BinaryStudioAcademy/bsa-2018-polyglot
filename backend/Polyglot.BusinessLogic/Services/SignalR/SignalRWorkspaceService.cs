@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Polyglot.BusinessLogic.Hubs;
-using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.Helpers.SignalR;
 using System.Threading.Tasks;
 
@@ -45,6 +45,16 @@ namespace Polyglot.BusinessLogic.Services.SignalR
         public async Task LanguageTranslationCommitted(string groupName, int languageId)
         {
             await hubContext.Clients.Group(groupName).SendAsync(Action.languageTranslationCommitted.ToString(), await GetIdsResponce(languageId));
+        }
+
+        public async Task ComplexStringTranslatingStarted(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingStarted.ToString(), await GetIdsResponce(complexStringId));
+        }
+
+        public async Task ComplexStringTranslatingFinished(string groupName, int complexStringId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(Action.complexStringTranslatingFinished.ToString(), await GetIdsResponce(complexStringId));
         }
     }
 }

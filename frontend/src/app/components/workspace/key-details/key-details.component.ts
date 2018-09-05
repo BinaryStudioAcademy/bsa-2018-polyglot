@@ -16,8 +16,10 @@ import { ProjectService } from "../../../services/project.service";
 import { ProjecttranslatorsService } from "../../../services/projecttranslators.service";
 import { UserProfilePrev } from "../../../models/user/user-profile-prev";
 import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
+import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { EventService } from "../../../services/event.service";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -78,8 +80,8 @@ export class KeyDetailsComponent implements OnInit {
         private signalrService: SignalrService,
         private service: TranslationService,
         private projectService: ProjectService,
-        private translatorsService: ProjecttranslatorsService
-    ) {
+        private translatorsService: ProjecttranslatorsService,
+        private userService: UserService) {
         eventService.listen().subscribe((data: any) => {
             if (data) {
                 this.reloadKeyDetails(this.currentKeyId);
@@ -171,13 +173,13 @@ export class KeyDetailsComponent implements OnInit {
                                     this.keyDetails.translations < 1
                                 ) {
                                     this.keyDetails.translations = translations;
-                                    
+
                                 } else {
                                     this.setNewTranslations(
                                         translations,
                                         response.senderFullName
                                     );
-                                    this.history.showHistory( this.currentKeyId,this.keyDetails.translations[this.index].id)
+                                    this.history.showHistory(this.currentKeyId, this.keyDetails.translations[this.index].id)
                                 }
                             }
                         });
@@ -333,7 +335,12 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
-        this.index=index;
+        this.index = index;
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: true
+        });
+
         if (index === undefined) {
             return;
         }
@@ -421,7 +428,7 @@ export class KeyDetailsComponent implements OnInit {
 
     onSave(index: number, t: any) {
         this.currentTranslation = "";
-        this.index=index;
+        this.index = index;
         // 'Save' button not work if nothing has been changed
         if (
             !t.translationValue ||
@@ -481,8 +488,13 @@ export class KeyDetailsComponent implements OnInit {
                     }
                 );
         }
-        }
+    }
     onClose(index: number, translation: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: false
+        });
+
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
@@ -503,7 +515,7 @@ export class KeyDetailsComponent implements OnInit {
             if (dialogRef.componentInstance.data.answer === 1) {
                 this.onSave(index, translation);
                 this.isMachineTranslation = false;
-            } 
+            }
             else if (dialogRef.componentInstance.data.answer === 0) {
                 this.keyDetails.translations[
                     index
@@ -519,7 +531,7 @@ export class KeyDetailsComponent implements OnInit {
                 this.currentTranslation = "";
             }
         }
-    );
+        );
     }
 
     onMachineTranslationMenuClick(item: any): void {
@@ -626,7 +638,6 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
-
     }
 
     reloadKeyDetails(index) {
@@ -640,10 +651,25 @@ export class KeyDetailsComponent implements OnInit {
                     this.isLoad = true;
                 }
                 this.getLanguages();
-                this.history=this.keyDetails.translations[index].history
-                this.history.showHistory(this.currentKeyId,this.keyDetails.translations[index].id)
+                this.history = this.keyDetails.translations[index].history
+                this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
     }
-
+    public showAssignButton(userId: number): boolean {
+        var result = false;
+        if (this.userService.getCurrentUser().userRole === 1) {
+            result = false;
+        }
+        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+        //     result = false;
+        // }
+        // else if (!userId) {
+        //     result = false;
+        // }
+        else {
+            result = true;
+        }
+        return result || !this.users.length;
+    }
 }

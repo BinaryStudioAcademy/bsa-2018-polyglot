@@ -1,6 +1,6 @@
 namespace Polyglot.DataAccess.Entities
 {
-    public class ProjectLanguage 
+    public class ProjectLanguage : MidEntity
     {
         public int? ProjectId { get; set; }
         public virtual Project Project { get; set; }

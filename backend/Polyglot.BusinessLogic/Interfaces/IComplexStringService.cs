@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Polyglot.BusinessLogic.Services;
 using Polyglot.Common.DTOs.NoSQL;
 
 namespace Polyglot.BusinessLogic.Interfaces
@@ -38,8 +37,12 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId, int itemsOnPage, int page);
 
-		Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value);
+		    Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value);
 
-		Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId);
+		    Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId);
+
+        Task<string> ReIndex();
+      
+        Task ChangeStringStatus(int id, bool status, string groupName);
     }
 }

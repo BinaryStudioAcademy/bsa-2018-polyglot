@@ -1,24 +1,25 @@
 <mat-dialog-content>
   <form (submit)="onSubmit()">
       <mat-form-field>
-        <input id="key" name="key" type="text" [(ngModel)]="string.termText" required matInput placeholder="Term Text"
-                #key="ngModel" autocomplete="yes">
-        <mat-error *ngIf="key.errors">
+        <input id="term" appNoWhiteSpace name="term" type="text" [(ngModel)]="string.termText" required matInput placeholder="Term Text"
+                #term="ngModel" autocomplete="yes"  maxlength="50">
+        <mat-error *ngIf="term && term.errors">
           Term Text is required
         </mat-error>
       </mat-form-field>
 
       <mat-form-field>  
-        <input id="base" name="base" type="text" [(ngModel)]="string.explanationText" required matInput placeholder="Explanation Text"
-                #base="ngModel" autocomplete="yes">
-        <mat-error *ngIf="base.errors">
+        <input id="exp" appNoWhiteSpace name="exp" type="text" [(ngModel)]="string.explanationText" required matInput placeholder="Explanation Text"
+                #exp="ngModel" autocomplete="yes">
+        <mat-error *ngIf="exp && exp.errors">
           Explanation Text is required
         </mat-error>
       </mat-form-field>
 
       <button 
         type="submit" 
-        mat-raised-button color="primary">
+        mat-raised-button color="primary"
+        [disabled]="(term && term.errors) || (exp && exp.errors)">
         Save
       </button>
   </form>

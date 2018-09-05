@@ -168,10 +168,11 @@ namespace Polyglot.Controllers
        [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
 	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
 	    {
-	        var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
-	        return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
-	            : Ok(projectsStrings);
-	    }
+            var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
+
+            return projectsStrings == null ? NotFound("No project strings found!") as IActionResult
+             : Ok(projectsStrings);
+        }
 
         // POST: Projects
         [HttpPost]
@@ -264,6 +265,16 @@ namespace Polyglot.Controllers
         {
             var glossaries = await service.GetAssignedGlossaries(id);
             return glossaries == null ? NotFound($"Project with id = {id} has got no glossaries!") as IActionResult
+                : Ok(glossaries);
+
+        }
+
+        // GET: Projects/5/notAssigned
+        [HttpGet("{id}/notassigned")]
+        public async Task<IActionResult> GetNotAssignedGlossaries(int id)
+        {
+            var glossaries = await service.GetNotAssignedGlossaries(id);
+            return glossaries == null ? NotFound() as IActionResult
                 : Ok(glossaries);
 
         }

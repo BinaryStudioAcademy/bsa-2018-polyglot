@@ -12,7 +12,7 @@
 
   <div class="radio-group">
     <mat-radio-group [(ngModel)]="selectedFormat">
-      <mat-radio-button color="primary" class="radio-item" *ngFor="let format of formats" [value]="format">
+      <mat-radio-button color="primary" class="radio-item" *ngFor="let format of formats; let i = index" [value]="format">
         {{format}}
       </mat-radio-button>    
     </mat-radio-group>

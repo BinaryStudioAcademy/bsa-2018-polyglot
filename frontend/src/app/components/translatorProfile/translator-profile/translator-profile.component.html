@@ -42,13 +42,12 @@
                           <hr>
                           <mat-card-subtitle *ngIf="!teams || teams.length === 0">You are not a member of any team.</mat-card-subtitle>
                           <div class="team-list">
-                              <br>
-                              <div *ngFor="let t of teams">
+                              <div *ngFor="let t of teams; let i = index">
                                   <div class="team-card">
-                                        <h3 class="team" mat-list-item [routerLink]="['/dashboard/teams', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</h3>
-                                        <button *ngIf="isOwnersProfile()" class="team-leave-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam(t)>Leave</button>
-                                  </div>
-                                  <hr>
+                                        <h3 class="team" mat-list-item>
+                                            {{i+1}}. <a class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                        </h3>
+                                    </div>
                               </div>
                           </div>      
                         </div>

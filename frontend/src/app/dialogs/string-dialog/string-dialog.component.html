@@ -1,5 +1,4 @@
 <form (submit)="onSubmit()">
-  <h4>Create String</h4>
   <mat-grid-list cols="2">
     <mat-grid-tile>
       <div>
@@ -26,10 +25,10 @@
       </div>
       </mat-grid-tile>
       <mat-grid-tile>
-        <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
+        <app-upload-image [imageUrl]="str.pictureLink" (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <app-tags [allTags] = "getAllTags()"
+    <app-tags [allTags] = "getAllTags()" [existingTags] = "str.tags"
     (tagsEvent) = "receiveTags($event)"></app-tags>
     <button 
       type="submit" 

@@ -14,15 +14,16 @@ import { UserService } from '../../../services/user.service';
 import { RightService } from '../../../services/right.service';
 import { AppStateService } from '../../../services/app-state.service';
 
-
 @Component({
-	selector: 'app-team',
-	templateUrl: './team.component.html',
-	styleUrls: ['./team.component.sass']
+  selector: 'app-team-members',
+  templateUrl: './team-members.component.html',
+  styleUrls: ['./team-members.component.sass']
 })
-export class TeamComponent implements OnInit {
 
-	@Input() id: number;
+export class TeamMembersComponent implements OnInit {
+
+
+	@Input() teamId: number;
 	teamName: string;
 	teamTranslators: Translator[];
 	emailToSearch: string;
@@ -62,14 +63,13 @@ export class TeamComponent implements OnInit {
 		private dialog: MatDialog,
 		private userService: UserService,
 		private rightService: RightService) {
-		this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-		this.getTranslators();
+		
 		
 	}
 
 	getTranslators(){
 		this.teamTranslators = [];
-		this.teamService.getTeam(this.id)
+		this.teamService.getTeam(this.teamId)
 				.subscribe((data: Team) => {
 					this.teamName = data.name;
 					this.teamTranslators = data.teamTranslators;
@@ -80,11 +80,11 @@ export class TeamComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		
 		this.dataSource.paginator = this.paginator;
-		this.teamService.getTeam(this.id).subscribe(data => {
+		this.teamService.getTeam(this.teamId).subscribe(data => {
 			this.team = data;
 		})
+		this.getTranslators();
 	 // this.checkPaginatorNecessity();
 	}
 
@@ -140,13 +140,13 @@ export class TeamComponent implements OnInit {
 
 	changeTranslatorRight(e, id, rightDefinition: number){
 		if(e.checked){
-				this.rightService.setTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+				this.rightService.setTranslatorRight(this.teamId, id, rightDefinition).subscribe((teammate)=>{
 					let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
 					this.teamTranslators[teammateIndex] = teammate;
 				});
 			}
 		else{
-				this.rightService.removeTranslatorRight(this.id, id, rightDefinition).subscribe((teammate)=>{
+				this.rightService.removeTranslatorRight(this.teamId, id, rightDefinition).subscribe((teammate)=>{
 					let teammateIndex = this.teamTranslators.findIndex(t => t.userId === id);
 					this.teamTranslators[teammateIndex] = teammate;});
 			}

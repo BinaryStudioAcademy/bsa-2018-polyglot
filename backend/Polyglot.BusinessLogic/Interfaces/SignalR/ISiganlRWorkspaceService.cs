@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Polyglot.BusinessLogic.Interfaces
+namespace Polyglot.BusinessLogic.Interfaces.SignalR
 {
     public interface ISignalRWorkspaceService
     {
@@ -17,5 +17,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task LanguagesAdded(string groupName, int[] languagesIds);
 
         Task LanguageTranslationCommitted(string groupName, int languageId);
+
+        Task ComplexStringTranslatingStarted(string groupName, int complexStringId);
+
+        Task ComplexStringTranslatingFinished(string groupName, int complexStringId);
     }
 }

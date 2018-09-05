@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import * as signalR from "@aspnet/signalr";
 import { environment } from "../../environments/environment";
-import { HubConnection } from "@aspnet/signalr";
+import { ChatActions } from "../models/signalrModels/chat-actions";
 import { AppStateService } from "./app-state.service";
+import { GroupType } from "../models";
 
 @Injectable({
     providedIn: "root"
@@ -15,6 +16,7 @@ export class SignalrService {
     constructor(private appState: AppStateService) {}
 
     public createConnection(groupName: string, hubUrl: string) {
+        debugger;
         if (
             !this.connection ||
             this.connection.connection.connectionState === 2
@@ -76,6 +78,10 @@ export class SignalrService {
         }
     }
 
+    public readMessage(interlocutorId: number) {
+        this.connection.send(ChatActions[ChatActions.messageRead], `${GroupType[GroupType.users]}${interlocutorId}`);
+    }
+
     connect(groupName: string, hubUrl: string): Promise<void> {
         if (!this.connection) {
             console.log(
@@ -88,13 +94,22 @@ export class SignalrService {
             this.connection.onclose(err => {
                 console.log(`SignalR hub ${hubUrl} disconnected.`);
                 if (this.connectionClosedByUser) {
-                    this.createConnection(groupName, hubUrl);
+                    {
+                        setTimeout(() => {
+                            this.createConnection(groupName, hubUrl);
+                        }, 500);
+                    }
                 }
             });
         }
         console.log(`SignalR hub ${hubUrl} reconnection started...`);
         return this.connection
             .start()
-            .catch(err => console.log("SignalR ERROR " + err));
+            .catch(err => {
+                console.log("SignalR ERROR " + err);
+                setTimeout(() => {
+                    this.createConnection(groupName, hubUrl);
+                }, 500);
+            });
     }
 }

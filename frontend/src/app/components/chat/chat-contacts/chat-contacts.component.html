@@ -1,0 +1,137 @@
+<div class="contacts-container">
+    
+
+    <mat-tab-group mat-stretch-tabs>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon matBadge="15" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">person</mat-icon>
+            </ng-template>
+            <ng-template matTabContent>
+
+                <ul>
+                    <!--
+
+                        <li>
+                        <mat-card class="person-card">
+                            <mat-card-header>
+                                <a class="person-img">
+                                    <img class="person-avatar" mat-card-avatar src="https://theblueraft.files.wordpress.com/2010/08/aang.jpg">
+                                </a>
+                                <div class="person-card-text">
+                                    <div class="person-name">Grzegosz Brzeczyszczykiewicz</div>
+                                    <div class="person-message-prev">
+                                        This extra div is actually quite annoying. As it turns out though,
+                                        you can use shadow-piercing to apply a style to it without changing the CSS
+                                        emulation mode. You
+                                        can do this using the ::ng-deep combinator as such
+                                    </div>
+                                </div>
+                                <div class="online-status-container">
+                                    <span class="online-status-text">last seen recently</span>
+                                    <mat-icon class="online-status-icon">brightness_1</mat-icon>
+                                </div>
+                            </mat-card-header>
+                        </mat-card>
+                    </li>
+
+                    -->
+
+
+                    <li *ngFor="let u of users" (click)="selectUser(u)">
+                        <mat-card class="person-card">
+                            <mat-card-header>
+                                <a class="person-img">
+                                    <img class="person-avatar" mat-card-avatar src="{{u.avatarUrl}}">
+                                </a>
+                                <div class="person-card-text">
+                                    <div class="person-name">{{u.fullName}}</div>
+                                    <div class="person-message-prev">{{u.lastMessageText}}</div>
+                                </div>
+                                <div class="online-status-container">
+                                    <span [hidden]="u.isOnline" class="online-status-text">last seen {{u.lastSeen | date: 'medium'}}</span>
+                                    <span [hidden]="!u.isOnline" class="online-status-text">online</span>
+                                    <mat-icon class="online-status-icon" [style.color]="u.isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
+                                </div>
+                            </mat-card-header>
+                            <!--    <div class="person-options-container">
+                                    <mat-icon>more_vert</mat-icon>
+                            </div>
+                        -->
+                        </mat-card>
+                    </li>
+                </ul>
+
+            </ng-template>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">group</mat-icon>
+            </ng-template>
+            <ng-template matTabContent>
+
+                <mat-accordion class="example-headers-align">
+                    <mat-expansion-panel [disabled]="projects.lenght < 1" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Projects
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon matBadge="6" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">business_center</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <ng-template matExpansionPanelContent>
+                            <ul>
+                                <li *ngFor="let p of projects">
+                                    <mat-card>
+                                        <mat-card-header>
+                                            <mat-card-title>Project {{p.id}}</mat-card-title>
+                                            <mat-card-subtitle>{{p.name}}</mat-card-subtitle>
+                                        </mat-card-header>
+
+                                    </mat-card>
+                                </li>
+                            </ul>
+                        </ng-template>
+
+                        <mat-action-row>
+                            <button mat-button color="primary" (click)="nextStep()">Next</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel [disabled]="teams.lenght < 1" [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Teams
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">group</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <ng-template matExpansionPanelContent>
+                            <ul>
+                                <li *ngFor="let t of teams">
+                                    <mat-card>
+                                        <mat-card-header>
+                                            <mat-card-title>Team {{t.id}}</mat-card-title>
+                                            <mat-card-subtitle>{{t.name}}</mat-card-subtitle>
+                                        </mat-card-header>
+                                    </mat-card>
+                                </li>
+                            </ul>
+                        </ng-template>
+
+                        <mat-action-row>
+                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                            <button mat-button color="primary" (click)="nextStep()">Next</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+
+</div>
