@@ -27,11 +27,17 @@ export class ChatWindowComponent implements OnInit {
     @ViewChild("mainwindow")
     mainWindow: ElementRef;
     @Input() dialog: any;
-    interlocutor: ChatUser;
-    public currentMessage: string = "";
-    public currentUserId: number;
-
+    interlocutors = {};;
+    currentInterlocutorId: number;
     messages = [];
+    
+    public currentMessage: string = "";
+    public isDirect: boolean;
+    public currentUserId: number;
+    public currentGroupName: string;
+    public groupParticipantsCount: number;
+    public groupParticipantsOnlineCount: number;
+
     constructor(
         private appState: AppStateService,
         private renderer: Renderer2,
@@ -47,7 +53,7 @@ export class ChatWindowComponent implements OnInit {
                 `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
                 Hub[Hub.chatHub]
             );
-            this.interlocutor = this.dialog.participants[0];
+            this.interlocutors[this.dialog.participants[0].id] = this.dialog.participants[0];
         }
         
         this.subscribeChatEvents();
@@ -77,7 +83,7 @@ export class ChatWindowComponent implements OnInit {
             ChatActions[ChatActions.messageRead],
             (userId: number) => {
                 debugger;
-                if(this.interlocutor.id == userId){
+                if(this.interlocutors[userId]){
                     for(let i = 0; i < this.messages.length; i++){
                         this.messages[i].isRead = true;
                     }
@@ -101,7 +107,37 @@ export class ChatWindowComponent implements OnInit {
                 `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
                 Hub[Hub.chatHub]
             );
-            this.interlocutor = this.dialog.participants[0];
+            this.interlocutors = {};
+            this.currentInterlocutorId = -1;
+
+            switch(this.dialog.dialogType){
+                case(0):
+                case(1):
+                this.currentInterlocutorId = this.dialog.participants[0].id;
+                this.interlocutors[this.currentInterlocutorId] = this.dialog.participants[0];
+                this.isDirect = true;
+                break;
+                case(2):
+                for(let i = 0; i < this.dialog.participants.length; i++)
+                {
+                    this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
+                }
+                this.currentGroupName = `Project ${this.dialog.identifier}`; 
+                this.groupParticipantsCount = this.dialog.participants.length;
+                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
+                this.isDirect = false;
+                break;
+                case(3):
+                for(let i = 0; i < this.dialog.participants.length; i++)
+                {
+                    this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
+                }
+                this.currentGroupName = `Team ${this.dialog.identifier}`; 
+                this.groupParticipantsCount = this.dialog.participants.length;
+                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
+                this.isDirect = false;
+                break;
+            }
         }
         this.getMessagesHistory();
     }
@@ -117,14 +153,15 @@ export class ChatWindowComponent implements OnInit {
 
 
     getMessagesHistory() {
-        if (this.dialog && this.interlocutor && this.interlocutor.id) {
+
+        if (this.dialog && this.dialog.participants && this.dialog.participants.length > 0) {
             let targetGroup;
             let targetGroupDialogId;
             switch(this.dialog.dialogType){
                 case(0):
                 case(1):
                 targetGroup = GroupType.users;
-                targetGroupDialogId = this.interlocutor.id;
+                targetGroupDialogId = this.currentInterlocutorId;
                 break;
                 case(2):
                 targetGroup = GroupType.projects;
@@ -141,11 +178,16 @@ export class ChatWindowComponent implements OnInit {
                     if (messages) {
                         debugger;
 
-                        this.messages = messages;
-                        //.filter(m => m.senderId == this.interlocutor.id || 
-                        //    m.senderId == this.currentUserId);
-
-                        this.signalRService.readMessage(this.interlocutor.id);
+                        if(this.isDirect)
+                        {
+                            this.messages = messages.filter(m => m.senderId == this.currentInterlocutorId || 
+                                    m.senderId == this.currentUserId);
+                            this.signalRService.readMessage(this.currentInterlocutorId);
+                        }
+                        else 
+                        {
+                            this.messages = messages.filter(m => this.interlocutors[m.senderId]);
+                        }
                     }
                 });
         }
@@ -157,12 +199,13 @@ export class ChatWindowComponent implements OnInit {
             dialogId: this.dialog.id,
             body: this.currentMessage
             };
+            this.currentMessage = "";
+
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
                     debugger;
                     if(message){
                         this.messages.push(message);
-                        this.currentMessage = "";
                     }
                 });
         }
@@ -178,174 +221,3 @@ export class ChatWindowComponent implements OnInit {
         });
     }
 }
-
-const MOCK_MESSAGES = [
-    {
-        body:
-            "Do you know the difference between education and experience? Education is what you get when you read the fine print; experience is what you get when you don't",
-        date: Date.now(),
-        user: {
-            fullName: "Julia Louis-Dreyfus",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
-            isOnline: false
-        }
-    },
-    {
-        body: "No wonder you're tired! You understood so much today. ",
-        date: Date.now(),
-        user: {
-            fullName: "Jennifer Love Hewitt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body:
-            "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it.'",
-        date: Date.now(),
-        user: {
-            fullName: "Natalya Rudakova",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body:
-            "If truth is beauty, how come no one has their hair done in the library?",
-        date: Date.now(),
-        user: {
-            fullName: "Natalya Rudakova",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body:
-            "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.",
-        date: Date.now(),
-        user: {
-            fullName: "Jennifer Love Hewitt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body: "the high school after high school!",
-        date: Date.now(),
-        user: {
-            fullName: "Natalya Rudakova",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body: "A professor is one who talks in someone else's sleep. ",
-        date: Date.now(),
-        user: {
-            fullName: "Natalya Rudakova",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body: "Never let your schooling interfere with your education. ",
-        date: Date.now(),
-        user: {
-            fullName: "Jennifer Love Hewitt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body:
-            "About all some men accomplish in life is to send a son to Harvard. ",
-        date: Date.now(),
-        user: {
-            fullName: "Jennifer Love Hewitt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body: " He that teaches himself has a fool for a master",
-        date: Date.now(),
-        user: {
-            fullName: "Hugh Jackman",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
-            isOnline: false
-        }
-    },
-    {
-        body:
-            "You may have heard that a dean is to faculty as a hydrant is to a dog",
-        date: Date.now(),
-        user: {
-            fullName: "Natalya Rudakova",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/natalya_rudakova.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body:
-            "The world is coming to an end! Repent and return those library books!",
-        date: Date.now(),
-        user: {
-            fullName: "Jennifer Love Hewitt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/jennifer_love_hewitt.jpg",
-            isOnline: true
-        }
-    },
-    {
-        body: "This is the sort of English up with which I will not put",
-        date: Date.now(),
-        user: {
-            fullName: "Hugh Jackman",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
-            isOnline: false
-        }
-    },
-    {
-        body:
-            "So, is the glass half empty, half full, or just twice as large as it needs to be? ",
-        date: Date.now(),
-        user: {
-            fullName: "Julia Louis-Dreyfus",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/julia_louis_dreyfus.jpg",
-            isOnline: false
-        }
-    },
-    {
-        body: "OK, now let's look at four dimensions on the blackboard.",
-        date: Date.now(),
-        user: {
-            fullName: "Hugh Jackman",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/hugh_jackman.jpg",
-            isOnline: false
-        }
-    },
-    {
-        body: "Having a wonderful wine, wish you were beer. ",
-        date: Date.now(),
-        user: {
-            fullName: "Theodore Roosevelt",
-            avatarUrl:
-                "https://www.randomlists.com/img/people/theodore_roosevelt.jpg",
-            isOnline: false
-        }
-    }
-];

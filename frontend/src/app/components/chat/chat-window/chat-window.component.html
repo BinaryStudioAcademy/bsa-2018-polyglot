@@ -1,8 +1,15 @@
 <div class="chat-container">
 
     <mat-toolbar class="interlocutor-info">
-        <span class="interlocutor-name">{{interlocutor?.fullName}}</span>
-        <span class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutor?.isOnline ? "Online" : "Offline"}}</span>
+        <div *ngIf="isDirect; else group">
+                <span class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</span>
+                <span class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online" : "Offline"}}</span>
+        </div>
+        <ng-template #group>
+                <span class="group-name">{{currentGroupName}}</span>
+                <span class="participants-count">Participants: {{groupParticipantsCount}}</span>
+                <span class="participants-online-count">Online: {{groupParticipantsOnlineCount}}</span>
+        </ng-template>
     </mat-toolbar>
 
     <div class="chat-messages-container" #mainwindow>
@@ -11,12 +18,13 @@
             <!-- <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner>  -->
 
             <li class="message" [ngClass]="{'message-from-user' : currentUserId !== m.senderId}" *ngFor="let m of messages" (click)="toggleSelection(m)">
-                <a class="person-img">
-                    <img class="person-avatar" mat-card-avatar src="{{interlocutor.avatarUrl}}">
-                </a>
-                <div class="sender-name">{{interlocutor.fullName}}</div>
+                    <a class="person-img">
+                            <img class="person-avatar" mat-card-avatar src="{{interlocutors[m.senderId]?.avatarUrl}}">
+                        </a>
+                <div class="sender-name">{{interlocutors[m.senderId]?.fullName}}</div>
+            
                 <mat-card class="message-card">
-                    {{m.body}}
+                        {{m.body}}
                     <div class="message-info-container">
                         <span class="recieved-read-container">
                             <span [hidden]="m.isRead" class="recieved-icon">
