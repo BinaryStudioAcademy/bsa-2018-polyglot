@@ -85,7 +85,7 @@
           <a mat-list-item [routerLink]="['key', key.id]" [routerLinkActive]="'active'" *ngFor="let key of keys" [ngStyle]="{'border-left': highlightStringStatus(key)}" [ngClass]="{'in-progress': isStringInProgress(key)}">
             <div [class.selected]="key === selectedKey" (click)="onSelect(key)">
 
-              <app-workspace-key (removeEvent)="removeComplexString($event)" [key]="key"></app-workspace-key>
+              <app-workspace-key (removeEvent)="removeComplexString($event)" (editKey)="editComplexString($event)" [key]="key"></app-workspace-key>
 
             </div>
             <mat-divider></mat-divider>
@@ -101,3 +101,4 @@
   </div>
   <ng-snotify></ng-snotify>
 </section>
+  

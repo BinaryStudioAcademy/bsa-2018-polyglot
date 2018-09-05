@@ -71,7 +71,7 @@ namespace Polyglot.BusinessLogic.Services
                 newTeam.TeamTranslators = translators;
                 newTeam.CreatedBy = manager;
                 newTeam.Name = receivedTeam.Name;
-                newTeam = uow.GetRepository<Team>().Update(newTeam);
+                newTeam = await uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
                 foreach(var translator in newTeam.TeamTranslators)
                 {
@@ -166,7 +166,7 @@ namespace Polyglot.BusinessLogic.Services
             if (uow != null)
             {
                 var teamRepository = uow.GetRepository<Team>();
-                var target = teamRepository.Update(mapper.Map<Team>(entity));
+                var target = await teamRepository.Update(mapper.Map<Team>(entity));
                 if (target != null)
                 {
                     await uow.SaveAsync();
@@ -189,7 +189,7 @@ namespace Polyglot.BusinessLogic.Services
             if (translators != null && translators.Count > 0)
             {
                 
-                var tLanguages = await uow.GetRepository<TranslatorLanguage>()
+                var tLanguages = await uow.GetMidRepository<TranslatorLanguage>()
                     .GetAllAsync();
                 // вычисляем рейтинги переводчиков
                 Dictionary<int, double> ratings = new Dictionary<int, double>();
@@ -231,7 +231,7 @@ namespace Polyglot.BusinessLogic.Services
             var translator = await uow.GetRepository<UserProfile>().GetAsync(id);
             if (translator != null && translator.UserRole == Role.Translator)
             {
-                var translatorLanguages = await uow.GetRepository<TranslatorLanguage>()
+                var translatorLanguages = await uow.GetMidRepository<TranslatorLanguage>()
                     .GetAllAsync(tl => tl.TranslatorId == translator.Id);
 
                 return mapper.Map<UserProfile, TranslatorDTO>(translator, opt => opt.AfterMap((src, dest) =>

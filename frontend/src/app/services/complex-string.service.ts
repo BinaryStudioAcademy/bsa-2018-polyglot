@@ -27,8 +27,8 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data, undefined, 'form-data');
   }
 
-  update(iString: IString, id: number): Observable<IString> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, iString);
+  update(data: FormData, id: number): Observable<IString> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, data, undefined, 'form-data');
   }
 
   getStringTranslations(id: number): Observable<any> {
@@ -83,7 +83,7 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + stringId + '/' + translationId, 'optional' );
   }
 
-  changeStringStatus(id: number, groupName: string, status: number) {
+  changeStringStatus(id: number, groupName: string, status: boolean) {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/status/' + status, '/?groupName=' + groupName);
   }
 }

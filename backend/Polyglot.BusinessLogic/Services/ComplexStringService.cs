@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Nest;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Polyglot.BusinessLogic.TranslationServices;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.Authentication;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Interfaces;
 using Polyglot.DataAccess.MongoModels;
@@ -27,10 +30,12 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IFileStorageProvider provider;
         private readonly ICRUDService<UserProfile, UserProfileDTO> userSevice;
         private readonly ISignalRWorkspaceService signalRService;
+        private readonly IElasticClient _elasticClient;
+        private readonly TranslationTimerService _timerService;
 
 
         public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow, IFileStorageProvider provider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspace)
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
         {
             this.uow = uow;
             this.repository = repository;
@@ -38,6 +43,8 @@ namespace Polyglot.BusinessLogic.Services
             this.provider = provider;
             this.userSevice = userService;
             this.signalRService = signalRWorkspace;
+            this._elasticClient = elasticClient;
+            this._timerService = timerService;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -413,12 +420,29 @@ namespace Polyglot.BusinessLogic.Services
 
             return paginatedHistory;
         }
-
-        public async Task ChangeStringStatus(int id, int status, string groupName)
+        
+        public async Task<string> ReIndex()
         {
-            if (status == 1)
+            var allPosts = (await repository.GetAllAsync()).ToList();
+
+            var res = await ElasticRepository.ReIndex(allPosts);
+
+            return res;
+        }
+        
+        public async Task ChangeStringStatus(int id, bool status, string groupName)
+        {
+            if (status)
             {
                 await signalRService.ComplexStringTranslatingStarted(groupName, id);
+                _timerService.TrackTranslatingTime(id);
+                await Task.Delay(10000)
+                    .ContinueWith(r => _timerService.UntrackTranslatingTime(id));
+
+                if (_timerService.IsTranslationFinished(id))
+                {
+                    await signalRService.ComplexStringTranslatingFinished(groupName, id);
+                }
             }
             else
             {

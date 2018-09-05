@@ -10,8 +10,12 @@ import {
 import { ProjectService } from "../../../services/project.service";
 import { MatSnackBar } from "@angular/material";
 import { ChatService } from "../../../services/chat.service";
-import { GroupType } from "../../../models";
+import { GroupType, ChatMessage } from "../../../models";
 import { SignalrService } from "../../../services/signalr.service";
+import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
+import { AppStateService } from "../../../services/app-state.service";
+import { Hub } from "../../../models/signalrModels/hub";
+import { ChatActions } from "../../../models/signalrModels/chat-actions";
 
 @Component({
     selector: "app-chat-window",
@@ -21,12 +25,13 @@ import { SignalrService } from "../../../services/signalr.service";
 export class ChatWindowComponent implements OnInit {
     @ViewChild("mainwindow")
     mainWindow: ElementRef;
-    @Input()
-    interlocutor: any;
+    @Input() interlocutor: any;
     public currentMessage: string = "";
+    public currentUserId: number;
 
     messages = [];
     constructor(
+        private appState: AppStateService,
         private renderer: Renderer2,
         private chatService: ChatService,
         public snackBar: MatSnackBar,
@@ -34,19 +39,50 @@ export class ChatWindowComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.currentUserId = this.appState.currentDatabaseUser.id;
         //  this.messages = MOCK_MESSAGES;
-        debugger;
+        this.signalRService.createConnection(
+            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`,
+            Hub[Hub.chatHub]
+        );
+        this.subscribeChatEvents();
     }
 
     ngOnDestroy() {
-        debugger;
+        this.signalRService.closeConnection(
+            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`
+        );
+    }
+
+    subscribeChatEvents() {
+        this.signalRService.connection.on(
+            ChatActions[ChatActions.messageReceived],
+            (message: ChatMessage) => {
+                debugger;
+                if(this.interlocutor.id == message.senderId){
+                    this.messages.push(message);
+                }
+            }
+        );
+
+        this.signalRService.connection.on(
+            ChatActions[ChatActions.messageRead],
+            (userId: number) => {
+                debugger;
+                if(this.interlocutor.id == userId){
+                    for(let i = 0; i < this.messages.length; i++){
+                        this.messages[i].isRead = true;
+                    }
+                }
+            }
+        );
     }
 
     ngOnChanges(changes: SimpleChanges) {
         this.getMessagesHistory();
     }
 
-    ngAfterViewInit() {
+    ngAfterViewChecked() {
         let scrollHeight = this.mainWindow.nativeElement.scrollHeight;
         this.renderer.setProperty(
             this.mainWindow.nativeElement,
@@ -55,14 +91,17 @@ export class ChatWindowComponent implements OnInit {
         );
     }
 
+
     getMessagesHistory() {
-        if (this.interlocutor) {
+        if (this.interlocutor && this.interlocutor.id) {
+            debugger;
             this.chatService
                 .getMessagesHistory(GroupType.users, this.interlocutor.id)
                 .subscribe(messages => {
                     if (messages) {
                         debugger;
                         this.messages = messages;
+                        this.signalRService.readMessage(this.interlocutor.id);
                     }
                 });
         }
@@ -70,15 +109,19 @@ export class ChatWindowComponent implements OnInit {
 
     sendMessage() {
         if (this.currentMessage.length > 0) {
-            this.messages.push({
-                senderId: 1,
-                recipientId: this.interlocutor.id,
-                body: this.currentMessage,
-                receivedDate: Date.now(),
-                isRead: false
-            });
-            this.currentMessage = "";
-            this.signalRService.sendMessage("", this.currentMessage);
+            let message = {
+            recipientId: this.interlocutor.id,
+            body: this.currentMessage
+            };
+            this.chatService.sendMessage(GroupType.users, this.interlocutor.id, 
+                message).subscribe((message: ChatMessage) => {
+                    debugger;
+                    let a = this.currentUserId == message.senderId;
+                    if(message){
+                        this.messages.push(message);
+                        this.currentMessage = "";
+                    }
+                });
         }
     }
 

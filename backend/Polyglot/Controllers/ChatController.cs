@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.Helpers;
 
 namespace Polyglot.Controllers
@@ -31,7 +32,7 @@ namespace Polyglot.Controllers
         [HttpGet("users/{id}/contacts")]
         public async Task<IActionResult> GetUserContacts(int userId)
         {
-            var contacts = await chatService.GetContactsAsync(ChatGroup.User, userId);
+            var contacts = await chatService.GetContactsAsync(ChatGroup.chatUser, userId);
             return contacts == null ? NotFound("No contacts found!") as IActionResult
                 : Ok(contacts);
         }
@@ -104,7 +105,7 @@ namespace Polyglot.Controllers
         [HttpGet("users/{userId}/messages")]
         public async Task<IActionResult> GetUserMessagesHistory(int userId)
         {
-            var messages = await chatService.GetGroupMessagesHistoryAsync(ChatGroup.User, userId);
+            var messages = await chatService.GetGroupMessagesHistoryAsync(ChatGroup.chatUser, userId);
             return messages == null ? NotFound("No messages found!") as IActionResult
                 : Ok(messages);
         }
@@ -127,23 +128,31 @@ namespace Polyglot.Controllers
                 : Ok(messages);
         }
 
+        //POST: /chat/users/:userId/messages
+        [HttpPost("users/{userId}/messages")]
+        public async Task<IActionResult> Post(int userId, [FromBody]ChatMessageDTO message)
+        {
+            var m = await chatService.SendMessage(message, ChatGroup.chatUser, userId);
+            return m == null ? StatusCode(409) as IActionResult
+                : Ok(m);
+        }
 
-      //  // POST: api/Chat
-      //  [HttpPost]
-      //  public void Post([FromBody] string value)
-      //  {
-      //  }
-      //
-      //  // PUT: api/Chat/5
-      //  [HttpPut("{id}")]
-      //  public void Put(int id, [FromBody] string value)
-      //  {
-      //  }
-      //
-      //  // DELETE: api/ApiWithActions/5
-      //  [HttpDelete("{id}")]
-      //  public void Delete(int id)
-      //  {
-      //  }
+        //  // POST: api/Chat
+        //  [HttpPost]
+        //  public void Post([FromBody] string value)
+        //  {
+        //  }
+        //
+        //  // PUT: api/Chat/5
+        //  [HttpPut("{id}")]
+        //  public void Put(int id, [FromBody] string value)
+        //  {
+        //  }
+        //
+        //  // DELETE: api/ApiWithActions/5
+        //  [HttpDelete("{id}")]
+        //  public void Delete(int id)
+        //  {
+        //  }
     }
 }

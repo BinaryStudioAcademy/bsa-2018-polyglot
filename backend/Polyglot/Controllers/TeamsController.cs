@@ -5,6 +5,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Helpers;
 using Microsoft.AspNetCore.Authorization;

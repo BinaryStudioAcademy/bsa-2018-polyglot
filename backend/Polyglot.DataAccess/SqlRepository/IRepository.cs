@@ -6,16 +6,14 @@ using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.DataAccess.SqlRepository
 {
-    public interface IRepository <TEntity>: IBaseRepository<TEntity> where TEntity : DbEntity
+    public interface IRepository <TEntity>: IBaseRepository<TEntity> where TEntity : Entity, new()
     {
      //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
        // Interfaces.IRepository<TEntity> Include(Expression<Func<TEntity, object>> include);
 
-        TEntity Update(TEntity entity);
-
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
-        bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
+        Task<bool> UpdateBool(TEntity entity); // Workaroud for Entity being tracked
     }
 }

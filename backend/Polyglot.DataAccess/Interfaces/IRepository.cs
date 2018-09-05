@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.DataAccess.Interfaces
 {
-    public interface IBaseRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity> where TEntity : Entity, new ()
     {
         //   Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
         Task<TEntity> CreateAsync(TEntity entity);
+
+        Task<TEntity> Update(TEntity entity);
 
         Task<TEntity> DeleteAsync(int id);
 

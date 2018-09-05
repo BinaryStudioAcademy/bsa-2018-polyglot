@@ -327,7 +327,7 @@ export class KeyDetailsComponent implements OnInit {
     setStep(index: number) {
         this.eventService.filter({
             keyId: this.currentKeyId,
-            status: 1
+            status: true
         });
 
         if (index === undefined) {
@@ -416,6 +416,10 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     onSave(index: number, t: any) {
+        this.eventService.filter({
+            keyId: this.currentKeyId,
+            status: false
+        });
         this.currentTranslation = "";
 
         // 'Save' button not work if nothing has been changed
@@ -487,7 +491,7 @@ export class KeyDetailsComponent implements OnInit {
     onClose(index: number, translation: any) {
         this.eventService.filter({
             keyId: this.currentKeyId,
-            status: 0
+            status: false
         });
 
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {

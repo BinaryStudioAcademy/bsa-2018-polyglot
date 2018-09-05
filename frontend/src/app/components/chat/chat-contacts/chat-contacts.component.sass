@@ -1,3 +1,7 @@
+
+.mat-tab-header-pagination.mat-tab-header-pagination-disabled 
+  display: none !important
+
 .mat-drawer
   height: 100vh
 
@@ -10,7 +14,10 @@ li
     padding: 0
 
 ul
+    display: flex
+    flex-direction: column-reverse
     list-style: none
+    
 
 li
     display: flex
@@ -59,7 +66,7 @@ li,
 
 
 .person-card:hover
-    background-color: #C1C1C1
+    background-color: #E8EDF3
     .online-status-text
       opacity: 1
 
@@ -119,7 +126,7 @@ li,
     width: auto
     height: auto
     font-size: 10px
-    color: green
+    
 .mat-tab-header
   width: 300px
 

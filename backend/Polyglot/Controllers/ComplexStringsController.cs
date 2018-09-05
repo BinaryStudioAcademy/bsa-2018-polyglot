@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -15,6 +17,7 @@ using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class ComplexStringsController : ControllerBase
@@ -127,12 +130,22 @@ namespace Polyglot.Controllers
 
         // PUT: ComplexStrings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyComplexString(int id, [FromBody]ComplexStringDTO complexString)
+        public async Task<IActionResult> ModifyComplexString(int id, IFormFile formFile)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            Request.Form.TryGetValue("str", out StringValues res);
+            ComplexStringDTO complexString = JsonConvert.DeserializeObject<ComplexStringDTO>(res);
+            if (Request.Form.Files.Count != 0)
+            {
+                IFormFile file = Request.Form.Files[0];
+                byte[] byteArr;
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    byteArr = ms.ToArray();
+                }
 
-            complexString.Id = id;
+                complexString.PictureLink = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(file.FileName));
+            }
 
             var entity = await dataProvider.ModifyComplexString(complexString);
             return entity == null ? StatusCode(304) as IActionResult
@@ -214,12 +227,25 @@ namespace Polyglot.Controllers
                 : Ok(response);
         }
 
-        [HttpGet("{id}/status/{status}")]
-        public async Task<IActionResult> ChangeStringStatus(int id, int status, string groupName)
+        [Route("/search/reindex")]
+        public async Task<IActionResult> ReIndex()
         {
-            await dataProvider.ChangeStringStatus(id, status, groupName);
+            var result = await dataProvider.ReIndex();
+            return Ok(result);
+        }
 
-            return Ok();
+        [HttpGet("{id}/status/{status}")]
+        public async Task<IActionResult> ChangeStringStatus(int id, bool status, string groupName)
+        {
+            try
+            {
+                await dataProvider.ChangeStringStatus(id, status, groupName);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Exception from CurrentUser: " + ex.Message);
+            }
         }
     }
 }

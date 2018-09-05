@@ -34,10 +34,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public isLoad: boolean;
     public projectLanguagesCount: number;
     public stringsInProgress: number[] = [];
-
     public projectTags: string[] = [];
-
     private routeSub: Subscription;
+    private loop: any;
+    private currentKeyId: number;
+    private previousKeyId: number;
 
     filters: Array<string>;
 
@@ -63,7 +64,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                if (result.status && !this.stringsInProgress.includes(result.keyId)) {
+                    this.sendStringStatusMessage(result.keyId);
+                } else {
+                    this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                }            
             }
         );
     }
@@ -126,6 +131,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
+                            this.currentKeyId = keyId;
                             this.router.navigate([this.currentPath, keyId]);
                         } else {
                             this.isLoad = true;
@@ -154,19 +160,35 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    // sendStringStatusMessage(keyId: number) {
-    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, 1).subscribe(() => {});
-    //     setTimeout(() => { 
-    //         if (this.stringsInProgress.includes(keyId)) {
-    //             this.sendStringStatusMessage(keyId);
-    //         }
-    //     }, 5000);
-    // }
+    sendStringStatusMessage(keyId: number) {
+        this.previousKeyId = this.currentKeyId;
+        this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+        this.loop = setInterval(() => {
+            if (this.previousKeyId !== this.currentKeyId) {
+                this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
+                clearInterval(this.loop);
+            } else {
+                this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+            }   
+        }, 10000);
+    }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
             data: {
-                projectId: this.project.id
+                projectId: this.project.id,
+                string: {
+                    id: 0,
+                    key: '',
+                    base: '',
+                    description: '',
+                    tags: [],
+                    projectId: this.project.id,
+                    translations: [],
+                    comments: [],
+                    createdBy: 0,
+                    createdOn: new Date()
+                }
             }
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
@@ -190,6 +212,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     onSelect(key: any) {
         this.selectedKey = key;
+        this.currentKeyId = this.selectedKey.id;
     }
 
     ngOnDestroy() {
@@ -223,6 +246,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.currentPath, this.selectedKey.id]);
         } else {
             this.router.navigate([this.basicPath]);
+        }
+    }
+
+    editComplexString(complexStringId: number){
+        this.getKeys(this.currentPage, keys => {
+            this.keys = this.keys.concat(keys);
+            this.router.navigate([this.basicPath]);
+        });
+
+        if (this.keys.length > 0) {
+            this.router.navigate([this.currentPath, this.selectedKey.id]);
         }
     }
 
@@ -349,7 +383,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     } */
 
     highlightStringStatus(key) {
-        if (key.translations.length === 0) {
+        if (this.stringsInProgress.includes(key.id)) {
+            return '';
+        } else if (key.translations.length === 0) {
             return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
             return "7px solid #ffcc00"; // partially
@@ -359,9 +395,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     isStringInProgress(key) {
-        if (this.stringsInProgress.includes(key.id)) {
-            return true;
-        }
-        return false;
+        return this.stringsInProgress.includes(key.id);
     }
 }

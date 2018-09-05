@@ -24,29 +24,24 @@ table
   display: grid
   grid-gap: 5px
 
-  
-
-
-.row-info
-  align-self: center
-  .row-description
-    display: block
-    overflow: hidden
-
-
 
 .list-item
   margin: 10px
-  padding: 5px
+  padding: 10px
   display: grid
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+  grid-template-columns: 40% 26% 17% 17%
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
   max-height: 150px
   img    
     justify-self: center
+  a
+    color: black
 
 .row-info
-  padding-left: 10px
+  align-self: center
+  text-overflow: ellipsis
+  white-space: nowrap
+  overflow: hidden
 
 .row-name
   align-self: center
@@ -54,10 +49,8 @@ table
   white-space: nowrap
   overflow: hidden
   font-size: 25px
-  a
-    font-size: 25px
-    margin: 0
-    margin: 5px 0
+  font-weight: bold
+  
 
 
   

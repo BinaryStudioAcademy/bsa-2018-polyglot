@@ -12,6 +12,11 @@
   </form>
 </div>
 <mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
+
+<div class="no-items-div mt-1 mb-1" *ngIf="cards && !isLoad && cards.length === 0">
+    <p>No projects</p>
+</div>
+
 <div *ngIf="cards && !isLoad">
 
   <div *ngIf="toggle.checked && cards.length > 0" class="container">
@@ -86,9 +91,7 @@
     </mat-list>
   </div>
 </div>
-<div *ngIf="!isLoad&&cards.length === 0" class="no-projects">
-  No Projects
-</div>
+
 
 <ng-snotify></ng-snotify>
 <button *ngIf="isCurrentUserManager()" routerLink="/newproject" mat-fab color="primary" class="button-add">
