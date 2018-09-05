@@ -35,7 +35,7 @@ namespace Polyglot.BusinessLogic.Services
                 }
             }
 
-            var target = uow.GetRepository<Project>().Update(project);
+            var target = await uow.GetRepository<Project>().Update(project);
             if (target != null)
             {
                 await uow.SaveAsync();

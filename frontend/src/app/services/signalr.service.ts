@@ -16,7 +16,6 @@ export class SignalrService {
     constructor(private appState: AppStateService) {}
 
     public createConnection(groupName: string, hubUrl: string) {
-        debugger;
         if (
             !this.connection ||
             this.connection.connection.connectionState === 2

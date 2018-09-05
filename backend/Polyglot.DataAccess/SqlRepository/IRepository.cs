@@ -16,6 +16,7 @@ namespace Polyglot.DataAccess.SqlRepository
 
         Task<TEntity> GetLastAsync();
 
-        bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
+        //bool UpdateBool(TEntity entity); // Workaroud for Entity being tracked
+        Task<bool> UpdateBool(TEntity entity); // Workaroud for Entity being tracked
     }
 }

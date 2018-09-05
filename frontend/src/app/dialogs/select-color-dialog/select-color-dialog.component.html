@@ -1,11 +1,11 @@
 <h3>Select tag color</h3>
 <hr>
 <div class="color-grid">
-<button *ngFor="let color of data;let i = index" (click)="selectColor(i);" mat-button [style.background-color]="color">
+<button *ngFor="let color of data;let i = index" style="opacity: .8" (click)="selectColor(i);" mat-button [style.background-color]="color">
 <!--   костыль на кнопку без текста -->
 <span [style.color]="color">.</span>
 </button>
-<button style="border: 1px solid black" mat-button (click)=selectColor(-1)>
+<button style="border: 1px solid black" style="opacity: .8" mat-button (click)=selectColor(-1)>
   <span>Default</span>
 </button>
 </div>
