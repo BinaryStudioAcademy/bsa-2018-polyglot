@@ -253,10 +253,14 @@ namespace Polyglot.Common.Mapping
 
                 cfg.CreateMap<ChatDialog, ChatDialogDTO>()
                 .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
-                .ForMember(p => p.Participants, opt => opt.Ignore());
+                .ForMember(p => p.DialogType, opt => opt.MapFrom(po => po.DialogType))
+                .ForMember(p => p.Identifier, opt => opt.MapFrom(po => po.Identifier))
+                .ForMember(p => p.Participants, opt => opt.MapFrom(po => po.DialogParticipants.Select(dp => dp.Participant)));
 
                 cfg.CreateMap<ChatDialogDTO, ChatDialog>()
                 .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.DialogType, opt => opt.MapFrom(po => po.DialogType))
+                .ForMember(p => p.Identifier, opt => opt.MapFrom(po => po.Identifier))
                 .ForMember(p => p.DialogParticipants, opt => opt.Ignore())
                 .ForMember(p => p.Messages, opt => opt.Ignore());
 

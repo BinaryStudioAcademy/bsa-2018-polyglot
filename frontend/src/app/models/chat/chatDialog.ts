@@ -8,4 +8,8 @@ export interface ChatDialog {
     unreadMessagesCount: number;
 
     participants: ChatUser[];
+
+    identifier: number; 
+
+    
 }

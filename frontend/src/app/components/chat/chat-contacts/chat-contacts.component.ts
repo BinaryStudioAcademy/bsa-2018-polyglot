@@ -22,11 +22,13 @@ export class ChatContactsComponent implements OnInit {
 
     unreadMessagesTotal = {
         persons: 0,
-        groups: 0
+        groups: 0,
+        teams: 0,
+        projects: 0
     };
 
     private dialogs: ChatDialog[] = []; //ChatUser[];
-    private projects: Project[] = [];
+    private projects: ChatDialog[] = [];
     private teams: Team[] = [];
 
     constructor(
@@ -46,13 +48,15 @@ export class ChatContactsComponent implements OnInit {
         );
         this.subscribeChatEvents();
 
+        setTimeout(() => {
         this.chatService
                 .getProjectsList()
-                .subscribe((projects: Project[]) => {
-                    if (projects) {
-                        this.projects = projects;
+                .subscribe((dialogs: ChatDialog[]) => {
+                    if (dialogs) {
+                        this.projects = dialogs;
                     }
                 });
+            }, 500);
 
         setTimeout(() => {
             this.chatService
@@ -66,7 +70,7 @@ export class ChatContactsComponent implements OnInit {
                         this.dialogs = dialogs.filter(d => d.participants.length > 0);
                     }
                 });
-        }, 500);
+        }, 1000);
 
         setTimeout(() => {
             this.chatService.getTeamsList().subscribe((teams: Team[]) => {

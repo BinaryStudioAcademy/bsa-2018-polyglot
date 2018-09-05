@@ -17,8 +17,8 @@ export class ChatService {
   getDialogs() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + `/dialogs`);
   }
-
-  getProjectsList() : Observable<Project[]> {
+  
+  getProjectsList() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/projects');
   }
 

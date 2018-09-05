@@ -11,6 +11,10 @@ namespace Polyglot.Common.DTOs.Chat
 
         public IEnumerable<ChatUserDTO> Participants { get; set; }
 
+        public ChatGroup DialogType { get; set; }
+
+        public long Identifier { get; set; }
+
         public int UnreadMessagesCount { get; set; }
 
         public string LastMessageText { get; set; }

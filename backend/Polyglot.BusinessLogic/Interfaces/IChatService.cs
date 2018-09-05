@@ -8,7 +8,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IChatService
     {
-        Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync();
+        Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync(ChatGroup targetGroup);
 
         Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId);
 

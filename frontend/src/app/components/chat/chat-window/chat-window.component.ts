@@ -26,7 +26,7 @@ import { ChatDialog } from "../../../models/chat/chatDialog";
 export class ChatWindowComponent implements OnInit {
     @ViewChild("mainwindow")
     mainWindow: ElementRef;
-    @Input() dialog: ChatDialog;
+    @Input() dialog: any;
     interlocutor: ChatUser;
     public currentMessage: string = "";
     public currentUserId: number;
@@ -117,15 +117,33 @@ export class ChatWindowComponent implements OnInit {
 
 
     getMessagesHistory() {
-        if (this.interlocutor && this.interlocutor.id) {
-            debugger;
+        if (this.dialog && this.interlocutor && this.interlocutor.id) {
+            let targetGroup;
+            let targetGroupDialogId;
+            switch(this.dialog.dialogType){
+                case(0):
+                case(1):
+                targetGroup = GroupType.users;
+                targetGroupDialogId = this.interlocutor.id;
+                break;
+                case(2):
+                targetGroup = GroupType.projects;
+                targetGroupDialogId = this.dialog.identifier;
+                break;
+                case(3):
+                targetGroupDialogId = this.dialog.identifier;
+                targetGroup = GroupType.teams;
+                break;
+            }
             this.chatService
-                .getDialogMessages(GroupType.users, this.interlocutor.id)
+                .getDialogMessages(targetGroup, targetGroupDialogId)
                 .subscribe(messages => {
                     if (messages) {
                         debugger;
-                        this.messages = messages.filter(m => m.senderId == this.interlocutor.id || 
-                            m.senderId == this.currentUserId);
+
+                        this.messages = messages;
+                        //.filter(m => m.senderId == this.interlocutor.id || 
+                        //    m.senderId == this.currentUserId);
 
                         this.signalRService.readMessage(this.interlocutor.id);
                     }

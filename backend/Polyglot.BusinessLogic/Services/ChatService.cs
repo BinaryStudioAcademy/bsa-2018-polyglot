@@ -41,19 +41,36 @@ namespace Polyglot.BusinessLogic.Services
 
 
 
-        public async Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync()
+        public async Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync(ChatGroup targetGroup)
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
             var dialogs = await uow.GetRepository<ChatDialog>()
-                .GetAllAsync(d => d.DialogType == ChatGroup.direct && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
+                .GetAllAsync(d => d.DialogType == targetGroup && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
 
             if (dialogs == null || dialogs.Count < 1)
                 return null;
 
-            return mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest, currentUser)));
+            List<ChatDialogDTO> result = null;
+
+            switch (targetGroup)
+            {
+                case ChatGroup.direct:
+                case ChatGroup.dialog:
+                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest, currentUser)));
+                    break;
+                case ChatGroup.chatProject:
+                case ChatGroup.chatTeam:
+#warning добавить participants
+                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs);
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
         }
 
         public void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
@@ -105,6 +122,7 @@ namespace Polyglot.BusinessLogic.Services
 
             switch (targetGroup)
             {
+                case ChatGroup.dialog:
                 case ChatGroup.direct:
                     {
                         dialogIdentifer = currentUser.Id + targetGroupDialogId;

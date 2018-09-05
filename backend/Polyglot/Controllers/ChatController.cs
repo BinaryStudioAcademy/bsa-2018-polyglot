@@ -32,7 +32,7 @@ namespace Polyglot.Controllers
         [HttpGet("dialogs")]
         public async Task<IActionResult> GetDialogs()
         {
-            var contacts = await chatService.GetDialogsAsync();
+            var contacts = await chatService.GetDialogsAsync(DataAccess.Helpers.ChatGroup.dialog);
             return contacts == null ? NotFound("No dialogs found!") as IActionResult
                 : Ok(contacts);
         }
@@ -41,8 +41,26 @@ namespace Polyglot.Controllers
         [HttpGet("dialogs/users/{targetGroupDialogId}/messages")]
         public async Task<IActionResult> GetDialogMessages(int targetGroupDialogId)
         {
-            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.direct, targetGroupDialogId);
-            return messages == null ? NotFound("No user messages found!") as IActionResult
+            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.dialog, targetGroupDialogId);
+            return messages == null ? NotFound("No messages found!") as IActionResult
+                : Ok(messages);
+        }
+
+        // GET: /chat/dialogs/projects/{targetGroupDialogId}/messages
+        [HttpGet("dialogs/projects/{targetGroupDialogId}/messages")]
+        public async Task<IActionResult> GetProjectMessages(int targetGroupDialogId)
+        {
+            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.chatProject, targetGroupDialogId);
+            return messages == null ? NotFound("No messages found!") as IActionResult
+                : Ok(messages);
+        }
+
+        // GET: /chat/dialogs/teams/{targetGroupDialogId}/messages
+        [HttpGet("dialogs/teams/{targetGroupDialogId}/messages")]
+        public async Task<IActionResult> GetTeamMessages(int targetGroupDialogId)
+        {
+            var messages = await chatService.GetDialogMessagesAsync(DataAccess.Helpers.ChatGroup.chatTeam, targetGroupDialogId);
+            return messages == null ? NotFound("No messages found!") as IActionResult
                 : Ok(messages);
         }
 
@@ -68,9 +86,13 @@ namespace Polyglot.Controllers
         [HttpGet("projects")]
         public async Task<IActionResult> GetProjects()
         {
-            var projects = await projectService.GetListAsync();
-            return projects == null ? NotFound("No projects found!") as IActionResult
-                : Ok(projects);
+            var contacts = await chatService.GetDialogsAsync(DataAccess.Helpers.ChatGroup.chatProject);
+            return contacts == null ? NotFound("No dialogs found!") as IActionResult
+                : Ok(contacts);
+
+         //  var projects = await projectService.GetListAsync();
+         //  return projects == null ? NotFound("No projects found!") as IActionResult
+         //      : Ok(projects);
         }
 
         // GET: /chat/projects/:projectId/contacts

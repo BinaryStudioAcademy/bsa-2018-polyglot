@@ -4,7 +4,7 @@
     <mat-tab-group mat-stretch-tabs>
         <mat-tab>
             <ng-template mat-tab-label>
-                <mat-icon [matBadgeHidden]="isOnPersonsPage && unreadMessagesTotal['persons'] < 1" [matBadge]="unreadMessagesTotal['persons']" matBadgeColor="warn" matBadgeSize="medium">person</mat-icon>
+                <mat-icon [matBadgeHidden]="isOnPersonsPage || unreadMessagesTotal['persons'] < 1" [matBadge]="unreadMessagesTotal['persons']" matBadgeColor="warn" matBadgeSize="medium">person</mat-icon>
             </ng-template>
             <ng-template matTabContent>
 
@@ -39,7 +39,7 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <mat-icon matBadge="1" matBadgeColor="warn" [matBadgeHidden]="true" matBadgeSize="medium">group</mat-icon>
+                <mat-icon [matBadgeHidden]="!isOnPersonsPage || unreadMessagesTotal['groups'] < 1" [matBadge]="unreadMessagesTotal['groups']" matBadgeColor="warn" matBadgeSize="medium">group</mat-icon>
             </ng-template>
             <ng-template matTabContent>
 
@@ -57,10 +57,10 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let p of projects">
-                                    <mat-card>
+                                    <mat-card (click)="selectDialog(p)">
                                         <mat-card-header>
-                                            <mat-card-title>Project {{p.id}}</mat-card-title>
-                                            <mat-card-subtitle>{{p.name}}</mat-card-subtitle>
+                                            <mat-card-title>Project #{{p?.identifier}}</mat-card-title>
+                                            <mat-card-subtitle></mat-card-subtitle>
                                         </mat-card-header>
 
                                     </mat-card>
@@ -86,10 +86,10 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let t of teams">
-                                    <mat-card>
+                                    <mat-card (click)="selectDialog(t)">
                                         <mat-card-header>
-                                            <mat-card-title>Team {{t.id}}</mat-card-title>
-                                            <mat-card-subtitle>{{t.name}}</mat-card-subtitle>
+                                            <mat-card-title>Team {{t?.name}}</mat-card-title>
+                                            <mat-card-subtitle></mat-card-subtitle>
                                         </mat-card-header>
                                     </mat-card>
                                 </li>
