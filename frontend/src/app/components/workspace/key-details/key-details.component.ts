@@ -631,35 +631,21 @@ export class KeyDetailsComponent implements OnInit {
         this.currentSuggestion = "";
     }
 
-    public showAssignButton(userId: number): boolean {
-        var result = false;
-        if (this.userService.getCurrentUser().userRole === 1) {
-            result = false;
-        }
-        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
-        //     result = false;
-        // }
-        // else if (!userId) {
-        //     result = false;
-        // }
-        else {
-           result = true;
-        }
-        return result || !this.users.length;
-    }
-
-    public OnSelfAssign(translation: Translation){
-        this.chooseUser({ user: this.appState.currentDatabaseUser, translationId: translation.id, langId: translation.languageId })
-    }
-
-    public CanSelfAssign(translation: Translation) : boolean{
-        const user = this.appState.currentDatabaseUser;
-        if(!translation.assignedTranslatorName){
-            if(user.userRole === Role.Translator){
-                return true;
-            }
-        } 
-        return false;
-    }
+    // public showAssignButton(userId: number): boolean {
+    //     var result = false;
+    //     if (this.userService.getCurrentUser().userRole === 1) {
+    //         result = false;
+    //     }
+    //     // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+    //     //     result = false;
+    //     // }
+    //     // else if (!userId) {
+    //     //     result = false;
+    //     // }
+    //     else {
+    //         result = true;
+    //     }
+    //     return result || !this.users.length;
+    // }
 
 }

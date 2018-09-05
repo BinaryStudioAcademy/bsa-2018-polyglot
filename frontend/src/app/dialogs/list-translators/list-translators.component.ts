@@ -92,10 +92,7 @@ export class ListTranslatorsComponent implements OnInit {
     }
 
     isTranslator(){
-        if(this.stateService.currentDatabaseUser.userRole === Role.Translator){
-            return true;
-        }
-        return false;
+        this.stateService.currentDatabaseUser.userRole === Role.Translator
     }
 
     isEnoughRigts(){
