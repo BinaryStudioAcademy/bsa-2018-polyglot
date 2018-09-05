@@ -35,6 +35,8 @@ namespace Polyglot.BusinessLogic
             services.AddTransient(typeof(ICRUDService<,>), typeof(CRUDService<,>));
             services.AddScoped<ISignalRWorkspaceService, SignalRWorkspaceService>();
             services.AddScoped<ISignalRChatService, SignalRChatService>();
+
+            services.AddSingleton<TranslationTimerService>();
         }
 
         public static void ConfigureMiddleware(IApplicationBuilder app)
