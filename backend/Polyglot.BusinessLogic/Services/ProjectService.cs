@@ -512,28 +512,56 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
-            var skipItems = itemsOnPage * page;
+			// Myroslav`s example
+           	//var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
+			//    x.Query(q => q
+			//            .Match(m => m
+			//                .Field(f => f.ProjectId)
+			//                .Query(id.ToString())
+			//            )
+			//        )
+			//        .From(page * itemsOnPage)
+			//        .Size(itemsOnPage)
+			//);
+			//return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
 
-            var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
 
-            var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
 
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+			// returns 10 latest complex string from all projects
+			// works well
+			var result0 = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(); 
 
-            //var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
-            //    x.Query(q => q
-            //            .Match(m => m
-            //                .Field(f => f.ProjectId)
-            //                .Query(id.ToString())
-            //            )
-            //        )
-            //        .From(page * itemsOnPage)
-            //        .Size(itemsOnPage)
-            //);
 
-            //return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
+			// should return only string from {id} project that match {search}
+			// doesn`t work at all
+			var result = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
+				.Query(q => q
+					.Match(m => m
+						.Field(f => f.ProjectId)
+						.Query(id.ToString())
+					)
+				)
+					.Query(q => q
+						.MultiMatch(m => m			
+							.Fields(f => f
+								.Fields(f1 => f1.OriginalValue, f2 => f2.Key))
+								.Query(search)
+						)					
+					)
+					.From(page * itemsOnPage)
+					.Size(itemsOnPage)
+				);
+			// return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
 
-        }
+
+
+
+			// taking data from Mongo
+			var skipItems = itemsOnPage * page;
+			var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+			var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+			return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+		}
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId)
         {
