@@ -7,6 +7,8 @@ import { applyDrag, generateItems } from '../../../models';
 import { Translator } from '../../../models/Translator';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { NotificationService } from '../../../services/notification.service';
+import { OptionDefinition } from '../../../models/optionDefinition';
 
 
 @Component({
@@ -39,7 +41,8 @@ export class NewTeamComponent implements OnInit {
     private router: Router,
     private teamService: TeamService,
     private snotifyService: SnotifyService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
 
 
