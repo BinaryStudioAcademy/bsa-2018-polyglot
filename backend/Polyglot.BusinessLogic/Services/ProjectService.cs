@@ -752,7 +752,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<GlossaryDTO>> GetNotAssignedGlossaries(int projectId)
         {
-            var assignedGlossaries = (await uow.GetMidRepository<ProjectGlossary>().GetAllAsync(g => g.ProjectId != projectId))
+            var assignedGlossaries = (await uow.GetMidRepository<ProjectGlossary>().GetAllAsync(g => g.ProjectId == projectId))
                 .Select(x => x.GlossaryId)
                 .ToList();
             var allGlossaries = await this.glossaryService.GetListAsync();
