@@ -24,12 +24,7 @@
 			type="submit" 
 			mat-raised-button color="primary"
 			[disabled]="glossary.originLanguage.id === 0 || (name && name.errors)">
-			Edit
-		</button>
-		<button 
-			(click) = 'onDelete()'
-			mat-raised-button color="warn">
-			Delete
+			Save
 		</button>
 	</form>
 </mat-dialog-content>
