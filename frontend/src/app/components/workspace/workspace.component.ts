@@ -176,7 +176,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
             data: {
-                projectId: this.project.id
+                projectId: this.project.id,
+                string: {
+                    id: 0,
+                    key: '',
+                    base: '',
+                    description: '',
+                    tags: [],
+                    projectId: this.project.id,
+                    translations: [],
+                    comments: [],
+                    createdBy: 0,
+                    createdOn: new Date()
+                }
             }
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
@@ -234,6 +246,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.currentPath, this.selectedKey.id]);
         } else {
             this.router.navigate([this.basicPath]);
+        }
+    }
+
+    editComplexString(complexStringId: number){
+        this.getKeys(this.currentPage, keys => {
+            this.keys = this.keys.concat(keys);
+            this.router.navigate([this.basicPath]);
+        });
+
+        if (this.keys.length > 0) {
+            this.router.navigate([this.currentPath, this.selectedKey.id]);
         }
     }
 

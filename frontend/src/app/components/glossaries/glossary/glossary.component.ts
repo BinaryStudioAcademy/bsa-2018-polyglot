@@ -7,6 +7,7 @@ import { GlossaryString } from '../../../models/glossary-string';
 import { MatTableDataSource, MatDialog } from '@angular/material';
 import { SnotifyService } from 'ng-snotify';
 import { GlossaryStringDialogComponent } from '../../../dialogs/glossary-string-dialog/glossary-string-dialog.component';
+import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-glossary',
@@ -25,6 +26,10 @@ export class GlossaryComponent implements OnInit {
     public isNewRecord: boolean;
     displayedColumns: string[] = ['termText', 'explanationText', 'edit_btn', 'remove_btn'];
     dataSource: MatTableDataSource<GlossaryString>;
+    desc: string = "Are you sure you want to remove the term?";
+    btnOkText: string = "Delete";
+    btnCancelText: string = "Cancel";
+    answer: boolean;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -64,26 +69,35 @@ export class GlossaryComponent implements OnInit {
         });
     }
 
-    onDelete(Item: GlossaryString) {
-        console.log(Item)
-        this.glossaryService.deleteString(this.glossary.id, Item.id).subscribe(
-            (d) => {
-                if (d) {
-                    this.snotifyService.success("Glossary deleted", "Success!");
-                    this.refreshData();
-                }
-                else {
-                    this.snotifyService.error("Glossary wasn`t deleted", "Error!");
-                    this.refreshData();
-                }
-
-            },
-            err => {
-                console.log('err', err);
-                this.snotifyService.error("Glossary wasn`t deleted", "Error!");
-                this.refreshData();
-            });
-    }
+    onDelete(Item: GlossaryString): void{
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '500px',
+          data: {description: this.desc, btnOkText: this.btnOkText, btnCancelText: this.btnCancelText, answer: this.answer}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (dialogRef.componentInstance.data.answer){
+            this.glossaryService.deleteString(this.glossary.id, Item.id).subscribe(
+              (d) => {
+                  if (d) {
+                      this.snotifyService.success("Glossary deleted", "Success!");
+                      this.refreshData();
+                  }
+                  else {
+                      this.snotifyService.error("Glossary wasn`t deleted", "Error!");
+                      this.refreshData();
+                  }
+    
+              },
+              err => {
+                  console.log('err', err);
+                  this.snotifyService.error("Glossary wasn`t deleted", "Error!");
+                  this.refreshData();
+              });
+    
+            }
+          }
+        );
+      }
 
     onEdit(Item: GlossaryString) {
         this.dialog.open(GlossaryStringDialogComponent, {

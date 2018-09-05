@@ -1,8 +1,8 @@
 export enum TypeTechnology {
-    JS,
-    Angular,
-    dotNet,
-    iOS,
-    Android,
-    Java
+    'JS',
+    'Angular',
+    '.NET',
+    'iOS',
+    'Android',
+    'Java'
 }

@@ -35,12 +35,14 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IComplexStringService stringService;
         private readonly ISignalRWorkspaceService signalrService;
         ICRUDService<UserProfile, UserProfileDTO> userService;
+        private readonly IGlossaryService glossaryService;
         private readonly IElasticClient _elasticClient;
+
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
-            ISignalRWorkspaceService signalrService, IElasticClient elasticClient)
+            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -48,6 +50,7 @@ namespace Polyglot.BusinessLogic.Services
             this.stringService = stringService;
             this.userService = userService;
             this.signalrService = signalrService;
+            this.glossaryService = glossaryService;
             _elasticClient = elasticClient;
         }
 
@@ -739,12 +742,21 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId)
         {
             var proj = await uow.GetRepository<Project>().GetAsync(projectId);
-            if (proj != null && proj.ProjectGlossaries.Count > 0)
+            if (proj != null)
             {
                 var glossaries = proj.ProjectGlossaries?.Select(p => p.Glossary);
                 return mapper.Map<IEnumerable<Glossary>, IEnumerable<GlossaryDTO>>(glossaries);
             }
             return null;
+        }
+
+        public async Task<IEnumerable<GlossaryDTO>> GetNotAssignedGlossaries(int projectId)
+        {
+            var assignedGlossaries = (await uow.GetMidRepository<ProjectGlossary>().GetAllAsync(g => g.ProjectId == projectId))
+                .Select(x => x.GlossaryId)
+                .ToList();
+            var allGlossaries = await this.glossaryService.GetListAsync();
+            return allGlossaries?.Where(g => !assignedGlossaries.Contains(g.Id));
         }
 
         public async Task<bool> TryDismissGlossary(int projectId, int glossaryId)
