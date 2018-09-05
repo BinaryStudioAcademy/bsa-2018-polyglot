@@ -166,7 +166,7 @@ namespace Polyglot.Controllers
 
         // Get: Projects/5/complexString
        [HttpGet("{id}/paginatedStrings", Name = "GetProjectStringsWithPagination")]
-	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0)
+	    public async Task<IActionResult> GetProjectStrings(int id, [FromQuery(Name = "itemsOnPage")] int itemsOnPage = 7, [FromQuery(Name = "page")] int page = 0,[FromQuery(Name = "search")] string search = "")
 	    {
             var projectsStrings = await service.GetProjectStringsWithPaginationAsync(id,itemsOnPage,page);
 

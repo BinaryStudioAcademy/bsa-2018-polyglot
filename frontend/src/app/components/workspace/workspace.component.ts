@@ -23,7 +23,7 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string;
+    public searchQuery: string = "";
     public selectedKey: any;
     public isEmpty;
     public currentPath;
@@ -39,6 +39,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private loop: any;
     private currentKeyId: number;
     private previousKeyId: number;
+    private projectId: number;
 
     filters: Array<string>;
 
@@ -81,12 +82,13 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     ngOnInit() {
         console.log(this.stringsInProgress);
         this.filters = [];
-        this.searchQuery = "";
+        // this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             forkJoin(
                 this.projectService.getById(params.projectId),
-                this.projectService.getProjectLanguages(params.projectId)
+                this.projectService.getProjectLanguages(params.projectId),
+                this.projectId = params.projectId
             ).subscribe(result => {
                 this.project = result[0];
                 this.projectService
@@ -121,7 +123,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 .getProjectStringsWithPagination(
                     params.projectId,
                     this.elementsOnPage,
-                    0
+                    0,
+                    this.searchQuery
                 )
                 .subscribe((data: any) => {
                     if (data) {
@@ -369,7 +372,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             .getProjectStringsWithPagination(
                 this.project.id,
                 this.elementsOnPage,
-                this.currentPage
+                this.currentPage,
+                this.searchQuery
             )
             .subscribe((keys: any) => {
                 this.currentPage++;
@@ -396,5 +400,36 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     isStringInProgress(key) {
         return this.stringsInProgress.includes(key.id);
+    }
+
+    searchChanges() {
+        this.projectService
+                .getProjectStringsWithPagination(
+                    this.projectId,
+                    this.elementsOnPage,
+                    0,
+                    this.searchQuery
+                )
+                .subscribe((data: any) => {
+                    if (data) {
+                        this.keys = data;
+                        this.isLoad = true;
+                        this.onSelect(this.keys[0]);
+                        let keyId: number;
+                        if (this.keys.length !== 0) {
+                            keyId = this.keys[0].id;
+                            this.currentKeyId = keyId;
+                            this.router.navigate([this.currentPath, keyId]);
+                        } else {
+                            this.isLoad = true;
+                        }
+                    }
+                    let list = this.keys.filter(x => x.tags.length > 0);
+                    this.projectTags = [].concat.apply(
+                        [],
+                        list.map(x => x.tags)
+                    );
+                    this.projectTags = Array.from(new Set(this.projectTags));
+                });
     }
 }
