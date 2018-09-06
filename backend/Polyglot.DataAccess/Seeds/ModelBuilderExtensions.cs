@@ -209,20 +209,7 @@ namespace Polyglot.DataAccess.Seeds
              }
                 );
 
-            modelBuilder.Entity<ProjectTag>().HasData(
-                new { Id = 1, ProjectId = 1, TagId = 1 },
-                new { Id = 2, ProjectId = 1, TagId = 2 },
-                new { Id = 3, ProjectId = 2, TagId = 2 },
-                new { Id = 4, ProjectId = 2, TagId = 4 },
-                new { Id = 5, ProjectId = 3, TagId = 5 },
-                new { Id = 6, ProjectId = 3, TagId = 6 },
-                new { Id = 7, ProjectId = 4, TagId = 3 },
-                new { Id = 8, ProjectId = 4, TagId = 4 },
-                new { Id = 9, ProjectId = 5, TagId = 7 },
-                new { Id = 10, ProjectId = 5, TagId = 8 }
-                );
-
-
+         
             modelBuilder.Entity<ProjectLanguage>().HasData(
               new { Id = 1, ProjectId = 1, LanguageId = 1 },
               new { Id = 2, ProjectId = 1, LanguageId = 2 },
@@ -636,11 +623,6 @@ namespace Polyglot.DataAccess.Seeds
                    Technology ="films",
                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
                    ProjectTeams =  new List<ProjectTeam>(),
-                   ProjectTags = {
-                           new ProjectTag { TagId = 1, ProjectId = 1 },
-                           new ProjectTag { TagId = 2, ProjectId = 1 },
-                           new ProjectTag { TagId = 3, ProjectId = 1 },
-                   },
                    ProjectLanguageses = {
                            new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
                            new ProjectLanguage { LanguageId = 2, ProjectId = 1 },

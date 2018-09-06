@@ -19,7 +19,7 @@ namespace Polyglot.DataAccess.MongoModels
 
         public List<Translation> Translations { get; set; }
         public List<Comment> Comments { get; set; }
-        public List<string> Tags { get; set; }
+        public List<int> Tags { get; set; }
 
         public ComplexString()
         {

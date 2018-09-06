@@ -133,7 +133,7 @@ namespace Polyglot.BusinessLogic.Services
                         ProjectId = id,
                         Translations = new List<Translation>(),
                         Comments = new List<Comment>(),
-                        Tags = new List<string>(),
+                        Tags = new List<int>(),
                         CreatedOn = DateTime.Now,
                         CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
                     });
@@ -552,7 +552,15 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id)
         {
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var map = mapper.Map<List<ComplexStringDTO>>(strings);
+
+            for (int i = 0; i < map.Count; i++)
+            {
+                map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+            } 
+
+            return map;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
@@ -561,7 +569,15 @@ namespace Polyglot.BusinessLogic.Services
 
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
 
-            var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var map = mapper.Map<List<ComplexStringDTO>>(strings);
+
+            for (int i = 0; i < map.Count; i++)
+            {
+                map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+            }
+
+            var paginatedStrings = map.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
 
             return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
 
@@ -584,7 +600,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             List<FilterType> criteriaFilters = new List<FilterType>();
             List<string> tagFilters = new List<string>();
-            List<ComplexString> result = new List<ComplexString>();
+            List<ComplexStringDTO> result = new List<ComplexStringDTO>();
 
             foreach (var opt in options)
             {
@@ -609,21 +625,27 @@ namespace Polyglot.BusinessLogic.Services
             if (criteriaFilters.Contains(FilterType.Untranslated))
                 finalFilter = AndAlso(finalFilter, x => x.Translations.Count == 0);
 
-            if (criteriaFilters.Contains(FilterType.WithTags))
-                finalFilter = AndAlso(finalFilter, x => x.Tags.Count != 0);
-
             if (criteriaFilters.Contains(FilterType.WithPhoto))
                 finalFilter = AndAlso(finalFilter, x => x.PictureLink != null);
 
             var criteriaResult = await stringsProvider.GetAllAsync(finalFilter);
 
+
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var mappedStrings = mapper.Map<List<ComplexStringDTO>>(criteriaResult);
+
+            for (int i = 0; i < mappedStrings.Count; i++)
+            {
+                mappedStrings[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => criteriaResult[i].Tags.Contains(x.Id)));
+            }
+
             if (tagFilters.Count != 0)
             {
                 foreach (var tag in tagFilters)
                 {
-                    foreach (var res in criteriaResult)
+                    foreach (var res in mappedStrings)
                     {
-                        if(res.Tags.Contains(tag))
+                        if (res.Tags.Select(x => x.Name).Contains(tag))
                             result.Add(res);
                     }
                 }
@@ -631,10 +653,10 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
             {
-                result = criteriaResult;
+                result = mappedStrings;
             }
 
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
+            return result;
         }
 
         private Expression<Func<T, bool>> AndAlso<T>(
@@ -740,7 +762,6 @@ namespace Polyglot.BusinessLogic.Services
         {
             Translated,
             Untranslated,
-            WithTags,
             WithPhoto
         }
 

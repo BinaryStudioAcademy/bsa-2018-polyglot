@@ -87,19 +87,6 @@ namespace Polyglot.DataAccess.SqlRepository
                 .WithMany(p => p.ProjectLanguageses)
                 .HasForeignKey(pl => pl.ProjectId);
 
-            modelBuilder.Entity<ProjectTag>()
-               .HasKey(pt => new { pt.TagId, pt.ProjectId });
-
-            modelBuilder.Entity<ProjectTag>()
-                .HasOne(pt => pt.Tag)
-                .WithMany(t => t.ProjectTags)
-                .HasForeignKey(pt => pt.TagId);
-
-            modelBuilder.Entity<ProjectTag>()
-                .HasOne(pt => pt.Project)
-                .WithMany(p => p.ProjectTags)
-                .HasForeignKey(pt => pt.ProjectId);
-
             modelBuilder.Entity<TeamTranslator>()
                 .HasOne(tt => tt.Team)
                 .WithMany(team => team.TeamTranslators)
