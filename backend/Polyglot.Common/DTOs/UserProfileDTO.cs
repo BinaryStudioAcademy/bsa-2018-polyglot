@@ -24,6 +24,7 @@ namespace Polyglot.Common.DTOs
 
         public ICollection<RatingDTO> Ratings { get; set; }
         public ICollection<TranslatorDTO> TeamTranslators { get; set; }
+        public ICollection<NotificationDTO> Notifications { get; set; }
         public List<ProjectDTO> Projects { get; set; }
 
         public UserProfileDTO()
@@ -31,6 +32,7 @@ namespace Polyglot.Common.DTOs
             TeamTranslators = new List<TranslatorDTO>();
             Ratings = new List<RatingDTO>();
             Projects = new List<ProjectDTO>();
+            Notifications = new List<NotificationDTO>();
         }
     }
 }
