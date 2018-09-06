@@ -20,6 +20,14 @@ namespace Polyglot.DataAccess.Elasticsearch
         private static ConnectionSettings _settings;
 
         private static bool _updateSearchService;
+		
+		public static bool isElasticUsed
+		{
+			get
+			{
+				return _updateSearchService;
+			}
+		}
 
 
         public static void AddElasticsearch(this IServiceCollection services, IConfiguration configuration)

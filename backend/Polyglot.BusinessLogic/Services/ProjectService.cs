@@ -14,6 +14,7 @@ using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
 using Nest;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
@@ -512,10 +513,10 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
-
 			// check if Elastic is connected
 			// if true use elastic else use mongo
-			if (true)
+			
+			if (ElasticRepository.isElasticUsed)
 			{
 				// sorts string by creation date
 				var sorter = new SortDescriptor<DataAccess.ElasticsearchModels.ComplexStringIndex>();
@@ -552,9 +553,7 @@ namespace Polyglot.BusinessLogic.Services
 							)						
 						)							
 					);
-				return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
-				
-				
+				return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);	
 			}
 			else
 			{				
