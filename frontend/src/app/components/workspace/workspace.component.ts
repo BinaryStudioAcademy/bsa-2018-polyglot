@@ -24,6 +24,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
     public searchQuery: string = ' ';
+    public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
     public currentPath;
@@ -373,7 +374,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.project.id,
                 this.elementsOnPage,
                 this.currentPage,
-                this.searchQuery.trim()
+                this.currentSearchQuery.trim()
             )
             .subscribe((keys: any) => {
                 this.currentPage++;
@@ -403,12 +404,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     searchChanges() {
+        debugger;
+        this.currentSearchQuery = this.searchQuery;
+        this.currentPage = 0;
         this.projectService
                 .getProjectStringsWithPagination(
                     this.projectId,
                     this.elementsOnPage,
-                    0,
-                    this.searchQuery.trim()
+                    this.currentPage,
+                    this.currentSearchQuery.trim()
                 )
                 .subscribe((data: any) => {
                     if (data) {
@@ -431,5 +435,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     );
                     this.projectTags = Array.from(new Set(this.projectTags));
                 });
+        this.currentPage++;
     }
 }
