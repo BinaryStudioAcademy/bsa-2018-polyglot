@@ -118,6 +118,7 @@ import { TeamProjectComponent } from "./components/team-details/team-project/tea
 import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
 import { TeamDetailsComponent } from "./components/team-details/team-details.component";
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { TranslationInputComponent } from './components/workspace/key-details/translation-input/translation-input.component';
 
 @NgModule({
   exports: [
@@ -199,7 +200,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     ChatWindowComponent,
     ListTranslatorsComponent,
     TabOptionalComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    TranslationInputComponent
   ],
   imports: [
     BrowserModule,
