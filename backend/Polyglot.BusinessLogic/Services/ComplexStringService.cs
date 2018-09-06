@@ -49,7 +49,6 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
         {
-
             var targets = await _complexStringRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ComplexStringDTO>>(targets);
         }
@@ -273,8 +272,12 @@ namespace Polyglot.BusinessLogic.Services
             entity.Id = savedEntity.Id;
             entity.CreatedOn = DateTime.Now;
             entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
-            var target = await _complexStringRepository
-                .CreateAsync(_mapper.Map<ComplexString>(entity));
+
+            var mappedItem = _mapper.Map<ComplexString>(entity);
+            mappedItem.Tags = entity.Tags.Select(x => x.Id).ToList();
+
+            var target = await _complexStringRepository.CreateAsync(mappedItem);
+
             if (target != null)
             {
                 await _signalRWorkspaceService.ComplexStringAdded($"{Group.project}{target.ProjectId}", target.Id);

@@ -8,11 +8,9 @@ namespace Polyglot.Common.DTOs
         public string Color { get; set; }
         public string Name { get; set; }
 
-        public List<TagDTO> ProjectTags { get; set; } 
-
         public TagDTO()
         {
-            ProjectTags = new List<TagDTO>();
+
         }
     }
 }
