@@ -30,6 +30,7 @@ namespace Polyglot.DataAccess.Elasticsearch
 
             _settings = new ConnectionSettings(new Uri(url))
                 .DefaultIndex(defaultIndex)
+                .DefaultFieldNameInferrer(s => s)
                 .DefaultMappingFor<ComplexStringIndex>(m => m
                     .IndexName("complexstring")
                     .TypeName("complexstring")
