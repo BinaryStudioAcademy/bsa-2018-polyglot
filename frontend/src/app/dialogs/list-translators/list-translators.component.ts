@@ -6,6 +6,8 @@ import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { AppStateService } from '../../services/app-state.service';
+import { Role } from '../../models';
 
 @Component({
     selector: 'app-list-translators',
@@ -30,7 +32,7 @@ export class ListTranslatorsComponent implements OnInit {
 
     @ViewChild('translatorInput') translatorInput: ElementRef<HTMLInputElement>;
 
-    constructor() {
+    constructor(private stateService: AppStateService) {
 
     }
 
@@ -87,6 +89,19 @@ export class ListTranslatorsComponent implements OnInit {
             user = null;
         }
         this.chooseUserEvent.emit({ user: user, translationId: this.translationId, langId: this.langId });
+    }
+
+    isTranslator(){
+        this.stateService.currentDatabaseUser.userRole === Role.Translator
+    }
+
+    isEnoughRigts(){
+        //ToDo: Add rights when it will implemented.
+        return !this.isTranslator();
+    }
+
+    onSelfAssign(){
+        this.chooseUserEvent.emit({ user: this.stateService.currentDatabaseUser, translationId: this.translationId, langId: this.langId })
     }
 
     onClose() {

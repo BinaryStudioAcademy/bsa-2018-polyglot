@@ -23,11 +23,11 @@
                                 </mat-panel-description>
                                 <div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
                                     <img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
-                                </div>
+								</div>
                                 <button mat-icon-button [matMenuTriggerFor]="translatorsMenu"
-                                (mouseenter)="toggleDisable()" class="optional-btn"  [disabled]="showAssignButton(t.assignedTranslatorId)" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
-                               >
-                                        <mat-icon>more_vert</mat-icon>
+                                (mouseenter)="toggleDisable()" class="optional-btn" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
+                                >
+									<mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #translatorsMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll list-users">
                                    <app-list-translators [translationId] = "t.id" [langId] = "t.languageId" [projectId] = "projectId" (chooseUserEvent) = "chooseUser($event)" [options] = "users" *ngIf ="users.length"></app-list-translators>

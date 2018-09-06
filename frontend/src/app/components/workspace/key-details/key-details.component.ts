@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language } from "../../../models";
+import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -661,6 +661,25 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.currentSuggestion = "";
     }
 
+
+    // public showAssignButton(userId: number): boolean {
+    //     var result = false;
+    //     if (this.userService.getCurrentUser().userRole === 1) {
+    //         result = false;
+    //     }
+    //     // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+    //     //     result = false;
+    //     // }
+    //     // else if (!userId) {
+    //     //     result = false;
+    //     // }
+    //     else {
+    //         result = true;
+    //     }
+    //     return result || !this.users.length;
+    // }
+
+
     reloadKeyDetails(index) {
         this.dataIsLoaded = true;
         this.route.params.subscribe(value => {
@@ -676,21 +695,5 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
-    }
-    public showAssignButton(userId: number): boolean {
-        var result = false;
-        if (this.userService.getCurrentUser().userRole === 1) {
-            result = false;
-        }
-        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
-        //     result = false;
-        // }
-        // else if (!userId) {
-        //     result = false;
-        // }
-        else {
-            result = true;
-        }
-        return result || !this.users.length;
     }
 }
