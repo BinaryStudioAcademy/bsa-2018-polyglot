@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.QueryTypes;
 using Polyglot.DataAccess.Seeds;
 
@@ -27,12 +28,12 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<GlossaryString> GlossaryStrings { get; set; }
         public DbSet<TeamTranslator> TeamTranslators { get; set; }
         public DbSet<ProjectTeam> ProjectTeams { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<UserState> ChatUserStates { get; set; }
+        public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Option> Options { get; set; }
-
         public DbQuery<UserRights> UserRights { get; set; }
-
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -86,19 +87,6 @@ namespace Polyglot.DataAccess.SqlRepository
                 .WithMany(p => p.ProjectLanguageses)
                 .HasForeignKey(pl => pl.ProjectId);
 
-            modelBuilder.Entity<ProjectTag>()
-               .HasKey(pt => new { pt.TagId, pt.ProjectId });
-
-            modelBuilder.Entity<ProjectTag>()
-                .HasOne(pt => pt.Tag)
-                .WithMany(t => t.ProjectTags)
-                .HasForeignKey(pt => pt.TagId);
-
-            modelBuilder.Entity<ProjectTag>()
-                .HasOne(pt => pt.Project)
-                .WithMany(p => p.ProjectTags)
-                .HasForeignKey(pt => pt.ProjectId);
-
             modelBuilder.Entity<TeamTranslator>()
                 .HasOne(tt => tt.Team)
                 .WithMany(team => team.TeamTranslators)
@@ -139,12 +127,34 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasOne(p => p.OriginLanguage)
                 .WithMany(l => l.Glossaries)
                 .HasForeignKey(p => p.OriginLanguageId);
+            
+           modelBuilder.Entity<ChatMessage>()
+               .HasOne(m => m.Dialog)
+               .WithMany(d => d.Messages)
+               .HasForeignKey(m => m.DialogId);
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasKey(dp => new { dp.ChatDialogId, dp.ParticipantId });
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasOne(dp => dp.Participant)
+                .WithMany()
+                .HasForeignKey(dp => dp.ParticipantId);
+
+            modelBuilder.Entity<DialogParticipant>()
+                .HasOne(dp => dp.ChatDialog)
+                .WithMany(dp => dp.DialogParticipants)
+                .HasForeignKey(dp => dp.ChatDialogId);
+
+            modelBuilder.Query<UserRights>()
+                .ToView("View_UserRights");
 
             modelBuilder.Entity<Notification>()
                 .HasMany(up => up.Options)
                 .WithOne(r => r.Notification)
                 .HasForeignKey(r => r.NotificationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Option>()
                 .HasOne(up => up.Notification)

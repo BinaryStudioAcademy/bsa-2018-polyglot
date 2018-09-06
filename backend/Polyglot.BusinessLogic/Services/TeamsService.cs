@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Polyglot.Core.Authentication;
+using Polyglot.DataAccess.Entities.Chat;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -16,6 +17,7 @@ namespace Polyglot.BusinessLogic.Services
         INotificationService notificationService;
         public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService)
             :base(uow, mapper)
+
         {
             this.notificationService = notificationService;
         }
@@ -33,18 +35,27 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
             {
-                 result = await uow.GetRepository<Team>().GetAllAsync(x => x.CreatedBy == user);
+                result = await uow.GetRepository<Team>().GetAllAsync(x => x.CreatedBy == user);
             }
 
             return mapper.Map<IEnumerable<TeamPrevDTO>>(result);
-        }   
-        
+        }
+
         public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
         {
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (currentUser == null || currentUser.UserRole != Role.Manager)
+                return null;
+
             var userRepo = uow.GetRepository<UserProfile>();
 
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
+            List<DialogParticipant> teamChatDialogParticipants = new List<DialogParticipant>()
+            {
+                new DialogParticipant() { Participant = currentUser }
+            };
+
             foreach (var id in receivedTeam.TranslatorIds)
             {
                 currentTranslator = await userRepo.GetAsync(id);
@@ -54,22 +65,25 @@ namespace Polyglot.BusinessLogic.Services
                     {
                         UserProfile = currentTranslator
                     });
+
+                    if (currentTranslator.Id != currentUser.Id)
+                        teamChatDialogParticipants.Add(new DialogParticipant() { Participant = currentTranslator });
                 }
             }
 
             if (translators.Count < 1)
                 return null;
 
-            var manager = await CurrentUser.GetCurrentUserProfile();
-
-            if (manager.UserRole == Role.Manager)
-            {
-
-                Team newTeam = await uow.GetRepository<Team>().CreateAsync(new Team());
-                await uow.SaveAsync();
-
+            Team newTeam = await uow.GetRepository<Team>().CreateAsync(
+                    new Team()
+                    {
+                        TeamTranslators = translators,
+                        CreatedBy = currentUser,
+                        Name = receivedTeam.Name
+                    });
+            
                 newTeam.TeamTranslators = translators;
-                newTeam.CreatedBy = manager;
+                newTeam.CreatedBy = currentUser;
                 newTeam.Name = receivedTeam.Name;
                 newTeam = await uow.GetRepository<Team>().Update(newTeam);
                 await uow.SaveAsync();
@@ -78,7 +92,7 @@ namespace Polyglot.BusinessLogic.Services
 
                     await notificationService.SendNotification(new NotificationDTO
                     {
-                        SenderId = manager.Id,
+                        SenderId = currentUser.Id,
                         Message = $"You received an invitation in team {newTeam.Name}",
                         ReceiverId = translator.TranslatorId,
                         NotificationAction = NotificationAction.JoinTeam,
@@ -97,18 +111,36 @@ namespace Polyglot.BusinessLogic.Services
                     });
                 }
 
-                return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
-            }
+            var teamChatDialog = new ChatDialog()
+            {
+                DialogName = newTeam.Name,
+                DialogParticipants = teamChatDialogParticipants,
+                DialogType = ChatGroup.chatTeam,
+                Identifier = newTeam.Id
+            };
+            await uow.GetRepository<ChatDialog>().CreateAsync(teamChatDialog);
+            await uow.SaveAsync();
 
-            return null;
+            return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
         }
 
         public async Task<bool> TryDisbandTeamAsync(int teamId)
         {
-#warning протестировать не удаляются ли пользователи
-
             await uow.GetRepository<Team>().DeleteAsync(teamId);
-            return await uow.SaveAsync() > 0;
+            var success = await uow.SaveAsync() > 0;
+
+            if (success)
+            {
+                var targetTeamDialog = uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatTeam && d.Identifier == teamId)
+                ?.Id;
+                if (targetTeamDialog.HasValue)
+                {
+                    await uow.GetRepository<ChatDialog>().DeleteAsync(targetTeamDialog.Value);
+                }
+                await uow.SaveAsync();
+            }
+            return success;
         }
 
         #region Overrides
@@ -121,7 +153,7 @@ namespace Polyglot.BusinessLogic.Services
             if (team?.TeamTranslators?.Any() != true)
                 return null;
 
-            
+
             var translators = team.TeamTranslators;
             // вычисляем рейтинги переводчиков
             Dictionary<int, double> ratings = new Dictionary<int, double>();
@@ -154,11 +186,11 @@ namespace Polyglot.BusinessLogic.Services
             return new TeamDTO()
             {
                 Id = team.Id,
-				Name = team.Name,
+                Name = team.Name,
                 TeamTranslators = teamTranslators.ToList(),
                 TeamProjects = teamsProjects.ToList()
             };
-           
+
         }
 
         public override async Task<TeamDTO> PutAsync(TeamDTO entity)
@@ -188,7 +220,7 @@ namespace Polyglot.BusinessLogic.Services
 
             if (translators != null && translators.Count > 0)
             {
-                
+
                 var tLanguages = await uow.GetMidRepository<TranslatorLanguage>()
                     .GetAllAsync();
                 // вычисляем рейтинги переводчиков

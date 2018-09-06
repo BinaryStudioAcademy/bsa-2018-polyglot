@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
@@ -39,13 +39,15 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private loop: any;
     private currentKeyId: number;
     private previousKeyId: number;
+    private div;
+    private differ;
+    private madiv;
 
     filters: Array<string>;
 
     filterOptions: string[] = [
         "Translated",
         "Untranslated",
-        "With Tags",
         "With Photo"
     ];
 
@@ -59,7 +61,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
-        private eventService: EventService
+        private eventService: EventService,
+        private differs: KeyValueDiffers
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
@@ -71,6 +74,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }            
             }
         );
+        this.differ = differs.find({}).create();
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -89,6 +93,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.projectService.getProjectLanguages(params.projectId)
             ).subscribe(result => {
                 this.project = result[0];
+                this.projectTags = this.project.tags.map(x => x.name);
                 this.projectService
                     .getProjectLanguages(this.project.id)
                     .subscribe(
@@ -137,12 +142,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             this.isLoad = true;
                         }
                     }
-                    let list = this.keys.filter(x => x.tags.length > 0);
-                    this.projectTags = [].concat.apply(
-                        [],
-                        list.map(x => x.tags)
-                    );
-                    this.projectTags = Array.from(new Set(this.projectTags));
                 });
 
             this.currentPage++;
@@ -177,6 +176,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         let dialogRef = this.dialog.open(StringDialogComponent, {
             data: {
                 projectId: this.project.id,
+                tags : this.project.tags,
                 string: {
                     id: 0,
                     key: '',
@@ -194,11 +194,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
                 this.keys.push(result);
-                result.tags.forEach(element => {
-                    if (!this.projectTags.includes(element)) {
+                result.tags.map(x => x.name)
+                .forEach(element => {
+                    if(!this.projectTags.includes(element)){
                         this.projectTags.push(element);
                     }
-                });
+                })
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
                 this.router.navigate([this.currentPath, keyId]);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
@@ -25,7 +25,7 @@ import { UserService } from "../../../services/user.service";
     templateUrl: "./key-details.component.html",
     styleUrls: ["./key-details.component.sass"]
 })
-export class KeyDetailsComponent implements OnInit {
+export class KeyDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator)
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
@@ -67,6 +67,8 @@ export class KeyDetailsComponent implements OnInit {
     currentSuggestion: string;
     isSaveDisabled: boolean;
     currentUserRole: any;
+    translationInputs: any;
+
     users: UserProfilePrev[] = [];
     currentUserId: number;
     constructor(
@@ -142,6 +144,10 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.closeConnection(
             `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
         );
+    }
+
+    ngAfterViewInit() {
+        this.translationInputs = document.getElementsByClassName('translation');
     }
 
     ngOnChanges() {
@@ -252,6 +258,11 @@ export class KeyDetailsComponent implements OnInit {
         );
     }
 
+    
+    onTextChange(i, translation) {
+        this.translationInputs.item(i).textContent = translation;
+    }
+
     handleNewLanguagesAdded(languagesIds) {
         this.isLoad = true;
         this.projectService.getProjectLanguages(this.projectId).subscribe(
@@ -341,11 +352,12 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.translationInputs.item(index).textContent = this.keyDetails.translations[index].translationValue;
         this.index = index;
-       this.eventService.filter({
-            keyId: this.currentKeyId,
-            status: true
-        });
+        this.eventService.filter({
+                keyId: this.currentKeyId,
+                status: true
+            });
         this.history.translationSelected=true;
         if (index === undefined) {
             return;
