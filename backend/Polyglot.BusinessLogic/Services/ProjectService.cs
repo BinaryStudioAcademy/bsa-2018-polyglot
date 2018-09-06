@@ -512,62 +512,57 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
-			// Myroslav`s example
-           	//var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
-			//    x.Query(q => q
-			//            .Match(m => m
-			//                .Field(f => f.ProjectId)
-			//                .Query(id.ToString())
-			//            )
-			//        )
-			//        .From(page * itemsOnPage)
-			//        .Size(itemsOnPage)
-			//);
-			//return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
 
-
-
-
-
-			// check if search is used and if Elastic is connected
+			// check if Elastic is connected
 			// if true use elastic else use mongo
-			if(search.Length != 0)
+			if (true)
 			{
-				// returns 10 random complex strings from all projects
-				// works well
-				var result0 = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>();
+				// sorts string by creation date
+				var sorter = new SortDescriptor<DataAccess.ElasticsearchModels.ComplexStringIndex>();
+				sorter.Field("CreatedAt", Nest.SortOrder.Ascending);
 
-
-				// should return only string from {id} project that match {search}
-				// doesn`t work at all
+				// ElasticSearch query equals to
+				// ({id} == projectId) && (search == str.key || search == str.OriginalValue)
+				// ProjectId MUST match and either Key or OriginalValue must match
 				var result = await _elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
-					.Query(q => q
-						.Match(m => m
-							.Field(f => f.ProjectId.ToString())
-							.Query(id.ToString())
-						)
-					)
-						.Query(q => q
-							.MultiMatch(m => m
-								.Fields(f => f
-									.Fields(f1 => f1.OriginalValue, f2 => f2.Key))
-									.Query(search)
-							)
-						)
+						.Sort(s => sorter)
 						.From(page * itemsOnPage)
 						.Size(itemsOnPage)
-				);
-				// return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
+						.Query(q => q
+							.Bool(b => b
+								.Must(mu => mu
+									.Match(ma => ma
+										.Field(f => f.ProjectId.ToString())
+										.Query(id.ToString())
+									), mu => mu
+									.Bool(bb => bb
+										.MinimumShouldMatch(1)
+										.Should(sh => sh
+											.Match(m => m
+												.Field( f=> f.Key)
+												.Query(search)
+											), sh => sh
+											.Match(m => m
+												.Field(f => f.OriginalValue)
+												.Query(search)
+											)
+										)
+									)
+								)
+							)						
+						)							
+					);
+				return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
+				
+				
 			}
 			else
-			{
-				// for now data is always returned from mongo
-			}
-
-			var skipItems = itemsOnPage * page;
-			var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
-			var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
-			return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+			{				
+				var skipItems = itemsOnPage * page;
+				var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+				var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+				return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+			}			
 		}
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId)
