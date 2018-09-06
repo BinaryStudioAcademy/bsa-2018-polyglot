@@ -4,11 +4,11 @@ export interface ChatMessage {
 
     senderId: number;
 
-    recipientId: number;
-
     body: string;
 
     receivedDate: Date;
 
     isRead: boolean;
+
+    dialogId: number;
 }

@@ -61,6 +61,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<GlossaryDTO>> GetAssignedGlossaries(int projectId);
 
+        Task<IEnumerable<GlossaryDTO>> GetNotAssignedGlossaries(int projectId);
+
         Task<bool> TryDismissGlossary(int projectId, int glossaryId);
 
         #endregion

@@ -8,18 +8,21 @@ namespace Polyglot.DataAccess.Entities
 {
     public class Notification : Entity
     {
-        public virtual UserProfile SendFrom { get; set; }
-        public int SendFromId { get; set; }
-
-        public virtual UserProfile UserProfile { get; set; }
-        public int UserProfileId { get; set; }
+        [ForeignKey("SenderId")]
+        public virtual UserProfile Sender { get; set; }
+        public int? SenderId { get; set; }
+        [ForeignKey("ReceiverId")]
+        public virtual UserProfile Receiver { get; set; }
+        public int? ReceiverId { get; set; }
         public string Message { get; set; }
+        public NotificationAction NotificationAction { get; set; }
+        public int Payload { get; set; }
 
-        public virtual ICollection<NotificationOption> NotificationOptions { get; set; }
+        public virtual ICollection<Option> Options { get; set; }
 
         public Notification()
         {
-            NotificationOptions = new List<NotificationOption>();
+            Options = new List<Option>();
         }
     }
 }

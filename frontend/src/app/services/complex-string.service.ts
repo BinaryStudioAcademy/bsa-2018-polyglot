@@ -27,8 +27,8 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, '', data, undefined, 'form-data');
   }
 
-  update(iString: IString, id: number): Observable<IString> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, iString);
+  update(data: FormData, id: number): Observable<IString> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api, id, data, undefined, 'form-data');
   }
 
   getStringTranslations(id: number): Observable<any> {
@@ -72,7 +72,11 @@ export class ComplexStringService {
   }
 
   getTranslationHistory(id: number, translationId: string, itemsOnPage: number, page: number) {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage='+itemsOnPage+'&page='+page);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage=' + itemsOnPage+'&page='+page);
+  }
+
+  revertTranslationHistory(id: number, translationId: string, historyId: string) {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/','revert?translationId=' + translationId + '&historyId=' + historyId);
   }
 
   addOptionalTranslation(stringId, translationId, value) {

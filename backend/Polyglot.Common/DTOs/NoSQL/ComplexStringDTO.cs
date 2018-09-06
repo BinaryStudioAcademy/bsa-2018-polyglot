@@ -25,7 +25,7 @@ namespace Polyglot.Common.DTOs.NoSQL
 
         public List<TranslationDTO> Translations { get; set; }
 		public List<CommentDTO> Comments { get; set; }
-		public List<string> Tags { get; set; }
+		public List<TagDTO> Tags { get; set; }
 
 		public ComplexStringDTO()
 		{

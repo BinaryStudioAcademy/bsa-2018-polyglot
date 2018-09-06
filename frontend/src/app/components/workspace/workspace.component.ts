@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
@@ -36,13 +36,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public stringsInProgress: number[] = [];
     public projectTags: string[] = [];
     private routeSub: Subscription;
+    private loop: any;
+    private currentKeyId: number;
+    private previousKeyId: number;
+    private div;
+    private differ;
+    private madiv;
 
     filters: Array<string>;
 
     filterOptions: string[] = [
         "Translated",
         "Untranslated",
-        "With Tags",
         "With Photo"
     ];
 
@@ -56,14 +61,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
-        private eventService: EventService
+        private eventService: EventService,
+        private differs: KeyValueDiffers
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                if (result.status && !this.stringsInProgress.includes(result.keyId)) {
+                    this.sendStringStatusMessage(result.keyId);
+                } else {
+                    this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
+                }            
             }
         );
+        this.differ = differs.find({}).create();
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -82,6 +93,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 this.projectService.getProjectLanguages(params.projectId)
             ).subscribe(result => {
                 this.project = result[0];
+                this.projectTags = this.project.tags.map(x => x.name);
                 this.projectService
                     .getProjectLanguages(this.project.id)
                     .subscribe(
@@ -124,17 +136,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                         let keyId: number;
                         if (this.keys.length !== 0) {
                             keyId = this.keys[0].id;
+                            this.currentKeyId = keyId;
                             this.router.navigate([this.currentPath, keyId]);
                         } else {
                             this.isLoad = true;
                         }
                     }
-                    let list = this.keys.filter(x => x.tags.length > 0);
-                    this.projectTags = [].concat.apply(
-                        [],
-                        list.map(x => x.tags)
-                    );
-                    this.projectTags = Array.from(new Set(this.projectTags));
                 });
 
             this.currentPage++;
@@ -152,30 +159,47 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
-    // sendStringStatusMessage(keyId: number) {
-    //     this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
-    //     setInterval(() => { 
-    //         if (this.sendMessages) {
-    //             console.log('hi');
-    //             this.sendStringStatusMessage(keyId);
-    //         }
-    //     }, 2000);
-    // }
+    sendStringStatusMessage(keyId: number) {
+        this.previousKeyId = this.currentKeyId;
+        this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+        this.loop = setInterval(() => {
+            if (this.previousKeyId !== this.currentKeyId) {
+                this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
+                clearInterval(this.loop);
+            } else {
+                this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
+            }   
+        }, 10000);
+    }
 
     onAddNewStringClick() {
         let dialogRef = this.dialog.open(StringDialogComponent, {
             data: {
-                projectId: this.project.id
+                projectId: this.project.id,
+                tags : this.project.tags,
+                string: {
+                    id: 0,
+                    key: '',
+                    base: '',
+                    description: '',
+                    tags: [],
+                    projectId: this.project.id,
+                    translations: [],
+                    comments: [],
+                    createdBy: 0,
+                    createdOn: new Date()
+                }
             }
         });
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
                 this.keys.push(result);
-                result.tags.forEach(element => {
-                    if (!this.projectTags.includes(element)) {
+                result.tags.map(x => x.name)
+                .forEach(element => {
+                    if(!this.projectTags.includes(element)){
                         this.projectTags.push(element);
                     }
-                });
+                })
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
                 this.router.navigate([this.currentPath, keyId]);
@@ -189,6 +213,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     onSelect(key: any) {
         this.selectedKey = key;
+        this.currentKeyId = this.selectedKey.id;
     }
 
     ngOnDestroy() {
@@ -222,6 +247,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             this.router.navigate([this.currentPath, this.selectedKey.id]);
         } else {
             this.router.navigate([this.basicPath]);
+        }
+    }
+
+    editComplexString(complexStringId: number){
+        this.getKeys(this.currentPage, keys => {
+            this.keys = this.keys.concat(keys);
+            this.router.navigate([this.basicPath]);
+        });
+
+        if (this.keys.length > 0) {
+            this.router.navigate([this.currentPath, this.selectedKey.id]);
         }
     }
 
