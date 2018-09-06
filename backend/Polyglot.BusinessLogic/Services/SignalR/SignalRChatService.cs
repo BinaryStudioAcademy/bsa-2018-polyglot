@@ -3,9 +3,6 @@ using Polyglot.BusinessLogic.Hubs;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.Helpers.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Services.SignalR
@@ -16,9 +13,9 @@ namespace Polyglot.BusinessLogic.Services.SignalR
         {
         }
 
-        public async Task MessageReveived(string groupName, ChatMessageDTO message)
+        public async Task MessageReveived(string groupName, int dialogId, int messageId,  string text)
         {
-            await hubContext.Clients.Group(groupName).SendAsync(ChatAction.messageReceived.ToString(), message);
+            await hubContext.Clients.Group(groupName).SendAsync(ChatAction.messageReceived.ToString(), await GetChatMessageResponce(dialogId, messageId, text));
         }
     }
 }
