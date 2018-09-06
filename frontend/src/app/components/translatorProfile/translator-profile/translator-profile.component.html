@@ -45,7 +45,8 @@
                               <div *ngFor="let t of teams; let i = index">
                                   <div class="team-card">
                                         <h3 class="team" mat-list-item>
-                                            {{i+1}}. <a class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                            {{i+1}}. <a *ngIf="isOwnersProfile()" class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                                     <span *ngIf="!isOwnersProfile()" class="team-name">Team {{t.name || t.id}}</span>
                                         </h3>
                                     </div>
                               </div>

@@ -29,13 +29,14 @@
               <div>
                 <div class="project-button-wrapper">
                     <h2 class="title">Projects:</h2>
-                    <button  mat-raised-button color="primary" routerLink="/newproject">Create new</button>
+                    <button *ngIf="isOwnersProfile()" mat-raised-button color="primary" routerLink="/newproject">Create new</button>
                 </div>         
                 <hr>
                 <div class="project-list">
                     <div class="project-card" mat-list-item  *ngFor="let p of projects; let i = index">
                         <h3  class="project">
-                            {{i+1}}. <a class="project-name" [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'">{{p.name}}</a>
+                            {{i+1}}. <a *ngIf="isOwnersProfile()" class="project-name" [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'">{{p.name}}</a>
+                                     <span *ngIf="!isOwnersProfile()" class="project-name">{{p.name}}</span>
                         </h3>
                     </div>
                 </div>      
