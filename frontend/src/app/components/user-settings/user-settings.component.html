@@ -1,9 +1,14 @@
 <h2>Edit profile</h2>
 <form [formGroup]="profileForm" fxLayout="row" fxLayoutWrap (submit)="saveChanges(profileForm.value)">
     <div class="form-container">
-            <div class="name-field">
-                <img src="{{manager.avatarUrl}}" alt="avatar" (click)="editPhoto()">
+       
+        <div class="photo">
+            <div class="parent" (click)="editPhoto()">
+                <div class="child bg-five" [ngStyle]="{'background-image': 'url(' + manager.avatarUrl + ')'}">
+                    <p>Click to change</p>
+                </div>
             </div>
+        </div>
 
         <div class="line-block margin-top-20px">
             <mat-form-field class="name-field form-input float-left">
@@ -30,7 +35,7 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="form-input float-left">
-               
+
                 <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" formControlName="birthDate" placeholder="Date of birth">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
