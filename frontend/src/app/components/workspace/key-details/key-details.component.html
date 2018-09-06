@@ -56,11 +56,12 @@
 								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
 							</mat-expansion-panel-header>
-						   <div >
-								<mat-form-field class="textarea-translation">
+						   <div>
+								<div class="translation" style="position: relative; top: 54px; word-wrap: break-word; width: 100%"></div>
+								<mat-form-field class="textarea-translation"> 
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea (contextmenu)="onRightClick($event)"
-												(keyup)="isCanSave(i, t)"  matInput
+										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(0,0,0,0)"
+												(keyup)="onTextChange(i, t.translationValue); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize

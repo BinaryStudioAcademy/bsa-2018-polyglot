@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
@@ -39,6 +39,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private loop: any;
     private currentKeyId: number;
     private previousKeyId: number;
+    private div;
+    private differ;
+    private madiv;
 
     filters: Array<string>;
 
@@ -58,7 +61,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
-        private eventService: EventService
+        private eventService: EventService,
+        private differs: KeyValueDiffers
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
@@ -70,6 +74,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }            
             }
         );
+        this.differ = differs.find({}).create();
     }
 
     description: string = "Are you sure you want to remove the project?";
