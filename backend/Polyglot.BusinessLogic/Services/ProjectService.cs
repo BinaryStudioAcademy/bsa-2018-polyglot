@@ -567,9 +567,7 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
 			// check if Elastic is connected
-			// if true use elastic else use mongo
-			id = 4013;
-			
+			// if true use elastic else use mongo			
 			if (ElasticRepository.isElasticUsed)
 			{
 				// sorts string by creation date
