@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -16,6 +17,7 @@ using Polyglot.DataAccess.Interfaces;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class ComplexStringsController : ControllerBase
@@ -85,7 +87,19 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-		[HttpPost("{stringId}/{translationId}")]
+        [HttpPut("{id}/translations/revert", Name = "RevertHistory")]
+        public async Task<IActionResult> RevertTranslationHistory(int id, [FromQuery(Name = "translationId")] Guid translationId, [FromQuery(Name = "historyId")] Guid historyId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.RevertTranslationHistory(id, translationId, historyId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        [HttpPost("{stringId}/{translationId}")]
 		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);
@@ -231,6 +245,7 @@ namespace Polyglot.Controllers
             var result = await dataProvider.ReIndex();
             return Ok(result);
         }
+
         [HttpGet("{id}/status/{status}")]
         public async Task<IActionResult> ChangeStringStatus(int id, bool status, string groupName)
         {
@@ -239,9 +254,9 @@ namespace Polyglot.Controllers
                 await dataProvider.ChangeStringStatus(id, status, groupName);
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest("Exception from CurrentUser: " + ex.Message);
             }
         }
     }

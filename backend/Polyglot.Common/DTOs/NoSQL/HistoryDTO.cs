@@ -4,6 +4,8 @@ namespace Polyglot.Common.DTOs.NoSQL
 {
     public class HistoryDTO
     {
+        public Guid Id { get; set; }
+
         public string UserName { get; set; }
 
         public string AvatarUrl { get; set; }

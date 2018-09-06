@@ -11,10 +11,13 @@ namespace Polyglot.DataAccess.Entities
 
         public virtual UserProfile UserProfile { get; set; }
 
+        public bool IsActivated { get; set; }
+
         public virtual ICollection<TranslatorRight> TranslatorRights { get; set; }
 
         public TeamTranslator()
         {
+            IsActivated = false;
             TranslatorRights = new List<TranslatorRight>();
         }
     }

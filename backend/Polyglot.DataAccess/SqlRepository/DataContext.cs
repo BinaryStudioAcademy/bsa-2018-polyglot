@@ -32,7 +32,6 @@ namespace Polyglot.DataAccess.SqlRepository
         public DbSet<UserState> ChatUserStates { get; set; }
         public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationOption> NotificationOptions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbQuery<UserRights> UserRights { get; set; }
 
@@ -51,22 +50,10 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<UserProfile>()
-                .HasMany(up => up.Notifications)
-                .WithOne(r => r.UserProfile)
-                .HasForeignKey(r => r.UserProfileId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Rating>()
                 .HasOne(r => r.CreatedBy)
                 .WithMany()
                 .HasForeignKey(r => r.CreatedById)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Notification>()
-                .HasOne(r => r.SendFrom)
-                .WithMany()
-                .HasForeignKey(r => r.SendFromId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Project>()
@@ -153,7 +140,7 @@ namespace Polyglot.DataAccess.SqlRepository
                 .HasOne(p => p.OriginLanguage)
                 .WithMany(l => l.Glossaries)
                 .HasForeignKey(p => p.OriginLanguageId);
-
+            
            modelBuilder.Entity<ChatMessage>()
                .HasOne(m => m.Dialog)
                .WithMany(d => d.Messages)
@@ -175,18 +162,21 @@ namespace Polyglot.DataAccess.SqlRepository
             modelBuilder.Query<UserRights>()
                 .ToView("View_UserRights");
 
-            modelBuilder.Entity<NotificationOption>()
-                .HasKey(tr => new { tr.NotificationId, tr.OptionID });
+            modelBuilder.Entity<Notification>()
+                .HasMany(up => up.Options)
+                .WithOne(r => r.Notification)
+                .HasForeignKey(r => r.NotificationId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<NotificationOption>()
-                .HasOne(tr => tr.Notification)
-                .WithMany(r => r.NotificationOptions)
-                .HasForeignKey(tr => tr.NotificationId);
 
-            modelBuilder.Entity<NotificationOption>()
-                .HasOne(tr => tr.Option)
-                .WithMany(tr => tr.NotificationOptions)
-                .HasForeignKey(tr => tr.OptionID);
+            modelBuilder.Entity<Option>()
+                .HasOne(up => up.Notification)
+                .WithMany(r => r.Options)
+                .HasForeignKey(r => r.NotificationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Query<UserRights>()
+                .ToView("View_UserRights");
             //new feature in EF Core 2.1
             //modelBuilder.Seed();
 
