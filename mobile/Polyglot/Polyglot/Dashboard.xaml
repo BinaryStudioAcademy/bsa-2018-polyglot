@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.Dashboard">
+    <ListView x:Name="MyListView"
+            ItemTapped="Handle_ItemTapped"
+            CachingStrategy="RecycleElement"
+              HasUnevenRows="True">
+
+
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout Orientation="Vertical" >
+                        <Label Grid.Row="0" Font="bold, 20" HorizontalTextAlignment="Center" Text="{Binding Name}"   />
+                        <Image  Source="{Binding ImageUrl}"></Image>
+                        <Label Grid.Column="1" Grid.Row="1" Text="{Binding Description}"  />
+                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding Technology}"  />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+
+    </ListView>
+</ContentPage>

@@ -13,5 +13,11 @@ namespace Polyglot
         {
             InitializeComponent();
         }
+
+        async void OnButtonClicked(object sender, EventArgs args)
+        {
+            var newPage = new Dashboard();
+            await Navigation.PushAsync(newPage);
+        }
     }
 }
