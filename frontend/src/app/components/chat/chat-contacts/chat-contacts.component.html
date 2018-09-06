@@ -1,50 +1,76 @@
 <div class="contacts-container">
-    
+
 
     <mat-tab-group mat-stretch-tabs>
         <mat-tab>
             <ng-template mat-tab-label>
-                <mat-icon [matBadgeHidden]="isOnPersonsPage || unreadMessagesTotal['persons'] < 1" [matBadge]="unreadMessagesTotal['persons']" matBadgeColor="warn" matBadgeSize="medium">person</mat-icon>
+                <mat-icon [matBadgeHidden]="isOnPersonsPage || unreadMessagesTotal['persons'] < 1" [matBadge]="unreadMessagesTotal['persons']"
+                    matBadgeColor="warn" matBadgeSize="medium">person</mat-icon>
             </ng-template>
+            
             <ng-template matTabContent>
+                    <mat-toolbar class="persons-search">
+                            <button mat-icon-button (click)="toggle()">
+                                <mat-icon aria-label="persons-search">favorite</mat-icon>
+                            </button>
+                            <mat-form-field class="team-details_filter">
+                                <input matInput placeholder="Filter">
+                            </mat-form-field>
+                        </mat-toolbar>
 
-                <ul>
+            <div [hidden]="isSearchMode">
+                    <ul>
+                            <li *ngFor="let d of dialogs" (click)="selectDialog(d)">
+                                <mat-card class="person-card">
+                                    <mat-card-header>
+                                        <a class="person-img" [matBadgeHidden]="d.unreadMessagesCount < 1" [matBadge]="d.unreadMessagesCount"
+                                            matBadgeColor="warn" matBadgeSize="medium">
+                                            <img class="person-avatar" mat-card-avatar src="{{d?.participants[0].avatarUrl}}">
+                                        </a>
+                                        <div class="person-card-text">
+                                            <div class="person-name">{{d?.participants[0].fullName}}</div>
+                                            <div class="person-message-prev">{{d?.lastMessageText}}</div>
+                                        </div>
+                                        <div class="options-button-container">
+                                                <button class="person-card-options" (click)="$event.preventDefault(); $event.stopPropagation();" mat-button
+                                                [matMenuTriggerFor]="menu">
+                                                <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
+                                            </button>
+                                        </div>
+                                        <mat-menu #menu="matMenu" xPosition="before" class="person-options">
+                                            <button (click)="onDeleteString()" mat-menu-item>Delete</button>
+                                        </mat-menu>
+                                        <div class="online-status-container">
+                                            <span [hidden]="d?.participants[0].isOnline" class="online-status-text">last seen
+                                                {{d?.participants[0].lastSeen | date: 'medium'}}</span>
+                                            <span [hidden]="!d?.participants[0].isOnline" class="online-status-text">online</span>
+                                            <mat-icon class="online-status-icon" [style.color]="d?.participants[0].isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
+                                        </div>
+                                    </mat-card-header>
+                                </mat-card>
+                            </li>
+        
+                        </ul>
+            </div>
 
-                    <li *ngFor="let d of dialogs" (click)="selectDialog(d)">
-                        <mat-card class="person-card">
-                            <mat-card-header>
-                                <a class="person-img" [matBadgeHidden]="d.unreadMessagesCount < 1" [matBadge]="d.unreadMessagesCount" matBadgeColor="warn" matBadgeSize="medium">
-                                    <img class="person-avatar" mat-card-avatar src="{{d?.participants[0].avatarUrl}}">
-                                </a>
-                                <div class="person-card-text">
-                                    <div class="person-name">{{d?.participants[0].fullName}}</div>
-                                    <div class="person-message-prev">{{d?.lastMessageText}}</div>
-                                </div>
-                                <div class="online-status-container">
-                                    <span [hidden]="d?.participants[0].isOnline" class="online-status-text">last seen {{d?.participants[0].lastSeen | date: 'medium'}}</span>
-                                    <span [hidden]="!d?.participants[0].isOnline" class="online-status-text">online</span>
-                                    <mat-icon class="online-status-icon" [style.color]="d?.participants[0].isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
-                                </div>
-                            </mat-card-header>
-                            <!--    <div class="person-options-container">
-                                    <mat-icon>more_vert</mat-icon>
-                            </div>
-                        -->
-                        </mat-card>
-                    </li>
-
-                </ul>
+            <div [hidden]="!isSearchMode">
+111111111111111111
+1
+1
+            </div>
 
             </ng-template>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <mat-icon [matBadgeHidden]="!isOnPersonsPage || unreadMessagesTotal['groups'] < 1" [matBadge]="unreadMessagesTotal['groups']" matBadgeColor="warn" matBadgeSize="medium">group</mat-icon>
+                <mat-icon [matBadgeHidden]="!isOnPersonsPage || unreadMessagesTotal['groups'] < 1" [matBadge]="unreadMessagesTotal['groups']"
+                    matBadgeColor="warn" matBadgeSize="medium">group</mat-icon>
             </ng-template>
             <ng-template matTabContent>
 
                 <mat-accordion class="example-headers-align">
-                    <mat-expansion-panel [disabled]="projects.lenght < 1" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                    <mat-expansion-panel [disabled]="projects.lenght < 1" [expanded]="step === 0" (opened)="setStep(0)"
+                        hideToggle>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 Projects
@@ -57,9 +83,9 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let p of projects">
-                                    <mat-card (click)="selectDialog(p)">
+                                    <mat-card class="project-card group-card" (click)="selectDialog(p)">
                                         <mat-card-header>
-                                            <mat-card-title>Project #{{p?.identifier}}</mat-card-title>
+                                            <mat-card-title>{{p?.dialogName}}</mat-card-title>
                                             <mat-card-subtitle></mat-card-subtitle>
                                         </mat-card-header>
 
@@ -67,13 +93,10 @@
                                 </li>
                             </ul>
                         </ng-template>
-
-                        <mat-action-row>
-                            <button mat-button color="primary" (click)="nextStep()">Next</button>
-                        </mat-action-row>
                     </mat-expansion-panel>
 
-                    <mat-expansion-panel [disabled]="teams.lenght < 1" [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                    <mat-expansion-panel [disabled]="teams.lenght < 1" [expanded]="step === 1" (opened)="setStep(1)"
+                        hideToggle>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 Teams
@@ -86,20 +109,15 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let t of teams">
-                                    <mat-card (click)="selectDialog(t)">
+                                    <mat-card class="team-card group-card" (click)="selectDialog(t)">
                                         <mat-card-header>
-                                            <mat-card-title>Team {{t?.name}}</mat-card-title>
+                                            <mat-card-title>{{t?.dialogName}}</mat-card-title>
                                             <mat-card-subtitle></mat-card-subtitle>
                                         </mat-card-header>
                                     </mat-card>
                                 </li>
                             </ul>
                         </ng-template>
-
-                        <mat-action-row>
-                            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-                            <button mat-button color="primary" (click)="nextStep()">Next</button>
-                        </mat-action-row>
                     </mat-expansion-panel>
 
                 </mat-accordion>

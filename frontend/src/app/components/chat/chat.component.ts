@@ -18,6 +18,7 @@ import { ChatMessage, ChatDialog } from "../../models";
 export class ChatComponent implements OnInit {
     selectedDialog: ChatDialog;
     mobileQuery: MediaQueryList;
+    isInterlocutorSelected = false;
     private _mobileQueryListener: () => void;
 
     constructor(

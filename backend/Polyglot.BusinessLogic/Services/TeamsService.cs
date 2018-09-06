@@ -49,7 +49,10 @@ namespace Polyglot.BusinessLogic.Services
 
             List<TeamTranslator> translators = new List<TeamTranslator>();
             UserProfile currentTranslator;
-            List<DialogParticipant> teamChatDialogParticipants = new List<DialogParticipant>();
+            List<DialogParticipant> teamChatDialogParticipants = new List<DialogParticipant>()
+            {
+                new DialogParticipant() { Participant = currentUser }
+            };
 
             foreach (var id in receivedTeam.TranslatorIds)
             {
@@ -61,7 +64,8 @@ namespace Polyglot.BusinessLogic.Services
                         UserProfile = currentTranslator
                     });
 
-                    teamChatDialogParticipants.Add(new DialogParticipant() { Participant = currentTranslator });
+                    if(currentTranslator.Id != currentUser.Id)
+                        teamChatDialogParticipants.Add(new DialogParticipant() { Participant = currentTranslator });
                 }
             }
 
@@ -86,6 +90,7 @@ namespace Polyglot.BusinessLogic.Services
                 Identifier = newTeam.Id
             };
             await uow.GetRepository<ChatDialog>().CreateAsync(teamChatDialog);
+            await uow.SaveAsync();
 
             return newTeam != null ? mapper.Map<TeamDTO>(newTeam) : null;
         }
@@ -93,7 +98,20 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<bool> TryDisbandTeamAsync(int teamId)
         {
             await uow.GetRepository<Team>().DeleteAsync(teamId);
-            return await uow.SaveAsync() > 0;
+            var success = await uow.SaveAsync() > 0;
+
+            if (success)
+            {
+                var targetTeamDialog = uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatTeam && d.Identifier == teamId)
+                ?.Id;
+                if (targetTeamDialog.HasValue)
+                {
+                    await uow.GetRepository<ChatDialog>().DeleteAsync(targetTeamDialog.Value);
+                }
+                await uow.SaveAsync();
+            }
+            return success;
         }
 
         #region Overrides

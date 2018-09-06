@@ -63,49 +63,13 @@ namespace Polyglot.BusinessLogic.Services
                     break;
                 case ChatGroup.chatProject:
                 case ChatGroup.chatTeam:
-#warning добавить participants
-                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs);
+                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormGroupDialogs(src, dest, currentUser)));
                     break;
                 default:
                     break;
             }
-
+            
             return result;
-        }
-
-        public void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
-        {
-            List<ChatDialogDTO> result = dest;
-            result.ForEach(d =>
-            {
-                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
-                var interlocator = accordingSourceDialog
-                    .DialogParticipants
-                    .Select(dp => dp.Participant)
-                    .Where(p => p.Id != currentUser.Id)
-                    .FirstOrDefault();
-
-                if (interlocator != null)
-                {
-                    d.LastMessageText = accordingSourceDialog
-                        .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
-                        ?.Body;
-
-                    if (d.LastMessageText.Length > 155)
-                    {
-                        d.LastMessageText = d.LastMessageText.Substring(0, 150);
-                    }
-
-                    d.UnreadMessagesCount = accordingSourceDialog.Messages
-                        .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
-                        .Count();
-
-                    d.Participants = new List<ChatUserDTO>()
-                    {
-                        mapper.Map<ChatUserDTO>(interlocator)
-                    };
-                }
-            });
         }
 
         public async Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId)
@@ -140,7 +104,7 @@ namespace Polyglot.BusinessLogic.Services
 
             messages = (await uow.GetRepository<ChatDialog>()
                 .GetAsync(d => d.Identifier == dialogIdentifer && d.DialogType == targetGroup))
-                ?.Messages.AsEnumerable();
+                ?.Messages;
 
             return messages != null ? mapper.Map<IEnumerable<ChatMessageDTO>>(messages) : null;
         }
@@ -315,99 +279,56 @@ namespace Polyglot.BusinessLogic.Services
 
         //    return (await uow.SaveAsync() > 0 && addedMessage != null) ? mapper.Map<ChatMessageDTO>(addedMessage) : null;
         //}
+
+        #region Private members
+
+        private void FormGroupDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
+        {
+            List<ChatDialogDTO> result = dest;
+            result.ForEach(d =>
+            {
+                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
+                d.UnreadMessagesCount = accordingSourceDialog.Messages
+                        .Where(m => m.SenderId != currentUser.Id && !m.IsRead)
+                        .Count();
+            });
+        }
+
+        private void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
+        {
+            List<ChatDialogDTO> result = dest;
+            result.ForEach(d =>
+            {
+                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
+                var interlocator = accordingSourceDialog
+                    .DialogParticipants
+                    .Select(dp => dp.Participant)
+                    .Where(p => p.Id != currentUser.Id)
+                    .FirstOrDefault();
+
+                if (interlocator != null)
+                {
+                    d.LastMessageText = accordingSourceDialog
+                        .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
+                        ?.Body;
+
+                    if (d.LastMessageText.Length > 155)
+                    {
+                        d.LastMessageText = d.LastMessageText.Substring(0, 150);
+                    }
+
+                    d.UnreadMessagesCount = accordingSourceDialog.Messages
+                        .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
+                        .Count();
+
+                    d.Participants = new List<ChatUserDTO>()
+                    {
+                        mapper.Map<ChatUserDTO>(interlocator)
+                    };
+                }
+            });
+        }
+
+        #endregion Private members
     }
 }
-
-
-//messages = new List<ChatMessageDTO>
-//{
-//    new ChatMessageDTO()
-//    {
-//        Id = 0,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = currentUser.Id,
-//        SenderId = targetGroupItemId,
-//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 1,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = currentUser.Id,
-//        SenderId = targetGroupItemId,
-//        Body = "If truth is beauty, how come no one has their hair done in the library?"
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 2,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = targetGroupItemId,
-//        SenderId = currentUser.Id,
-//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 3,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = currentUser.Id,
-//        SenderId = targetGroupItemId,
-//        Body = "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 4,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = currentUser.Id,
-//        SenderId = targetGroupItemId,
-//        Body = "the high school after high school!"
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 5,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = targetGroupItemId,
-//        SenderId = currentUser.Id,
-//        Body = "A professor is one who talks in someone else's sleep."
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 6,
-//        IsRead = true,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = targetGroupItemId,
-//        SenderId = currentUser.Id,
-//        Body = "About all some men accomplish in life is to send a son to Harvard. My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-//    },new ChatMessageDTO()
-//    {
-//        Id = 7,
-//        IsRead = false,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = currentUser.Id,
-//        SenderId = targetGroupItemId,
-//        Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 8,
-//        IsRead = false,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = targetGroupItemId,
-//        SenderId = currentUser.Id,
-//        Body = "The world is coming to an end! Repent and return those library books!"
-//    },
-//    new ChatMessageDTO()
-//    {
-//        Id = 9,
-//        IsRead = false,
-//        ReceivedDate = DateTime.Now,
-//        RecipientId = targetGroupItemId,
-//        SenderId = currentUser.Id,
-//        Body = "So, is the glass half empty, half full, or just twice as large as it needs to be?."
-//    }
-//};

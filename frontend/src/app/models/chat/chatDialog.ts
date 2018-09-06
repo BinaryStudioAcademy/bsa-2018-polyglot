@@ -11,5 +11,5 @@ export interface ChatDialog {
 
     identifier: number; 
 
-    
+    dialogName: string;
 }

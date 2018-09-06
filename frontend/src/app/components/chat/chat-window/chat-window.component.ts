@@ -27,7 +27,7 @@ export class ChatWindowComponent implements OnInit {
     @ViewChild("mainwindow")
     mainWindow: ElementRef;
     @Input() dialog: any;
-    interlocutors = {};;
+    interlocutors = {};
     currentInterlocutorId: number;
     messages = [];
     
@@ -48,13 +48,13 @@ export class ChatWindowComponent implements OnInit {
 
     ngOnInit() {
         this.currentUserId = this.appState.currentDatabaseUser.id;
-        if(this.dialog){
-            this.signalRService.createConnection(
-                `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
-                Hub[Hub.chatHub]
-            );
-            this.interlocutors[this.dialog.participants[0].id] = this.dialog.participants[0];
-        }
+        //if(this.dialog){
+        //    this.signalRService.createConnection(
+        //        `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
+        //        Hub[Hub.chatHub]
+        //    );
+        //    this.interlocutors[this.dialog.participants[0].id] = this.dialog.participants[0];
+        //}
         
         this.subscribeChatEvents();
     }
@@ -122,7 +122,7 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
-                this.currentGroupName = `Project ${this.dialog.identifier}`; 
+                this.currentGroupName = this.dialog.dialogName; 
                 this.groupParticipantsCount = this.dialog.participants.length;
                 this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
                 this.isDirect = false;
@@ -132,7 +132,7 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
-                this.currentGroupName = `Team ${this.dialog.identifier}`; 
+                this.currentGroupName = this.dialog.dialogName; 
                 this.groupParticipantsCount = this.dialog.participants.length;
                 this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
                 this.isDirect = false;

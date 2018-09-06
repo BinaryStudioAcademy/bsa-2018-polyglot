@@ -7,6 +7,7 @@ import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
+import { FormControl } from "@angular/forms";
 
 @Component({
     selector: "app-chat-contacts",
@@ -15,6 +16,7 @@ import { ChatActions } from "../../../models/signalrModels/chat-actions";
 })
 export class ChatContactsComponent implements OnInit {
     @Output() onItemSelect = new EventEmitter<any>(true);
+    isSearchMode = false;
     public isOnPersonsPage: boolean;
     currentUserId: number;
     selectedDialogId: number;
@@ -27,9 +29,12 @@ export class ChatContactsComponent implements OnInit {
         projects: 0
     };
 
+    toggle() {
+        this.isSearchMode  = !this.isSearchMode ;
+    }
     private dialogs: ChatDialog[] = []; //ChatUser[];
     private projects: ChatDialog[] = [];
-    private teams: Team[] = [];
+    private teams: ChatDialog[] = [];
 
     constructor(
         private chatService: ChatService,
@@ -73,12 +78,13 @@ export class ChatContactsComponent implements OnInit {
         }, 1000);
 
         setTimeout(() => {
-            this.chatService.getTeamsList().subscribe((teams: Team[]) => {
+            this.chatService.getTeamsList()
+            .subscribe((teams: ChatDialog[]) => {
                 if (teams) {
                     this.teams = teams;
                 }
             });
-        }, 500);
+        }, 1500);
     }
 
     ngOnDestroy(){

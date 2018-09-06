@@ -224,12 +224,37 @@ namespace Polyglot.BusinessLogic.Services
                 .Select(x => x.TeamId);
 
             var idForAdd = teamIds.Except(teamsIdInDB);
+            var projectDialog = await uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatProject && d.Identifier == projectId);
+            List<Team> assignedTeams = new List<Team>();
 
             foreach (var item in idForAdd)
             {
                 await uow.GetRepository<ProjectTeam>().CreateAsync(new ProjectTeam() { ProjectId = projectId, TeamId = item });
+                assignedTeams.Add(await uow.GetRepository<Team>().GetAsync(item));
             }
 
+            var participants = assignedTeams
+                .SelectMany(t => t.TeamTranslators)
+                .Select(tt => tt.UserProfile)
+                .ToList();
+
+            participants.AddRange(assignedTeams.Select(t => t.CreatedBy));
+
+            participants = participants.GroupBy(up => up.Id)
+                .SelectMany(g => g.Select(sg => sg))
+                .Except(projectDialog.DialogParticipants.Select(dp => dp.Participant))
+                .ToList();
+
+            participants.ForEach(p =>
+            {
+                projectDialog.DialogParticipants.Add(new DialogParticipant()
+                {
+                    Participant = p
+                });
+            });
+
+            await uow.GetRepository<ChatDialog>().Update(projectDialog);
             await uow.SaveAsync();
 
             var project = await uow.GetRepository<Project>().GetAsync(projectId);
@@ -499,6 +524,14 @@ namespace Polyglot.BusinessLogic.Services
                 }
                 await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
+                var targetTeamDialog = uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatProject && d.Identifier == identifier)
+                ?.Id;
+
+                if (targetTeamDialog.HasValue)
+                {
+                    await uow.GetRepository<ChatDialog>().DeleteAsync(targetTeamDialog.Value);
+                }
                 await uow.SaveAsync();
                 return true;
             }

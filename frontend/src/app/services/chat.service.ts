@@ -22,7 +22,7 @@ export class ChatService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/projects');
   }
 
-  getTeamsList() : Observable<Team[]> {
+  getTeamsList() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/teams');
   }
 
