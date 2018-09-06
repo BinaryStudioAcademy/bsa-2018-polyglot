@@ -1,18 +1,28 @@
 <div class="chat-container">
     <mat-toolbar class="interlocutor-info">
         <div *ngIf="isDirect; else group">
-            <span class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</span>
-            <span class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
-                : "Offline"}}</span>
+            <div class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</div>
+            <div class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
+                : "Offline"}}</div>
         </div>
         <ng-template #group>
-            <div class="group-info">
-                <span class="group-name">{{currentGroupName}}</span>
-                <span class="participants-count">Participants: {{groupParticipantsCount}}</span>
-                <span class="participants-online-count">Online: {{groupParticipantsOnlineCount}}</span>
-            </div>
-            <div class="participants-items">
-
+            <div class="group-info-container">
+                <div class="group-info">
+                    <div class="group-name">{{currentGroupName}}</div>
+                    <div class="participants-count-container">
+                        <span class="participants-count">Participants: {{groupParticipantsCount}}</span>
+                        <span class="participants-online-count">Online: {{groupParticipantsOnlineCount}}</span>
+                    </div>
+                </div>
+                <div class="participants-items">
+                    <ul>
+                        <li *ngFor="let p of dialog.participants">
+                            <button mat-fab class="person-button" (click)="selectPerson(p)">
+                                <img class="person-avatar" mat-card-avatar src="{{p?.avatarUrl}}">
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </ng-template>
     </mat-toolbar>
@@ -33,6 +43,10 @@
                     {{m.body}}
                     <div class="message-info-container">
                         <span class="recieved-read-container">
+                            <!--<span [hidden]="" class="error-icon">
+                                    <mat-icon>warning</mat-icon>
+                            </span>
+                        -->
                             <span [hidden]="m.isRead" class="recieved-icon">
                                 <mat-icon>done</mat-icon>
                             </span>
@@ -62,6 +76,7 @@
                 <button mat-icon-button>
                     <mat-icon class="smilles-icon" aria-label="">sentiment_very_satisfied</mat-icon>
                 </button>
+
                 <button mat-icon-button (click)="sendMessage()">
                     <mat-icon class="send-icon" aria-label="">send</mat-icon>
                 </button>

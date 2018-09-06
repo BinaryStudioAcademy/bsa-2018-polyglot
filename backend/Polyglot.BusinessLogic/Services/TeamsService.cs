@@ -64,7 +64,7 @@ namespace Polyglot.BusinessLogic.Services
                         UserProfile = currentTranslator
                     });
 
-                    if(currentTranslator.Id != currentUser.Id)
+                    if (currentTranslator.Id != currentUser.Id)
                         teamChatDialogParticipants.Add(new DialogParticipant() { Participant = currentTranslator });
                 }
             }

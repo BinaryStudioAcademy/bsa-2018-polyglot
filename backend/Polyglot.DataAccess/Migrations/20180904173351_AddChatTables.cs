@@ -63,7 +63,7 @@ namespace Polyglot.DataAccess.Migrations
                         column: x => x.DialogId,
                         principalTable: "ChatDialogs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ChatMessages_UserProfiles_SenderId",
                         column: x => x.SenderId,

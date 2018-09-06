@@ -10,9 +10,11 @@
             
             <ng-template matTabContent>
                     <mat-toolbar class="persons-search">
-                            <button mat-icon-button (click)="toggle()">
+
+                        <!--    <button mat-icon-button (click)="toggle()">
                                 <mat-icon aria-label="persons-search">favorite</mat-icon>
                             </button>
+                        -->
                             <mat-form-field class="team-details_filter">
                                 <input matInput placeholder="Filter">
                             </mat-form-field>
@@ -21,7 +23,7 @@
             <div [hidden]="isSearchMode">
                     <ul>
                             <li *ngFor="let d of dialogs" (click)="selectDialog(d)">
-                                <mat-card class="person-card">
+                                <mat-card class="person-card dialog-card">
                                     <mat-card-header>
                                         <a class="person-img" [matBadgeHidden]="d.unreadMessagesCount < 1" [matBadge]="d.unreadMessagesCount"
                                             matBadgeColor="warn" matBadgeSize="medium">
@@ -30,6 +32,8 @@
                                         <div class="person-card-text">
                                             <div class="person-name">{{d?.participants[0].fullName}}</div>
                                             <div class="person-message-prev">{{d?.lastMessageText}}</div>
+                                         <!--   <div class="person-role">{{d?.participants[0].role}}</div>
+                                         -->
                                         </div>
                                         <div class="options-button-container">
                                                 <button class="person-card-options" (click)="$event.preventDefault(); $event.stopPropagation();" mat-button
@@ -38,7 +42,7 @@
                                             </button>
                                         </div>
                                         <mat-menu #menu="matMenu" xPosition="before" class="person-options">
-                                            <button (click)="onDeleteString()" mat-menu-item>Delete</button>
+                                            <button (click)="deleteDialog(d)" mat-menu-item>Delete</button>
                                         </mat-menu>
                                         <div class="online-status-container">
                                             <span [hidden]="d?.participants[0].isOnline" class="online-status-text">last seen
@@ -54,9 +58,7 @@
             </div>
 
             <div [hidden]="!isSearchMode">
-111111111111111111
-1
-1
+                SEARCH MODE
             </div>
 
             </ng-template>
@@ -69,7 +71,7 @@
             <ng-template matTabContent>
 
                 <mat-accordion class="example-headers-align">
-                    <mat-expansion-panel [disabled]="projects.lenght < 1" [expanded]="step === 0" (opened)="setStep(0)"
+                    <mat-expansion-panel [disabled]="projects.lenght < 1"
                         hideToggle>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -83,7 +85,7 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let p of projects">
-                                    <mat-card class="project-card group-card" (click)="selectDialog(p)">
+                                    <mat-card class="project-card group-card dialog-card" (click)="selectDialog(p)">
                                         <mat-card-header>
                                             <mat-card-title>{{p?.dialogName}}</mat-card-title>
                                             <mat-card-subtitle></mat-card-subtitle>
@@ -95,7 +97,7 @@
                         </ng-template>
                     </mat-expansion-panel>
 
-                    <mat-expansion-panel [disabled]="teams.lenght < 1" [expanded]="step === 1" (opened)="setStep(1)"
+                    <mat-expansion-panel [disabled]="teams.lenght < 1"
                         hideToggle>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -109,7 +111,7 @@
                         <ng-template matExpansionPanelContent>
                             <ul>
                                 <li *ngFor="let t of teams">
-                                    <mat-card class="team-card group-card" (click)="selectDialog(t)">
+                                    <mat-card class="team-card group-card dialog-card" (click)="selectDialog(t)">
                                         <mat-card-header>
                                             <mat-card-title>{{t?.dialogName}}</mat-card-title>
                                             <mat-card-subtitle></mat-card-subtitle>

@@ -68,7 +68,7 @@ namespace Polyglot.BusinessLogic.Services
                 default:
                     break;
             }
-            
+
             return result;
         }
 
@@ -141,38 +141,6 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<ChatMessageDTO>(newMessage);
         }
 
-        //public async Task<ChatContactsDTO> GetDialogsAsync(ChatGroup targetGroup, int targetGroupItemId)
-        //{
-        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
-        //    if (currentUser == null)
-        //        return null;
-
-        //    ChatContactsDTO contacts = new ChatContactsDTO()
-        //    {
-        //        ChatUserId = targetGroupItemId
-        //    };
-
-        //    switch (targetGroup)
-        //    {
-        //        case ChatGroup.chatUser:
-        //            {
-        //                var c = await GetUserContacts(currentUser);
-        //                if(c != null)
-        //                {
-        //                    contacts.ContactList = c;
-        //                }
-        //                break;
-        //            }
-        //        case ChatGroup.Project:
-        //            break;
-        //        case ChatGroup.Team:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //    return contacts;
-        //}
-
         public async Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync()
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();
@@ -181,35 +149,6 @@ namespace Polyglot.BusinessLogic.Services
 
             return null;
         }
-
-        //public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
-        //{
-        //    IEnumerable<ChatMessage> messages = null;
-        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
-        //    if (currentUser == null)
-        //        return null;
-
-        //    switch (targetGroup)
-        //    {
-        //        case ChatGroup.direct:
-        //            {
-        //                messages = await uow.GetRepository<ChatMessage>()
-        //                    .GetAllAsync(m => 
-        //                    (m.RecipientId == currentUser.Id && m.SenderId == targetGroupItemId) 
-        //                    || 
-        //                    (m.RecipientId == targetGroupItemId && m.SenderId == currentUser.Id));
-        //                break;
-        //            }
-        //        case ChatGroup.Project:
-        //            break;
-        //        case ChatGroup.Team:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    return mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
-        //}
 
         public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
         {
@@ -248,37 +187,65 @@ namespace Polyglot.BusinessLogic.Services
             return await teamService.GetAllTeamsAsync() ?? null;
         }
 
+        public async Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog)
+        {
+            if (dialog.Participants.Count() < 1)
+                return null;
 
-        //public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
-        //{
-        //    var currentUser = await CurrentUser.GetCurrentUserProfile();
-        //    if (currentUser == null || message == null)
-        //        return null;
+            var currentUser = await CurrentUser.GetCurrentUserProfile();
 
-        //    ChatMessage addedMessage = null;
+            if (currentUser == null)
+                return null;
 
-        //    switch (targetGroup)
-        //    {
-        //        case ChatGroup.direct:
-        //            {
-        //                message.IsRead = false;
-        //                message.ReceivedDate = DateTime.Now;
-        //                message.SenderId = currentUser.Id;
-        //                addedMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
-        //                await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
-        //                break;
-        //            }
+            var targetIdentifier = dialog.Participants.Sum(p => p.Id) + currentUser.Id;
+            var d = await uow.GetRepository<ChatDialog>()
+                .GetAsync(dd => dd.Identifier == targetIdentifier && dd.DialogType == ChatGroup.dialog);
 
-        //        case ChatGroup.Project:
-        //            break;
-        //        case ChatGroup.Team:
-        //            break;
-        //        default:
-        //            break;
-        //    }
+            if (d == null)
+            {
+                var repo = uow.GetRepository<UserProfile>();
+                UserProfile currentInterlocator;
+                List<DialogParticipant> dp = new List<DialogParticipant>();
 
-        //    return (await uow.SaveAsync() > 0 && addedMessage != null) ? mapper.Map<ChatMessageDTO>(addedMessage) : null;
-        //}
+                foreach (var p in dialog.Participants)
+                {
+                    currentInterlocator = await repo.GetAsync(p.Id);
+                    if (currentInterlocator != null)
+                    {
+                        dp.Add(new DialogParticipant() { Participant = currentInterlocator });
+                    }
+                }
+                dp.Add(new DialogParticipant() { Participant = currentUser });
+
+                if (dp.Count < 2)
+                {
+                    return null;
+                }
+
+
+                var newDialog = await uow.GetRepository<ChatDialog>()
+                    .CreateAsync(new ChatDialog()
+                    {
+                        Identifier = targetIdentifier,
+                        DialogParticipants = dp,
+                        DialogType = ChatGroup.dialog
+                    }
+                    );
+
+                await uow.SaveAsync();
+                return mapper.Map<ChatDialogDTO>(newDialog);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteDialog(int id)
+        {
+            await uow.GetRepository<ChatDialog>().DeleteAsync(id);
+            return await uow.SaveAsync() > 0;
+        }
 
         #region Private members
 
@@ -297,6 +264,7 @@ namespace Polyglot.BusinessLogic.Services
         private void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {
             List<ChatDialogDTO> result = dest;
+            string lastMessage;
             result.ForEach(d =>
             {
                 var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
@@ -308,9 +276,10 @@ namespace Polyglot.BusinessLogic.Services
 
                 if (interlocator != null)
                 {
-                    d.LastMessageText = accordingSourceDialog
+                    lastMessage = accordingSourceDialog
                         .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
                         ?.Body;
+                    d.LastMessageText = lastMessage != null ? lastMessage : ""; 
 
                     if (d.LastMessageText.Length > 155)
                     {

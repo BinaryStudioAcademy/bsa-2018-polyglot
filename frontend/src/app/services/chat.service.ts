@@ -18,6 +18,14 @@ export class ChatService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + `/dialogs`);
   }
   
+  addDialog(dialog: ChatDialog) : Observable<ChatDialog> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/dialogs', undefined, dialog);
+  }
+
+  deleteDialog(dialogId: number) : Observable<boolean> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/dialogs', dialogId);
+  }
+
   getProjectsList() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/projects');
   }
@@ -50,9 +58,6 @@ export class ChatService {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
   //}
 //
-  //addContact(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
 //
   //deleteContact(project: FormData) : Observable<Project> {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');

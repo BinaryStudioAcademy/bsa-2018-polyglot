@@ -8,7 +8,7 @@ import { Hub } from "../../models/signalrModels/hub";
 import { ProjectService } from "../../services/project.service";
 import { ChatService } from "../../services/chat.service";
 import { AppStateService } from "../../services/app-state.service";
-import { ChatMessage, ChatDialog } from "../../models";
+import { ChatMessage, ChatDialog, ChatUser } from "../../models";
 
 @Component({
     selector: "app-chat",
@@ -17,6 +17,7 @@ import { ChatMessage, ChatDialog } from "../../models";
 })
 export class ChatComponent implements OnInit {
     selectedDialog: ChatDialog;
+    selectedPerson: ChatUser;
     mobileQuery: MediaQueryList;
     isInterlocutorSelected = false;
     private _mobileQueryListener: () => void;
@@ -46,5 +47,10 @@ export class ChatComponent implements OnInit {
     onSelected($event){
         debugger;
         this.selectedDialog = $event;
+    }
+
+    onPersonSelected($event){
+        debugger;
+        this.selectedPerson = $event;
     }
 }

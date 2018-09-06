@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, SimpleChanges, Input } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
 import { ChatUser, Project, Team, GroupType } from "../../../models";
 import { ChatDialog } from "../../../models/chat/chatDialog";
@@ -16,11 +16,11 @@ import { FormControl } from "@angular/forms";
 })
 export class ChatContactsComponent implements OnInit {
     @Output() onItemSelect = new EventEmitter<any>(true);
+    @Input() person: ChatUser;
     isSearchMode = false;
     public isOnPersonsPage: boolean;
     currentUserId: number;
     selectedDialogId: number;
-    step = 2;
 
     unreadMessagesTotal = {
         persons: 0,
@@ -29,9 +29,6 @@ export class ChatContactsComponent implements OnInit {
         projects: 0
     };
 
-    toggle() {
-        this.isSearchMode  = !this.isSearchMode ;
-    }
     private dialogs: ChatDialog[] = []; //ChatUser[];
     private projects: ChatDialog[] = [];
     private teams: ChatDialog[] = [];
@@ -41,11 +38,10 @@ export class ChatContactsComponent implements OnInit {
         private appState: AppStateService,
         private signalRService: SignalrService
     ) {
-        this.isOnPersonsPage = true;
+       // this.isOnPersonsPage = true;
     }
 
     ngOnInit() {
-
         this.currentUserId = this.appState.currentDatabaseUser.id;
         this.signalRService.createConnection(
             `${SignalrGroups[SignalrGroups.direct]}${this.currentUserId}`,
@@ -73,6 +69,7 @@ export class ChatContactsComponent implements OnInit {
                         dialogs.length > 0
                     ) {
                         this.dialogs = dialogs.filter(d => d.participants.length > 0);
+                        this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
                     }
                 });
         }, 1000);
@@ -114,20 +111,56 @@ export class ChatContactsComponent implements OnInit {
     }
 
     selectDialog(dialog: ChatDialog) {
+        this.unreadMessagesTotal['persons'] -= dialog.unreadMessagesCount;
         dialog.unreadMessagesCount = 0;
         this.selectedDialogId = dialog.id;
         this.onItemSelect.emit(dialog);
     }
 
-    setStep(index: number) {
-        this.step = index;
+    toggle() {
+        this.isSearchMode  = !this.isSearchMode ;
     }
 
-    nextStep() {
-        this.step++;
+    ngOnChanges(changes: SimpleChanges) {
+        
+        debugger;
+        if(changes.person.currentValue)
+        {
+            let person: ChatUser = changes.person.currentValue;
+            let targetId = person.id + this.currentUserId;
+            let targetDialog = this.dialogs.filter(d => d.identifier == targetId && !d.dialogName && d.participants.length === 1);
+            if(targetDialog && targetDialog.length > 0)
+            {
+                this.onItemSelect.emit(targetDialog[0]);
+            }
+            else 
+            {
+                let dialog: ChatDialog = {
+                    id: -1,
+                    lastMessageText: "",
+                    unreadMessagesCount: 0,
+                    participants: [ person ],
+                    identifier: 0,
+                    dialogName: ""
+                }
+                this.chatService.addDialog(dialog)
+                .subscribe((dialog: ChatDialog) => {
+                    if(dialog)
+                    {
+                        this.dialogs.push(dialog);
+                        this.onItemSelect.emit(dialog);
+                    }
+                });
+            }
+        }
     }
 
-    prevStep() {
-        this.step--;
+    deleteDialog(dialog){
+        this.chatService.deleteDialog(dialog.id)
+            .subscribe((success: boolean) => {
+                if(success){
+                    this.dialogs = this.dialogs.filter(d => d.id !== dialog.id);
+                }
+            })
     }
 }

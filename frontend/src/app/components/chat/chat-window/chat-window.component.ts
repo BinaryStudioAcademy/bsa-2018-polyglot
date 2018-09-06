@@ -5,7 +5,9 @@ import {
     ElementRef,
     Renderer2,
     Input,
-    SimpleChanges
+    SimpleChanges,
+    Output,
+    EventEmitter
 } from "@angular/core";
 import { ProjectService } from "../../../services/project.service";
 import { MatSnackBar } from "@angular/material";
@@ -24,8 +26,8 @@ import { ChatDialog } from "../../../models/chat/chatDialog";
     styleUrls: ["./chat-window.component.sass"]
 })
 export class ChatWindowComponent implements OnInit {
-    @ViewChild("mainwindow")
-    mainWindow: ElementRef;
+    @ViewChild("mainwindow") mainWindow: ElementRef;
+    @Output() onPersonSelect = new EventEmitter<any>(true);
     @Input() dialog: any;
     interlocutors = {};
     currentInterlocutorId: number;
@@ -48,14 +50,6 @@ export class ChatWindowComponent implements OnInit {
 
     ngOnInit() {
         this.currentUserId = this.appState.currentDatabaseUser.id;
-        //if(this.dialog){
-        //    this.signalRService.createConnection(
-        //        `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
-        //        Hub[Hub.chatHub]
-        //    );
-        //    this.interlocutors[this.dialog.participants[0].id] = this.dialog.participants[0];
-        //}
-        
         this.subscribeChatEvents();
     }
 
@@ -151,7 +145,6 @@ export class ChatWindowComponent implements OnInit {
         );
     }
 
-
     getMessagesHistory() {
 
         if (this.dialog && this.dialog.participants && this.dialog.participants.length > 0) {
@@ -208,6 +201,13 @@ export class ChatWindowComponent implements OnInit {
                         this.messages.push(message);
                     }
                 });
+        }
+    }
+
+    selectPerson(person){
+        if(person)
+        {
+            this.onPersonSelect.emit(person);
         }
     }
 

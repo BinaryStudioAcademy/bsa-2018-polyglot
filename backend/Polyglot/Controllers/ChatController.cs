@@ -60,24 +60,6 @@ namespace Polyglot.Controllers
                 : Ok(messages);
         }
 
-        // GET: /chat/users/:userId/state
-        //[HttpGet("users/{id}/state")]
-        //public async Task<IActionResult> GetUserState(int userId)
-        //{
-        //    var userState = await chatService.GetUserStateAsync(userId);
-        //    return userState == null ? NotFound("User not found!") as IActionResult
-        //        : Ok(userState);
-        //}
-
-        //// GET: /chat/users/state
-        //[HttpGet("users/state")]
-        //public async Task<IActionResult> GetContactsUsersState()
-        //{
-        //    var userState = await chatService.GetUsersStateAsync();
-        //    return userState == null ? NotFound("Users not found!") as IActionResult
-        //        : Ok(userState);
-        //}
-
         // GET: /chat/projects
         [HttpGet("projects")]
         public async Task<IActionResult> GetProjects()
@@ -95,27 +77,7 @@ namespace Polyglot.Controllers
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
-
-        // GET: /chat/projects/:projectId/contacts
-        //[HttpGet("projects/{id}/contacts")]
-        //public async Task<IActionResult> GetProjectContacts(int projectId)
-        //{
-        //var contacts = await chatService.GetContactsAsync(ChatGroup.Project, projectId);
-        //return contacts == null ? NotFound("No contacts found!") as IActionResult
-        //: Ok(contacts);
-        //}
-
-
-
-        // GET: /chat/teams/:teamId/contacts
-        //[HttpGet("teams/{teamId}/contacts")]
-        //public async Task<IActionResult> GetTeamContacts(int teamId)
-        //{
-        //var contacts = await chatService.GetContactsAsync(ChatGroup.Team, teamId);
-        //return contacts == null ? NotFound("No contacts found!") as IActionResult
-        //: Ok(contacts);
-        //}
-
+        
         //GET: /chat/messages/{:id}
         [HttpGet("messages/{id}")]
         public async Task<IActionResult> GetMessage(int id)
@@ -124,27 +86,6 @@ namespace Polyglot.Controllers
             return message == null ? NotFound("Message not found!") as IActionResult
                 : Ok(message);
         }
-
-
-
-
-        //// GET: /chat/projects/:projectId/messages
-        //[HttpGet("projects/{projectId}/messages")]
-        //public async Task<IActionResult> GetProjectMessagesHistory(int projectId)
-        //{
-        //    var messages = await chatService.GetGroupMessagesHistoryAsync(ChatGroup.Project, projectId);
-        //    return messages == null ? NotFound("No messages found!") as IActionResult
-        //        : Ok(messages);
-        //}
-
-        //// GET: /chat/teams/:teamId/messages
-        //[HttpGet("teams/{teamId}/messages")]
-        //public async Task<IActionResult> GetTeamMessagesHistory(int teamId)
-        //{
-        //    var messages = await chatService.GetGroupMessagesHistoryAsync(ChatGroup.Team, teamId);
-        //    return messages == null ? NotFound("No messages found!") as IActionResult
-        //        : Ok(messages);
-        //}
 
         //POST: /chat/users/dialogs/messages
         [HttpPost("users/dialogs/messages")]
@@ -155,22 +96,22 @@ namespace Polyglot.Controllers
                 : Ok(m);
         }
 
-        //  // POST: api/Chat
-        //  [HttpPost]
-        //  public void Post([FromBody] string value)
-        //  {
-        //  }
-        //
-        //  // PUT: api/Chat/5
-        //  [HttpPut("{id}")]
-        //  public void Put(int id, [FromBody] string value)
-        //  {
-        //  }
-        //
-        //  // DELETE: api/ApiWithActions/5
-        //  [HttpDelete("{id}")]
-        //  public void Delete(int id)
-        //  {
-        //  }
+        //POST: /chat/dialogs
+        [HttpPost("dialogs")]
+        public async Task<IActionResult> CreateDialog([FromBody]ChatDialogDTO dialog)
+        {
+            var d = await chatService.CreateDialog(dialog);
+            return d == null ? StatusCode(409) as IActionResult
+                : Ok(d);
+        }
+
+        //DELETE: /chat/dialogs/:id
+        [HttpDelete("dialogs/{id}")]
+        public async Task<IActionResult> DeleteDialog(int id)
+        {
+            var success = await chatService.DeleteDialog(id);
+            return success == null ? StatusCode(409) as IActionResult
+                : Ok(success);
+        }
     }
 }
