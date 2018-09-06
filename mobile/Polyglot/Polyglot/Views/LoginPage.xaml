@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.LoginPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" Margin="0,10,0,10" />
+            <Editor  HorizontalOptions="Center"  WidthRequest="200" ></Editor>
+            <Editor  HorizontalOptions="Center" WidthRequest="200" ></Editor>
+            <Button  HorizontalOptions="Center"  Text="Login"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
