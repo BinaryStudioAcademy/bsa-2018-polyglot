@@ -81,9 +81,9 @@ export class AppStateService {
         this.LoginStatus = localStorage.getItem('LoginStatus') === 'true';
         //this.workspaceState.next(JSON.parse(localStorage.getItem('workspaceState')));
     }
+  
 
-
-    updateState(user: firebase.User, token: string, loginStatus: boolean, dbUser?: UserProfile) {
+    updateState(user?: firebase.User, token?: string, loginStatus?: boolean, dbUser?: UserProfile) {
         this.currentFirebaseUser = user;
         this.currentFirebaseToken = token;
         this.LoginStatus = loginStatus;

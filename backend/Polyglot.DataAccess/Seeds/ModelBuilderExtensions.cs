@@ -533,24 +533,24 @@ namespace Polyglot.DataAccess.Seeds
             //    context.SaveChanges();
             //}
 
-            if (!context.Tags.Any())
-            {
-                var tags = new List<Tag> {
-                   new Tag {  Color = "Apple", Name = "csharp" },
-                   new Tag {  Color = "Aqua", Name = "asp-net-core" },
-                   new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
-                   new Tag {  Color = "Awesome", Name = "angular" },
-                   new Tag {  Color = "Azure", Name = "binary-studio" },
-                   new Tag { Color = "Bittersweet", Name = "bsa18" },
-                   new Tag {  Color = "Blue bell", Name = "firebase" },
-                   new Tag {  Color = "Capri", Name = "www" },
-                   new Tag {  Color = "Cameo pink", Name = "seeds" },
-                   new Tag { Color = "Blue-gray", Name = "mock" }
-               };
+            //if (!context.Tags.Any())
+            //{
+            //    var tags = new List<Tag> {
+            //       new Tag {  Color = "Apple", Name = "csharp" },
+            //       new Tag {  Color = "Aqua", Name = "asp-net-core" },
+            //       new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
+            //       new Tag {  Color = "Awesome", Name = "angular" },
+            //       new Tag {  Color = "Azure", Name = "binary-studio" },
+            //       new Tag { Color = "Bittersweet", Name = "bsa18" },
+            //       new Tag {  Color = "Blue bell", Name = "firebase" },
+            //       new Tag {  Color = "Capri", Name = "www" },
+            //       new Tag {  Color = "Cameo pink", Name = "seeds" },
+            //       new Tag { Color = "Blue-gray", Name = "mock" }
+            //   };
 
-                context.AddRange(tags);
-                context.SaveChanges();
-            }
+            //    context.AddRange(tags);
+            //    context.SaveChanges();
+            //}
 
             //if (!context.Teams.Any())
             //{
