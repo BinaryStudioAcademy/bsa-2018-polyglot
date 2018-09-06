@@ -17,11 +17,6 @@
                 </button>
             </mat-form-field>
             <button style="margin-left:10px"mat-flat-button color="primary" [matMenuTriggerFor]="filters">Advanced search</button>
-            <div class="mydiv" contenteditable="true" style="outline:0px;">
-              {{div}}
-            </div>
-            <button (click)="replace()">Replace</button>
-            <button (click)="check()">Check</button>
             <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false" class="no-menu-scroll">
                 <div style="padding: 20px!important;padding-top:0px!important;"> 
                   <div>
