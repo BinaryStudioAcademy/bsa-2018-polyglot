@@ -3,6 +3,7 @@ using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
+using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.MongoModels;
 using System.Linq;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
@@ -228,6 +229,39 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.FullName))
                 .ForMember(p => p.Role, opt => opt.MapFrom(po => po.UserRole))
                 .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl));
+
+                cfg.CreateMap<ChatMessageDTO, ChatMessage>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
+                .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
+                .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
+                .ForMember(p => p.Dialog, opt => opt.Ignore())
+                .ForMember(p => p.DialogId, opt => opt.MapFrom(po => po.DialogId))
+                .ForMember(p => p.Sender, opt => opt.Ignore())
+                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+
+                cfg.CreateMap<ChatMessage, ChatMessageDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))
+                .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
+                .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
+                .ForMember(p => p.DialogId, opt => opt.MapFrom(po => po.DialogId))
+                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+
+                cfg.CreateMap<ChatDialog, ChatDialogDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.DialogType, opt => opt.MapFrom(po => po.DialogType))
+                .ForMember(p => p.Identifier, opt => opt.MapFrom(po => po.Identifier))
+                .ForMember(p => p.DialogName, opt => opt.MapFrom(po => po.DialogName))
+                .ForMember(p => p.Participants, opt => opt.MapFrom(po => po.DialogParticipants.Select(dp => dp.Participant)));
+
+                cfg.CreateMap<ChatDialogDTO, ChatDialog>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
+                .ForMember(p => p.DialogType, opt => opt.MapFrom(po => po.DialogType))
+                .ForMember(p => p.Identifier, opt => opt.MapFrom(po => po.Identifier))
+                .ForMember(p => p.DialogName, opt => opt.MapFrom(po => po.DialogName))
+                .ForMember(p => p.DialogParticipants, opt => opt.Ignore())
+                .ForMember(p => p.Messages, opt => opt.Ignore());
 
 
                 cfg.CreateMap<UserProfileDTO, UserProfile>()
