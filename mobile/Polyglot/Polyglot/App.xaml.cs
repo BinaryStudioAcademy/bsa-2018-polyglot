@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Polyglot.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,7 +16,7 @@ namespace Polyglot
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+
         }
 
         protected override void OnSleep()
