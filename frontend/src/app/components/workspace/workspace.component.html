@@ -12,7 +12,7 @@
                     <mat-icon>search</mat-icon>
                 </button>
                 <input (change)="searchChanges()" matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
-                <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
+                <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''; searchChanges()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
