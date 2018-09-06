@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Polyglot.BusinessLogic.ViewModels
+namespace Polyglot.BusinessLogic
 {
-    class LoginViewModel
+    class HttpService
     {
     }
 }
