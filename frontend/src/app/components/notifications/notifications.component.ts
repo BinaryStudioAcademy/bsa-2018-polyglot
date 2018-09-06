@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { OptionDefinition } from '../../models/optionDefinition';
 import { Notification } from '../../models/notification';
@@ -17,12 +17,8 @@ export class NotificationsComponent implements OnInit {
                 private teamService: TeamService,
                 private snotifyService: SnotifyService) { }
 
-    userNotifications: Notification[];
-    ngOnInit() {
-        this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
-            this.userNotifications = notifications;
-        });
-    }
+    @Input() userNotifications: Notification[];
+    ngOnInit() {    }
 
     getStringEnum(enumNumber: number){
         return OptionDefinition[enumNumber];

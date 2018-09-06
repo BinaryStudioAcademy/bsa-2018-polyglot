@@ -4,5 +4,6 @@ export enum SignalrGroups {
     chatShared,
     chatTeams,
     chatProject,
-    chatUser
+    chatUser,
+    notification
 }
