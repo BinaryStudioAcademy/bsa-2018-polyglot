@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
@@ -39,6 +39,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private loop: any;
     private currentKeyId: number;
     private previousKeyId: number;
+    private div;
+    private differ;
+    private madiv;
 
     filters: Array<string>;
 
@@ -59,7 +62,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
-        private eventService: EventService
+        private eventService: EventService,
+        private differs: KeyValueDiffers
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
@@ -71,12 +75,25 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }            
             }
         );
+        this.differ = differs.find({}).create();
     }
 
     description: string = "Are you sure you want to remove the project?";
     btnOkText: string = "Delete";
     btnCancelText: string = "Cancel";
     answer: boolean;
+
+    replace($event) {
+        // if ($event.keyCode === 32 || $event.which === 32) {
+            
+        //     madiv.item(0).innerHTML += '<span style="color: red">' + madiv.item(0).textContent + '</span> ';
+        // }  
+        this.madiv = document.getElementsByClassName("mydiv");
+    }
+
+    // check() {
+    //     console.log(this.madiv.item(0).textCo);
+    // }
 
     ngOnInit() {
         console.log(this.stringsInProgress);
@@ -150,6 +167,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     ngDoCheck() {
+        // var changes = this.differ.diff(this.div);
+        
+        // this.div = madiv.item(0).textContent;
+        // console.log(this.div);
+
         if (
             this.project &&
             this.keys &&

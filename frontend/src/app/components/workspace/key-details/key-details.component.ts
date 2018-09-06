@@ -137,6 +137,14 @@ export class KeyDetailsComponent implements OnInit {
         });
     }
 
+    check(i, translation, $event) {
+        var elem = document.getElementById('translation' + i);
+        elem.textContent = translation;
+        if ($event.keyCode === 32 || $event.which === 32) {
+            elem.innerHTML = '<span style="color: red">' + elem.textContent + '</span>';
+        }
+    }
+
     ngOnDestroy() {
         this.signalrService.closeConnection(
             `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`

@@ -57,10 +57,12 @@
 							</mat-menu>
 							</mat-expansion-panel-header>
 						   <div >
-								<mat-form-field class="textarea-translation">
+								<!-- <app-translation-input  [(inputText)]="t.translationValue" [index]="i"></app-translation-input> -->
+								<div id="translation{{i}}" style="position: relative; top: 54px; "></div>
+								<mat-form-field class="textarea-translation"> 
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea (contextmenu)="onRightClick($event)"
-												(keyup)="isCanSave(i, t)"  matInput
+										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(120,120,120,0)"
+												(keyup)="isCanSave(i, t); check(i, t.translationValue, $event);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize

@@ -33,4 +33,11 @@ export class TranslationInputComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.divObject = document.getElementById(`translation${this.index}`);
   }
+
+  onTextChanged($event) {
+    this.divObject.textContent = this.inputTextValue;
+    if ($event.keyCode === 32 || $event.which === 32) {
+      console.log('hello');
+    }
+  }
 }
