@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.Android", "Polyglo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot", "Polyglot\Polyglot\Polyglot.csproj", "{F065379C-032C-47B2-B5C9-54253B25018D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyglot.BusinessLogic", "Polyglot.BusinessLogic\Polyglot.BusinessLogic.csproj", "{EF7B50D5-3D46-4872-88CE-BA9C74FB941C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

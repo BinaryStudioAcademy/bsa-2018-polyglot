@@ -5,7 +5,7 @@
     <ListView x:Name="MyListView"
             ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"
-              HasUnevenRows="True">
+            RowHeight="50">
 
 
         <ListView.ItemTemplate>
@@ -13,7 +13,7 @@
                 <ViewCell>
                     <StackLayout Orientation="Vertical" >
                         <Label Grid.Row="0" Font="bold, 20" HorizontalTextAlignment="Center" Text="{Binding Name}"   />
-                        <Image  Source="{Binding ImageUrl}"></Image>
+                        <Image   Source="{Binding ImageUrl}"></Image>
                         <Label Grid.Column="1" Grid.Row="1" Text="{Binding Description}"  />
                         <Label Grid.Column="0" Grid.Row="1" Text="{Binding Technology}"  />
                     </StackLayout>
