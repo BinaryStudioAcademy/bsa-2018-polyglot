@@ -66,7 +66,7 @@ export class KeyDetailsComponent implements OnInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
-
+    currentUserRole: any;
     users: UserProfilePrev[] = [];
     currentUserId: number;
     constructor(
@@ -92,6 +92,7 @@ export class KeyDetailsComponent implements OnInit {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
+        this.currentUserRole = this.appState.currentDatabaseUser.userRole;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
