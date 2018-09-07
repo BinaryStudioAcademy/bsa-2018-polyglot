@@ -57,11 +57,11 @@
 							</mat-menu>
 							</mat-expansion-panel-header>
 						   <div style="max-width: 861px">
-								<div class="translation-div" style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px;" [ngStyle]="{'top': setPosition(i)}"></div>
+								<div class="translation-div" style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation"> 
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(0,0,0,0)"
-												(keyup)="onTextChange(i, t.translationValue, $event); isCanSave(i, t);"  matInput
+												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
