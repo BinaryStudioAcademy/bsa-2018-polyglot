@@ -27,7 +27,7 @@ export class TabCommentsComponent implements OnInit {
     @Input() textCommentForAdd: string;
 
     public commentForm = this.fb.group({
-        commentBody: [this.textCommentForAdd]
+        commentBody: ['']
     });
     public body: string;
 
@@ -51,6 +51,8 @@ export class TabCommentsComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         this.commentForm.reset();
+        this.body = `-->${this.textCommentForAdd}<-- `;
+
     }
 
     ngOnDestroy() {

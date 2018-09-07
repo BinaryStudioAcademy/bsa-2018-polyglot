@@ -1,9 +1,7 @@
 <div class="container">
     <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
         <mat-form-field class="field-full-width">
-            <input #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500">
-            <!-- <input formControlName="commentBody" placeholder="Enter comment2" > -->
-            <div>{{textCommentForAdd}}</div>
+            <input [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500">
         </mat-form-field>
         <div class="button-container">
             <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>
