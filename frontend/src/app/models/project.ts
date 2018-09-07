@@ -21,5 +21,5 @@ export interface Project {
     projectLanguageses?: Array<ProjectLanguage>;
     projectGlossaries?: Array<ProjectGlossary>;
     tags?: Array<Tag>;
-    projectStatistics?: ProjectTranslationStatistics;
+    progress: number;
 }

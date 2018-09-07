@@ -11,7 +11,7 @@
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
                         <mat-expansion-panel [style.border]="highlightString(i)"
-                        [disabled]="isDisabled || currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName" [expanded]="expandedArray[i].isOpened"  (opened)="setStep(i)" hideToggle>
+                        [disabled]="isDisabled || (currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName && currentUserRole !== 1)" [expanded]="expandedArray[i].isOpened"  (opened)="setStep(i)" hideToggle>
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
@@ -56,21 +56,24 @@
 								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
 							</mat-expansion-panel-header>
-						   <div>
-								<div class="translation" style="position: relative; top: 54px; word-wrap: break-word; width: 100%"></div>
+						   <div style="max-width: 861px">
+                                <div class="translation-div"
+                                (contextmenu)="onRightClick($event)"
+                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(0,0,0,0)"
-												(keyup)="onTextChange(i, t.translationValue); isCanSave(i, t);"  matInput
+										<textarea style="color: rgba(0,0,0,0)"
+												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
+												  placeholder="Write here to start translating"
 													  cdkAutosizeMinRows="2"
 													  placeholder="Write here to start translating"
                                                       cdkAutosizeMaxRows="10"
-                                                      (contextmenu)="onRightClick($event)"
-                                                      (click)="onClickOnTranslation($event)"></textarea>
-                                        <!-- <button mat-raised-button color="primary" [hidden] = "!isVisible" id ="main-input" (click) ="addComment()"> Add comment </button> -->
+													  class="translation-input"></textarea>
+                                                      <!-- (contextmenu)="onRightClick($event)"
+                                                      (click)="onClickOnTranslation($event)" -->
 								</mat-form-field>
 								<mat-menu  #appMenu="matMenu" class=".context-menu" yPosition="below" xPosition="before">
 									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
