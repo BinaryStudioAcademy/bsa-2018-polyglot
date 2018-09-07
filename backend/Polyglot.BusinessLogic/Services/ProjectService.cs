@@ -624,10 +624,11 @@ namespace Polyglot.BusinessLogic.Services
 				var models = mapper.Map<List<ComplexString>>(result.Documents);
 				var tags = await uow.GetRepository<Tag>().GetAllAsync();
 				var dtos = mapper.Map<List<ComplexStringDTO>>(models);
-				for (int i = 0; i < dtos.Count; i++)
-				{
-					dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
-				}
+				// Temporary
+				//for (int i = 0; i < dtos.Count; i++)
+				//{
+				//	dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
+				//}
 				return dtos;
 			}
 			else
