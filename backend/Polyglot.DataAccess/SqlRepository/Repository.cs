@@ -68,6 +68,7 @@ namespace Polyglot.DataAccess.SqlRepository
         {
 
             var result = DbSet.Update(entity).Entity;
+           
             await ElasticRepository.UpdateSearchIndex(result, CrudAction.Update);
             return result;
         }

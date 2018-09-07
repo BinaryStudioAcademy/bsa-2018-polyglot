@@ -67,6 +67,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentSuggestion: string;
     isSaveDisabled: boolean;
     translationDivs: any;
+    currentUserRole: any;
     translationInputs: any;
     glossaryWords: any[] = [];
 
@@ -95,6 +96,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
+        this.currentUserRole = this.appState.currentDatabaseUser.userRole;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
