@@ -58,7 +58,7 @@
 							</mat-expansion-panel-header>
 						   <div>
 								<div class="translation" style="position: relative; top: 54px; word-wrap: break-word; width: 100%"></div>
-								<mat-form-field class="textarea-translation"> 
+								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(0,0,0,0)"
 												(keyup)="onTextChange(i, t.translationValue); isCanSave(i, t);"  matInput
@@ -67,7 +67,10 @@
 												  cdkTextareaAutosize
 													  cdkAutosizeMinRows="2"
 													  placeholder="Write here to start translating"
-													  cdkAutosizeMaxRows="10"></textarea>
+                                                      cdkAutosizeMaxRows="10"
+                                                      (contextmenu)="onRightClick($event)"
+                                                      (click)="onClickOnTranslation($event)"></textarea>
+                                        <!-- <button mat-raised-button color="primary" [hidden] = "!isVisible" id ="main-input" (click) ="addComment()"> Add comment </button> -->
 								</mat-form-field>
 								<mat-menu  #appMenu="matMenu" class=".context-menu" yPosition="below" xPosition="before">
 									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
@@ -93,10 +96,16 @@
 
 						  </div>
 						</mat-expansion-panel>
-				</mat-accordion>
+                </mat-accordion>
 		</div>
 	</div>
 </mat-card>
+<button
+    class="btn-add-comment"
+    [hidden]="!isVisible"
+    color="primary"
+    id ="main-input"
+    (click) ="addComment()"> Add comment </button>
 
 <mat-card class="my-1 ml-1 px-1 grow-1 translations-details">
 	<mat-tab-group flex>
@@ -117,7 +126,7 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Comment" matTooltipPosition="above">comment</mat-icon>
 			</ng-template>
-			<app-tab-comments [(comments)] = "comments"></app-tab-comments>
+			<app-tab-comments [(comments)] = "comments" [(textCommentForAdd)]="textCommentForAdd"></app-tab-comments>
 			<!-- <app-tab-comments *ngIf="keyDetails" [(keyDetails)] = "keyDetails"></app-tab-comments> -->
 
 		</mat-tab>
