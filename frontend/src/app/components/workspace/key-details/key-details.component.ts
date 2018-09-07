@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language } from "../../../models";
+import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -66,7 +66,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    translationDivs: any;
+    currentUserRole: any;
     translationInputs: any;
+    glossaryWords: any[] = [];
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
@@ -93,6 +96,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
+        this.currentUserRole = this.appState.currentDatabaseUser.userRole;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
@@ -102,6 +106,15 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
                     this.users = data;
                 });
+                this.projectService.getAssignedGlossaries(this.projectId).subscribe(
+                    (glos) => {
+                        for (let i = 0; i < glos.length; i++) {
+                            for (let j = 0; j < glos[i].glossaryStrings.length; j++) {
+                                this.glossaryWords.push(glos[i].glossaryStrings[j]);
+                            }
+                        }
+                    }
+                );
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
                     this.signalrService.closeConnection(
                         `${SignalrGroups[SignalrGroups.complexString]}${
@@ -145,7 +158,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.translationInputs = document.getElementsByClassName('translation');
+        this.translationDivs = document.getElementsByClassName('translation-div');
+        this.translationInputs = document.getElementsByClassName('translation-input');
     }
 
     ngOnChanges() {
@@ -257,8 +271,42 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     
-    onTextChange(i, translation) {
-        this.translationInputs.item(i).textContent = translation;
+    onTextChange(i) { 
+        let words =  this.translationInputs.item(i).value.split(' ');
+        let result = '';
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = 0; j < this.glossaryWords.length; j++) {
+                if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
+                    words[i] = '<span style="color: #ff3333; z-index: 4;">' + words[i] + '</span>';
+                }
+            }
+            if (i !== words.length - 1) {
+                words[i] = words[i] + ' ';
+            }
+            result += words[i];
+        }
+
+        this.translationDivs.item(i).innerHTML = result;
+    }
+
+    setPosition(i) {
+        let position;
+        switch (i) {
+            case 0:
+                position = '38px';
+                break;
+            case 1:
+                position = '86px';
+                break;
+            case 2:
+                position = '134px';
+                break;
+            case 3:
+                position = '182px';
+                break;
+        }
+        return position;
     }
 
     handleNewLanguagesAdded(languagesIds) {
@@ -350,7 +398,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
-        this.translationInputs.item(index).textContent = this.keyDetails.translations[index].translationValue;
+        this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
                 keyId: this.currentKeyId,
@@ -661,6 +709,25 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.currentSuggestion = "";
     }
 
+
+    // public showAssignButton(userId: number): boolean {
+    //     var result = false;
+    //     if (this.userService.getCurrentUser().userRole === 1) {
+    //         result = false;
+    //     }
+    //     // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+    //     //     result = false;
+    //     // }
+    //     // else if (!userId) {
+    //     //     result = false;
+    //     // }
+    //     else {
+    //         result = true;
+    //     }
+    //     return result || !this.users.length;
+    // }
+
+
     reloadKeyDetails(index) {
         this.dataIsLoaded = true;
         this.route.params.subscribe(value => {
@@ -676,21 +743,5 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
-    }
-    public showAssignButton(userId: number): boolean {
-        var result = false;
-        if (this.userService.getCurrentUser().userRole === 1) {
-            result = false;
-        }
-        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
-        //     result = false;
-        // }
-        // else if (!userId) {
-        //     result = false;
-        // }
-        else {
-            result = true;
-        }
-        return result || !this.users.length;
     }
 }

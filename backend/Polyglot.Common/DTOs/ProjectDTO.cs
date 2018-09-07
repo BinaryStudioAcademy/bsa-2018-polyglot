@@ -31,6 +31,8 @@ namespace Polyglot.Common.DTOs
 
         public virtual List<TeamDTO> ProjectTeams { get; set; }
 
+		public int Progress { get; set; }
+
         public ProjectDTO()
         {
 
