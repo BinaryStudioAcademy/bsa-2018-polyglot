@@ -88,7 +88,6 @@ export class NavigationComponent implements OnDestroy {
     this.signalRService.connection.on(            
       SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
       (response: any) => {
-        console.log(response);
           if (this.signalRService.validateResponse(response)) {
               this.notificationService
                   .getCurrenUserNotifications()
