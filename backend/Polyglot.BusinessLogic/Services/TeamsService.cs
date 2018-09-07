@@ -82,6 +82,7 @@ namespace Polyglot.BusinessLogic.Services
                         Name = receivedTeam.Name
                     });
             
+
                 await uow.SaveAsync();
                 foreach(var translator in newTeam.TeamTranslators)
                 {

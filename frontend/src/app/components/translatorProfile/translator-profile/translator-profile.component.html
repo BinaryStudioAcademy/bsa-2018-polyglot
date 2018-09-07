@@ -4,9 +4,16 @@
     fxLayout.xs="column"
     fxLayoutAlign="center"
     fxLayoutGap="20px">
-        <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
+        <!-- <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
             <img src="{{userProfile.avatarUrl}}" alt="avatar" (click)="editPhoto()">
-        </div>
+        </div> -->
+
+        <div class="parent" (click)="editPhoto()">
+                <div class="child bg-five" [ngStyle]="{'background-image': 'url(' + userProfile.avatarUrl + ')'}">
+                    <p>Click to change</p>
+                </div>
+            </div>
+
         <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
             <div fxFlex="50%">
                 <div class="user-name">
@@ -88,7 +95,7 @@
                     <mat-card-title>Contacts</mat-card-title><hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                <div class="review">
+                <div *ngIf="!isTranslator()" class="review">
                     <mat-card *ngIf="!isOwnersProfile()">
                         <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
                     </mat-card>
