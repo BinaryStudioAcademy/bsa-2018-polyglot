@@ -443,7 +443,22 @@ namespace Polyglot.BusinessLogic.Services
 
                 result = result.Distinct().ToList();
             }
-            return mapper.Map<List<ProjectDTO>>(result);
+
+			var mapped = mapper.Map<List<ProjectDTO>>(result);
+			// Add progress to DTO here
+			foreach(var p in mapped)
+			{
+				var strings = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+				int languagesAmount = p.ProjectLanguageses.Count;
+				int max = strings.Count * languagesAmount;
+				int currentProgress = 0;
+				foreach(var str in strings)
+				{
+					currentProgress += str.Translations.Count;
+				}
+				p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+			}
+			return mapped;
         }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
