@@ -67,21 +67,19 @@ export class NavigationComponent implements OnDestroy {
     this.appStateService.getDatabaseUser().subscribe(data => {
       if(data){
         this.manager = data;
-        this.notificationService
-                  .getCurrenUserNotifications()
-                  .subscribe(notifications => {
-                      if (notifications) {
-                        console.log(notifications);
-                        this.notifications = notifications;
-                        this.signalRService.createConnection(
-                          `${SignalrGroups[SignalrGroups.notification]}${
-                            this.manager.id
-                            }`,
-                            "navigationHub"
-                        );
-                        this.subscribeNotificationChanges();
-                      }
-                  });
+        this.signalRService.createConnection(
+          `${SignalrGroups[SignalrGroups.notification]}${
+            this.manager.id
+            }`,
+            "navigationHub"
+        );
+        this.subscribeNotificationChanges();
+
+        this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
+          if (notifications) {
+            this.notifications = notifications;
+          }
+        });
       }
     });
   }
@@ -90,7 +88,8 @@ export class NavigationComponent implements OnDestroy {
     this.signalRService.connection.on(            
       SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
       (response: any) => {
-          if (this.signalRService.validateResponse(response)) {
+        console.log(response);
+          //if (this.signalRService.validateResponse(response)) {
               this.notificationService
                   .getCurrenUserNotifications()
                   .subscribe(notifications => {
@@ -99,7 +98,7 @@ export class NavigationComponent implements OnDestroy {
                         this.notifications = notifications;
                       }
                   });
-          }
+          //}
       });
   }
 
