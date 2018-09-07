@@ -34,8 +34,6 @@ namespace Polyglot.DataAccess.Entities
 
         public virtual ICollection<TeamTranslator> TeamTranslators { get; set; }
 
-        public virtual ICollection<Notification> Notifications { get; set; }
-
         public virtual List<Project> Projects { get; set; }
 
         public UserProfile()
@@ -43,7 +41,6 @@ namespace Polyglot.DataAccess.Entities
             TeamTranslators = new List<TeamTranslator>();
             Ratings = new List<Rating>();
             Projects = new List<Project>();
-            Notifications = new List<Notification>();
         }
         
     }

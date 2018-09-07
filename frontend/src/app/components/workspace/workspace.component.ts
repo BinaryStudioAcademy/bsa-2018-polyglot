@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, forkJoin } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
@@ -23,7 +23,8 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string;
+    public searchQuery: string = ' ';
+    public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
     public currentPath;
@@ -39,13 +40,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private loop: any;
     private currentKeyId: number;
     private previousKeyId: number;
+    private projectId: number;
+    private div;
+    private differ;
+    private madiv;
 
     filters: Array<string>;
 
     filterOptions: string[] = [
         "Translated",
         "Untranslated",
-        "With Tags",
         "With Photo"
     ];
 
@@ -59,7 +63,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
-        private eventService: EventService
+        private eventService: EventService,
+        private differs: KeyValueDiffers
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
@@ -71,6 +76,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }            
             }
         );
+        this.differ = differs.find({}).create();
     }
 
     description: string = "Are you sure you want to remove the project?";
@@ -81,14 +87,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     ngOnInit() {
         console.log(this.stringsInProgress);
         this.filters = [];
-        this.searchQuery = "";
+        // this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             forkJoin(
                 this.projectService.getById(params.projectId),
-                this.projectService.getProjectLanguages(params.projectId)
+                this.projectService.getProjectLanguages(params.projectId),
+                this.projectId = params.projectId
             ).subscribe(result => {
                 this.project = result[0];
+                this.projectTags = this.project.tags.map(x => x.name);
                 this.projectService
                     .getProjectLanguages(this.project.id)
                     .subscribe(
@@ -121,7 +129,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 .getProjectStringsWithPagination(
                     params.projectId,
                     this.elementsOnPage,
-                    0
+                    0,
+                    this.searchQuery.trim()
                 )
                 .subscribe((data: any) => {
                     if (data) {
@@ -137,12 +146,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             this.isLoad = true;
                         }
                     }
-                    let list = this.keys.filter(x => x.tags.length > 0);
-                    this.projectTags = [].concat.apply(
-                        [],
-                        list.map(x => x.tags)
-                    );
-                    this.projectTags = Array.from(new Set(this.projectTags));
                 });
 
             this.currentPage++;
@@ -177,6 +180,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         let dialogRef = this.dialog.open(StringDialogComponent, {
             data: {
                 projectId: this.project.id,
+                tags : this.project.tags,
                 string: {
                     id: 0,
                     key: '',
@@ -194,11 +198,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         dialogRef.componentInstance.onAddString.subscribe(result => {
             if (result) {
                 this.keys.push(result);
-                result.tags.forEach(element => {
-                    if (!this.projectTags.includes(element)) {
+                result.tags.map(x => x.name)
+                .forEach(element => {
+                    if(!this.projectTags.includes(element)){
                         this.projectTags.push(element);
                     }
-                });
+                })
                 this.selectedKey = result;
                 let keyId = this.keys[0].id;
                 this.router.navigate([this.currentPath, keyId]);
@@ -369,7 +374,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             .getProjectStringsWithPagination(
                 this.project.id,
                 this.elementsOnPage,
-                this.currentPage
+                this.currentPage,
+                this.currentSearchQuery.trim()
             )
             .subscribe((keys: any) => {
                 this.currentPage++;
@@ -396,5 +402,40 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     isStringInProgress(key) {
         return this.stringsInProgress.includes(key.id);
+    }
+
+    searchChanges() {
+        debugger;
+        this.currentSearchQuery = this.searchQuery;
+        this.currentPage = 0;
+        this.projectService
+                .getProjectStringsWithPagination(
+                    this.projectId,
+                    this.elementsOnPage,
+                    this.currentPage,
+                    this.currentSearchQuery.trim()
+                )
+                .subscribe((data: any) => {
+                    if (data) {
+                        this.keys = data;
+                        this.isLoad = true;
+                        this.onSelect(this.keys[0]);
+                        let keyId: number;
+                        if (this.keys.length !== 0) {
+                            keyId = this.keys[0].id;
+                            this.currentKeyId = keyId;
+                            this.router.navigate([this.currentPath, keyId]);
+                        } else {
+                            this.isLoad = true;
+                        }
+                    }
+                    let list = this.keys.filter(x => x.tags.length > 0);
+                    this.projectTags = [].concat.apply(
+                        [],
+                        list.map(x => x.tags)
+                    );
+                    this.projectTags = Array.from(new Set(this.projectTags));
+                });
+        this.currentPage++;
     }
 }

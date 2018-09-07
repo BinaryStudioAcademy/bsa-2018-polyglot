@@ -16,7 +16,6 @@ export class SignalrService {
     constructor(private appState: AppStateService) {}
 
     public createConnection(groupName: string, hubUrl: string) {
-        debugger;
         if (
             !this.connection ||
             this.connection.connection.connectionState === 2
@@ -71,6 +70,19 @@ export class SignalrService {
             responce.ids.length > 0 &&
             responce.senderId &&
             responce.senderId !== this.appState.currentDatabaseUser.id
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public validateChatResponse(responce: any): boolean {
+        if (
+            responce.senderId &&
+            responce.senderId !== this.appState.currentDatabaseUser.id &&
+            responce.dialogId &&
+            responce.text && responce.text.length > 0
         ) {
             return true;
         } else {
