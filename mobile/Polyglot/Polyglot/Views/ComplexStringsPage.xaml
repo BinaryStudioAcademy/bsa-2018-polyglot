@@ -5,7 +5,6 @@
   <ListView 
             ItemsSource="{Binding ComplexStrings}"
             SelectedItem="{Binding SelectedString, Mode=OneWayToSource}"
-            ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement">
 
     <ListView.ItemTemplate>
