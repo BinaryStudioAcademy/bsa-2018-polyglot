@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language } from "../../../models";
+import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -25,7 +25,7 @@ import { UserService } from "../../../services/user.service";
     templateUrl: "./key-details.component.html",
     styleUrls: ["./key-details.component.sass"]
 })
-export class KeyDetailsComponent implements OnInit {
+export class KeyDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator)
     paginator: MatPaginator;
     @ViewChild(TabHistoryComponent)
@@ -66,6 +66,7 @@ export class KeyDetailsComponent implements OnInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    translationInputs: any;
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
@@ -141,6 +142,10 @@ export class KeyDetailsComponent implements OnInit {
         this.signalrService.closeConnection(
             `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
         );
+    }
+
+    ngAfterViewInit() {
+        this.translationInputs = document.getElementsByClassName('translation');
     }
 
     ngOnChanges() {
@@ -251,6 +256,11 @@ export class KeyDetailsComponent implements OnInit {
         );
     }
 
+    
+    onTextChange(i, translation) {
+        this.translationInputs.item(i).textContent = translation;
+    }
+
     handleNewLanguagesAdded(languagesIds) {
         this.isLoad = true;
         this.projectService.getProjectLanguages(this.projectId).subscribe(
@@ -340,11 +350,12 @@ export class KeyDetailsComponent implements OnInit {
     }
 
     setStep(index: number) {
+        this.translationInputs.item(index).textContent = this.keyDetails.translations[index].translationValue;
         this.index = index;
-       this.eventService.filter({
-            keyId: this.currentKeyId,
-            status: true
-        });
+        this.eventService.filter({
+                keyId: this.currentKeyId,
+                status: true
+            });
         this.history.translationSelected=true;
         if (index === undefined) {
             return;
@@ -650,6 +661,25 @@ export class KeyDetailsComponent implements OnInit {
         this.currentSuggestion = "";
     }
 
+
+    // public showAssignButton(userId: number): boolean {
+    //     var result = false;
+    //     if (this.userService.getCurrentUser().userRole === 1) {
+    //         result = false;
+    //     }
+    //     // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
+    //     //     result = false;
+    //     // }
+    //     // else if (!userId) {
+    //     //     result = false;
+    //     // }
+    //     else {
+    //         result = true;
+    //     }
+    //     return result || !this.users.length;
+    // }
+
+
     reloadKeyDetails(index) {
         this.dataIsLoaded = true;
         this.route.params.subscribe(value => {
@@ -665,21 +695,5 @@ export class KeyDetailsComponent implements OnInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
-    }
-    public showAssignButton(userId: number): boolean {
-        var result = false;
-        if (this.userService.getCurrentUser().userRole === 1) {
-            result = false;
-        }
-        // else if (this.userService.getCurrentUser().userRole === 0 && this.userService.getCurrentUser().id === userId) {
-        //     result = false;
-        // }
-        // else if (!userId) {
-        //     result = false;
-        // }
-        else {
-            result = true;
-        }
-        return result || !this.users.length;
     }
 }

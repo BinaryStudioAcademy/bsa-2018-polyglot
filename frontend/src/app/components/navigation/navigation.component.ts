@@ -67,17 +67,17 @@ export class NavigationComponent implements OnDestroy {
     this.appStateService.getDatabaseUser().subscribe(data => {
       if(data){
         this.manager = data;
-        this.signalRService.createConnection(
-          `${SignalrGroups[SignalrGroups.notification]}${
-            this.manager.id
-            }`,
-            "navigationHub"
-        );
-        this.subscribeNotificationChanges();
 
         this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
           if (notifications) {
             this.notifications = notifications;
+            this.signalRService.createConnection(
+              `${SignalrGroups[SignalrGroups.notification]}${
+                this.manager.id
+                }`,
+                "navigationHub"
+            );
+            this.subscribeNotificationChanges();
           }
         });
       }
@@ -89,7 +89,7 @@ export class NavigationComponent implements OnDestroy {
       SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
       (response: any) => {
         console.log(response);
-          //if (this.signalRService.validateResponse(response)) {
+          if (this.signalRService.validateResponse(response)) {
               this.notificationService
                   .getCurrenUserNotifications()
                   .subscribe(notifications => {
@@ -98,7 +98,7 @@ export class NavigationComponent implements OnDestroy {
                         this.notifications = notifications;
                       }
                   });
-          //}
+          }
       });
   }
 

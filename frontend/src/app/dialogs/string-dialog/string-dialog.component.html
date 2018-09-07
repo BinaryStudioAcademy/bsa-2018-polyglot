@@ -28,7 +28,7 @@
         <app-upload-image [imageUrl]="str.pictureLink" (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <app-tags [allTags] = "getAllTags()" [existingTags] = "str.tags"
+    <app-tags [allTags] = "data.tags"
     (tagsEvent) = "receiveTags($event)"></app-tags>
     <button 
       type="submit" 

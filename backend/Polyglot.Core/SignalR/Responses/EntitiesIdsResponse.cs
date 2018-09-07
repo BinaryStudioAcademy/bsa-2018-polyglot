@@ -1,6 +1,6 @@
 ﻿namespace Polyglot.Core.SignalR.Responses
 {
-    public class EntitiesIdsResponse : IResponse
+    public class EntitiesIdsResponce : IResponse
     {
         public int SenderId { get; set; }
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpService, RequestMethod } from './http.service';
-import { GroupType, ChatContacts, Project, Team, ChatMessage } from '../models';
+import { GroupType, Project, Team, ChatMessage } from '../models';
+import { ChatDialog } from '../models/chat/chatDialog';
 
 @Injectable({
   providedIn: 'root'
@@ -13,29 +14,36 @@ export class ChatService {
     this.api = "chat";
   }
 
-  getContacts(targetGroup: GroupType, targetGroupId: number) : Observable<ChatContacts> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[targetGroup]}/${targetGroupId}/contacts`);
+  getDialogs() : Observable<ChatDialog[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/dialogs`);
+  }
+  
+  addDialog(dialog: ChatDialog) : Observable<ChatDialog> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/dialogs', undefined, dialog);
   }
 
-  getProjectsList() : Observable<Project[]> {
+  deleteDialog(dialogId: number) : Observable<boolean> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/dialogs', dialogId);
+  }
+
+  getProjectsList() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/projects');
   }
 
-  getTeamsList() : Observable<Team[]> {
+  getTeamsList() : Observable<ChatDialog[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/teams');
   }
 
-  getMessagesHistory(group: GroupType, targetGroupId: number) : Observable<ChatMessage[]> {
-    debugger;
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/${targetGroupId}/messages`);
+  getDialogMessages(group: GroupType, targetGroupDialogId: number) : Observable<ChatMessage[]> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/dialogs/${GroupType[group]}/${targetGroupDialogId}/messages`);
   }
 
-  getMessage(group: GroupType, targetGroupId: number, targetMessageId: number) : Observable<ChatMessage> {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/${GroupType[group]}/${targetGroupId}/messages`, targetMessageId);
+  getMessage(targetMessageId: number) : Observable<ChatMessage> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + `/messages`, targetMessageId);
   }
 
-  sendMessage(group: GroupType, targetGroupId: number, message) : Observable<ChatMessage> {
-    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${GroupType[group]}/${targetGroupId}/messages`, undefined, message);
+  sendMessage(group: GroupType, message) : Observable<ChatMessage> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${GroupType[group]}/dialogs/messages`, undefined, message);
   }
 
   //createMessage(project: FormData) : Observable<Project> {
@@ -50,9 +58,6 @@ export class ChatService {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
   //}
 //
-  //addContact(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
 //
   //deleteContact(project: FormData) : Observable<Project> {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');

@@ -6,11 +6,11 @@
 	documents that should have consistent terminology.</p>
 
 
-<div class="no-items-div mt-1 mb-1" *ngIf="glossaries.length === 0">
+<div class="no-items-div mt-1 mb-1" *ngIf="glossaries && glossaries.length === 0">
 	<p>No glossaries</p>
 </div>
 
-<div class="row-container" *ngIf="glossaries.length !== 0">
+<div class="row-container" *ngIf="glossaries && glossaries.length !== 0">
   <mat-list>
     <div class="list-item" *ngFor="let glossary of glossaries">      
         <a routerLinkActive="active" [routerLink]="['/dashboard/glossaries', glossary.id]" class="row-name">

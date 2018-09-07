@@ -10,14 +10,21 @@
         <mat-sidenav class="contacts-list" #snav [mode]="'side'">
             <mat-nav-list>
 
-                <app-chat-contacts (onItemSelect)="onSelected($event)"></app-chat-contacts>
+                <app-chat-contacts (onItemSelect)="onSelected($event)" [person]="selectedPerson"></app-chat-contacts>
 
             </mat-nav-list>
         </mat-sidenav>
 
         <mat-sidenav-content class="chat-messages-window">
 
-            <app-chat-window [interlocutor]="selectedUser"></app-chat-window>
+                <app-chat-window *ngIf="selectedDialog || selectedPerson; else mainWindow" (onPersonSelect)="onPersonSelected($event)" [dialog]="selectedDialog"></app-chat-window>
+
+
+                <ng-template #mainWindow>
+                        main window placeholder
+                </ng-template>
+
+            
 
         </mat-sidenav-content>
     </mat-sidenav-container>

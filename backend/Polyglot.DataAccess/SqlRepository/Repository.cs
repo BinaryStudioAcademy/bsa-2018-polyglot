@@ -89,6 +89,11 @@ namespace Polyglot.DataAccess.SqlRepository
             return true;
         }
 
+        public async Task<TEntity> GetLastAsync()
+        {
+            return await DbSet.LastOrDefaultAsync();
+        }
+
         //public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where) 
         //    => 
         //    ApplyIncludes().AnyAsync(where);

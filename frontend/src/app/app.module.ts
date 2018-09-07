@@ -111,6 +111,9 @@ import { AssignGlossariesComponent } from './components/project-details/assign-g
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
+import { SelectColorDialogComponent } from './dialogs/select-color-dialog/select-color-dialog.component';
+
+
 import { ChatComponent } from "./components/chat/chat.component";
 import { ChatContactsComponent } from './components/chat/chat-contacts/chat-contacts.component';
 import { ChatWindowComponent } from './components/chat/chat-window/chat-window.component';
@@ -192,6 +195,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
+    SelectColorDialogComponent,
     TeamDetailsComponent,
     TeamMembersComponent,
     ChatComponent,
@@ -253,7 +257,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    SelectColorDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
