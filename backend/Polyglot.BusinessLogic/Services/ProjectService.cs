@@ -448,15 +448,24 @@ namespace Polyglot.BusinessLogic.Services
 			// Add progress to DTO here
 			foreach(var p in mapped)
 			{
-				var strings = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+				List<ComplexString> temp = new List<ComplexString>();
+
+				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
 				int languagesAmount = p.ProjectLanguageses.Count;
-				int max = strings.Count * languagesAmount;
+				int max = temp.Count * languagesAmount;
 				int currentProgress = 0;
-				foreach(var str in strings)
+				foreach(var str in temp)
 				{
 					currentProgress += str.Translations.Count;
 				}
-				p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+				if(currentProgress == 0 || max == 0)
+				{
+					p.Progress = 0;
+				}
+				else
+				{
+					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+				}				
 			}
 			return mapped;
         }
