@@ -66,6 +66,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    translationDivs: any;
     translationInputs: any;
 
     users: UserProfilePrev[] = [];
@@ -145,7 +146,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.translationInputs = document.getElementsByClassName('translation');
+        this.translationDivs = document.getElementsByClassName('translation-div');
+        this.translationInputs = document.getElementsByClassName('translation-input');
     }
 
     ngOnChanges() {
@@ -257,8 +259,40 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     
-    onTextChange(i, translation) {
-        this.translationInputs.item(i).textContent = translation;
+    onTextChange(i, translation, $event) { 
+        let words =  this.translationInputs.item(i).value.split(' ');
+        let result = '';
+
+        for (let i = 0; i < words.length; i++) {
+            if (words[i] === 'nicko') {
+                words[i] = '<span style="color: red">' + words[i] + '</span>';
+            }
+            if (i !== words.length - 1) {
+                words[i] = words[i] + ' ';
+            }
+            result += words[i];
+        }
+
+        this.translationDivs.item(i).innerHTML = result;
+    }
+
+    setPosition(i) {
+        let position;
+        switch (i) {
+            case 0:
+                position = '38px';
+                break;
+            case 1:
+                position = '86px';
+                break;
+            case 2:
+                position = '134px';
+                break;
+            case 3:
+                position = '182px';
+                break;
+        }
+        return position;
     }
 
     handleNewLanguagesAdded(languagesIds) {
