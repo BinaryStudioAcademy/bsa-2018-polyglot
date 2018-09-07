@@ -16,7 +16,7 @@ namespace Polyglot
 
         async void OnButtonClicked(object sender, EventArgs args)
         {
-            var newPage = new Dashboard();
+            var newPage =new NavigationPage( new Dashboard(new ViewModels.DashboardViewModel()));
             await Navigation.PushAsync(newPage);
         }
     }

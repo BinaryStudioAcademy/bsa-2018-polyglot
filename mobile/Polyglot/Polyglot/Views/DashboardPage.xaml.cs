@@ -14,15 +14,14 @@ namespace Polyglot
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Dashboard : ContentPage
     {
-        public DashboardViewModel dashboard { get; set; }
 
-        public Dashboard()
+        public Dashboard(DashboardViewModel dashboard)
         {
-            /* BindingContext= var in constructor*/
+            BindingContext = dashboard;
+
             InitializeComponent();
 
             dashboard.Initialize();
-            BindingContext = dashboard;
         }
 
         //async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
