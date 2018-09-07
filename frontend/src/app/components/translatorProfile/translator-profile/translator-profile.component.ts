@@ -10,6 +10,8 @@ import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppStateService } from '../../../services/app-state.service';
+import { LanguageService } from '../../../services/language.service';
+import { LanguageStatistic, TranslatorLanguage } from '../../../models';
 
 @Component({
   selector: 'app-translator-profile',
@@ -30,11 +32,12 @@ export class TranslatorProfileComponent implements OnInit{
               private snotifyService: SnotifyService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private appStateService: AppStateService) { }
+              private appStateService: AppStateService,
+              private languageService: LanguageService) { }
 
     @Input() public userProfile : any;
     public Comments: Comment[];
-    Languages: Language[];
+    Languages: TranslatorLanguage[];
     private routeSub: Subscription;
 
     ngOnInit(): void {
@@ -45,15 +48,9 @@ export class TranslatorProfileComponent implements OnInit{
             });
         });
 
-        this.Languages = [
-            {Name : "French",Proficiency : 47},
-            {Name : "Spanish",Proficiency : 77},
-            {Name : "English",Proficiency : 97},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50}
-          ];
+        this.languageService.getTranslatorsLanguages(this.userProfile.id).subscribe(languages=>{
+            this.Languages = languages;
+        });
     }
 
     isOwnersProfile(){
@@ -131,7 +128,3 @@ export class TranslatorProfileComponent implements OnInit{
 }
 
 
-export interface Language{
-    Name : string,
-    Proficiency : number
-}

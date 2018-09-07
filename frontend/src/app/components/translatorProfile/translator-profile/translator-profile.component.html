@@ -65,10 +65,10 @@
               <hr>
               <div class="languages-list">
               <br>
-              <div *ngFor="let l of Languages">
+              <div *ngFor="let translatorLanguage of Languages">
                       <mat-card-header>
-                        <mat-card-title>{{l.Name}}</mat-card-title>
-                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
+                        <mat-card-title>{{translatorLanguage.languge.name}}</mat-card-title>
+                        <mat-card-subtitle>{{translatorLanguage.proficiency}}/100</mat-card-subtitle>
                       </mat-card-header>
                       <mat-card-content>
                     <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
