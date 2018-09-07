@@ -14,6 +14,7 @@ using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
 using Nest;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
@@ -563,38 +564,72 @@ namespace Polyglot.BusinessLogic.Services
             return map;
         }
 
-        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
+        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
-            var skipItems = itemsOnPage * page;
+			// check if Elastic is connected
+			// if true use elastic else use mongo			
+			if (ElasticRepository.isElasticUsed)
+			{
+				// sorts string by creation date
+				var sorter = new SortDescriptor<DataAccess.ElasticsearchModels.ComplexStringIndex>();
+				sorter.Field("CreatedAt", Nest.SortOrder.Ascending);
 
-            var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+				// ElasticSearch query equals to
+				// ({id} == projectId) && (search == str.key || search == str.OriginalValue)
+				// ProjectId MUST match and either Key or OriginalValue must match
+				var result = await elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
+						.Sort(s => sorter)
+						.From(page * itemsOnPage)
+						.Size(itemsOnPage)
+						.Query(q => q
+							.Bool(b => b
+								.Must(mu => mu
+									.Match(ma => ma
+										.Field(f => f.ProjectId.ToString())
+										.Query(id.ToString())
+									), mu => mu
+									.Bool(bb => bb
+										.MinimumShouldMatch(1)
+										.Should(sh => sh
+											.Match(m => m
+												.Field( f=> f.Key)
+												.Query(search)
+											), sh => sh
+											.Match(m => m
+												.Field(f => f.OriginalValue)
+												.Query(search)
+											)
+										)
+									)
+								)
+							)						
+						)							
+					);
+				// adding tags to dto`s
+				var models = mapper.Map<List<ComplexString>>(result.Documents);
+				var tags = await uow.GetRepository<Tag>().GetAllAsync();
+				var dtos = mapper.Map<List<ComplexStringDTO>>(models);
+				for (int i = 0; i < dtos.Count; i++)
+				{
+					dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
+				}
+				return dtos;
+			}
+			else
+			{				
+				var skipItems = itemsOnPage * page;
+                var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+                var tags = await uow.GetRepository<Tag>().GetAllAsync();
+                var map = mapper.Map<List<ComplexStringDTO>>(strings);
+                for (int i = 0; i < map.Count; i++)
+                {
+                    map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+                }
+                var paginatedStrings = map.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+                return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+			}			
+		}
 
-            var tags = await uow.GetRepository<Tag>().GetAllAsync();
-            var map = mapper.Map<List<ComplexStringDTO>>(strings);
-
-            for (int i = 0; i < map.Count; i++)
-            {
-                map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
-            }
-
-            var paginatedStrings = map.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
-
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
-
-            //var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
-            //    x.Query(q => q
-            //            .Match(m => m
-            //                .Field(f => f.ProjectId)
-            //                .Query(id.ToString())
-            //            )
-            //        )
-            //        .From(page * itemsOnPage)
-            //        .Size(itemsOnPage)
-            //);
-
-            //return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
-
-        }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId)
         {

@@ -20,6 +20,14 @@ namespace Polyglot.DataAccess.Elasticsearch
         private static ConnectionSettings _settings;
 
         private static bool _updateSearchService;
+		
+		public static bool isElasticUsed
+		{
+			get
+			{
+				return _updateSearchService;
+			}
+		}
 
 
         public static void AddElasticsearch(this IServiceCollection services, IConfiguration configuration)
@@ -30,6 +38,7 @@ namespace Polyglot.DataAccess.Elasticsearch
 
             _settings = new ConnectionSettings(new Uri(url))
                 .DefaultIndex(defaultIndex)
+                .DefaultFieldNameInferrer(s => s)
                 .DefaultMappingFor<ComplexStringIndex>(m => m
                     .IndexName("complexstring")
                     .TypeName("complexstring")
