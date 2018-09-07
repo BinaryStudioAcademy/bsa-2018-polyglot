@@ -24,11 +24,13 @@ export class TabCommentsComponent implements OnInit {
     public commentText: string;
     public routeSub: Subscription;
     public keyId: number;
+    @Input() textCommentForAdd: string;
+
     public commentForm = this.fb.group({
         commentBody: ['']
     });
     public body: string;
-    
+
     private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;
@@ -49,6 +51,8 @@ export class TabCommentsComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         this.commentForm.reset();
+        this.body = `-->${this.textCommentForAdd}<-- `;
+
     }
 
     ngOnDestroy() {
@@ -168,10 +172,10 @@ export class TabCommentsComponent implements OnInit {
             this.currentPage + 1
             )
             .subscribe((comments: any) => {
-                
+
                     this.currentPage++;
                     saveResultsCallback(comments);
-              
+
 
             });
     }

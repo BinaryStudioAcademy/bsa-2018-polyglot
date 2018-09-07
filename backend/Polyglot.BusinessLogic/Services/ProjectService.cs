@@ -443,7 +443,31 @@ namespace Polyglot.BusinessLogic.Services
 
                 result = result.Distinct().ToList();
             }
-            return mapper.Map<List<ProjectDTO>>(result);
+
+			var mapped = mapper.Map<List<ProjectDTO>>(result);
+			// Add progress to DTO here
+			foreach(var p in mapped)
+			{
+				List<ComplexString> temp = new List<ComplexString>();
+
+				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+				int languagesAmount = p.ProjectLanguageses.Count;
+				int max = temp.Count * languagesAmount;
+				int currentProgress = 0;
+				foreach(var str in temp)
+				{
+					currentProgress += str.Translations.Count;
+				}
+				if(currentProgress == 0 || max == 0)
+				{
+					p.Progress = 0;
+				}
+				else
+				{
+					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+				}				
+			}
+			return mapped;
         }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
@@ -609,10 +633,11 @@ namespace Polyglot.BusinessLogic.Services
 				var models = mapper.Map<List<ComplexString>>(result.Documents);
 				var tags = await uow.GetRepository<Tag>().GetAllAsync();
 				var dtos = mapper.Map<List<ComplexStringDTO>>(models);
-				for (int i = 0; i < dtos.Count; i++)
-				{
-					dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
-				}
+				// Temporary
+				//for (int i = 0; i < dtos.Count; i++)
+				//{
+				//	dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
+				//}
 				return dtos;
 			}
 			else

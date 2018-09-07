@@ -67,9 +67,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    translationDivs: any;
     currentUserRole: any;
     translationInputs: any;
     private signalRConnection;
+    glossaryWords: any[] = [];
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
@@ -106,6 +108,15 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
                     this.users = data;
                 });
+                this.projectService.getAssignedGlossaries(this.projectId).subscribe(
+                    (glos) => {
+                        for (let i = 0; i < glos.length; i++) {
+                            for (let j = 0; j < glos[i].glossaryStrings.length; j++) {
+                                this.glossaryWords.push(glos[i].glossaryStrings[j]);
+                            }
+                        }
+                    }
+                );
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
                     this.signalrService.leaveGroup(
                         `${SignalrGroups[SignalrGroups.complexString]}${
@@ -150,7 +161,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.translationInputs = document.getElementsByClassName('translation');
+        this.translationDivs = document.getElementsByClassName('translation-div');
+        this.translationInputs = document.getElementsByClassName('translation-input');
     }
 
     ngOnChanges() {
@@ -169,7 +181,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     subscribeProjectChanges() {
-        debugger;
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation],
             (response: any) => {
@@ -195,7 +206,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                     {
                                         this.history.translationSelected = false;
                                     }
-                                   
                                 }
                             }
                         });
@@ -262,9 +272,44 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-    
-    onTextChange(i, translation) {
-        this.translationInputs.item(i).textContent = translation;
+
+
+    onTextChange(i) {
+        let words =  this.translationInputs.item(i).value.split(' ');
+        let result = '';
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = 0; j < this.glossaryWords.length; j++) {
+                if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
+                    words[i] = '<span style="color: #ff3333; z-index: 4;">' + words[i] + '</span>';
+                }
+            }
+            if (i !== words.length - 1) {
+                words[i] = words[i] + ' ';
+            }
+            result += words[i];
+        }
+
+        this.translationDivs.item(i).innerHTML = result;
+    }
+
+    setPosition(i) {
+        let position;
+        switch (i) {
+            case 0:
+                position = '38px';
+                break;
+            case 1:
+                position = '86px';
+                break;
+            case 2:
+                position = '134px';
+                break;
+            case 3:
+                position = '182px';
+                break;
+        }
+        return position;
     }
 
     handleNewLanguagesAdded(languagesIds) {
@@ -356,7 +401,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
-        this.translationInputs.item(index).textContent = this.keyDetails.translations[index].translationValue;
+        this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
                 keyId: this.currentKeyId,
@@ -701,5 +746,65 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
+    }
+
+    getPosition(e) {
+        var posx = 0;
+        var posy = 0;
+
+        if (!e) { let e = window.event; }
+
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+
+        return {
+            x: posx,
+            y: posy
+        }
+    }
+
+    isVisible = false;
+    textCommentForAdd: string;
+
+    onRightClick($event) {
+        let length = document.getSelection().toString().length;
+        if (length > 1) {
+            this.isVisible = true;
+            $event.preventDefault();
+            let menu = document.getElementById("main-input");
+
+            menu.style.position = "absolute";
+            menu.style.visibility = "visible";
+
+            menu.style.marginLeft = `${(this.getPosition($event).x - 350).toString()}px`;
+            menu.style.marginTop = `${(this.getPosition($event).y - 180).toString()}px`;
+
+            this.isVisible = true;
+        }
+        else {
+            this.isVisible = false;
+        }
+        return false;
+    }
+
+    onClickOnTranslation($event) {
+        this.isVisible = false;
+    }
+
+    addComment() {
+        this.textCommentForAdd = document.getSelection().toString();
+        //If we use span for background
+        // var comment = document.getElementById("comment");
+        // comment.innerHTML = comment.innerHTML + `<span
+        //   style ="background: #fffa6b;
+        //   border-radius: 10%;
+        //   opacity: 0.8;"
+        // >${this.text}</span>`;
+        this.isVisible = false;
     }
 }
