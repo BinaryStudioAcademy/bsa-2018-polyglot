@@ -5,4 +5,5 @@ export interface TeamProject {
     project: Project;
     projectId?: number;
     teamId: number;
+    progress: number;
 }
