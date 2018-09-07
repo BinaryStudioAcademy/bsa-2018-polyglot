@@ -3,6 +3,7 @@ export enum SignalrGroups {
     project,
     chatTeams,
     chatProject,
+    notification,
     direct,
     dialog
 }

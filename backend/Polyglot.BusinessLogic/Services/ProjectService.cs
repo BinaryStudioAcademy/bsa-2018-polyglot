@@ -927,7 +927,7 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     Message = $"Complex string with key {projectString.Key}" +
                     $" was assigned to the project",
-                    DateTime = DateTime.Now
+                    DateTime = projectString.CreatedOn
                 });
 
                 var comments = await this.stringService.GetCommentsAsync(projectString.Id);

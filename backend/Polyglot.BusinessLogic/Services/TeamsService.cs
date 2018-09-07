@@ -82,12 +82,6 @@ namespace Polyglot.BusinessLogic.Services
                         Name = receivedTeam.Name
                     });
             
-                newTeam.TeamTranslators = translators;
-                newTeam.CreatedBy = currentUser;
-                newTeam.Name = receivedTeam.Name;
-
-            newTeam = await uow.GetRepository<Team>().CreateAsync(newTeam);
-
 
                 await uow.SaveAsync();
                 foreach(var translator in newTeam.TeamTranslators)
