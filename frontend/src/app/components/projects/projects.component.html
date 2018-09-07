@@ -41,7 +41,7 @@
           <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
         </a>
       </div>
-      <div *ngIf="card.progress" class="progress-container">
+      <div  class="progress-container">
         <span>Progress: {{card.progress | number:'1.0-1'}}%</span>
         <mat-progress-bar class="lang-progress" mode="determinate" value="{{card.progress}}"></mat-progress-bar>
       </div>
