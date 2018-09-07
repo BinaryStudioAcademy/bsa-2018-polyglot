@@ -66,6 +66,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    currentUserRole: any;
     translationInputs: any;
 
     users: UserProfilePrev[] = [];
@@ -93,6 +94,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
+        this.currentUserRole = this.appState.currentDatabaseUser.userRole;
         this.route.params.subscribe(value => {
             this.isLoad = false;
             this.dataProvider.getById(value.keyId).subscribe((data: any) => {
