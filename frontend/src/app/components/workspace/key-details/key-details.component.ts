@@ -203,7 +203,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                     {
                                         this.history.translationSelected = false;
                                     }
-                                   
+
                                 }
                             }
                         });
@@ -270,8 +270,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-    
-    onTextChange(i) { 
+
+
+    onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
         let result = '';
 
@@ -743,5 +744,65 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
+    }
+
+    getPosition(e) {
+        var posx = 0;
+        var posy = 0;
+
+        if (!e) { let e = window.event; }
+
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+
+        return {
+            x: posx,
+            y: posy
+        }
+    }
+
+    isVisible = false;
+    textCommentForAdd: string;
+
+    onRightClick($event) {
+        let length = document.getSelection().toString().length;
+        if (length > 1) {
+            this.isVisible = true;
+            $event.preventDefault();
+            let menu = document.getElementById("main-input");
+
+            menu.style.position = "absolute";
+            menu.style.visibility = "visible";
+
+            menu.style.marginLeft = `${(this.getPosition($event).x - 350).toString()}px`;
+            menu.style.marginTop = `${(this.getPosition($event).y - 180).toString()}px`;
+
+            this.isVisible = true;
+        }
+        else {
+            this.isVisible = false;
+        }
+        return false;
+    }
+
+    onClickOnTranslation($event) {
+        this.isVisible = false;
+    }
+
+    addComment() {
+        this.textCommentForAdd = document.getSelection().toString();
+        //If we use span for background
+        // var comment = document.getElementById("comment");
+        // comment.innerHTML = comment.innerHTML + `<span
+        //   style ="background: #fffa6b;
+        //   border-radius: 10%;
+        //   opacity: 0.8;"
+        // >${this.text}</span>`;
+        this.isVisible = false;
     }
 }
