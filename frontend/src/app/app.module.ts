@@ -61,6 +61,7 @@ import {
     MatProgressSpinnerModule
 } from "@angular/material";
 import { MatSortModule } from "@angular/material/sort";
+
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
@@ -239,6 +240,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     NgxChartsModule,
     NgxInfiniteScrollerModule,
     InfiniteScrollModule
+   
   ],
   entryComponents: [
     LoginDialogComponent,

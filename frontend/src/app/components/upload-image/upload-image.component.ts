@@ -22,7 +22,7 @@ export class UploadImageComponent implements OnInit {
 
 
     sendImage($event) {
-        debugger;
+        
         if ($event[0].size < 10000000) {
             this.isWarning = false;
             this.fileEvent.emit($event);

@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { RightService } from '../../../services/right.service';
 import { AppStateService } from '../../../services/app-state.service';
+import { TeamAddMemberComponent } from '../../../dialogs/team-add-member/team-add-member.component';
 
 @Component({
   selector: 'app-team-members',
@@ -26,8 +27,9 @@ export class TeamMembersComponent implements OnInit {
 	@Input() teamId: number;
 	teamName: string;
 	teamTranslators: Translator[];
+	public assignedTransaltors: Array<any> = [];
 	emailToSearch: string;
-	displayedColumns: string[] = ['status', 'fullName', 'email', 'rights', 'options' ];
+	displayedColumns: string[] = ['status', 'fullName', 'rating', 'rights', 'options' ];
 	dataSource: MatTableDataSource<Translator> = new MatTableDataSource();
 	emailFormControl = new FormControl('', [
 		Validators.email,
@@ -72,7 +74,9 @@ export class TeamMembersComponent implements OnInit {
 		this.teamService.getTeam(this.teamId)
 				.subscribe((data: Team) => {
 					this.teamName = data.name;
+					
 					this.teamTranslators = data.teamTranslators;
+					
 					this.dataSource = new MatTableDataSource(this.teamTranslators);
 					this.dataSource.sort = this.sort;
 					this.ngOnChanges();
@@ -86,6 +90,7 @@ export class TeamMembersComponent implements OnInit {
 		})
 		this.getTranslators();
 	 // this.checkPaginatorNecessity();
+	
 	}
 
 	ngOnChanges(){
@@ -98,6 +103,101 @@ export class TeamMembersComponent implements OnInit {
 		// If the user changes the sort order, reset back to the first page.
 		this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 	}
+	
+	addMember() {
+		// if (this.IsLoad)
+		//   return;
+	
+		// this.IsLoad = true;
+		this.teamService.getAllTranslators()
+		  .subscribe(translators => {
+			if (!translators || translators.length < 1) {
+			  this.snotifyService.error("No translators found!", "Error!");
+			  return;
+			}
+	
+			const thisTransaltors = this.teamTranslators;
+
+			let availableTransaltors = translators.filter(function (translator) {
+			  let t = thisTransaltors.find(t => t.userId === translator.userId);
+			  if (t)
+				return translator.userId !== t.userId;
+			  return true;
+			})
+	
+
+			// this.IsLoad = false;
+	
+			// if (!availableTeams || availableTeams.length < 1) {
+			//   this.snotifyService.error("No more teams avaible to assign!", "Error!");
+			//   this.IsLoad = false;
+			//   return;
+			// }
+			let dialogRef = this.dialog.open(TeamAddMemberComponent, {
+			  hasBackdrop: true,
+			  width: '800px',
+			  data: {
+				translators: availableTransaltors
+			  },
+			});
+	
+			dialogRef.componentInstance.onAssign.subscribe((selectedTransaltors: Array <any>) => {
+			//   this.IsLoad = true;
+	
+			  if (selectedTransaltors && selectedTransaltors.length > 0) {
+				this.teamService.update(2, selectedTransaltors.map(t => t.id))
+				  .subscribe(responce => {
+					///TODO: fire a progress notification//////////////////////////////////////////////////////////////
+	
+					if (responce) {
+					  Array.prototype.push.apply(this.teamTranslators, selectedTransaltors.filter(function (team) {
+						let t = thisTransaltors.find(t => t.id === team.id);
+						if (t)
+						  return team.id !== t.id;
+						return true;
+					  }));
+					  this.teamTranslators.sort(this.compareId);
+					//   this.IsLoad = false;
+					  this.snotifyService.success("Teams successfully assigned!", "Success!");
+					}
+				  },
+					err => {
+	
+					//   this.IsLoad = false;
+					  this.snotifyService.error(err, "Error!");
+					  console.log('err', err);
+					});
+			  }
+			  else {
+				//  this.snotifyService.error(data.message, "Error!");
+			  }
+			});
+	
+			dialogRef.afterClosed().subscribe(() => {
+			  dialogRef.componentInstance.onAssign.unsubscribe();
+			});
+	
+		  },
+			err => {
+	
+			  this.snotifyService.error("An error occurred while loading teams, please try again later", "Error!");
+			  console.log('err', err);
+	
+			});
+	
+	  }
+	
+
+	  compareId(a, b) {
+		if (a.id < b.id)
+		  return -1;
+		if (a.id > b.id)
+		  return 1;
+		return 0;
+	  }
+
+
+
 	
 	applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue.trim().toLowerCase();

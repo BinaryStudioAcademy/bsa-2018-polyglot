@@ -405,7 +405,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     searchChanges() {
-        debugger;
+        
         this.currentSearchQuery = this.searchQuery;
         this.currentPage = 0;
         this.projectService
