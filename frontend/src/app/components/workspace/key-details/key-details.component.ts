@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
-import { Language } from "../../../models";
+import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
 import { SaveStringConfirmComponent } from "../../../dialogs/save-string-confirm/save-string-confirm.component";
 import { TabHistoryComponent } from "./tab-history/tab-history.component";
@@ -82,6 +82,10 @@ export class KeyDetailsComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.refresh();
+    }
+
+    refresh(){
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
@@ -128,6 +132,7 @@ export class KeyDetailsComponent implements OnInit {
                     });
             });
         });
+
     }
 
     ngOnDestroy() {
@@ -565,6 +570,13 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
+    highlightTranslation(translation: Translation) {
+        if (translation.isConfirmed) {
+            return "2px ridge #63ed66";
+        }
+        return "";
+    }
+
     onAssign() {
     }
 
@@ -633,6 +645,23 @@ export class KeyDetailsComponent implements OnInit {
                 }
             );
         this.currentSuggestion = "";
+    }
+
+    public onConfirm(translation: Translation){
+        console.log(translation);
+        this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.snotifyService.success("Confirmed!");
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public canBeConfirmed(translation: Translation){
+        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
     }
 
     public showAssignButton(userId: number): boolean {

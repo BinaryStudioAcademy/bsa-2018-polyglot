@@ -7,6 +7,7 @@ export interface Translation {
     translationValue: string;
     languageId: number;
     createdOn: Date;
+    isConfirmed: boolean;
 
     history: AdditionalTranslation[];
     optionalTranslations: AdditionalTranslation[]

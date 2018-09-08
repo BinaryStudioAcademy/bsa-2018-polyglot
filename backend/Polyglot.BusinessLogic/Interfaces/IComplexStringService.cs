@@ -33,6 +33,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation);
 
+        Task<TranslationDTO> ConfirmTranslation(int identifier, TranslationDTO translation);
+
         Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId, int itemsOnPage, int page);
 
 		    Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value);

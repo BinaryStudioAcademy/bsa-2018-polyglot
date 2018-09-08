@@ -10,20 +10,25 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-                        <mat-expansion-panel [style.border]="highlightString(i)"
-                        [disabled]="isDisabled || currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
+                        <mat-expansion-panel [style.border]="highlightString(i)"  
+                        [disabled]="t.isConfirmed || (isDisabled || currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName)" [expanded]="expandedArray[i].isOpened" (opened)="setStep(i)" hideToggle>
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
-								  <mat-panel-description class="mat-panel-description">
+								  <mat-panel-description class="mat-panel-description" [ngStyle]="{'border-left': highlightTranslation(t)}">
 								  	<p *ngIf = "t.translationValue">{{t.translationValue}}</p>
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
                                 </mat-panel-description>
                                 <div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
                                     <img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
-                                </div>
+								</div>
+								<button *ngIf="canBeConfirmed(t)" mat-icon-button (click)="onConfirm(t)"
+                                (mouseenter)="toggleDisable()" class="optional-btn" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Confirm"
+                                >
+							    	<i class="fas fa-check"></i>
+                                </button>
                                 <button mat-icon-button [matMenuTriggerFor]="translatorsMenu"
                                 (mouseenter)="toggleDisable()" class="optional-btn"  [disabled]="showAssignButton(t.assignedTranslatorId)" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
                                >
