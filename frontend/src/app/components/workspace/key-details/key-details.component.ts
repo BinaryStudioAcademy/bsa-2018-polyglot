@@ -570,12 +570,6 @@ export class KeyDetailsComponent implements OnInit {
         return "";
     }
 
-    highlightTranslation(translation: Translation) {
-        if (translation.isConfirmed) {
-            return "2px ridge #63ed66";
-        }
-        return "";
-    }
 
     onAssign() {
     }
