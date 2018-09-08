@@ -12,12 +12,3 @@ export interface LanguageStatistic {
 
     progress: number;
 }
-
-export enum Proficiency{
-    Beginner,
-    Elementary,
-    Intermediate,
-    UpperIntermediate,
-    Advanced,
-    Proficiency
-}

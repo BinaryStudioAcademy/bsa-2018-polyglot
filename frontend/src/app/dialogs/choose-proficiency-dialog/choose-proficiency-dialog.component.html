@@ -1,3 +1,11 @@
-<div *ngFor="let language of allLanguages">
-    {{language.name}}
+<div *ngFor="let translatorLanguage of newTranslatorLanguages">
+    <h4>{{translatorLanguage.language.name}}</h4>
+    <mat-form-field>
+        <mat-select placeholder="Choose proficiency" 
+         (selectionChange)="proficiencyChange($event.value, translatorLanguage)">
+            <mat-option *ngFor="let prof of getProficiencyValues()" [value]="translatorLanguage.proficiency || prof" >
+                {{prof}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
