@@ -34,13 +34,18 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators/' + translatorId + '/rating', undefined, undefined);
   }
 
-  formTeam(translatorIds: Array<number>,name : string): Observable<Team> {
+  formTeam(translatorIds: Array<number>, name : string): Observable<Team> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, {translatorIds:translatorIds,name:name});
   }
 
   deletedTeamTranslators(teamTranslatorIds: Array<number>): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/translators', undefined, teamTranslatorIds);
   }
+
+  addTeamTranslators(teamTranslatorIds: Array<number>, teamId: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/translators', undefined, {translatorIds: teamTranslatorIds, teamId : teamId});
+  }
+
  // create(body){
  //   return this.dataService.sendRequest(RequestMethod.Post, this.api, undefined, body);
  // }

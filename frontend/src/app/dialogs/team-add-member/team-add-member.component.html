@@ -12,13 +12,14 @@
     <mat-selection-list #translatorsListElement>
         <mat-list-option class="list-item" (click)="change($event, translatorsListElement)" *ngFor="let t of translators" [selected]="t.selected"
             [value]="t">
-
+            
             <div class="item-container">
+                    <img class="manager-img" src="{{t.avatarUrl}}">
                  <div class="title">
                     <mat-card-title class="card-title">{{t.name}}</mat-card-title>
                     <mat-card-subtitle class="card-subtitle">{{t.fullName}}</mat-card-subtitle>
                 </div>
-
+                <app-star-rating style="pointer-events: none !important" [rating]="t.rating" [starCount]="5"></app-star-rating> 
                 
             </div>
             <mat-divider></mat-divider>
@@ -28,6 +29,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="p-1 mt-2">
-    <button style="float: left" mat-raised-button color="primary" [disabled]="disabled" (click)="assign()" mat-button>Add members</button>
+    <button style="float: left" mat-raised-button color="primary" [disabled]="disabled" (click)="assign()" mat-button>Add</button>
     <button style="float: right" mat-raised-button color="warn" [mat-dialog-close]="true">Cancel</button>
 </mat-dialog-actions>

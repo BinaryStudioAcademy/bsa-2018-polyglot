@@ -146,6 +146,7 @@ namespace Polyglot.BusinessLogic.Services
             return success;
         }
 
+        
         #region Overrides
 
 
@@ -309,6 +310,27 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
+        public async Task<TeamDTO> TryAddTeamAsync(TeamTranslatorsDTO teamTranslators)
+        {
+
+            foreach (var translatorId in teamTranslators.TranslatorIds)
+
+            {
+                var newTeamTranslator = new TeamTranslator
+                {
+                    TeamId = teamTranslators.TeamId,
+                    TranslatorId = translatorId
+
+                };
+                var teamTranslator = await uow.GetRepository<TeamTranslator>().CreateAsync(newTeamTranslator);
+                await uow.SaveAsync();
+                
+            };
+
+            var team  = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
+
+            return mapper.Map<TeamDTO>(team); ;
+        }
         #endregion Translators
     }
 }
