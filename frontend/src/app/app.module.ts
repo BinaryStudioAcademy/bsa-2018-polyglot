@@ -121,6 +121,7 @@ import { TeamProjectComponent } from "./components/team-details/team-project/tea
 import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
 import { TeamDetailsComponent } from "./components/team-details/team-details.component";
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
 
 @NgModule({
   exports: [
@@ -203,7 +204,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     ChatWindowComponent,
     ListTranslatorsComponent,
     TabOptionalComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    ChooseProficiencyDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -258,7 +260,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
     SaveStringConfirmComponent,
-    SelectColorDialogComponent
+    SelectColorDialogComponent,
+    ChooseProficiencyDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,
