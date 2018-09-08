@@ -9,7 +9,7 @@ namespace Polyglot.DataAccess.ElasticsearchModels
     {
         public ComplexStringIndex()
         {
-            
+			Tags = new List<int>();
         }
 
         public string Id { get; set; }
