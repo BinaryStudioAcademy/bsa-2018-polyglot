@@ -640,12 +640,27 @@ export class KeyDetailsComponent implements OnInit {
             );
         this.currentSuggestion = "";
     }
-
+    
     public onConfirm(translation: Translation){
-        console.log(translation);
         this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
             res => {
+                this.refresh();
                 this.snotifyService.success("Confirmed!");
+                this.toggleDisable();
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public onUnConfirm(translation: Translation){
+        this.dataProvider.unConfirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.refresh();
+                this.snotifyService.success("Unconfirmed!");
+                this.toggleDisable();
             },
             err => {
                 this.snotifyService.error("Error!");
@@ -656,6 +671,10 @@ export class KeyDetailsComponent implements OnInit {
 
     public canBeConfirmed(translation: Translation){
         return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    }
+
+    public canUnBeConfirmed(translation: Translation){
+        return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
     }
 
     public showAssignButton(userId: number): boolean {

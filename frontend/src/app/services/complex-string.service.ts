@@ -47,6 +47,10 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/confirm', undefined, translation);
   }
 
+  unConfirmTranslation(translation: Translation, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/unconfirm', undefined, translation);
+  }
+
   delete(id: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }

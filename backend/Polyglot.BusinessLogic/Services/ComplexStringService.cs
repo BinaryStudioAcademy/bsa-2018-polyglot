@@ -173,12 +173,8 @@ namespace Polyglot.BusinessLogic.Services
                 var result = await repository.Update(mapper.Map<ComplexString>(target));
 
                 var targetProjectId = target.ProjectId;
-                await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
+
                 await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
-                //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
-                //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
-                //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
-                //return translationNew;
                 return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
@@ -199,12 +195,7 @@ namespace Polyglot.BusinessLogic.Services
                 var result = await repository.Update(mapper.Map<ComplexString>(target));
 
                 var targetProjectId = target.ProjectId;
-                await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
                 await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
-                //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
-                //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
-                //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
-                //return translationNew;
                 return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
