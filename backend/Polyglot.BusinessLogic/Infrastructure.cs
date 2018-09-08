@@ -26,7 +26,9 @@ namespace Polyglot.BusinessLogic
             
             services.AddTransient<IRightService, RightService>();
             services.AddTransient<IGlossaryService, GlossaryService>();
+            services.AddTransient<ITagService, TagService>();
             services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<INotificationService, NotificationService>();
 
             services.AddTransient<IRatingService, RatingService>();
             services.AddScoped<ITranslatorProvider, TranslatorProvider>(provider =>
@@ -35,6 +37,7 @@ namespace Polyglot.BusinessLogic
             services.AddTransient(typeof(ICRUDService<,>), typeof(CRUDService<,>));
             services.AddScoped<ISignalRWorkspaceService, SignalRWorkspaceService>();
             services.AddScoped<ISignalRChatService, SignalRChatService>();
+            services.AddScoped<ISignaRNavigationService, SignalRNavigationService>();
 
             services.AddSingleton<TranslationTimerService>();
         }

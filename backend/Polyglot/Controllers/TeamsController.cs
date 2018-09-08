@@ -4,7 +4,6 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Helpers;
@@ -145,6 +144,16 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]RightDefinition rightDefinition)
         {
             var entity = await rightService.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        [HttpPut("{teamId}/activate")]
+        public async Task<IActionResult> ActivateCurrentUser(int teamId)
+        {
+            int currentUserId = (await CurrentUser.GetCurrentUserProfile()).Id;
+            var entity = await service.ActivateUserInTeam(currentUserId, teamId);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

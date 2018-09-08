@@ -1,11 +1,11 @@
 <h2 *ngIf="glossary">{{glossary.name}}</h2>
 
 
-<div class="no-items-div mt-1 mb-1" *ngIf="strings.length === 0">
+<div class="no-items-div mt-1 mb-1" *ngIf="strings && strings.length === 0">
     <p>No terms</p>
 </div>
 
-<div *ngIf="strings.length !== 0">
+<div *ngIf="strings && strings.length !== 0">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
       <ng-container matColumnDef="termText">

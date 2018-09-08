@@ -80,7 +80,11 @@ export class ComplexStringService {
   }
 
   getTranslationHistory(id: number, translationId: string, itemsOnPage: number, page: number) {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage='+itemsOnPage+'&page='+page);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage=' + itemsOnPage+'&page='+page);
+  }
+
+  revertTranslationHistory(id: number, translationId: string, historyId: string) {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/','revert?translationId=' + translationId + '&historyId=' + historyId);
   }
 
   addOptionalTranslation(stringId, translationId, value) {

@@ -24,48 +24,47 @@ namespace Polyglot.BusinessLogic.Services
 {
     public class ComplexStringService : IComplexStringService
     {
-        private readonly IMongoRepository<ComplexString> repository;
-        private readonly IUnitOfWork uow;
-        private readonly IMapper mapper;
-        private readonly IFileStorageProvider provider;
-        private readonly ICRUDService<UserProfile, UserProfileDTO> userSevice;
-        private readonly ISignalRWorkspaceService signalRService;
+        private readonly IMongoRepository<ComplexString> _complexStringRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IFileStorageProvider _fileStorageProvider;
+        private readonly ICRUDService<UserProfile, UserProfileDTO> _userProfileService;
+        private readonly ISignalRWorkspaceService _signalRWorkspaceService;
         private readonly IElasticClient _elasticClient;
         private readonly TranslationTimerService _timerService;
 
 
-        public ComplexStringService(IMongoRepository<ComplexString> repository, IMapper mapper, IUnitOfWork uow, IFileStorageProvider provider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
+        public ComplexStringService(IMongoRepository<ComplexString> complexStringRepository, IMapper mapper, IUnitOfWork unitOfWork, IFileStorageProvider fileStorageProvider,
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspaceWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
         {
-            this.uow = uow;
-            this.repository = repository;
-            this.mapper = mapper;
-            this.provider = provider;
-            this.userSevice = userService;
-            this.signalRService = signalRWorkspace;
+            this._unitOfWork = unitOfWork;
+            this._complexStringRepository = complexStringRepository;
+            this._mapper = mapper;
+            this._fileStorageProvider = fileStorageProvider;
+            this._userProfileService = userService;
+            this._signalRWorkspaceService = signalRWorkspaceWorkspace;
             this._elasticClient = elasticClient;
             this._timerService = timerService;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
         {
-
-            var targets = await repository.GetAllAsync();
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(targets);
+            var targets = await _complexStringRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ComplexStringDTO>>(targets);
         }
 
         public async Task<ComplexStringDTO> GetComplexString(int identifier)
         {
 
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                ComplexStringDTO stringDTO = mapper.Map<ComplexStringDTO>(target);
+                ComplexStringDTO stringDTO = _mapper.Map<ComplexStringDTO>(target);
                 foreach (var translation in stringDTO.Translations)
                 {
                     if(translation.AssignedTranslatorId != 0)
                     {
-                        UserProfileDTO user = await userSevice.GetOneAsync(translation.AssignedTranslatorId);
+                        UserProfileDTO user = await _userProfileService.GetOneAsync(translation.AssignedTranslatorId);
                         translation.AssignedTranslatorAvatarUrl = user.AvatarUrl;
                         translation.AssignedTranslatorName = user.FullName;
                     }
@@ -79,10 +78,10 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<TranslationDTO>> GetStringTranslationsAsync(int identifier)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                return mapper.Map<IEnumerable<TranslationDTO>>(target.Translations);
+                return _mapper.Map<IEnumerable<TranslationDTO>>(target.Translations);
             }
 
             return null;
@@ -91,11 +90,18 @@ namespace Polyglot.BusinessLogic.Services
       
         public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var currentTranslation = mapper.Map<Translation>(translation);
+                var currentTranslation = _mapper.Map<Translation>(translation);
                 currentTranslation.Id = Guid.NewGuid();
+                currentTranslation.History.Add(new AdditionalTranslation
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    TranslationValue = translation.TranslationValue,
+                    UserId = translation.UserId
+                });
                 //currentTranslation.AssignedTranslatorId = translation.AssignedTranslatorId;
 
                 var targetTranslationDublicateIndex = target.Translations.FindIndex(t => t.LanguageId == translation.LanguageId);
@@ -107,14 +113,14 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     target.Translations.Add(currentTranslation);
                 }
-                var result = await repository.Update(mapper.Map<ComplexString>(target));
+                var result = await _complexStringRepository.Update(target);
 
 
                 var targetProjectId = target.ProjectId;
-                await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
-                await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+                await _signalRWorkspaceService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
+                await _signalRWorkspaceService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
 
-                return (mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
                 //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.LastOrDefault();
                 //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
                 //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
@@ -126,16 +132,17 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var translationsList = mapper.Map<List<Translation>>(target.Translations);
+                var translationsList = _mapper.Map<List<Translation>>(target.Translations);
                 var currentTranslation = translationsList.FirstOrDefault(x => x.Id == translation.Id);
                 currentTranslation.History.Add(new AdditionalTranslation
                 {
-                    CreatedOn = currentTranslation.CreatedOn,
-                    TranslationValue = currentTranslation.TranslationValue,
-                    UserId = currentTranslation.UserId
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    TranslationValue = translation.TranslationValue,
+                    UserId = translation.UserId
                 });
                 currentTranslation.TranslationValue = translation.TranslationValue;
                 currentTranslation.UserId = translation.UserId;
@@ -144,16 +151,16 @@ namespace Polyglot.BusinessLogic.Services
 
                 target.Translations = translationsList;
 
-                var result = await repository.Update(mapper.Map<ComplexString>(target));
+                var result = await _complexStringRepository.Update(target);
 
                 var targetProjectId = target.ProjectId;
-                await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
-                await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+                await _signalRWorkspaceService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
+                await _signalRWorkspaceService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
                 //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
                 //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
                 //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
                 //return translationNew;
-                return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
 
@@ -202,9 +209,35 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-        public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
+        public async Task<TranslationDTO> RevertTranslationHistory(int identifier, Guid translationId, Guid historyId)
+        {
+            var complexString = await _complexStringRepository.GetAsync(identifier);
+            var currentTranslation = complexString.Translations.FirstOrDefault(x => x.Id == translationId);
+            var currentHistory = currentTranslation?.History.FirstOrDefault(x => x.Id == historyId);
+
+            if (currentTranslation!=null&&currentHistory!=null)
+            {           
+                currentTranslation?.History.RemoveAll(x=>x.CreatedOn>currentHistory?.CreatedOn);
+
+                currentTranslation.TranslationValue = currentHistory.TranslationValue;
+                currentTranslation.CreatedOn = currentHistory.CreatedOn;
+                currentTranslation.UserId = currentHistory.UserId;
+
+                var result = await _complexStringRepository.Update(complexString);
+
+                var targetProjectId = complexString.ProjectId;
+                await _signalRWorkspaceService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", (int)currentTranslation.LanguageId);
+                await _signalRWorkspaceService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+
+                return _mapper.Map<ComplexStringDTO>(result).Translations.FirstOrDefault(x => x.Id == translationId);
+            }
+            return null;
+        }
+
+
+		public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
-			var targetString = await repository.GetAsync(stringId);
+			var targetString = await _complexStringRepository.GetAsync(stringId);
 			var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
 
 			targetTranslation.OptionalTranslations.Add(
@@ -215,8 +248,8 @@ namespace Polyglot.BusinessLogic.Services
 					//Type = Translation.TranslationType.Human
 				});
 
-			var result = await repository.Update(targetString);
-			return mapper.Map<AdditionalTranslationDTO>
+			var result = await _complexStringRepository.Update(targetString);
+			return _mapper.Map<AdditionalTranslationDTO>
 				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
 		}
 
@@ -224,11 +257,11 @@ namespace Polyglot.BusinessLogic.Services
 		{
 			List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
 
-			var source = (await repository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
+			var source = (await _complexStringRepository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
 
 			foreach(var opt in source)
 			{
-				var user = await uow.GetRepository<UserProfile>().GetAsync(opt.UserId);
+				var user = await _unitOfWork.GetRepository<UserProfile>().GetAsync(opt.UserId);
 
 				target.Add(
 					new OptionalTranslationDTO() {
@@ -244,10 +277,10 @@ namespace Polyglot.BusinessLogic.Services
 
 		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
-            var target = await repository.Update(mapper.Map<ComplexString>(entity));
+            var target = await _complexStringRepository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
             {
-                return mapper.Map<ComplexStringDTO>(target);
+                return _mapper.Map<ComplexStringDTO>(target);
             }
             return null;
 
@@ -255,17 +288,17 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> DeleteComplexString(int identifier)
         {
-            ComplexString toDelete = await repository.GetAsync(identifier);
+            ComplexString toDelete = await _complexStringRepository.GetAsync(identifier);
             int projectId = toDelete.ProjectId;
 
             if (toDelete.PictureLink != null)
-                await provider.DeleteFileAsync(toDelete.PictureLink);
+                await _fileStorageProvider.DeleteFileAsync(toDelete.PictureLink);
 
-            await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().DeleteAsync(identifier);
-            await uow.SaveAsync();
-            await repository.DeleteAsync(identifier);
+            await _unitOfWork.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().DeleteAsync(identifier);
+            await _unitOfWork.SaveAsync();
+            await _complexStringRepository.DeleteAsync(identifier);
 
-            await this.signalRService.ComplexStringRemoved($"{Group.project}{projectId}", identifier);
+            await this._signalRWorkspaceService.ComplexStringRemoved($"{Group.project}{projectId}", identifier);
 
             return true;
         }
@@ -277,33 +310,37 @@ namespace Polyglot.BusinessLogic.Services
                 TranslationKey = entity.Key,
                 ProjectId = entity.ProjectId
             };
-            var savedEntity = await uow.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
-            await uow.SaveAsync();
+            var savedEntity = await _unitOfWork.GetRepository<Polyglot.DataAccess.Entities.ComplexString>().CreateAsync(sqlComplexString);
+            await _unitOfWork.SaveAsync();
             entity.Id = savedEntity.Id;
             entity.CreatedOn = DateTime.Now;
             entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
-            var target = await repository
-                .CreateAsync(mapper.Map<ComplexString>(entity));
+
+            var mappedItem = _mapper.Map<ComplexString>(entity);
+            mappedItem.Tags = entity.Tags.Select(x => x.Id).ToList();
+
+            var target = await _complexStringRepository.CreateAsync(mappedItem);
+
             if (target != null)
             {
-                await signalRService.ComplexStringAdded($"{Group.project}{target.ProjectId}", target.Id);
-                return mapper.Map<ComplexStringDTO>(target);
+                await _signalRWorkspaceService.ComplexStringAdded($"{Group.project}{target.ProjectId}", target.Id);
+                return _mapper.Map<ComplexStringDTO>(target);
             }
             return null;
         }
 
         public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment , int itemsOnPage)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var currentComment = mapper.Map<Comment>(comment);
+                var currentComment = _mapper.Map<Comment>(comment);
                 currentComment.Id = Guid.NewGuid();
                 target.Comments.Add(currentComment);
-                var result = await repository.Update(target);
-                var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                var result = await _complexStringRepository.Update(target);
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 
-                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
+                await _signalRWorkspaceService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
                 
                 return commentsWithUsers.OrderByDescending(x => x.CreatedOn).Take(itemsOnPage);
 
@@ -314,7 +351,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, Guid commentId)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
                 
@@ -324,10 +361,10 @@ namespace Polyglot.BusinessLogic.Services
                 comments.Remove(currentComment);
                 target.Comments = comments;
 
-                var result = await repository.Update(target);
+                var result = await _complexStringRepository.Update(target);
                 
-                var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                await _signalRWorkspaceService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
                 return commentsWithUsers.Reverse();
 
             }
@@ -336,20 +373,20 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentDTO>> EditComment(int identifier, CommentDTO comment)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var comments = mapper.Map<List<Comment>>(target.Comments);
+                var comments = _mapper.Map<List<Comment>>(target.Comments);
                 var currentComment = comments.FirstOrDefault(x => x.Id == comment.Id);
                 
                 currentComment.Text = comment.Text;
                 
                 target.Comments = comments;
 
-                var result = await repository.Update(target);
-                var commentsWithUsers = await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
+                var result = await _complexStringRepository.Update(target);
+                var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
 
-                await signalRService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
+                await _signalRWorkspaceService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
 
                 return commentsWithUsers.Reverse();
 
@@ -361,10 +398,10 @@ namespace Polyglot.BusinessLogic.Services
                 
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                return await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
+                return await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(target.Comments));
             }
 
             return null;
@@ -374,13 +411,13 @@ namespace Polyglot.BusinessLogic.Services
         {
             var skipItems = itemsOnPage * page;
 
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
 
             if (target != null)
             {
                 
                 var paginatedComments = target.Comments.OrderByDescending(x => x.CreatedOn).Skip(skipItems).Take(itemsOnPage);
-                return await GetFullUserInComments(mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
+                return await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
             }
 
             return null;
@@ -391,7 +428,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             foreach(var com in comments)
             {
-                com.User = await userSevice.GetOneAsync(com.User.Id);
+                com.User = await _userProfileService.GetOneAsync(com.User.Id);
             }
             return comments;
         }
@@ -406,10 +443,13 @@ namespace Polyglot.BusinessLogic.Services
 
             var history = new List<HistoryDTO>();
 
+            translation.History = translation.History.OrderBy(x => x.CreatedOn).ToList();
+
             if (translation.History.Count == 0)
             {
-                var user = await userSevice.GetOneAsync(translation.UserId);
+                var user = await _userProfileService.GetOneAsync(translation.UserId);
                 history.Add(new HistoryDTO {
+                    Id = translation.Id,
                     UserName = user.FullName,
                     AvatarUrl = user.AvatarUrl,
                     Action = "translated",
@@ -420,9 +460,10 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
             {
-                var first = await userSevice.GetOneAsync(translation.History[0].UserId);
+                var first = await _userProfileService.GetOneAsync(translation.History[0].UserId);
                 history.Add(new HistoryDTO
                 {
+                    Id = translation.History[0].Id,
                     UserName = first.FullName,
                     AvatarUrl = first.AvatarUrl,
                     Action = "translated",
@@ -433,9 +474,10 @@ namespace Polyglot.BusinessLogic.Services
 
                 for (int i = 1; i < translation.History.Count; i++)
                 {
-                    var user = await userSevice.GetOneAsync(translation.History[i].UserId);
+                    var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
                     history.Add(new HistoryDTO
                     {
+                        Id = translation.History[i].Id,
                         UserName = user.FullName,
                         AvatarUrl = user.AvatarUrl,
                         Action = "changed",
@@ -444,17 +486,6 @@ namespace Polyglot.BusinessLogic.Services
                         When = translation.History[i].CreatedOn
                     });
                 }
-
-                var last = await userSevice.GetOneAsync(translation.UserId);
-                history.Add(new HistoryDTO
-                {
-                    UserName = last.FullName,
-                    AvatarUrl = last.AvatarUrl,
-                    Action = "changed",
-                    From = $"{translation.History[translation.History.Count - 1].TranslationValue}",
-                    To = $"{translation.TranslationValue}",
-                    When = translation.CreatedOn
-                });
             }
 
             history.Reverse();
@@ -466,7 +497,7 @@ namespace Polyglot.BusinessLogic.Services
         
         public async Task<string> ReIndex()
         {
-            var allPosts = (await repository.GetAllAsync()).ToList();
+            var allPosts = (await _complexStringRepository.GetAllAsync()).ToList();
 
             var res = await ElasticRepository.ReIndex(allPosts);
 
@@ -477,19 +508,19 @@ namespace Polyglot.BusinessLogic.Services
         {
             if (status)
             {
-                await signalRService.ComplexStringTranslatingStarted(groupName, id);
+                await _signalRWorkspaceService.ComplexStringTranslatingStarted(groupName, id);
                 _timerService.TrackTranslatingTime(id);
                 await Task.Delay(10000)
                     .ContinueWith(r => _timerService.UntrackTranslatingTime(id));
 
                 if (_timerService.IsTranslationFinished(id))
                 {
-                    await signalRService.ComplexStringTranslatingFinished(groupName, id);
+                    await _signalRWorkspaceService.ComplexStringTranslatingFinished(groupName, id);
                 }
             }
             else
             {
-                await signalRService.ComplexStringTranslatingFinished(groupName, id);
+                await _signalRWorkspaceService.ComplexStringTranslatingFinished(groupName, id);
             }
         }
     }
