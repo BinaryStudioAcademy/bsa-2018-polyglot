@@ -88,9 +88,17 @@ namespace Polyglot.Controllers
         }
 
         [HttpPut("{id}/translations/confirm")]
-        public async Task<IActionResult> Confirmranslation(int id, [FromBody]TranslationDTO translation)
+        public async Task<IActionResult> ConfirmTranslation(int id, [FromBody]TranslationDTO translation)
         {
             var entity = await dataProvider.ConfirmTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{id}/translations/unconfirm")]
+        public async Task<IActionResult> UnConfirmTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+            var entity = await dataProvider.UnConfirmTranslation(id, translation);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

@@ -185,6 +185,32 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
+        public async Task<TranslationDTO> UnConfirmTranslation(int identifier, TranslationDTO translation)
+        {
+            var target = await repository.GetAsync(identifier);
+            if (target != null)
+            {
+                var translationsList = mapper.Map<List<Translation>>(target.Translations);
+                var currentTranslation = translationsList.FirstOrDefault(x => x.Id == translation.Id);
+                currentTranslation.IsConfirmed = false;
+
+                target.Translations = translationsList;
+
+                var result = await repository.Update(mapper.Map<ComplexString>(target));
+
+                var targetProjectId = target.ProjectId;
+                await signalRService.LanguageTranslationCommitted($"{Group.project}{targetProjectId}", translation.LanguageId);
+                await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+                //var translationNew = (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+                //translationNew.AssignedTranslatorAvatarUrl = translation.AssignedTranslatorAvatarUrl;
+                //translationNew.AssignedTranslatorName = translation.AssignedTranslatorName;
+                //return translationNew;
+                return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+            }
+            return null;
+
+        }
+
         public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var targetString = await repository.GetAsync(stringId);
