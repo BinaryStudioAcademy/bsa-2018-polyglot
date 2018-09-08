@@ -61,6 +61,7 @@ import {
     MatProgressSpinnerModule
 } from "@angular/material";
 import { MatSortModule } from "@angular/material/sort";
+
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
@@ -121,6 +122,7 @@ import { TeamProjectComponent } from "./components/team-details/team-project/tea
 import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
 import { TeamDetailsComponent } from "./components/team-details/team-details.component";
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 
 @NgModule({
   exports: [
@@ -203,7 +205,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     ChatWindowComponent,
     ListTranslatorsComponent,
     TabOptionalComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    TeamAddMemberComponent
   ],
   imports: [
     BrowserModule,
@@ -239,6 +242,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     NgxChartsModule,
     NgxInfiniteScrollerModule,
     InfiniteScrollModule
+   
   ],
   entryComponents: [
     LoginDialogComponent,
@@ -258,7 +262,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
     SaveStringConfirmComponent,
-    SelectColorDialogComponent
+    SelectColorDialogComponent,
+    TeamAddMemberComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

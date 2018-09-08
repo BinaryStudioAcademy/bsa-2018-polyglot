@@ -5,6 +5,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.MongoModels;
+using Polyglot.DataAccess.ElasticsearchModels;
 using System.Linq;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
@@ -414,9 +415,35 @@ namespace Polyglot.Common.Mapping
                   .ForMember(p => p.UserId, opt => opt.MapFrom(pt => pt.UserId))
                   .ForMember(p => p.AssignedTranslatorId, opt => opt.MapFrom(pt => pt.AssignedTranslatorId));
 
-                #endregion
+				#endregion
 
-            }).CreateMapper();
+				#region ElasticSearch
+				cfg.CreateMap<ComplexStringIndex, ComplexStringDTO>()
+					.ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
+					  .ForMember(p => p.Comments, opt => opt.Ignore())
+					  .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
+					  .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
+					  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
+					  .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
+					  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+					  .ForMember(p => p.Tags, opt => opt.Ignore())
+					  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
+					  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedAt));
+
+				cfg.CreateMap<ComplexStringIndex, ComplexString>()
+					.ForMember(p => p.Id, opt => opt.MapFrom(pt => pt.Id))
+					  .ForMember(p => p.Comments, opt => opt.Ignore())
+					  .ForMember(p => p.Description, opt => opt.MapFrom(po => po.Description))
+					  .ForMember(p => p.LanguageId, opt => opt.MapFrom(po => po.LanguageId))
+					  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
+					  .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
+					  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
+					  .ForMember(p => p.Tags, opt => opt.Ignore())
+					  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
+					  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedAt));
+				#endregion
+
+			}).CreateMapper();
         }
     }
 }

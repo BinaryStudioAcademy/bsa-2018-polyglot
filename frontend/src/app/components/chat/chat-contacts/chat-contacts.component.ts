@@ -63,7 +63,7 @@ export class ChatContactsComponent implements OnInit {
             this.chatService
                 .getDialogs()
                 .subscribe((dialogs: ChatDialog[]) => {
-                    debugger;
+                    
                     if (
                         dialogs &&
                         dialogs.length > 0
@@ -123,7 +123,7 @@ export class ChatContactsComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         
-        debugger;
+        
         if(changes.person.currentValue)
         {
             let person: ChatUser = changes.person.currentValue;

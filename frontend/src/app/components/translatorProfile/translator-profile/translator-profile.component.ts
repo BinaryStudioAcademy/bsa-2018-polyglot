@@ -60,6 +60,10 @@ export class TranslatorProfileComponent implements OnInit{
         return this.userProfile.id == this.userService.getCurrentUser().id;
     }
 
+    isTranslator(){
+        return !this.userService.isCurrentUserManager();
+    }
+
     leaveTeam(team: Team)
     {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {

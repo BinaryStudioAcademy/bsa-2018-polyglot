@@ -13,7 +13,7 @@ import { Directive, Input } from '@angular/core';
 export class NoWhiteSpaceDirective implements Validator {
 
     validate(control: AbstractControl): { [key: string]: any } {
-        debugger;
+        
         let isWhitespace = (control.value || '').trim().length === 0;
         let isValid = !isWhitespace;
         return isValid ? null : { 'WhiteSpace' : true };
