@@ -7,6 +7,7 @@
         Intermediate,
         UpperIntermediate,
         Advanced,
-        Proficiency
+        Proficiency,
+        Native
     }
 }

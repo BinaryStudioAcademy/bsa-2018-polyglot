@@ -10,7 +10,7 @@ export interface LanguageStatistic {
 
     complexStringsCount: number;
 
-    proficiency: Proficiency;
+    progress: number;
 }
 
 export enum Proficiency{

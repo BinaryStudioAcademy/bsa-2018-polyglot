@@ -83,9 +83,9 @@ namespace Polyglot.Controllers
 
         // PUT: Languages/user
         [HttpPut("user")]
-        public async Task<IActionResult> SetCurrenUserLanguage([FromBody]TranslatorLanguageDTO language)
+        public async Task<IActionResult> SetCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
         {
-            var entity = await service.SetTranslatorLanguage((await CurrentUser.GetCurrentUserProfile()).Id, language);
+            var entity = await service.SetTranslatorLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

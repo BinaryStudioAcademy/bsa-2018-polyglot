@@ -22,19 +22,22 @@ namespace Polyglot.BusinessLogic.Services
             return mapper.Map<IEnumerable<TranslatorLanguageDTO>>(entity);
         }
 
-        public async Task<TranslatorLanguageDTO> SetTranslatorLanguage(int userId, TranslatorLanguageDTO language)
+        public async Task<IEnumerable<TranslatorLanguageDTO>> SetTranslatorLanguages(int userId, TranslatorLanguageDTO[] languages)
         {
-            var lang = await uow.GetMidRepository<TranslatorLanguage>().GetAsync(tl => tl.TranslatorId == userId && tl.Language.Id == language.Language.Id);
-            if(lang != null)
+            foreach (var language in languages)
             {
-                var entity = uow.GetMidRepository<TranslatorLanguage>().Update(mapper.Map<TranslatorLanguage>(language));
-                return mapper.Map<TranslatorLanguageDTO>(entity);
+                var lang = await uow.GetMidRepository<TranslatorLanguage>().GetAsync(tl => tl.TranslatorId == userId && tl.Language.Id == language.Language.Id);
+                if (lang != null)
+                {
+                    var entity = uow.GetMidRepository<TranslatorLanguage>().Update(mapper.Map<TranslatorLanguage>(language));
+                }
+                else
+                {
+                    var entity = await uow.GetMidRepository<TranslatorLanguage>().CreateAsync(mapper.Map<TranslatorLanguage>(language));
+                }
             }
-            else
-            {
-                var entity = await uow.GetMidRepository<TranslatorLanguage>().CreateAsync(mapper.Map<TranslatorLanguage>(language));
-                return mapper.Map<TranslatorLanguageDTO>(entity);
-            }
+            var all = await uow.GetMidRepository<TranslatorLanguage>().GetAllAsync(tr => tr.TranslatorId == userId);
+            return mapper.Map<IEnumerable<TranslatorLanguageDTO>>(all);
         }
     }
 }

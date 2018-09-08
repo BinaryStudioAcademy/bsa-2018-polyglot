@@ -260,7 +260,8 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
     SaveStringConfirmComponent,
-    SelectColorDialogComponent
+    SelectColorDialogComponent,
+    ChooseProficiencyDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

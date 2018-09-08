@@ -11,6 +11,6 @@ namespace Polyglot.BusinessLogic.Interfaces
     {
         Task<IEnumerable<TranslatorLanguageDTO>> GetTranslatorLanguages(int userId);
 
-        Task<TranslatorLanguageDTO> SetTranslatorLanguage(int userId, TranslatorLanguageDTO language);
+        Task<IEnumerable<TranslatorLanguageDTO>> SetTranslatorLanguages(int userId, TranslatorLanguageDTO[] languages);
     }
 }

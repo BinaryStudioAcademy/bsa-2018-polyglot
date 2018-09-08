@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Inject, EventEmitter, Input } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Language } from '../../models';
+import { Language, Proficiency, TranslatorLanguage } from '../../models';
 import { LanguageService } from '../../services/language.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class ChooseProficiencyDialogComponent implements OnInit {
 
   allLanguages: Language[];
   @Output() onSubmit = new EventEmitter<any>(true);
-  langs = [];
+  @Input() translatorLanguages: TranslatorLanguage[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -23,24 +23,19 @@ export class ChooseProficiencyDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.data && this.data.translatorLanguages){
+      this.translatorLanguages = this.data.translatorLanguages;
+    }
     this.languageService.getAll().subscribe((languages)=>{
       this.allLanguages = languages;
+      console.log(this.translatorLanguages);
+      console.log(this.allLanguages)
     })
+    
   }
 
   submit(){
     
     
-  }
-
-  change($event, lang){
-
-    let inArray = this.selectedLangs.find(l => l.id === lang.id)
-
-    if($event.checked && !inArray)
-      this.selectedLangs.push(lang);
-    else if(!$event.checked && inArray){
-      this.selectedLangs = this.selectedLangs.filter(l => l.id != lang.id);
-    }
   }
 }

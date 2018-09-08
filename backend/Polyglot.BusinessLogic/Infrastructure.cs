@@ -29,7 +29,7 @@ namespace Polyglot.BusinessLogic
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<INotificationService, NotificationService>();
-
+            services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IRatingService, RatingService>();
             services.AddScoped<ITranslatorProvider, TranslatorProvider>(provider =>
                 new TranslatorProvider("https://translation.googleapis.com/language/translate/v2",

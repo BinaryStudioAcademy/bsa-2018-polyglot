@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppStateService } from '../../../services/app-state.service';
 import { LanguageService } from '../../../services/language.service';
 import { LanguageStatistic, TranslatorLanguage } from '../../../models';
+import { ChooseProficiencyDialogComponent } from '../../../dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
 
 @Component({
   selector: 'app-translator-profile',
@@ -123,6 +124,12 @@ export class TranslatorProfileComponent implements OnInit{
                 }
             );
         }
+    }
+
+    openProficiencyDialog(){
+        const dialogRef = this.dialog.open(ChooseProficiencyDialogComponent, {
+            data: {translatorLanguages: this.Languages}
+        });       
     }
 
 }
