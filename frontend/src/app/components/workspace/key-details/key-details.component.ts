@@ -70,6 +70,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentUserRole: any;
     translationInputs: any;
     glossaryWords: any[] = [];
+    divHidden: boolean;
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
@@ -275,11 +276,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
         let result = '';
-
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
-                    words[i] = '<span style="color: #ff3333; z-index: 4;">' + words[i] + '</span>';
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
             }
             if (i !== words.length - 1) {
@@ -289,6 +289,20 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         }
 
         this.translationDivs.item(i).innerHTML = result;
+
+        let glosWords: any =  document.querySelectorAll('.child');
+        for (let n = 0; n < glosWords.length; n++) {
+            glosWords[n].addEventListener('mouseover', function(e) {
+                let chil: any = glosWords[n].children[0];
+                chil.style.top = `${glosWords[n].offsetTop - 17}px`;
+                chil.style.left = `${glosWords[n].offsetLeft}px`;
+                chil.style.visibility = 'visible';           
+            });
+            glosWords[n].addEventListener('mouseout', function(e) {
+                let chil: any = glosWords[n].children[0];
+                chil.style.visibility = 'hidden';
+            });
+        }
     }
 
     setPosition(i) {
@@ -399,6 +413,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
+        this.divHidden = false;
         this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
@@ -515,12 +530,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         } else {
             t.Type = TranslationType.Human;
         }*/
-
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider
                 .editStringTranslation(t, this.currentKeyId)
                 .subscribe(
                     (d: any[]) => {
+                        this.divHidden = true;
                         //console.log(this.keyDetails.translations);
                         this.expandedArray[index] = {
                             isOpened: false,
@@ -542,6 +557,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 .createStringTranslation(t, this.currentKeyId)
                 .subscribe(
                     (d: any) => {
+                        this.divHidden = true;
                         this.expandedArray[index] = {
                             isOpened: false,
                             oldValue: ""
@@ -566,6 +582,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         });
 
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
+            this.divHidden = true;
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             this.hideHistory();
@@ -587,6 +604,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.isMachineTranslation = false;
             }
             else if (dialogRef.componentInstance.data.answer === 0) {
+                this.divHidden = true;
                 this.keyDetails.translations[
                     index
                 ].translationValue = this.expandedArray[index].oldValue;
