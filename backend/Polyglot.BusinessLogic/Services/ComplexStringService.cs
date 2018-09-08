@@ -168,21 +168,21 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslationDTO> ConfirmTranslation(int identifier, TranslationDTO translation)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var translationsList = mapper.Map<List<Translation>>(target.Translations);
+                var translationsList = _mapper.Map<List<Translation>>(target.Translations);
                 var currentTranslation = translationsList.FirstOrDefault(x => x.Id == translation.Id);
                 currentTranslation.IsConfirmed = true;
 
                 target.Translations = translationsList;
 
-                var result = await repository.Update(mapper.Map<ComplexString>(target));
+                var result = await _complexStringRepository.Update(_mapper.Map<ComplexString>(target));
 
                 var targetProjectId = target.ProjectId;
 
-                await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
-                return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+                await _signalRWorkspaceService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
 
@@ -190,23 +190,23 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TranslationDTO> UnConfirmTranslation(int identifier, TranslationDTO translation)
         {
-            var target = await repository.GetAsync(identifier);
+            var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                var translationsList = mapper.Map<List<Translation>>(target.Translations);
+                var translationsList = _mapper.Map<List<Translation>>(target.Translations);
                 var currentTranslation = translationsList.FirstOrDefault(x => x.Id == translation.Id);
                 currentTranslation.IsConfirmed = false;
 
                 target.Translations = translationsList;
 
-                var result = await repository.Update(mapper.Map<ComplexString>(target));
+                var result = await _complexStringRepository.Update(_mapper.Map<ComplexString>(target));
 
                 var targetProjectId = target.ProjectId;
-                await signalRService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
-                return (mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
+
+                await _signalRWorkspaceService.ChangedTranslation($"{Group.complexString}{identifier}", identifier);
+                return (_mapper.Map<ComplexStringDTO>(result)).Translations.FirstOrDefault(x => x.Id == translation.Id);
             }
             return null;
-
         }
 
         public async Task<TranslationDTO> RevertTranslationHistory(int identifier, Guid translationId, Guid historyId)
