@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Language, TranslatorLanguage } from '../../models';
 import { LanguageService } from '../../services/language.service';
 import { Proficiency } from '../../models/proficiency';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-choose-proficiency-dialog',
@@ -19,25 +20,29 @@ export class ChooseProficiencyDialogComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ChooseProficiencyDialogComponent>,
-        private languageService: LanguageService
+        private languageService: LanguageService,
+        private userService: UserService
     ) { }
 
     ngOnInit() {
         if(this.data && this.data.translatorLanguages){
-            this.translatorLanguages = this.data.translatorLanguages;
+            this.translatorLanguages = this.data.translatorLanguages.map(x => Object.assign({}, x));
         }
         this.languageService.getAll().subscribe((languages)=>{
             this.allLanguages = languages;
 
             this.allLanguages.forEach(lang => {
-                this.newTranslatorLanguages.push({
-                    proficiency: null,
-                    language: lang
-                })
+                let index = this.translatorLanguages.findIndex(t => t.language.id === lang.id)
+                if(index >= 0){
+                    this.newTranslatorLanguages.push(this.translatorLanguages[index])
+                }
+                else{
+                    this.newTranslatorLanguages.push({
+                        proficiency: null,
+                        language: lang
+                    });
+                }
             });
-            console.log(this.newTranslatorLanguages);
-            console.log(this.translatorLanguages);
-            console.log(this.allLanguages)
         })  
     }
 
@@ -51,10 +56,24 @@ export class ChooseProficiencyDialogComponent implements OnInit {
 
     proficiencyChange(prof: string, translatorLanguage: TranslatorLanguage){
         translatorLanguage.proficiency = Proficiency[prof];
-        console.log(this.newTranslatorLanguages);
     }
 
     submit(){
-  
+        const filteredTranslatorLanguages = this.newTranslatorLanguages.filter(tl => tl.proficiency != null);
+        this.languageService.SetCurrentUserLaguage(filteredTranslatorLanguages).subscribe(data => {
+            this.newTranslatorLanguages = data;
+            this.dialogRef.close();
+        });
+    }
+    close(){
+        this.newTranslatorLanguages = this.data.translatorLanguages.map(x => Object.assign({}, x));
+        this.dialogRef.close();
+    }
+
+    getStringProficiency(prof: Proficiency){
+        return Proficiency[prof];
+    }
+    divideCamelCase(str: string){
+        return str.replace(/([a-z](?=[A-Z]))/g, '$1 ');
     }
 }

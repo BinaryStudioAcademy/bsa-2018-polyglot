@@ -29,13 +29,20 @@ namespace Polyglot.BusinessLogic.Services
                 var lang = await uow.GetMidRepository<TranslatorLanguage>().GetAsync(tl => tl.TranslatorId == userId && tl.Language.Id == language.Language.Id);
                 if (lang != null)
                 {
-                    var entity = uow.GetMidRepository<TranslatorLanguage>().Update(mapper.Map<TranslatorLanguage>(language));
+                    lang.Proficiency = language.Proficiency;
+                    var entity = uow.GetMidRepository<TranslatorLanguage>().Update(mapper.Map<TranslatorLanguage>(lang));
                 }
                 else
                 {
-                    var entity = await uow.GetMidRepository<TranslatorLanguage>().CreateAsync(mapper.Map<TranslatorLanguage>(language));
+                    var entity = await uow.GetMidRepository<TranslatorLanguage>().CreateAsync(new TranslatorLanguage
+                    {
+                        LanguageId = language.Language.Id,
+                        TranslatorId = userId,
+                        Proficiency = language.Proficiency
+                    });
                 }
             }
+            await uow.SaveAsync();
             var all = await uow.GetMidRepository<TranslatorLanguage>().GetAllAsync(tr => tr.TranslatorId == userId);
             return mapper.Map<IEnumerable<TranslatorLanguageDTO>>(all);
         }

@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppStateService } from '../../../services/app-state.service';
 import { LanguageService } from '../../../services/language.service';
 import { LanguageStatistic, TranslatorLanguage } from '../../../models';
+import { Proficiency } from '../../../models/proficiency';
 import { ChooseProficiencyDialogComponent } from '../../../dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
 
 @Component({
@@ -129,7 +130,17 @@ export class TranslatorProfileComponent implements OnInit{
     openProficiencyDialog(){
         const dialogRef = this.dialog.open(ChooseProficiencyDialogComponent, {
             data: {translatorLanguages: this.Languages}
-        });       
+        });      
+        dialogRef.afterClosed().subscribe(()=>{
+            this.Languages = dialogRef.componentInstance.newTranslatorLanguages;
+        });
+    }
+
+    getStringProficiency(prof: Proficiency){
+        if(Proficiency[prof] === "UpperIntermediate"){
+            return "Upper Intermediate"
+        }
+        return Proficiency[prof];
     }
 
 }
