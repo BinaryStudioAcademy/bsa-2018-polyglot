@@ -132,7 +132,9 @@ export class TranslatorProfileComponent implements OnInit{
             data: {translatorLanguages: this.Languages}
         });      
         dialogRef.afterClosed().subscribe(()=>{
-            this.Languages = dialogRef.componentInstance.newTranslatorLanguages;
+            this.languageService.getTranslatorsLanguages(this.userService.getCurrentUser().id).subscribe(data=>{
+                this.Languages = data;
+            });
         });
     }
 

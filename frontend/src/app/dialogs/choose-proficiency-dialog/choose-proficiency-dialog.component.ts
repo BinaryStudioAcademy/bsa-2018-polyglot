@@ -60,13 +60,11 @@ export class ChooseProficiencyDialogComponent implements OnInit {
 
     submit(){
         const filteredTranslatorLanguages = this.newTranslatorLanguages.filter(tl => tl.proficiency != null);
-        this.languageService.SetCurrentUserLaguage(filteredTranslatorLanguages).subscribe(data => {
-            this.newTranslatorLanguages = data;
+        this.languageService.SetCurrentUserLaguage(filteredTranslatorLanguages).subscribe(() => {
             this.dialogRef.close();
         });
     }
     close(){
-        this.newTranslatorLanguages = this.data.translatorLanguages.map(x => Object.assign({}, x));
         this.dialogRef.close();
     }
 

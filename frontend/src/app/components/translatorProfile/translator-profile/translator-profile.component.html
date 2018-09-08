@@ -62,14 +62,18 @@
                 <div class="item" fxFlex>  
             <div class="left-card">
               <strong class="title"> Languages</strong>
-              <button mat-button color="primary" (click)="openProficiencyDialog()" style="margin-left: 25px">Select</button>
+              <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openProficiencyDialog()">
+                    <mat-icon class="bell" aria-label="Notification icon">
+                        settings
+                    </mat-icon>
+              </button>
               <hr>
               <div class="languages-list">
               <br>
               <div *ngFor="let translatorLanguage of Languages">
                       <mat-card-header>
-                        <mat-card-title>{{translatorLanguage.language.name}}</mat-card-title>
-                        <mat-card-subtitle>{{getStringProficiency(translatorLanguage.proficiency)}}</mat-card-subtitle>
+                        <mat-card-title>{{translatorLanguage?.language?.name}}</mat-card-title>
+                        <mat-card-subtitle>{{getStringProficiency(translatorLanguage?.proficiency)}}</mat-card-subtitle>
                       </mat-card-header>
                       <mat-card-content>
                     <mat-progress-bar mode="determinate" value="{{translatorLanguage.proficiency*14.29+15}}"></mat-progress-bar>

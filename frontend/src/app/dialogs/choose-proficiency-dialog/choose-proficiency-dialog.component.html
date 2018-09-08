@@ -1,5 +1,6 @@
+<mat-spinner class="spinner" *ngIf="newTranslatorLanguages.length === 0"></mat-spinner>
 <div *ngFor="let translatorLanguage of newTranslatorLanguages">
-    <h4>{{translatorLanguage.language.name}}</h4>
+    <h4>{{translatorLanguage?.language?.name}}</h4>
     <mat-form-field>
         <mat-select placeholder="Choose proficiency" 
          (selectionChange)="proficiencyChange($event.value, translatorLanguage)"

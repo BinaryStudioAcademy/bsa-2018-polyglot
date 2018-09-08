@@ -43,8 +43,7 @@ namespace Polyglot.BusinessLogic.Services
                 }
             }
             await uow.SaveAsync();
-            var all = await uow.GetMidRepository<TranslatorLanguage>().GetAllAsync(tr => tr.TranslatorId == userId);
-            return mapper.Map<IEnumerable<TranslatorLanguageDTO>>(all);
+            return await this.GetTranslatorLanguages(userId);
         }
     }
 }
