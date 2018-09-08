@@ -6,6 +6,7 @@ namespace Polyglot.DataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("DELETE FROM TranslatorLanguages", true);
             migrationBuilder.AlterColumn<int>(
                 name: "Proficiency",
                 table: "TranslatorLanguages",
