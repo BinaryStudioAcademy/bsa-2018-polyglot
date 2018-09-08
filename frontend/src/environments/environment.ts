@@ -13,7 +13,6 @@ export const environment = {
         messagingSenderId: "366581495425"
     },
     apiUrl: 'http://localhost:58828'
-    //http://polyglotbsa.azurewebsites.net/api
 };
 
 
