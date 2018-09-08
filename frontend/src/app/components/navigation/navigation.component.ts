@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, AfterContentInit, DoCheck, AfterContentChecked, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, AfterContentInit, DoCheck, AfterContentChecked, AfterViewInit, AfterViewChecked, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '../../dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../dialogs/signup-dialog/signup-dialog.component';
@@ -11,6 +11,12 @@ import { map } from 'rxjs/operators';
 import { AppStateService } from '../../services/app-state.service';
 import { Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
+import { SignalrService } from '../../services/signalr.service';
+import { SignalrGroups } from '../../models/signalrModels/signalr-groups';
+import { SignalrSubscribeActions } from '../../models/signalrModels/signalr-subscribe-actions';
+import { NotificationService } from '../../services/notification.service';
+import { Notification } from '../../models/notification';
+import { Hub } from '../../models/signalrModels/hub';
 
 
 @Component({
@@ -23,8 +29,9 @@ export class NavigationComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+  private signalRConnection;
   manager : UserProfile;
-  // email: string;
+  notifications: Notification[];
   role: string;
 
   constructor(
@@ -36,7 +43,9 @@ export class NavigationComponent implements OnDestroy {
     private appState: AppStateService,
     private router: Router,
     private eventService: EventService,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private signalRService: SignalrService,
+    private notificationService: NotificationService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 960px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -58,8 +67,40 @@ export class NavigationComponent implements OnDestroy {
   ngOnInit(): void {
     this.updateCurrentUser();
     this.appStateService.getDatabaseUser().subscribe(data => {
+      if(data){
         this.manager = data;
+
+        this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
+          if (notifications) {
+            this.notifications = notifications;
+            this.signalRConnection = this.signalRService.connect(
+              `${SignalrGroups[SignalrGroups.notification]}${
+                this.manager.id
+                }`,
+                Hub.navigationHub
+            );
+            this.subscribeNotificationChanges();
+          }
+        });
+      }
     });
+  }
+
+  subscribeNotificationChanges(){
+    this.signalRConnection.on(            
+      SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
+      (response: any) => {
+          if (this.signalRService.validateResponse(response)) {
+              this.notificationService
+                  .getCurrenUserNotifications()
+                  .subscribe(notifications => {
+                      console.log(notifications);
+                      if (notifications) {
+                        this.notifications = notifications;
+                      }
+                  });
+          }
+      });
   }
 
   onLoginClick() {
@@ -98,6 +139,10 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.signalRService.leaveGroup(
+      `${SignalrGroups[SignalrGroups.notification]}${this.manager.id}`,
+      Hub.navigationHub
+  );
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 

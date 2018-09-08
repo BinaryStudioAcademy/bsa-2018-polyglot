@@ -10,6 +10,7 @@
         languageRemoved,
         languageTranslationCommitted,
         complexStringTranslatingStarted,
-        complexStringTranslatingFinished
+        complexStringTranslatingFinished,
+        notificationSend
     }
 }

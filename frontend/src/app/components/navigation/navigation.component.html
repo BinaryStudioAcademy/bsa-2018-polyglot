@@ -42,7 +42,7 @@
 				<a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
-				<app-notifications *ngIf="isLoggedIn()"></app-notifications>
+				<app-notifications [(userNotifications)]="notifications" *ngIf="isLoggedIn()"></app-notifications>
 				<button mat-mini-fab [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" class="menu-button no-hover-effect" *ngIf="isLoggedIn()">
 					<img *ngIf="manager && manager.avatarUrl != ''" src="{{manager?.avatarUrl}}" class="profile-small-image">
 				</button>

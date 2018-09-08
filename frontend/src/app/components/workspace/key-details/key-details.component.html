@@ -57,7 +57,7 @@
 							</mat-menu>
 							</mat-expansion-panel-header>
 						   <div style="max-width: 861px">
-                                <div class="translation-div"
+                                <div [hidden]="divHidden" class="translation-div"
                                 (contextmenu)="onRightClick($event)"
                                 (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation">

@@ -89,6 +89,7 @@ namespace Polyglot
                 {
                     options.MapHub<WorkspaceHub>("/workspaceHub");
                     options.MapHub<ChatHub>("/chatHub");
+                    options.MapHub<NavigationHub>("/navigationHub");
                 });
             }
             else
@@ -97,6 +98,7 @@ namespace Polyglot
                 {
                     options.MapHub<WorkspaceHub>("/workspaceHub");
                     options.MapHub<ChatHub>("/chatHub");
+                    options.MapHub<NavigationHub>("/navigationHub");
                 });
             }
         }

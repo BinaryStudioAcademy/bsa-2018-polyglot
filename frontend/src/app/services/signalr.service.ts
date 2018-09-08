@@ -91,7 +91,7 @@ export class UserSignalRConnection {
     public constructor(public hub: Hub) {}
 
     public joinGroup(groupName: string) {
-        debugger;
+        
         if (this.groups.includes(groupName)) {
             return;
         }
@@ -198,7 +198,7 @@ export class UserSignalRConnection {
     }
 
     connect(): Promise<void> {
-        debugger;
+        
         if (this.connectAttemptsCount < 1) {
             console.log(
                 `Maximum number of attempts to connect ${
@@ -229,7 +229,7 @@ export class UserSignalRConnection {
     }
 
     reconnect(): Promise<void> {
-        debugger;
+        
         if (!this.connection) {
             this.connect();
         } else {
