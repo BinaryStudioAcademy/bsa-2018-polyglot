@@ -25,23 +25,27 @@
         </div>
     </div>
 
+    <div class="" style="margin-top: 20px"
+       fxLayout
+       fxLauoutWrap
+       fxLayoutAlign="center"
+       fxLayout.xs="column"
+       fxLayoutGap="20px">
+       <div fxLayout="column" fxLayoutGap="20px" fxFlex.sm="30%" fxFlex="25%" fxLayout.xs="column" >
+          <div class="item" fxFlex>
+              <div>
+                <div class="project-button-wrapper">
+                    <h2 class="title">Projects:</h2>
+                    <button *ngIf="isOwnersProfile()" mat-raised-button color="primary" routerLink="/newproject">Create new</button>
+                </div>         
+                <hr>
+                <div class="project-list">
+                    <div class="project-card" mat-list-item  *ngFor="let p of projects; let i = index">
+                        <h3  class="project">
+                            {{i+1}}. <a *ngIf="isOwnersProfile()" class="project-name" [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'">{{p.name}}</a>
+                                     <span *ngIf="!isOwnersProfile()" class="project-name">{{p.name}}</span>
+                        </h3>
 
-    <div class="" style="margin-top: 20px" fxLayout fxLauoutWrap fxLayoutAlign="center" fxLayout.xs="column" fxLayoutGap="20px">
-        <div fxLayout="column" fxLayoutGap="20px" fxFlex.sm="30%" fxFlex="25%" fxLayout.xs="column">
-            <div class="item" fxFlex>
-                <div>
-                    <div class="project-button-wrapper">
-                        <h2 class="title">Projects:</h2>
-                        <button mat-raised-button color="primary" routerLink="/newproject">Create new</button>
-                    </div>
-                    <hr>
-                    <div class="project-list">
-                        <div class="project-card" mat-list-item *ngFor="let p of projects; let i = index">
-                            <h3 class="project">
-                                {{i+1}}.
-                                <a class="project-name" [routerLink]="['/workspace', p.id]" [routerLinkActive]="'active'">{{p.name}}</a>
-                            </h3>
-                        </div>
                     </div>
                 </div>
             </div>

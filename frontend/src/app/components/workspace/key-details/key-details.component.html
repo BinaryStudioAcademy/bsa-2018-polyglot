@@ -57,18 +57,23 @@
 							</mat-menu>
 							</mat-expansion-panel-header>
 						   <div style="max-width: 861px">
-								<div [hidden]="divHidden" class="translation-div" style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
-								<mat-form-field class="textarea-translation"> 
+                                <div [hidden]="divHidden" class="translation-div"
+                                (contextmenu)="onRightClick($event)"
+                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
+								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
-										<textarea (contextmenu)="onRightClick($event)" style="color: rgba(0,0,0,0)"
+										<textarea style="color: rgba(0,0,0,0)"
 												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
 												  placeholder="Write here to start translating"
 													  cdkAutosizeMinRows="2"
-													  cdkAutosizeMaxRows="10"
+													  placeholder="Write here to start translating"
+                                                      cdkAutosizeMaxRows="10"
 													  class="translation-input"></textarea>
+                                                      <!-- (contextmenu)="onRightClick($event)"
+                                                      (click)="onClickOnTranslation($event)" -->
 								</mat-form-field>
 								<mat-menu  #appMenu="matMenu" class=".context-menu" yPosition="below" xPosition="before">
 									<button mat-menu-item ng-click="addComent()" matTooltip="Comment" matTooltipPosition="above">
@@ -94,10 +99,16 @@
 
 						  </div>
 						</mat-expansion-panel>
-				</mat-accordion>
+                </mat-accordion>
 		</div>
 	</div>
 </mat-card>
+<button
+    class="btn-add-comment"
+    [hidden]="!isVisible"
+    color="primary"
+    id ="main-input"
+    (click) ="addComment()"> Add comment </button>
 
 <mat-card class="my-1 ml-1 px-1 grow-1 translations-details">
 	<mat-tab-group flex>
@@ -118,7 +129,7 @@
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Comment" matTooltipPosition="above">comment</mat-icon>
 			</ng-template>
-			<app-tab-comments [(comments)] = "comments"></app-tab-comments>
+			<app-tab-comments [(comments)] = "comments" [(textCommentForAdd)]="textCommentForAdd"></app-tab-comments>
 			<!-- <app-tab-comments *ngIf="keyDetails" [(keyDetails)] = "keyDetails"></app-tab-comments> -->
 
 		</mat-tab>

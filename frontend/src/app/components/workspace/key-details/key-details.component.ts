@@ -204,7 +204,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                     {
                                         this.history.translationSelected = false;
                                     }
-                                   
+
                                 }
                             }
                         });
@@ -271,15 +271,15 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-    
-    onTextChange(i) { 
+
+
+    onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
         let result = '';
-
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
-                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%; opacity: 0.8;" class="child">' + words[i] + '<span style="position: absolute; visibility: hidden; color: black;">Explanaition</span></div>';
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
             }
             if (i !== words.length - 1) {
@@ -290,11 +290,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.translationDivs.item(i).innerHTML = result;
 
-        let glosWords =  document.querySelectorAll('.child');
+        let glosWords: any =  document.querySelectorAll('.child');
         for (let n = 0; n < glosWords.length; n++) {
             glosWords[n].addEventListener('mouseover', function(e) {
                 let chil: any = glosWords[n].children[0];
-                chil.style.visibility = 'visible';
+                chil.style.top = `${glosWords[n].offsetTop - 17}px`;
+                chil.style.left = `${glosWords[n].offsetLeft}px`;
+                chil.style.visibility = 'visible';           
             });
             glosWords[n].addEventListener('mouseout', function(e) {
                 let chil: any = glosWords[n].children[0];
@@ -580,6 +582,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         });
 
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
+            this.divHidden = true;
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             this.hideHistory();
@@ -759,5 +762,65 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
+    }
+
+    getPosition(e) {
+        var posx = 0;
+        var posy = 0;
+
+        if (!e) { let e = window.event; }
+
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+
+        return {
+            x: posx,
+            y: posy
+        }
+    }
+
+    isVisible = false;
+    textCommentForAdd: string;
+
+    onRightClick($event) {
+        let length = document.getSelection().toString().length;
+        if (length > 1) {
+            this.isVisible = true;
+            $event.preventDefault();
+            let menu = document.getElementById("main-input");
+
+            menu.style.position = "absolute";
+            menu.style.visibility = "visible";
+
+            menu.style.marginLeft = `${(this.getPosition($event).x - 350).toString()}px`;
+            menu.style.marginTop = `${(this.getPosition($event).y - 180).toString()}px`;
+
+            this.isVisible = true;
+        }
+        else {
+            this.isVisible = false;
+        }
+        return false;
+    }
+
+    onClickOnTranslation($event) {
+        this.isVisible = false;
+    }
+
+    addComment() {
+        this.textCommentForAdd = document.getSelection().toString();
+        //If we use span for background
+        // var comment = document.getElementById("comment");
+        // comment.innerHTML = comment.innerHTML + `<span
+        //   style ="background: #fffa6b;
+        //   border-radius: 10%;
+        //   opacity: 0.8;"
+        // >${this.text}</span>`;
+        this.isVisible = false;
     }
 }
