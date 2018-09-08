@@ -23,7 +23,7 @@ namespace Polyglot.DataAccess.MongoModels
 
         public ComplexString()
         {
-
+			Tags = new List<int>();
         }
 
         public IIndexObject GetIndexObject()
@@ -38,7 +38,9 @@ namespace Polyglot.DataAccess.MongoModels
                 Key = Key,
                 OriginalValue = OriginalValue,
                 PictureLink = PictureLink,
-                ProjectId = ProjectId
+                ProjectId = ProjectId,
+				Tags = Tags,
+				CreatedBy = CreatedBy
             };
         }
     }

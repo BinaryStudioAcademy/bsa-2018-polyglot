@@ -606,7 +606,7 @@ namespace Polyglot.BusinessLogic.Services
 						)							
 					);
 				// adding tags to dto`s
-				var models = mapper.Map<List<ComplexString>>(result.Documents);
+				var models = result.Documents.ToList();
 				var tags = await uow.GetRepository<Tag>().GetAllAsync();
 				var dtos = mapper.Map<List<ComplexStringDTO>>(models);
 				for (int i = 0; i < dtos.Count; i++)

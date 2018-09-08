@@ -438,7 +438,7 @@ namespace Polyglot.Common.Mapping
 					  .ForMember(p => p.OriginalValue, opt => opt.MapFrom(po => po.OriginalValue))
 					  .ForMember(p => p.PictureLink, opt => opt.MapFrom(po => po.PictureLink))
 					  .ForMember(p => p.ProjectId, opt => opt.MapFrom(po => po.ProjectId))
-					  .ForMember(p => p.Tags, opt => opt.Ignore())
+					  .ForMember(p => p.Tags, opt => opt.MapFrom(po => po.Tags))
 					  .ForMember(p => p.Translations, opt => opt.MapFrom(po => po.Translations))
 					  .ForMember(p => p.CreatedOn, opt => opt.MapFrom(po => po.CreatedAt));
 				#endregion
