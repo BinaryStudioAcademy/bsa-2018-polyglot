@@ -32,6 +32,13 @@ namespace Polyglot.BusinessLogic.Services
             var translator = (await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TeamId == teamId && t.TranslatorId == userId));
 
             var right = (await uow.GetRepository<Right>().GetAsync(r => r.Definition == definition));
+            if(right == null)
+            {
+                right = (await uow.GetRepository<Right>().CreateAsync(new Right()
+                {
+                    Definition = definition
+                }));
+            }
             translator.TranslatorRights.Add(new TranslatorRight()
             {
                 RightId = right.Id,
