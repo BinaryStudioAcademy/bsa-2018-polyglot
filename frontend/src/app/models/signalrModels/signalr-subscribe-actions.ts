@@ -9,5 +9,6 @@ export enum SignalrSubscribeActions {
     languagesAdded,
     languageTranslationCommitted,
     complexStringTranslatingStarted,
-    complexStringTranslatingFinished
+    complexStringTranslatingFinished,
+    notificationSend
 }

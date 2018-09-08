@@ -19,6 +19,7 @@ import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { UserService } from "../../../services/user.service";
+import { Hub } from "../../../models/signalrModels/hub";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -69,6 +70,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     translationDivs: any;
     currentUserRole: any;
     translationInputs: any;
+    private signalRConnection;
     glossaryWords: any[] = [];
     divHidden: boolean;
 
@@ -117,28 +119,28 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                     }
                 );
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
-                    this.signalrService.closeConnection(
-                        `${SignalrGroups[SignalrGroups.complexString]}${
-                        this.currentKeyId
-                        }`
-                    );
-
-                    this.currentKeyId = data.id;
-                    this.signalrService.createConnection(
+                    this.signalrService.leaveGroup(
                         `${SignalrGroups[SignalrGroups.complexString]}${
                         this.currentKeyId
                         }`,
-                        "workspaceHub"
+                        Hub.workspaceHub
+                    );
+
+                    this.currentKeyId = data.id;
+                    this.signalRConnection = this.signalrService.connect(
+                        `${SignalrGroups[SignalrGroups.complexString]}${
+                        this.currentKeyId
+                        }`,
+                        Hub.workspaceHub
                     );
                 } else {
                     this.currentKeyId = data.id;
-                    this.signalrService.createConnection(
+                    this.signalRConnection = this.signalrService.connect(
                         `${SignalrGroups[SignalrGroups.complexString]}${
                         this.currentKeyId
                         }`,
-                        "workspaceHub"
+                        Hub.workspaceHub
                     );
-
                     this.subscribeProjectChanges();
                 }
 
@@ -153,8 +155,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnDestroy() {
-        this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
+        this.signalrService.leaveGroup(
+            `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`,
+            Hub.workspaceHub
         );
     }
 
@@ -179,7 +182,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -204,14 +207,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                     {
                                         this.history.translationSelected = false;
                                     }
-
                                 }
                             }
                         });
                 }
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.commentsChanged],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -224,7 +226,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             }
         );
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -261,7 +263,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
 
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {

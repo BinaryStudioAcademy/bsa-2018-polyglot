@@ -22,6 +22,8 @@ export class ChatContactsComponent implements OnInit {
     currentUserId: number;
     selectedDialogId: number;
 
+    private signalRConnection;
+
     unreadMessagesTotal = {
         persons: 0,
         groups: 0,
@@ -43,9 +45,9 @@ export class ChatContactsComponent implements OnInit {
 
     ngOnInit() {
         this.currentUserId = this.appState.currentDatabaseUser.id;
-        this.signalRService.createConnection(
+        this.signalRConnection = this.signalRService.connect(
             `${SignalrGroups[SignalrGroups.direct]}${this.currentUserId}`,
-            Hub[Hub.chatHub]
+            Hub.chatHub
         );
         this.subscribeChatEvents();
 
@@ -85,13 +87,14 @@ export class ChatContactsComponent implements OnInit {
     }
 
     ngOnDestroy(){
-        this.signalRService.closeConnection(
-            `${SignalrGroups[SignalrGroups.direct]}${this.currentUserId}`
+        this.signalRService.leaveGroup(
+            `${SignalrGroups[SignalrGroups.direct]}${this.currentUserId}`,
+            Hub.chatHub
        );
     }
 
     subscribeChatEvents() {
-        this.signalRService.connection.on(
+        this.signalRConnection.on(
             ChatActions[ChatActions.messageReceived],
             (responce: any) => {
                 if(this.signalRService.validateChatResponse(responce) 

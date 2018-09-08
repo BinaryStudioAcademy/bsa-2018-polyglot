@@ -1,5 +1,6 @@
 export enum Hub
 {
     workspaceHub,
-    chatHub
+    chatHub,
+    navigationHub
 }

@@ -44,6 +44,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private div;
     private differ;
     private madiv;
+    private signalRConnection;
 
     filters: Array<string>;
 
@@ -108,13 +109,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                             };
 
                             this.appState.setWorkspaceState = workspaceState;
-                            this.signalrService.createConnection(
+                            this.signalRConnection = this.signalrService.connect(
                                 `${SignalrGroups[SignalrGroups.project]}${
                                     this.project.id
                                 }`,
-                                Hub[Hub.workspaceHub]
+                                Hub.workspaceHub
                             );
                             this.subscribeProjectChanges();
+
                         },
                         err => {
                             this.keys = null;
@@ -222,8 +224,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`
+        this.signalrService.leaveGroup(
+            `${SignalrGroups[SignalrGroups.project]}${this.project.id}`,
+            Hub.workspaceHub
         );
     }
 
@@ -266,7 +269,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on(
+        debugger;
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -280,7 +284,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[
                 SignalrSubscribeActions.complexStringRemoved
             ],
@@ -290,7 +294,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[
                 SignalrSubscribeActions.complexStringTranslatingStarted
             ],
@@ -301,7 +305,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 }            
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[
                 SignalrSubscribeActions.complexStringTranslatingFinished
             ],
