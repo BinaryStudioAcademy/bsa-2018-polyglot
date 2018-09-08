@@ -16,6 +16,7 @@ import { SignalrGroups } from '../../models/signalrModels/signalr-groups';
 import { SignalrSubscribeActions } from '../../models/signalrModels/signalr-subscribe-actions';
 import { NotificationService } from '../../services/notification.service';
 import { Notification } from '../../models/notification';
+import { Hub } from '../../models/signalrModels/hub';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class NavigationComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+  private signalRConnection;
   manager : UserProfile;
   notifications: Notification[];
   role: string;
@@ -71,11 +73,11 @@ export class NavigationComponent implements OnDestroy {
         this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
           if (notifications) {
             this.notifications = notifications;
-            this.signalRService.createConnection(
+            this.signalRConnection = this.signalRService.connect(
               `${SignalrGroups[SignalrGroups.notification]}${
                 this.manager.id
                 }`,
-                "navigationHub"
+                Hub.navigationHub
             );
             this.subscribeNotificationChanges();
           }
@@ -85,7 +87,7 @@ export class NavigationComponent implements OnDestroy {
   }
 
   subscribeNotificationChanges(){
-    this.signalRService.connection.on(            
+    this.signalRConnection.on(            
       SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
       (response: any) => {
           if (this.signalRService.validateResponse(response)) {
@@ -137,8 +139,9 @@ export class NavigationComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.signalRService.closeConnection(
-      `${SignalrGroups[SignalrGroups.notification]}${this.manager.id}`
+    this.signalRService.leaveGroup(
+      `${SignalrGroups[SignalrGroups.notification]}${this.manager.id}`,
+      Hub.navigationHub
   );
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
