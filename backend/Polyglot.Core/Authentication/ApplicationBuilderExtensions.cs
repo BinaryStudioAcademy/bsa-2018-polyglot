@@ -10,7 +10,11 @@ namespace Polyglot.Core.Authentication
                 context => context.Request.Path.StartsWithSegments(""),
                 a => a.Use(async (context, next) =>
                     {
-                        CurrentUser.CurrentContext = context;
+						if (!context.Request.Path.StartsWithSegments("/workspaceHub") &&
+							!context.Request.Path.StartsWithSegments("/chatHub"))
+						{
+							CurrentUser.CurrentContext = context;
+						}
                         await next();
                     }
                 )
