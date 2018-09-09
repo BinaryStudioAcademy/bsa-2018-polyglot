@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { NotificationService } from '../../../services/notification.service';
 import { OptionDefinition } from '../../../models/optionDefinition';
+import { Proficiency } from '../../../models/proficiency';
 
 
 @Component({
@@ -133,6 +134,13 @@ export class NewTeamComponent implements OnInit {
       search += data[key];
     }
     return search;
+  }
+
+  getStringProficiency(prof: Proficiency){
+    if(Proficiency[prof] === "UpperIntermediate"){
+      return "Upper Intermediate"
+    }
+    return Proficiency[prof];
   }
 }
 

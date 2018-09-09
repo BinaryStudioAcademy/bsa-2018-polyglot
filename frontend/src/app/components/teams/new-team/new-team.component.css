@@ -1,0 +1,111 @@
+.new-team {
+  display: -ms-grid;
+  display: grid;
+}
+
+.container {
+  height: 100%;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.new-team-container,
+.translators-list-container {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.new-team-card {
+  margin: 0;
+  padding: 0;
+}
+
+.add-from-header {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 200px auto 200px;
+      grid-template-columns: 200px auto 200px;
+}
+
+.teammate-card {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 200px auto 50px 50px;
+      grid-template-columns: 200px auto 50px 50px;
+  width: 100%;
+  margin: 10px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  min-width: 160px;
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 10px;
+}
+
+.temmate-header {
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  padding: 0;
+  margin: 0;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 60% auto;
+      grid-template-rows: 60% auto;
+  -ms-grid-columns: 50% auto;
+      grid-template-columns: 50% auto;
+  height: 100%;
+}
+
+.add-btn {
+  -ms-grid-column: 3;
+      grid-column-start: 3;
+  margin-right: 20px;
+}
+
+.save-btn {
+  margin-right: 20px;
+  margin-left: auto;
+}
+
+.rating {
+  margin-top: 10px;
+}
+
+.languages-list {
+  margin-right: 10px;
+}
+
+.header-image {
+  margin-left: 10px;
+  margin-bottom: auto;
+  margin-top: auto;
+  margin-right: auto;
+  width: 120px;
+}
+
+.header-image-small {
+  height: 64px;
+  width: 64px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.spinner {
+  margin-top: 100px;
+  margin-left: calc(400px - 50px);
+}
+
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+
+li {
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  list-style-type: none;
+}
+/*# sourceMappingURL=new-team.component.css.map */
