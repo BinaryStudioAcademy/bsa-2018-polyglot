@@ -13,8 +13,8 @@
             <DataTemplate>
                 <ViewCell>
                     <StackLayout>
-                        <Label HorizontalOptions="Start" Font="30,bold"  TextColor="Black" Text="{Binding Key}" />
-                        <Label Text="{Binding OriginalValue}" />
+                        <Label HorizontalOptions="Start" Font="bold, 20" Margin="0, 10, 0, 0" TextColor="Black" Text="{Binding Key}" />
+                        <Label Font="20" Text="{Binding OriginalValue}" />
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>

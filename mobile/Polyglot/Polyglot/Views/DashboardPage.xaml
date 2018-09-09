@@ -20,7 +20,7 @@
                         <Label IsVisible="False" Text="{Binding Id}"   />
                         <Image WidthRequest="90" HeightRequest="50" Source="{Binding ImageUrl}"></Image>
                         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
-                            <Label Margin="10, 0" TextColor="Black" Font="bold, 20" HorizontalTextAlignment="Start" Text="{Binding Name}"   />
+                            <Label Margin="10, 10" TextColor="Black" Font="bold, 20" HorizontalTextAlignment="Start" Text="{Binding Name}"   />
                             <Label Font="15" HeightRequest="30" HorizontalTextAlignment="Start" LineBreakMode="TailTruncation"  Text="{Binding Description}"  />
                         </StackLayout>
                     </StackLayout>

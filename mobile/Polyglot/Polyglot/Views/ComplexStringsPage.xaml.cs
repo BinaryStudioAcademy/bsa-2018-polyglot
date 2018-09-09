@@ -22,10 +22,6 @@ namespace Polyglot.Views
 
             complexStringsViewModel.Initialize(projectId);
 
-            if (complexStringsViewModel.ComplexStrings == null||!complexStringsViewModel.ComplexStrings.Any())
-            {
-                DisplayAlert("Alert", "You have been alerted", "OK");
-            }
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -33,11 +29,9 @@ namespace Polyglot.Views
             if (e.Item == null)
                 return;
 
-            var c = e.Item as ComplexStringViewModel;
+            var complexString = e.Item as ComplexStringViewModel;
 
-            var stringId = c.Id;
-
-            var newPage = new TranslationsPage(new ViewModels.TranslationsViewModel(), stringId);
+            var newPage = new TranslationsPage(new ViewModels.TranslationsViewModel(), complexString.Id, complexString.ProjectId);
             await Navigation.PushAsync(newPage);
             ((ListView)sender).SelectedItem = null;
         }

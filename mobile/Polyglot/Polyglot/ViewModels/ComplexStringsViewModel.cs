@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Xamarin.Forms;
 
 namespace Polyglot.ViewModels
 {
@@ -48,8 +49,10 @@ namespace Polyglot.ViewModels
                 Id=x.Id,
                 Key=x.Key,
                 OriginalValue=x.OriginalValue,
-                Description=x.Description
+                Description=x.Description,
+                ProjectId = x.ProjectId
             }).ToList();
+
         }
     }
 }

@@ -5,8 +5,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" FontSize="20" Margin="0,40,0,40"/>
-            <Editor  x:Name="Email" HorizontalOptions="Center"  WidthRequest="350" ></Editor>
-            <Entry   IsPassword="True"   x:Name="Password" HorizontalOptions="Center" WidthRequest="350" ></Entry>
+            <Entry   Placeholder="login" x:Name="Email" HorizontalOptions="Center"  WidthRequest="350" ></Entry>
+            <Entry   Placeholder="password" IsPassword="True"   x:Name="Password" HorizontalOptions="Center" WidthRequest="350" ></Entry>
             <Button  HorizontalOptions="Center"  Text="Login" Clicked="Login_OnClicked"></Button>
         </StackLayout>
     </ContentPage.Content>

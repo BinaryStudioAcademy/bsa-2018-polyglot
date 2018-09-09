@@ -15,10 +15,13 @@ namespace Polyglot.Views
     {
         public ObservableCollection<string> Items { get; set; }
 
-        public TranslationsPage(TranslationsViewModel translations, string complexStringId)
+        public TranslationsPage(TranslationsViewModel translations, int complexStringId, int projectId)
         {
+            BindingContext = translations;
+
             InitializeComponent();
 
+            translations.Initialize(complexStringId, projectId);
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
