@@ -207,7 +207,7 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     ListTranslatorsComponent,
     TabOptionalComponent,
     NotificationsComponent,
-    TeamAddMemberComponent
+    TeamAddMemberComponent,
     ChooseProficiencyDialogComponent
   ],
   imports: [
@@ -265,7 +265,7 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     GlossaryStringDialogComponent,
     SaveStringConfirmComponent,
     SelectColorDialogComponent,
-    TeamAddMemberComponent
+    TeamAddMemberComponent,
     ChooseProficiencyDialogComponent
 
   ],
