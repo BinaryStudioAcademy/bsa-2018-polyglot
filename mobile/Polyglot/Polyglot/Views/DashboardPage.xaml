@@ -1,22 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Dashboard">
+             x:Class="Polyglot.Dashboard"
+             Title="Dashboard">
     <ListView 
             ItemsSource="{Binding Projects}"
             SelectedItem="{Binding SelectedProject, Mode=OneWayToSource}"
+            ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"
             HasUnevenRows="True"
-            RowHeight="100">
+            RowHeight="100"
+               x:Name="list">
 
 
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
-                    <StackLayout   Orientation="Horizontal" >
-                        <Image WidthRequest="70" HeightRequest="70" Source="{Binding ImageUrl}"></Image>
+                    <StackLayout Orientation="Horizontal" >
+                        <Label IsVisible="False" Text="{Binding Id}"   />
+                        <Image WidthRequest="90" HeightRequest="50" Source="{Binding ImageUrl}"></Image>
                         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
-                            <Label TextColor="Black" Font="bold, 20" HorizontalTextAlignment="Start" Text="{Binding Name}"   />
+                            <Label Margin="10, 0" TextColor="Black" Font="bold, 20" HorizontalTextAlignment="Start" Text="{Binding Name}"   />
                             <Label Font="15" HeightRequest="30" HorizontalTextAlignment="Start" LineBreakMode="TailTruncation"  Text="{Binding Description}"  />
                         </StackLayout>
                     </StackLayout>

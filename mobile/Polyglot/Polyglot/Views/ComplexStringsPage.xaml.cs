@@ -14,13 +14,17 @@ namespace Polyglot.Views
     {
         public ObservableCollection<string> Items { get; set; }
 
-        public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, string projectId)
+        public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, int projectId)
         {
             BindingContext = complexStringsViewModel;
             InitializeComponent();
 
             complexStringsViewModel.Initialize(projectId);
 
+            if (complexStringsViewModel.ComplexStrings == null||!complexStringsViewModel.ComplexStrings.Any())
+            {
+                DisplayAlert("Alert", "You have been alerted", "OK");
+            }
         }
     }
 }

@@ -4,8 +4,8 @@ namespace Polyglot.ViewModels
 {
     public class ComplexStringViewModel : BaseViewModel
     {
-        private int _id;
-        public int Id
+        private string _id;
+        public string Id
         {
             get => _id;
             set => SetProperty(ref _id, value);

@@ -6,11 +6,11 @@ namespace Polyglot.ViewModels
 
     public class ProjectViewModel : BaseViewModel
     {
-        private const string DefaultImageUrl = "../Assets/project.jpg";
+        private const string DefaultImageUrl = "https://www.projectsmart.co.uk/img/project.png";
 
 
-        private string _id;
-        public string Id
+        private int _id;
+        public int Id
         {
             get => _id;
             set => SetProperty(ref _id, value);
