@@ -8,7 +8,7 @@
     
             <div class="parent" (click)="editPhoto()">
                 <div class="child bg-five" [ngStyle]="{'background-image': 'url(' + manager.avatarUrl + ')'}">
-                    <p>Click to change</p>
+                    <p *ngIf="isOwnersProfile()" >Click to change</p>
                 </div>
             </div>
     
@@ -19,7 +19,7 @@
                     <div class="user-name">{{manager.fullName}}</div>
                     <button mat-raised-button color="primary" class="project-btn-width" routerLink="./settings">
                         Settings
-                        <i class="material-icons" style="margin-left: 5px">settings</i>
+                        <i class="material-icons" style="margin-left: 5px" *ngIf="isOwnersProfile()">settings</i>
                     </button>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     <div>
                         <div class="project-button-wrapper">
                             <h2 class="title">Projects:</h2>
-                            <button mat-raised-button color="primary" routerLink="/newproject">Create new</button>
+                            <button *ngIf="isOwnersProfile()" mat-raised-button color="primary" routerLink="/newproject">Create new</button>
                         </div>
                         <hr>
                         <div class="project-list">
