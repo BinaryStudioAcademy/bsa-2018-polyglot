@@ -19,6 +19,7 @@ import { TabOptionalComponent } from "./tab-optional/tab-optional.component";
 import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { UserService } from "../../../services/user.service";
+import { Hub } from "../../../models/signalrModels/hub";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -66,8 +67,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     currentTranslation: string;
     currentSuggestion: string;
     isSaveDisabled: boolean;
+    translationDivs: any;
     currentUserRole: any;
     translationInputs: any;
+    private signalRConnection;
+    glossaryWords: any[] = [];
+    divHidden: boolean;
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
@@ -91,6 +96,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.refresh();
+    }
+
+    refresh(){
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
@@ -104,29 +113,38 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
                     this.users = data;
                 });
+                this.projectService.getAssignedGlossaries(this.projectId).subscribe(
+                    (glos) => {
+                        for (let i = 0; i < glos.length; i++) {
+                            for (let j = 0; j < glos[i].glossaryStrings.length; j++) {
+                                this.glossaryWords.push(glos[i].glossaryStrings[j]);
+                            }
+                        }
+                    }
+                );
                 if (this.currentKeyId && this.currentKeyId !== data.id) {
-                    this.signalrService.closeConnection(
-                        `${SignalrGroups[SignalrGroups.complexString]}${
-                        this.currentKeyId
-                        }`
-                    );
-
-                    this.currentKeyId = data.id;
-                    this.signalrService.createConnection(
+                    this.signalrService.leaveGroup(
                         `${SignalrGroups[SignalrGroups.complexString]}${
                         this.currentKeyId
                         }`,
-                        "workspaceHub"
+                        Hub.workspaceHub
+                    );
+
+                    this.currentKeyId = data.id;
+                    this.signalRConnection = this.signalrService.connect(
+                        `${SignalrGroups[SignalrGroups.complexString]}${
+                        this.currentKeyId
+                        }`,
+                        Hub.workspaceHub
                     );
                 } else {
                     this.currentKeyId = data.id;
-                    this.signalrService.createConnection(
+                    this.signalRConnection = this.signalrService.connect(
                         `${SignalrGroups[SignalrGroups.complexString]}${
                         this.currentKeyId
                         }`,
-                        "workspaceHub"
+                        Hub.workspaceHub
                     );
-
                     this.subscribeProjectChanges();
                 }
 
@@ -138,16 +156,19 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                     });
             });
         });
+
     }
 
     ngOnDestroy() {
-        this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`
+        this.signalrService.leaveGroup(
+            `${SignalrGroups[SignalrGroups.complexString]}${this.keyDetails.id}`,
+            Hub.workspaceHub
         );
     }
 
     ngAfterViewInit() {
-        this.translationInputs = document.getElementsByClassName('translation');
+        this.translationDivs = document.getElementsByClassName('translation-div');
+        this.translationInputs = document.getElementsByClassName('translation-input');
     }
 
     ngOnChanges() {
@@ -166,7 +187,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -191,14 +212,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                     {
                                         this.history.translationSelected = false;
                                     }
-                                   
                                 }
                             }
                         });
                 }
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.commentsChanged],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -211,7 +231,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             }
         );
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -248,7 +268,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
 
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -258,9 +278,57 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-    
-    onTextChange(i, translation) {
-        this.translationInputs.item(i).textContent = translation;
+
+
+    onTextChange(i) {
+        let words =  this.translationInputs.item(i).value.split(' ');
+        let result = '';
+        for (let i = 0; i < words.length; i++) {
+            for (let j = 0; j < this.glossaryWords.length; j++) {
+                if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
+                }
+            }
+            if (i !== words.length - 1) {
+                words[i] = words[i] + ' ';
+            }
+            result += words[i];
+        }
+
+        this.translationDivs.item(i).innerHTML = result;
+
+        let glosWords: any =  document.querySelectorAll('.child');
+        for (let n = 0; n < glosWords.length; n++) {
+            glosWords[n].addEventListener('mouseover', function(e) {
+                let chil: any = glosWords[n].children[0];
+                chil.style.top = `${glosWords[n].offsetTop - 17}px`;
+                chil.style.left = `${glosWords[n].offsetLeft}px`;
+                chil.style.visibility = 'visible';           
+            });
+            glosWords[n].addEventListener('mouseout', function(e) {
+                let chil: any = glosWords[n].children[0];
+                chil.style.visibility = 'hidden';
+            });
+        }
+    }
+
+    setPosition(i) {
+        let position;
+        switch (i) {
+            case 0:
+                position = '38px';
+                break;
+            case 1:
+                position = '86px';
+                break;
+            case 2:
+                position = '134px';
+                break;
+            case 3:
+                position = '182px';
+                break;
+        }
+        return position;
     }
 
     handleNewLanguagesAdded(languagesIds) {
@@ -352,7 +420,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
-        this.translationInputs.item(index).textContent = this.keyDetails.translations[index].translationValue;
+        this.divHidden = false;
+        this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
                 keyId: this.currentKeyId,
@@ -468,12 +537,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         } else {
             t.Type = TranslationType.Human;
         }*/
-
         if (t.id != "00000000-0000-0000-0000-000000000000" && t.id) {
             this.dataProvider
                 .editStringTranslation(t, this.currentKeyId)
                 .subscribe(
                     (d: any[]) => {
+                        this.divHidden = true;
                         //console.log(this.keyDetails.translations);
                         this.expandedArray[index] = {
                             isOpened: false,
@@ -495,6 +564,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 .createStringTranslation(t, this.currentKeyId)
                 .subscribe(
                     (d: any) => {
+                        this.divHidden = true;
                         this.expandedArray[index] = {
                             isOpened: false,
                             oldValue: ""
@@ -519,6 +589,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         });
 
         if (!translation.translationValue || (this.expandedArray[index].oldValue === translation.translationValue && !this.isMachineTranslation)) {
+            this.divHidden = true;
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             this.hideHistory();
@@ -540,6 +611,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.isMachineTranslation = false;
             }
             else if (dialogRef.componentInstance.data.answer === 0) {
+                this.divHidden = true;
                 this.keyDetails.translations[
                     index
                 ].translationValue = this.expandedArray[index].oldValue;
@@ -592,6 +664,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         }
         return "";
     }
+
 
     onAssign() {
     }
@@ -662,6 +735,42 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             );
         this.currentSuggestion = "";
     }
+    
+    public onConfirm(translation: Translation){
+        this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.refresh();
+                this.snotifyService.success("Confirmed!");
+                this.toggleDisable();
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public onUnConfirm(translation: Translation){
+        this.dataProvider.unConfirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.refresh();
+                this.snotifyService.success("Unconfirmed!");
+                this.toggleDisable();
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public canBeConfirmed(translation: Translation){
+        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    }
+
+    public canUnBeConfirmed(translation: Translation){
+        return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    }
 
 
     // public showAssignButton(userId: number): boolean {
@@ -697,5 +806,65 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.history.showHistory(this.currentKeyId, this.keyDetails.translations[index].id)
             });
         });
+    }
+
+    getPosition(e) {
+        var posx = 0;
+        var posy = 0;
+
+        if (!e) { let e = window.event; }
+
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+
+        return {
+            x: posx,
+            y: posy
+        }
+    }
+
+    isVisible = false;
+    textCommentForAdd: string;
+
+    onRightClick($event) {
+        let length = document.getSelection().toString().length;
+        if (length > 1) {
+            this.isVisible = true;
+            $event.preventDefault();
+            let menu = document.getElementById("main-input");
+
+            menu.style.position = "absolute";
+            menu.style.visibility = "visible";
+
+            menu.style.marginLeft = `${(this.getPosition($event).x - 350).toString()}px`;
+            menu.style.marginTop = `${(this.getPosition($event).y - 180).toString()}px`;
+
+            this.isVisible = true;
+        }
+        else {
+            this.isVisible = false;
+        }
+        return false;
+    }
+
+    onClickOnTranslation($event) {
+        this.isVisible = false;
+    }
+
+    addComment() {
+        this.textCommentForAdd = document.getSelection().toString();
+        //If we use span for background
+        // var comment = document.getElementById("comment");
+        // comment.innerHTML = comment.innerHTML + `<span
+        //   style ="background: #fffa6b;
+        //   border-radius: 10%;
+        //   opacity: 0.8;"
+        // >${this.text}</span>`;
+        this.isVisible = false;
     }
 }

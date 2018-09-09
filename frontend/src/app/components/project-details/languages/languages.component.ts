@@ -10,6 +10,7 @@ import { Language } from "../../../models";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrService } from "../../../services/signalr.service";
+import { Hub } from "../../../models/signalrModels/hub";
 
 @Component({
     selector: "app-languages",
@@ -24,6 +25,7 @@ export class LanguagesComponent implements OnInit {
     public IsLoad: boolean = true;
     public IsLangLoad: boolean = false;
     public IsLoading: any = {};
+    private signalRConnection;
 
     constructor(
         private projectService: ProjectService,
@@ -40,12 +42,8 @@ export class LanguagesComponent implements OnInit {
                 langs => {
                     this.langs = langs;
                     this.langs.sort(this.compareProgress);
-                    this.signalrService.createConnection(
-                        `${SignalrGroups[SignalrGroups.project]}${
-                            this.projectId
-                        }`,
-                        "workspaceHub"
-                    );
+
+                    this.signalRConnection = this.signalrService.connect(`${SignalrGroups[SignalrGroups.project]}${this.projectId}`, Hub.workspaceHub);
                     this.subscribeProjectChanges();
                     this.IsLoad = false;
                 },
@@ -59,13 +57,11 @@ export class LanguagesComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.signalrService.closeConnection(
-            `${SignalrGroups[SignalrGroups.project]}${this.projectId}`
-        );
+        this.signalrService.leaveGroup(`${SignalrGroups[SignalrGroups.project]}${this.projectId}`, Hub.workspaceHub);
     }
 
     subscribeProjectChanges() {
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languageRemoved],
             response => {
                 if (this.signalrService.validateResponse(response)) {
@@ -83,7 +79,7 @@ export class LanguagesComponent implements OnInit {
                 }
             }
         );
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
                 if (this.signalrService.validateResponse(response)) {
@@ -108,7 +104,7 @@ export class LanguagesComponent implements OnInit {
             }
         );
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
             (response: any) => {
                 this.snotifyService.info(
@@ -125,7 +121,7 @@ export class LanguagesComponent implements OnInit {
             }
         );
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[
                 SignalrSubscribeActions.complexStringRemoved
             ],
@@ -157,7 +153,7 @@ export class LanguagesComponent implements OnInit {
             }
         );
 
-        this.signalrService.connection.on(
+        this.signalRConnection.on(
             SignalrSubscribeActions[
                 SignalrSubscribeActions.languageTranslationCommitted
             ],

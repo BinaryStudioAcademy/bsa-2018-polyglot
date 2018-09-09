@@ -87,6 +87,23 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
+
+        [HttpPut("{id}/translations/confirm")]
+        public async Task<IActionResult> ConfirmTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+            var entity = await dataProvider.ConfirmTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{id}/translations/unconfirm")]
+        public async Task<IActionResult> UnConfirmTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+            var entity = await dataProvider.UnConfirmTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
         [HttpPut("{id}/translations/revert", Name = "RevertHistory")]
         public async Task<IActionResult> RevertTranslationHistory(int id, [FromQuery(Name = "translationId")] Guid translationId, [FromQuery(Name = "historyId")] Guid historyId)
         {
@@ -98,8 +115,7 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-
-        [HttpPost("{stringId}/{translationId}")]
+    [HttpPost("{stringId}/{translationId}")]
 		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);

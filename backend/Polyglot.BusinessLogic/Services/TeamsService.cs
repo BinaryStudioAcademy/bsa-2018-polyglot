@@ -9,16 +9,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities.Chat;
+using Polyglot.DataAccess.MongoRepository;
+using System;
 
 namespace Polyglot.BusinessLogic.Services
 {
     public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
     {
         INotificationService notificationService;
-        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService)
+		private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+
+		public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
             :base(uow, mapper)
 
         {
+			this.stringsProvider = rep;
             this.notificationService = notificationService;
         }
 
@@ -82,12 +87,6 @@ namespace Polyglot.BusinessLogic.Services
                         Name = receivedTeam.Name
                     });
             
-                newTeam.TeamTranslators = translators;
-                newTeam.CreatedBy = currentUser;
-                newTeam.Name = receivedTeam.Name;
-
-            newTeam = await uow.GetRepository<Team>().CreateAsync(newTeam);
-
 
                 await uow.SaveAsync();
                 foreach(var translator in newTeam.TeamTranslators)
@@ -186,6 +185,28 @@ namespace Polyglot.BusinessLogic.Services
             }));
 
             var teamsProjects = mapper.Map<IEnumerable<TeamProjectDTO>>(team.ProjectTeams);
+
+			foreach(var p in teamsProjects)
+			{				
+				var targetProject = await uow.GetRepository<Project>().GetAsync(p.ProjectId);
+				List<DataAccess.MongoModels.ComplexString> temp = new List<DataAccess.MongoModels.ComplexString>();
+				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == targetProject.Id);
+				int languagesAmount = targetProject.ProjectLanguageses.Count;
+				int max = temp.Count * languagesAmount;
+				int currentProgress = 0;
+				foreach (var str in temp)
+				{
+					currentProgress += str.Translations.Count;
+				}
+				if (currentProgress == 0 || max == 0)
+				{
+					p.Progress = 0;
+				}
+				else
+				{
+					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+				}
+			}
 
             return new TeamDTO()
             {

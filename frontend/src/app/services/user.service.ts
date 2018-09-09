@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UserProfile, Rating, Team } from '../models';
 import { AppStateService } from './app-state.service';
 import { Router } from '@angular/router';

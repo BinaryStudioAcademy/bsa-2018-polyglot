@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.DTOs;
+using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.SqlRepository;
@@ -15,9 +17,11 @@ namespace Polyglot.BusinessLogic.Services
     public class NotificationService : CRUDService<Notification, NotificationDTO>, INotificationService
     {
         private readonly IUserService userService;
-        public NotificationService(IUnitOfWork uow, IMapper mapper, IUserService userService) : base(uow, mapper)
+        private readonly ISignaRNavigationService signaRNavigationService;
+        public NotificationService(IUnitOfWork uow, IMapper mapper, IUserService userService, ISignaRNavigationService signaRNavigationService) : base(uow, mapper)
         {
             this.userService = userService;
+            this.signaRNavigationService = signaRNavigationService;
         }
         public async Task<IEnumerable<NotificationDTO>> GetNotificationsByUserId(int userId)
         {
@@ -30,7 +34,12 @@ namespace Polyglot.BusinessLogic.Services
             var notification = await uow.GetRepository<Notification>().CreateAsync(mapper.Map<Notification>(notificationDTO));
 
             await uow.SaveAsync();
-            return notification != null ? mapper.Map<NotificationDTO>(notification) : null;
+            if (notification != null)
+            {
+                await signaRNavigationService.NotificationAdded($"{Group.notification}{notification.ReceiverId}", notification.Id);
+                return mapper.Map<NotificationDTO>(notification);
+            }
+            return null;
         }
         public override async Task<bool> TryDeleteAsync(int identifier)
         {

@@ -40,6 +40,8 @@ export class ChatWindowComponent implements OnInit {
     public groupParticipantsCount: number;
     public groupParticipantsOnlineCount: number;
 
+    private signalRConnection;
+
     constructor(
         private appState: AppStateService,
         private renderer: Renderer2,
@@ -54,13 +56,11 @@ export class ChatWindowComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.signalRService.closeConnection(
-            `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`
-        );
+        this.signalRService.leaveGroup(`${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`, Hub.chatHub);
     }
 
     subscribeChatEvents() {
-        this.signalRService.connection.on(
+        this.signalRConnection.on(
             ChatActions[ChatActions.messageReceived],
             (responce: any) => {
                 if(this.dialog.id == responce.dialogId && this.signalRService.validateChatResponse(responce))
@@ -73,7 +73,7 @@ export class ChatWindowComponent implements OnInit {
             }
         );
 
-        this.signalRService.connection.on(
+        this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
             (userId: number) => {
                 
@@ -91,15 +91,16 @@ export class ChatWindowComponent implements OnInit {
         this.messages = [];
         
         if(changes.dialog.previousValue) {
-            this.signalRService.closeConnection(
-                `${SignalrGroups[SignalrGroups.dialog]}${changes.dialog.previousValue.id}`
+            this.signalRService.leaveGroup(
+                `${SignalrGroups[SignalrGroups.dialog]}${changes.dialog.previousValue.id}`,
+                Hub.chatHub
             );
         }
 
         if(this.dialog){
-            this.signalRService.createConnection(
+            this.signalRConnection = this.signalRService.connect(
                 `${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`,
-                Hub[Hub.chatHub]
+                Hub.chatHub
             );
             this.interlocutors = {};
             this.currentInterlocutorId = -1;

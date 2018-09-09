@@ -1,0 +1,17 @@
+<mat-spinner class="spinner" *ngIf="newTranslatorLanguages.length === 0"></mat-spinner>
+<div *ngFor="let translatorLanguage of newTranslatorLanguages">
+    <h4>{{translatorLanguage?.language?.name}}</h4>
+    <mat-form-field>
+        <mat-select placeholder="Choose proficiency" 
+         (selectionChange)="proficiencyChange($event.value, translatorLanguage)"
+         [value]="getStringProficiency(translatorLanguage.proficiency)">
+            <mat-option *ngFor="let prof of getProficiencyValues()" [value]="prof" >
+                {{divideCamelCase(prof)}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<mat-dialog-actions class="p-1 mt-2 buttons">
+    <button  mat-raised-button color="primary" (click)="submit()" mat-button>Ok</button>
+    <button  mat-raised-button color="warn" (click)="close()">Cancel</button>
+</mat-dialog-actions>
