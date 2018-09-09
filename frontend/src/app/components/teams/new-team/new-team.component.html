@@ -10,9 +10,9 @@
                     <input matInput required appNoWhiteSpace placeholder="Team name" [(ngModel)]="name" #teamName="ngModel">
                 </mat-form-field>
                 <div class="save-btn">
-                        <button mat-raised-button color="primary" [disabled]="selectedTranslators.length == 0 || teamName.invalid ? true : null"
-                            (click)="createTeam()">Create</button>
-                    </div>
+                    <button mat-raised-button color="primary" [disabled]="selectedTranslators.length == 0 || teamName.invalid ? true : null"
+                        (click)="createTeam()">Create</button>
+                </div>
             </div>
         </div>
     </div>
@@ -23,7 +23,15 @@
 <div class=list-container>
     <div class="translators-list-container">
 
+        <mat-chip-list>
+            <mat-chip style="background-color: #ff7b25;">Beginner</mat-chip>
+            <mat-chip style="background-color: #e3eaa7;">Intermediate</mat-chip>
+            <mat-chip style="background-color: #82b74b;">Advanced</mat-chip>
+            <mat-chip style="background-color: #92a8d1">Proficiency</mat-chip>
+            <mat-chip style="background-color: #944dff;">Native</mat-chip>
 
+
+        </mat-chip-list>
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>
@@ -44,13 +52,23 @@
                         </div>
                         <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
                             <ul>
-                              <li *ngFor="let l of t.translatorLanguages">
-                                {{l.language.name}}
-                                <mat-card-subtitle>{{getStringProficiency(l.proficiency)}}</mat-card-subtitle>
-                              </li>
+                                <li *ngFor="let l of t.translatorLanguages">
+                                    <mat-chip *ngIf="l.proficiency===0" style="background-color: #ff7b25;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===2" style="background-color: #e3eaa7;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===4" style="background-color: #82b74b;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===5" style="background-color: #92a8d1;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===6" style="background-color: #944dff;">{{l.language.name}}</mat-chip>
+                                </li>
+                            </ul>  
+                        </span>
+                        <span *ngIf="t.translatorLanguages.length == 0" class="languages-list">
+                            <ul>
+                                <li>
+                                    <mat-chip style="background-color: #d64161;">No data</mat-chip>
+                                </li>
                             </ul>
-                          </span>
-                        <p *ngIf="t.translatorLanguages.length == 0 ">Translator dont add any languages</p>
+
+                        </span>
                     </div>
                     <mat-divider></mat-divider>
                 </mat-list-option>
