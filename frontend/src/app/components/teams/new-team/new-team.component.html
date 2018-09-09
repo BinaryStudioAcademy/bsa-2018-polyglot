@@ -23,6 +23,7 @@
 <div class=list-container>
     <div class="translators-list-container">
 
+
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>
@@ -41,10 +42,20 @@
                                 <app-star-rating [rating]="t.rating" [starCount]="5"></app-star-rating>
                             </mat-card-subtitle>
                         </div>
+                        <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+                            <ul>
+                              <li *ngFor="let l of t.translatorLanguages">
+                                {{l.language.name}}
+                                <mat-card-subtitle>{{getStringProficiency(l.proficiency)}}</mat-card-subtitle>
+                              </li>
+                            </ul>
+                          </span>
+                        <p *ngIf="t.translatorLanguages.length == 0 ">Translator dont add any languages</p>
                     </div>
                     <mat-divider></mat-divider>
                 </mat-list-option>
             </mat-selection-list>
+
         </div>
     </div>
 </div>
