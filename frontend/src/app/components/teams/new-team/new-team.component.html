@@ -87,25 +87,24 @@
               </div>
               <div class="teammate-name">
                 <a style="text-decoration: none; color:black; cursor: pointer" (click)="userService.redirectById(t.userId)">{{t.fullName}}</a>
-              </div>
-              <div class="rating">
-                <mat-icon aria-label="icon-button">star_rate</mat-icon>
-                <span>{{t.rating | number: '1.0-1'}}</span>
+                <div class="rating">
+                    <mat-icon aria-label="icon-button">star_rate</mat-icon>
+                    <span>{{t.rating | number: '1.0-1'}}</span>
+                  </div>
               </div>
 
             </div>
 
-            <div *ngIf="t.translatorLanguages.length > 0" class="languages-list">
-              <span>
+
+              <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
                 <ul>
                   <li *ngFor="let l of t.translatorLanguages">
                     {{l.language.name}}
-                    <mat-progress-bar mode="determinate" value="{{l.proficiency}}"></mat-progress-bar>
+                    <mat-card-subtitle>{{getStringProficiency(l.proficiency)}}</mat-card-subtitle>
                   </li>
                 </ul>
               </span>
-            </div>
-            <p *ngIf="t.translatorLanguages.length == 0 ">Please add some Languages!!</p>
+            <p *ngIf="t.translatorLanguages.length == 0 ">Translator dont add any languages</p>
 
             <div class="add-btn">
               <button mat-raised-button color="primary" (click)="addTranslator(t)">Add</button>
