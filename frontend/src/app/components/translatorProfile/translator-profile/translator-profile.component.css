@@ -1,0 +1,151 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.item {
+  -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  background-color: white;
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.card {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.parent {
+  width: 150px;
+  margin: 20px;
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  float: left;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.child {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+p {
+  display: none;
+  font-size: 12px;
+  color: #ffffff !important;
+  font-family: sans-serif;
+  text-align: center;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 50px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.parent:hover .child, .parent:focus .child {
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.parent:hover .child:before, .parent:focus .child:before, .parent:hover p, .parent:focus p {
+  display: block;
+}
+
+.child:before {
+  content: "";
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(52, 73, 94, 0.75);
+}
+
+.user-name {
+  display: inline;
+  font-weight: bold;
+  font-size: 40px;
+}
+
+.social {
+  display: none;
+  float: right;
+}
+
+span {
+  color: black;
+}
+
+.title {
+  margin-top: 0;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.review {
+  margin-top: 30px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.review-avatar {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.review-comment {
+  margin-left: 25px;
+  font-size: 125%;
+}
+
+.review-date {
+  margin-left: 75%;
+  font-size: 90%;
+  color: gray;
+}
+
+.stars {
+  margin-left: 15px;
+  font-size: 85%;
+}
+
+.review-card {
+  background-color: #f7f7f7;
+  margin-bottom: 20px;
+}
+
+.team-name {
+  color: black;
+}
+/*# sourceMappingURL=translator-profile.component.css.map */
