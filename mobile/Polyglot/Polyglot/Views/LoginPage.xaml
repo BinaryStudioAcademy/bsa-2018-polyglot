@@ -4,9 +4,9 @@
              x:Class="Polyglot.Views.LoginPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" Margin="0,10,0,10" />
-            <Editor  x:Name="Email" HorizontalOptions="Center"  WidthRequest="200" ></Editor>
-            <Editor  x:Name="Password" HorizontalOptions="Center" WidthRequest="200" ></Editor>
+            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" FontSize="20" Margin="0,40,0,40"/>
+            <Editor  x:Name="Email" HorizontalOptions="Center"  WidthRequest="350" ></Editor>
+            <Entry   IsPassword="True"   x:Name="Password" HorizontalOptions="Center" WidthRequest="350" ></Entry>
             <Button  HorizontalOptions="Center"  Text="Login" Clicked="Login_OnClicked"></Button>
         </StackLayout>
     </ContentPage.Content>

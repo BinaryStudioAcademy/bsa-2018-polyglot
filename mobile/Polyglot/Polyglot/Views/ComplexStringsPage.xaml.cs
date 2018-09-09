@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Polyglot.ViewModels;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -25,6 +26,20 @@ namespace Polyglot.Views
             {
                 DisplayAlert("Alert", "You have been alerted", "OK");
             }
+        }
+
+        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item == null)
+                return;
+
+            var c = e.Item as ComplexStringViewModel;
+
+            var stringId = c.Id;
+
+            var newPage = new TranslationsPage(new ViewModels.TranslationsViewModel(), stringId);
+            await Navigation.PushAsync(newPage);
+            ((ListView)sender).SelectedItem = null;
         }
     }
 }

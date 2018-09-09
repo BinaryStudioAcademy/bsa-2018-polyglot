@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,7 +20,9 @@ namespace Polyglot.Views
 
 	    private async void Login_OnClicked(object sender, EventArgs e)
 	    {
-	        var token = await _vm.LoginByEmail(Email.Text, Password.Text);
-	    }
+            UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
+	        var newPage = new Dashboard(new ViewModels.DashboardViewModel());
+	        await Navigation.PushAsync(newPage);
+        }
 	}
 }

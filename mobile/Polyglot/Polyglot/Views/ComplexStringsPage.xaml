@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Polyglot.Views.ComplexStringsPage"
              Title="Complex Strings">
-    <ListView 
-            ItemsSource="{Binding ComplexStrings}"
+    <ListView  ItemsSource="{Binding ComplexStrings}"
+            ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
             RowHeight="70">
 
         <ListView.ItemTemplate>

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Polyglot.ViewModels
 {
@@ -25,7 +27,7 @@ namespace Polyglot.ViewModels
                     content);
 
                 var result = await response.Content.ReadAsStringAsync();
-                return result;
+                return JObject.Parse(result)["idToken"].ToString();
             }
         }
     }

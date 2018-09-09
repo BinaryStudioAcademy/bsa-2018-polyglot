@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Polyglot.BusinessLogic
+﻿namespace Polyglot.BusinessLogic.Services
 {
-    class UserService
+    public class UserService
     {
+        public static string Token { get; set; }
     }
 }
