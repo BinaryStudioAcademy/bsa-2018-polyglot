@@ -123,7 +123,7 @@
     (click) ="addComment()"> Add comment </button>
 
 <mat-card class="my-1 ml-1 px-1 grow-1 translations-details">
-	<mat-tab-group flex>
+	<mat-tab-group flex [selectedIndex]="selectedIndex">
 		<mat-tab label="Detail">
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Detail" matTooltipPosition="above">details</mat-icon>
