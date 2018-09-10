@@ -1,8 +1,8 @@
 <div class="container" *ngIf="allLanguages">
     <h3>Not Selected Languages: </h3>
     <div *ngFor="let translatorLanguage of notAssignedLanguages">
-        <ul cols="2">
-            <li>
+        <ul >
+            <li class="language-name">
                 {{translatorLanguage.language.name}}
             </li>
             <li>
@@ -14,7 +14,7 @@
     </div>
     <h3>Selected Languages: </h3>
     <div *ngFor="let translatorLanguage of assignedLanguages">
-        <ul cols="2">
+        <ul>
             <li class="language-name">
                 {{translatorLanguage.language.name}}
             </li>
@@ -24,5 +24,11 @@
                 </a>
             </li>
         </ul>
+    </div>
+    <div class="buttons-container" style="text-align: center">
+        <div style="display: inline-block">
+            <button  mat-raised-button color="primary" (click)="submit()" mat-button>Save</button>
+            <button  mat-raised-button color="warn" (click)="close()">Cancel</button>
+        </div>
     </div>
 </div>
