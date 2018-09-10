@@ -70,7 +70,7 @@
 						   <div>
                                 <div [hidden]="divHidden" class="translation-div"
                                 (contextmenu)="onRightClick($event)"
-                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 90%; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
+                                (click)="onClickOnTranslation($event)" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
