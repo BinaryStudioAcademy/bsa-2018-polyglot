@@ -20,7 +20,7 @@ export class SignalrService {
         let targetConnection = this.userConnections.find(c => c.hub == hub);
         if (!targetConnection) {
             // создаем подключение
-            targetConnection = new UserSignalRConnection(hub);
+            targetConnection = new UserSignalRConnection(hub, this.appState);
             this.userConnections.push(targetConnection);
             targetConnection.isClosedByUser.subscribe(hub => {
                 this.userConnections = this.userConnections.filter(
@@ -72,7 +72,11 @@ export class SignalrService {
     }
 
     public readMessage(interlocutorId: number) {
-        //this.connection.send(ChatActions[ChatActions.messageRead], `${GroupType[GroupType.users]}${interlocutorId}`);
+        let chatHub = this.userConnections.find(c => c.hub == Hub.chatHub);
+        if(chatHub)
+        {
+            chatHub.connection.send(ChatActions[ChatActions.messageRead], `${GroupType[GroupType.users]}${interlocutorId}`);
+        }
     }
 }
 
@@ -83,15 +87,14 @@ export class UserSignalRConnection {
     private joinGroupAttemptsСount = maxJoinAttemptsСount;
     private connectAttemptsCount = maxJoinAttemptsСount;
     private subscribeAttemptsCount = maxJoinAttemptsСount;
-    private connection: any;
     private groups: string[] = [];
     private isDisconnectedByUser: boolean;
+    public connection: any;
     public isClosedByUser = new EventEmitter<Hub>(true);
 
-    public constructor(public hub: Hub) {}
+    public constructor(public hub: Hub, private appState: AppStateService) {}
 
     public joinGroup(groupName: string) {
-        
         if (this.groups.includes(groupName)) {
             return;
         }
@@ -198,7 +201,6 @@ export class UserSignalRConnection {
     }
 
     connect(): Promise<void> {
-        
         if (this.connectAttemptsCount < 1) {
             console.log(
                 `Maximum number of attempts to connect ${
@@ -209,9 +211,23 @@ export class UserSignalRConnection {
         } else {
             if (!this.connection) {
                 console.log(`Creating SignalR ${Hub[this.hub]} connection...`);
-                this.connection = new signalR.HubConnectionBuilder()
-                    .withUrl(`${environment.apiUrl}/${Hub[this.hub]}`)
-                    .build();
+
+                switch (this.hub) {
+                    case Hub.chatHub:
+                        this.connection = new signalR.HubConnectionBuilder()
+                            .withUrl(`${environment.apiUrl}/${Hub[this.hub]}`, {
+                                accessTokenFactory: () =>
+                                    this.appState.currentFirebaseToken
+                            })
+                            .build();
+                        break;
+                    default: {
+                        this.connection = new signalR.HubConnectionBuilder()
+                            .withUrl(`${environment.apiUrl}/${Hub[this.hub]}`)
+                            .build();
+                        break;
+                    }
+                }
 
                 this.connection.onclose(err => {
                     console.log(`SignalR hub ${Hub[this.hub]} disconnected.`);
@@ -229,7 +245,6 @@ export class UserSignalRConnection {
     }
 
     reconnect(): Promise<void> {
-        
         if (!this.connection) {
             this.connect();
         } else {
