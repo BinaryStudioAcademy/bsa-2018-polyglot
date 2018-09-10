@@ -36,7 +36,7 @@
 									<i class="fas fa-times"></i>
                                 </button>
                                 <button *ngIf="!t.isConfirmed" mat-icon-button [matMenuTriggerFor]="translatorsMenu"
-                                (mouseenter)="toggleDisable()" class="optional-btn"  [disabled]="showAssignButton(t.assignedTranslatorId)" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
+                                (mouseenter)="toggleDisable()" class="optional-btn" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
                                >
                                         <mat-icon>more_vert</mat-icon>
                                 </button>
