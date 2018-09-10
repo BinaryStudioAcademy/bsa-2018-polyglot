@@ -280,11 +280,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-
-
     onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
-        console.log(words);
         let result = '';
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
@@ -338,6 +335,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 break;
             case 3:
                 position = '182px';
+                break;
+            case 4:
+                position = '230px';
                 break;
         }
         return position;
@@ -666,8 +666,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.expandedArray[$event.keyId].isOpened = true;
     }
 
-    toggleDisable() {
-        this.isDisabled = !this.isDisabled;
+    toggleDisable(status: boolean) {
+        this.isDisabled = status;
     }
 
     highlightString(index: number) {
@@ -753,7 +753,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             res => {
                 this.refresh();
                 this.snotifyService.success("Confirmed!");
-                this.toggleDisable();
+                this.toggleDisable(false);
             },
             err => {
                 this.snotifyService.error("Error!");
@@ -767,7 +767,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             res => {
                 this.refresh();
                 this.snotifyService.success("Unconfirmed!");
-                this.toggleDisable();
+                this.toggleDisable(false);
             },
             err => {
                 this.snotifyService.error("Error!");
