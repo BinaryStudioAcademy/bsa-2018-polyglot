@@ -189,17 +189,42 @@ export class ChatWindowComponent implements OnInit {
 
     sendMessage() {
         if (this.currentMessage.length > 0) {
-            let message = {
-            dialogId: this.dialog.id,
-            body: this.currentMessage
+            const messageid =  Date.now();
+            let message: ChatMessage = {
+                id: undefined,
+                clientId: messageid,
+                senderId: this.currentUserId,
+                body: this.currentMessage,
+                receivedDate: undefined,
+                isRead: false,
+                isRecieved: false,
+                isRecieving: true,
+                dialogId: this.dialog.id
             };
+            debugger;
             this.currentMessage = "";
+            this.messages.push(message);
+
+            setTimeout((id = messageid) => {
+                debugger;
+                let targetMessage = this.messages.find(m => m.clientId === id);
+                if(targetMessage && !targetMessage.isRecieved)
+                {
+                    targetMessage.isRecieving = false;
+                }
+            }, 7000);
 
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
-                    
+                    debugger;
                     if(message){
-                        this.messages.push(message);
+                        let m = this.messages.find(m => m.clientId === message.clientId);
+                        if(m)
+                        {
+                            const index = this.messages.indexOf(m, 0);
+                            message.isRecieving = false;
+                            this.messages[index] = message;
+                        }
                     }
                 });
         }

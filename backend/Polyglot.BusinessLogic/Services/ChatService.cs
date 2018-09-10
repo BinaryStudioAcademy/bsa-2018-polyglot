@@ -119,9 +119,13 @@ namespace Polyglot.BusinessLogic.Services
             if (currentUser == null || message == null)
                 return null;
 
+            var clientMessageId = message.ClientId;
             message.ReceivedDate = DateTime.Now;
             message.SenderId = currentUser.Id;
-            var newMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
+
+            var a = mapper.Map<ChatMessage>(message);
+
+            var newMessage = await uow.GetRepository<ChatMessage>().CreateAsync(a);
             await uow.SaveAsync();
 
             if (newMessage == null)
@@ -138,7 +142,7 @@ namespace Polyglot.BusinessLogic.Services
                 await signalRChatService.MessageReveived($"{ChatGroup.direct.ToString()}{participant.ParticipantId}", dialogId, newMessage.Id, text);
             }
 
-            return mapper.Map<ChatMessageDTO>(newMessage);
+            return mapper.Map<ChatMessageDTO>(newMessage, opt => opt.AfterMap((src, dest) => ((ChatMessageDTO)dest).ClientId = clientMessageId));
         }
 
         public async Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync()

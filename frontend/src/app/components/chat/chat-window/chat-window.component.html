@@ -43,16 +43,21 @@
                     {{m.body}}
                     <div class="message-info-container">
                         <span class="recieved-read-container">
-                            <!--<span [hidden]="" class="error-icon">
-                                    <mat-icon>warning</mat-icon>
+                            <span *ngIf="!m.isRecieved && m.isRecieving" class="sending-icon">
+                                <mat-spinner [diameter]="15"></mat-spinner> 
                             </span>
-                        -->
-                            <span [hidden]="m.isRead" class="recieved-icon">
-                                <mat-icon>done</mat-icon>
+                            <span [hidden]="m.isRecieving"> 
+                                    <span [hidden]="m.isRecieved" class="error-icon">
+                                            <mat-icon>warning</mat-icon>
+                                    </span>
+                                    <span [hidden]="!m.isRecieved || m.isRead" class="recieved-icon">
+                                        <mat-icon>done</mat-icon>
+                                    </span>
+                                    <span [hidden]="!m.isRecieved || !m.isRead" class="read-icon">
+                                        <mat-icon>done_all</mat-icon>
+                                    </span>
                             </span>
-                            <span [hidden]="!m.isRead" class="read-icon">
-                                <mat-icon>done_all</mat-icon>
-                            </span>
+                            
                         </span>
                         <span class="message-time">{{ m.receivedDate | date:'shortTime' }}</span>
                     </div>

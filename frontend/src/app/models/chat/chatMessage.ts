@@ -2,6 +2,8 @@ export interface ChatMessage {
     
     id: number;
 
+    clientId: number;
+    
     senderId: number;
 
     body: string;
@@ -9,6 +11,10 @@ export interface ChatMessage {
     receivedDate: Date;
 
     isRead: boolean;
+
+    isRecieved: boolean;
+
+    isRecieving: boolean;
 
     dialogId: number;
 }

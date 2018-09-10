@@ -7,6 +7,7 @@ using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.DataAccess.MongoModels;
 using Polyglot.DataAccess.ElasticsearchModels;
 using System.Linq;
+using System;
 using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 
 namespace Polyglot.Common.Mapping
@@ -249,7 +250,8 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.IsRead, opt => opt.MapFrom(po => po.IsRead))
                 .ForMember(p => p.ReceivedDate, opt => opt.MapFrom(po => po.ReceivedDate))
                 .ForMember(p => p.DialogId, opt => opt.MapFrom(po => po.DialogId))
-                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId));
+                .ForMember(p => p.SenderId, opt => opt.MapFrom(po => po.SenderId))
+                .ForMember(p => p.IsRecieved, opt => opt.MapFrom(po => po.ReceivedDate != default(DateTime)));
 
                 cfg.CreateMap<ChatDialog, ChatDialogDTO>()
                 .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
