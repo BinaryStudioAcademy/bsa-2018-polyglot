@@ -273,7 +273,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
 
 
-    onTextChange(i, $event = {key: '', which: 0, code: ''}) {
+    onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
         console.log(words);
         let result = '';

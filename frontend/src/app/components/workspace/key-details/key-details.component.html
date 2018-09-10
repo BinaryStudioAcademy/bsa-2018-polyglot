@@ -64,7 +64,7 @@
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
 												(keydown)="enterPress($event);"
-												(keyup)="onTextChange(i, $event); isCanSave(i, t);"  matInput
+												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
 												  cdkTextareaAutosize
