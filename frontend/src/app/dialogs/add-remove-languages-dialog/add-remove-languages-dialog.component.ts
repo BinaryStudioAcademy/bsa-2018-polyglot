@@ -43,4 +43,29 @@ export class AddRemoveLanguagesDialogComponent implements OnInit {
         });
     }
 
+    onDelete(translatorLanguage: TranslatorLanguage){
+        this.assignedLanguages = this.assignedLanguages.filter(tl => {
+            return tl.language.id !== translatorLanguage.language.id;
+        });
+        this.notAssignedLanguages.push(translatorLanguage);
+    }
+
+    onAssign(translatorLanguage: TranslatorLanguage){
+        this.notAssignedLanguages = this.notAssignedLanguages.filter(tl => {
+            return tl.language.id !== translatorLanguage.language.id;
+        });
+        this.assignedLanguages.push(translatorLanguage);
+    }
+
+    submit(){
+        this.languageService.setCurrentUserLaguages(this.assignedLanguages).subscribe(()=>{
+            this.languageService.deleteCurrentUserLaguages(this.notAssignedLanguages).subscribe(()=>{
+                this.dialogRef.close();
+            })
+        })
+    }
+    close(){
+        this.dialogRef.close();
+    }
+
 }

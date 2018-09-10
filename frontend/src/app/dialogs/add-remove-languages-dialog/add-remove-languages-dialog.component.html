@@ -1,5 +1,5 @@
 <div class="container" *ngIf="allLanguages">
-    <h3>Not Selected Languages: </h3>
+    <h3 *ngIf="notAssignedLanguages.length > 0">Not Selected Languages: </h3>
     <div *ngFor="let translatorLanguage of notAssignedLanguages">
         <ul >
             <li class="language-name">
@@ -7,12 +7,12 @@
             </li>
             <li>
                 <a mat-button color="primary" class="button" routerLinkActive="active" (click)='onAssign(translatorLanguage)'>
-                    <i class="fas fa-check"></i> Assign
+                    <i class="fas fa-check"></i> Add
                 </a>
             </li>
         </ul>
     </div>
-    <h3>Selected Languages: </h3>
+    <h3 *ngIf="assignedLanguages.length > 0">Selected Languages: </h3>
     <div *ngFor="let translatorLanguage of assignedLanguages">
         <ul>
             <li class="language-name">
