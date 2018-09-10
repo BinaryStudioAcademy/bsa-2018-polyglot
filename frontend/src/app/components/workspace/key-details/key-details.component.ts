@@ -76,6 +76,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
+    selectedIndex = 0;
+
     constructor(
         private eventService: EventService,
         private route: ActivatedRoute,
@@ -96,6 +98,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.refresh();
+    }
+
+    refresh(){
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
@@ -152,6 +158,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                     });
             });
         });
+
     }
 
     ngOnDestroy() {
@@ -273,8 +280,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         );
     }
 
-
-
     onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
         let result = '';
@@ -283,6 +288,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
                     words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
+            }
+            if (words[i] === '') {
+                words[i] = '<span style="padding-left: 0.28571427715em"></span>';
             }
             if (i !== words.length - 1) {
                 words[i] = words[i] + ' ';
@@ -307,6 +315,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         }
     }
 
+    enterPress($event) {
+        if ($event.which === 13) {
+            $event.preventDefault();
+        }
+    }
+
     setPosition(i) {
         let position;
         switch (i) {
@@ -321,6 +335,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 break;
             case 3:
                 position = '182px';
+                break;
+            case 4:
+                position = '230px';
                 break;
         }
         return position;
@@ -649,8 +666,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.expandedArray[$event.keyId].isOpened = true;
     }
 
-    toggleDisable() {
-        this.isDisabled = !this.isDisabled;
+    toggleDisable(status: boolean) {
+        this.isDisabled = status;
     }
 
     highlightString(index: number) {
@@ -659,6 +676,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         }
         return "";
     }
+
 
     onAssign() {
     }
@@ -729,6 +747,42 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             );
         this.currentSuggestion = "";
     }
+    
+    public onConfirm(translation: Translation){
+        this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.refresh();
+                this.snotifyService.success("Confirmed!");
+                this.toggleDisable(false);
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public onUnConfirm(translation: Translation){
+        this.dataProvider.unConfirmTranslation(translation, this.keyDetails.id).subscribe(
+            res => {
+                this.refresh();
+                this.snotifyService.success("Unconfirmed!");
+                this.toggleDisable(false);
+            },
+            err => {
+                this.snotifyService.error("Error!");
+                console.log(err);
+            }
+        )
+    }
+
+    public canBeConfirmed(translation: Translation){
+        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    }
+
+    public canUnBeConfirmed(translation: Translation){
+        return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    }
 
 
     // public showAssignButton(userId: number): boolean {
@@ -743,7 +797,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     //     //     result = false;
     //     // }
     //     else {
-    //         result = true;
+    //        result = true;
     //     }
     //     return result || !this.users.length;
     // }
@@ -823,6 +877,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         //   border-radius: 10%;
         //   opacity: 0.8;"
         // >${this.text}</span>`;
+        this.selectTab(2);
         this.isVisible = false;
+    }
+
+    selectTab(index: number): void {
+        this.selectedIndex = index;
     }
 }

@@ -19,7 +19,7 @@
                 <div class="user-name">
                     {{userProfile.fullName}}
                 </div>
-                <mat-card-subtitle>
+                <mat-card-subtitle style="margin-top: 5px">
                     Registration date : <span> {{userProfile.registrationDate | date:'shortDate'}}</span>
                 </mat-card-subtitle>
             </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
     
-    <div class="" style="margin-top: 20px;"
+    <div class="left-cards" style="margin-top: 20px;"
         fxLayout
         fxLayoutAlign="center"
         fxLayout.xs="column"
@@ -62,17 +62,22 @@
                     </div>
                 <div class="item" fxFlex>  
             <div class="left-card">
-              <h2 class="title"> Languages</h2>
+              <strong class="title"> Languages</strong>
+              <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openProficiencyDialog()">
+                    <mat-icon class="bell" aria-label="Notification icon">
+                        settings
+                    </mat-icon>
+              </button>
               <hr>
               <div class="languages-list">
               <br>
-              <div *ngFor="let l of Languages">
+              <div *ngFor="let translatorLanguage of Languages">
                       <mat-card-header>
-                        <mat-card-title>{{l.Name}}</mat-card-title>
-                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
+                        <mat-card-title>{{translatorLanguage?.language?.name}}</mat-card-title>
+                        <mat-card-subtitle>{{getStringProficiency(translatorLanguage?.proficiency)}}</mat-card-subtitle>
                       </mat-card-header>
                       <mat-card-content>
-                    <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
+                    <mat-progress-bar mode="determinate" value="{{translatorLanguage.proficiency*14.29+15}}"></mat-progress-bar>
                       </mat-card-content>
               </div>  
             </div>  

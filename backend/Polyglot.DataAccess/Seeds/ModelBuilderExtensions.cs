@@ -152,7 +152,8 @@ namespace Polyglot.DataAccess.Seeds
                 new Language { Id = 2, Name = "Ukrainian", Code = "uk" },
                 new Language { Id = 3, Name = "German", Code = "de" },
                 new Language { Id = 4, Name = "Spanish", Code = "es" },
-                new Language { Id = 5, Name = "Italian", Code = "it" }
+                new Language { Id = 5, Name = "Italian", Code = "it" },
+                new Language { Id = 6, Name = "Chinese", Code = "zh" }
                 );
 
 
@@ -497,16 +498,16 @@ namespace Polyglot.DataAccess.Seeds
             if (!context.TranslatorLanguages.Any())
             {
                 var translatorLanguages = new List<TranslatorLanguage> {
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = "Medium" }
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = Proficiency.Beginner }
                    };
 
                 context.AddRange(translatorLanguages);

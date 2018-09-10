@@ -45,12 +45,12 @@ export class ChatComponent implements OnInit {
     }
 
     onSelected($event){
-        debugger;
+        
         this.selectedDialog = $event;
     }
 
     onPersonSelected($event){
-        debugger;
+        
         this.selectedPerson = $event;
     }
 }

@@ -10,32 +10,43 @@
 	<div>
 		<div *ngFor="let t of keyDetails.translations; let i = index;" class="comments-container">
 				<mat-accordion class="example-headers-align">
-                        <mat-expansion-panel [style.border]="highlightString(i)"
-                        [disabled]="isDisabled || (currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName && currentUserRole !== 1)" [expanded]="expandedArray[i].isOpened"  (opened)="setStep(i)" hideToggle>
+                        <mat-expansion-panel [class.confirmed]="t.isConfirmed" [style.border]="highlightString(i)"
+                        [disabled]="t.isConfirmed || isDisabled || (currentUserId !== t.assignedTranslatorId && t.assignedTranslatorName && currentUserRole !== 1)" [expanded]="expandedArray[i].isOpened"  (opened)="setStep(i)" hideToggle>
+
 						  <mat-expansion-panel-header class="header-translation" *ngIf = "!(expandedArray[i].isOpened)" >
 								  <mat-panel-title class="mat-panel-title">
 									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
 								  <mat-panel-description class="mat-panel-description">
-								  	<p *ngIf = "t.translationValue">{{t.translationValue}}</p>
+								  	<p class="description" *ngIf = "t.translationValue">{{t.translationValue}}</p>
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
-                                </mat-panel-description>
-                                <div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
-                                    <img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
+								</mat-panel-description>
+								<div *ngIf ="t.assignedTranslatorId" class="optional-btn"  matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
+									<img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
 								</div>
-                                <button mat-icon-button [matMenuTriggerFor]="translatorsMenu"
-                                (mouseenter)="toggleDisable()" class="optional-btn" (mouseleave)="toggleDisable()" matTooltipPosition="after" color="primary" matTooltip="Assign user"
-                                >
-									<mat-icon>more_vert</mat-icon>
-                                </button>
+								<button *ngIf="canBeConfirmed(t)" mat-icon-button (click)="onConfirm(t)"
+								(mouseenter)="toggleDisable(true)" class="optional-btn confirm-btn" (mouseleave)="toggleDisable(false)" matTooltipPosition="after" matTooltip="Confirm"
+								>
+									<i class="fas fa-check"></i>
+								</button>
+								<button *ngIf="canUnBeConfirmed(t)" mat-icon-button (click)="onUnConfirm(t)"
+								(mouseenter)="toggleDisable(true)" class="optional-btn" (mouseleave)="toggleDisable(false)" color="warn" matTooltipPosition="after" matTooltip="Unconfirm"
+								>
+									<i class="fas fa-times"></i>
+								</button>
+								<button *ngIf="!t.isConfirmed" mat-icon-button [matMenuTriggerFor]="translatorsMenu"
+								(mouseenter)="toggleDisable(true)" class="optional-btn" (mouseleave)="toggleDisable(false)" matTooltipPosition="after" color="primary" matTooltip="Assign user"
+							   >
+										<mat-icon>more_vert</mat-icon>
+								</button>
                                 <mat-menu #translatorsMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll list-users">
                                    <app-list-translators [translationId] = "t.id" [langId] = "t.languageId" [projectId] = "projectId" (chooseUserEvent) = "chooseUser($event)" [options] = "users" *ngIf ="users.length"></app-list-translators>
                                 </mat-menu>
-                                <button  mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+                                <button *ngIf="!t.isConfirmed" mat-icon-button [matMenuTriggerFor]="machineMenu" matTooltip="Machine translation" (click)="onMachineTranslationMenuClick(t.languageCode)" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable(true)" (mouseleave)="toggleDisable(false)">
 									<mat-icon class="icon-size">g_translate</mat-icon>
 								</button>
-								<button [disabled]="!t.translationValue"  mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable()" (mouseleave)="toggleDisable()">
+								<button *ngIf="!t.isConfirmed" [disabled]="!t.translationValue"  mat-icon-button [matMenuTriggerFor]="optionalMenu" matTooltip="Suggest optional translation" matTooltipPosition="after" color="primary" class="optional-btn" (mouseenter)="toggleDisable(true)" (mouseleave)="toggleDisable(false)">
 									<mat-icon style="font-size: 22px">translate</mat-icon>
 								</button>
 								<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
@@ -63,6 +74,7 @@
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
+												(keydown)="enterPress($event);"
 												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
@@ -111,7 +123,7 @@
     (click) ="addComment()"> Add comment </button>
 
 <mat-card class="my-1 ml-1 px-1 grow-1 translations-details">
-	<mat-tab-group flex>
+	<mat-tab-group flex [selectedIndex]="selectedIndex">
 		<mat-tab label="Detail">
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Detail" matTooltipPosition="above">details</mat-icon>
