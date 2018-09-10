@@ -1,4 +1,5 @@
-﻿using App;
+﻿using Android.Content.Res;
+using App;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic.DTO;
 using Polyglot.BusinessLogic.Services;
@@ -52,7 +53,6 @@ namespace Polyglot.ViewModels
                 Description=x.Description,
                 ProjectId = x.ProjectId
             }).ToList();
-
         }
     }
 }

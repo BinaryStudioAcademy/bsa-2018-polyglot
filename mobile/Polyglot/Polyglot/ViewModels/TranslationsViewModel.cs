@@ -25,7 +25,9 @@ namespace Polyglot.ViewModels
             var httpClient = new HttpClient();
             var token = UserService.Token;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var translationsResponse = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net//api/complexstrings/" + complexStringId + "/translations");
+
+            var stringsUrl = "http://polyglotbsa.azurewebsites.net/api/complexstrings/" + complexStringId + "/translations";
+            var translationsResponse = await httpClient.GetAsync(stringsUrl);
 
 
             //will throw an exception if not successful
@@ -35,31 +37,31 @@ namespace Polyglot.ViewModels
 
             var translations = JsonConvert.DeserializeObject<List<TranslationDTO>>(content);
 
-            var languagesResponse = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net//api/projects/" + projectId + "/languages");
+
+            var langUrl = "http://polyglotbsa.azurewebsites.net/api/projects/" + projectId + "/languages/";
+
+            var languagesResponse = await httpClient.GetAsync(langUrl);
 
 
             //will throw an exception if not successful
-            translationsResponse.EnsureSuccessStatusCode();
+            languagesResponse.EnsureSuccessStatusCode();
 
-            string content2 = await translationsResponse.Content.ReadAsStringAsync();
+            string content2 = await languagesResponse.Content.ReadAsStringAsync();
 
             var languages = JsonConvert.DeserializeObject<List<LanguageDTO>>(content2);
 
             Translations = from lang in languages
                            join tr in translations
                            on lang.Id equals tr.LanguageId
+                           into val
+                           from t in val.DefaultIfEmpty()
                            select new TranslationViewModel
                            {
                                Language = lang.Name,
-                               Translation = tr.TranslationValue == null ? "No Translation" : tr.TranslationValue
+                               Translation = t == null ? "Not translated" : t.TranslationValue
                            };
-                
-                
-                /*languages.LeftJoin(translations, lang => lang.Id, tr => tr.LanguageId, (lang, tr) => new TranslationViewModel
-            {
-                Language = lang,
-                Translation = tr
-            }).ToList();*/
+
+            Translations = Translations.ToList();  
         }
     }
 }
