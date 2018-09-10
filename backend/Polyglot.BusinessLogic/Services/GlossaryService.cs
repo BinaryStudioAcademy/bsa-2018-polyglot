@@ -74,6 +74,7 @@ namespace Polyglot.BusinessLogic.Services
 
             var ent = mapper.Map<Glossary>(entity);
             ent.OriginLanguage = null;
+            ent.UserProfile = null;
             var target = await uow.GetRepository<Glossary>().CreateAsync(ent);
             await uow.SaveAsync();
 

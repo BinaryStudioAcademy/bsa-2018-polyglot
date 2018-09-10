@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { GlossaryService } from '../../services/glossary.service';
 import { SnotifyService } from 'ng-snotify';
 import { LanguageService } from '../../services/language.service';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-glossary-create-dialog',
@@ -21,7 +22,8 @@ export class GlossaryCreateDialogComponent implements OnInit {
     private glossaryService: GlossaryService,
     public dialogRef: MatDialogRef<GlossaryCreateDialogComponent>,
     private snotifyService: SnotifyService,
-    private languageService: LanguageService) { }
+    private languageService: LanguageService,
+    private stateService: AppStateService) { }
 
 
   ngOnInit() {
@@ -39,7 +41,8 @@ export class GlossaryCreateDialogComponent implements OnInit {
       name: '',
       originLanguage: {id : 0, code : '', name : ''},
       projectGlossaries: [],
-      glossaryStrings: []
+      glossaryStrings: [],
+      userProfile: this.stateService.currentDatabaseUser
       
     };
   }

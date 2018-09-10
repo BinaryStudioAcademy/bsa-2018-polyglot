@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { GlossaryCreateDialogComponent } from '../../dialogs/glossary-create-dialog/glossary-create-dialog.component';
 import { GlossaryEditDialogComponent } from '../../dialogs/glossary-edit-dialog/glossary-edit-dialog.component';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
     selector: 'app-glossaries',
@@ -25,14 +26,15 @@ export class GlossariesComponent implements OnInit {
 
     constructor(private glossaryService: GlossaryService,
         public dialog: MatDialog,
-        private snotifyService: SnotifyService) { }
+        private snotifyService: SnotifyService,
+        private staseService: AppStateService) { }
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     ngOnInit() {
-        this.glossaryService.getAll().subscribe((data: Glossary[]) => {
+        this.glossaryService.getUsersGlossaries(this.staseService.currentDatabaseUser.id).subscribe((data: Glossary[]) => {
             this.glossaries = data;
             this.dataSource = new MatTableDataSource(this.glossaries);
         })
