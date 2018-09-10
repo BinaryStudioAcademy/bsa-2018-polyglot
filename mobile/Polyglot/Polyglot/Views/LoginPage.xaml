@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Polyglot.Views.LoginPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" FontSize="20" Margin="0,40,0,40"/>
-            <Editor  x:Name="Email" HorizontalOptions="Center"  WidthRequest="350" ></Editor>
-            <Editor  x:Name="Password" HorizontalOptions="Center" WidthRequest="350" ></Editor>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" FontSize="20" Margin="0,0,0,40"/>
+            <Entry  x:Name="Email" Placeholder="Email" HorizontalOptions="Center"  WidthRequest="320" ></Entry>
+            <Entry  x:Name="Password" IsPassword="True" Placeholder="Password" HorizontalOptions="Center" WidthRequest="320" ></Entry>
             <Button  HorizontalOptions="Center"  Text="Login" Clicked="Login_OnClicked"></Button>
         </StackLayout>
+
     </ContentPage.Content>
 </ContentPage>

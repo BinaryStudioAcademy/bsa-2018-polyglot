@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Dashboard">
-    <ListView 
+             x:Class="Polyglot.DashboardPage" Title="Projects">
+    <ContentPage.Content>
+        <ListView 
             ItemsSource="{Binding Projects}"
             SelectedItem="{Binding SelectedProject, Mode=OneWayToSource}"
             CachingStrategy="RecycleElement"
@@ -25,4 +26,5 @@
         </ListView.ItemTemplate>
 
     </ListView>
+    </ContentPage.Content>
 </ContentPage>
