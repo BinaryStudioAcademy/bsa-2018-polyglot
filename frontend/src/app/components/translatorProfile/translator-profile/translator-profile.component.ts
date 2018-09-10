@@ -131,7 +131,8 @@ export class TranslatorProfileComponent implements OnInit{
     openProficiencyDialog(){
         const dialogRef = this.dialog.open(ChooseProficiencyDialogComponent, {
             data: {translatorLanguages: this.Languages}
-        });      
+        });
+        dialogRef.componentInstance.openAddLangsDialogEvent.subscribe(()=> this.openAddRemoveLanguageDialog())      
         dialogRef.afterClosed().subscribe(()=>{
             this.languageService.getTranslatorsLanguages(this.userService.getCurrentUser().id).subscribe(data=>{
                 this.Languages = data;

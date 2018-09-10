@@ -1,3 +1,4 @@
+<mat-spinner *ngIf="!allLanguages"></mat-spinner>
 <div class="container" *ngIf="allLanguages">
     <h3 *ngIf="notAssignedLanguages.length > 0">Not Selected Languages: </h3>
     <div *ngFor="let translatorLanguage of notAssignedLanguages">

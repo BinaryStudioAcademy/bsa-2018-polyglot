@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, Inject, EventEmitter, Input } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Language, TranslatorLanguage } from '../../models';
 import { LanguageService } from '../../services/language.service';
 import { Proficiency } from '../../models/proficiency';
 import { UserService } from '../../services/user.service';
+import { AddRemoveLanguagesDialogComponent } from '../add-remove-languages-dialog/add-remove-languages-dialog.component';
 
 @Component({
     selector: 'app-choose-proficiency-dialog',
@@ -15,12 +16,15 @@ export class ChooseProficiencyDialogComponent implements OnInit {
     allLanguages: Language[];
     @Input() translatorLanguages: TranslatorLanguage[];
     newTranslatorLanguages: TranslatorLanguage[] = [];
+    isLoad: boolean = false;
+    openAddLangsDialogEvent: EventEmitter<any> = new EventEmitter();
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ChooseProficiencyDialogComponent>,
         private languageService: LanguageService,
-        private userService: UserService
+        private userService: UserService,
+        public dialog: MatDialog
     ) { }
 
     ngOnInit() {
@@ -36,6 +40,7 @@ export class ChooseProficiencyDialogComponent implements OnInit {
                     this.newTranslatorLanguages.push(this.translatorLanguages[index])
                 }
             });
+            this.isLoad = true;
         });
     }
 
@@ -66,5 +71,10 @@ export class ChooseProficiencyDialogComponent implements OnInit {
     }
     divideCamelCase(str: string){
         return str.replace(/([a-z](?=[A-Z]))/g, '$1 ');
+    }
+
+    openAddLangDialog(){
+        this.dialogRef.close();
+        this.openAddLangsDialogEvent.emit();
     }
 }
