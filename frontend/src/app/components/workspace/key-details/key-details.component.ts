@@ -662,8 +662,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.keyDetails.translations[$event.keyId].translationValue =
             $event.translation;
-
-        this.expandedArray[$event.keyId].isOpened = true;
+        
+        this.translationInputs[$event.keyId].value = $event.translation;
+        this.setStep($event.keyId);
     }
 
     toggleDisable(status: boolean) {
