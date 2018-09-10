@@ -67,10 +67,10 @@
 								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
 							</mat-expansion-panel-header>
-						   <div style="max-width: 861px">
+						   <div>
                                 <div [hidden]="divHidden" class="translation-div"
                                 (contextmenu)="onRightClick($event)"
-                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
+                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 90%; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
