@@ -19,6 +19,7 @@ namespace Polyglot.Controllers
         private readonly IRightService rightService;
         private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
+
         public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper,
                                 IRightService rightService)
         {
@@ -31,7 +32,7 @@ namespace Polyglot.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-            var teams = await service.GetAllTeamsAsync(); 
+            var teams = await service.GetAllTeamsAsync();
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
@@ -123,6 +124,18 @@ namespace Polyglot.Controllers
 
             return Ok();
         }
+
+        [HttpPut("translators")]
+
+
+        public async Task<IActionResult> AddTeamTranslators([FromBody]TeamTranslatorsDTO teamTransalors)
+        {
+            var entity = await service.TryAddTeamAsync(teamTransalors);
+
+            return Ok(entity);
+
+        }
+
 
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]

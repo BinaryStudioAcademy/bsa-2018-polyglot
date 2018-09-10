@@ -76,7 +76,7 @@ export class ChatWindowComponent implements OnInit {
         this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
             (userId: number) => {
-                debugger;
+                
                 if(this.interlocutors[userId]){
                     for(let i = 0; i < this.messages.length; i++){
                         this.messages[i].isRead = true;
@@ -87,7 +87,7 @@ export class ChatWindowComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        debugger;
+        
         this.messages = [];
         
         if(changes.dialog.previousValue) {
@@ -170,7 +170,7 @@ export class ChatWindowComponent implements OnInit {
                 .getDialogMessages(targetGroup, targetGroupDialogId)
                 .subscribe(messages => {
                     if (messages) {
-                        debugger;
+                        
 
                         if(this.isDirect)
                         {
@@ -197,7 +197,7 @@ export class ChatWindowComponent implements OnInit {
 
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
-                    debugger;
+                    
                     if(message){
                         this.messages.push(message);
                     }
