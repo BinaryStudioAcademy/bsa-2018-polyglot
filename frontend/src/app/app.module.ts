@@ -124,6 +124,7 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
 
 @NgModule({
   exports: [
@@ -208,7 +209,8 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     TabOptionalComponent,
     NotificationsComponent,
     TeamAddMemberComponent,
-    ChooseProficiencyDialogComponent
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -266,7 +268,8 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     SaveStringConfirmComponent,
     SelectColorDialogComponent,
     TeamAddMemberComponent,
-    ChooseProficiencyDialogComponent
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

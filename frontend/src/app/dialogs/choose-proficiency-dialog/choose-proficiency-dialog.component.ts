@@ -13,7 +13,6 @@ import { UserService } from '../../services/user.service';
 export class ChooseProficiencyDialogComponent implements OnInit {
 
     allLanguages: Language[];
-    @Output() onSubmit = new EventEmitter<any>(true);
     @Input() translatorLanguages: TranslatorLanguage[];
     newTranslatorLanguages: TranslatorLanguage[] = [];
 
@@ -36,14 +35,8 @@ export class ChooseProficiencyDialogComponent implements OnInit {
                 if(index >= 0){
                     this.newTranslatorLanguages.push(this.translatorLanguages[index])
                 }
-                else{
-                    this.newTranslatorLanguages.push({
-                        proficiency: null,
-                        language: lang
-                    });
-                }
             });
-        })  
+        });
     }
 
     getProficiencyValues(): string[]{
@@ -60,7 +53,7 @@ export class ChooseProficiencyDialogComponent implements OnInit {
 
     submit(){
         const filteredTranslatorLanguages = this.newTranslatorLanguages.filter(tl => tl.proficiency != null);
-        this.languageService.SetCurrentUserLaguage(filteredTranslatorLanguages).subscribe(() => {
+        this.languageService.setCurrentUserLaguages(filteredTranslatorLanguages).subscribe(() => {
             this.dialogRef.close();
         });
     }

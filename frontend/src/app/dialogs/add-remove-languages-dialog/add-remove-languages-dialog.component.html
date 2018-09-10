@@ -1,0 +1,28 @@
+<div class="container" *ngIf="allLanguages">
+    <h3>Not Selected Languages: </h3>
+    <div *ngFor="let translatorLanguage of notAssignedLanguages">
+        <ul cols="2">
+            <li>
+                {{translatorLanguage.language.name}}
+            </li>
+            <li>
+                <a mat-button color="primary" class="button" routerLinkActive="active" (click)='onAssign(translatorLanguage)'>
+                    <i class="fas fa-check"></i> Assign
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h3>Selected Languages: </h3>
+    <div *ngFor="let translatorLanguage of assignedLanguages">
+        <ul cols="2">
+            <li class="language-name">
+                {{translatorLanguage.language.name}}
+            </li>
+            <li>
+                <a mat-button color="warn" class="button" routerLinkActive="active" (click)='onDelete(translatorLanguage)'>
+                    <i class="fas fa-ban"></i> Remove
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

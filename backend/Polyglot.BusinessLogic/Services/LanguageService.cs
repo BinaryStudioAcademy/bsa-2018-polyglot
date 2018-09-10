@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -40,6 +41,20 @@ namespace Polyglot.BusinessLogic.Services
                         TranslatorId = userId,
                         Proficiency = language.Proficiency
                     });
+                }
+            }
+            await uow.SaveAsync();
+            return await this.GetTranslatorLanguages(userId);
+        }
+
+        public async Task<IEnumerable<TranslatorLanguageDTO>> DeleteTranslatorsLanguages(int userId, TranslatorLanguageDTO[] languages)
+        {
+            foreach (var language in languages)
+            {
+                var lang = await uow.GetMidRepository<TranslatorLanguage>().GetAsync(tl => tl.TranslatorId == userId && tl.Language.Id == language.Language.Id);
+                if (lang != null)
+                {
+                    var entity = uow.GetMidRepository<TranslatorLanguage>().Delete(mapper.Map<TranslatorLanguage>(lang));
                 }
             }
             await uow.SaveAsync();
