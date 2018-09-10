@@ -282,12 +282,16 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     onTextChange(i) {
         let words =  this.translationInputs.item(i).value.split(' ');
+        console.log(words);
         let result = '';
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
                     words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
+            }
+            if (words[i] === '') {
+                words[i] = '<span style="padding-left: 0.28571427715em"></span>';
             }
             if (i !== words.length - 1) {
                 words[i] = words[i] + ' ';
@@ -309,6 +313,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 let chil: any = glosWords[n].children[0];
                 chil.style.visibility = 'hidden';
             });
+        }
+    }
+
+    enterPress($event) {
+        if ($event.which === 13) {
+            $event.preventDefault();
         }
     }
 

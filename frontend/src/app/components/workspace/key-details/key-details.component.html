@@ -18,7 +18,7 @@
 									  <p>{{t.languageName}}</p>
 								  </mat-panel-title>
 								  <mat-panel-description class="mat-panel-description">
-								  	<p *ngIf = "t.translationValue">{{t.translationValue}}</p>
+								  	<p class="description" *ngIf = "t.translationValue">{{t.translationValue}}</p>
 								  	<p *ngIf = "!t.translationValue" class="none-translation">Click here to start translating...
 									</p>
                                 </mat-panel-description>
@@ -74,6 +74,7 @@
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
+												(keydown)="enterPress($event);"
 												(keyup)="onTextChange(i); isCanSave(i, t);"  matInput
 												[(ngModel)]="t.translationValue"
 												[(ngModel)]="currentTranslation"
