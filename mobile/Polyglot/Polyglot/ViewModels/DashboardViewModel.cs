@@ -10,50 +10,39 @@ using System.Net.Http.Headers;
 using System.Text;
 using Polyglot.BusinessLogic.Services;
 using Xamarin.Forms;
+using Polyglot.BusinessLogic;
 
 namespace Polyglot.ViewModels
 {
     public class DashboardViewModel : BaseViewModel
     {
-        private ProjectViewModel _selectedProject;
-        public ProjectViewModel SelectedProject
-        {
-            get => _selectedProject;
-            set
-            {
-                if (!SetProperty(ref _selectedProject, value))
-                {
-                    return;
-                }
-
-            }
-        }
-
+        public bool IsEmpty => Projects == null || !Projects.Any();
 
         private IEnumerable<ProjectViewModel> _projects;
         public IEnumerable<ProjectViewModel> Projects
         {
             get => _projects;
-            set => SetProperty(ref _projects, value);
+            set
+            {
+                if (!SetProperty(ref _projects, value))
+                {
+                    return;
+                }
+
+                RaisePropertyChanged(nameof(IsEmpty));
+
+            }
         }
 
         public async void Initialize()
         {
-            var httpClient = new HttpClient();
-            var token = UserService.Token;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net/api/projects/");
-
-            //will throw an exception if not successful
-            response.EnsureSuccessStatusCode();
-
-            string content = await response.Content.ReadAsStringAsync();
-
-            var projects = JsonConvert.DeserializeObject<List<ProjectDTO>>(content);
+            var url = "projects";
+            var httpService = new HttpService();
+            var projects = await httpService.GetAsync<List<ProjectDTO>>(url);
 
             Projects = projects.Select(x => new ProjectViewModel
             {
-                Id=x.Id,
+                Id = x.Id,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,
                 Description = x.Description

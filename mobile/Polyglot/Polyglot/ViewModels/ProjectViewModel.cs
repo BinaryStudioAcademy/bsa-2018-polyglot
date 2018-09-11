@@ -8,13 +8,11 @@ namespace Polyglot.ViewModels
     {
         private const string DefaultImageUrl = "https://www.projectsmart.co.uk/img/project.png";
 
-
         private int _id;
         public int Id
         {
             get => _id;
             set => SetProperty(ref _id, value);
-
         }
 
         private string _name;
@@ -22,7 +20,6 @@ namespace Polyglot.ViewModels
         {
             get => _name;
             set => SetProperty(ref _name, value);
-
         }
 
         private string _description;
@@ -30,7 +27,6 @@ namespace Polyglot.ViewModels
         {
             get => _description;
             set => SetProperty(ref _description, value);
-
         }
 
         private string _imageUrl = DefaultImageUrl;
@@ -43,12 +39,9 @@ namespace Polyglot.ViewModels
                 {
                     return;
                 }
-
                 _imageUrl = string.IsNullOrEmpty(value) ? DefaultImageUrl : value;
                 RaisePropertyChanged();
             }
         }
-
-
     }
 }

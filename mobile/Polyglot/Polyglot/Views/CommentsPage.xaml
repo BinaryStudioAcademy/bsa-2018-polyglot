@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.Views.CommentsPage">
+    <StackLayout>
+        <Label IsVisible="{Binding IsEmpty}">No Comments</Label>
+        <ListView 
+            ItemsSource="{Binding Comments}"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
+            RowHeight="200"    >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" >
+                            <Label Text="{Binding UserName}"   />
+                            <Label Font="15" HeightRequest="30"  Text="{Binding Text}"  />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

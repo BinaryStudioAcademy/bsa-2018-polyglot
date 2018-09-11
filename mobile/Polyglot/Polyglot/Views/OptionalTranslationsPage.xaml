@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.Views.OptionalTranslationsPage">
+    <StackLayout>
+        <Label IsVisible="{Binding IsEmpty}">No Optional translations</Label>
+        <ListView 
+            ItemsSource="{Binding OptionalTranslations}"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
+            RowHeight="200"    >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <StackLayout  Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <Image WidthRequest="50" HeightRequest="50" Source="{Binding UserPictureURL}"></Image>
+                                    <Label Margin="10, 20, 0, 0" HorizontalTextAlignment="Center" Text="{Binding UserName}"/>
+                                </StackLayout>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical">
+                                <Label Margin="10, 0, 0, 0" HorizontalTextAlignment="Start" Font="15" HeightRequest="30"  Text="{Binding Translation}"  />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

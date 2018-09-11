@@ -18,6 +18,12 @@ namespace Polyglot
 
             dashboard.Initialize();
 
+
+            if (dashboard.Projects == null)
+            {
+
+            }
+
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)

@@ -57,6 +57,7 @@ namespace Polyglot.ViewModels
                            from t in val.DefaultIfEmpty()
                            select new TranslationViewModel
                            {
+                               Id= t == null ? "" : t.Id.ToString(),
                                Language = lang.Name,
                                Translation = t == null ? "Not translated" : t.TranslationValue
                            };

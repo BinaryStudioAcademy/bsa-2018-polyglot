@@ -17,10 +17,17 @@ namespace Polyglot.Views
 
         public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, int projectId)
         {
+
             BindingContext = complexStringsViewModel;
+
             InitializeComponent();
 
             complexStringsViewModel.Initialize(projectId);
+
+            if (complexStringsViewModel.ComplexStrings == null)
+            {
+                DisplayAlert("Title", "M", "OK");
+            }
 
         }
 
