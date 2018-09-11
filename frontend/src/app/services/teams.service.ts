@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService, RequestMethod } from './http.service';
 import { Observable, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Team, Right } from '../models';
+import { Team, Right, Language } from '../models';
 import { Translator } from '../models/Translator';
 
 @Injectable({
@@ -18,12 +18,20 @@ export class TeamService {
   }
 
   getTeam(id: number): Observable<Team> {
-    
+
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);
   }
 
   getAllTranslators(): Observable<Translator[]> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/translators', undefined, undefined);
+  }
+
+  getFilteredTranslators(prof: number, languages: Language[]): Observable<Translator[]> {
+    var searchQuery = `?prof=${prof}`;
+    languages.forEach(function(item, i, languages) {
+ 		searchQuery += `&languages=${item.id}`;
+    });
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/filteredtranslators', searchQuery, undefined);
   }
 
   GetTranslator(id: number): Observable<Translator> {
@@ -52,7 +60,7 @@ export class TeamService {
 
   activateCurrentUserInTeam(teamId: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, teamId + "/activate");
-  } 
+  }
 
   update(id: number, body){
     return this.dataService.sendRequest(RequestMethod.Put, this.api, id, body);
