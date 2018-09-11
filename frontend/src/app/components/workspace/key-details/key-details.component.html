@@ -50,25 +50,20 @@
 							<mat-menu #machineMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
 								<app-machine-translation-menu (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
-
-							<div *ngIf="t.assignedTranslatorId" class="optional-btn" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
-								<img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
-							</div>
-
-
-
-							<button *ngIf="canUnBeConfirmed(t)" mat-icon-button (click)="onUnConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn unconfirm-btn"
-							 (mouseleave)="toggleDisable(false)" color="warn" matTooltipPosition="after" matTooltip="Unconfirm">
-								<i class="fas fa-times"></i>
-							</button>
-
 							<button *ngIf="!t.isConfirmed" mat-icon-button [matMenuTriggerFor]="translatorsMenu" (mouseenter)="toggleDisable(true)" class="optional-btn"
 							 (mouseleave)="toggleDisable(false)" matTooltipPosition="after" color="primary" matTooltip="Assign user">
 								<mat-icon>more_vert</mat-icon>
 							</button>
+							<div *ngIf="t.assignedTranslatorId" class="optional-btn" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
+								<img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
+							</div>
+							<button *ngIf="canUnBeConfirmed(t)" mat-icon-button (click)="onUnConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn unconfirm-btn"
+							 (mouseleave)="toggleDisable(false)" color="warn" matTooltipPosition="after" matTooltip="Unconfirm">
+							 <mat-icon>close</mat-icon>
+							</button>
 							<button *ngIf="canBeConfirmed(t)" mat-icon-button (click)="onConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn confirm-btn"
 							 (mouseleave)="toggleDisable(false)" matTooltipPosition="after" matTooltip="Confirm">
-								<i class="fas fa-check"></i>
+							 <mat-icon>done</mat-icon>
 							</button>
 							<mat-menu #translatorsMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll list-users">
 								<app-list-translators [translationId]="t.id" [langId]="t.languageId" [projectId]="projectId" (chooseUserEvent)="chooseUser($event)"

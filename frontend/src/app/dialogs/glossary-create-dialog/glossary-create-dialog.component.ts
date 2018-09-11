@@ -65,3 +65,4 @@ export class GlossaryCreateDialogComponent implements OnInit {
                 });
   }
 
+}
