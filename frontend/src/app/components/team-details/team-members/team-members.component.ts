@@ -312,4 +312,13 @@ export class TeamMembersComponent implements OnInit {
 		}
 		);
 	}
+
+	removeTranslator(userId: number){
+		this.teamService.removeUserFromTeam(userId, this.teamId).subscribe((team: Team)=>{
+			console.log(team);
+			this.teamTranslators = team.teamTranslators;
+			this.dataSource = new MatTableDataSource(this.teamTranslators);
+				this.dataSource.sort = this.sort;
+		});
+	}
 }

@@ -57,7 +57,10 @@
   </ng-container>  
     <ng-container matColumnDef="options" class="icons-container">
         <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">            
+        <td mat-cell *matCellDef="let element">  
+            <a *ngIf="userService.isCurrentUserManager()" mat-button color="warn" class="button" routerLinkActive="active" (click)='removeTranslator(element.userId)'>
+                <i class="fas fa-ban"></i> Remove translator
+            </a>
         </td>
     </ng-container>
 
