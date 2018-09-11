@@ -1,3 +1,113 @@
-<p>
-  manager-guide works!
-</p>
+<div class="item">
+    <div class="description">
+        <h3>1. Create a project</h3>
+        <p class="step">
+            To create a project go
+            <a class="link" [routerLink]="['/newproject']">here</a>
+            and submit a form with your data.
+        </p>
+        <p class="step">
+            After that your project will appear on the
+            <a class="link" [routerLink]="['/dashboard/projects']">dashboard</a>.
+        </p>
+    </div>
+    <div class="image">
+        <img src="/assets/images/guideline/CreateProject.PNG">
+    </div>
+</div>
+
+<div class="item">
+    <div class="description">
+        <h3>2. Create a string</h3>
+        <p class="step">
+            To create a project go to the project`s workspace. All information about your strings will be displayed there.
+        </p>
+        <p class="step">
+            Press
+            <strong>Add new string</strong> button in the top right corner.
+        </p>
+        <p class="step">
+            Here you have to type your string`s key, base value, description, select tags and picture.
+        </p>
+        <p class="hint">
+            <mat-icon style="vertical-align: middle;">info_outline</mat-icon>
+            You should select all names suitable to make translator`s work easier!
+        </p>
+    </div>
+    <div class="image">
+        <img src="/assets/images/guideline/CreateString.PNG">
+    </div>
+</div>
+
+<div class="item">
+    <div class="description">
+        <h3>3. Create a team</h3>
+        <p class="step">
+            To create a team go
+            <a class="link" [routerLink]="['/newteam']">here</a>
+            and choose translators from general list.
+        </p>
+        <p class="step">
+            All translators will get an invitation from you.
+        </p>
+        <p class="hint">
+            <mat-icon style="vertical-align: middle;">info_outline</mat-icon>
+            Pay attention to translator`s language level!
+        </p>
+    </div>
+    <div class="image">
+        <img src="/assets/images/guideline/CreateTeam.PNG">
+    </div>
+    <div class="description">
+        <p class="step">
+            Now you have to assign this team to your project.
+        </p>
+        <p class="step">
+            Go to <strong>Teams</strong> tab in your`s project details and assign your team.
+        </p>
+    </div>    
+</div>
+
+<div class="item">
+    <div class="description">
+        <h3>4. Create glossary</h3>
+        <p class="step">
+            To create a glossary go
+            <a class="link" [routerLink]="['dashboard/glossaries']">here</a>
+            and press "+" button.
+        </p>
+        <p class="step">
+            Now fill glossary with terms and explanations that relate to your technology.
+        </p>
+    </div>
+    <div class="image">
+        <img src="/assets/images/guideline/Glossary.PNG">
+    </div>
+    <div class="description">
+        <p class="step">
+            Now you have to assign glossary to your project in the same way like you have assigned team.
+        </p>
+    </div>
+</div>
+
+<div class="item">
+    <div class="description">
+        <h3>5. Watch the progress</h3>
+        <p class="step">
+            Now your translators are working and you watch how the work goes.
+        </p>
+        <p class="step">
+            On the 
+            <a class="link" [routerLink]="['/dashboard/projects']">dashboard</a>
+            you can see general progress and in <strong>Report</strong> tab you can see detailed information.
+        </p>
+        <div class="images">
+            <div class="image">
+                <img src="/assets/images/guideline/Progress.PNG">
+            </div>
+            <div class="image">
+                <img src="/assets/images/guideline/Report.PNG">
+            </div>
+        </div>
+    </div>
+</div>
