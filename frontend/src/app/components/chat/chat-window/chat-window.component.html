@@ -67,7 +67,7 @@
         </ul>
     </div>
 
-    <footer class="chat-input-container">
+    <footer class="chat-input-container" (keyup.enter)="sendMessage()">
         <mat-card class="new-message-notification">
             <span>New message recieved</span>
             <mat-icon aria-label="">send</mat-icon>

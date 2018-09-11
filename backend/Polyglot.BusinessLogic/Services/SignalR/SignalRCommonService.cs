@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Polyglot.Core.Authentication;
 using Polyglot.Core.SignalR.Responses;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Services.SignalR
 {
+    [Authorize]
     public class SignalRCommonService<THub> where THub : Hub
     {
         protected readonly IHubContext<THub> hubContext;
@@ -24,7 +26,7 @@ namespace Polyglot.BusinessLogic.Services.SignalR
                 Ids = ids
             };
         }
-
+        
         protected async Task<ChatMessageResponce> GetChatMessageResponce(int dialogId, int messageId, string text)
         {
             var currentUser = await CurrentUser.GetCurrentUserProfile();

@@ -7,6 +7,8 @@ namespace Polyglot.Common.DTOs.Chat
     {
         public int Id { get; set; }
 
+        public string Uid { get; set; }
+
         public string FullName { get; set; }
 
         public string Email { get; set; }
