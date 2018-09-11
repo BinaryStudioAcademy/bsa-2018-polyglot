@@ -89,5 +89,13 @@ namespace Polyglot.Controllers
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
+
+        [HttpDelete("user")]
+        public async Task<IActionResult> DeleteCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
+        {
+            var entity = await service.DeleteTranslatorsLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
     }
 }

@@ -14,6 +14,7 @@ import { LanguageService } from '../../../services/language.service';
 import { LanguageStatistic, TranslatorLanguage } from '../../../models';
 import { Proficiency } from '../../../models/proficiency';
 import { ChooseProficiencyDialogComponent } from '../../../dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { AddRemoveLanguagesDialogComponent } from '../../../dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
 
 @Component({
   selector: 'app-translator-profile',
@@ -129,6 +130,18 @@ export class TranslatorProfileComponent implements OnInit{
 
     openProficiencyDialog(){
         const dialogRef = this.dialog.open(ChooseProficiencyDialogComponent, {
+            data: {translatorLanguages: this.Languages}
+        });
+        dialogRef.componentInstance.openAddLangsDialogEvent.subscribe(()=> this.openAddRemoveLanguageDialog())      
+        dialogRef.afterClosed().subscribe(()=>{
+            this.languageService.getTranslatorsLanguages(this.userService.getCurrentUser().id).subscribe(data=>{
+                this.Languages = data;
+            });
+        });
+    }
+
+    openAddRemoveLanguageDialog(){
+        const dialogRef = this.dialog.open(AddRemoveLanguagesDialogComponent, {
             data: {translatorLanguages: this.Languages}
         });      
         dialogRef.afterClosed().subscribe(()=>{

@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, Inject, EventEmitter, Input } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Language, TranslatorLanguage } from '../../models';
 import { LanguageService } from '../../services/language.service';
 import { Proficiency } from '../../models/proficiency';
 import { UserService } from '../../services/user.service';
+import { AddRemoveLanguagesDialogComponent } from '../add-remove-languages-dialog/add-remove-languages-dialog.component';
 
 @Component({
     selector: 'app-choose-proficiency-dialog',
@@ -13,15 +14,17 @@ import { UserService } from '../../services/user.service';
 export class ChooseProficiencyDialogComponent implements OnInit {
 
     allLanguages: Language[];
-    @Output() onSubmit = new EventEmitter<any>(true);
     @Input() translatorLanguages: TranslatorLanguage[];
     newTranslatorLanguages: TranslatorLanguage[] = [];
+    isLoad: boolean = false;
+    openAddLangsDialogEvent: EventEmitter<any> = new EventEmitter();
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ChooseProficiencyDialogComponent>,
         private languageService: LanguageService,
-        private userService: UserService
+        private userService: UserService,
+        public dialog: MatDialog
     ) { }
 
     ngOnInit() {
@@ -36,14 +39,9 @@ export class ChooseProficiencyDialogComponent implements OnInit {
                 if(index >= 0){
                     this.newTranslatorLanguages.push(this.translatorLanguages[index])
                 }
-                else{
-                    this.newTranslatorLanguages.push({
-                        proficiency: null,
-                        language: lang
-                    });
-                }
             });
-        })  
+            this.isLoad = true;
+        });
     }
 
     getProficiencyValues(): string[]{
@@ -60,7 +58,7 @@ export class ChooseProficiencyDialogComponent implements OnInit {
 
     submit(){
         const filteredTranslatorLanguages = this.newTranslatorLanguages.filter(tl => tl.proficiency != null);
-        this.languageService.SetCurrentUserLaguage(filteredTranslatorLanguages).subscribe(() => {
+        this.languageService.setCurrentUserLaguages(filteredTranslatorLanguages).subscribe(() => {
             this.dialogRef.close();
         });
     }
@@ -73,5 +71,10 @@ export class ChooseProficiencyDialogComponent implements OnInit {
     }
     divideCamelCase(str: string){
         return str.replace(/([a-z](?=[A-Z]))/g, '$1 ');
+    }
+
+    openAddLangDialog(){
+        this.dialogRef.close();
+        this.openAddLangsDialogEvent.emit();
     }
 }
