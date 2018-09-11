@@ -93,4 +93,8 @@ export class UserService {
     this.router.navigate(['/user', id]);
     }
   }
+
+  getUserProfilesByNameStartWith(startsWith: string){
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/name', startsWith);
+  }
 }

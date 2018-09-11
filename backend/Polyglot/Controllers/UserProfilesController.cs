@@ -187,5 +187,14 @@ namespace Polyglot.Controllers
             return rights == null ? NotFound($"Rights not found!") as IActionResult
                : Ok(rights);
         }
+
+        // GET: UserProfiles
+        [HttpGet("name/{fullName}")]
+        public async Task<IActionResult> GetUserProfilesByNameStartWith(string fullName)
+        {
+            var user = await service.GetUsersByNameStartsWith(fullName);
+            return user == null ? NotFound($"Users not found!") as IActionResult
+               : Ok(user);
+        }
     }
 }

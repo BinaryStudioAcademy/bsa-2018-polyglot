@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, SimpleChanges, Input } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
-import { ChatUser, Project, Team, GroupType } from "../../../models";
+import { ChatUser, Project, Team, GroupType, UserProfile } from "../../../models";
 import { ChatDialog } from "../../../models/chat/chatDialog";
 import { AppStateService } from "../../../services/app-state.service";
 import { SignalrService } from "../../../services/signalr.service";
@@ -8,6 +8,7 @@ import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
 import { FormControl } from "@angular/forms";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-chat-contacts",
@@ -21,6 +22,9 @@ export class ChatContactsComponent implements OnInit {
     public isOnPersonsPage: boolean;
     currentUserId: number;
     selectedDialogId: number;
+    filterInput: string;
+    timeOutFilter: boolean = false;
+    searchUsers: UserProfile[];
 
     private signalRConnection;
 
@@ -38,7 +42,8 @@ export class ChatContactsComponent implements OnInit {
     constructor(
         private chatService: ChatService,
         private appState: AppStateService,
-        private signalRService: SignalrService
+        private signalRService: SignalrService,
+        private userService: UserService
     ) {
        // this.isOnPersonsPage = true;
     }
@@ -166,4 +171,36 @@ export class ChatContactsComponent implements OnInit {
                 }
             })
     }
+
+    focusFilter(){
+        this.isSearchMode = true;
+    }
+
+    focusOutFilter(){
+        this.isSearchMode = false;
+    }
+
+    filterChange(event){
+        if(event.target.value.length > 0){
+            this.isSearchMode = true;
+            this.searchUsers = [];
+            if(!this.timeOutFilter){
+                this.timeOutFilter = true;
+                setTimeout(()=>{
+                    this.filterInput = event.target.value;
+                    this.timeOutFilter = false;
+                    if(this.filterInput.length > 0){
+                        this.userService.getUserProfilesByNameStartWith(this.filterInput).subscribe((users)=>{
+                            this.searchUsers = users; 
+                            this.timeOutFilter = false;                       
+                        });
+                    }
+                }, 1000);             
+            }
+        }
+        else{
+            this.isSearchMode = false;
+        }
+    }
+    
 }

@@ -16,7 +16,9 @@
                             </button>
                         -->
                             <mat-form-field class="team-details_filter">
-                                <input matInput placeholder="Filter">
+                                <input class="filter-input" matInput placeholder="Filter"
+                                    (input)="filterChange($event)">
+                                    <mat-spinner *ngIf="timeOutFilter" [diameter]="20" matSuffix></mat-spinner>
                             </mat-form-field>
                         </mat-toolbar>
 
@@ -58,7 +60,31 @@
             </div>
 
             <div [hidden]="!isSearchMode">
-                SEARCH MODE
+                <ul>
+                    <li *ngFor="let user of searchUsers" (click)="selectDialog(d)">
+                        <mat-card class="person-card dialog-card">
+                            <mat-card-header>
+                                <a class="person-img">
+                                    <img class="person-avatar" mat-card-avatar src="{{user.avatarUrl}}">
+                                </a>
+                                <div class="person-card-text">
+                                    <div class="person-name">{{user.fullName}}</div>
+                                    <div class="person-role">{{user.role}}</div>
+                                </div>
+                                <div class="options-button-container">
+                                        <button class="person-card-options" (click)="$event.preventDefault(); $event.stopPropagation();" mat-button
+                                        [matMenuTriggerFor]="menu">
+                                        <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
+                                    </button>
+                                </div>
+                                <mat-menu #menu="matMenu" xPosition="before" class="person-options">
+                                    <button (click)="deleteDialog(d)" mat-menu-item>Delete</button>
+                                </mat-menu>
+                            </mat-card-header>
+                        </mat-card>
+                    </li>
+    
+                </ul>
             </div>
 
             </ng-template>
