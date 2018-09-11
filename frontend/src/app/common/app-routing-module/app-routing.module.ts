@@ -50,8 +50,8 @@ const routes: Routes = [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
-      { path: 'glossaries', component: GlossariesComponent },
-      { path: 'glossaries/:glossaryId', component: GlossaryComponent },
+      { path: 'glossaries', canActivate: [TranslatorGuardService], component: GlossariesComponent },
+      { path: 'glossaries/:glossaryId', canActivate: [TranslatorGuardService], component: GlossaryComponent },
       { path: 'strings', component: NoFoundComponent }
     ]
   },
