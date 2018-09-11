@@ -18,18 +18,21 @@ namespace Polyglot.BusinessLogic.Services
     {
         INotificationService notificationService;
 		private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+        private readonly ICurrentUser _currentUser;
 
-		public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
+        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService,
+		                    IMongoRepository<DataAccess.MongoModels.ComplexString> rep, ICurrentUser currentUser)
             :base(uow, mapper)
 
         {
 			this.stringsProvider = rep;
+            _currentUser = currentUser;
             this.notificationService = notificationService;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             IEnumerable<Team> result = new List<Team>();
 
             if (user.UserRole == Role.Translator)
@@ -48,7 +51,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null || currentUser.UserRole != Role.Manager)
                 return null;
 

@@ -32,10 +32,12 @@ namespace Polyglot.BusinessLogic.Services
         private readonly ISignalRWorkspaceService _signalRWorkspaceService;
         private readonly IElasticClient _elasticClient;
         private readonly TranslationTimerService _timerService;
+        private readonly ICurrentUser _currentUser;
 
 
         public ComplexStringService(IMongoRepository<ComplexString> complexStringRepository, IMapper mapper, IUnitOfWork unitOfWork, IFileStorageProvider fileStorageProvider,
-                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspaceWorkspace, IElasticClient elasticClient, TranslationTimerService timerService)
+                                    ICRUDService<UserProfile, UserProfileDTO> userService, ISignalRWorkspaceService signalRWorkspaceWorkspace, IElasticClient elasticClient,
+                                    TranslationTimerService timerService, ICurrentUser currentUser)
         {
             this._unitOfWork = unitOfWork;
             this._complexStringRepository = complexStringRepository;
@@ -45,6 +47,7 @@ namespace Polyglot.BusinessLogic.Services
             this._signalRWorkspaceService = signalRWorkspaceWorkspace;
             this._elasticClient = elasticClient;
             this._timerService = timerService;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListAsync()
@@ -243,7 +246,7 @@ namespace Polyglot.BusinessLogic.Services
 			targetTranslation.OptionalTranslations.Add(
 				new AdditionalTranslation() {
 					TranslationValue = value,
-					UserId = (await CurrentUser.GetCurrentUserProfile()).Id,
+					UserId = (await _currentUser.GetCurrentUserProfile()).Id,
 					CreatedOn = DateTime.Now
 					//Type = Translation.TranslationType.Human
 				});
@@ -314,7 +317,7 @@ namespace Polyglot.BusinessLogic.Services
             await _unitOfWork.SaveAsync();
             entity.Id = savedEntity.Id;
             entity.CreatedOn = DateTime.Now;
-            entity.CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id;
+            entity.CreatedBy = (await _currentUser.GetCurrentUserProfile()).Id;
 
             var mappedItem = _mapper.Map<ComplexString>(entity);
             mappedItem.Tags = entity.Tags.Select(x => x.Id).ToList();

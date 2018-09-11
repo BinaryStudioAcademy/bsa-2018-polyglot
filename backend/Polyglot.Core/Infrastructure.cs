@@ -20,7 +20,6 @@ namespace Polyglot.Core
 
         public static void ConfigureMiddleware(this IApplicationBuilder app)
         {
-            app.UseCustomizedIdentity();
             app.ConfigureCustomExceptionMiddleware();
         }
     }

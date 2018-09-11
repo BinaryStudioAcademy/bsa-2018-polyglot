@@ -69,7 +69,7 @@ export class LoginDialogComponent implements OnInit {
               buttons: [
                 {text: 'Resend', action: () => {
                   userCred.user.sendEmailVerification();
-                  this.authService.logout();
+                  this.authService.logout().subscribe(() => {});
                   this.snotify.clear();
                   this.snotify.info(`Email confirmation was send to ${userCred.user.email}`, this.notificationConfig);
                 }}
