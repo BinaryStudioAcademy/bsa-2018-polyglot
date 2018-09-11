@@ -42,8 +42,8 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + '/translators', undefined, teamTranslatorIds);
   }
 
-  addTeamTranslators(teamTranslatorIds: Array<number>, teamId: number): Observable<any> {
-    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/translators', undefined, {translatorIds: teamTranslatorIds, teamId : teamId});
+  addTeamTranslators(teamTranslatorIds: Array<number>, teamId: number, teamName: string): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/translators', undefined, {translatorIds: teamTranslatorIds, teamId : teamId, teamName: teamName});
   }
 
  // create(body){

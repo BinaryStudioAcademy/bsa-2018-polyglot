@@ -15,8 +15,8 @@
         <input matInput (keyup)="applyFilter($event.target.value)"  placeholder="Search">
     </mat-form-field>
   <div class = "top-buttons">
-  <button mat-raised-button class="top-button" (click)="delete(teamId)" color="warn" type="button">Delete team</button>
-  <button mat-raised-button class="top-button" (click)="addMember()" color="primary" type="button">Add member</button>
+  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="delete(teamId)" color="warn" type="button">Delete team</button>
+  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="addMember()" color="primary" type="button">Add member</button>
   <button *ngIf="isMember()" class="top-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam()>Leave team</button>
 
 </div>

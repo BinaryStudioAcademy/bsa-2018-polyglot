@@ -144,7 +144,7 @@ export class TeamMembersComponent implements OnInit {
 
 
 
-					this.teamService.addTeamTranslators(selectedTransaltors.map(t => t.userId), this.teamId)
+					this.teamService.addTeamTranslators(selectedTransaltors.map(t => t.userId), this.teamId, this.teamName)
 						.subscribe(responce => {
 
 

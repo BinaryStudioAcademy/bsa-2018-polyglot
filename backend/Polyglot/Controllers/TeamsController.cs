@@ -172,7 +172,7 @@ namespace Polyglot.Controllers
         }
 
         [HttpDelete("{teamId}/removeUser/{userId}")]
-        public async Task<IActionResult> ActivateCurrentUser(int teamId, int userId)
+        public async Task<IActionResult> RemoveUserFromTeam(int teamId, int userId)
         {
             
             var entity = await service.DeleteUserFromTeam(userId, teamId);
