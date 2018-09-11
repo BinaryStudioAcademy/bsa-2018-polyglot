@@ -91,7 +91,6 @@ namespace Polyglot.BusinessLogic.Services
             await uow.SaveAsync();
             foreach (var translator in newTeam.TeamTranslators)
             {
-
                 await notificationService.SendNotification(new NotificationDTO
                 {
                     SenderId = currentUser.Id,
@@ -367,10 +366,7 @@ namespace Polyglot.BusinessLogic.Services
 
             }
             await uow.SaveAsync();
-
-
             var team = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
-
             return mapper.Map<TeamDTO>(team);
         }
 
