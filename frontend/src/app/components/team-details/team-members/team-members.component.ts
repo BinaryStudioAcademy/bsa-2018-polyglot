@@ -63,7 +63,7 @@ export class TeamMembersComponent implements OnInit {
 		private searchService: SearchService,
 		private activatedRoute: ActivatedRoute,
 		private dialog: MatDialog,
-		private userService: UserService,
+		public userService: UserService,
 		private rightService: RightService,
 		private changeDetectorRefs: ChangeDetectorRef) {
 

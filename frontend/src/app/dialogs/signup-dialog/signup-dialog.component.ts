@@ -99,7 +99,7 @@ export class SignupDialogComponent implements OnInit {
           }
         );
         // not sure that it is logging out 
-        this.authService.logout();
+        this.authService.logout().subscribe(() => {});
       });
   }
   }

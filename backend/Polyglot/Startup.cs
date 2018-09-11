@@ -8,6 +8,7 @@ using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Hubs;
 using Polyglot.Common;
 using Polyglot.Core;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess;
 
 namespace Polyglot
@@ -53,6 +54,9 @@ namespace Polyglot
             {
                 services.AddSignalR().AddAzureSignalR();
             }
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
 
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);
