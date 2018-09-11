@@ -1,23 +1,9 @@
-<!-- <button mat-icon-button class="no-hover-effect" *ngIf="!userNotifications || userNotifications.length == 0">
-    <mat-icon class="bell" aria-label="Notification icon">
-        notifications_none
+<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications && userNotifications.length > 0">
+    <mat-icon class="bell" aria-label="Notification icon" [matBadge]="userNotifications.length" matBadgePosition="above after"
+        matBadgeColor="accent">
+        notifications
     </mat-icon>
 </button>
- <button *ngIf="userNotifications && userNotifications.length > 0" [matBadge]="userNotifications.length" matBadgeOverlap="true"
-    matBadgeColor="warn" matBadgeSize="small" mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click"
-    class="no-hover-effect">
-    <mat-icon class="bell" aria-label="Notification icon">
-        notifications_active
-    </mat-icon>
-</button> --> 
-
-<button  mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications && userNotifications.length > 0" >
-    <mat-icon   class="bell" aria-label="Notification icon" [matBadge]="userNotifications.length" matBadgePosition="above after"  matBadgeColor="accent">
-        notifications_none
-    </mat-icon>
-</button>
-
-
 <mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
     <mat-card class="card" *ngFor="let notification of userNotifications">
         <mat-card-header>
