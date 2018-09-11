@@ -512,14 +512,6 @@ namespace Polyglot.BusinessLogic.Services
             if (status)
             {
                 await _signalRWorkspaceService.ComplexStringTranslatingStarted(groupName, id);
-                _timerService.TrackTranslatingTime(id);
-                await Task.Delay(10000)
-                    .ContinueWith(r => _timerService.UntrackTranslatingTime(id));
-
-                if (_timerService.IsTranslationFinished(id))
-                {
-                    await _signalRWorkspaceService.ComplexStringTranslatingFinished(groupName, id);
-                }
             }
             else
             {
