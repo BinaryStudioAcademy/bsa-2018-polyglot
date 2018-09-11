@@ -16,6 +16,7 @@ namespace Polyglot.Views
 		{
 			InitializeComponent();
 		    NavigationPage.SetHasNavigationBar(this, false);
+		    IsPresented = false;
 
             Detail = new NavigationPage(new DashboardPage(new DashboardViewModel()));
 
@@ -27,11 +28,12 @@ namespace Polyglot.Views
 		    roleLabel.Text = User.UserRole == 1 ? "Manager" : "Tranlsator";
 		}
 
-	    private void ToProfile_Click(object sender, EventArgs e)
+	    private async void ToProfile_Click(object sender, EventArgs e)
 	    {
-	        Detail = new NavigationPage(new ProfilePage());
+	        var newPage = new NavigationPage(new ProfilePage(UserService.CurrentUser));
+	        await Navigation.PushAsync(newPage);
 	        IsPresented = false;
-	    }
+        }
 
 	    private async void Logout_Click(object sender, EventArgs e)
 	    {

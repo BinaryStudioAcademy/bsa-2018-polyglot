@@ -23,8 +23,8 @@ namespace Polyglot.Views
 
 	    private async void Login_OnClicked(object sender, EventArgs e)
 	    {
-	        loginBtn.IsVisible = false;
 	        IsBusy = true;
+            loginBtn.IsVisible = false;
 	        //UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
             UserService.Token = await _vm.LoginByEmail("01f2d5e591@nicemail.pro", "йцукен123");
 	        await UserService.GetCurrentUserInstance();

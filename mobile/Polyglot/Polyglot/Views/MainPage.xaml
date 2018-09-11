@@ -11,9 +11,9 @@
                     <Label Margin="0,10,0,0" FontSize="20" HorizontalOptions="Center" x:Name="Name" ></Label>
                     <Label x:Name="roleLabel" HorizontalOptions="Center" FontSize="20" Margin="0,0,0,10" ></Label>
                     <Label TextColor="Gray">Pages</Label>
-                    <Button Text="Teams"></Button>
+                    <Button Text="Teams" TextColor="Blue" BackgroundColor="White"></Button>
                     <Label TextColor="Gray">Common</Label >
-                    <Button Text="Profile" Clicked="ToProfile_Click"></Button>
+                    <Button Text="Profile" TextColor="Blue" BackgroundColor="White" Clicked="ToProfile_Click"></Button>
                     <Button Text="Logout" TextColor="Red" BackgroundColor="White" Clicked="Logout_Click"></Button>
                 </StackLayout>
             </ContentPage.Content>

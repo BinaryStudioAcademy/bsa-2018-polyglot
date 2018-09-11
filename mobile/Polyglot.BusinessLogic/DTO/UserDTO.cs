@@ -21,8 +21,13 @@ namespace Polyglot.BusinessLogic.DTO
 
         public int UserRole { get; set; }
 
+        public ICollection<RatingDTO> Ratings { get; set; }
+        public List<ProjectDTO> Projects { get; set; }
+
         public UserDTO()
         {
+            Ratings = new List<RatingDTO>();
+            Projects = new List<ProjectDTO>();
         }
     }
 }
