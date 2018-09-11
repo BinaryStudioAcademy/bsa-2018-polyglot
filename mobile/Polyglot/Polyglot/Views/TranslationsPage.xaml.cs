@@ -22,6 +22,7 @@ namespace Polyglot.Views
         {
             BindingContext = translationsViewModel;
 
+            NavigationPage.SetHasNavigationBar(this, false);
             ComplexStringId = complexStringId;
 
             InitializeComponent();
@@ -48,13 +49,21 @@ namespace Polyglot.Views
                     await Navigation.PushAsync(commentsPage);
                     break;
 
-                case "History":
+                case "History":                   
+                    if (string.IsNullOrEmpty(tr.Id))
+                    {
+                        break;
+                    }
                     var historyPage = new HistoryPage(new HistoryViewModel(), ComplexStringId, tr.Id);
                     await Navigation.PushAsync(historyPage);
 
                     break;
 
-                case "Optional translations":
+                case "Optional translations":                   
+                    if (string.IsNullOrEmpty(tr.Id))
+                    {
+                        break;
+                    }
                     var optionalPage = new OptionalTranslationsPage(new OptionalTranslationsViewModel(), ComplexStringId, tr.Id);
                     await Navigation.PushAsync(optionalPage);
 

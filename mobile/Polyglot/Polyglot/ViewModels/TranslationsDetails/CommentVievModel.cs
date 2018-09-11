@@ -13,6 +13,8 @@ namespace Polyglot.ViewModels.TranslationsDetails
 {
     public class CommentVievModel : BaseViewModel
     {
+        private const string DefaultImageUrl = "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909__340.png";
+
         private string _userName;
         public string UserName
         {
@@ -25,6 +27,29 @@ namespace Polyglot.ViewModels.TranslationsDetails
         {
             get => _text;
             set => SetProperty(ref _text, value);
+        }
+
+
+        private string _userPictureURL = DefaultImageUrl;
+        public string UserPictureURL
+        {
+            get => _userPictureURL;
+            set
+            {
+                if (_userPictureURL == value)
+                {
+                    return;
+                }
+                _userPictureURL = value.StartsWith("/") ? DefaultImageUrl : value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private DateTime _dateTime;
+        public DateTime DateTime
+        {
+            get => _dateTime;
+            set => SetProperty(ref _dateTime, value);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Polyglot.ViewModels.TranslationsDetails
 {
    public class OptionalTranslationViewModel : BaseViewModel
     {
-        private const string DefaultImageUrl = "http://polyglotbsa.azurewebsites.net/assets/images/default-avatar.jpg";
+        private const string DefaultImageUrl = "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909__340.png";
 
         private string _userName;
         public string UserName

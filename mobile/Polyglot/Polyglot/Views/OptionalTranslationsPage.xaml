@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Views.OptionalTranslationsPage">
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             x:Class="Polyglot.Views.OptionalTranslationsPage"
+             Title="Optional translations">
     <StackLayout>
-        <Label IsVisible="{Binding IsEmpty}">No Optional translations</Label>
+        <Label  Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No Optional translations</Label>
         <ListView 
             ItemsSource="{Binding OptionalTranslations}"
             CachingStrategy="RecycleElement"
@@ -15,12 +17,13 @@
                         <StackLayout>
                             <StackLayout  Orientation="Vertical">
                                 <StackLayout Orientation="Horizontal">
-                                    <Image WidthRequest="50" HeightRequest="50" Source="{Binding UserPictureURL}"></Image>
-                                    <Label Margin="10, 20, 0, 0" HorizontalTextAlignment="Center" Text="{Binding UserName}"/>
+                                    <abstractions:CircleImage Source="{Binding UserPictureURL}" Margin="10, 10, 0, 0"  WidthRequest="50" HeightRequest="50"></abstractions:CircleImage>
+                                    <Label Margin="10, 20, 0, 0" Font="bold, 15"  HorizontalTextAlignment="Center" Text="{Binding UserName}"/>
                                 </StackLayout>
                             </StackLayout>
                             <StackLayout Orientation="Vertical">
-                                <Label Margin="10, 0, 0, 0" HorizontalTextAlignment="Start" Font="15" HeightRequest="30"  Text="{Binding Translation}"  />
+                                <Label Margin="10, 0, 0, 0" HorizontalTextAlignment="Start" Font="13" HeightRequest="30"  Text="{Binding Translation}"  />
+                                <Label  HorizontalTextAlignment="End" Font="9"  Text="{Binding DateTime}"  />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

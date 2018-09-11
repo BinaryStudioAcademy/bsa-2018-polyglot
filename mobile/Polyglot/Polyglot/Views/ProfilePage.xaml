@@ -11,7 +11,7 @@
                 <Label HorizontalOptions="CenterAndExpand" FontSize="15"  TextColor="Black" x:Name="Role"/>
                 <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <Label FontSize="15" Text="Registration date :"></Label>
-                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=RegistrationDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=RegistrationDate, StringFormat='.{0:dd/MM/yyyy}'}"></Label>
                 </StackLayout>
                 <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" x:Name="Rating"> 
                     <Label FontSize="15" Text="Rating:"></Label>
@@ -25,7 +25,7 @@
                     HorizontalOptions="FillAndExpand" />
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Birth :"></Label>
-                        <Label TextColor="Black" Text="{Binding Path=BirthDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=BirthDate, StringFormat='.{0:dd/MM/yyyy}'}"></Label>
                     </StackLayout>
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Country :"></Label>

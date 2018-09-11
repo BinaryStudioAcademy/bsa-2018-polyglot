@@ -40,7 +40,9 @@ namespace Polyglot.ViewModels.TranslationsDetails
             Comments = comments.Select(x => new CommentVievModel
             {
                 Text = x.Text,
-                UserName = x.User.FullName
+                UserName = x.User.FullName,
+                DateTime=x.CreatedOn,
+                UserPictureURL=x.User.AvatarUrl
             }).ToList();
 
         }

@@ -8,5 +8,6 @@ namespace Polyglot.BusinessLogic.DTO
     {
         public int Id { get; set; }
         public string FullName { get; set; }
+        public string AvatarUrl { get; set; }
     }
 }

@@ -23,12 +23,6 @@ namespace Polyglot.Views
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this,false);
             complexStringsViewModel.Initialize(projectId);
-
-            if (complexStringsViewModel.ComplexStrings == null)
-            {
-                DisplayAlert("Title", "M", "OK");
-            }
-
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)

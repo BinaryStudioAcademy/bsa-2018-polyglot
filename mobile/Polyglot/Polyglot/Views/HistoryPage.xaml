@@ -1,22 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Views.HistoryPage">
+             x:Class="Polyglot.Views.HistoryPage"
+             Title="History">
     <StackLayout>
-        <Label IsVisible="{Binding IsEmpty}">No History</Label>
+        <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No History</Label>
         <ListView 
             ItemsSource="{Binding History}"
             CachingStrategy="RecycleElement"
             HasUnevenRows="True"
-            RowHeight="200">
+            RowHeight="250">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Vertical" >
-                            <Label>From</Label>
+                            <Label Font="bold, 15">From</Label>
                             <Label Text="{Binding From}"   />
-                            <Label>To</Label>
-                            <Label Font="15" HeightRequest="30"  Text="{Binding To}"  />
+                            <Label Font="bold, 15">To</Label>
+                            <Label HeightRequest="30"  Text="{Binding To}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

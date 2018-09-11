@@ -18,7 +18,7 @@ namespace Polyglot.Views
 		    NavigationPage.SetHasNavigationBar(this, false);
 		    IsPresented = false;
 
-            Detail = new NavigationPage(new DashboardPage(new DashboardViewModel()));
+            Detail = new NavigationPage(new Dashboard(new DashboardViewModel()));
 
 		    User = UserService.CurrentUser;
 
