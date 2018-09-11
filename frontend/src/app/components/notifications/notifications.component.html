@@ -1,24 +1,36 @@
-<button mat-icon-button class="no-hover-effect" *ngIf="!userNotifications || userNotifications.length == 0">
+<!-- <button mat-icon-button class="no-hover-effect" *ngIf="!userNotifications || userNotifications.length == 0">
     <mat-icon class="bell" aria-label="Notification icon">
         notifications_none
     </mat-icon>
 </button>
-<button *ngIf="userNotifications && userNotifications.length > 0" [matBadge]="userNotifications.length" matBadgeOverlap="true" matBadgeColor="warn" matBadgeSize="small" mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" class="no-hover-effect">
+ <button *ngIf="userNotifications && userNotifications.length > 0" [matBadge]="userNotifications.length" matBadgeOverlap="true"
+    matBadgeColor="warn" matBadgeSize="small" mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click"
+    class="no-hover-effect">
     <mat-icon class="bell" aria-label="Notification icon">
         notifications_active
     </mat-icon>
+</button> --> 
+
+<button  mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications && userNotifications.length > 0" >
+    <mat-icon   class="bell" aria-label="Notification icon" [matBadge]="userNotifications.length" matBadgePosition="above after"  matBadgeColor="accent">
+        notifications_none
+    </mat-icon>
 </button>
+
+
 <mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
     <mat-card class="card" *ngFor="let notification of userNotifications">
         <mat-card-header>
-        <mat-card-title class="card-main">
-            <div>
-                <div>From: <strong>{{notification.sender.fullName}}</strong></div>
-                <p>
-                    <i>{{notification.message}}</i>
-                </p>
-            </div>
-        </mat-card-title>
+            <mat-card-title class="card-main">
+                <div>
+                    <div>From:
+                        <strong>{{notification.sender.fullName}}</strong>
+                    </div>
+                    <p>
+                        <i>{{notification.message}}</i>
+                    </p>
+                </div>
+            </mat-card-title>
         </mat-card-header>
         <mat-card-content class="card-navigation">
             <a *ngFor="let notificationOption of notification.options" mat-button color="primary" class="card-navigation-button" (click)="buttonClick(notification, notificationOption.optionDefinition)">

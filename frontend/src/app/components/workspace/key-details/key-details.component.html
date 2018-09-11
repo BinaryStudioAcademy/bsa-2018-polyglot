@@ -61,10 +61,12 @@
 							 (mouseleave)="toggleDisable(false)" color="warn" matTooltipPosition="after" matTooltip="Unconfirm">
 							 <mat-icon>close</mat-icon>
 							</button>
+							
 							<button *ngIf="canBeConfirmed(t)" mat-icon-button (click)="onConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn confirm-btn"
 							 (mouseleave)="toggleDisable(false)" matTooltipPosition="after" matTooltip="Confirm">
 							 <mat-icon>done</mat-icon>
 							</button>
+
 							<mat-menu #translatorsMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll list-users">
 								<app-list-translators [translationId]="t.id" [langId]="t.languageId" [projectId]="projectId" (chooseUserEvent)="chooseUser($event)"
 								 [options]="users" *ngIf="users.length"></app-list-translators>
