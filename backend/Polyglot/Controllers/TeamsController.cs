@@ -171,5 +171,14 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
+        [HttpDelete("{teamId}/removeUser/{userId}")]
+        public async Task<IActionResult> RemoveUserFromTeam(int teamId, int userId)
+        {
+            
+            var entity = await service.DeleteUserFromTeam(userId, teamId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
     }
 }
