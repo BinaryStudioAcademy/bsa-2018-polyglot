@@ -127,6 +127,8 @@ import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-language
 import { GuidelineComponent } from './components/guideline/guideline.component';
 import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
 import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
+import { CommentsPipe } from './common/pipes/comments.pipe';
+
 
 @NgModule({
   exports: [
@@ -214,7 +216,8 @@ import { ManagerGuideComponent } from './components/guideline/manager-guide/mana
     AddRemoveLanguagesDialogComponent,
     GuidelineComponent,
     TranslatorGuideComponent,
-    ManagerGuideComponent
+    ManagerGuideComponent,
+    CommentsPipe
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { Notification } from '../../models/notification';
 import { TeamService } from '../../services/teams.service';
 import { SnotifyService } from 'ng-snotify';
 import { NotificationAction } from '../../models/NotificationAction';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-notifications',
@@ -15,7 +16,8 @@ export class NotificationsComponent implements OnInit {
 
     constructor(private notificationService: NotificationService,
                 private teamService: TeamService,
-                private snotifyService: SnotifyService) { }
+                private snotifyService: SnotifyService,
+                private userService: UserService) { }
 
     @Input() userNotifications: Notification[];
     ngOnInit() {    }
@@ -49,10 +51,12 @@ export class NotificationsComponent implements OnInit {
                     break;
                     
                 case OptionDefinition.Decline:
-                    this.notificationService.removeNotification(notification.id).subscribe((notifications)=>{
-                        this.userNotifications = notifications;
-                        this.snotifyService.warning(`You declined an invitation`, "Warning!");
-                    }); 
+                    this.teamService.removeUserFromTeam(this.userService.getCurrentUser().id, notification.payload).subscribe(()=>{
+                        this.notificationService.removeNotification(notification.id).subscribe((notifications)=>{
+                            this.userNotifications = notifications;
+                            this.snotifyService.warning(`You declined an invitation`, "Warning!");
+                        }); 
+                    });
                     break;  
                     
             }

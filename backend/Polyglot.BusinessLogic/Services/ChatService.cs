@@ -26,24 +26,26 @@ namespace Polyglot.BusinessLogic.Services
         private readonly ISignalRChatService signalRChatService;
         private readonly IMapper mapper;
         private readonly IUnitOfWork uow;
+        private readonly ICurrentUser _currentUser;
 
         public ChatService(
             ISignalRChatService signalRChatService,
             IProjectService projectService,
-            ITeamService teamService, IMapper mapper, IUnitOfWork uow)
+            ITeamService teamService, IMapper mapper, IUnitOfWork uow, ICurrentUser currentUser)
         {
             this.signalRChatService = signalRChatService;
             this.projectService = projectService;
             this.teamService = teamService;
             this.mapper = mapper;
             this.uow = uow;
+            _currentUser = currentUser;
         }
 
 
 
         public async Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync(ChatGroup targetGroup)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
@@ -77,7 +79,7 @@ namespace Polyglot.BusinessLogic.Services
             if (targetGroupDialogId < 0)
                 return null;
 
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
@@ -115,7 +117,7 @@ namespace Polyglot.BusinessLogic.Services
             if (targetDialog == null)
                 return null;
 
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null || message == null)
                 return null;
 
@@ -143,7 +145,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync()
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
@@ -152,7 +154,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
@@ -192,7 +194,7 @@ namespace Polyglot.BusinessLogic.Services
             if (dialog.Participants.Count() < 1)
                 return null;
 
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
 
             if (currentUser == null)
                 return null;

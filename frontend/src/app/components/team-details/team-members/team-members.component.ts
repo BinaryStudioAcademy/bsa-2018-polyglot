@@ -63,7 +63,7 @@ export class TeamMembersComponent implements OnInit {
 		private searchService: SearchService,
 		private activatedRoute: ActivatedRoute,
 		private dialog: MatDialog,
-		private userService: UserService,
+		public userService: UserService,
 		private rightService: RightService,
 		private changeDetectorRefs: ChangeDetectorRef) {
 
@@ -144,7 +144,7 @@ export class TeamMembersComponent implements OnInit {
 
 
 
-					this.teamService.addTeamTranslators(selectedTransaltors.map(t => t.userId), this.teamId)
+					this.teamService.addTeamTranslators(selectedTransaltors.map(t => t.userId), this.teamId, this.teamName)
 						.subscribe(responce => {
 
 
@@ -312,4 +312,24 @@ export class TeamMembersComponent implements OnInit {
 		}
 		);
 	}
+
+	removeTranslator(translator: Translator){
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			width: '500px',
+			data: { description: `Are you sure you want to remove ${translator.fullName} from this team?`, btnOkText: "yes", btnCancelText: "no", answer: this.answerLeave }
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			if (dialogRef.componentInstance.data.answer) {
+				this.teamService.removeUserFromTeam(translator.userId, this.teamId).subscribe((team: Team)=>{
+					this.teamTranslators = team.teamTranslators;
+					this.dataSource = new MatTableDataSource(this.teamTranslators);
+						this.dataSource.sort = this.sort;
+				});
+				}
+			},
+			err => {
+				this.snotifyService.error("An error occured while deleting this user", "Error!");
+			});
+		}
+
 }

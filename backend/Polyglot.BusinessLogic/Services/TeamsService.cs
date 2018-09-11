@@ -17,19 +17,22 @@ namespace Polyglot.BusinessLogic.Services
     public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
     {
         INotificationService notificationService;
-		private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+		    private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+        private readonly ICurrentUser _currentUser;
 
-		public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
+        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService,
+		                    IMongoRepository<DataAccess.MongoModels.ComplexString> rep, ICurrentUser currentUser)
             :base(uow, mapper)
 
         {
-			this.stringsProvider = rep;
+			      this.stringsProvider = rep;
+            _currentUser = currentUser;
             this.notificationService = notificationService;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             IEnumerable<Team> result = new List<Team>();
 
             if (user.UserRole == Role.Translator)
@@ -48,7 +51,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null || currentUser.UserRole != Role.Manager)
                 return null;
 
@@ -86,20 +89,19 @@ namespace Polyglot.BusinessLogic.Services
                         CreatedBy = currentUser,
                         Name = receivedTeam.Name
                     });
-            
 
-                await uow.SaveAsync();
-                foreach(var translator in newTeam.TeamTranslators)
+
+            await uow.SaveAsync();
+            foreach (var translator in newTeam.TeamTranslators)
+            {
+                await notificationService.SendNotification(new NotificationDTO
                 {
-
-                    await notificationService.SendNotification(new NotificationDTO
-                    {
-                        SenderId = currentUser.Id,
-                        Message = $"You received an invitation in team {newTeam.Name}",
-                        ReceiverId = translator.TranslatorId,
-                        NotificationAction = NotificationAction.JoinTeam,
-                        Payload = newTeam.Id,  
-                        Options = new List<OptionDTO>()
+                    SenderId = currentUser.Id,
+                    Message = $"You received an invitation in team {newTeam.Name}",
+                    ReceiverId = translator.TranslatorId,
+                    NotificationAction = NotificationAction.JoinTeam,
+                    Payload = newTeam.Id,
+                    Options = new List<OptionDTO>()
                         {
                             new OptionDTO()
                             {
@@ -110,8 +112,8 @@ namespace Polyglot.BusinessLogic.Services
                                 OptionDefinition = OptionDefinition.Decline
                             }
                         }
-                    });
-                }
+                });
+            }
 
             var teamChatDialog = new ChatDialog()
             {
@@ -145,7 +147,7 @@ namespace Polyglot.BusinessLogic.Services
             return success;
         }
 
-        
+
         #region Overrides
 
 
@@ -154,7 +156,7 @@ namespace Polyglot.BusinessLogic.Services
             var team = await uow.GetRepository<Team>().GetAsync(teamId);
 
             if (team?.TeamTranslators?.Any() != true)
-                return null;
+                return mapper.Map<TeamDTO>(team);
 
 
             var translators = team.TeamTranslators;
@@ -186,27 +188,27 @@ namespace Polyglot.BusinessLogic.Services
 
             var teamsProjects = mapper.Map<IEnumerable<TeamProjectDTO>>(team.ProjectTeams);
 
-			foreach(var p in teamsProjects)
-			{				
-				var targetProject = await uow.GetRepository<Project>().GetAsync(p.ProjectId);
-				List<DataAccess.MongoModels.ComplexString> temp = new List<DataAccess.MongoModels.ComplexString>();
-				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == targetProject.Id);
-				int languagesAmount = targetProject.ProjectLanguageses.Count;
-				int max = temp.Count * languagesAmount;
-				int currentProgress = 0;
-				foreach (var str in temp)
-				{
-					currentProgress += str.Translations.Count;
-				}
-				if (currentProgress == 0 || max == 0)
-				{
-					p.Progress = 0;
-				}
-				else
-				{
-					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
-				}
-			}
+            foreach (var p in teamsProjects)
+            {
+                var targetProject = await uow.GetRepository<Project>().GetAsync(p.ProjectId);
+                List<DataAccess.MongoModels.ComplexString> temp = new List<DataAccess.MongoModels.ComplexString>();
+                temp = await stringsProvider.GetAllAsync(str => str.ProjectId == targetProject.Id);
+                int languagesAmount = targetProject.ProjectLanguageses.Count;
+                int max = temp.Count * languagesAmount;
+                int currentProgress = 0;
+                foreach (var str in temp)
+                {
+                    currentProgress += str.Translations.Count;
+                }
+                if (currentProgress == 0 || max == 0)
+                {
+                    p.Progress = 0;
+                }
+                else
+                {
+                    p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+                }
+            }
 
             return new TeamDTO()
             {
@@ -325,7 +327,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
             teamTranslator.IsActivated = true;
-            teamTranslator =  await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
+            teamTranslator = await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
             await uow.SaveAsync();
             return mapper.Map<TranslatorDTO>(teamTranslator);
         }
@@ -335,7 +337,6 @@ namespace Polyglot.BusinessLogic.Services
         {
 
             foreach (var translatorId in teamTranslators.TranslatorIds)
-
             {
                 var newTeamTranslator = new TeamTranslator
                 {
@@ -343,14 +344,44 @@ namespace Polyglot.BusinessLogic.Services
                     TranslatorId = translatorId
 
                 };
+
                 var teamTranslator = await uow.GetRepository<TeamTranslator>().CreateAsync(newTeamTranslator);
-                await uow.SaveAsync();
-                
-            };
 
-            var team  = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
+                await notificationService.SendNotification(new NotificationDTO
+                {
+                    SenderId = translatorId,
+                    Message = $"You received an invitation in team {teamTranslators.TeamName}",
+                    ReceiverId = translatorId,
+                    NotificationAction = NotificationAction.JoinTeam,
+                    Payload = teamTranslators.TeamId,
+                    Options = new List<OptionDTO>()
+                        {
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Accept
+                            },
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Decline
+                            }
+                        }
+                });
 
-            return mapper.Map<TeamDTO>(team); ;
+            }
+            await uow.SaveAsync();
+            var team = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
+            return mapper.Map<TeamDTO>(team);
+        }
+
+
+        public async Task<TeamDTO> DeleteUserFromTeam(int userId, int teamId)
+        {
+            var translator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
+            var deletedTranslator = uow.GetRepository<TeamTranslator>().DeleteAsync(translator.Id);
+            var team = await uow.GetRepository<Team>().GetAsync(translator.TeamId);
+            await uow.SaveAsync();
+
+            return mapper.Map<TeamDTO>(team);
         }
         #endregion Translators
     }
