@@ -13,7 +13,7 @@
                     <Label FontSize="15" Text="Registration date :"></Label>
                     <Label FontSize="15" TextColor="Black" Text="{Binding Path=RegistrationDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
                 </StackLayout>
-                <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" x:Name="Rating"> 
                     <Label FontSize="15" Text="Rating:"></Label>
                     <Label FontSize="15" TextColor="Black" Text="3/5"></Label>
                 </StackLayout>
@@ -48,13 +48,25 @@
                              HorizontalOptions="FillAndExpand" />
                 </StackLayout>
                 <StackLayout Padding="20,10,0,10" x:Name="Projects">
-                    <Label Text="Projects"></Label>
+                    <Label Text="Projects" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
                 </StackLayout >
                 <StackLayout Padding="20,10,0,10" x:Name="Teams">
-                    <Label Text="Teams"></Label>
+                    <Label Text="Teams" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
                 </StackLayout >
                 <StackLayout Padding="20,10,0,10" x:Name="Reviews">
-                    <Label FontSize="20" Text="Review"></Label>
+                    <Label Text="Reviews" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
                 </StackLayout>
             </StackLayout>
         </ScrollView>
