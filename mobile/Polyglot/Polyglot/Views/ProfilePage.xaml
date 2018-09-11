@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             x:Class="Polyglot.Views.ProfilePage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout >
+                <abstractions:CircleImage x:Name="Avatar" Margin="0,30,0,20"  WidthRequest="120" HeightRequest="120"></abstractions:CircleImage>
+                <Label HorizontalOptions="CenterAndExpand" FontSize="20" TextColor="Black" Text="{Binding Path=FullName}"/>
+                <Label HorizontalOptions="CenterAndExpand" FontSize="15"  TextColor="Black" x:Name="Role"/>
+                <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                    <Label FontSize="15" Text="Registration date :"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=RegistrationDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
+                </StackLayout>
+                <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" x:Name="Rating"> 
+                    <Label FontSize="15" Text="Rating:"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="3/5"></Label>
+                </StackLayout>
+                <StackLayout Padding="20,10,20,0">
+                    <Label Text="Personal detail" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                         Color="Black"
+                    HeightRequest="1" 
+                    HorizontalOptions="FillAndExpand" />
+                    <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="Birth :"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=BirthDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
+                    </StackLayout>
+                    <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="Country :"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=Country}"></Label>
+                    </StackLayout>
+                    <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="City :"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=City}"></Label>
+                    </StackLayout>
+                    <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="Phone :"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=Phone}"></Label>
+                    </StackLayout>
+                </StackLayout >
+                <StackLayout Padding="20,10,0,10" x:Name="Languages">
+                    <Label Text="Languages" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
+                </StackLayout>
+                <StackLayout Padding="20,10,0,10" x:Name="Projects">
+                    <Label Text="Projects" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
+                </StackLayout >
+                <StackLayout Padding="20,10,0,10" x:Name="Teams">
+                    <Label Text="Teams" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
+                </StackLayout >
+                <StackLayout Padding="20,10,0,10" x:Name="Reviews">
+                    <Label Text="Reviews" TextColor="Black" Margin="0" FontSize="18"/>
+                    <BoxView Margin="0"
+                             Color="Black"
+                             HeightRequest="1" 
+                             HorizontalOptions="FillAndExpand" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

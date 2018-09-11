@@ -3,11 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Polyglot.Views.LoginPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Polyglot!" HorizontalOptions="Center" FontSize="20" Margin="0,40,0,40"/>
-            <Entry   Placeholder="login" x:Name="Email" HorizontalOptions="Center"  WidthRequest="350" ></Entry>
-            <Entry   Placeholder="password" IsPassword="True"   x:Name="Password" HorizontalOptions="Center" WidthRequest="350" ></Entry>
-            <Button  HorizontalOptions="Center"  Text="Login" Clicked="Login_OnClicked"></Button>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <StackLayout Orientation="Horizontal" Margin="0,0,0,0" HorizontalOptions="CenterAndExpand">
+                <Image Source="http://polyglotbsa.azurewebsites.net/multilingual-512.png" WidthRequest="60" Margin="0,-25,0,0" HeightRequest="25"></Image>
+                <Label Text="Polyglot" TextColor="Black" HorizontalOptions="Center" FontSize="40" Margin="0,0,0,25"/>
+            </StackLayout>
+            <Entry  x:Name="Email" Placeholder="Email" HorizontalOptions="Center"  WidthRequest="320" ></Entry>
+            <Entry  Margin="0,0,0,40" x:Name="Password" IsPassword="True" Placeholder="Password" HorizontalOptions="Center" WidthRequest="320" ></Entry>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+                <Button x:Name="loginBtn" BackgroundColor="DodgerBlue" CornerRadius="50" WidthRequest="150" TextColor="White" HorizontalOptions="CenterAndExpand" Text="Login" Clicked="Login_OnClicked"></Button>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

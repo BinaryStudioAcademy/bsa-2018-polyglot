@@ -15,14 +15,22 @@ namespace Polyglot.Views
 		public LoginPage()
 		{
 			InitializeComponent();
-		    _vm = new LoginViewModel();
+		    NavigationPage.SetHasNavigationBar(this, false);
+            _vm = new LoginViewModel();
+		    BindingContext = this;
+		    IsBusy = false;
 		}
 
 	    private async void Login_OnClicked(object sender, EventArgs e)
 	    {
-            UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
-	        var newPage = new Dashboard(new ViewModels.DashboardViewModel());
-	        await Navigation.PushAsync(newPage);
-        }
+	        IsBusy = true;
+            loginBtn.IsVisible = false;
+	        UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
+            //UserService.Token = await _vm.LoginByEmail("01f2d5e591@nicemail.pro", "йцукен123");
+	        await UserService.GetCurrentUserInstance();
+	        var newPage = new NavigationPage(new MainPage());
+	        await Navigation.PushModalAsync(newPage);
+	        IsBusy = false;
+	    }
 	}
 }

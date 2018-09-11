@@ -1,5 +1,4 @@
-﻿using Android.Content.Res;
-using App;
+﻿using App;
 using Newtonsoft.Json;
 using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;

@@ -7,10 +7,10 @@ using Xamarin.Forms.Xaml;
 namespace Polyglot
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Dashboard : ContentPage
+    public partial class DashboardPage : ContentPage
     {
 
-        public Dashboard(DashboardViewModel dashboard)
+        public DashboardPage(DashboardViewModel dashboard)
         {
             BindingContext = dashboard;
 
@@ -35,7 +35,7 @@ namespace Polyglot
 
             var projectId = c.Id;
 
-            var newPage = new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId);
+            var newPage = new NavigationPage(new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId));
             await Navigation.PushAsync(newPage);
             ((ListView)sender).SelectedItem = null;
         }
