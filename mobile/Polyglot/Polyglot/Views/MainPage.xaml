@@ -7,7 +7,7 @@
         <ContentPage Title="Projects">
             <ContentPage.Content >
                 <StackLayout Padding="5,100,5,5" BackgroundColor="White" >
-                    <abstractions:CircleImage HorizontalOptions="Center" x:Name="Avatar" HeightRequest="50"></abstractions:CircleImage>
+                    <abstractions:CircleImage HorizontalOptions="Center" x:Name="Avatar" WidthRequest="70" HeightRequest="70"></abstractions:CircleImage>
                     <Label Margin="0,10,0,0" FontSize="20" HorizontalOptions="Center" x:Name="Name" ></Label>
                     <Label x:Name="roleLabel" HorizontalOptions="Center" FontSize="20" Margin="0,0,0,10" ></Label>
                     <Label TextColor="Gray">Pages</Label>

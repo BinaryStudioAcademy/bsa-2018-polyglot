@@ -20,8 +20,8 @@ namespace Polyglot.Views
             BindingContext = translations;
 
             InitializeComponent();
-
             translations.Initialize(complexStringId, projectId);
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
