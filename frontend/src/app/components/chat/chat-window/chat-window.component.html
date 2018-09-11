@@ -1,0 +1,86 @@
+<div class="chat-container">
+    <mat-toolbar class="interlocutor-info">
+        <div *ngIf="isDirect; else group">
+            <div class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</div>
+            <div class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
+                : "Offline"}}</div>
+        </div>
+        <ng-template #group>
+            <div class="group-info-container">
+                <div class="group-info">
+                    <div class="group-name">{{currentGroupName}}</div>
+                    <div class="participants-count-container">
+                        <span class="participants-count">Participants: {{groupParticipantsCount}}</span>
+                        <span class="participants-online-count">Online: {{groupParticipantsOnlineCount}}</span>
+                    </div>
+                </div>
+                <div class="participants-items">
+                    <ul>
+                        <li *ngFor="let p of dialog.participants">
+                            <button mat-fab class="person-button" (click)="selectPerson(p)">
+                                <img class="person-avatar" mat-card-avatar src="{{p?.avatarUrl}}">
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </ng-template>
+    </mat-toolbar>
+
+    <div class="chat-messages-container" #mainwindow>
+
+        <ul>
+            <!-- <mat-spinner class="messages-spinner" [diameter]="35"></mat-spinner>  -->
+
+            <li class="message" [ngClass]="{'message-from-user' : currentUserId !== m.senderId}" *ngFor="let m of messages"
+                (click)="toggleSelection(m)">
+                <a class="person-img">
+                    <img class="person-avatar" mat-card-avatar src="{{interlocutors[m.senderId]?.avatarUrl}}">
+                </a>
+                <div class="sender-name">{{interlocutors[m.senderId]?.fullName}}</div>
+
+                <mat-card class="message-card">
+                    {{m.body}}
+                    <div class="message-info-container">
+                        <span class="recieved-read-container">
+                            <!--<span [hidden]="" class="error-icon">
+                                    <mat-icon>warning</mat-icon>
+                            </span>
+                        -->
+                            <span [hidden]="m.isRead" class="recieved-icon">
+                                <mat-icon>done</mat-icon>
+                            </span>
+                            <span [hidden]="!m.isRead" class="read-icon">
+                                <mat-icon>done_all</mat-icon>
+                            </span>
+                        </span>
+                        <span class="message-time">{{ m.receivedDate | date:'shortTime' }}</span>
+                    </div>
+                </mat-card>
+            </li>
+
+        </ul>
+    </div>
+
+    <footer class="chat-input-container">
+        <mat-card class="new-message-notification">
+            <span>New message recieved</span>
+            <mat-icon aria-label="">send</mat-icon>
+        </mat-card>
+        <mat-form-field class="chat-form-field" appearance="outline">
+            <button mat-icon-button matPrefix>
+                <mat-icon aria-label="">add</mat-icon>
+            </button>
+            <input [(ngModel)]="currentMessage" name="message" matInput placeholder="Message polyglot">
+            <span matSuffix class="message-actions-container">
+                <button mat-icon-button>
+                    <mat-icon class="smilles-icon" aria-label="">sentiment_very_satisfied</mat-icon>
+                </button>
+
+                <button mat-icon-button (click)="sendMessage()">
+                    <mat-icon class="send-icon" aria-label="">send</mat-icon>
+                </button>
+            </span>
+        </mat-form-field>
+    </footer>
+</div>

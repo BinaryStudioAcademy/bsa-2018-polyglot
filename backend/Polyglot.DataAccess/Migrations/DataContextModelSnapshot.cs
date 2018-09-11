@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Polyglot.DataAccess;
+using Polyglot.DataAccess.SqlRepository;
 
 namespace Polyglot.DataAccess.Migrations
 {
@@ -15,9 +15,100 @@ namespace Polyglot.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
+                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.ChatDialog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DialogName");
+
+                    b.Property<int>("DialogType");
+
+                    b.Property<long>("Identifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatDialogs");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body");
+
+                    b.Property<int?>("DialogId");
+
+                    b.Property<bool>("IsRead");
+
+                    b.Property<DateTime>("ReceivedDate");
+
+                    b.Property<int>("SenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DialogId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("ChatMessages");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.DialogParticipant", b =>
+                {
+                    b.Property<int?>("ChatDialogId");
+
+                    b.Property<int?>("ParticipantId");
+
+                    b.HasKey("ChatDialogId", "ParticipantId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("DialogParticipant");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.UserState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChatUserId");
+
+                    b.Property<bool>("IsOnline");
+
+                    b.Property<DateTime>("LastSeen");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatUserId");
+
+                    b.ToTable("ChatUserStates");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.ComplexString", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProjectId");
+
+                    b.Property<string>("TranslationKey");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ComplexStrings");
+                });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.File", b =>
                 {
@@ -48,15 +139,34 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("OriginLanguageId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OriginLanguageId");
+
+                    b.ToTable("Glossaries");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<string>("ExplanationText");
 
-                    b.Property<string>("OriginLanguage");
+                    b.Property<int?>("GlossaryId");
 
                     b.Property<string>("TermText");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Glossaries");
+                    b.HasIndex("GlossaryId");
+
+                    b.ToTable("GlossaryStrings");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Language", b =>
@@ -74,19 +184,46 @@ namespace Polyglot.DataAccess.Migrations
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Manager", b =>
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("UserProfileId");
+                    b.Property<string>("Message");
+
+                    b.Property<int>("NotificationAction");
+
+                    b.Property<int>("Payload");
+
+                    b.Property<int?>("ReceiverId");
+
+                    b.Property<int?>("SenderId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("ReceiverId");
 
-                    b.ToTable("Managers");
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("NotificationId");
+
+                    b.Property<int>("OptionDefinition");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Project", b =>
@@ -103,26 +240,26 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<int?>("MainLanguageId");
 
-                    b.Property<int?>("ManagerId");
-
                     b.Property<string>("Name");
 
                     b.Property<string>("Technology");
+
+                    b.Property<int?>("UserProfileId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MainLanguageId");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("UserProfileId");
 
                     b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectGlossary", b =>
                 {
-                    b.Property<int>("GlossaryId");
+                    b.Property<int?>("GlossaryId");
 
-                    b.Property<int>("ProjectId");
+                    b.Property<int?>("ProjectId");
 
                     b.HasKey("GlossaryId", "ProjectId");
 
@@ -139,7 +276,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("ActionType");
 
-                    b.Property<int?>("ActorId");
+                    b.Property<int?>("AuthorId");
 
                     b.Property<string>("OriginValue");
 
@@ -151,7 +288,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActorId");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("ProjectId");
 
@@ -160,9 +297,9 @@ namespace Polyglot.DataAccess.Migrations
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectLanguage", b =>
                 {
-                    b.Property<int>("LanguageId");
+                    b.Property<int?>("LanguageId");
 
-                    b.Property<int>("ProjectId");
+                    b.Property<int?>("ProjectId");
 
                     b.HasKey("LanguageId", "ProjectId");
 
@@ -171,17 +308,23 @@ namespace Polyglot.DataAccess.Migrations
                     b.ToTable("ProjectLanguage");
                 });
 
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectTag", b =>
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectTeam", b =>
                 {
-                    b.Property<int>("TagId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ProjectId");
 
-                    b.HasKey("TagId", "ProjectId");
+                    b.Property<int>("TeamId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTag");
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("ProjectTeams");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Rating", b =>
@@ -194,13 +337,17 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("CreatedById");
+                    b.Property<int>("CreatedById");
 
                     b.Property<double>("Rate");
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -211,7 +358,7 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Definition");
+                    b.Property<int>("Definition");
 
                     b.HasKey("Id");
 
@@ -228,7 +375,11 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("ProjectId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tags");
                 });
@@ -239,11 +390,13 @@ namespace Polyglot.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProjectId");
+                    b.Property<int?>("CreatedById");
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Teams");
                 });
@@ -253,6 +406,8 @@ namespace Polyglot.DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<int>("TeamId");
 
@@ -264,52 +419,16 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.HasIndex("TranslatorId");
 
-                    b.ToTable("TeamTranslator");
-                });
-
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Translation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ProjectId");
-
-                    b.Property<string>("TanslationKey");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Translations");
-                });
-
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Translator", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("RatingId");
-
-                    b.Property<int?>("UserProfileId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RatingId");
-
-                    b.HasIndex("UserProfileId");
-
-                    b.ToTable("Translators");
+                    b.ToTable("TeamTranslators");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>
                 {
-                    b.Property<int>("TranslatorId");
+                    b.Property<int?>("TranslatorId");
 
-                    b.Property<int>("LanguageId");
+                    b.Property<int?>("LanguageId");
 
-                    b.Property<string>("Proficiency");
+                    b.Property<int>("Proficiency");
 
                     b.HasKey("TranslatorId", "LanguageId");
 
@@ -320,9 +439,9 @@ namespace Polyglot.DataAccess.Migrations
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorRight", b =>
                 {
-                    b.Property<int>("TeamTranslatorId");
+                    b.Property<int?>("TeamTranslatorId");
 
-                    b.Property<int>("RightId");
+                    b.Property<int?>("RightId");
 
                     b.HasKey("TeamTranslatorId", "RightId");
 
@@ -341,7 +460,7 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("AvatarUrl");
 
-                    b.Property<DateTime>("BirthDate");
+                    b.Property<DateTime?>("BirthDate");
 
                     b.Property<string>("City");
 
@@ -359,9 +478,52 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<string>("Uid");
 
+                    b.Property<int>("UserRole");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserProfiles");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.ChatMessage", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Chat.ChatDialog", "Dialog")
+                        .WithMany("Messages")
+                        .HasForeignKey("DialogId");
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.DialogParticipant", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Chat.ChatDialog", "ChatDialog")
+                        .WithMany("DialogParticipants")
+                        .HasForeignKey("ChatDialogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Participant")
+                        .WithMany()
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Chat.UserState", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "ChatUser")
+                        .WithMany()
+                        .HasForeignKey("ChatUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.ComplexString", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Project", "Project")
+                        .WithMany("Translations")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.File", b =>
@@ -375,22 +537,48 @@ namespace Polyglot.DataAccess.Migrations
                         .HasForeignKey("UploadedById");
                 });
 
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Manager", b =>
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Glossary", b =>
                 {
-                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
+                    b.HasOne("Polyglot.DataAccess.Entities.Language", "OriginLanguage")
+                        .WithMany("Glossaries")
+                        .HasForeignKey("OriginLanguageId");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Glossary")
+                        .WithMany("GlossaryStrings")
+                        .HasForeignKey("GlossaryId");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Notification", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Receiver")
                         .WithMany()
-                        .HasForeignKey("UserProfileId");
+                        .HasForeignKey("ReceiverId");
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Option", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Notification", "Notification")
+                        .WithMany("Options")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Project", b =>
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.Language", "MainLanguage")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("MainLanguageId");
 
-                    b.HasOne("Polyglot.DataAccess.Entities.Manager", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId");
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
+                        .WithMany("Projects")
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectGlossary", b =>
@@ -408,9 +596,9 @@ namespace Polyglot.DataAccess.Migrations
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectHistory", b =>
                 {
-                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Actor")
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("ActorId");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("Polyglot.DataAccess.Entities.Project", "Project")
                         .WithMany()
@@ -430,16 +618,16 @@ namespace Polyglot.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectTag", b =>
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.ProjectTeam", b =>
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.Project", "Project")
-                        .WithMany("ProjectTags")
+                        .WithMany("ProjectTeams")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Polyglot.DataAccess.Entities.Tag", "Tag")
-                        .WithMany("ProjectTags")
-                        .HasForeignKey("TagId")
+                    b.HasOne("Polyglot.DataAccess.Entities.Team", "Team")
+                        .WithMany("ProjectTeams")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -447,14 +635,27 @@ namespace Polyglot.DataAccess.Migrations
                 {
                     b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "User")
+                        .WithMany("Ratings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Polyglot.DataAccess.Entities.Tag", b =>
+                {
+                    b.HasOne("Polyglot.DataAccess.Entities.Project")
+                        .WithMany("Tags")
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.Team", b =>
                 {
-                    b.HasOne("Polyglot.DataAccess.Entities.Project")
-                        .WithMany("Teams")
-                        .HasForeignKey("ProjectId");
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TeamTranslator", b =>
@@ -464,28 +665,10 @@ namespace Polyglot.DataAccess.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Polyglot.DataAccess.Entities.Translator", "Translator")
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
                         .WithMany("TeamTranslators")
                         .HasForeignKey("TranslatorId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Translation", b =>
-                {
-                    b.HasOne("Polyglot.DataAccess.Entities.Project")
-                        .WithMany("Translations")
-                        .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("Polyglot.DataAccess.Entities.Translator", b =>
-                {
-                    b.HasOne("Polyglot.DataAccess.Entities.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
-
-                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
-                        .WithMany()
-                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.TranslatorLanguage", b =>
@@ -495,7 +678,7 @@ namespace Polyglot.DataAccess.Migrations
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Polyglot.DataAccess.Entities.Translator", "Translator")
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
                         .WithMany()
                         .HasForeignKey("TranslatorId")
                         .OnDelete(DeleteBehavior.Cascade);

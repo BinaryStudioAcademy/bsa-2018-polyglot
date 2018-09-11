@@ -1,23 +1,25 @@
-import { Manager } from "./manager";
 import { Language } from "./language";
-import { ProjectTag } from "./project-tag";
 import { ProjectGlossary } from "./project-glossary";
 import { ProjectLanguage } from "./project-language";
 import { Translation } from "./translation";
 import { Team } from "./team";
+import { UserProfile } from "./user-profile";
+import { Tag } from ".";
+import { ProjectTranslationStatistics } from "./projectTranslationStatistics";
 
 export interface Project {
-    id: number;
+    id?: number;
     name: string;
-    description: string;
+    description?: string;
     technology: string;
-    imageUrl: string;
-    createdOn: Date;
-    manager: Manager;
-    mainLanguage: Language;
-    teams: Array<Team>;
-    translations: Array<Translation>;
-    projectLanguageses: Array<ProjectLanguage>;
-    projectGlossaries: Array<ProjectGlossary>;
-    projectTags: Array<ProjectTag>;
+    imageUrl?: string;
+    createdOn?: Date;
+    userProfile?: UserProfile;
+    mainLanguage?: Language;
+    teams?: Array<Team>;
+    translations?: Array<Translation>;
+    projectLanguageses?: Array<ProjectLanguage>;
+    projectGlossaries?: Array<ProjectGlossary>;
+    tags?: Array<Tag>;
+    progress: number;
 }

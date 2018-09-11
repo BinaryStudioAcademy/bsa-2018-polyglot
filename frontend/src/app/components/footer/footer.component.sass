@@ -1,3 +1,4 @@
+
 \:host 
   display: block
   position: relative
@@ -11,6 +12,8 @@
   padding: 1rem
   background-color: white
   text-align: center
+  flex-wrap: wrap
+  justify-content: center
 
 .footer
   h2
@@ -20,5 +23,18 @@
  -webkit-box-flex: 1
  -ms-flex: 1 1 auto
  flex: 1 1 auto
+
+.active 
+ color: #3F51B5
+
+ 
+@media only screen and (max-width: 748px)
+  ::ng-deep .footer
+    display: inline-grid
+
+  
+
+
+
  
 

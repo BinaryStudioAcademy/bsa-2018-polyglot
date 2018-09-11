@@ -1,18 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface ICRUDService<TEntity, TIdentifier> where TEntity : class
-    {
-        Task<IEnumerable<TEntity>> GetListAsync();
+    public interface ICRUDService <TEntity, TEntityDTO>
+		where TEntity : Entity, new()
+		where TEntityDTO : class, new()
+	{
+		Task<IEnumerable<TEntityDTO>> GetListAsync();
+ 
 
-        Task<TEntity> GetOneAsync(TIdentifier identifier);
+		Task<TEntityDTO> GetOneAsync(int identifier);
+     
+		Task<TEntityDTO> PutAsync(TEntityDTO entity);
+         
 
-        Task<TEntity> PutAsync(TIdentifier identifier, TEntity entity);
+		Task<bool> TryDeleteAsync(int identifier);
 
-        Task<bool> TryDeleteAsync(TIdentifier identifier);
+        Task<bool> TryAddAsync(int identifier);
 
-        Task<TEntity> PostAsync(TEntity entity);
+
+        Task<TEntityDTO> PostAsync(TEntityDTO entity);
+            
     }
 }

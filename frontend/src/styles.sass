@@ -1,11 +1,67 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css"
 @import "common-styles/all"
+@import "~ng-snotify/styles/material";
+
+
+
+$fixed-footer-height: 65px
+$fixed-toolbar-height: 64px // This value was taken from material default toolbar height
 
 body
-  font-family: Roboto, Arial, sans-serif
+  font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif
   margin: 0
   min-height: 100%
 
 html
   min-height: 100%
 
+// ------------------------------Start------------------------------
+// We need this styles for nice workspace view.
+// If something unexpected happened with your UI, 
+// just comment this styles. and check if it is a source of problem
+
+// This structure makes fixed header and footer
+// Also all content will be in <mat-sidenav-content> (according to out structure) and it will be scrollable
+// I hope this won't break other components.
+
+=flex-column()
+  display: flex !important
+  flex-direction: column
+
+html, body, app
+  height: 100%
+  +flex-column()
+
+app-navigation
+  height: calc(100% - #{$fixed-footer-height}) // we need take this in account
+  +flex-column()
+
+  mat-toolbar // This is already setted by Material but just to be sure I set it here one more time.
+    max-height: $fixed-toolbar-height
+    min-height: $fixed-toolbar-height
+  
+  mat-sidenav-container
+    height: calc(100% - #{$fixed-toolbar-height})
+    +flex-column()
+
+  mat-sidenav-content
+    height: 100%
+    +flex-column()
+
+app-footer
+  max-height: $fixed-footer-height
+  min-height: $fixed-footer-height
+
+// ------------------------------End------------------------------
+
+/* Use class 'no-hover-effect' to remove hover effect from buttons
+.no-hover-effect
+  &.mat-fab .mat-button-focus-overlay, &.mat-button .mat-button-focus-overlay, &.mat-mini-fab .mat-button-focus-overlay, &.mat-icon-button .mat-button-focus-overlay
+    background-color: transparent
+
+.no-menu-scroll
+  &.mat-menu-panel
+    max-width: 1000px
+
+a 
+    text-decoration: none

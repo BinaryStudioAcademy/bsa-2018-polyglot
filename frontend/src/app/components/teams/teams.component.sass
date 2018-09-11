@@ -1,6 +1,10 @@
-
 .container
   margin-top: 30px
+  margin-bottom: 30px
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+  grid-gap: 25px
+  justify-items: center
 
 .search-form 
   min-width: 150px
@@ -13,15 +17,26 @@
 .search-full-width 
   width: 100%
 
-
-.example-card 
-  max-width: 300px
+.example-card  
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
-  margin: 10px
- 
-.example-header-image 
-  background-image: url('https://atmanco.com/wp-content/uploads/2016/05/exceptional-team.png')
-  background-size: cover
+  margin: 0
+  display: grid
+  grid-template-rows: 70px auto 50px
+
+
+.mat-card-avatar
+  height: 60px
+  width: 60px
+
+.card-title
+  font-size: 23px
+  margin-left: 10px
+  margin-bottom: 10px
+
+.card-subtitle
+  font-size: 15px
+  margin-left: 10px
+  outline: 0
 
 .button-add
  position: fixed
@@ -29,19 +44,87 @@
  bottom: 50px
  width: 72px
  height: 72px
+ z-index: 100 
 
 .card-buttons
-  button
-    width: 120px
-    margin: 20px 
   margin: 0
-  padding: 0  
+  padding: 0
+  justify-self: center
+  button
+    margin: 0
+    margin: 10px auto
+    padding: 0px 10px
+    height: 35px
+    justify-self: center
 
-.progress-span
-  display: block
-  margin-top: 10px
-  text-align: center 
+
+
+.mat-raised-button
+  padding: 0
+
+.title
+  display: grid
+  grid-template-columns: minmax(170px, 1fr)
+
+.mat-card-title
+  overflow: hidden
+  white-space: nowrap
+  height: 30px
+  text-overflow: ellipsis
+
+
+.mat-card-header
+  margin-bottom: 10px
+  grid-row-start: 1
+  grid-row-end: 2
 
 
 
+.team-img
+  height: 50px
+  width: 50px
 
+
+.temp
+  display: grid
+  grid-row-start: 2
+  grid-row-end: 3
+  grid-template-columns: repeat(auto-fill, 70px)
+  grid-gap: 10px
+  justify-content: center
+
+
+.img-container
+  margin: 20px
+  padding: 20px
+  display: flex
+  flex-wrap: wrap
+  align-content: space-between
+  justify-content: space-around
+  img
+    border-radius: 50px
+    margin: 5px
+
+
+.mat-card-actions 
+  grid-row-start: 3
+  grid-row-end: 4
+
+
+.spinner
+  margin-left: auto
+  margin-right: auto
+  margin-top: 100px
+
+.card-subtitle:hover
+  cursor: pointer
+
+img:hover
+  cursor: pointer
+
+.no-teams
+  margin-top: 50px
+  font-size: 70px
+  text-align: center
+  align-items: center
+  color: #f3f3f3

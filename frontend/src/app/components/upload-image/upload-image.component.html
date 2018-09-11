@@ -1,6 +1,11 @@
 <form #imageForm = ngForm>
-  <div [ngfBackground]="fileToUpload" class = "img">
-    <img *ngIf="fileToUpload.name == 'empty'" class="defaultImg" src = "/assets/images/default.jpg">
+  <div [ngfBackground]="fileToUpload" *ngIf="!isWarning" class = "img">
+    <img *ngIf="!fileToUpload && !imageUrl" class="defaultImg" src = "/assets/images/default.jpg">
+    <img *ngIf="imageUrl && !fileToUpload" class="defaultImg" src="{{imageUrl}}">
+  </div>
+  <div *ngIf="isWarning" class="px-2">
+    <span>Image more than 10MB!</span><br>
+    <span>Please,select another</span>
   </div>
   <div ngfDrop selectable="1" multiple="1"
   [(file)]="fileToUpload"
@@ -10,7 +15,7 @@
   [class.valid-drag]   = "validDrag"
   accept= "image/*"
   class="drop"
-  (filesChange) = "sendImage()"
+  (filesChange) = "sendImage($event)"
 >
   Select Image
 </div>

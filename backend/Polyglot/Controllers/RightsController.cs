@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -11,17 +7,16 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class RightsController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Right, int> service;
+        private readonly ICRUDService<Right, RightDTO> service;
 
-        public RightsController(ICRUDService<Right, int> service, IMapper mapper)
+        public RightsController(ICRUDService<Right, RightDTO> service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Rights
@@ -30,7 +25,7 @@ namespace Polyglot.Controllers
         {
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No rights found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<RightDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Rights/5
@@ -39,7 +34,7 @@ namespace Polyglot.Controllers
         {
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Right with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<RightDTO>(project));
+                : Ok(project);
         }
 
         // POST: Rights
@@ -48,10 +43,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Right>(project));
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<RightDTO>(entity));
+                entity);
         }
 
         // PUT: Rights/5
@@ -61,9 +56,9 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Right>(project));
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<RightDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5

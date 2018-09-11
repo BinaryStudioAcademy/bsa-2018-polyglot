@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -11,17 +7,16 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class ProjectHistoriesController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<ProjectHistory, int> service;
+        private readonly ICRUDService<ProjectHistory, ProjectHistoryDTO> service;
 
-        public ProjectHistoriesController(ICRUDService<ProjectHistory, int> service, IMapper mapper)
+        public ProjectHistoriesController(ICRUDService<ProjectHistory, ProjectHistoryDTO> service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: ProjectHistorys
@@ -30,7 +25,7 @@ namespace Polyglot.Controllers
         {
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No project histories found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<ProjectHistoryDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: ProjectHistorys/5
@@ -39,7 +34,7 @@ namespace Polyglot.Controllers
         {
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"ProjectHistory with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<ProjectHistoryDTO>(project));
+                : Ok(project);
         }
 
         // POST: ProjectHistorys
@@ -48,10 +43,10 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<ProjectHistory>(project));
+            var entity = await service.PostAsync(project);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<ProjectHistoryDTO>(entity));
+                entity);
         }
 
         // PUT: ProjectHistorys/5
@@ -61,9 +56,9 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<ProjectHistory>(project));
+            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<ProjectHistoryDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5

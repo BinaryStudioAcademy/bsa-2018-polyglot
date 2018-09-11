@@ -1,0 +1,40 @@
+<div class="container">
+  <mat-card class="example-card" *ngFor="let card of cards">
+    <mat-card-header>
+      <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.project.userProfile.id)">
+        <img mat-card-avatar class="manager-img" src="{{card.project.userProfile.avatarUrl}}">
+      </a>
+      <div class="title">
+        <mat-card-title class="card-title">
+          <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.project.id]"> {{card.project.name}}</a>
+        </mat-card-title>
+
+        <mat-card-subtitle (click)="userService.redirectById(card.project.userProfile.id)" class="card-subtitle manager-name">{{card.project.userProfile.fullName}}</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    <div class="img-container">
+      <a [routerLink]="['/workspace', card.project.id]">
+        <img *ngIf="card.project.imageUrl !== null" class="content-img" mat-card-image src={{card.project.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
+      </a>
+      <a [routerLink]="['/workspace', card.project.id]">
+        <img *ngIf="card.project.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
+      </a>
+    </div>
+    <div class="progress-container">
+      <span>Progress: {{card.progress | number:'1.0-1'}}%</span>
+      <mat-progress-bar class="lang-progress" mode="determinate" value="{{card.progress}}"></mat-progress-bar>
+    </div>
+    <div class="description">
+      <mat-card-content *ngIf="card.project.description !== null && card.project.description!=='' ">
+        {{card.project.description}}
+      </mat-card-content>
+      <mat-card-content *ngIf="card.project.description == null || card.project.description=='' ">
+        No description
+      </mat-card-content>
+    </div>
+    <mat-card-actions class="card-buttons">
+      <button mat-raised-button color="primary" [routerLink]="['/workspace', card.project.id]">WORKSPACE</button>
+      <button mat-raised-button color="primary" [routerLink]="['/project/details', card.project.id]">DETAILS</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

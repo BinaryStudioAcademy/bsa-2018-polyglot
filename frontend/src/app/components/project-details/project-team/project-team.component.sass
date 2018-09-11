@@ -1,0 +1,184 @@
+div.teams-container,
+.assign-team-container
+    display: flex
+    flex-direction: row
+    justify-content: flex-start
+    flex-wrap: wrap
+    margin: 10px
+
+.manager-img-placeholder
+    border-radius: 50%
+
+.example-card  
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
+    margin: 20px
+    display: grid
+    grid-template-rows: 70px auto 50px
+    padding: 0
+    width: 250px
+
+.manager-img
+    height: 50px
+    width: 50px
+    position: absolute
+    top: 10%
+    left: 3%
+    cursor: pointer
+
+.card-title
+  font-size: 23px
+  margin-left: 10px
+  margin-bottom: 10px
+
+.card-subtitle
+    font-size: 15px
+    margin-bottom: 13px
+    margin-left: 10px
+    outline: 0
+
+.card-subtitle:hover
+    cursor: pointer
+
+.button-add
+ position: fixed
+ right: 50px
+ bottom: 50px
+ width: 72px
+ height: 72px
+
+.card-buttons
+  margin: 0
+  padding: 0
+  justify-self: center
+  button
+    margin: 0
+    margin: 10px auto
+    padding: 0px 10px
+    height: 35px
+    justify-self: center
+
+.mat-raised-button
+  padding: 0
+
+.title
+  display: grid
+  grid-template-columns: minmax(170px, 1fr)
+
+mat-card-title
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.mat-card-avatar
+  width: 50px
+  height: 50px
+
+mat-card-header.mat-card-header
+    position: relative
+    margin: 0
+    padding-top: 14px
+    padding-left: 60px
+    -ms-grid-row: 1
+    grid-row-start: 1
+    -ms-grid-row-span: 1
+    grid-row-end: 2
+    
+
+mat-card-header.mat-card-header-placeholder
+  
+
+.text-placeholder
+    border-radius: 24px 24px 24px 24px
+    background-color: #BBBBBB
+
+.title-placeholder
+    position: relative
+    top: 10px
+    width: 90px
+    height: 15px
+    
+.subtitle-placeholder
+    width: 70px
+    height: 10px
+    margin-left: 20px
+    margin-top: 2px
+
+.action-btn-container
+    grid-row: 3
+    margin-left: auto
+    margin-right: auto
+    margin-bottom: 10px
+
+.team-img
+  height: 60px
+  width: 60px
+
+.card-content
+    box-sizing: border-box
+    padding: 0 15px
+
+.card-content-placeholder
+    min-height: 150px
+
+
+.img-container
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: space-around
+  margin: 0
+  width: 100%
+  height: 100%
+  padding: 15px 0
+  align-content: center
+  
+  img
+    border-radius: 50px
+    margin-bottom: 5%
+
+.card-content-placeholder
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+.team-assign-icon
+    font-size: 150px
+    width: 150px
+    height: 150px
+    color: #BBBBBB
+        
+
+.assign-card
+    cursor: pointer
+    &:hover
+        .team-assign-icon
+            color: #C3D08B
+            transition: ease-in 0.4s
+        .card-content.card-content-placeholder
+            transition: ease-in 0.4s
+            background-color: #F7F7F7
+
+.translator-img
+    height: 60px
+    margin: 5px
+.translator-img:hover
+    cursor: pointer
+   
+    
+    
+.button-add
+  position: fixed
+  right: 50px
+  bottom: 50px
+  width: 72px
+  height: 72px
+  padding: 0
+  z-index: 100 
+
+.no-teams
+  margin-top: 50px
+  font-size: 70px
+  text-align: center
+  align-items: center
+  color: #d8d8d8

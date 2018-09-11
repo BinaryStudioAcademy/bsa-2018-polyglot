@@ -1,0 +1,253 @@
+.sub-menu
+  display: grid
+  grid-template-columns: 180px auto
+  mat-slide-toggle
+    align-self: center
+    justify-self: center
+
+
+.container
+  margin-top: 30px
+  margin-bottom: 30px
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(250px, 0.5fr))
+  grid-gap: 15px
+  justify-content: center
+
+.search-form 
+  min-width: 150px
+  max-width: 500px
+  width: 100%
+  margin-left: auto
+  margin-right: 50px
+  margin-top: 10px
+  
+.search-full-width 
+  width: 100%
+
+.example-card 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
+  margin: 0
+
+mat-card
+  padding: 15px
+
+.mat-card-header
+  padding: 0
+
+.mat-card-avatar
+  height: 60px
+  width: 60px
+
+
+mat-card-title
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.card-title
+  font-size: 23px
+  margin-left: 10px
+  margin-bottom: 10px
+
+.card-subtitle
+  font-size: 15px
+  margin-left: 10px
+
+.content-img
+  margin-bottom: 10px
+
+.description
+  display: grid
+  grid-template-columns: minmax(220px, 1fr)
+  grid-gap: 15px
+  
+mat-card-content
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.card-buttons
+  display: flex
+  justify-content: space-around 
+  margin: 0
+  padding: 0
+  button
+    margin: 0
+    margin: 10px auto
+    padding: 0px 10px
+
+.button-add
+  position: fixed
+  right: 50px
+  bottom: 50px
+  width: 72px
+  height: 72px
+  padding: 0
+  z-index: 100 
+
+
+.title
+  display: grid
+  grid-template-columns: minmax(150px, 1fr)
+
+
+
+.img-container 
+ height: 230px
+ max-height: 100%
+ width: 328px
+ max-width: 100%
+ overflow: hidden
+ text-align: center
+ display: table-cell
+ vertical-align: middle
+ padding: 0px
+ margin: 0px
+ 
+
+.img-container img 
+  height: auto
+  max-height: 100%
+  width: auto
+  max-width: 100%
+
+
+.spinner
+  margin-left: auto
+  margin-right: auto
+  margin-top: 100px
+
+
+.box-padding
+  padding: 0 5% 0 0;
+
+.row-container
+  margin-top: 30px
+  margin-bottom: 30px
+  cursor: pointer
+
+.row-manager
+  display: grid
+  grid-gap: 5px
+  grid-template-rows: 2
+  text-align: center
+  .row-manager-img
+    height: 60px
+    width: 60px
+    align-self: end
+
+.row-buttons
+  display: grid
+  padding: 10px 0
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+  grid-gap: 5px
+  button
+    width: 120px
+    height: 40px
+    justify-self: center
+    align-self: center
+    text-align: center
+    margin-top: 10px
+  
+.description-buttons
+  grid-template-columns: 66% 34%
+  display: grid;
+
+.row-info
+  align-self: center
+  .row-description
+    overflow: hidden
+    text-overflow: ellipsis
+    display: -webkit-box
+    text-align: justify
+    -webkit-line-clamp: 3
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    
+    
+
+.list-item
+  margin: 10px
+  padding: 5px
+  display: grid
+  grid-gap: 2%
+  box-sizing: border-box
+  grid-template-columns: 20% 78%
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
+  max-height: 150px
+  img    
+    justify-self: center
+
+.description-columns
+
+
+.row-name
+  align-self: center
+  h3
+    margin: 0
+    font-size: 25px
+    margin: 5px 0
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+
+.manager-name
+  outline: 0
+  cursor: pointer
+
+.manager-img
+  cursor: pointer
+
+.no-projects
+  margin-top: 50px
+  font-size: 70px
+  text-align: center
+  align-items: center
+  color: #f3f3f3
+
+.progress-container
+  margin-bottom: 10px
+
+@media only screen and (max-width: 1010px)
+  ::ng-deep .description-buttons
+      grid-template-columns: 75% 25% !important
+
+@media only screen and (max-width: 748px)
+  ::ng-deep 
+    .row-buttons
+      grid-template-columns: 49% 49%!important
+    .row-buttons button
+      width: 90%!important
+    .description-buttons
+      grid-template-areas: 'a' 'b'!important
+      grid-template-columns: none !important
+    .row-buttons #workspace
+      justify-self: left!important
+    .row-description
+      -webkit-line-clamp: 2!important
+
+@media only screen and (max-width: 690px)
+  ::ng-deep
+    .sub-menu
+      grid-gap: 2%
+      grid-template-columns: 25% 71%!important
+      justify-content: flex-start
+    .mat-slide-toggle-label 
+      display: grid!important
+      grid-template: 'a' 'b'
+    .mat-slide-toggle-bar
+      display: block
+      width: 100%
+    .mat-slide-toggle-content
+      display: block
+      width: 100%
+      margin-top: 18px
+
+@media only screen and (max-width: 500px)
+  ::ng-deep 
+     .list-item
+       grid-gap: 6%!important
+       grid-template-columns: 25% 65%!important
+     

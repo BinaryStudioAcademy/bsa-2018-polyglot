@@ -1,0 +1,85 @@
+<div class="new-team">
+
+    <div class="new-team-container">
+        <div class="new-team-card">
+            <div class="add-from-header">
+                <div class="new-team-header-image">
+                    <img class="header-image" src="https://www.yellow.com.mt/sys/articles/1043/59c4cb3932838_translators.jpg" alt="Your photo">
+                </div>
+                <mat-form-field class="team-name">
+                    <input matInput required appNoWhiteSpace placeholder="Team name" [(ngModel)]="name" #teamName="ngModel">
+                </mat-form-field>
+                <div class="save-btn">
+                    <button mat-raised-button color="primary" [disabled]="selectedTranslators.length == 0 || teamName.invalid ? true : null"
+                        (click)="createTeam()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class=list-container>
+    <div class="translators-list-container">
+
+        <mat-chip-list>
+            <div class="chips-wrapper">
+                    <mat-chip style="background-color: #ff7b25;">Beginner</mat-chip>
+                    <mat-chip style="background-color: #e3eaa7;">Intermediate</mat-chip>
+                    <mat-chip style="background-color: #82b74b;">Advanced</mat-chip>
+                    <mat-chip style="background-color: #92a8d1">Proficiency</mat-chip>
+                    <mat-chip style="background-color: #944dff;">Native</mat-chip>
+        
+
+
+            </div>
+            
+
+        </mat-chip-list>
+        <div class="translators-list-wrapper">
+            <div *ngIf="IsLoad" class="spinner">
+                <mat-spinner></mat-spinner>
+            </div>
+            <mat-selection-list #translatorListElement>
+                <mat-list-option class="list-item" (click)="change($event, translatorListElement)" *ngFor="let t of allTranslators" [selected]="t.selected"
+                    [value]="t">
+                    <div class="item-container">
+                        <img class="manager-img" src="{{getAvatarUrl(t)}}">
+                        <div class="title">
+                            <mat-card-title class="card-title">
+                                <a style="text-decoration: none; color:black; cursor: pointer" (click)="userService.redirectById(t.userId)">{{t.fullName}}
+                                </a>
+                            </mat-card-title>
+                            <mat-card-subtitle class="card-subtitle">
+                                <app-star-rating [rating]="t.rating" [starCount]="5"></app-star-rating>
+                            </mat-card-subtitle>
+                        </div>
+                        <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+                            <ul>
+                                <li *ngFor="let l of t.translatorLanguages">
+                                    <mat-chip *ngIf="l.proficiency===0" style="background-color: #ff7b25;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===2" style="background-color: #e3eaa7;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===4" style="background-color: #82b74b;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===5" style="background-color: #92a8d1;">{{l.language.name}}</mat-chip>
+                                    <mat-chip *ngIf="l.proficiency===6" style="background-color: #944dff;">{{l.language.name}}</mat-chip>
+                                </li>
+                            </ul>  
+                        </span>
+                        <span *ngIf="t.translatorLanguages.length == 0" class="languages-list">
+                            <ul>
+                                <li>
+                                    <mat-chip style="background-color: #d64161;">No data</mat-chip>
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                </mat-list-option>
+            </mat-selection-list>
+
+        </div>
+    </div>
+</div>
+<ng-snotify></ng-snotify>

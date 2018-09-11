@@ -1,0 +1,119 @@
+@import "../../../common-styles/styleForForm.sass";
+
+.form-container
+    width: 60%
+    margin-top: 20px
+    text-align: center
+    padding: 3%
+
+.photo
+    width: 100%
+    height: 200px
+    position: relative
+    
+.parent
+  width: 150px
+  height: 150px
+  overflow: hidden
+  position: relative
+  display: inline-block
+  cursor: pointer
+  border-radius: 50%
+
+.child
+  height: 100%
+  width: 100%
+  background-size: cover
+  background-repeat: no-repeat
+  -webkit-transition: all .5s
+  -moz-transition: all .5s
+  -o-transition: all .5s
+  transition: all .5s
+
+
+p
+  display: none
+  font-size: 12px
+  color: #ffffff !important
+  font-family: sans-serif
+  text-align: center
+  margin: auto
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  height: 50px
+  cursor: pointer
+  text-decoration: none;
+
+.parent
+  &:hover .child, &:focus .child
+    -ms-transform: scale(1.2)
+    -moz-transform: scale(1.2)
+    -webkit-transform: scale(1.2)
+    -o-transform: scale(1.2)
+    transform: scale(1.2)
+  &:hover .child:before, &:focus .child:before, &:hover p, &:focus p
+    display: block
+
+.child:before
+  content: ""
+  display: none
+  height: 100%
+  width: 100%
+  position: absolute
+  top: 0
+  left: 0
+  background-color: rgba(52, 73, 94, 0.75)    
+
+mat-form-field
+    width: 35%
+    margin: 15px 0
+
+.inline
+    display: inline-block
+
+.button-container
+    text-align: center
+
+img
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
+    border-radius: 50%
+    width: 150px
+    height: auto
+
+button
+    width: 100px
+    height: 40px
+    margin-top: 15px
+
+.float-left
+    float: left
+
+.line-block
+    width: 100%
+    display: block
+
+.form-input
+    width: 48%
+
+.margin-top-20px
+    margin-top: 20px
+
+.address-field
+    width: 100%
+
+.left-margin-3
+    margin-left: 3%
+
+@media only screen and (max-width: 768px) 
+    .form-input
+        width: 100%
+
+    .left-margin-3
+        margin-left: 0%
+    
+
+
+

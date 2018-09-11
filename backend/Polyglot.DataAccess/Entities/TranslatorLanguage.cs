@@ -1,13 +1,15 @@
+﻿using Polyglot.DataAccess.Helpers;
+
 namespace Polyglot.DataAccess.Entities
 {
-    public class TranslatorLanguage : Entity
+    public class TranslatorLanguage : MidEntity
     {
-        public int TranslatorId { get; set; }
-        public Translator Translator { get; set; }
+        public int? TranslatorId { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
 
-        public int LanguageId { get; set; }
-        public Language Language { get; set; }
+        public int? LanguageId { get; set; }
+        public virtual Language Language { get; set; }
 
-        public string Proficiency { get; set; }
+        public Proficiency Proficiency { get; set; }
     }
 }

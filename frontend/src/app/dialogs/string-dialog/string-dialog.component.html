@@ -1,11 +1,10 @@
 <form (submit)="onSubmit()">
-  <h4>Create String</h4>
   <mat-grid-list cols="2">
     <mat-grid-tile>
       <div>
         <mat-form-field>
           <input id="key" name="key" type="text" [(ngModel)]="str.key" required matInput placeholder="Key"
-                 #key="ngModel" autocomplete="yes">
+                 #key="ngModel" maxlength="25" autocomplete="yes">
           <mat-error *ngIf="key.errors">
             Key is required
           </mat-error>
@@ -20,15 +19,16 @@
         </mat-form-field>
         <mat-form-field>
           <textarea id="description" name="description" type="text" [(ngModel)]="str.description" matInput placeholder="Description"
-                    #description="ngModel" autocomplete="yes"></textarea>
+                    #description="ngModel" maxlength="500" autocomplete="yes"></textarea>
+          <mat-hint align="end">{{description.value ? description.value.length : 0}} / 500</mat-hint>
         </mat-form-field>
       </div>
       </mat-grid-tile>
       <mat-grid-tile>
-        <app-upload-image (fileEvent) = "receiveImage($event)"></app-upload-image>
+        <app-upload-image [imageUrl]="str.pictureLink" (fileEvent) = "receiveImage($event)"></app-upload-image>
       </mat-grid-tile>
     </mat-grid-list>
-    <app-tags [allTags] = "getAllTags()"
+    <app-tags [allTags] = "data.tags"
     (tagsEvent) = "receiveTags($event)"></app-tags>
     <button 
       type="submit" 

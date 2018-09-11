@@ -1,0 +1,101 @@
+\:host
+  display: flex
+  flex-direction: column
+  
+header
+  background: #EDE7F6
+  min-height: 66px
+
+.project-logo
+  width: 100px
+  height: 100px
+  border-radius: 50%
+  background: white
+
+.project-main
+  display: flex
+  flex-direction: column
+
+.workspace-height
+  height:calc(100vh - 267px)!important
+
+.keys-list
+  max-width: 25%
+  min-width: 25%
+
+  .mat-list-item
+    height: auto
+
+  .keys-list__nav
+    width: 100%
+    padding-top: 0
+
+  .key-list-style
+    overflow-y: auto
+    height: calc(100vh - 299px)!important
+    border-top: 1px solid gainsboro!important
+
+.key-details-card
+  margin-right: 0 !important
+
+.search-bar
+  min-height: 70px
+
+::-webkit-scrollbar 
+  width: 5px
+::-webkit-scrollbar-track 
+    background: #f1f1f1
+::-webkit-scrollbar-thumb 
+    background: #888
+::-webkit-scrollbar-thumb:hover 
+    background: #555
+.project-button-wrapper
+    display: flex
+    justify-content: space-between
+
+.active
+  background: rgb(248,248,248)!important
+
+.in-progress
+  animation: anim 3s infinite linear
+
+.no-string-div
+  font-size: 70px
+  text-align: center
+  height: calc(54vh + 3px)
+  align-items: center
+  color: Gainsboro
+
+.keys-list__nav
+  a
+    div
+      width: 100%
+
+.filter
+  margin-left: 20px
+.spinner
+  display: flex
+  justify-content: center 
+  padding: 30px !important
+  
+.fiter-content
+  display: grid
+  grid-template-columns: auto auto auto
+  grid-gap: 10px
+  padding: 10px
+  min-width: 450px!important
+@keyframes anim
+  0%
+    border-left: 7px solid #ffffff
+  25%
+    border-left: 7px solid #b366ff
+  50%
+    border-left: 7px solid #6600cc
+  75%
+    border-left: 7px solid #b366ff
+  100%
+    border-left: 7px solid #ffffff
+
+.filter-icon
+  margin-left: 5px
+  font-size: 15px

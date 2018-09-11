@@ -1,0 +1,94 @@
+.container
+    padding: 2%
+
+ul
+    margin: 0
+    margin-top: 5%
+    padding: 0 5%
+
+li
+    list-style: none
+    margin-bottom: 2%
+
+.lang-item mat-card
+    transition: ease-in 0.4s
+    span
+        transition: ease-in 0.7s
+
+.lang-item mat-card:hover
+    background-color: #F2F3EB
+    span
+        opacity: 1
+
+.card-content,
+.select-lang-container
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: stretch
+
+.lang-progress-container
+    //position: relative
+    width: 50%
+    //align-self: center
+    display: flex
+    flex-direction: column
+    .lang-progress-info
+        //position: absolute
+        display: flex
+        flex-direction: row
+        justify-content: space-between
+        width: 100%
+        height: 40%
+        align-self: flex-end
+        font-size: 12px
+        span
+            opacity: 0
+
+.progress-container
+    display: flex
+    align-items: flex-end
+    box-sizing: border-box
+    padding-bottom: 5px
+    height: 60%
+
+.mat-icon-button
+    align-self: center
+
+.lang-progress
+    width: 100%
+
+.lang
+    align-self: center
+
+.spinner
+    max-width: 100px
+    margin: 0 auto
+    padding-top: 40px
+    height: 90px
+
+.spinner-small 
+    width: 20px !important
+    height: 20px !important
+    align-self: center
+    
+
+.select-lang-container
+    justify-content: flex-start
+    flex-wrap: wrap
+    max-height: 2%
+    max-width: 45%
+
+.no-languages
+    text-align: center
+
+button.mat-flat-button.mat-primary
+    min-width: 160px
+    margin-right: 10px
+    
+.card-content button
+    position: relative
+    .delete-spinner
+        position: absolute
+        top: 7px
+        left: -30px

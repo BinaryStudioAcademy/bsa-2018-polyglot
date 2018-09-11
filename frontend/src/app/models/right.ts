@@ -1,7 +1,6 @@
-import { TranslatorRight } from "./translator-right";
+import { RightDefinition } from "./rightDefinition";
 
 export interface Right {
     id: number;
-    definition: string;
-    translatorRights: Array<TranslatorRight>;
+    definition: RightDefinition;
 }

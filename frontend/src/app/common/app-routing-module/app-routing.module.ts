@@ -12,18 +12,33 @@ import { LandingComponent } from '../../components/landing/landing.component';
 import { AuthGuard } from '../../services/guards/auth-guard.service';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 import { ContactComponent } from '../../components/contact/contact.component';
+import { WorkspaceComponent } from '../../components/workspace/workspace.component';
+import { KeyDetailsComponent } from '../../components/workspace/key-details/key-details.component';
 import { TranslatorProfileComponent } from '../../components/translatorProfile/translator-profile/translator-profile.component';
 
 import { NewProjectComponent } from '../../components/new-project/new-project.component';
 import { ManagerProfileComponent } from '../../components/manager-profile/manager-profile.component';
 import { LandingGuard } from '../../services/guards/landing-guard.service';
+import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
+import { ProjectDetailsComponent } from '../../components/project-details/project-details.component';
+import { TeamDetailsComponent } from '../../components/team-details/team-details.component';
+import { NewTeamComponent } from '../../components/teams/new-team/new-team.component';
+import { GlossaryComponent } from '../../components/glossaries/glossary/glossary.component';
+import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
+import { ChatComponent } from '../../components/chat/chat.component';
+import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
+import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
+
+
   
 const routes: Routes = [
   { path: '',  canActivate: [LandingGuard], component: LandingComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'profile', component: ManagerProfileComponent},
-  { path: 'profile/newproject', component: NewProjectComponent },
+  { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent},
+  { path: 'newproject', canActivate: [AuthGuard, TranslatorGuardService], component: NewProjectComponent },
+  { path: 'newteam', canActivate: [AuthGuard, TranslatorGuardService], component: NewTeamComponent },
+  { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
 
   {
     path: 'dashboard',
@@ -34,11 +49,29 @@ const routes: Routes = [
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
       { path: 'glossaries', component: GlossariesComponent },
-      { path: 'newproject', component: NewProjectComponent },
-      { path: 'strings', component: NoFoundComponent },
+      { path: 'glossaries/:glossaryId', component: GlossaryComponent },
+      { path: 'strings', component: NoFoundComponent }
     ]
   },
-  { path: 'translator', component: TranslatorProfileComponent },
+  { path: 'team/details/:teamId', canActivate: [AuthGuard], component: TeamDetailsComponent},
+  { path: 'project/details/:projectId', canActivate: [AuthGuard], component: ProjectDetailsComponent },
+  {
+    path: 'workspace/:projectId',
+    canActivate: [AuthGuard],
+    component: WorkspaceComponent,
+    children: [{
+        path: 'key/:keyId',
+        component : KeyDetailsComponent
+      }
+    ]
+  },
+  { 
+    path: 'chat', 
+    canActivate: [AuthGuard], 
+    component: ChatComponent
+  },
+  { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
+  { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: '404', component: NoFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,7 +9,7 @@ import { AuthService } from './../../services/auth.service';
 })
 export class FooterComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private appState: AppStateService) { }
 
   ngOnInit() {
   }
@@ -18,7 +19,7 @@ export class FooterComponent implements OnInit {
   }
 
   isLoggedIn() {
-    return this.authService.isLoggedIn();
+    return this.appState.LoginStatus;
   }
 
 }

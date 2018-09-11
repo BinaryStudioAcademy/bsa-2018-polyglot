@@ -1,0 +1,8 @@
+<div *ngIf="SelectedUser">
+    <div *ngIf ="isSelectedUserManager()">
+        <app-manager-profile [(manager)]="SelectedUser"></app-manager-profile>
+    </div>
+    <div *ngIf ="!isSelectedUserManager()">
+        <app-translator-profile [(userProfile)]="SelectedUser"></app-translator-profile>
+    </div>
+</div>

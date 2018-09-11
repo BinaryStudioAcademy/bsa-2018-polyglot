@@ -1,30 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface Team {
-
-  text: string;
-  rating: number;
-}
+import { TeamService } from "../../services/teams.service";
+import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'app-teams',
-  templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.sass']
+    selector: 'app-teams',
+    templateUrl: './teams.component.html',
+    styleUrls: ['./teams.component.sass']
 })
 export class TeamsComponent implements OnInit {
-  
-  teams: Team[] = [
-    { text: 'Team1', rating: 40 },
-    { text: 'Team2', rating: 30 },
-    { text: 'Team3', rating: 29 },
-    { text: 'Team4', rating: 85 },
-    { text: 'Team5', rating: 100 },
-  
-  ];
 
-  constructor() { }
+    isLoad: boolean = true;
+    teams: any = [];
 
-  ngOnInit() {
-  }
+    constructor(private teamsService: TeamService,
+        private userService: UserService) { }
 
+    ngOnInit() {
+        this.getAllTeams();
+    }
+
+    getAllTeams() {
+        this.teamsService.getAllTeams()
+            .subscribe((teams) => {
+                this.teams = teams;
+                this.isLoad = false;
+            });
+    }
+
+    isCurrentUserManager() {
+        return this.userService.isCurrentUserManager();
+    }
 }

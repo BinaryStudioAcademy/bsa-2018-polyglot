@@ -1,4 +1,11 @@
 <div>
   <img-cropper #cropper [image]="imageData" [settings]="cropperSettings"></img-cropper><br>
-  <button mat-raised-button color="primary" (click) = "uploadImage()">Upload</button>
 </div>
+<div style="margin: 0 auto;max-width: 340px;margin-bottom: 5px;margin-top: 5px;">
+    <span *ngIf="IsWarning">Image more than 10MB!Please,select another</span>
+</div>
+<div class="file-upload">
+    <input mat-button type="button" class="file-input" value="Choose photo" onclick="document.getElementById('file').click();" />
+    <input type="file" (change)="fileChangeListener($event)" style="display:none;" id="file" name="file"/>
+</div>
+<button [disabled]="IsWarning" class=btn (click)="uploadImage()">Upload</button>

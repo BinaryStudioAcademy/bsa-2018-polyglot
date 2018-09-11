@@ -1,10 +1,10 @@
 version: '1.0.{build}'
 image: Visual Studio 2017
-skip_branch_with_pr: true
 branches:
   only:
   - master
   - develop
+skip_branch_with_pr: true
 clone_depth: 1
 init:
   # Good practise, because Windows
@@ -30,7 +30,7 @@ notifications:
       secure: YEqYADnFRmmkD0iJxExaQIR/EtPx3CsRa4UsEluaDaZziW3H5vzFGvRDUkXa4WhBg0DJZK1W+4ikMs82BgyqjA5ZKsK6WhsIq4i2lKQSNmk=
     on_build_success: true
     on_build_failure: true
-    # on_build_status_changed: false
+    on_build_status_changed: true
 deploy:
   - provider: WebDeploy
     server:

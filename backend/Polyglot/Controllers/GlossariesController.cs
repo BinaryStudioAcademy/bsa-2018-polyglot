@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
@@ -11,59 +7,58 @@ using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class GlossariesController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Glossary, int> service;
+        private readonly IGlossaryService service;
 
-        public GlossariesController(ICRUDService<Glossary, int> service, IMapper mapper)
+        public GlossariesController(IGlossaryService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
-        // GET: Glossarys
+        // GET: Glossaries
         [HttpGet]
-        public async Task<IActionResult> GetAllGlossarys()
+        public async Task<IActionResult> GetAllGlossaries()
         {
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No glossaries found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<GlossaryDTO>>(projects));
+                : Ok(projects);
         }
 
-        // GET: Glossarys/5
+        // GET: Glossaries/5
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
         {
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Glossary with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<GlossaryDTO>(project));
+                : Ok(project);
         }
 
-        // POST: Glossarys
-        public async Task<IActionResult> AddGlossary([FromBody]GlossaryDTO project)
+        // POST: Glossaries
+        public async Task<IActionResult> AddGlossary([FromBody]GlossaryDTO glossary)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Glossary>(project));
+            var entity = await service.PostAsync(glossary);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<GlossaryDTO>(entity));
+                entity);
         }
 
-        // PUT: Glossarys/5
+        // PUT: Glossaries/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyGlossary(int id, [FromBody]GlossaryDTO project)
+        public async Task<IActionResult> ModifyGlossary(int id, [FromBody]GlossaryDTO glossary)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Glossary>(project));
+            var entity = await service.PutAsync(glossary);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<GlossaryDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
@@ -72,6 +67,42 @@ namespace Polyglot.Controllers
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        // POST: Glossaries/5/strings
+        [HttpPost("{id}/strings")]
+        public async Task<IActionResult> AddString(int id, [FromBody]GlossaryStringDTO glossaryString)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.AddString(id, glossaryString);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        // PUT: Glossaries/5/strings
+        [HttpPut("{id}/strings")]
+        public async Task<IActionResult> EditString(int id, [FromBody]GlossaryStringDTO glossaryString)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.UpdateString(id, glossaryString);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        // DELETE: Glossaries/5/strings
+        [HttpDelete("{id}/strings/{stringId}")]
+        public async Task<IActionResult> DeleteString(int id, int stringId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest() as IActionResult;
+
+            var entity = await service.DeleteString(id, stringId);
+            return entity == false ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

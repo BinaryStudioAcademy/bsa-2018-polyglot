@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class LanguagesController : ControllerBase
     {
-        private readonly IMapper mapper;
-        private readonly ICRUDService<Language, int> service;
+        private readonly ILanguageService service;
 
-        public LanguagesController(ICRUDService<Language, int> service, IMapper mapper)
+        public LanguagesController(ILanguageService service)
         {
             this.service = service;
-            this.mapper = mapper;
         }
 
         // GET: Languages
@@ -30,7 +26,7 @@ namespace Polyglot.Controllers
         {
             var projects = await service.GetListAsync();
             return projects == null ? NotFound("No languages found!") as IActionResult
-                : Ok(mapper.Map<IEnumerable<LanguageDTO>>(projects));
+                : Ok(projects);
         }
 
         // GET: Languages/5
@@ -39,31 +35,32 @@ namespace Polyglot.Controllers
         {
             var project = await service.GetOneAsync(id);
             return project == null ? NotFound($"Language with id = {id} not found!") as IActionResult
-                : Ok(mapper.Map<LanguageDTO>(project));
+                : Ok(project);
         }
 
+        [HttpPost]
         // POST: Languages
-        public async Task<IActionResult> AddLanguage([FromBody]LanguageDTO project)
+        public async Task<IActionResult> AddLanguage([FromBody]LanguageDTO language)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PostAsync(mapper.Map<Language>(project));
+            var entity = await service.PostAsync(language);
             return entity == null ? StatusCode(409) as IActionResult
                 : Created($"{Request?.Scheme}://{Request?.Host}{Request?.Path}{entity.Id}",
-                mapper.Map<LanguageDTO>(entity));
+                entity);
         }
 
         // PUT: Languages/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyLanguage(int id, [FromBody]LanguageDTO project)
+        public async Task<IActionResult> ModifyLanguage(int id, [FromBody]LanguageDTO language)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
-            var entity = await service.PutAsync(id, mapper.Map<Language>(project));
+            var entity = await service.PutAsync(language);
             return entity == null ? StatusCode(304) as IActionResult
-                : Ok(mapper.Map<LanguageDTO>(entity));
+                : Ok(entity);
         }
 
         // DELETE: ApiWithActions/5
@@ -72,6 +69,33 @@ namespace Polyglot.Controllers
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        // PUT: Languages/5
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserLanguages(int id)
+        {
+
+            var entities = await service.GetTranslatorLanguages(id);
+            return entities == null ? NotFound($"This user hasn't languages") as IActionResult
+                : Ok(entities);
+        }
+
+        // PUT: Languages/user
+        [HttpPut("user")]
+        public async Task<IActionResult> SetCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
+        {
+            var entity = await service.SetTranslatorLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpDelete("user")]
+        public async Task<IActionResult> DeleteCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
+        {
+            var entity = await service.DeleteTranslatorsLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

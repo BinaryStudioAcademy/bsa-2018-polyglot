@@ -5,7 +5,7 @@
     <input id="email" name="email" type="email" [(ngModel)]="user.email" required matInput placeholder="Your Email"
       #email="ngModel" autocomplete="on"
       pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-      maxlength="25">
+      maxlength="50">
     <mat-error *ngIf="email.errors && email.errors.required">
       Email is
       <strong>required</strong>
@@ -22,9 +22,10 @@
   </mat-form-field>
 
   <mat-form-field class="my-1">
-    <input id="password" name="password" type="password" [(ngModel)]="user.password" required matInput placeholder="Your Password"
+    <input id="password" name="password" [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" required matInput placeholder="Your Password"
       #password="ngModel"
       maxlength="30">
+    <mat-icon class="finger" matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
     <mat-error *ngIf="password.errors && password.errors.required">
       Password is
       <strong>required</strong>
@@ -34,13 +35,20 @@
       Password <strong>cannot</strong> be more than 30 characters long
     </mat-error>
   </mat-form-field>
+<div class="forgot-box">
+    <a  class="forgot-password" (click)="onForgotPasswordClick()"  color="primary">Forgot password?</a>
+</div>
+  
+  <br>
 
   <mat-error *ngIf="firebaseError" style="align-self: center; margin-bottom: 20px;">
     {{firebaseError}}
   </mat-error>
 
+  
   <button class="simplebtn" mat-button type="submit">Log In</button>
 
   <button class="socialbtn" mat-button type="button" (click)="onGoogleClick()"><img class="btnlogo" src="/assets/images/googlelogo.png" alt="G" height="30">Log In using Google</button>
   <button class="socialbtn" mat-button type="button" (click)="onFacebookClick()"><img class="btnlogo" src="/assets/images/facebooklogo.png" alt="F" height="30">Log In using Facebook</button>
 </form>
+<ng-snotify></ng-snotify>

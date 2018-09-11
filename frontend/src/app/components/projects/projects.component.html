@@ -1,40 +1,99 @@
+<div class="sub-menu">
+  <mat-slide-toggle (change)="changeLayout()" [checked]="checked" color="primary" #toggle>
+    Card view
+  </mat-slide-toggle>
   <form class="search-form">
-  
     <mat-form-field class="search-full-width">
-  
       <input type="search" matInput placeholder="Search">
       <button mat-raised-button color="primary" matSuffix>
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
-  
   </form>
+</div>
+<mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 
+<div class="no-items-div mt-1 mb-1" *ngIf="cards && !isLoad && cards.length === 0">
+    <p>No projects</p>
+</div>
 
-<div class="container" fxLayout="wrap row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="space-evenly" fxLayoutAlign.sm="center stretch">
-  <div fxFlex="30%" *ngFor="let card of cards">
-    <mat-card class="example-card">
+<div *ngIf="cards && !isLoad">
+
+  <div *ngIf="toggle.checked && cards.length > 0" class="container">
+    <mat-card class="example-card" *ngFor="let card of cards">
       <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{card.text}}</mat-card-title>
-        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+        <a class="manager-img" style="text-decoration: none; color:black" (click)="userService.redirectById(card.userProfile.id)">
+          <img mat-card-avatar class="manager-img" src="{{card.userProfile.avatarUrl}}">
+        </a>
+        <div class="title">
+          <mat-card-title class="card-title">
+            <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
+          </mat-card-title>
+
+          <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
+        </div>
       </mat-card-header>
-      <img mat-card-image src="http://www.illuminationworksllc.com/wp-content/uploads/2017/04/ProjectManagement-1.jpg" alt="Photo of a project">
-      <mat-card-content>
-        The basic idea with this project is to suspend a container of liquid and let drops fall through a small hole, then capture
-        the resulting splash. Timing the shutter as the splash is created is everything.
-      </mat-card-content>
+      <div class="img-container">
+        <a [routerLink]="['/workspace', card.id]">
+          <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
+        </a>
+        <a [routerLink]="['/workspace', card.id]">
+          <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
+        </a>
+      </div>
+      <div  class="progress-container">
+        <span>Progress: {{card.progress | number:'1.0-1'}}%</span>
+        <mat-progress-bar class="lang-progress" mode="determinate" value="{{card.progress}}"></mat-progress-bar>
+      </div>
+      <div class="description">
+        <mat-card-content *ngIf="card.description !== null && card.description!=='' ">
+          {{card.description}}
+        </mat-card-content>
+        <mat-card-content *ngIf="card.description == null || card.description=='' ">
+          No description
+        </mat-card-content>
+      </div>
       <mat-card-actions class="card-buttons">
-        <button mat-raised-button color="primary">WORKSPACE</button>
-        <div fxFlex></div>
-        <button mat-raised-button color="primary">DETAILS</button>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
       </mat-card-actions>
-      <mat-progress-bar mode="determinate" value={{card.progress}}></mat-progress-bar>
-      <span class="progress-span">{{card.progress}}% translated </span>
     </mat-card>
   </div>
 
-  <button routerLink="../newproject" mat-fab color="primary" class="button-add">
-    <mat-icon  aria-label="Add button">add</mat-icon>
-  </button>
+
+  <div *ngIf="!toggle.checked && cards.length > 0" class="row-container">
+    <mat-list>
+      <div class="list-item" *ngFor="let card of cards">
+        <div class="row-manager">
+          <a (click)="userService.redirectById(card.userProfile.id)">
+            <img mat-card-avatar class="row-manager-img" src="{{card.userProfile.avatarUrl}}">
+          </a>
+          <strong class="manager-name" (click)="userService.redirectById(card.userProfile.id)">
+            {{card.userProfile.fullName}}
+          </strong>
+        </div>
+        <div class="description-buttons">
+          <div class="description-column box-padding">
+            <div class="row-name">
+              <h3>{{card.name}}</h3>
+            </div>
+            <div class="row-info">
+              <span *ngIf="card.description !== null && card.description!=='' " class="row-description">{{card.description}}</span>
+              <span *ngIf="card.description == null || card.description=='' " class="row-description">No description</span>
+            </div>            
+          </div>
+          <div class="row-buttons">
+            <button id="workspace" mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
+            <button id="details" mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+          </div>
+        </div>
+      </div>
+    </mat-list>
+  </div>
 </div>
+
+
+<ng-snotify></ng-snotify>
+<button *ngIf="isCurrentUserManager()" routerLink="/newproject" mat-fab color="primary" class="button-add">
+  <mat-icon aria-label="Add button">add</mat-icon>
+</button>

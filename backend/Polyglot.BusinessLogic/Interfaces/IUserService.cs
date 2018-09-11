@@ -1,53 +1,16 @@
-﻿using Polyglot.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Polyglot.Common.DTOs;
+using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : ICRUDService<UserProfile, UserProfileDTO>
     {
-        #region UserProfiles
+        Task<UserProfileDTO> GetByUidAsync();
 
-        Task<UserProfile> GetUserProfileAsync(int id);
+        Task<bool> IsExistByUidAsync();
 
-        Task<IEnumerable<UserProfile>> GetAllUserProfilesAsync(int id);
-
-        Task<UserProfile> AddUserProfileAsync(UserProfile profile);
-
-        Task<UserProfile> UpdateMangerAsync(UserProfile profile);
-
-        Task<bool> TryDeleteUserProfileAsync(int id);
-
-        #endregion
-
-        #region Managers
-
-        Task<Manager> GetManagerAsync(int id);
-
-        Task<IEnumerable<Manager>> GetAllManagersAsync(int id);
-
-        Task<Manager> AddManagerAsync(Manager manager);
-
-        Task<Manager> UpdateManagerAsync(Manager manager);
-
-        Task<bool> TryDeleteManagerAsync(int id);
-
-        #endregion
-
-        #region Translators
-
-        Task<Translator> GetTranslatorAsync(int id);
-
-        Task<IEnumerable<Translator>> GetAllTranslatorsAsync(int id);
-
-        Task<Translator> AddTranslatorAsync(Translator translator);
-
-        Task<Translator> UpdateTranslatorAsync(Translator translator);
-
-        Task<bool> TryDeleteTranslatorAsync(int id);
-
-        #endregion
+        Task<bool> PutUserBool(UserProfileDTO userProfileDTO);
     }
 }

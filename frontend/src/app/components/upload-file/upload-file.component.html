@@ -1,0 +1,19 @@
+<div class="container">
+  <h3>You can import your files with data and we will add strings to the projects!</h3>
+  <p>Just select file and clik <strong>Upload</strong></p>
+  <p>(For this moment we work only with .json and .resx)</p>  
+  <form #fileForm = ngForm>  
+    <div class="drop word-wraper" ngfDrop selectable="1" multiple="1"
+      [(file)]="fileToUpload"
+      [(validDrag)]="validDrag"
+      [(invalidDrag)]="invalidDrag"
+      [class.invalid-drag] = "validDrag===false"
+      [class.valid-drag]   = "validDrag"
+      (filesChange) = "ConfirmFile($event)">
+        <p *ngIf="!fileToUpload">Select File</p>
+        <p *ngIf="fileToUpload">{{fileToUpload.name}}</p>
+    </div>  
+  </form>
+  <button mat-raised-button color="primary" [disabled]="!fileToUpload" (click)="Upload()" >Upload</button>
+</div>
+<ng-snotify></ng-snotify>

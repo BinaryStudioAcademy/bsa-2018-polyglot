@@ -1,9 +1,40 @@
+
+.content 
+  flex: 1
+
+.main 
+  display: flex
+  flex-direction: column
+  > *:not(router-outlet) 
+    flex: 1
+    display: block
+  
+.all-wrap
+  min-height: 100vh
+  
+
+.page-wrap 
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+   
+
+.mat-sidenav-content
+  text-align: left 
+  
+
+
+
 .companyName
   font-size: 150%
+  margin-left: 15px
+  outline: 0
+
+.companyName:hover
+    cursor: pointer
 
 div
   overflow: inherit
-
 a
   text-decoration: none
   font-size: 110%
@@ -17,11 +48,61 @@ button
   padding: 0 14px
 
 .example-spacer
-  flex: 1 1 auto
-
-.mat-sidenav-content
-  text-align: left
+  flex: 1 auto
 
 .toolbar-icon
   padding: 0 14px
+
+.menu-button
+  background-color: white
+  color: #222
+  margin-left: 20px
+
+.profile-small-image
+  width: 42px
+  height: 42px 
+  border-radius: 50% 
+  position: absolute 
+  bottom: 0px
+  right: 0px
+
+.card
+  max-width: 300px 
+  border-radius: 8px
+
+.card-main
+  display: flex 
+  align-items: center
+
+.profile-big-image
+  border-radius: 50% 
+  width: 100px 
+  height: 100px
+
+.card-navigation
+  display: flex 
+  justify-content: space-around
+
+.card-navigation-button
+  text-align: center
+  
+
+h1.example-app-name 
+  margin-left: 8px
+
+.active 
+  color: #3F51B5
+
+.aside-button  
+  align-self: center
+  margin-top: 20px
+
+// .bell
+//   font-size: 34px
+//   width: 40px
+//   height: 40px
+//   text-align: center
+//   line-height: 34px!important
+  
+
 

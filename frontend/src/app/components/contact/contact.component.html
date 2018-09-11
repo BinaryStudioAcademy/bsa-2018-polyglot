@@ -1,3 +1,20 @@
-<p>
-  contact works!
-</p>
+<h1>Contact</h1>
+<div class="container">
+    <div class="contact">
+        <h2>Let's get in touch</h2>
+        <p class="description">Contact us to discuss your project and how we can help</p>
+        <p class="adress">59 Chornovola Ave Lviv, Ukraine</p>
+        <p class="number">
+            <a href="tel:+14156709788">+1 415 670 9788</a>
+        </p>
+        <p class="email">
+            <a href="mailto:welcome@binary-studio.com">welcome@binary-studio.com</a>
+        </p>
+    </div>
+    <div class="map-box">
+        <agm-map class="agm-map" [latitude]="lat" [longitude]="lng" [zoomControl]="false" [zoom]="zoom">
+            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+    </div>
+</div>
+<ng-snotify></ng-snotify>

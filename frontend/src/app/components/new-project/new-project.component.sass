@@ -1,42 +1,26 @@
-.form-container 
-  background: white
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
-  margin-bottom: 20px !important
+@import "../../../common-styles/styleForForm.sass";
 
-form
-  display: flex
-  flex-direction: column
-  
-.form-container 
-  width: 70%
-  margin: auto
+.form-container
+  max-width: 700px
 
-.project-full-width, .field-choose-wraper
+.field-choose-wraper
   margin: 0 40px
 
-h2
-  text-align: center
-  font: 500 20px/32px Roboto,"Helvetica Neue",sans-serif
-  padding: 20px 0 0 0
-
-.mat-select-wraper 
-  width: 45%
-
-.field-choose-wraper 
-  display: flex
-  justify-content: space-between
-
-.saveButton
-  display: flex
-  justify-content: center
-
-.saveButton button
-  background: #f1f1f1;
-  width: 20%;
-  margin-bottom: 20px;
-
-.errors 
-  display: flex
 
 .description-text-area
-  height: 54px;
+  height: 54px
+
+mat-form-field
+  display: inline
+
+.mat-select
+  width: 100%
+
+.select-fields-container
+  width: 100%
+
+.buttons
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+

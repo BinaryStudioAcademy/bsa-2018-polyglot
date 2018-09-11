@@ -3,10 +3,10 @@
   <span class='spacer'></span>
   <h2>© Polyglot App 2018.</h2>
 
-  <a mat-button routerLink="/about-us">About us</a>
-  <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard">Dashboard</a>
-  <a mat-button routerLink="/contact">Contacts</a>  
-  <a mat-button *ngIf="isLoggedIn()">Settings</a>  
+  <a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
+  <a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+  <a mat-button routerLink="/contact" routerLinkActive="active">Contacts</a>  
+  <a mat-button *ngIf="isLoggedIn()" routerLinkActive="active"  routerLink="/profile/settings">Settings</a>  
   <a mat-button>Help & Feedback</a>
 
   <span class='spacer'></span>
