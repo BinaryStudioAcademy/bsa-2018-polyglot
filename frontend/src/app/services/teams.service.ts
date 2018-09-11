@@ -62,5 +62,7 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
 
-
+  removeUserFromTeam(userId: number, teamId: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api, teamId + "/removeUser/" + userId);
+  }
 }

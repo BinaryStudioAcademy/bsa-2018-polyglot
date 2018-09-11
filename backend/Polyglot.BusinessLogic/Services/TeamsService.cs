@@ -350,7 +350,17 @@ namespace Polyglot.BusinessLogic.Services
 
             var team  = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
 
-            return mapper.Map<TeamDTO>(team); ;
+            return mapper.Map<TeamDTO>(team);
+        }
+
+        public async Task<TeamDTO> DeleteUserFromTeam(int userId, int teamId)
+        {
+            var translator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
+            var deletedTranslator = uow.GetRepository<TeamTranslator>().DeleteAsync(translator.Id);
+            var team = await uow.GetRepository<Team>().GetAsync(translator.TeamId);
+            await uow.SaveAsync();
+
+            return mapper.Map<TeamDTO>(team);
         }
         #endregion Translators
     }

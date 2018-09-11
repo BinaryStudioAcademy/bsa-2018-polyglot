@@ -30,6 +30,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslatorDTO> ActivateUserInTeam(int userId, int teamId);
 
+        Task<TeamDTO> DeleteUserFromTeam(int userId, int teamId);
+
         #endregion Translators
     }
 }
