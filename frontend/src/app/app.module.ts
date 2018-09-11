@@ -106,7 +106,6 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
@@ -196,7 +195,6 @@ import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-language
     DownloadFileComponent,
     StarRatingComponent,
     UserProfileComponent,
-    TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
     SelectColorDialogComponent,
