@@ -3,12 +3,13 @@ using Polyglot.BusinessLogic.Hubs;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Polyglot.Common.Helpers.SignalR;
 using System.Threading.Tasks;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services.SignalR
 {
     public class SignalRWorkspaceService : SignalRCommonService<WorkspaceHub>, ISignalRWorkspaceService
     {
-        public SignalRWorkspaceService(IHubContext<WorkspaceHub> hubContext) : base(hubContext)
+        public SignalRWorkspaceService(IHubContext<WorkspaceHub> hubContext, ICurrentUser currentUser) : base(hubContext, currentUser)
         {
         }
 

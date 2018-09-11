@@ -8,15 +8,17 @@ namespace Polyglot.BusinessLogic.Services.SignalR
     public class SignalRCommonService<THub> where THub : Hub
     {
         protected readonly IHubContext<THub> hubContext;
+        private readonly ICurrentUser _currentUser;
 
-        public SignalRCommonService(IHubContext<THub> hubContext)
+        public SignalRCommonService(IHubContext<THub> hubContext, ICurrentUser currentUser)
         {
             this.hubContext = hubContext;
+            _currentUser = currentUser;
         }
 
         protected async Task<EntitiesIdsResponce> GetIdsResponce(params int[] ids)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             return new EntitiesIdsResponce()
             {
                 SenderId = currentUser.Id,
@@ -27,7 +29,7 @@ namespace Polyglot.BusinessLogic.Services.SignalR
 
         protected async Task<ChatMessageResponce> GetChatMessageResponce(int dialogId, int messageId, string text)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (text.Length > 155)
                 text = text.Substring(0, 150);
 

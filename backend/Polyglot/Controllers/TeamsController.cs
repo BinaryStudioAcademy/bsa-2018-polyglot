@@ -17,15 +17,17 @@ namespace Polyglot.Controllers
     {
         private readonly ITeamService service;
         private readonly IRightService rightService;
+        private readonly ICurrentUser _currentUser;
         private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
 
         public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper,
-                                IRightService rightService)
+                                IRightService rightService, ICurrentUser currentUser)
         {
             this.service = service;
             this.teamTranslatorService = teamTranslatorService;
             this.rightService = rightService;
+            _currentUser = currentUser;
         }
 
         // GET: Teams
@@ -165,7 +167,7 @@ namespace Polyglot.Controllers
         [HttpPut("{teamId}/activate")]
         public async Task<IActionResult> ActivateCurrentUser(int teamId)
         {
-            int currentUserId = (await CurrentUser.GetCurrentUserProfile()).Id;
+            int currentUserId = (await _currentUser.GetCurrentUserProfile()).Id;
             var entity = await service.ActivateUserInTeam(currentUserId, teamId);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
