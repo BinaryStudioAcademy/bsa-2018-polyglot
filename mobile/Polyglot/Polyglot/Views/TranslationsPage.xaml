@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.Views.TranslationsPage"
+             Title="Translations">
+    <ListView 
+            ItemsSource="{Binding Translations}"
+            CachingStrategy="RecycleElement"
+        RowHeight="100">
+        <ListView.ItemTemplate>
+        <DataTemplate>
+            <ViewCell>
+                <StackLayout Orientation="Horizontal">
+                        <StackLayout Orientation="Vertical"  WidthRequest="100">
+                            <Label  Font="bold, 20"  TextColor="Black" Text="{Binding Language}" />
+                        </StackLayout>
+                        <StackLayout WidthRequest="100" HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                            <Label Margin="10, 0, 0, 0" HorizontalOptions="StartAndExpand" Font="20"  TextColor="Gray" Text="{Binding Translation}" />
+                        </StackLayout>
+                    </StackLayout>
+                   
+            </ViewCell>
+        </DataTemplate>
+    </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

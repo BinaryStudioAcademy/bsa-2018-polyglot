@@ -32,5 +32,13 @@ namespace Polyglot.ViewModels
             set => SetProperty(ref _description, value);
         }
 
+        private int _projectId;
+        public int ProjectId
+        {
+            get => _projectId;
+            set => SetProperty(ref _projectId, value);
+        }
+
+
     }
 }

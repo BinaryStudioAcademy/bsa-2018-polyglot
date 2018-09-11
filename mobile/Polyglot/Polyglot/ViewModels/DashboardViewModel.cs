@@ -51,10 +51,9 @@ namespace Polyglot.ViewModels
 
             var projects = JsonConvert.DeserializeObject<List<ProjectDTO>>(content);
 
-            var DefaultImageUrl = "local image path";
-
             Projects = projects.Select(x => new ProjectViewModel
             {
+                Id=x.Id,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,
                 Description = x.Description

@@ -1,17 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Views.ComplexStringsPage">
-  <ListView 
-            ItemsSource="{Binding ComplexStrings}"
-            SelectedItem="{Binding SelectedString, Mode=OneWayToSource}"
-            CachingStrategy="RecycleElement">
+             x:Class="Polyglot.Views.ComplexStringsPage"
+             Title="Complex Strings">
+    <ListView  ItemsSource="{Binding ComplexStrings}"
+            ItemTapped="Handle_ItemTapped"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
+            RowHeight="70">
 
-    <ListView.ItemTemplate>
-        <DataTemplate>
-            <TextCell Text="{Binding Key}" />
-        </DataTemplate>
-    </ListView.ItemTemplate>
-
-  </ListView>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout>
+                        <Label HorizontalOptions="Start" Font="bold, 20" Margin="0, 10, 0, 0" TextColor="Black" Text="{Binding Key}" />
+                        <Label Font="15"  MinimumHeightRequest="100" TextColor="Gray" Text="{Binding OriginalValue}" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 </ContentPage>

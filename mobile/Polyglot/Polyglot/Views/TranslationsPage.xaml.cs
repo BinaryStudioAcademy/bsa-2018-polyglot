@@ -11,17 +11,17 @@ using Xamarin.Forms.Xaml;
 namespace Polyglot.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ComplexStringsPage : ContentPage
+    public partial class TranslationsPage : ContentPage
     {
         public ObservableCollection<string> Items { get; set; }
 
-        public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, int projectId)
+        public TranslationsPage(TranslationsViewModel translations, int complexStringId, int projectId)
         {
-            BindingContext = complexStringsViewModel;
+            BindingContext = translations;
+
             InitializeComponent();
 
-            complexStringsViewModel.Initialize(projectId);
-
+            translations.Initialize(complexStringId, projectId);
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -29,10 +29,9 @@ namespace Polyglot.Views
             if (e.Item == null)
                 return;
 
-            var complexString = e.Item as ComplexStringViewModel;
+            await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
 
-            var newPage = new TranslationsPage(new ViewModels.TranslationsViewModel(), complexString.Id, complexString.ProjectId);
-            await Navigation.PushAsync(newPage);
+            //Deselect Item
             ((ListView)sender).SelectedItem = null;
         }
     }

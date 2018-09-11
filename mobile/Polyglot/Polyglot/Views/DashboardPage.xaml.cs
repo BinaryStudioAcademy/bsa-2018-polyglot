@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using Polyglot.BusinessLogic.DTO;
-using Polyglot.ViewModels;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using Polyglot.ViewModels;
+using Polyglot.Views;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,17 +17,21 @@ namespace Polyglot
             InitializeComponent();
 
             dashboard.Initialize();
+
         }
 
-        //async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
-        //{
-        //    if (e.Item == null)
-        //        return;
+        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item == null)
+                return;
 
-        //    await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
+            var c = e.Item as ProjectViewModel;
 
-        //    //Deselect Item
-        //    ((ListView)sender).SelectedItem = null;
-        //}
+            var projectId = c.Id;
+
+            var newPage = new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId);
+            await Navigation.PushAsync(newPage);
+            ((ListView)sender).SelectedItem = null;
+        }
     }
 }
