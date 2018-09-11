@@ -76,6 +76,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     users: UserProfilePrev[] = [];
     currentUserId: number;
+    selectedIndex = 0;
+
     constructor(
         private eventService: EventService,
         private route: ActivatedRoute,
@@ -660,8 +662,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.keyDetails.translations[$event.keyId].translationValue =
             $event.translation;
-
-        this.expandedArray[$event.keyId].isOpened = true;
+        
+        this.translationInputs[$event.keyId].value = $event.translation;
+        this.setStep($event.keyId);
     }
 
     toggleDisable(status: boolean) {
@@ -875,6 +878,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         //   border-radius: 10%;
         //   opacity: 0.8;"
         // >${this.text}</span>`;
+        this.selectTab(2);
         this.isVisible = false;
+    }
+
+    selectTab(index: number): void {
+        this.selectedIndex = index;
     }
 }

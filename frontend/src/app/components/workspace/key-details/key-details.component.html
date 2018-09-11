@@ -67,10 +67,10 @@
 								<app-machine-translation-menu  (selectTranslationEvent)="selectTranslation($event)" [data]="MachineTranslation" [keyId]="i"></app-machine-translation-menu>
 							</mat-menu>
 							</mat-expansion-panel-header>
-						   <div style="max-width: 861px">
+						   <div>
                                 <div [hidden]="divHidden" class="translation-div"
                                 (contextmenu)="onRightClick($event)"
-                                (click)="onClickOnTranslation($event)"  style="position: absolute; word-wrap: break-word; width: 100%; max-width: 861px; line-height: 15.5px; z-index: 3;" [ngStyle]="{'top': setPosition(i)}"></div>
+                                (click)="onClickOnTranslation($event)" [ngStyle]="{'top': setPosition(i)}"></div>
 								<mat-form-field class="textarea-translation">
 										<mat-label class="language-label">{{t.languageName}}</mat-label>
 										<textarea style="color: rgba(0,0,0,0)"
@@ -123,7 +123,7 @@
     (click) ="addComment()"> Add comment </button>
 
 <mat-card class="my-1 ml-1 px-1 grow-1 translations-details">
-	<mat-tab-group flex>
+	<mat-tab-group flex [selectedIndex]="selectedIndex">
 		<mat-tab label="Detail">
 			<ng-template mat-tab-label>
 				<mat-icon class="icon-size" matTooltip="Detail" matTooltipPosition="above">details</mat-icon>
@@ -150,13 +150,6 @@
 				<mat-icon class="icon-size" matTooltip="Optional Translation" matTooltipPosition="above">translate</mat-icon>
 			</ng-template>
 			<app-tab-optional></app-tab-optional>
-		</mat-tab>
-
-		<mat-tab label="Glossary" >
-			<ng-template mat-tab-label>
-				<mat-icon class="icon-size" matTooltip="Glossary" matTooltipPosition="above">book</mat-icon>
-			</ng-template>
-			<app-tab-glossary [keyDetails]="keyDetails" [translation]="currentTranslation"></app-tab-glossary>
 		</mat-tab>
 	</mat-tab-group>
 </mat-card>

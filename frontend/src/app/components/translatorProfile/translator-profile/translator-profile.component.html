@@ -64,8 +64,13 @@
             <div class="left-card">
               <strong class="title"> Languages</strong>
               <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openProficiencyDialog()">
-                    <mat-icon class="bell" aria-label="Notification icon">
+                    <mat-icon>
                         settings
+                    </mat-icon>
+              </button>
+              <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openAddRemoveLanguageDialog()">
+                    <mat-icon>
+                        add
                     </mat-icon>
               </button>
               <hr>
