@@ -1,0 +1,8 @@
+<div class="content">
+  
+    <h1>Hello, {{user.fullName}}!</h1>
+    <h3>Let me explain you how to use Polyglot.</h3>
+
+    <app-translator-guide *ngIf="user && user.userRole==0"></app-translator-guide>
+    <app-manager-guide *ngIf="user && user.userRole==1"></app-manager-guide>
+</div>
