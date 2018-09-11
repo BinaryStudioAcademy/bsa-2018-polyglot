@@ -3,13 +3,9 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, from, of } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { SessionStorage } from "ngx-store";
 import { environment } from '../../environments/environment';
 import { AppStateService } from './app-state.service';
-import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
-import { UserService } from './user.service';
-import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable({
     providedIn: 'root'
@@ -45,9 +41,18 @@ export class HttpService {
             flatMap((response: any) => {
                 if (response === "T") {
                     return from(this.authService.refreshToken()).pipe(flatMap(
-                        () => this.createRequest(type, endpoint, params, body, respType, typeOfContent).pipe(
-                            catchError((res: HttpErrorResponse) => this.handleError(res)))
-                    ));
+                        () => this.createRequest(type, endpoint, params, body, respType, typeOfContent)
+                            .pipe(
+                                catchError((res: HttpErrorResponse) => this.handleError(res)),
+                                flatMap((response: any) => {
+                                    if (response === "T") {
+                                        from(this.authService.logout()).subscribe(() => {})
+                                    } else {
+                                        return of(response);
+                                    }
+                                })
+                            )
+                    ))
                 } else {
                     return of(response);
                 }

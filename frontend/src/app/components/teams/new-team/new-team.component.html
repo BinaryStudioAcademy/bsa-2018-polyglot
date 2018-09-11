@@ -49,16 +49,25 @@
 
         <mat-chip-list>
             <div class="chips-wrapper">
-                    <mat-chip style="background-color: #ff7b25;">Beginner</mat-chip>
-                    <mat-chip style="background-color: #e3eaa7;">Intermediate</mat-chip>
-                    <mat-chip style="background-color: #82b74b;">Advanced</mat-chip>
-                    <mat-chip style="background-color: #92a8d1">Proficiency</mat-chip>
-                    <mat-chip style="background-color: #944dff;">Native</mat-chip>
-
-
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>A2</button>
+                    Elementary
+                </mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>B1</button>
+                    Intermediate</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>B2</button>
+                    Upper Intermediate</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>C1</button>
+                    Advanced</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>C2</button>
+                    Proficiency</mat-chip>
 
             </div>
-
+            
 
         </mat-chip-list>
         <div class="translators-list-wrapper">
@@ -79,25 +88,19 @@
                                 <app-star-rating [rating]="t.rating" [starCount]="5"></app-star-rating>
                             </mat-card-subtitle>
                         </div>
-                        <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
-                            <ul>
-                                <li *ngFor="let l of t.translatorLanguages">
-                                    <mat-chip *ngIf="l.proficiency===0" style="background-color: #ff7b25;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===2" style="background-color: #e3eaa7;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===4" style="background-color: #82b74b;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===5" style="background-color: #92a8d1;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===6" style="background-color: #944dff;">{{l.language.name}}</mat-chip>
-                                </li>
-                            </ul>
-                        </span>
-                        <span *ngIf="t.translatorLanguages.length == 0" class="languages-list">
-                            <ul>
-                                <li>
-                                    <mat-chip style="background-color: #d64161;">No data</mat-chip>
-                                </li>
-                            </ul>
+                        <mat-chip-list *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+                            <div class="chips-wrapper">
+                                <mat-chip color="primary" *ngFor="let l of t.translatorLanguages">
+                                    <button *ngIf="l.proficiency===0" mat-mini-fab disabled>A2 </button>
+                                    <button *ngIf="l.proficiency===2" mat-mini-fab disabled>B1 </button>
+                                    <button *ngIf="l.proficiency===4" mat-mini-fab disabled>B2 </button>
+                                    <button *ngIf="l.proficiency===5" mat-mini-fab disabled>C1 </button>
+                                    <button *ngIf="l.proficiency===6" mat-mini-fab disabled>C2 </button>
+                                    {{l.language.name}}
+                                </mat-chip>
+                            </div>
 
-                        </span>
+                        </mat-chip-list>
                     </div>
                     <mat-divider></mat-divider>
                 </mat-list-option>

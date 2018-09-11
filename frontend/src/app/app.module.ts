@@ -106,7 +106,6 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
@@ -125,6 +124,8 @@ import { NotificationsComponent } from './components/notifications/notifications
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
 import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pipe';
+import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { CommentsPipe } from './common/pipes/comments.pipe';
 
 @NgModule({
   exports: [
@@ -196,7 +197,6 @@ import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pi
     DownloadFileComponent,
     StarRatingComponent,
     UserProfileComponent,
-    TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
     SelectColorDialogComponent,
@@ -211,6 +211,9 @@ import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pi
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
     TranslatorSearchByNamePipe
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent,
+    CommentsPipe
   ],
   imports: [
     BrowserModule,
@@ -268,7 +271,8 @@ import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pi
     SaveStringConfirmComponent,
     SelectColorDialogComponent,
     TeamAddMemberComponent,
-    ChooseProficiencyDialogComponent
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

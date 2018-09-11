@@ -42,12 +42,12 @@ namespace Polyglot.BusinessLogic.Services
         ICRUDService<UserProfile, UserProfileDTO> userService;
         private readonly IGlossaryService glossaryService;
         private readonly IElasticClient elasticClient;
-
+        private readonly ICurrentUser _currentUser;
 
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
-            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient)
+            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient, ICurrentUser currentUser)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -57,6 +57,7 @@ namespace Polyglot.BusinessLogic.Services
             this.signalrService = signalrService;
             this.glossaryService = glossaryService;
             this.elasticClient = elasticClient;
+            _currentUser = currentUser;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -136,7 +137,7 @@ namespace Polyglot.BusinessLogic.Services
                         Comments = new List<Comment>(),
                         Tags = new List<int>(),
                         CreatedOn = DateTime.Now,
-                        CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
+                        CreatedBy = (await _currentUser.GetCurrentUserProfile()).Id
                     });
             }
 
@@ -428,7 +429,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             List<Project> result = new List<Project>();
             if (user.UserRole == Role.Manager)
             {
@@ -474,7 +475,7 @@ namespace Polyglot.BusinessLogic.Services
         {
             var ent = mapper.Map<Project>(entity);
             ent.MainLanguage = null;
-            ent.UserProfile = await CurrentUser.GetCurrentUserProfile();
+            ent.UserProfile = await _currentUser.GetCurrentUserProfile();
 
             var target = await uow.GetRepository<Project>().CreateAsync(ent);
             await uow.SaveAsync();

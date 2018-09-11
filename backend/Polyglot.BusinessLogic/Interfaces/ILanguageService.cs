@@ -12,5 +12,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<TranslatorLanguageDTO>> GetTranslatorLanguages(int userId);
 
         Task<IEnumerable<TranslatorLanguageDTO>> SetTranslatorLanguages(int userId, TranslatorLanguageDTO[] languages);
+
+        Task<IEnumerable<TranslatorLanguageDTO>> DeleteTranslatorsLanguages(int userId, TranslatorLanguageDTO[] languages);
     }
 }

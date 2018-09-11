@@ -14,23 +14,26 @@ using System;
 
 namespace Polyglot.BusinessLogic.Services
 {
-	public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
-	{
-		INotificationService notificationService;
-		private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+    public class TeamsService : CRUDService<Team, TeamDTO>, ITeamService
+    {
+        INotificationService notificationService;
+		    private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+        private readonly ICurrentUser _currentUser;
 
-		public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService, IMongoRepository<DataAccess.MongoModels.ComplexString> rep)
-			: base(uow, mapper)
+        public TeamsService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService,
+		                    IMongoRepository<DataAccess.MongoModels.ComplexString> rep, ICurrentUser currentUser)
+            :base(uow, mapper)
 
-		{
-			this.stringsProvider = rep;
-			this.notificationService = notificationService;
-		}
+        {
+			      this.stringsProvider = rep;
+            _currentUser = currentUser;
+            this.notificationService = notificationService;
+        }
 
-		public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
-		{
-			var user = await CurrentUser.GetCurrentUserProfile();
-			IEnumerable<Team> result = new List<Team>();
+        public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
+        {
+            var user = await _currentUser.GetCurrentUserProfile();
+            IEnumerable<Team> result = new List<Team>();
 
 			if (user.UserRole == Role.Translator)
 			{
@@ -46,11 +49,11 @@ namespace Polyglot.BusinessLogic.Services
 			return mapper.Map<IEnumerable<TeamPrevDTO>>(result);
 		}
 
-		public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
-		{
-			var currentUser = await CurrentUser.GetCurrentUserProfile();
-			if (currentUser == null || currentUser.UserRole != Role.Manager)
-				return null;
+        public async Task<TeamDTO> FormTeamAsync(ReceiveTeamDTO receivedTeam)
+        {
+            var currentUser = await _currentUser.GetCurrentUserProfile();
+            if (currentUser == null || currentUser.UserRole != Role.Manager)
+                return null;
 
 			var userRepo = uow.GetRepository<UserProfile>();
 
@@ -79,39 +82,38 @@ namespace Polyglot.BusinessLogic.Services
 			if (translators.Count < 1)
 				return null;
 
-			Team newTeam = await uow.GetRepository<Team>().CreateAsync(
-					new Team()
-					{
-						TeamTranslators = translators,
-						CreatedBy = currentUser,
-						Name = receivedTeam.Name
-					});
+            Team newTeam = await uow.GetRepository<Team>().CreateAsync(
+                    new Team()
+                    {
+                        TeamTranslators = translators,
+                        CreatedBy = currentUser,
+                        Name = receivedTeam.Name
+                    });
 
 
-			await uow.SaveAsync();
-			foreach (var translator in newTeam.TeamTranslators)
-			{
-
-				await notificationService.SendNotification(new NotificationDTO
-				{
-					SenderId = currentUser.Id,
-					Message = $"You received an invitation in team {newTeam.Name}",
-					ReceiverId = translator.TranslatorId,
-					NotificationAction = NotificationAction.JoinTeam,
-					Payload = newTeam.Id,
-					Options = new List<OptionDTO>()
-						{
-							new OptionDTO()
-							{
-								OptionDefinition = OptionDefinition.Accept
-							},
-							new OptionDTO()
-							{
-								OptionDefinition = OptionDefinition.Decline
-							}
-						}
-				});
-			}
+            await uow.SaveAsync();
+            foreach (var translator in newTeam.TeamTranslators)
+            {
+                await notificationService.SendNotification(new NotificationDTO
+                {
+                    SenderId = currentUser.Id,
+                    Message = $"You received an invitation in team {newTeam.Name}",
+                    ReceiverId = translator.TranslatorId,
+                    NotificationAction = NotificationAction.JoinTeam,
+                    Payload = newTeam.Id,
+                    Options = new List<OptionDTO>()
+                        {
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Accept
+                            },
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Decline
+                            }
+                        }
+                });
+            }
 
 			var teamChatDialog = new ChatDialog()
 			{
@@ -146,15 +148,15 @@ namespace Polyglot.BusinessLogic.Services
 		}
 
 
-		#region Overrides
+        #region Overrides
 
 
 		public override async Task<TeamDTO> GetOneAsync(int teamId)
 		{
 			var team = await uow.GetRepository<Team>().GetAsync(teamId);
 
-			if (team?.TeamTranslators?.Any() != true)
-				return null;
+            if (team?.TeamTranslators?.Any() != true)
+                return mapper.Map<TeamDTO>(team);
 
 
 			var translators = team.TeamTranslators;
@@ -186,8 +188,8 @@ namespace Polyglot.BusinessLogic.Services
 
 			var teamsProjects = mapper.Map<IEnumerable<TeamProjectDTO>>(team.ProjectTeams);
 
-			foreach (var p in teamsProjects)
-			{
+			foreach(var p in teamsProjects)
+			{				
 				var targetProject = await uow.GetRepository<Project>().GetAsync(p.ProjectId);
 				List<DataAccess.MongoModels.ComplexString> temp = new List<DataAccess.MongoModels.ComplexString>();
 				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == targetProject.Id);
@@ -340,37 +342,66 @@ namespace Polyglot.BusinessLogic.Services
 			return 0.0d;
 		}
 
-		public async Task<TranslatorDTO> ActivateUserInTeam(int userId, int teamId)
-		{
-			var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
-			teamTranslator.IsActivated = true;
-			teamTranslator = await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
-			await uow.SaveAsync();
-			return mapper.Map<TranslatorDTO>(teamTranslator);
-		}
+        public async Task<TranslatorDTO> ActivateUserInTeam(int userId, int teamId)
+        {
+            var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
+            teamTranslator.IsActivated = true;
+            teamTranslator =  await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
+            await uow.SaveAsync();
+            return mapper.Map<TranslatorDTO>(teamTranslator);
+        }
 
 
 		public async Task<TeamDTO> TryAddTeamAsync(TeamTranslatorsDTO teamTranslators)
 		{
 
-			foreach (var translatorId in teamTranslators.TranslatorIds)
+            foreach (var translatorId in teamTranslators.TranslatorIds)
+            {
+                var newTeamTranslator = new TeamTranslator
+                {
+                    TeamId = teamTranslators.TeamId,
+                    TranslatorId = translatorId
 
-			{
-				var newTeamTranslator = new TeamTranslator
-				{
-					TeamId = teamTranslators.TeamId,
-					TranslatorId = translatorId
+                };
 
-				};
-				var teamTranslator = await uow.GetRepository<TeamTranslator>().CreateAsync(newTeamTranslator);
-				await uow.SaveAsync();
+                var teamTranslator = await uow.GetRepository<TeamTranslator>().CreateAsync(newTeamTranslator);
 
-			};
+                await notificationService.SendNotification(new NotificationDTO
+                {
+                    SenderId = translatorId,
+                    Message = $"You received an invitation in team {teamTranslators.TeamName}",
+                    ReceiverId = translatorId,
+                    NotificationAction = NotificationAction.JoinTeam,
+                    Payload = teamTranslators.TeamId,
+                    Options = new List<OptionDTO>()
+                        {
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Accept
+                            },
+                            new OptionDTO()
+                            {
+                                OptionDefinition = OptionDefinition.Decline
+                            }
+                        }
+                });
 
-			var team = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
+            }
+            await uow.SaveAsync();
+            var team = await uow.GetRepository<Team>().GetAsync(teamTranslators.TeamId);
+            return mapper.Map<TeamDTO>(team);
+        }
 
-			return mapper.Map<TeamDTO>(team); ;
-		}
-		#endregion Translators
-	}
+
+        public async Task<TeamDTO> DeleteUserFromTeam(int userId, int teamId)
+        {
+            var translator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
+            var deletedTranslator = uow.GetRepository<TeamTranslator>().DeleteAsync(translator.Id);
+            var team = await uow.GetRepository<Team>().GetAsync(translator.TeamId);
+            await uow.SaveAsync();
+
+            return mapper.Map<TeamDTO>(team);
+        }
+        #endregion Translators
+    }
 }

@@ -1,0 +1,35 @@
+<mat-spinner *ngIf="!allLanguages"></mat-spinner>
+<div class="container" *ngIf="allLanguages">
+    <h3 *ngIf="notAssignedLanguages.length > 0">Not Selected Languages: </h3>
+    <div *ngFor="let translatorLanguage of notAssignedLanguages">
+        <ul >
+            <li class="language-name">
+                {{translatorLanguage.language.name}}
+            </li>
+            <li>
+                <a mat-button color="primary" class="button" routerLinkActive="active" (click)='onAssign(translatorLanguage)'>
+                    <i class="fas fa-check"></i> Add
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h3 *ngIf="assignedLanguages.length > 0">Selected Languages: </h3>
+    <div *ngFor="let translatorLanguage of assignedLanguages">
+        <ul>
+            <li class="language-name">
+                {{translatorLanguage.language.name}}
+            </li>
+            <li>
+                <a mat-button color="warn" class="button" routerLinkActive="active" (click)='onDelete(translatorLanguage)'>
+                    <i class="fas fa-ban"></i> Remove
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-container" style="text-align: center">
+        <div style="display: inline-block">
+            <button  mat-raised-button color="primary" (click)="submit()" mat-button>Save</button>
+            <button  mat-raised-button color="warn" (click)="close()">Cancel</button>
+        </div>
+    </div>
+</div>

@@ -20,11 +20,14 @@ namespace Polyglot.BusinessLogic.Services
     {
         IUserService userService;
         IProjectService projectService;
-        public RightService(IUnitOfWork uow, IMapper mapper, IUserService userService, IProjectService projectService)
+        private readonly ICurrentUser _currentUser;
+
+        public RightService(IUnitOfWork uow, IMapper mapper, IUserService userService, IProjectService projectService, ICurrentUser currentUser)
             : base(uow, mapper)
         {
             this.userService = userService;
             this.projectService = projectService;
+            _currentUser = currentUser;
         }
 
         public async Task<TranslatorDTO> SetTranslatorRight(int userId, int teamId, RightDefinition definition)
@@ -71,7 +74,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> CheckIfCurrentUserCanInProject(RightDefinition definition, int projectId)
         {
-            var userRights = (await CurrentUser.GetRightsInProject(projectId)).Select(r => r.RightDefinition).Distinct();
+            var userRights = (await _currentUser.GetRightsInProject(projectId)).Select(r => r.RightDefinition).Distinct();
             if(userRights.Contains(definition))
             {
                 return true;
@@ -81,13 +84,13 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<List<RightDefinition>> GetUserRightsInProject(int projectId)
         {
-            var userRights = await CurrentUser.GetRightsInProject(projectId);
+            var userRights = await _currentUser.GetRightsInProject(projectId);
             return userRights.Select(r => r.RightDefinition).Distinct().ToList();
         }
 
         public async Task<List<UserRights>> GetUserRights()
         {
-            var userRights = await CurrentUser.GetRights();
+            var userRights = await _currentUser.GetRights();
             return userRights.ToList();
         }
     }

@@ -36,6 +36,12 @@
                         </div>
                         <hr>
                         <div class="project-list">
+                            <div [hidden]="!isLoad" class="spinner">
+                                <mat-spinner></mat-spinner>
+                            </div>
+                            <div *ngIf="isNoProjects">
+                                <h1 class="no-projects">No projects</h1>
+                            </div>
                             <div class="project-card" mat-list-item *ngFor="let p of projects; let i = index">
                                 <h3 class="project">
                                     {{i+1}}.
