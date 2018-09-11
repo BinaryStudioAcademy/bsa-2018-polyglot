@@ -433,6 +433,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
+        this.eventService.filter({
+            isEditing: true
+        });
         this.divHidden = false;
         this.onTextChange(index);
         this.index = index;
@@ -529,6 +532,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     onSave(index: number, t: any) {
         this.eventService.filter({
+            isEditing: false
+        });
+        this.eventService.filter({
             keyId: this.currentKeyId,
             status: false
         });
@@ -598,6 +604,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         }
     }
     onClose(index: number, translation: any) {
+        this.eventService.filter({
+            isEditing: false
+        });
         this.eventService.filter({
             keyId: this.currentKeyId,
             status: false
