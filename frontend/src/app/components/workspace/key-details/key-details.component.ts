@@ -34,6 +34,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     hideHistory() { this.history.hideHistory(); }
     @ViewChild(TabOptionalComponent)
     optional: TabOptionalComponent;
+    hideOptional() { this.optional.hideOptional() }
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -443,6 +444,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 status: true
             });
         this.history.translationSelected=true;
+        this.optional.translationSelected=true;
         if (index === undefined) {
             return;
         }
@@ -567,6 +569,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             oldValue: ""
                         };
                         this.hideHistory();
+                        
                         this.optional.showOptional(
                             this.currentKeyId,
                             this.keyDetails.translations[index].id
@@ -614,6 +617,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             this.hideHistory();
+            this.hideOptional();
             return;
         }
         const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
@@ -638,6 +642,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 ].translationValue = this.expandedArray[index].oldValue;
                 this.expandedArray[index] = { isOpened: false, oldValue: "" };
                 this.hideHistory();
+                this.hideOptional();
                 if (this.isMachineTranslation) {
                     this.keyDetails.translations[
                         index
