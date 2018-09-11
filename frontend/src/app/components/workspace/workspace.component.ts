@@ -45,6 +45,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private differ;
     private madiv;
     private signalRConnection;
+    isEditing: boolean;
 
     filters: Array<string>;
 
@@ -70,7 +71,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                if (result.status && !this.stringsInProgress.includes(result.keyId)) {
+                if (result.isEditing != undefined) {
+                    this.isEditing = result.isEditing
+                } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
                 } else {
                     this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
@@ -169,7 +172,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.previousKeyId = this.currentKeyId;
         this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
         this.loop = setInterval(() => {
-            if (this.previousKeyId !== this.currentKeyId) {
+            if (this.previousKeyId !== this.currentKeyId || !this.isEditing) {
                 this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
                 clearInterval(this.loop);
             } else {
@@ -302,6 +305,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 console.log(response.ids[0]);
                 if (!this.stringsInProgress.includes(response.ids[0])) {
                     this.stringsInProgress.push(response.ids[0]);
+                    setTimeout(() => {
+                        if (this.stringsInProgress.includes(response.ids[0])) {
+                            this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
+                        }
+                    }, 9700);
                 }            
             }
         );

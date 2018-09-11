@@ -47,10 +47,12 @@ export class GlossariesComponent implements OnInit {
     }
 
     onCreate() {
-        this.dialog.open(GlossaryCreateDialogComponent).afterClosed().subscribe(() => {
+        this.dialog.open(GlossaryCreateDialogComponent)
+        .afterClosed()
+        .subscribe(() => {
             this.glossaryService.getAll().subscribe((data: Glossary[]) => {
                 this.glossaries = data;
-            })
+            });
         });
 
     }

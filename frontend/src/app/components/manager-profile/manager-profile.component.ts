@@ -27,6 +27,8 @@ export class ManagerProfileComponent implements OnInit {
   btnOkText: string = "Yes";
   btnCancelText: string = "No";
   answer: boolean;
+  isLoad: boolean = true;
+  isNoProjects: boolean;
 
   constructor(
     public dialog: MatDialog,
@@ -43,6 +45,8 @@ export class ManagerProfileComponent implements OnInit {
 
     this.projectService.getAll().subscribe(pr => {
         this.projects = pr;
+        this.isNoProjects = this.projects.length === 0;
+        this.isLoad = false;
     });
     this.userService.getUserTeams(this.manager.id).subscribe(t => {
       this.teams = t;

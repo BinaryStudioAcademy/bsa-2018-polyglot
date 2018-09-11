@@ -1,5 +1,5 @@
-<div class="container">
-    <mat-spinner class="spinner" *ngIf="newTranslatorLanguages.length === 0"></mat-spinner>
+<mat-spinner class="spinner" *ngIf="!isLoad"></mat-spinner>
+<div class="container" *ngIf="newTranslatorLanguages?.length > 0">
     <ul class="languages-container">
         <li class="language" *ngFor="let translatorLanguage of newTranslatorLanguages">
 
@@ -20,5 +20,14 @@
             <button  mat-raised-button color="primary" (click)="submit()" mat-button>Ok</button>
             <button  mat-raised-button color="warn" (click)="close()">Cancel</button>
         </div>
+    </div>
+</div>
+<div class="message-container" *ngIf="newTranslatorLanguages?.length === 0 && isLoad">
+    <h3>You haven't assigned any languages yet.<br>Do you want to add some?</h3>
+    <div class="buttons-container" style="text-align: center">
+        <div style="display: inline-block">
+            <button  mat-raised-button color="primary" (click)="openAddLangDialog()" mat-button>Yes</button>
+            <button  mat-raised-button color="warn" (click)="close()">No</button>
+        </div>    
     </div>
 </div>
