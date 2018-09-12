@@ -74,5 +74,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
         Task<ProjectTranslationStatisticsDTO> GetProjectLanguageStatistic(int projectId);
         Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds);
+
+		Task<List<ProjectDTO>> SearchProjects(string query);
     }
 }

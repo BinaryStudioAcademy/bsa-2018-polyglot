@@ -46,7 +46,10 @@ namespace Polyglot.Controllers
 		[HttpGet("search")]
 		public async Task<IActionResult> SearchProjects(string query)
 		{
-			var projects = await service.GetListAsync();
+			if (query == null)
+				query = "";
+
+			var projects = await service.SearchProjects(query);
 			return projects == null ? NotFound("No projects found!") as IActionResult
 				: Ok(projects);
 		}

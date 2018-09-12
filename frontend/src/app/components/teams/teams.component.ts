@@ -34,13 +34,13 @@ export class TeamsComponent implements OnInit {
 
     search() {
         this.searchQuery = this.searchQuery.trim();
-        if (this.searchQuery.length > 0) {
-            debugger;
-            this.teamsService.searchTeams(this.searchQuery)
+
+        debugger;
+        this.teamsService.searchTeams(this.searchQuery)
             .subscribe(pr => {
                 debugger;
                 this.teams = pr;
             });
-        }
+
     }
 }

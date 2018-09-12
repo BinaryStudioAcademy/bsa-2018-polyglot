@@ -18,11 +18,13 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TeamDTO> TryAddTeamAsync(TeamTranslatorsDTO teamTranslators);
 
-        #endregion Teams
+		Task<List<TeamPrevDTO>> SearchTeams(string query);
 
-        #region Translators
+		#endregion Teams
 
-        Task<IEnumerable<TranslatorDTO>> GetAllTranslatorsAsync();
+		#region Translators
+
+		Task<IEnumerable<TranslatorDTO>> GetAllTranslatorsAsync();
 
         Task<TranslatorDTO> GetTranslatorAysnc(int id);
 

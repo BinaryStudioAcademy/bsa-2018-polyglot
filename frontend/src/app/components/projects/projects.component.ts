@@ -30,7 +30,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         private projectService: ProjectService,
         public dialog: MatDialog,
         private snotifyService: SnotifyService
-    ) {}
+    ) { }
 
     public cards: Project[];
     isLoad: boolean = true;
@@ -52,7 +52,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.projectService.getAll().subscribe(pr => {
             if (pr) {
                 this.cards = pr;
-                this.cards.sort((a:Project, b: Project) => {
+                this.cards.sort((a: Project, b: Project) => {
                     if (a.priority > b.priority) return -1;
                     if (a.priority < b.priority) return 1;
                     return 0;
@@ -94,17 +94,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     search() {
         this.searchQuery = this.searchQuery.trim();
-        if (this.searchQuery.length > 0) {
-            debugger;
-            this.projectService.searchProjects(this.searchQuery)
+
+        debugger;
+        this.projectService.searchProjects(this.searchQuery)
             .subscribe(pr => {
                 debugger;
                 this.cards = pr;
             });
-        }
+
     }
 
-    increasePriority(projectId: number){
+    increasePriority(projectId: number) {
         debugger;
         this.projectService.increasePriority(projectId).subscribe((a) => {
             debugger;
