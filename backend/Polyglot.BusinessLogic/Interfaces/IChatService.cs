@@ -25,5 +25,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChatMessageDTO> GetMessageAsync(int messageId);
 
         Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user);
+
+        Task ReadMessages(int dialogId, string whoUid);
+
+        Task ChangeUserStatus(string targetUserUid, bool isOnline);
     }
 }

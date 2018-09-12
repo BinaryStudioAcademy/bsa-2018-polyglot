@@ -2,8 +2,12 @@
     <mat-toolbar class="interlocutor-info">
         <div *ngIf="isDirect; else group">
             <div class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</div>
-            <div class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
-                : "Offline"}}</div>
+            <div class="last-seen">
+                  <!--  last seen
+                    {{interlocutors[currentInterlocutorId]?.lastSeen | date: 'medium'}} -->
+                {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
+                : "Offline"}} 
+            </div>
         </div>
         <ng-template #group>
             <div class="group-info-container">
@@ -43,16 +47,21 @@
                     {{m.body}}
                     <div class="message-info-container">
                         <span class="recieved-read-container">
-                            <!--<span [hidden]="" class="error-icon">
-                                    <mat-icon>warning</mat-icon>
+                            <span *ngIf="!m.isRecieved && m.isRecieving" class="sending-icon">
+                                <mat-spinner [diameter]="15"></mat-spinner> 
                             </span>
-                        -->
-                            <span [hidden]="m.isRead" class="recieved-icon">
-                                <mat-icon>done</mat-icon>
+                            <span [hidden]="m.isRecieving"> 
+                                    <span [hidden]="m.isRecieved" class="error-icon">
+                                            <mat-icon>warning</mat-icon>
+                                    </span>
+                                    <span [hidden]="!m.isRecieved || m.isRead" class="recieved-icon">
+                                        <mat-icon>done</mat-icon>
+                                    </span>
+                                    <span [hidden]="!m.isRecieved || !m.isRead" class="read-icon">
+                                        <mat-icon>done_all</mat-icon>
+                                    </span>
                             </span>
-                            <span [hidden]="!m.isRead" class="read-icon">
-                                <mat-icon>done_all</mat-icon>
-                            </span>
+                            
                         </span>
                         <span class="message-time">{{ m.receivedDate | date:'shortTime' }}</span>
                     </div>
@@ -62,7 +71,7 @@
         </ul>
     </div>
 
-    <footer class="chat-input-container">
+    <footer class="chat-input-container" (keyup.enter)="sendMessage()">
         <mat-card class="new-message-notification">
             <span>New message recieved</span>
             <mat-icon aria-label="">send</mat-icon>

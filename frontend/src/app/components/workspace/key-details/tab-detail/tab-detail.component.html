@@ -10,9 +10,17 @@
         <img class="content-img" (click)="onImageClick(keyDetails)" mat-card-image src={{keyDetails.pictureLink}} alt="Photo of a project"
             onError="this.src='/assets/images/default.jpg';">
     </div>
-    <h3>{{keyDetails.key}}</h3>
-    <h4 *ngIf="keyDetails.description != null && keyDetails.description != ''">Description:</h4>
+    <br>
+    <div>
+        <b>Key: </b>
+        {{keyDetails.key}}
+    </div>
+    <br>
+    <div>
+        <b>Base translation: </b>
+        {{keyDetails.base}}
+    </div>
+    <br>
+    <b *ngIf="keyDetails.description != null && keyDetails.description != ''">Description:</b>
     <div>{{keyDetails.description}}</div>
-    <h4>Base:</h4>
-    <div>{{keyDetails.base}}</div>
 </div>

@@ -39,8 +39,19 @@ namespace Polyglot.Controllers
                 : Ok(teams);
         }
 
-        // GET: teams/:id
-        [HttpGet("{id}", Name = "GetTeam")]
+		[HttpGet("search")]
+		public async Task<IActionResult> SearchTeams(string query)
+		{
+			if (query == null)
+				query = "";
+
+			var projects = await service.SearchTeams(query);
+			return projects == null ? NotFound("No Teams found!") as IActionResult
+				: Ok(projects);
+		}
+
+		// GET: teams/:id
+		[HttpGet("{id}", Name = "GetTeam")]
         public async Task<IActionResult> GetTeam(int id)
 
 
@@ -60,8 +71,17 @@ namespace Polyglot.Controllers
                 : Ok(translators);
         }
 
-        // GET: teams/translators/:id
-        [HttpGet("translators/{id}", Name = "GetTranslator")]
+		// GET: teams/translators
+		[HttpGet("filteredtranslators", Name = "GetFilteredtranslators")]
+		public async Task<IActionResult> GetFilteredtranslators([FromQuery(Name = "prof")] int prof, [FromQuery(Name = "languages")] int[] languages)
+		{
+			var translators = await service.GetFilteredtranslators(prof, languages);
+			return translators == null ? NotFound("No translators found!") as IActionResult
+				: Ok(translators);
+		}
+
+		// GET: teams/translators/:id
+		[HttpGet("translators/{id}", Name = "GetTranslator")]
         public async Task<IActionResult> GetTranslator(int id)
         {
             var translators = await service.GetTranslatorAysnc(id);

@@ -1,12 +1,10 @@
-
-
 .mat-panel-description
   width: 55%
-  text-align: left
+  
 
 .none-translation
   text-align: left
-  width: 55%
+  
 
 .description
   white-space: nowrap
@@ -16,11 +14,13 @@
 
 .mat-panel-title
   width: 10%
+  min-width: 70px
 
 .buttons
-  width: 27%
+  width: 200px
   display: flex
-  justify-content: flex-start   
+  justify-content: flex-start 
+  min-width: 200px  
 
 .optional-btn
   margin: 0
@@ -33,7 +33,7 @@
   padding-top: 10px;
 
 .confirmed
-  background-color: rgba(0, 255, 0, 0.1)
+  background-color: rgb(215, 215, 215)
  
 .unconfirm-btn
   margin-left: auto
@@ -41,9 +41,11 @@
 .textarea-translation textarea
   padding-top: 10px;
 
+
 .confirm-btn
-  // color: rgb(179, 211, 190)
   margin-left: auto
+  
+
 
 .button-translation
   display: flex;
@@ -160,12 +162,13 @@
     padding: 6px
     border: 1px solid #3f51b5
     border-radius: 7%
+    z-index: 5
 
 
 
 .translation-div
   position: absolute
   word-wrap: break-word
-  width: 90%
   line-height: 15.5px
-  z-index: 3
+  z-index: 1
+  pointer-events: none

@@ -19,6 +19,10 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
+  searchProjects(query: string): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, 'search/' + '?query=' + query);
+  }
+
   getById(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id);
   }
@@ -33,6 +37,10 @@ export class ProjectService {
 
   delete(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
+  }
+
+  increasePriority(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + `/${projectId}/priority`);
   }
 
   getProjectStrings(id: number) : Observable<any> {

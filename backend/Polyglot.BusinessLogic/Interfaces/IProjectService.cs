@@ -15,6 +15,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<byte[]> GetFile(int id, int languageId, string format);
 
+        Task IncreasePriority(int projectId);
+
         #region Teams
 
         Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);
@@ -72,5 +74,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChartDTO> GetNotTranskatedStringToLanguagesStatistic(int id);
         Task<ProjectTranslationStatisticsDTO> GetProjectLanguageStatistic(int projectId);
         Task<IEnumerable<ProjectTranslationStatisticsDTO>> GetProjectLanguageStatistics(List<int> projectIds);
+
+		Task<List<ProjectDTO>> SearchProjects(string query);
     }
 }

@@ -114,7 +114,7 @@ export class HttpService {
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
 
             errorMsg = err.message;
-            if (error.status === 401 || errorMsg.indexOf('No JWT') > -1 || errorMsg.indexOf('Unauthorized') > -1) {
+            if (error.status === 401) {
                 console.log('The authentication session expires or the user is not authorised. Force refresh of the current page.');
                 return 'T';
 
