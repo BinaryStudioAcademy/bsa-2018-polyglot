@@ -19,6 +19,10 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api);
   }
 
+  searchProjects(query: string): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, 'search/' + '?query=' + query);
+  }
+
   getById(id: number) : Observable<Project> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id);
   }
