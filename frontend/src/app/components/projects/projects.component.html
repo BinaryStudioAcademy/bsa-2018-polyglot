@@ -2,14 +2,14 @@
   <mat-slide-toggle (change)="changeLayout()" [checked]="checked" color="primary" #toggle>
     Card view
   </mat-slide-toggle>
-  <form class="search-form">
+  <div class="search-form">
     <mat-form-field class="search-full-width">
-      <input type="search" matInput placeholder="Search">
-      <button mat-raised-button color="primary" matSuffix>
+      <input [(ngModel)]="searchQuery" type="search" matInput placeholder="Search">
+      <button (click)="search()" mat-raised-button color="primary" matSuffix>
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
-  </form>
+  </div>
 </div>
 <mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 

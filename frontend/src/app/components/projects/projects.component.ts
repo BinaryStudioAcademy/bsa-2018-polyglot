@@ -22,6 +22,7 @@ import { UserService } from "../../services/user.service";
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
     public checked = true;
+    searchQuery: string;
 
     constructor(
         private userService: UserService,
@@ -84,5 +85,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
+    }
+
+    search() {
+        this.searchQuery = this.searchQuery.trim();
+        if (this.searchQuery.length > 0) {
+            debugger;
+        }
     }
 }

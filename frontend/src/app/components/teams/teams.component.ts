@@ -11,6 +11,7 @@ export class TeamsComponent implements OnInit {
 
     isLoad: boolean = true;
     teams: any = [];
+    searchQuery: string;
 
     constructor(private teamsService: TeamService,
         private userService: UserService) { }
@@ -29,5 +30,12 @@ export class TeamsComponent implements OnInit {
 
     isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
+    }
+
+    search() {
+        this.searchQuery = this.searchQuery.trim();
+        if (this.searchQuery.length > 0) {
+            debugger;
+        }
     }
 }
