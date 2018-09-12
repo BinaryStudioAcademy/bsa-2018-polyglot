@@ -35,6 +35,10 @@ export class ProjectService {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id);
   }
 
+  increasePriority(projectId: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + `/${projectId}/priority`);
+  }
+
   getProjectStrings(id: number) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/complexStrings');
   }
