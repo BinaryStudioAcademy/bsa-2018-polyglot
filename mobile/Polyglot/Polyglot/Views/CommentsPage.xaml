@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             x:Class="Polyglot.Views.CommentsPage" Title="Comments">
+    <StackLayout>
+        <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No Comments</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+        <ListView 
+            ItemsSource="{Binding Comments}"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
+            RowHeight="200"    >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <StackLayout  Orientation="Vertical">
+                                <StackLayout Orientation="Horizontal">
+                                    <abstractions:CircleImage Source="{Binding UserPictureURL}" Margin="10, 10, 0, 0"  WidthRequest="50" HeightRequest="50"></abstractions:CircleImage>
+                                    <Label Margin="10, 20, 0, 0" Font="bold, 15"  HorizontalTextAlignment="Center" Text="{Binding UserName}"/>
+                                </StackLayout>
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical">
+                                <Label Margin="10, 0, 0, 0" HorizontalTextAlignment="Start" Font="13" HeightRequest="30"  Text="{Binding Text}"  />
+                                <Label  HorizontalTextAlignment="End" Font="9"  Text="{Binding DateTime}"  />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

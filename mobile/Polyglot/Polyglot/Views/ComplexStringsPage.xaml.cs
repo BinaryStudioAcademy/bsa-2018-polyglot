@@ -17,11 +17,12 @@ namespace Polyglot.Views
 
         public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, int projectId)
         {
+
             BindingContext = complexStringsViewModel;
+
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this,false);
             complexStringsViewModel.Initialize(projectId);
-
         }
 
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)

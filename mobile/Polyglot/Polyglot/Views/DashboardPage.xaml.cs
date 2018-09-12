@@ -7,10 +7,10 @@ using Xamarin.Forms.Xaml;
 namespace Polyglot
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DashboardPage : ContentPage
+    public partial class Dashboard : ContentPage
     {
 
-        public DashboardPage(DashboardViewModel dashboard)
+        public Dashboard(DashboardViewModel dashboard)
         {
             BindingContext = dashboard;
 

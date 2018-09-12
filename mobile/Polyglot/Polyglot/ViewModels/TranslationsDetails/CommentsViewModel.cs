@@ -1,23 +1,20 @@
 ﻿using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
-using Polyglot.Views;
-using System;
+using Polyglot.BusinessLogic.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using Polyglot.BusinessLogic.Services;
-using Xamarin.Forms;
-using Polyglot.BusinessLogic;
 
-namespace Polyglot.ViewModels
+namespace Polyglot.ViewModels.TranslationsDetails
 {
-    public class DashboardViewModel : BaseViewModel
+    public class CommentsViewModel : BaseViewModel
     {
         private const bool DefaultIsEmpty = false;
         private const bool DefaultIsLoad = true;
+
 
         private bool _isEmpty = DefaultIsEmpty;
         public bool IsEmpty
@@ -29,7 +26,6 @@ namespace Polyglot.ViewModels
             }
         }
 
-
         private bool _isLoad = DefaultIsLoad;
         public bool IsLoad
         {
@@ -40,14 +36,13 @@ namespace Polyglot.ViewModels
             }
         }
 
-
-        private IEnumerable<ProjectViewModel> _projects;
-        public IEnumerable<ProjectViewModel> Projects
+        private IEnumerable<CommentVievModel> _comments;
+        public IEnumerable<CommentVievModel> Comments
         {
-            get => _projects;
+            get => _comments;
             set
             {
-                if (!SetProperty(ref _projects, value))
+                if (!SetProperty(ref _comments, value))
                 {
                     return;
                 }
@@ -57,23 +52,23 @@ namespace Polyglot.ViewModels
             }
         }
 
-        public async void Initialize()
+        public async void Initialize(int complexStringId)
         {
-            var url = "projects";
+            var stringsUrl = "complexstrings/" + complexStringId + "/paginatedComments?itemsOnPage=20&page=0";
             var httpService = new HttpService();
-            var projects = await httpService.GetAsync<List<ProjectDTO>>(url);
+            var comments = await httpService.GetAsync<List<CommentDTO>>(stringsUrl);
 
-            Projects = projects.Select(x => new ProjectViewModel
+            Comments = comments.Select(x => new CommentVievModel
             {
-                Id = x.Id,
-                Name = x.Name,
-                ImageUrl = x.ImageUrl,
-                Description = x.Description
+                Text = x.Text,
+                UserName = x.User.FullName,
+                DateTime=x.CreatedOn,
+                UserPictureURL=x.User.AvatarUrl
             }).ToList();
 
             IsLoad = false;
 
-            if (Projects == null || !Projects.Any())
+            if (Comments == null || !Comments.Any())
             {
                 _isEmpty = true;
             }

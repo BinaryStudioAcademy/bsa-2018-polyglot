@@ -1,5 +1,6 @@
 ﻿using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
 using Polyglot.BusinessLogic.Services;
 using Polyglot.Views;
@@ -15,43 +16,66 @@ namespace Polyglot.ViewModels
 {
     public class ComplexStringsViewModel : BaseViewModel
     {
-        private ComplexStringViewModel _selectedString;
-        public ComplexStringViewModel SelectedString
+        private const bool DefaultIsEmpty = false;
+        private const bool DefaultIsLoad= true;
+
+        private bool _isEmpty=DefaultIsEmpty;
+        public bool IsEmpty
         {
-            get => _selectedString;
-            set => SetProperty(ref _selectedString, value);
+            get => _isEmpty;
+            set
+            {
+                SetProperty(ref _isEmpty, value);
+            }
+        }
+
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
         }
 
         private IEnumerable<ComplexStringViewModel> _complexStrings;
         public IEnumerable<ComplexStringViewModel> ComplexStrings
         {
             get => _complexStrings;
-            set => SetProperty(ref _complexStrings, value);
+            set
+            {
+                if (!SetProperty(ref _complexStrings, value))
+                {
+                    return;
+                }
+
+                RaisePropertyChanged(nameof(IsEmpty));
+            }
         }
 
         public async void Initialize(int projectId)
         {
-            var httpClient = new HttpClient();
-            var token = UserService.Token;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net//api/projects/" +projectId + "/paginatedStrings?itemsOnPage=9&page=0&search=");
-
-
-            //will throw an exception if not successful
-            response.EnsureSuccessStatusCode();
-
-            string content = await response.Content.ReadAsStringAsync();
-
-            var complexStrings = JsonConvert.DeserializeObject<List<ComplexStringDTO>>(content);
+            var url = "projects/" + projectId + "/paginatedStrings?itemsOnPage=9&page=0&search=";
+            var httpService = new HttpService();
+            var complexStrings = await httpService.GetAsync<List<ComplexStringDTO>>(url);
 
             ComplexStrings = complexStrings.Select(x => new ComplexStringViewModel
             {
-                Id=x.Id,
-                Key=x.Key,
-                OriginalValue=x.OriginalValue,
-                Description=x.Description,
+                Id = x.Id,
+                Key = x.Key,
+                OriginalValue = x.OriginalValue,
+                Description = x.Description,
                 ProjectId = x.ProjectId
             }).ToList();
+
+            IsLoad = false;
+         
+            if(ComplexStrings == null || !ComplexStrings.Any())
+            {
+                _isEmpty = true;
+            }
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿using Polyglot.BusinessLogic.DTO;
+using Polyglot.ViewModels;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace Polyglot.Views
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class HistoryPage : ContentPage
+    {
+        public HistoryPage(HistoryViewModel historyViewMoodel,int complexStringId, string historyId)
+        {
+            BindingContext = historyViewMoodel;
+           
+            InitializeComponent();
+
+            historyViewMoodel.Initialize(complexStringId, historyId);
+        }
+    }
+}

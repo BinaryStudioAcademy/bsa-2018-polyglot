@@ -1,23 +1,22 @@
 ﻿using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
-using Polyglot.Views;
+using Polyglot.BusinessLogic.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Polyglot.BusinessLogic.Services;
-using Xamarin.Forms;
-using Polyglot.BusinessLogic;
 
-namespace Polyglot.ViewModels
+namespace Polyglot.ViewModels.TranslationsDetails
 {
-    public class DashboardViewModel : BaseViewModel
+    public class OptionalTranslationsViewModel : BaseViewModel
     {
         private const bool DefaultIsEmpty = false;
         private const bool DefaultIsLoad = true;
+
 
         private bool _isEmpty = DefaultIsEmpty;
         public bool IsEmpty
@@ -29,7 +28,6 @@ namespace Polyglot.ViewModels
             }
         }
 
-
         private bool _isLoad = DefaultIsLoad;
         public bool IsLoad
         {
@@ -40,40 +38,37 @@ namespace Polyglot.ViewModels
             }
         }
 
-
-        private IEnumerable<ProjectViewModel> _projects;
-        public IEnumerable<ProjectViewModel> Projects
+        private IEnumerable<OptionalTranslationViewModel> _optionalTranslations;
+        public IEnumerable<OptionalTranslationViewModel> OptionalTranslations
         {
-            get => _projects;
+            get => _optionalTranslations;
             set
             {
-                if (!SetProperty(ref _projects, value))
+                if (!SetProperty(ref _optionalTranslations, value))
                 {
                     return;
                 }
-
                 RaisePropertyChanged(nameof(IsEmpty));
-
             }
         }
 
-        public async void Initialize()
+        public async void Initialize(int complexStringId, string translationId)
         {
-            var url = "projects";
+            var url = "complexstrings/" + complexStringId + "/" + translationId + "/optional";
             var httpService = new HttpService();
-            var projects = await httpService.GetAsync<List<ProjectDTO>>(url);
+            var optionalTranslations = await httpService.GetAsync<List<OptionalTranslationDTO>>(url);
 
-            Projects = projects.Select(x => new ProjectViewModel
+            OptionalTranslations = optionalTranslations.Select(x => new OptionalTranslationViewModel
             {
-                Id = x.Id,
-                Name = x.Name,
-                ImageUrl = x.ImageUrl,
-                Description = x.Description
+                Translation = x.TranslationValue,
+                UserName = x.UserName,
+                DateTime = x.DateTime,
+                UserPictureURL = x.UserPictureURL
             }).ToList();
 
             IsLoad = false;
 
-            if (Projects == null || !Projects.Any())
+            if (OptionalTranslations == null || !OptionalTranslations.Any())
             {
                 _isEmpty = true;
             }

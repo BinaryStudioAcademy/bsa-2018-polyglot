@@ -1,23 +1,21 @@
 ﻿using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
-using Polyglot.Views;
-using System;
+using Polyglot.BusinessLogic.Services;
+using Polyglot.ViewModels.TranslationsDetails;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using Polyglot.BusinessLogic.Services;
-using Xamarin.Forms;
-using Polyglot.BusinessLogic;
 
 namespace Polyglot.ViewModels
 {
-    public class DashboardViewModel : BaseViewModel
+    public class HistoryViewModel : BaseViewModel
     {
         private const bool DefaultIsEmpty = false;
         private const bool DefaultIsLoad = true;
+
 
         private bool _isEmpty = DefaultIsEmpty;
         public bool IsEmpty
@@ -29,7 +27,6 @@ namespace Polyglot.ViewModels
             }
         }
 
-
         private bool _isLoad = DefaultIsLoad;
         public bool IsLoad
         {
@@ -40,40 +37,38 @@ namespace Polyglot.ViewModels
             }
         }
 
-
-        private IEnumerable<ProjectViewModel> _projects;
-        public IEnumerable<ProjectViewModel> Projects
+        private IEnumerable<HistoryItemViewModel> _history;
+        public IEnumerable<HistoryItemViewModel> History
         {
-            get => _projects;
+            get => _history;
             set
             {
-                if (!SetProperty(ref _projects, value))
+                if (!SetProperty(ref _history, value))
                 {
                     return;
                 }
 
                 RaisePropertyChanged(nameof(IsEmpty));
-
             }
         }
 
-        public async void Initialize()
+        public async void Initialize(int complexStringId, string TranslationId)
         {
-            var url = "projects";
+            var url = "complexstrings/" + complexStringId + "/history/" + TranslationId+ "?itemsOnPage=20&page=0";
             var httpService = new HttpService();
-            var projects = await httpService.GetAsync<List<ProjectDTO>>(url);
+            var history = await httpService.GetAsync<List<HistoryDTO>>(url);
 
-            Projects = projects.Select(x => new ProjectViewModel
+            History = history.Select(x => new HistoryItemViewModel
             {
-                Id = x.Id,
-                Name = x.Name,
-                ImageUrl = x.ImageUrl,
-                Description = x.Description
+              Id=x.Id.ToString(),
+              From=x.From,
+              To=x.To,
+              When=x.When
             }).ToList();
 
             IsLoad = false;
 
-            if (Projects == null || !Projects.Any())
+            if (History == null || !History.Any())
             {
                 _isEmpty = true;
             }
