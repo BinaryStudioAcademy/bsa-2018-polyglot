@@ -124,7 +124,11 @@ import { NotificationsComponent } from './components/notifications/notifications
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
 import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { GuidelineComponent } from './components/guideline/guideline.component';
+import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
+import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
 import { CommentsPipe } from './common/pipes/comments.pipe';
+
 
 @NgModule({
   exports: [
@@ -210,6 +214,9 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
     AddRemoveLanguagesDialogComponent,
+    GuidelineComponent,
+    TranslatorGuideComponent,
+    ManagerGuideComponent,
     CommentsPipe
   ],
   imports: [

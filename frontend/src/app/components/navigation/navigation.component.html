@@ -35,6 +35,9 @@
 				<a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
+				<button mat-icon-button routerLink="/guideline" class="no-hover-effect" *ngIf="isLoggedIn()">
+					<mat-icon>info_outline</mat-icon>
+				</button>
 				<button mat-icon-button routerLink="/chat" class="no-hover-effect" *ngIf="isLoggedIn()">
 					<mat-icon class="chat" aria-label="Chat icon">
 						chat

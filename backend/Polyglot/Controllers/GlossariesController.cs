@@ -28,6 +28,15 @@ namespace Polyglot.Controllers
                 : Ok(projects);
         }
 
+        // GET: Glossaries/user/5
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUsersGlossaries(int id)
+        {
+            var projects = await service.GetUsersGlossaries(id);
+            return projects == null ? NotFound("No glossaries found!") as IActionResult
+                : Ok(projects);
+        }
+
         // GET: Glossaries/5
         [HttpGet("{id}", Name = "GetGlossary")]
         public async Task<IActionResult> GetGlossary(int id)
