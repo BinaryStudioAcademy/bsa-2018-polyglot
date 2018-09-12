@@ -287,7 +287,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
-                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%; pointer-events: auto;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
             }
             if (words[i] === '') {
