@@ -366,10 +366,13 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<TranslatorDTO> ActivateUserInTeam(int userId, int teamId)
         {
             var teamTranslator = await uow.GetRepository<TeamTranslator>().GetAsync(t => t.TranslatorId == userId && t.TeamId == teamId);
-            teamTranslator.IsActivated = true;
-            teamTranslator =  await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
-            await uow.SaveAsync();
-            return mapper.Map<TranslatorDTO>(teamTranslator);
+            if (teamTranslator != null) {
+                teamTranslator.IsActivated = true;
+                teamTranslator = await uow.GetRepository<TeamTranslator>().Update(teamTranslator);
+                await uow.SaveAsync();
+                return mapper.Map<TranslatorDTO>(teamTranslator);
+            }
+            return new TranslatorDTO() { };
         }
 
 

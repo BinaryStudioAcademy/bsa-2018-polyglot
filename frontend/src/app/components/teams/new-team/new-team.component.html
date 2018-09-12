@@ -95,10 +95,10 @@
                             <div class="chips-wrapper">
                                 <mat-chip color="primary" *ngFor="let l of t.translatorLanguages">
                                     <button *ngIf="l.proficiency===0" mat-mini-fab disabled>A2 </button>
-                                    <button *ngIf="l.proficiency===2" mat-mini-fab disabled>B1 </button>
-                                    <button *ngIf="l.proficiency===4" mat-mini-fab disabled>B2 </button>
-                                    <button *ngIf="l.proficiency===5" mat-mini-fab disabled>C1 </button>
-                                    <button *ngIf="l.proficiency===6" mat-mini-fab disabled>C2 </button>
+                                    <button *ngIf="l.proficiency===1" mat-mini-fab disabled>B1 </button>
+                                    <button *ngIf="l.proficiency===2" mat-mini-fab disabled>B2 </button>
+                                    <button *ngIf="l.proficiency===3" mat-mini-fab disabled>C1 </button>
+                                    <button *ngIf="l.proficiency===4" mat-mini-fab disabled>C2 </button>
                                     {{l.language.name}}
                                 </mat-chip>
                             </div>
