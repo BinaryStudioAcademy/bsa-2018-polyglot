@@ -1,4 +1,6 @@
-﻿using Polyglot.BusinessLogic.DTO;
+﻿using System.Threading.Tasks;
+using Polyglot.BusinessLogic.DTO;
+using Polyglot.BusinessLogic.Services;
 using Polyglot.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,7 +15,7 @@ namespace Polyglot.Views
 		{
 		    _vm = new ProfileViewModel(profile);
 
-		    BindingContext = _vm.User;
+		    BindingContext = _vm;
             InitializeComponent();
 
 		    NavigationPage.SetHasNavigationBar(this, false);
@@ -23,13 +25,14 @@ namespace Polyglot.Views
 		    if (_vm.User.UserRole == 1)
 		    {
 		        Rating.IsVisible = false;
-		        Teams.IsVisible = false;
 		        Reviews.IsVisible = false;
+		        Languages.IsVisible = false;
 		    }
-		    else
-		    {
-		        Projects.IsVisible = false;
-		    }
+
+		    _vm.GetUserLanguages(UserService.CurrentUser.Id);
+		    _vm.GetUserReviews(UserService.CurrentUser.Id);
+
         }
+
 	}
 }
