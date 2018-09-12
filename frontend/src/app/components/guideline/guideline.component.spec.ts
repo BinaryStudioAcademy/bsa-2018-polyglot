@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabGlossaryComponent } from './tab-glossary.component';
+import { GuidelineComponent } from './guideline.component';
 
-describe('TabGlossaryComponent', () => {
-  let component: TabGlossaryComponent;
-  let fixture: ComponentFixture<TabGlossaryComponent>;
+describe('GuidelineComponent', () => {
+  let component: GuidelineComponent;
+  let fixture: ComponentFixture<GuidelineComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabGlossaryComponent ]
+      declarations: [ GuidelineComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TabGlossaryComponent);
+    fixture = TestBed.createComponent(GuidelineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

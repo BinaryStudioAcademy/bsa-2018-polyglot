@@ -44,6 +44,10 @@ export class GlossaryService {
   deleteString(id : number, stringId : number) : Observable<any>{
     return this.dataService.sendRequest(RequestMethod.Delete, this.api + `/${id}/strings/${stringId}`, undefined, undefined);
   }
+
+  getUsersGlossaries(id: number) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/user', id, undefined);
+  }
   
   fakeGlossaryParse(base: string, translation: string) {
     var glossary: GlossaryTerm[] = [];

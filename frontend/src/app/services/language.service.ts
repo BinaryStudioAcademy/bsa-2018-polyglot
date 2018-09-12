@@ -37,7 +37,11 @@ export class LanguageService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, "user/" + userId);
   }
 
-  SetCurrentUserLaguage(translatorLanguages: TranslatorLanguage[]) : Observable<TranslatorLanguage[]> {
+  setCurrentUserLaguages(translatorLanguages: TranslatorLanguage[]) : Observable<TranslatorLanguage[]> {
     return this.dataService.sendRequest(RequestMethod.Put, this.api, "user", translatorLanguages);
+  }
+
+  deleteCurrentUserLaguages(translatorLanguages: TranslatorLanguage[]) : Observable<TranslatorLanguage[]> {
+    return this.dataService.sendRequest(RequestMethod.Delete, this.api, "user", translatorLanguages);
   }
 }

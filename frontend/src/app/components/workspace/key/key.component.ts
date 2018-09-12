@@ -5,6 +5,7 @@ import { ImgDialogComponent } from "../../../dialogs/img-dialog/img-dialog.compo
 import { ConfirmDialogComponent } from "../../../dialogs/confirm-dialog/confirm-dialog.component";
 import { SnotifyService } from "ng-snotify";
 import { StringDialogComponent } from "../../../dialogs/string-dialog/string-dialog.component";
+import { Tag } from "../../../models";
 
 @Component({
     selector: "app-workspace-key",
@@ -14,6 +15,8 @@ import { StringDialogComponent } from "../../../dialogs/string-dialog/string-dia
 export class KeyComponent implements OnInit {
     @Input()
     public key: any;
+    @Input()
+    public tags: string[];
     @Output()
     removeEvent = new EventEmitter<number>();
     @Output()
@@ -73,7 +76,10 @@ export class KeyComponent implements OnInit {
 		this.dialog.open(StringDialogComponent, {
 				data: {
                     projectId: this.key.projectId,
-					string: this.key
+                    string: this.key,
+                    tags: this.tags
+                    
+                    
 				}
 		}).afterClosed().subscribe(() => {
 			this.dataProvider.getById(this.key.id).subscribe(data => {

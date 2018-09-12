@@ -106,7 +106,6 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
@@ -124,6 +123,12 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { GuidelineComponent } from './components/guideline/guideline.component';
+import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
+import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
+import { CommentsPipe } from './common/pipes/comments.pipe';
+
 
 @NgModule({
   exports: [
@@ -195,7 +200,6 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     DownloadFileComponent,
     StarRatingComponent,
     UserProfileComponent,
-    TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
     SelectColorDialogComponent,
@@ -208,7 +212,12 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     TabOptionalComponent,
     NotificationsComponent,
     TeamAddMemberComponent,
-    ChooseProficiencyDialogComponent
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent,
+    GuidelineComponent,
+    TranslatorGuideComponent,
+    ManagerGuideComponent,
+    CommentsPipe
   ],
   imports: [
     BrowserModule,
@@ -266,7 +275,8 @@ import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-d
     SaveStringConfirmComponent,
     SelectColorDialogComponent,
     TeamAddMemberComponent,
-    ChooseProficiencyDialogComponent
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

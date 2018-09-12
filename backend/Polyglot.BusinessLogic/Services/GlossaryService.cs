@@ -74,10 +74,22 @@ namespace Polyglot.BusinessLogic.Services
 
             var ent = mapper.Map<Glossary>(entity);
             ent.OriginLanguage = null;
+            ent.UserProfile = null;
             var target = await uow.GetRepository<Glossary>().CreateAsync(ent);
             await uow.SaveAsync();
 
             return mapper.Map<GlossaryDTO>(target);
+        }
+
+        public async Task<IEnumerable<GlossaryDTO>> GetUsersGlossaries(int userId)
+        {
+            if (uow != null)
+            {
+                var targets = await uow.GetRepository<Glossary>().GetAllAsync();
+                return mapper.Map<IEnumerable<GlossaryDTO>>(targets.Where(g => g.UserProfileId == userId));
+            }
+            else
+                return null;
         }
     }
 }

@@ -6,13 +6,14 @@ using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.SignalR.Responses;
 using System.Threading.Tasks;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.BusinessLogic.Services.SignalR
 {
     [Authorize]
     public class SignalRChatService : SignalRCommonService<ChatHub>, ISignalRChatService
     {
-        public SignalRChatService(IHubContext<ChatHub> hubContext) : base(hubContext)
+        public SignalRChatService(IHubContext<ChatHub> hubContext, ICurrentUser currentUser) : base(hubContext, currentUser)
         {
         }
 
