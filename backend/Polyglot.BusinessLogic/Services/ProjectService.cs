@@ -193,6 +193,17 @@ namespace Polyglot.BusinessLogic.Services
                     string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
                     arr = Encoding.UTF8.GetBytes(temp);
                     break;
+
+                case ".csv":
+                    string tempCSV = "";
+                    foreach (var c in targetStrings)
+                    {
+                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\", \"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
+                    }
+                    arr = Encoding.UTF8.GetBytes(tempCSV);
+                    break;
+
                 default:
                     throw new NotImplementedException();
 
