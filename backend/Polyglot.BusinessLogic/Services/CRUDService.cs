@@ -68,6 +68,19 @@ namespace Polyglot.BusinessLogic.Services
                 return false;
         }
 
+        public virtual async Task<bool> TryAddAsync(int identifier)
+        {
+            if (uow != null)
+            {
+                await uow.GetRepository<TEntity>().PutAsync(identifier);
+                await uow.SaveAsync();
+                return true;
+            }
+            else
+                return false;
+        }
+
+
         public virtual async Task<TEntityDTO> PostAsync(TEntityDTO entity)
         {
             if (uow != null)

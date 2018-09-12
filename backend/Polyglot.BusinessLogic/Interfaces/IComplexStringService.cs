@@ -21,6 +21,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation);
 
+        Task<TranslationDTO> RevertTranslationHistory(int identifier, Guid translationId, Guid historyId);
+
         Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment, int itemsOnPage);
         
         Task<IEnumerable<CommentDTO>> DeleteComment(int identifier, Guid commentId);
@@ -32,6 +34,10 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<CommentDTO>> GetCommentsWithPaginationAsync(int id, int itemsOnPage, int page);
 
         Task<TranslationDTO> EditStringTranslation(int identifier, TranslationDTO translation);
+
+        Task<TranslationDTO> ConfirmTranslation(int identifier, TranslationDTO translation);
+
+        Task<TranslationDTO> UnConfirmTranslation(int identifier, TranslationDTO translation);
 
         Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId, int itemsOnPage, int page);
 

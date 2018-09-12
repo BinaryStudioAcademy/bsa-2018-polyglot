@@ -17,9 +17,11 @@ namespace Polyglot.BusinessLogic.Interfaces
          
 
 		Task<bool> TryDeleteAsync(int identifier);
-     
 
-		Task<TEntityDTO> PostAsync(TEntityDTO entity);
+        Task<bool> TryAddAsync(int identifier);
+
+
+        Task<TEntityDTO> PostAsync(TEntityDTO entity);
             
     }
 }

@@ -7,6 +7,9 @@ import { applyDrag, generateItems } from '../../../models';
 import { Translator } from '../../../models/Translator';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { NotificationService } from '../../../services/notification.service';
+import { OptionDefinition } from '../../../models/optionDefinition';
+import { Proficiency } from '../../../models/proficiency';
 
 
 @Component({
@@ -24,6 +27,8 @@ export class NewTeamComponent implements OnInit {
   // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
   // dataSource: MatTableDataSource<any>;
 
+  public selectedTranslators: Array<any> = [];
+  disabled: boolean = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -39,7 +44,8 @@ export class NewTeamComponent implements OnInit {
     private router: Router,
     private teamService: TeamService,
     private snotifyService: SnotifyService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
 
 
@@ -69,28 +75,16 @@ export class NewTeamComponent implements OnInit {
         });
   }
 
-  addTranslator(translator: Translator) {
 
-    if (this.teamTranslators.length < 9) { 
-      this.teamTranslators.push(translator);
-      this.allTranslators = this.allTranslators.filter(t => t.userId != translator.userId);
-    }
-    else {
-      this.snotifyService.error("Ohh we are sorry!, the team can not have more than 9 players", "Error!") 
-    }
-    
-    
-  }
+  change(e, teams) {
+    this.selectedTranslators = teams.selectedOptions.selected.map(item => item.value);
+    this.disabled = !this.selectedTranslators.length;
+}
 
-  removeTranslator(translator: Translator) {
 
-    this.allTranslators.push(translator);
-    this.teamTranslators = this.teamTranslators.filter(t => t.userId != translator.userId);
-  }
-
-  formTeam() {
-    if (this.teamTranslators && this.teamTranslators.length > 0) {
-      this.teamService.formTeam(this.teamTranslators.map(t => t.userId),this.name)
+  createTeam() {
+    if (this.selectedTranslators && this.selectedTranslators.length > 0) {
+      this.teamService.formTeam(this.selectedTranslators.map(t => t.userId),this.name)
         .subscribe((team) => {
           if (team) {
             this.router.navigate(['dashboard/teams']);
@@ -130,6 +124,13 @@ export class NewTeamComponent implements OnInit {
       search += data[key];
     }
     return search;
+  }
+
+  getStringProficiency(prof: Proficiency){
+    if(Proficiency[prof] === "UpperIntermediate"){
+      return "Upper Intermediate"
+    }
+    return Proficiency[prof];
   }
 }
 

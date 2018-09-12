@@ -4,15 +4,22 @@
     fxLayout.xs="column"
     fxLayoutAlign="center"
     fxLayoutGap="20px">
-        <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
+        <!-- <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
             <img src="{{userProfile.avatarUrl}}" alt="avatar" (click)="editPhoto()">
-        </div>
+        </div> -->
+
+        <div class="parent" (click)="editPhoto()">
+                <div class="child bg-five" [ngStyle]="{'background-image': 'url(' + userProfile.avatarUrl + ')'}">
+                    <p>Click to change</p>
+                </div>
+            </div>
+
         <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
             <div fxFlex="50%">
                 <div class="user-name">
                     {{userProfile.fullName}}
                 </div>
-                <mat-card-subtitle>
+                <mat-card-subtitle style="margin-top: 5px">
                     Registration date : <span> {{userProfile.registrationDate | date:'shortDate'}}</span>
                 </mat-card-subtitle>
             </div>
@@ -30,7 +37,7 @@
         </div>
     </div>
     
-    <div class="" style="margin-top: 20px;"
+    <div class="left-cards" style="margin-top: 20px;"
         fxLayout
         fxLayoutAlign="center"
         fxLayout.xs="column"
@@ -45,7 +52,8 @@
                               <div *ngFor="let t of teams; let i = index">
                                   <div class="team-card">
                                         <h3 class="team" mat-list-item>
-                                            {{i+1}}. <a class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                            {{i+1}}. <a *ngIf="isOwnersProfile()" class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                                     <span *ngIf="!isOwnersProfile()" class="team-name">Team {{t.name || t.id}}</span>
                                         </h3>
                                     </div>
                               </div>
@@ -54,17 +62,27 @@
                     </div>
                 <div class="item" fxFlex>  
             <div class="left-card">
-              <h2 class="title"> Languages</h2>
+              <strong class="title"> Languages</strong>
+              <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openProficiencyDialog()">
+                    <mat-icon>
+                        settings
+                    </mat-icon>
+              </button>
+              <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openAddRemoveLanguageDialog()">
+                    <mat-icon>
+                        add
+                    </mat-icon>
+              </button>
               <hr>
               <div class="languages-list">
               <br>
-              <div *ngFor="let l of Languages">
+              <div *ngFor="let translatorLanguage of Languages">
                       <mat-card-header>
-                        <mat-card-title>{{l.Name}}</mat-card-title>
-                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
+                        <mat-card-title>{{translatorLanguage?.language?.name}}</mat-card-title>
+                        <mat-card-subtitle>{{getStringProficiency(translatorLanguage?.proficiency)}}</mat-card-subtitle>
                       </mat-card-header>
                       <mat-card-content>
-                    <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
+                    <mat-progress-bar mode="determinate" value="{{translatorLanguage.proficiency*14.29+15}}"></mat-progress-bar>
                       </mat-card-content>
               </div>  
             </div>  
@@ -88,7 +106,7 @@
                     <mat-card-title>Contacts</mat-card-title><hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                <div class="review">
+                <div *ngIf="!isTranslator()" class="review">
                     <mat-card *ngIf="!isOwnersProfile()">
                         <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
                     </mat-card>

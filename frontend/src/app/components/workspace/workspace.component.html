@@ -11,8 +11,8 @@
                 <button mat-button matSuffix mat-icon-button aria-label="Search">
                     <mat-icon>search</mat-icon>
                 </button>
-                <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
-                <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
+                <input (change)="searchChanges()" matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                <button *ngIf="searchQuery.length!=0" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''; searchChanges()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -95,7 +95,7 @@
 
       </div>
     </mat-card>
-    <div style="width: 100%;" *ngIf="keys.length !== 0">
+    <div style="width: 75%;" *ngIf="keys.length !== 0">
       <router-outlet></router-outlet>
     </div>
   </div>

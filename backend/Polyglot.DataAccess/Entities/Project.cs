@@ -24,7 +24,7 @@ namespace Polyglot.DataAccess.Entities
         public virtual ICollection<ComplexString> Translations { get; set; }
         public virtual ICollection<ProjectLanguage> ProjectLanguageses { get; set; }
         public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
-        public virtual ICollection<ProjectTag> ProjectTags { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<ProjectTeam> ProjectTeams { get; set; }
 
 
@@ -34,7 +34,6 @@ namespace Polyglot.DataAccess.Entities
             Translations = new List<ComplexString>();
             ProjectLanguageses = new List<ProjectLanguage>();
             ProjectGlossaries = new List<ProjectGlossary>();
-            ProjectTags = new List<ProjectTag>();
         }
 
         public IIndexObject GetIndexObject()

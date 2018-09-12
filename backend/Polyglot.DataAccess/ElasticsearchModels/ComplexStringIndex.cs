@@ -9,7 +9,7 @@ namespace Polyglot.DataAccess.ElasticsearchModels
     {
         public ComplexStringIndex()
         {
-            
+			Tags = new List<int>();
         }
 
         public string Id { get; set; }
@@ -23,5 +23,8 @@ namespace Polyglot.DataAccess.ElasticsearchModels
         public string PictureLink { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Translation> Translations { get; set; }
-    }
+
+		public List<int> Tags { get; set; }
+		public int CreatedBy { get; set; }
+	}
 }

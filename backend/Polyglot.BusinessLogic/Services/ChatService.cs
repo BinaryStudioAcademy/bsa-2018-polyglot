@@ -13,9 +13,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Polyglot.BusinessLogic.Services.SignalR;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Microsoft.AspNetCore.Authorization;
+using Polyglot.DataAccess.Entities.Chat;
 
 namespace Polyglot.BusinessLogic.Services
 {
+    [Authorize]
     public class ChatService : IChatService
     {
         private readonly IProjectService projectService;
@@ -23,174 +26,154 @@ namespace Polyglot.BusinessLogic.Services
         private readonly ISignalRChatService signalRChatService;
         private readonly IMapper mapper;
         private readonly IUnitOfWork uow;
+        private readonly ICurrentUser _currentUser;
 
         public ChatService(
             ISignalRChatService signalRChatService,
             IProjectService projectService,
-            ITeamService teamService, IMapper mapper, IUnitOfWork uow)
+            ITeamService teamService, IMapper mapper, IUnitOfWork uow, ICurrentUser currentUser)
         {
             this.signalRChatService = signalRChatService;
             this.projectService = projectService;
             this.teamService = teamService;
             this.mapper = mapper;
             this.uow = uow;
+            _currentUser = currentUser;
         }
 
-        public async Task<ChatContactsDTO> GetContactsAsync(ChatGroup targetGroup, int targetGroupItemId)
+
+
+        public async Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync(ChatGroup targetGroup)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
 
-            ChatContactsDTO contacts = new ChatContactsDTO()
-            {
-                ChatUserId = targetGroupItemId
-            };
+            var dialogs = await uow.GetRepository<ChatDialog>()
+                .GetAllAsync(d => d.DialogType == targetGroup && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
+
+            if (dialogs == null || dialogs.Count < 1)
+                return null;
+
+            List<ChatDialogDTO> result = null;
 
             switch (targetGroup)
             {
-                case ChatGroup.chatUser:
-                    {
-                        var c = await GetUserContacts(currentUser);
-                        if(c != null)
-                        {
-                            contacts.ContactList = c;
-                        }
-                        break;
-                    }
-                case ChatGroup.Project:
+                case ChatGroup.direct:
+                case ChatGroup.dialog:
+                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormUserDialogs(src, dest, currentUser)));
                     break;
-                case ChatGroup.Team:
+                case ChatGroup.chatProject:
+                case ChatGroup.chatTeam:
+                    result = mapper.Map<List<ChatDialog>, List<ChatDialogDTO>>(dialogs, opt => opt.AfterMap((src, dest) => FormGroupDialogs(src, dest, currentUser)));
                     break;
                 default:
                     break;
             }
-            return contacts;
+
+            return result;
         }
 
-        public Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync()
+        public async Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId)
         {
-            throw new NotImplementedException();
-        }
+            if (targetGroupDialogId < 0)
+                return null;
 
-        public async Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId)
-        {
-            List<ChatMessageDTO> messages = new List<ChatMessageDTO>();
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            var currentUser = await _currentUser.GetCurrentUserProfile();
             if (currentUser == null)
                 return null;
+
+            IEnumerable<ChatMessage> messages = null;
+            long dialogIdentifer = -1;
+
             switch (targetGroup)
             {
-                case ChatGroup.chatUser:
+                case ChatGroup.dialog:
+                case ChatGroup.direct:
                     {
-                        messages = new List<ChatMessageDTO>
-                        {
-                            new ChatMessageDTO()
-                            {
-                                Id = 0,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 1,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "If truth is beauty, how come no one has their hair done in the library?"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 2,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 3,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "Ignorance must certainly be bliss or there wouldn't be so many people so resolutely pursuing it.My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 4,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "the high school after high school!"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 5,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "A professor is one who talks in someone else's sleep."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 6,
-                                IsRead = true,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "About all some men accomplish in life is to send a son to Harvard. My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },new ChatMessageDTO()
-                            {
-                                Id = 7,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = currentUser.Id,
-                                SenderId = targetGroupItemId,
-                                Body = "My father, a good man, told me, 'Never lose your ignorance; you cannot replace it."
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 8,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "The world is coming to an end! Repent and return those library books!"
-                            },
-                            new ChatMessageDTO()
-                            {
-                                Id = 9,
-                                IsRead = false,
-                                ReceivedDate = DateTime.Now,
-                                RecipientId = targetGroupItemId,
-                                SenderId = currentUser.Id,
-                                Body = "So, is the glass half empty, half full, or just twice as large as it needs to be?."
-                            }
-                        };
+                        dialogIdentifer = currentUser.Id + targetGroupDialogId;
                         break;
                     }
-                case ChatGroup.Project:
-                    break;
-                case ChatGroup.Team:
-                    break;
+                case ChatGroup.chatProject:
+                case ChatGroup.chatTeam:
+                    {
+                        dialogIdentifer = targetGroupDialogId;
+                        break;
+                    }
                 default:
                     break;
             }
-            return messages;
+
+            messages = (await uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.Identifier == dialogIdentifer && d.DialogType == targetGroup))
+                ?.Messages;
+
+            return messages != null ? mapper.Map<IEnumerable<ChatMessageDTO>>(messages) : null;
         }
 
-        public Task<ChatMessageDTO> GetMessageAsync(int messageId)
+        public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message)
         {
-            throw new NotImplementedException();
+            var targetDialog = await uow.GetRepository<ChatDialog>().GetAsync(message.DialogId);
+            if (targetDialog == null)
+                return null;
+
+            var currentUser = await _currentUser.GetCurrentUserProfile();
+            if (currentUser == null || message == null)
+                return null;
+
+            message.ReceivedDate = DateTime.Now;
+            message.SenderId = currentUser.Id;
+            var newMessage = await uow.GetRepository<ChatMessage>().CreateAsync(mapper.Map<ChatMessage>(message));
+            await uow.SaveAsync();
+
+            if (newMessage == null)
+                return null;
+
+            var dialogId = newMessage.DialogId.Value;
+            var text = newMessage.Body;
+            // отправляем уведомление о сообщении в диалог
+            await signalRChatService.MessageReveived($"{targetDialog.DialogType.ToString()}{dialogId}", dialogId, newMessage.Id, text);
+
+            //отправляем уведомление каждому участнику диалога
+            foreach (var participant in targetDialog.DialogParticipants)
+            {
+                await signalRChatService.MessageReveived($"{ChatGroup.direct.ToString()}{participant.ParticipantId}", dialogId, newMessage.Id, text);
+            }
+
+            return mapper.Map<ChatMessageDTO>(newMessage);
         }
+
+        public async Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync()
+        {
+            var currentUser = await _currentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            return null;
+        }
+
+        public async Task<ChatMessageDTO> GetMessageAsync(int messageId)
+        {
+            var currentUser = await _currentUser.GetCurrentUserProfile();
+            if (currentUser == null)
+                return null;
+
+            var message = await uow.GetRepository<ChatMessage>()
+                            .GetAsync(messageId);
+
+            if (message == null)
+                return null;
+
+            // current user должен принимать участие в диалоге к которому относится искомое сообщение 
+            var targetDialog = message.Dialog
+                ?.DialogParticipants
+                ?.Select(dp => dp.Participant)
+                ?.Where(p => p.Id == currentUser.Id)
+                ?.FirstOrDefault();
+
+            return targetDialog != null ? mapper.Map<ChatMessageDTO>(message) : null;
+        }
+
         public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
         {
             throw new NotImplementedException();
@@ -198,7 +181,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<ProjectDTO>> GetProjectsAsync()
         {
-            return await projectService.GetListAsync() ?? null; 
+            return await projectService.GetListAsync() ?? null;
         }
 
         public async Task<IEnumerable<TeamPrevDTO>> GetTeamsAsync()
@@ -206,76 +189,117 @@ namespace Polyglot.BusinessLogic.Services
             return await teamService.GetAllTeamsAsync() ?? null;
         }
 
-
-        public async Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId)
+        public async Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog)
         {
-            var currentUser = await CurrentUser.GetCurrentUserProfile();
+            if (dialog.Participants.Count() < 1)
+                return null;
+
+            var currentUser = await _currentUser.GetCurrentUserProfile();
+
             if (currentUser == null)
                 return null;
 
-            switch (targetGroup)
-            {
-                case ChatGroup.chatUser:
-                    {
-                        // сохранить в бд
-                        message.IsRead = false;
-                        message.ReceivedDate = DateTime.Now;
-                        message.SenderId = currentUser.Id;
-                        await signalRChatService.MessageReveived($"{targetGroup}{targetGroupItemId}", message);
-                        break;
-                    }
-                    
-                case ChatGroup.Project:
-                    break;
-                case ChatGroup.Team:
-                    break;
-                default:
-                    break;
-            }
-            return message;
-        }
+            var targetIdentifier = dialog.Participants.Sum(p => p.Id) + currentUser.Id;
+            var d = await uow.GetRepository<ChatDialog>()
+                .GetAsync(dd => dd.Identifier == targetIdentifier && dd.DialogType == ChatGroup.dialog);
 
-        private async Task<IEnumerable<ChatUserDTO>> GetUserContacts(UserProfile currentUser)
-        {
-            IEnumerable<ChatUserDTO> contacts = null;
-            List<UserProfile> users = null;
-            if (currentUser.UserRole == Role.Manager)
+            if (d == null)
             {
-                users = (await uow.GetRepository<Project>().GetAllAsync(p => p.UserProfile.Id == currentUser.Id))
-                    .SelectMany(p => p.ProjectTeams)
-                    .Select(pt => pt.Team)
-                    .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile)
-                    .ToList();
+                var repo = uow.GetRepository<UserProfile>();
+                UserProfile currentInterlocator;
+                List<DialogParticipant> dp = new List<DialogParticipant>();
+
+                foreach (var p in dialog.Participants)
+                {
+                    currentInterlocator = await repo.GetAsync(p.Id);
+                    if (currentInterlocator != null)
+                    {
+                        dp.Add(new DialogParticipant() { Participant = currentInterlocator });
+                    }
+                }
+                dp.Add(new DialogParticipant() { Participant = currentUser });
+
+                if (dp.Count < 2)
+                {
+                    return null;
+                }
+
+
+                var newDialog = await uow.GetRepository<ChatDialog>()
+                    .CreateAsync(new ChatDialog()
+                    {
+                        Identifier = targetIdentifier,
+                        DialogParticipants = dp,
+                        DialogType = ChatGroup.dialog
+                    }
+                    );
+
+                await uow.SaveAsync();
+                return mapper.Map<ChatDialogDTO>(newDialog);
             }
             else
             {
-                var translatorTeams = (await uow.GetRepository<TeamTranslator>()
-                    .GetAllAsync(x => x.TranslatorId == currentUser.Id))
-                    .Select(tt => tt.Team);
-
-                users = translatorTeams
-                    .SelectMany(t => t.TeamTranslators)
-                    .Select(tt => tt.UserProfile)
-                    .Where(u => u.Id != currentUser.Id)
-                    .ToList();
-
-                users.AddRange(translatorTeams.Select(tt => tt.CreatedBy));
+                return null;
             }
-
-            // достать из базы userState, последнее сообщение и примапить
-            contacts = mapper.Map <List<UserProfile>, List<ChatUserDTO>>(users, opt => opt.AfterMap((src, dest) =>
-            {
-                List<ChatUserDTO> result = dest;
-                result.ForEach(u => 
-                {
-                    u.LastMessageText = "Last message text from server, hell yeah!!1111";
-                    u.LastSeen = DateTime.Now;
-                    u.IsOnline = true;
-                });
-            }));
-
-            return contacts;
         }
+
+        public async Task<bool> DeleteDialog(int id)
+        {
+            await uow.GetRepository<ChatDialog>().DeleteAsync(id);
+            return await uow.SaveAsync() > 0;
+        }
+
+        #region Private members
+
+        private void FormGroupDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
+        {
+            List<ChatDialogDTO> result = dest;
+            result.ForEach(d =>
+            {
+                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
+                d.UnreadMessagesCount = accordingSourceDialog.Messages
+                        .Where(m => m.SenderId != currentUser.Id && !m.IsRead)
+                        .Count();
+            });
+        }
+
+        private void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
+        {
+            List<ChatDialogDTO> result = dest;
+            string lastMessage;
+            result.ForEach(d =>
+            {
+                var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
+                var interlocator = accordingSourceDialog
+                    .DialogParticipants
+                    .Select(dp => dp.Participant)
+                    .Where(p => p.Id != currentUser.Id)
+                    .FirstOrDefault();
+
+                if (interlocator != null)
+                {
+                    lastMessage = accordingSourceDialog
+                        .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
+                        ?.Body;
+                    d.LastMessageText = lastMessage != null ? lastMessage : ""; 
+
+                    if (d.LastMessageText.Length > 155)
+                    {
+                        d.LastMessageText = d.LastMessageText.Substring(0, 150);
+                    }
+
+                    d.UnreadMessagesCount = accordingSourceDialog.Messages
+                        .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
+                        .Count();
+
+                    d.Participants = new List<ChatUserDTO>()
+                    {
+                        mapper.Map<ChatUserDTO>(interlocator)
+                    };
+                }
+            });
+        }
+
+        #endregion Private members
     }
 }

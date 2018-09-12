@@ -36,7 +36,12 @@
 
             </ng-container>
             <ng-container *ngIf="!com.isEditting">
-                <div class="text">{{com?.text}}</div>
+                <div class="text">
+                    <span style="color: forestgreen">
+                       {{com?.text | comments: 'selectedText'}} 
+                    </span>
+                    {{com?.text | comments: 'commentText'}}
+                </div>
             </ng-container>
 
             <div class="date"><i>{{com?.createdOn | date:'medium'}}</i></div>

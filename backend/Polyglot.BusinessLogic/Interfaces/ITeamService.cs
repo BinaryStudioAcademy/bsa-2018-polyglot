@@ -16,6 +16,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<bool> TryDisbandTeamAsync(int teamId);
 
+        Task<TeamDTO> TryAddTeamAsync(TeamTranslatorsDTO teamTranslators);
+
         #endregion Teams
 
         #region Translators
@@ -25,6 +27,10 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<TranslatorDTO> GetTranslatorAysnc(int id);
 
         Task<double> GetTranslatorRatingValueAsync(int translatorId);
+
+        Task<TranslatorDTO> ActivateUserInTeam(int userId, int teamId);
+
+        Task<TeamDTO> DeleteUserFromTeam(int userId, int teamId);
 
         #endregion Translators
     }

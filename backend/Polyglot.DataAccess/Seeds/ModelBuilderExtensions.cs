@@ -152,7 +152,8 @@ namespace Polyglot.DataAccess.Seeds
                 new Language { Id = 2, Name = "Ukrainian", Code = "uk" },
                 new Language { Id = 3, Name = "German", Code = "de" },
                 new Language { Id = 4, Name = "Spanish", Code = "es" },
-                new Language { Id = 5, Name = "Italian", Code = "it" }
+                new Language { Id = 5, Name = "Italian", Code = "it" },
+                new Language { Id = 6, Name = "Chinese", Code = "zh" }
                 );
 
 
@@ -209,20 +210,7 @@ namespace Polyglot.DataAccess.Seeds
              }
                 );
 
-            modelBuilder.Entity<ProjectTag>().HasData(
-                new { Id = 1, ProjectId = 1, TagId = 1 },
-                new { Id = 2, ProjectId = 1, TagId = 2 },
-                new { Id = 3, ProjectId = 2, TagId = 2 },
-                new { Id = 4, ProjectId = 2, TagId = 4 },
-                new { Id = 5, ProjectId = 3, TagId = 5 },
-                new { Id = 6, ProjectId = 3, TagId = 6 },
-                new { Id = 7, ProjectId = 4, TagId = 3 },
-                new { Id = 8, ProjectId = 4, TagId = 4 },
-                new { Id = 9, ProjectId = 5, TagId = 7 },
-                new { Id = 10, ProjectId = 5, TagId = 8 }
-                );
-
-
+         
             modelBuilder.Entity<ProjectLanguage>().HasData(
               new { Id = 1, ProjectId = 1, LanguageId = 1 },
               new { Id = 2, ProjectId = 1, LanguageId = 2 },
@@ -251,8 +239,8 @@ namespace Polyglot.DataAccess.Seeds
 
             modelBuilder.Entity<Right>().HasData(
              new Right { Id = 1, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 2, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 3, Definition = RightDefinition.AddNewKey },
+             new Right { Id = 2, Definition = RightDefinition.AddNewLanguage },
+             new Right { Id = 3, Definition = RightDefinition.SelectNewLanguage },
              new Right { Id = 4, Definition = RightDefinition.AddNewKey },
              new Right { Id = 5, Definition = RightDefinition.AddNewKey }
             );
@@ -348,6 +336,7 @@ namespace Polyglot.DataAccess.Seeds
                new { Id = 5, ProjectId = 2, TranslationKey = "article" }
 
                );
+
 
         }
 
@@ -509,16 +498,16 @@ namespace Polyglot.DataAccess.Seeds
             if (!context.TranslatorLanguages.Any())
             {
                 var translatorLanguages = new List<TranslatorLanguage> {
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = "Medium" }
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = Proficiency.Beginner },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = Proficiency.Beginner }
                    };
 
                 context.AddRange(translatorLanguages);
@@ -545,24 +534,24 @@ namespace Polyglot.DataAccess.Seeds
             //    context.SaveChanges();
             //}
 
-            if (!context.Tags.Any())
-            {
-                var tags = new List<Tag> {
-                   new Tag {  Color = "Apple", Name = "csharp" },
-                   new Tag {  Color = "Aqua", Name = "asp-net-core" },
-                   new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
-                   new Tag {  Color = "Awesome", Name = "angular" },
-                   new Tag {  Color = "Azure", Name = "binary-studio" },
-                   new Tag { Color = "Bittersweet", Name = "bsa18" },
-                   new Tag {  Color = "Blue bell", Name = "firebase" },
-                   new Tag {  Color = "Capri", Name = "www" },
-                   new Tag {  Color = "Cameo pink", Name = "seeds" },
-                   new Tag { Color = "Blue-gray", Name = "mock" }
-               };
+            //if (!context.Tags.Any())
+            //{
+            //    var tags = new List<Tag> {
+            //       new Tag {  Color = "Apple", Name = "csharp" },
+            //       new Tag {  Color = "Aqua", Name = "asp-net-core" },
+            //       new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
+            //       new Tag {  Color = "Awesome", Name = "angular" },
+            //       new Tag {  Color = "Azure", Name = "binary-studio" },
+            //       new Tag { Color = "Bittersweet", Name = "bsa18" },
+            //       new Tag {  Color = "Blue bell", Name = "firebase" },
+            //       new Tag {  Color = "Capri", Name = "www" },
+            //       new Tag {  Color = "Cameo pink", Name = "seeds" },
+            //       new Tag { Color = "Blue-gray", Name = "mock" }
+            //   };
 
-                context.AddRange(tags);
-                context.SaveChanges();
-            }
+            //    context.AddRange(tags);
+            //    context.SaveChanges();
+            //}
 
             //if (!context.Teams.Any())
             //{
@@ -635,11 +624,6 @@ namespace Polyglot.DataAccess.Seeds
                    Technology ="films",
                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
                    ProjectTeams =  new List<ProjectTeam>(),
-                   ProjectTags = {
-                           new ProjectTag { TagId = 1, ProjectId = 1 },
-                           new ProjectTag { TagId = 2, ProjectId = 1 },
-                           new ProjectTag { TagId = 3, ProjectId = 1 },
-                   },
                    ProjectLanguageses = {
                            new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
                            new ProjectLanguage { LanguageId = 2, ProjectId = 1 },

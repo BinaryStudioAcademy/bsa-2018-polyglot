@@ -7,19 +7,81 @@
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
   background-color: white
   padding: 20px
+  max-height: 500px
+  overflow-y: scroll
     
 .card
 	-webkit-box-shadow: none
 	-moz-box-shadow: none
 	box-shadow: none
 	
-.avatar  
-    img
-       box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
-       border-radius: 50%
-       width: 150px
-       height: 150px
-       cursor: pointer
+// .avatar  
+//     img
+//        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
+//        border-radius: 50%
+//        width: 150px
+//        height: 150px
+//        cursor: pointer
+
+
+.parent
+  width: 150px
+  margin: 20px
+  height: 150px
+  overflow: hidden
+  position: relative
+  float: left
+  display: inline-block
+  cursor: pointer
+  border-radius: 50%
+
+.child
+  height: 100%
+  width: 100%
+  background-size: cover
+  background-repeat: no-repeat
+  -webkit-transition: all .5s
+  -moz-transition: all .5s
+  -o-transition: all .5s
+  transition: all .5s
+
+
+p
+  display: none
+  font-size: 12px
+  color: #ffffff !important
+  font-family: sans-serif
+  text-align: center
+  margin: auto
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  height: 50px
+  cursor: pointer
+  text-decoration: none;
+
+.parent
+  &:hover .child, &:focus .child
+    -ms-transform: scale(1.2)
+    -moz-transform: scale(1.2)
+    -webkit-transform: scale(1.2)
+    -o-transform: scale(1.2)
+    transform: scale(1.2)
+  &:hover .child:before, &:focus .child:before, &:hover p, &:focus p
+    display: block
+
+.child:before
+  content: ""
+  display: none
+  height: 100%
+  width: 100%
+  position: absolute
+  top: 0
+  left: 0
+  background-color: rgba(52, 73, 94, 0.75)
+
 .user-name
     display: inline
     font-weight: bold
@@ -32,9 +94,7 @@ span
     
 .title
     margin-top: 0
-.languages-list
-    overflow-y: scroll
-    height: 297px
+
 ::-webkit-scrollbar 
     width: 5px
 ::-webkit-scrollbar-track 
@@ -75,3 +135,6 @@ a
 
 .team-name
     color: black
+
+.left-cards
+    min-height: 600px

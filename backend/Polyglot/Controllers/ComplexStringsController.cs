@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -25,12 +24,14 @@ namespace Polyglot.Controllers
         private readonly IMapper mapper;
         private readonly IComplexStringService dataProvider;
         public IFileStorageProvider fileStorageProvider;
+        private readonly ICurrentUser _currentUser;
 
-        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider)
+        public ComplexStringsController(IComplexStringService dataProvider, IMapper mapper, IFileStorageProvider provider, ICurrentUser currentUser)
         {
             this.dataProvider = dataProvider;
             this.mapper = mapper;
             fileStorageProvider = provider;
+            _currentUser = currentUser;
         }
 
         // GET: ComplexStrings
@@ -68,7 +69,7 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             translation.UserId = user.Id;
 
             var entity = await dataProvider.SetStringTranslation(id, translation);
@@ -79,7 +80,7 @@ namespace Polyglot.Controllers
         [HttpPut("{id}/translations")]
         public async Task<IActionResult> EditStringTranslation(int id, [FromBody]TranslationDTO translation)
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             translation.UserId = user.Id;
 
             var entity = await dataProvider.EditStringTranslation(id, translation);
@@ -87,7 +88,35 @@ namespace Polyglot.Controllers
                 : Ok(entity);
         }
 
-		[HttpPost("{stringId}/{translationId}")]
+
+        [HttpPut("{id}/translations/confirm")]
+        public async Task<IActionResult> ConfirmTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+            var entity = await dataProvider.ConfirmTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{id}/translations/unconfirm")]
+        public async Task<IActionResult> UnConfirmTranslation(int id, [FromBody]TranslationDTO translation)
+        {
+            var entity = await dataProvider.UnConfirmTranslation(id, translation);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpPut("{id}/translations/revert", Name = "RevertHistory")]
+        public async Task<IActionResult> RevertTranslationHistory(int id, [FromQuery(Name = "translationId")] Guid translationId, [FromQuery(Name = "historyId")] Guid historyId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var entity = await dataProvider.RevertTranslationHistory(id, translationId, historyId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+    [HttpPost("{stringId}/{translationId}")]
 		public async Task<IActionResult> AddOptionalTranslation(int stringId, Guid translationId, string value)
 		{
 			var entity = await dataProvider.AddOptionalTranslation(stringId, translationId, value);

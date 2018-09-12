@@ -10,6 +10,11 @@ import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppStateService } from '../../../services/app-state.service';
+import { LanguageService } from '../../../services/language.service';
+import { LanguageStatistic, TranslatorLanguage } from '../../../models';
+import { Proficiency } from '../../../models/proficiency';
+import { ChooseProficiencyDialogComponent } from '../../../dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { AddRemoveLanguagesDialogComponent } from '../../../dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
 
 @Component({
   selector: 'app-translator-profile',
@@ -30,11 +35,12 @@ export class TranslatorProfileComponent implements OnInit{
               private snotifyService: SnotifyService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private appStateService: AppStateService) { }
+              private appStateService: AppStateService,
+              private languageService: LanguageService) { }
 
     @Input() public userProfile : any;
     public Comments: Comment[];
-    Languages: Language[];
+    Languages: TranslatorLanguage[];
     private routeSub: Subscription;
 
     ngOnInit(): void {
@@ -45,19 +51,17 @@ export class TranslatorProfileComponent implements OnInit{
             });
         });
 
-        this.Languages = [
-            {Name : "French",Proficiency : 47},
-            {Name : "Spanish",Proficiency : 77},
-            {Name : "English",Proficiency : 97},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50},
-            {Name : "OtherLang",Proficiency : 50}
-          ];
+        this.languageService.getTranslatorsLanguages(this.userProfile.id).subscribe(languages=>{
+            this.Languages = languages;
+        });
     }
 
     isOwnersProfile(){
         return this.userProfile.id == this.userService.getCurrentUser().id;
+    }
+
+    isTranslator(){
+        return !this.userService.isCurrentUserManager();
     }
 
     leaveTeam(team: Team)
@@ -124,10 +128,36 @@ export class TranslatorProfileComponent implements OnInit{
         }
     }
 
+    openProficiencyDialog(){
+        const dialogRef = this.dialog.open(ChooseProficiencyDialogComponent, {
+            data: {translatorLanguages: this.Languages}
+        });
+        dialogRef.componentInstance.openAddLangsDialogEvent.subscribe(()=> this.openAddRemoveLanguageDialog())      
+        dialogRef.afterClosed().subscribe(()=>{
+            this.languageService.getTranslatorsLanguages(this.userService.getCurrentUser().id).subscribe(data=>{
+                this.Languages = data;
+            });
+        });
+    }
+
+    openAddRemoveLanguageDialog(){
+        const dialogRef = this.dialog.open(AddRemoveLanguagesDialogComponent, {
+            data: {translatorLanguages: this.Languages}
+        });      
+        dialogRef.afterClosed().subscribe(()=>{
+            this.languageService.getTranslatorsLanguages(this.userService.getCurrentUser().id).subscribe(data=>{
+                this.Languages = data;
+            });
+        });
+    }
+
+    getStringProficiency(prof: Proficiency){
+        if(Proficiency[prof] === "UpperIntermediate"){
+            return "Upper Intermediate"
+        }
+        return Proficiency[prof];
+    }
+
 }
 
 
-export interface Language{
-    Name : string,
-    Proficiency : number
-}

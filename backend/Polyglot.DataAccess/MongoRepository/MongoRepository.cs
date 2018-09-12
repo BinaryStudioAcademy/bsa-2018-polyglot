@@ -94,9 +94,7 @@ namespace Polyglot.DataAccess.MongoRepository
         {
             try
             {
-                DeleteResult actionResult
-                    = await Collection.DeleteOneAsync(
-                        Builders<TEntity>.Filter.Eq("Id", id));
+                DeleteResult actionResult = await Collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
                 await ElasticRepository.UpdateSearchIndex(new TEntity { Id = id }, CrudAction.Delete);
                 return null;
             }
@@ -106,6 +104,12 @@ namespace Polyglot.DataAccess.MongoRepository
                 throw ex;
             }
         }
+
+        public Task<TEntity> PutAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public async Task<TEntity> Update(TEntity entity)
         {
@@ -138,5 +142,6 @@ namespace Polyglot.DataAccess.MongoRepository
 			await Collection.DeleteManyAsync(predicate);
 		}
 
-	}
+       
+    }
 }

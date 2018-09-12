@@ -43,6 +43,14 @@ export class ComplexStringService {
     return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations', undefined, translation);
   }
 
+  confirmTranslation(translation: Translation, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/confirm', undefined, translation);
+  }
+
+  unConfirmTranslation(translation: Translation, id: number): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/unconfirm', undefined, translation);
+  }
+
   delete(id: number): Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Delete, this.api, id, undefined);
   }
@@ -72,7 +80,11 @@ export class ComplexStringService {
   }
 
   getTranslationHistory(id: number, translationId: string, itemsOnPage: number, page: number) {
-    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage='+itemsOnPage+'&page='+page);
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + id + '/history/' + translationId, '?itemsOnPage=' + itemsOnPage+'&page='+page);
+  }
+
+  revertTranslationHistory(id: number, translationId: string, historyId: string) {
+    return this.dataService.sendRequest(RequestMethod.Put, this.api + '/' + id + '/translations/','revert?translationId=' + translationId + '&historyId=' + historyId);
   }
 
   addOptionalTranslation(stringId, translationId, value) {

@@ -42,6 +42,18 @@ namespace Polyglot.DataAccess.SqlRepository
             return null;
         }
 
+        public async Task<TEntity> PutAsync(int id)
+        {
+            TEntity temp = await DbSet.FindAsync(id);
+            if (temp != null)
+            {
+                var result = DbSet.Update(temp).Entity;
+                await Elasticsearch.ElasticRepository.UpdateSearchIndex(temp, CrudAction.Update);
+                return result;
+            }
+            return null;
+        }
+
         public async Task<TEntity> GetAsync(int id)
         {
             return await DbSet.FindAsync(id);
@@ -68,6 +80,7 @@ namespace Polyglot.DataAccess.SqlRepository
         {
 
             var result = DbSet.Update(entity).Entity;
+           
             await ElasticRepository.UpdateSearchIndex(result, CrudAction.Update);
             return result;
         }
@@ -88,6 +101,13 @@ namespace Polyglot.DataAccess.SqlRepository
             context.Entry(entity).State = EntityState.Modified;
             return true;
         }
+
+        public async Task<TEntity> GetLastAsync()
+        {
+            return await DbSet.LastOrDefaultAsync();
+        }
+
+       
 
         //public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where) 
         //    => 
