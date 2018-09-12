@@ -239,9 +239,26 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
             {
-                return null;
+                return mapper.Map<ChatDialogDTO>(d);
             }
         }
+
+        public async Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user)
+        {
+            ChatUserDTO chatUser = mapper.Map<ChatUserDTO>(user);
+            ChatDialogDTO dialog = new ChatDialogDTO()
+            {
+                DialogType = ChatGroup.dialog
+            };
+
+            List<ChatUserDTO> dp = new List<ChatUserDTO>();
+            dp.Add(mapper.Map<ChatUserDTO>(user));
+            dialog.Participants = dp;
+
+            return await CreateDialog(dialog);
+
+        }
+
 
         public async Task<bool> DeleteDialog(int id)
         {

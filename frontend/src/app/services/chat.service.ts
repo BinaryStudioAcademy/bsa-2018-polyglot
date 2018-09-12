@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpService, RequestMethod } from './http.service';
-import { GroupType, Project, Team, ChatMessage } from '../models';
+import { GroupType, Project, Team, ChatMessage, UserProfile } from '../models';
 import { ChatDialog } from '../models/chat/chatDialog';
 
 @Injectable({
@@ -46,6 +46,9 @@ export class ChatService {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + `/${GroupType[group]}/dialogs/messages`, undefined, message);
   }
 
+  startChatWithUser(user: UserProfile) : Observable<ChatDialog> {
+    return this.dataService.sendRequest(RequestMethod.Post, this.api + '/startDialog', undefined, user);
+  }
   //createMessage(project: FormData) : Observable<Project> {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
   //}

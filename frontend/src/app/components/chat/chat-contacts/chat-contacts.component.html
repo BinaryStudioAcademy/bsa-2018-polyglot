@@ -61,7 +61,7 @@
 
             <div [hidden]="!isSearchMode">
                 <ul>
-                    <li *ngFor="let user of searchUsers" (click)="selectDialog(d)">
+                    <li *ngFor="let user of searchUsers" (click)="setDialog(user)">
                         <mat-card class="person-card dialog-card">
                             <mat-card-header>
                                 <a class="person-img">
@@ -71,15 +71,6 @@
                                     <div class="person-name">{{user.fullName}}</div>
                                     <div class="person-role">{{user.role}}</div>
                                 </div>
-                                <div class="options-button-container">
-                                        <button class="person-card-options" (click)="$event.preventDefault(); $event.stopPropagation();" mat-button
-                                        [matMenuTriggerFor]="menu">
-                                        <mat-icon aria-label="dropdown-menu">more_vert</mat-icon>
-                                    </button>
-                                </div>
-                                <mat-menu #menu="matMenu" xPosition="before" class="person-options">
-                                    <button (click)="deleteDialog(d)" mat-menu-item>Delete</button>
-                                </mat-menu>
                             </mat-card-header>
                         </mat-card>
                     </li>

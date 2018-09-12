@@ -119,6 +119,7 @@ export class ChatContactsComponent implements OnInit {
     }
 
     selectDialog(dialog: ChatDialog) {
+        console.log(dialog);
         this.unreadMessagesTotal['persons'] -= dialog.unreadMessagesCount;
         dialog.unreadMessagesCount = 0;
         this.selectedDialogId = dialog.id;
@@ -201,6 +202,12 @@ export class ChatContactsComponent implements OnInit {
         else{
             this.isSearchMode = false;
         }
+    }
+
+    setDialog(user: UserProfile){
+        this.chatService.startChatWithUser(user).subscribe(dialog =>{
+            this.onItemSelect.emit(dialog);
+        });
     }
     
 }
