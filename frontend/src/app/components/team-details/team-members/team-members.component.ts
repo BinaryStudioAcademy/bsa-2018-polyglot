@@ -101,7 +101,9 @@ export class TeamMembersComponent implements OnInit {
 
     ngAfterViewInit() {
         // If the user changes the sort order, reset back to the first page.
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        if (this.sort) {
+            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        }
     }
 
     addMember() {
