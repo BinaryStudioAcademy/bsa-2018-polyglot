@@ -22,11 +22,13 @@ namespace Polyglot.BusinessLogic.Interfaces
 
 		#endregion Teams
 
+
 		#region Translators
 
-		Task<IEnumerable<TranslatorDTO>> GetAllTranslatorsAsync();
+        Task<IEnumerable<TranslatorDTO>> GetAllTranslatorsAsync();
+		Task<IEnumerable<TranslatorDTO>> GetFilteredtranslators(int prof, int[] languages);
+		Task<TranslatorDTO> GetTranslatorAysnc(int id);
 
-        Task<TranslatorDTO> GetTranslatorAysnc(int id);
 
         Task<double> GetTranslatorRatingValueAsync(int translatorId);
 

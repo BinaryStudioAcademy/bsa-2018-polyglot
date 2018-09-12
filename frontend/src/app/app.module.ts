@@ -123,6 +123,7 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pipe';
 import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
 import { GuidelineComponent } from './components/guideline/guideline.component';
 import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
@@ -213,6 +214,8 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     NotificationsComponent,
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
+    TranslatorSearchByNamePipe,
+    ChooseProficiencyDialogComponent,
     AddRemoveLanguagesDialogComponent,
     GuidelineComponent,
     TranslatorGuideComponent,
@@ -253,7 +256,7 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     NgxChartsModule,
     NgxInfiniteScrollerModule,
     InfiniteScrollModule
-   
+
   ],
   entryComponents: [
     LoginDialogComponent,
