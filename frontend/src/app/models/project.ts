@@ -22,4 +22,5 @@ export interface Project {
     projectGlossaries?: Array<ProjectGlossary>;
     tags?: Array<Tag>;
     progress: number;
+    priority: number;
 }
