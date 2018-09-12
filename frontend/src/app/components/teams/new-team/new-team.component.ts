@@ -169,6 +169,9 @@ export class NewTeamComponent implements OnInit {
     }
 
     onFilterApply(proficiency: string) {
+        if(!proficiency) {
+            proficiency = "Beginner";
+        }
         this.teamService.getFilteredTranslators(this.proficiencyTypes[proficiency], this.selectedLanguages)
             .subscribe(
                 (d: Translator[]) => {

@@ -210,7 +210,7 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     NotificationsComponent,
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
-    TranslatorSearchByNamePipe
+    TranslatorSearchByNamePipe,
     ChooseProficiencyDialogComponent,
     AddRemoveLanguagesDialogComponent,
     CommentsPipe
@@ -249,7 +249,7 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     NgxChartsModule,
     NgxInfiniteScrollerModule,
     InfiniteScrollModule
-   
+
   ],
   entryComponents: [
     LoginDialogComponent,

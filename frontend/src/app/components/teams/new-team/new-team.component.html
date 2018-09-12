@@ -17,31 +17,7 @@
         </div>
     </div>
 </div>
-<mat-form-field >
-    <button matSuffix mat-icon-button aria-label="Search">
-        <mat-icon>search</mat-icon>
-    </button>
-    <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
-    <button  matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery='';">
-        <mat-icon>close</mat-icon>
-    </button>
-</mat-form-field>
-<button mat-flat-button color="primary" [matMenuTriggerFor]="filters">Advanced search</button>
-<mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false">
-    <div (click)="$event.stopPropagation();">
-        <button mat-flat-button (click)="selectLanguages();">Select languages</button>
-        <mat-form-field>
-            <mat-select placeholder="Language level" #selectedCategory>
-                <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
-                    {{proficiency}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div>
-        <button mat-flat-button (click)="onFilterApply(selectedCategory.value)">Apply</button>
-    </div>
-</mat-menu>
+
 <mat-divider></mat-divider>
 
 <div class=list-container>
@@ -67,9 +43,36 @@
                     Proficiency</mat-chip>
 
             </div>
-            
+
 
         </mat-chip-list>
+        <div class="search-wrapper">
+                <mat-form-field >
+                        <button matSuffix mat-icon-button aria-label="Search">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                        <button  matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery='';">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" class="advanced-search-burron" [matMenuTriggerFor]="filters">Advanced search</button>
+                    <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false">
+                        <div (click)="$event.stopPropagation();" class="prof-wrappper">
+                            <mat-form-field>
+                                <mat-select placeholder="Language level" #selectedCategory>
+                                    <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
+                                        {{proficiency}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="buttons-wrappper">
+                            <button mat-raised-button (click)="selectLanguages();" (click)="$event.stopPropagation();">Select languages</button>
+                            <button mat-flat-button (click)="onFilterApply(selectedCategory.value)">Apply</button>
+                        </div>
+                    </mat-menu>
+            </div>
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>

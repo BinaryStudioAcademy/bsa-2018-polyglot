@@ -28,9 +28,11 @@ export class TeamService {
 
   getFilteredTranslators(prof: number, languages: Language[]): Observable<Translator[]> {
     var searchQuery = `?prof=${prof}`;
-    languages.forEach(function(item, i, languages) {
- 		searchQuery += `&languages=${item.id}`;
-    });
+    if(languages) {
+        languages.forEach(function(item, i, languages) {
+            searchQuery += `&languages=${item.id}`;
+       });
+    }
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/filteredtranslators', searchQuery, undefined);
   }
 

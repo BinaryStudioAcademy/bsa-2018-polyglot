@@ -288,15 +288,36 @@ namespace Polyglot.BusinessLogic.Services
 		public async Task<IEnumerable<TranslatorDTO>> GetFilteredtranslators(int prof, int[] languages)
 		{
 			IEnumerable<TranslatorDTO> entities = await this.GetAllTranslatorsAsync();
+			if (languages.Count() == 0 && prof == 0)
+				return entities;
+
 			List<TranslatorDTO> result = new List<TranslatorDTO>();
-			foreach (var entity in entities)
+			
+			if (languages.Count() == 0)
 			{
-				foreach (var lang in entity.TranslatorLanguages)
+				foreach (var entity in entities)
 				{
-					if ((int)lang.Proficiency > prof && languages.Contains(lang.Language.Id))
+					foreach (var lang in entity.TranslatorLanguages)
 					{
-						result.Add(entity);
-						break;
+						if ((int)lang.Proficiency >= prof)
+						{
+							result.Add(entity);
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach (var entity in entities)
+				{
+					foreach (var lang in entity.TranslatorLanguages)
+					{
+						if ((int)lang.Proficiency >= prof && languages.Contains(lang.Language.Id))
+						{
+							result.Add(entity);
+							break;
+						}
 					}
 				}
 			}
