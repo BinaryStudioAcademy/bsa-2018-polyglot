@@ -96,11 +96,12 @@ li,
     font-weight: 500
     
 .person-img
-    display: flex
-    align-items: center
-    .person-avatar
-      width: 50px
-      height: 50px
+  position: relative
+  display: flex
+  align-items: center
+  .person-avatar
+    width: 50px
+    height: 50px
 
 
 
@@ -116,22 +117,18 @@ li,
   flex-direction: column
   justify-content: center
  
-
 .online-status-container
-  display: flex
-  flex-direction: row
-  align-items: center
   position: absolute
-  right: 3px
-  top: 3px
-  .online-status-text
-    padding-right: 5px
-    font-size: 10px
-    opacity: 0
+  right: -3px
+  bottom: -5px
   .online-status-icon
-    width: auto
-    height: auto
-    font-size: 10px
+    height: 18px
+    width: 18px
+    color: #4BCB1C
+    background: #FAFAFA
+    font-size: 18px
+    border-radius: 50%
+    box-shadow: 2px 3px 8px -2px rgba(0,0,0,0.75)
     
 .mat-tab-header
   width: 300px

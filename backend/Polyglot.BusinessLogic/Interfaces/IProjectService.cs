@@ -15,6 +15,8 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<byte[]> GetFile(int id, int languageId, string format);
 
+        Task IncreasePriority(int projectId);
+
         #region Teams
 
         Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId);

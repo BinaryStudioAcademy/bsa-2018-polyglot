@@ -287,7 +287,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
-                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%; pointer-events: auto;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
             }
             if (words[i] === '') {
@@ -433,10 +433,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
+        this.divHidden = false;
+        this.translationDivs.item(index).style.width = `${this.translationInputs.item(index).clientWidth}px`;
+        let textarea: any = document.querySelectorAll('.textarea-translation').item(index);
+        textarea.style.width = `${this.translationInputs.item(index).clientWidth}px`;
         this.eventService.filter({
             isEditing: true
         });
-        this.divHidden = false;
         this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
