@@ -18,5 +18,9 @@ namespace Polyglot.BusinessLogic.Services.SignalR
         {
             await hubContext.Clients.Group(groupName).SendAsync(ChatAction.messageReceived.ToString(), await GetChatMessageResponce(dialogId, messageId, text));
         }
+        public async Task DialogsChanges(string groupName, int dialogId)
+        {
+            await hubContext.Clients.Group(groupName).SendAsync(ChatAction.dialogsChanged.ToString(), await GetIdsResponce(dialogId));
+        }
     }
 }

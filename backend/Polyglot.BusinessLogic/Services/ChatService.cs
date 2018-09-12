@@ -235,6 +235,10 @@ namespace Polyglot.BusinessLogic.Services
                     );
 
                 await uow.SaveAsync();
+                foreach(var participant in newDialog.DialogParticipants)
+                {
+                    await this.signalRChatService.DialogsChanges($"{ChatGroup.direct.ToString()}{participant.ParticipantId}", newDialog.Id);
+                }
                 return mapper.Map<ChatDialogDTO>(newDialog);
             }
             else
@@ -262,8 +266,15 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> DeleteDialog(int id)
         {
+            var dialogParticipantIds = (await uow.GetRepository<ChatDialog>().GetAsync(id)).DialogParticipants.Select(p => p.ParticipantId).ToList();
             await uow.GetRepository<ChatDialog>().DeleteAsync(id);
-            return await uow.SaveAsync() > 0;
+            var res = await uow.SaveAsync() > 0;
+            foreach (var participantId in dialogParticipantIds)
+            {
+                await this.signalRChatService.DialogsChanges($"{ChatGroup.direct.ToString()}{participantId}", (int)participantId);
+            }
+            return res;
+
         }
 
         #region Private members
