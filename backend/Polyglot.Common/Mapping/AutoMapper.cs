@@ -235,6 +235,16 @@ namespace Polyglot.Common.Mapping
                 .ForMember(p => p.Role, opt => opt.MapFrom(po => po.UserRole))
                 .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.AvatarUrl));
 
+                cfg.CreateMap<UserState, ChatUserDTO>()
+                .ForMember(p => p.Id, opt => opt.MapFrom(po => po.ChatUserId))
+                .ForMember(p => p.Uid, opt => opt.MapFrom(po => po.ChatUser.Uid))
+                .ForMember(p => p.Email, opt => opt.UseValue("NOT MAPPED"))
+                .ForMember(p => p.FullName, opt => opt.MapFrom(po => po.ChatUser.FullName))
+                .ForMember(p => p.Role, opt => opt.MapFrom(po => po.ChatUser.UserRole))
+                .ForMember(p => p.AvatarUrl, opt => opt.MapFrom(po => po.ChatUser.AvatarUrl))
+                .ForMember(p => p.IsOnline, opt => opt.MapFrom(po => po.IsOnline))
+                .ForMember(p => p.LastSeen, opt => opt.MapFrom(po => po.LastSeen));
+
                 cfg.CreateMap<ChatMessageDTO, ChatMessage>()
                 .ForMember(p => p.Id, opt => opt.MapFrom(po => po.Id))
                 .ForMember(p => p.Body, opt => opt.MapFrom(po => po.Body))

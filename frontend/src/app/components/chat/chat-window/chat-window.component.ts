@@ -236,7 +236,7 @@ export class ChatWindowComponent implements OnInit {
     }
 
     selectPerson(person){
-        if(person)
+        if(person && person.id !== this.currentUserId)
         {
             this.onPersonSelect.emit(person);
         }

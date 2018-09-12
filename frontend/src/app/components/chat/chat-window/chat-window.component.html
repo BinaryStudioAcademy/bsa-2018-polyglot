@@ -2,8 +2,12 @@
     <mat-toolbar class="interlocutor-info">
         <div *ngIf="isDirect; else group">
             <div class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</div>
-            <div class="last-seen">&nbsp;&nbsp;&nbsp; {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
-                : "Offline"}}</div>
+            <div class="last-seen">
+                  <!--  last seen
+                    {{interlocutors[currentInterlocutorId]?.lastSeen | date: 'medium'}} -->
+                {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
+                : "Offline"}} 
+            </div>
         </div>
         <ng-template #group>
             <div class="group-info-container">

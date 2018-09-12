@@ -269,7 +269,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     subscribeProjectChanges() {
-        debugger;
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
             (response: any) => {
