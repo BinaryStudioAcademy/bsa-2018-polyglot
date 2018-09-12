@@ -192,9 +192,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.changedTranslation],
             (response: any) => {
-                this.eventService.filter({
-                    translationUpdate: 'updated'
-                });
                 if (this.signalrService.validateResponse(response)) {
                     this.dataProvider
                         .getStringTranslations(this.currentKeyId)
