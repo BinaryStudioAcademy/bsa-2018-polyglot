@@ -16,7 +16,30 @@ namespace Polyglot.ViewModels
 {
     public class DashboardViewModel : BaseViewModel
     {
-        public bool IsEmpty => Projects == null || !Projects.Any();
+        private const bool DefaultIsEmpty = false;
+        private const bool DefaultIsLoad = true;
+
+        private bool _isEmpty = DefaultIsEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set
+            {
+                SetProperty(ref _isEmpty, value);
+            }
+        }
+
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
+        }
+
 
         private IEnumerable<ProjectViewModel> _projects;
         public IEnumerable<ProjectViewModel> Projects
@@ -48,6 +71,12 @@ namespace Polyglot.ViewModels
                 Description = x.Description
             }).ToList();
 
+            IsLoad = false;
+
+            if (Projects == null || !Projects.Any())
+            {
+                _isEmpty = true;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
 using Polyglot.BusinessLogic.Services;
 using System;
@@ -13,42 +14,41 @@ namespace Polyglot.ViewModels
 {
     public class TranslationsViewModel : BaseViewModel
     {
+        private const bool DefaultIsLoad = true;
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
+        }
+
         private IEnumerable<TranslationViewModel> _translations;
         public IEnumerable<TranslationViewModel> Translations
         {
             get => _translations;
-            set => SetProperty(ref _translations, value);
+            set {
+                if (!SetProperty(ref _translations, value))
+                {
+                    return;
+                }
+
+                RaisePropertyChanged(nameof(IsLoad));
+            }
         }
 
         public async void Initialize(int complexStringId, int projectId)
         {
-            var httpClient = new HttpClient();
-            var token = UserService.Token;
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var httpService = new HttpService();
 
-            var stringsUrl = "http://polyglotbsa.azurewebsites.net/api/complexstrings/" + complexStringId + "/translations";
-            var translationsResponse = await httpClient.GetAsync(stringsUrl);
+            var translationsUrl = "complexstrings/" + complexStringId + "/translations";
+            var translations = await httpService.GetAsync<List<TranslationDTO>>(translationsUrl);
 
-
-            //will throw an exception if not successful
-            translationsResponse.EnsureSuccessStatusCode();
-
-            string content = await translationsResponse.Content.ReadAsStringAsync();
-
-            var translations = JsonConvert.DeserializeObject<List<TranslationDTO>>(content);
-
-
-            var langUrl = "http://polyglotbsa.azurewebsites.net/api/projects/" + projectId + "/languages/";
-
-            var languagesResponse = await httpClient.GetAsync(langUrl);
-
-
-            //will throw an exception if not successful
-            languagesResponse.EnsureSuccessStatusCode();
-
-            string content2 = await languagesResponse.Content.ReadAsStringAsync();
-
-            var languages = JsonConvert.DeserializeObject<List<LanguageDTO>>(content2);
+            var langUrl = "projects/" + projectId + "/languages/";
+            var languages = await httpService.GetAsync<List<LanguageDTO>>(langUrl);
 
             Translations = from lang in languages
                            join tr in translations
@@ -62,7 +62,9 @@ namespace Polyglot.ViewModels
                                Translation = t == null ? "Not translated" : t.TranslationValue
                            };
 
-            Translations = Translations.ToList();  
+            Translations = Translations.ToList();
+
+            IsLoad = false;
         }
     }
 }

@@ -5,6 +5,7 @@
              Title="Complex Strings">
     <StackLayout>
         <Label IsVisible="{Binding IsEmpty}" >No Complex Strings</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView  ItemsSource="{Binding ComplexStrings}"
             ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"

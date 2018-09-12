@@ -6,6 +6,7 @@
              Title="Optional translations">
     <StackLayout>
         <Label  Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No Optional translations</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView 
             ItemsSource="{Binding OptionalTranslations}"
             CachingStrategy="RecycleElement"

@@ -37,7 +37,17 @@ namespace Polyglot.Views
 
             var tr = e.Item as TranslationViewModel;
 
-            var actionSheet = await DisplayActionSheet("Title", "Cancel", null, "Comments", "History", "Optional translations");
+            var actionSheet = "";
+
+            if (string.IsNullOrEmpty(tr.Id))
+            {
+                actionSheet = await DisplayActionSheet("Choose the option", "Cancel", null, "Create translation", "Comments");
+            }
+            else
+            {
+                actionSheet = await DisplayActionSheet("Choose the option", "Cancel", null, "Edit translation", "Comments", "History", "Optional translations");
+            }
+            
 
             switch (actionSheet)
             {
@@ -50,22 +60,26 @@ namespace Polyglot.Views
                     break;
 
                 case "History":                   
-                    if (string.IsNullOrEmpty(tr.Id))
-                    {
-                        break;
-                    }
                     var historyPage = new HistoryPage(new HistoryViewModel(), ComplexStringId, tr.Id);
                     await Navigation.PushAsync(historyPage);
 
                     break;
 
                 case "Optional translations":                   
-                    if (string.IsNullOrEmpty(tr.Id))
-                    {
-                        break;
-                    }
                     var optionalPage = new OptionalTranslationsPage(new OptionalTranslationsViewModel(), ComplexStringId, tr.Id);
                     await Navigation.PushAsync(optionalPage);
+
+                    break;
+
+                case "Edit translation":
+                    var editTranslationPage = new EditTranslationPage();
+                    await Navigation.PushAsync(editTranslationPage);
+
+                    break;
+
+                case "Create translation":
+                    var createTranslationPage = new CreateTranslationPage();
+                    await Navigation.PushAsync(createTranslationPage);
 
                     break;
             }

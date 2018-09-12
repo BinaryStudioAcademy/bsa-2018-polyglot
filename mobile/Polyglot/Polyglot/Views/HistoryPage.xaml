@@ -5,6 +5,7 @@
              Title="History">
     <StackLayout>
         <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No History</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView 
             ItemsSource="{Binding History}"
             CachingStrategy="RecycleElement"

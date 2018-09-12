@@ -5,6 +5,7 @@
              Title="Dashboard">
     <StackLayout>
         <Label IsVisible="{Binding IsEmpty}">No Projects</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView 
             ItemsSource="{Binding Projects}"
             SelectedItem="{Binding SelectedProject, Mode=OneWayToSource}"

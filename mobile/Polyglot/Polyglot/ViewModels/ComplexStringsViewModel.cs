@@ -16,7 +16,29 @@ namespace Polyglot.ViewModels
 {
     public class ComplexStringsViewModel : BaseViewModel
     {
-        public bool IsEmpty => ComplexStrings == null || !ComplexStrings.Any();
+        private const bool DefaultIsEmpty = false;
+        private const bool DefaultIsLoad= true;
+
+        private bool _isEmpty=DefaultIsEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set
+            {
+                SetProperty(ref _isEmpty, value);
+            }
+        }
+
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
+        }
 
         private IEnumerable<ComplexStringViewModel> _complexStrings;
         public IEnumerable<ComplexStringViewModel> ComplexStrings
@@ -30,7 +52,6 @@ namespace Polyglot.ViewModels
                 }
 
                 RaisePropertyChanged(nameof(IsEmpty));
-
             }
         }
 
@@ -48,6 +69,13 @@ namespace Polyglot.ViewModels
                 Description = x.Description,
                 ProjectId = x.ProjectId
             }).ToList();
+
+            IsLoad = false;
+         
+            if(ComplexStrings == null || !ComplexStrings.Any())
+            {
+                _isEmpty = true;
+            }
         }
     }
 }

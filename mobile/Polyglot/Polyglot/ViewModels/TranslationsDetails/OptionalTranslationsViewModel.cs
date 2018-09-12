@@ -14,7 +14,29 @@ namespace Polyglot.ViewModels.TranslationsDetails
 {
     public class OptionalTranslationsViewModel : BaseViewModel
     {
-        public bool IsEmpty => OptionalTranslations == null || !OptionalTranslations.Any();
+        private const bool DefaultIsEmpty = false;
+        private const bool DefaultIsLoad = true;
+
+
+        private bool _isEmpty = DefaultIsEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set
+            {
+                SetProperty(ref _isEmpty, value);
+            }
+        }
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
+        }
 
         private IEnumerable<OptionalTranslationViewModel> _optionalTranslations;
         public IEnumerable<OptionalTranslationViewModel> OptionalTranslations
@@ -43,6 +65,13 @@ namespace Polyglot.ViewModels.TranslationsDetails
                 DateTime = x.DateTime,
                 UserPictureURL = x.UserPictureURL
             }).ToList();
+
+            IsLoad = false;
+
+            if (OptionalTranslations == null || !OptionalTranslations.Any())
+            {
+                _isEmpty = true;
+            }
         }
     }
 }

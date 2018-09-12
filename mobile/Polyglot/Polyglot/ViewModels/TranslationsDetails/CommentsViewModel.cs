@@ -12,8 +12,29 @@ namespace Polyglot.ViewModels.TranslationsDetails
 {
     public class CommentsViewModel : BaseViewModel
     {
-        public bool IsEmpty => Comments == null || !Comments.Any();
+        private const bool DefaultIsEmpty = false;
+        private const bool DefaultIsLoad = true;
 
+
+        private bool _isEmpty = DefaultIsEmpty;
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set
+            {
+                SetProperty(ref _isEmpty, value);
+            }
+        }
+
+        private bool _isLoad = DefaultIsLoad;
+        public bool IsLoad
+        {
+            get => _isLoad;
+            set
+            {
+                SetProperty(ref _isLoad, value);
+            }
+        }
 
         private IEnumerable<CommentVievModel> _comments;
         public IEnumerable<CommentVievModel> Comments
@@ -45,6 +66,12 @@ namespace Polyglot.ViewModels.TranslationsDetails
                 UserPictureURL=x.User.AvatarUrl
             }).ToList();
 
+            IsLoad = false;
+
+            if (Comments == null || !Comments.Any())
+            {
+                _isEmpty = true;
+            }
         }
     }
 }
