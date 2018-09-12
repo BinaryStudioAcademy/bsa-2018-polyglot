@@ -1,9 +1,9 @@
-<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications.length == 0">
+<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="!userNotifications || userNotifications.length == 0">
     <mat-icon class="bell" aria-label="Notification icon">
         notifications_none
     </mat-icon>
 </button>
-<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications.length > 0">
+<button mat-icon-button [mdePopoverTriggerFor]="notifPopover" mdePopoverTriggerOn="click" *ngIf="userNotifications && userNotifications.length > 0">
     <mat-icon class="bell" aria-label="Notification icon" [matBadge]="userNotifications.length" matBadgePosition="above after"
         matBadgeColor="warn">
         notifications
