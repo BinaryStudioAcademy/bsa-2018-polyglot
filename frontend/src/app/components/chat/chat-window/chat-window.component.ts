@@ -12,13 +12,13 @@ import {
 import { ProjectService } from "../../../services/project.service";
 import { MatSnackBar } from "@angular/material";
 import { ChatService } from "../../../services/chat.service";
-import { GroupType, ChatMessage, ChatUser } from "../../../models";
+import { GroupType, ChatUser } from "../../../models";
 import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { AppStateService } from "../../../services/app-state.service";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
-import { ChatDialog } from "../../../models/chat/chatDialog";
+import { ChatMessage } from "../../../models/chat/chatMessage";
 
 @Component({
     selector: "app-chat-window",
