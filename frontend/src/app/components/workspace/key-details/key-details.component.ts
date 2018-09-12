@@ -92,7 +92,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         private translatorsService: ProjecttranslatorsService,
         private userService: UserService) {
         eventService.listen().subscribe((data: any) => {
-            if (data=="reload") {
+            if (data == "reload") {
                 this.reloadKeyDetails(this.currentKeyId);
             }
         });
@@ -102,7 +102,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.refresh();
     }
 
-    refresh(){
+    refresh() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
@@ -210,9 +210,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                         response.senderFullName
                                     );
                                     this.history.showHistory(this.currentKeyId, this.keyDetails.translations[this.index].id);
-                                    this.expandedArray[this.index].oldValue=translations[this.index].translationValue;
-                                    if(this.expandedArray[this.index].isOpened===false)
-                                    {
+                                    this.expandedArray[this.index].oldValue = translations[this.index].translationValue;
+                                    if (this.expandedArray[this.index].isOpened === false) {
                                         this.history.translationSelected = false;
                                     }
                                 }
@@ -257,6 +256,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             )
                         };
                         this.languages = this.appState.getWorkspaceState.languages;
+                        if (!this.languages.length)
+                        this.isEmpty=true;
                         this.keyDetails.translations = this.keyDetails.translations.filter(
                             t => t.languageId !== removedLanguageId
                         );
@@ -269,8 +270,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             }
         );
 
-
-
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
@@ -282,7 +281,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     onTextChange(i) {
-        let words =  this.translationInputs.item(i).value.split(' ');
+        let words = this.translationInputs.item(i).value.split(' ');
         let result = '';
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
@@ -301,15 +300,15 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.translationDivs.item(i).innerHTML = result;
 
-        let glosWords: any =  document.querySelectorAll('.child');
+        let glosWords: any = document.querySelectorAll('.child');
         for (let n = 0; n < glosWords.length; n++) {
-            glosWords[n].addEventListener('mouseover', function(e) {
+            glosWords[n].addEventListener('mouseover', function (e) {
                 let chil: any = glosWords[n].children[0];
                 chil.style.top = `${glosWords[n].offsetTop - 17}px`;
                 chil.style.left = `${glosWords[n].offsetLeft}px`;
-                chil.style.visibility = 'visible';           
+                chil.style.visibility = 'visible';
             });
-            glosWords[n].addEventListener('mouseout', function(e) {
+            glosWords[n].addEventListener('mouseout', function (e) {
                 let chil: any = glosWords[n].children[0];
                 chil.style.visibility = 'hidden';
             });
@@ -377,7 +376,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                         };
                     })
                 );
-                this.isLoad = false;
+                this.isLoad = true;
+                this.isEmpty = false;
+                this.snotifyService.info(
+                    `Some new languages were added to project`,
+                    "Language added"
+                );
+                
             },
             err => {
                 this.snotifyService.error("Languages update failed", "Error");
@@ -440,11 +445,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
-                keyId: this.currentKeyId,
-                status: true
-            });
-        this.history.translationSelected=true;
-        this.optional.translationSelected=true;
+            keyId: this.currentKeyId,
+            status: true
+        });
+        this.history.translationSelected = true;
+        this.optional.translationSelected = true;
         if (index === undefined) {
             return;
         }
@@ -490,13 +495,17 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     getLanguages() {
-        if (
-            !this.appState.getWorkspaceState ||
-            !this.appState.getWorkspaceState.languages
-        )
+        if (!this.appState.getWorkspaceState || !this.appState.getWorkspaceState.languages) {
+            
             return;
+        }
+
 
         this.languages = this.appState.getWorkspaceState.languages;
+        if (!this.languages.length) {
+            this.isEmpty = true;
+            return;
+        }
 
         const temp = this.languages.length;
         this.expandedArray = new Array();
@@ -510,9 +519,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 languageId: element.id,
                 languageCode: element.code,
                 ...this.getProp(element.id)
+
             };
+
         });
         this.isLoad = true;
+
     }
 
     getProp(id: number) {
@@ -569,7 +581,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             oldValue: ""
                         };
                         this.hideHistory();
-                        
+
                         this.optional.showOptional(
                             this.currentKeyId,
                             this.keyDetails.translations[index].id
@@ -590,7 +602,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             isOpened: false,
                             oldValue: ""
                         };
-                        this.keyDetails.translations[index].history=d.history;
+                        this.keyDetails.translations[index].history = d.history;
                         this.hideHistory();
                         this.optional.showOptional(
                             this.currentKeyId,
@@ -676,7 +688,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.keyDetails.translations[$event.keyId].translationValue =
             $event.translation;
-        
+
         this.translationInputs[$event.keyId].value = $event.translation;
         this.setStep($event.keyId);
     }
@@ -762,8 +774,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             );
         this.currentSuggestion = "";
     }
-    
-    public onConfirm(translation: Translation){
+
+    public onConfirm(translation: Translation) {
         this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
             res => {
                 this.refresh();
@@ -777,7 +789,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         )
     }
 
-    public onUnConfirm(translation: Translation){
+    public onUnConfirm(translation: Translation) {
         this.dataProvider.unConfirmTranslation(translation, this.keyDetails.id).subscribe(
             res => {
                 this.refresh();
@@ -791,11 +803,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         )
     }
 
-    public canBeConfirmed(translation: Translation){
+    public canBeConfirmed(translation: Translation) {
         return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
     }
 
-    public canUnBeConfirmed(translation: Translation){
+    public canUnBeConfirmed(translation: Translation) {
         return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
     }
 

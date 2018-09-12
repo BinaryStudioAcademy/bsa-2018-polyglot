@@ -87,7 +87,7 @@ export class LanguagesComponent implements OnInit {
                         `Some new languages were added to project`,
                         "Language added"
                     );
-                    this.IsLoad = true;
+                    
                     this.projectService
                         .getProjectLanguagesStatistic(this.projectId)
                         .subscribe(
@@ -262,6 +262,10 @@ export class LanguagesComponent implements OnInit {
                                     );
                                     this.langs.sort(this.compareProgress);
                                     this.IsLoad = false;
+                                    this.snotifyService.success(
+                                        "Language added",
+                                        "Success!"
+                                    );
                                 } else {
                                     this.snotifyService.error(
                                         "An error occurred while adding languages to project, please try again",
@@ -304,6 +308,12 @@ export class LanguagesComponent implements OnInit {
     }
 
     onDeleteLanguage(languageId: number) {
+        if(this.langs.length === 1)
+        {
+            this.snotifyService.error('You can not delete all languages from the project!' , "Warining!!!")
+            return;
+        }
+
         if (
             this.langs.filter(l => l.id === languageId)[0]
                 .translatedStringsCount > 0

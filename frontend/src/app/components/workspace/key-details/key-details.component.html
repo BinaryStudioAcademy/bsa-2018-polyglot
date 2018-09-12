@@ -1,5 +1,5 @@
 <div class="key-details mt-1 mb-1" *ngIf="isEmpty">
-	<mat-card class="no-items-div">
+	<mat-card class="comments-container">
 		<p>No languages</p>
 	</mat-card>
 </div>
@@ -48,7 +48,7 @@
 							 (mouseleave)="toggleDisable(false)" matTooltipPosition="after" color="primary" matTooltip="Assign user">
 								<mat-icon>more_vert</mat-icon>
 							</button>
-							<div *ngIf="t.assignedTranslatorId" class="optional-btn" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
+							<div *ngIf="t.assignedTranslatorId" class="optional-btn translator-avatar" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
 								<img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
 							</div>
 							<button *ngIf="canUnBeConfirmed(t)" mat-icon-button (click)="onUnConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn unconfirm-btn"
