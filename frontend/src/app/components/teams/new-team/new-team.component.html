@@ -43,13 +43,42 @@
                     Proficiency</mat-chip>
 
             </div>
+
+
         </mat-chip-list>
+        <div class="search-wrapper">
+                <mat-form-field >
+                        <button matSuffix mat-icon-button aria-label="Search">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                        <button  matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery='';">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" class="advanced-search-burron" [matMenuTriggerFor]="filters">Advanced search</button>
+                    <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false">
+                        <div (click)="$event.stopPropagation();" class="prof-wrappper">
+                            <mat-form-field>
+                                <mat-select placeholder="Language level" #selectedCategory>
+                                    <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
+                                        {{proficiency}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="buttons-wrappper">
+                            <button mat-raised-button (click)="selectLanguages();" (click)="$event.stopPropagation();">Select languages</button>
+                            <button mat-flat-button (click)="onFilterApply(selectedCategory.value)">Apply</button>
+                        </div>
+                    </mat-menu>
+            </div>
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>
             </div>
             <mat-selection-list #translatorListElement>
-                <mat-list-option class="list-item" (click)="change($event, translatorListElement)" *ngFor="let t of allTranslators" [selected]="t.selected"
+                <mat-list-option class="list-item" (click)="change($event, translatorListElement)" *ngFor="let t of allTranslators | translatorSearchByName : searchQuery" [selected]="t.selected"
                     [value]="t">
                     <div class="item-container">
                         <img class="manager-img" src="{{getAvatarUrl(t)}}">

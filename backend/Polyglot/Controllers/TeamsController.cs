@@ -60,8 +60,17 @@ namespace Polyglot.Controllers
                 : Ok(translators);
         }
 
-        // GET: teams/translators/:id
-        [HttpGet("translators/{id}", Name = "GetTranslator")]
+		// GET: teams/translators
+		[HttpGet("filteredtranslators", Name = "GetFilteredtranslators")]
+		public async Task<IActionResult> GetFilteredtranslators([FromQuery(Name = "prof")] int prof, [FromQuery(Name = "languages")] int[] languages)
+		{
+			var translators = await service.GetFilteredtranslators(prof, languages);
+			return translators == null ? NotFound("No translators found!") as IActionResult
+				: Ok(translators);
+		}
+
+		// GET: teams/translators/:id
+		[HttpGet("translators/{id}", Name = "GetTranslator")]
         public async Task<IActionResult> GetTranslator(int id)
         {
             var translators = await service.GetTranslatorAysnc(id);
