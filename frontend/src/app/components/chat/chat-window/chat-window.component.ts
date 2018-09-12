@@ -80,7 +80,6 @@ export class ChatWindowComponent implements OnInit {
         this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
             (userUid: string) => {
-                debugger;
                 if(this.dialog.participants.find(p => p.uid === userUid))
                 {
                     for(let i = 0; i < this.messages.length; i++){
@@ -175,8 +174,6 @@ export class ChatWindowComponent implements OnInit {
                 .getDialogMessages(targetGroup, targetGroupDialogId)
                 .subscribe(messages => {
                     if (messages) {
-                        
-
                         if(this.isDirect)
                         {
                             this.messages = messages.filter(m => m.senderId == this.currentInterlocutorId || 
@@ -220,7 +217,6 @@ export class ChatWindowComponent implements OnInit {
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
                     if(message){
-                        debugger;
                         let index = this.messages.findIndex(m => m.clientId === message.clientId);
                         if(index >= 0)
                         {

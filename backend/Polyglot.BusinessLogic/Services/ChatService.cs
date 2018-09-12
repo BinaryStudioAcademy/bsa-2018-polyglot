@@ -117,8 +117,8 @@ namespace Polyglot.BusinessLogic.Services
             var targetDialog = await uow.GetRepository<ChatDialog>().GetAsync(message.DialogId);
             if (targetDialog == null)
             {
-#warning create dialog
-                return null;
+                var user = await uow.GetRepository<UserProfile>().GetAsync(u => u.Id==message.ClientId);
+                targetDialog = mapper.Map<ChatDialog>(await StartChatWithUser(mapper.Map<UserProfileDTO>(user)));
             }
             
             var currentUserId = (await currentUser.GetCurrentUserProfile())?.Id;
