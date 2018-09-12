@@ -1,14 +1,12 @@
+\:host
+  display: flex
+
 .mat-panel-description
-  width: 55%
-  
-
-.none-translation
-  text-align: left
-  
-
-.description
+  width: 50%
+  min-width: 100px  
+ 
+.description, .none-translation
   white-space: nowrap
-  width: 573px
   overflow: hidden 
   text-overflow: ellipsis
 
@@ -17,7 +15,6 @@
   min-width: 70px
 
 .buttons
-  width: 200px
   display: flex
   justify-content: flex-start 
   min-width: 200px  
@@ -33,7 +30,7 @@
   padding-top: 10px;
 
 .confirmed
-  background-color: rgb(215, 215, 215)
+  background-color: rgb(248, 248, 248)
  
 .unconfirm-btn
   margin-left: auto
@@ -45,25 +42,15 @@
 .confirm-btn
   margin-left: auto
   
-
-
 .button-translation
   display: flex;
   justify-content: space-between;
 
-
-
 .language-label
   font-size: 16px
 
-
-\:host
-  display: flex
-
-  .mat-paginator
+.mat-paginator
     width: 100%
-
-
 
 .key-details
   height: fit-content
@@ -172,3 +159,5 @@
   line-height: 15.5px
   z-index: 1
   pointer-events: none
+
+
