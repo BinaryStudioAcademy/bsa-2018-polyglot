@@ -433,10 +433,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setStep(index: number) {
+        this.divHidden = false;
+        this.translationDivs.item(index).style.width = `${this.translationInputs.item(index).clientWidth}px`;
+        let textarea: any = document.querySelectorAll('.textarea-translation').item(index);
+        textarea.style.width = `${this.translationInputs.item(index).clientWidth}px`;
         this.eventService.filter({
             isEditing: true
         });
-        this.divHidden = false;
         this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
