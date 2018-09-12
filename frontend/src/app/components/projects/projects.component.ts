@@ -96,6 +96,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.searchQuery = this.searchQuery.trim();
         if (this.searchQuery.length > 0) {
             debugger;
+            this.projectService.searchProjects(this.searchQuery)
+            .subscribe(pr => {
+                debugger;
+                this.cards = pr;
+            });
         }
     }
 
