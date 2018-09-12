@@ -53,8 +53,9 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<IEnumerable<UserProfileDTO>> GetUsersByNameStartsWith(string startsWith)
         {
+            int currentUserId = (await _currentUser.GetCurrentUserProfile()).Id;
             return mapper.Map<IEnumerable<UserProfileDTO>>(await uow.GetRepository<UserProfile>()
-                .GetAllAsync(u => u.FullName.ToLower().StartsWith(startsWith.ToLower())));
+                .GetAllAsync(u => u.FullName.ToLower().StartsWith(startsWith.ToLower()) && u.Id != currentUserId));
         }
     }
 }

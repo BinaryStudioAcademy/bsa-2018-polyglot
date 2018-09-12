@@ -52,8 +52,8 @@ namespace Polyglot.BusinessLogic.Services
             var dialogs = await uow.GetRepository<ChatDialog>()
                 .GetAllAsync(d => d.DialogType == targetGroup && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
 
-            if (dialogs == null || dialogs.Count < 1)
-                return null;
+            if (dialogs.Count < 1)
+                return mapper.Map<IEnumerable<ChatDialogDTO>>(dialogs);
 
             List<ChatDialogDTO> result = null;
 
@@ -132,7 +132,7 @@ namespace Polyglot.BusinessLogic.Services
             var dialogId = newMessage.DialogId.Value;
             var text = newMessage.Body;
             // отправляем уведомление о сообщении в диалог
-            await signalRChatService.MessageReveived($"{targetDialog.DialogType.ToString()}{dialogId}", dialogId, newMessage.Id, text);
+            //await signalRChatService.MessageReveived($"{targetDialog.DialogType.ToString()}{dialogId}", dialogId, newMessage.Id, text);
 
             //отправляем уведомление каждому участнику диалога
             foreach (var participant in targetDialog.DialogParticipants)

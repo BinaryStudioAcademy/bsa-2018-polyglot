@@ -100,19 +100,6 @@ export class ChatContactsComponent implements OnInit {
 
     subscribeChatEvents() {
         this.signalRConnection.on(
-            ChatActions[ChatActions.dialogsChanged],
-            (responce: any) => {
-                    console.log("y");
-                    this.chatService.getDialogs().subscribe(dialogs => {
-                        console.log(dialogs);
-                        this.dialogs = dialogs.filter(d => d.participants.length > 0);
-                        this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
-                    });
-                
-            }
-        );
-
-        this.signalRConnection.on(
             ChatActions[ChatActions.messageReceived],
             (responce: any) => {
                 if(this.signalRService.validateChatResponse(responce) 
@@ -129,7 +116,16 @@ export class ChatContactsComponent implements OnInit {
                 }
             }
         );
+        this.signalRConnection.on(
+            ChatActions[ChatActions.dialogsChanged],
+            (responce: any) => {
+                    this.chatService.getDialogs().subscribe(dialogs => {
+                    this.dialogs = dialogs.filter(d => d.participants.length > 0);
+                    this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
+                });
+            });
     }
+ 
 
     selectDialog(dialog: ChatDialog) {
         this.unreadMessagesTotal['persons'] -= dialog.unreadMessagesCount;
