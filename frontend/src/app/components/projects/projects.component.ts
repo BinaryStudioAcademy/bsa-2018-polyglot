@@ -50,8 +50,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
         this.projectService.getAll().subscribe(pr => {
             if (pr) {
-                debugger;
                 this.cards = pr;
+                this.cards.sort((a:Project, b: Project) => {
+                    if (a.priority > b.priority) return -1;
+                    if (a.priority < b.priority) return 1;
+                    return 0;
+                });
+
                 if (
                     this.cards.length === 0 &&
                     this.onPage === true &&
@@ -84,5 +89,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
+    }
+
+    increasePriority(projectId: number){
+        debugger;
+        this.projectService.increasePriority(projectId).subscribe((a) => {
+            debugger;
+        });
     }
 }

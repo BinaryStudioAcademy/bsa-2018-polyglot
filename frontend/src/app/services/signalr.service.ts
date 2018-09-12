@@ -71,11 +71,11 @@ export class SignalrService {
         }
     }
 
-    public readMessage(interlocutorId: number) {
+    public readMessage(dialogId: number, interlocutorId: number) {
         let chatHub = this.userConnections.find(c => c.hub == Hub.chatHub);
         if(chatHub)
         {
-            chatHub.connection.send(ChatActions[ChatActions.messageRead], `${GroupType[GroupType.users]}${interlocutorId}`);
+            chatHub.connection.send(ChatActions[ChatActions.messageRead], dialogId, `${GroupType[GroupType.direct]}${interlocutorId}`);
         }
     }
 }

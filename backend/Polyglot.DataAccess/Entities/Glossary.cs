@@ -14,6 +14,10 @@ namespace Polyglot.DataAccess.Entities
         public virtual Language OriginLanguage { get; set; }
         public int? OriginLanguageId { get; set; }
 
+        [ForeignKey("UserProfileId")]
+        public virtual UserProfile UserProfile { get; set; }
+        public int? UserProfileId { get; set; }
+
         public virtual ICollection<ProjectGlossary> ProjectGlossaries { get; set; }
 
         public Glossary()

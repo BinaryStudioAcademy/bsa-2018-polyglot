@@ -361,6 +361,13 @@ namespace Polyglot.Controllers
             return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
         }
 
+        // PUT: projects/:id/priority
+        [HttpPut("{projectId}/priority")]
+        public async Task<IActionResult> IncreasePriority(int projectId)
+        {
+            await service.IncreasePriority(projectId);
+            return Ok();
+        }
     }
 
 }

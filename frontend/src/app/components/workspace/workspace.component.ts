@@ -71,7 +71,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                if (result.isEditing != undefined) {
+                if (result.isEditing !== undefined) {
                     this.isEditing = result.isEditing
                 } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
@@ -272,7 +272,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     subscribeProjectChanges() {
-        debugger;
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
             (response: any) => {
@@ -322,6 +321,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 if (this.stringsInProgress.includes(response.ids[0])) {
                     this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
                 }
+            }
+        );
+        this.signalRConnection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.languageTranslationCommitted
+            ],
+            (response: any) => {
+                this.projectService.getProjectStrings(this.project.id).subscribe(
+                    responseKeys => {
+                        this.keys = responseKeys;
+                    }
+                );
             }
         );
     }

@@ -58,7 +58,7 @@ export class ChatWindowComponent implements OnInit {
     ngOnDestroy() {
         this.signalRService.leaveGroup(`${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`, Hub.chatHub);
     }
-
+    
     subscribeChatEvents() {
         this.signalRConnection.on(
             ChatActions[ChatActions.messageReceived],
@@ -67,7 +67,11 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.chatService.getMessage(responce.messageId)
                         .subscribe((message: ChatMessage) => {
-                            this.messages.push(message);
+                            if(!this.messages.find(m => m.id === message.id))
+                            {
+                                this.messages.push(message);
+                                this.signalRService.readMessage(this.dialog.id, this.currentInterlocutorId);
+                            }
                         });
                 }
             }
@@ -75,9 +79,10 @@ export class ChatWindowComponent implements OnInit {
 
         this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
-            (userId: number) => {
-                
-                if(this.interlocutors[userId]){
+            (userUid: string) => {
+                debugger;
+                if(this.dialog.participants.find(p => p.uid === userUid))
+                {
                     for(let i = 0; i < this.messages.length; i++){
                         this.messages[i].isRead = true;
                     }
@@ -176,7 +181,7 @@ export class ChatWindowComponent implements OnInit {
                         {
                             this.messages = messages.filter(m => m.senderId == this.currentInterlocutorId || 
                                     m.senderId == this.currentUserId);
-                            this.signalRService.readMessage(this.currentInterlocutorId);
+                            this.signalRService.readMessage(this.dialog.id, this.currentInterlocutorId);
                         }
                         else 
                         {
@@ -189,24 +194,49 @@ export class ChatWindowComponent implements OnInit {
 
     sendMessage() {
         if (this.currentMessage.length > 0) {
-            let message = {
-            dialogId: this.dialog.id,
-            body: this.currentMessage
+            const messageid =  Date.now();
+            let message: ChatMessage = {
+                id: undefined,
+                clientId: messageid,
+                senderId: this.currentUserId,
+                body: this.currentMessage,
+                receivedDate: undefined,
+                isRead: false,
+                isRecieved: false,
+                isRecieving: true,
+                dialogId: this.dialog.id
             };
             this.currentMessage = "";
+            this.messages.push(message);
+
+            setTimeout((id = messageid) => {
+                let targetMessage = this.messages.find(m => m.clientId === id);
+                if(targetMessage && !targetMessage.isRecieved)
+                {
+                    targetMessage.isRecieving = false;
+                }
+            }, 7000);
 
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
-                    
                     if(message){
-                        this.messages.push(message);
+                        debugger;
+                        let index = this.messages.findIndex(m => m.clientId === message.clientId);
+                        if(index >= 0)
+                        {
+                            this.messages[index] = message;
+                            this.messages[index].isRecieving = false;
+                            //this.messages[index].isRead = message.isRead;
+                            //this.messages[index].senderId = message.senderId;
+                            //this.messages[index].receivedDate = message.receivedDate;
+                        }
                     }
                 });
         }
     }
 
     selectPerson(person){
-        if(person)
+        if(person && person.id !== this.currentUserId)
         {
             this.onPersonSelect.emit(person);
         }
