@@ -51,14 +51,22 @@ export class LoginDialogComponent implements OnInit {
         async (userCred) => {
           if (userCred.user.emailVerified) {
             this.appState.updateState(userCred.user, await userCred.user.getIdToken(), false);
-            this.userService.getUser().subscribe(
-              async (currentUser) => {
-                this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
-                this.dialogRef.close();
-                this.router.navigate(['/dashboard/projects']);
-                this.reloadEvent.emit(null);
+            this.userService.isUserInDb().subscribe(
+              (is) => {
+                if (is) {
+                  this.userService.getUser().subscribe(
+                    async (currentUser) => {
+                      this.appState.updateState(userCred.user, await userCred.user.getIdToken(), true, currentUser);
+                      this.dialogRef.close();
+                      this.router.navigate(['/dashboard/projects']);
+                      this.reloadEvent.emit(null);
+                    }
+                  );   
+                } else {
+                  this.firebaseError = 'An error occurred during authorization. Please contact polyglot.support@gmail.com';
+                }
               }
-            );    
+            ); 
           } else {
             this.snotify.clear();
             this.snotify.warning(`Email confirmation was already send to ${userCred.user.email}. Check your email.`, {
