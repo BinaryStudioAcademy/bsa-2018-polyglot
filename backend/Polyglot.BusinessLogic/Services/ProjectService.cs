@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Authorization;
 using Language = Polyglot.DataAccess.Entities.Language;
 using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.Common.DTOs.Chat;
+using KBCsv;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -112,8 +113,20 @@ namespace Polyglot.BusinessLogic.Services
                     {
                         dictionary[data.Attribute("name").Value] = data.Element("value").Value;
                     }
+                    break;
 
+                case "application/vnd.ms-excel":
+                case "text/csv":
+                    using (var textReader = new StreamReader(file.OpenReadStream()))
+                    using (var reader = new CsvReader(textReader, true))
+                    {
+                        while (reader.HasMoreRecords)
+                        {
+                            var dataRecord = await reader.ReadDataRecordAsync();
 
+                            dictionary[dataRecord[0]] = dataRecord[1];
+                        }
+                    }
                     break;
 
                 default:
@@ -194,6 +207,17 @@ namespace Polyglot.BusinessLogic.Services
                     string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
                     arr = Encoding.UTF8.GetBytes(temp);
                     break;
+
+                case ".csv":
+                    string tempCSV = "";
+                    foreach (var c in targetStrings)
+                    {
+                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\",\"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
+                    }
+                    arr = Encoding.UTF8.GetBytes(tempCSV);
+                    break;
+
                 default:
                     throw new NotImplementedException();
 
@@ -518,25 +542,25 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
                 }
-				List<ComplexString> temp = new List<ComplexString>();
 
-				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
-				int languagesAmount = p.ProjectLanguageses.Count;
-				int max = temp.Count * languagesAmount;
-				int currentProgress = 0;
-				foreach(var str in temp)
-				{
-					currentProgress += str.Translations.Count;
-				}
-				if(currentProgress == 0 || max == 0)
-				{
-					p.Progress = 0;
-				}
-				else
-				{
-					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
-				}				
-			}
+				List<ComplexString> temp = new List<ComplexString>();
+                temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+                int languagesAmount = p.ProjectLanguageses.Count;
+                int max = temp.Count * languagesAmount;
+                int currentProgress = 0;
+                foreach (var str in temp)
+                {
+                    currentProgress += str.Translations.Count;
+                }
+                if (currentProgress == 0 || max == 0)
+                {
+                    p.Progress = 0;
+                }
+                else
+                {
+                    p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+                }
+            }
 			return mapped;
         }
 
