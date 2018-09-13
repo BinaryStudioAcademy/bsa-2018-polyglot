@@ -328,25 +328,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setPosition(i) {
-        let position;
-        switch (i) {
-            case 0:
-                position = '38px';
-                break;
-            case 1:
-                position = '86px';
-                break;
-            case 2:
-                position = '134px';
-                break;
-            case 3:
-                position = '182px';
-                break;
-            case 4:
-                position = '230px';
-                break;
-        }
-        return position;
+        return `${38 + i * 48}px`;
     }
 
     handleNewLanguagesAdded(languagesIds) {
