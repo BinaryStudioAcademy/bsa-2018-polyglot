@@ -389,10 +389,15 @@ export class LanguagesComponent implements OnInit {
         return 0;
     }
 
-    isCurrentUserCanSelectNewString(): boolean{
+    isCurrentUserCanSelectNewLanguage(): boolean{
         if(this.userService.isCurrentUserManager()){
             return true;
         }
-        return this.rights.includes(RightDefinition.AddNewLanguage);
+        if(this.rights){
+            return this.rights.includes(RightDefinition.AddNewLanguage);
+        }
+        else{
+            return false;
+        }
     }
 }

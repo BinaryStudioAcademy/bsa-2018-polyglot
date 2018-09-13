@@ -24,6 +24,8 @@ import { UserService } from "../../../services/user.service";
 })
 export class ChatContactsComponent implements OnInit {
     @Output()
+    onNumberOfMessagesChanged = new EventEmitter<any>(true);
+    @Output()
     onItemSelect = new EventEmitter<any>(true);
     @Input()
     person: ChatUser;
@@ -84,6 +86,7 @@ export class ChatContactsComponent implements OnInit {
                     this.unreadMessagesTotal["persons"] = this.dialogs
                         .map(d => d.unreadMessagesCount)
                         .reduce((acc, current) => acc + current);
+                    this.onNumberOfMessagesChanged.emit(this.unreadMessagesTotal["persons"]);
                 }
             });
         }, 1000);
@@ -122,6 +125,8 @@ export class ChatContactsComponent implements OnInit {
                             this.dialogs[targetDialogIndex]
                                 .unreadMessagesCount++;
                             this.unreadMessagesTotal["persons"]++;
+                            this.onNumberOfMessagesChanged.emit(this.unreadMessagesTotal["persons"]);
+                            
                         }
                     }
                 }
@@ -133,6 +138,7 @@ export class ChatContactsComponent implements OnInit {
                     this.chatService.getDialogs().subscribe(dialogs => {
                     this.dialogs = dialogs.filter(d => d.participants.length > 0);
                     this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
+                    this.onNumberOfMessagesChanged.emit(this.unreadMessagesTotal["persons"]);
                 });
             });
     }
@@ -141,6 +147,7 @@ export class ChatContactsComponent implements OnInit {
     selectDialog(dialog: ChatDialog) {
         this.unreadMessagesTotal["persons"] -= dialog.unreadMessagesCount;
         dialog.unreadMessagesCount = 0;
+        this.onNumberOfMessagesChanged.emit(this.unreadMessagesTotal["persons"]);
         this.selectedDialogId = dialog.id;
         this.onItemSelect.emit(dialog);
     }
@@ -170,6 +177,7 @@ export class ChatContactsComponent implements OnInit {
                     identifier: 0,
                     dialogName: ""
                 };
+                this.onNumberOfMessagesChanged.emit(this.unreadMessagesTotal["persons"]);
                 this.chatService
                     .addDialog(dialog)
                     .subscribe((dialog: ChatDialog) => {

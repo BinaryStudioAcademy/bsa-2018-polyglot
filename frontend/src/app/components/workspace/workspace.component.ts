@@ -474,6 +474,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         if(this.userService.isCurrentUserManager()){
             return true;
         }
-        return this.rights.includes(RightDefinition.AddNewKey);
+        if(this.rights){
+            return this.rights.includes(RightDefinition.AddNewKey);
+        }
+        else{
+            return false;
+        }
     }
 }

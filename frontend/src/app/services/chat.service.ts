@@ -49,6 +49,10 @@ export class ChatService {
   startChatWithUser(user: UserProfile) : Observable<ChatDialog> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/startDialog', undefined, user);
   }
+
+  GetNumberOfUnreadMesages() : Observable<number> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/getNumberOfUnread');
+  }
   //createMessage(project: FormData) : Observable<Project> {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
   //}

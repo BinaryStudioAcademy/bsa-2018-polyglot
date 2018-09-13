@@ -17,6 +17,7 @@ import { SignalrSubscribeActions } from '../../models/signalrModels/signalr-subs
 import { NotificationService } from '../../services/notification.service';
 import { Notification } from '../../models/notification';
 import { Hub } from '../../models/signalrModels/hub';
+import { ChatService } from '../../services/chat.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class NavigationComponent implements OnDestroy {
     manager: UserProfile;
     notifications: Notification[];
     role: string;
+    numberOfUnread: number = 0;
 
     constructor(
         changeDetectorRef: ChangeDetectorRef,
@@ -44,7 +46,8 @@ export class NavigationComponent implements OnDestroy {
         private eventService: EventService,
         private appStateService: AppStateService,
         private signalRService: SignalrService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private chatService: ChatService
     ) {
         this.mobileQuery = media.matchMedia('(max-width: 960px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -67,6 +70,9 @@ export class NavigationComponent implements OnDestroy {
         this.appStateService.getFirebaseUser().subscribe(data => {
             if(data){
                 this.updateCurrentUser();
+                this.chatService.GetNumberOfUnreadMesages().subscribe(n => {
+                    this.numberOfUnread = n;
+                });
             }
         });
         this.appStateService.getDatabaseUser().subscribe(data => {
@@ -97,13 +103,18 @@ export class NavigationComponent implements OnDestroy {
                     this.notificationService
                         .getCurrenUserNotifications()
                         .subscribe(notifications => {
-                            console.log(notifications);
                             if (notifications) {
                                 this.notifications = notifications;
                             }
                         });
                 }
             });
+
+            this.signalRConnection.on(
+                SignalrSubscribeActions[SignalrSubscribeActions.numberOfMessagesChanges],
+                (response: any) => {
+                    this.numberOfUnread = response;
+                });
     }
 
     onLoginClick() {
@@ -186,5 +197,9 @@ export class NavigationComponent implements OnDestroy {
                 break;
         }
         return roleStr;
+    }
+
+    getNumberOfUnread(){
+        return this.numberOfUnread;
     }
 }
