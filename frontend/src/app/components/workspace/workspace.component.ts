@@ -25,7 +25,7 @@ import { RightDefinition } from "../../models/rightDefinition";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string = ' ';
+    public searchQuery: string;
     public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
@@ -97,7 +97,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
 
     ngOnInit() {
         this.filters = [];
-        // this.searchQuery = "";
+        this.searchQuery = '';
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             forkJoin(

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
+import { MatTableDataSource, MatPaginator, MatDialog, MatMenuTrigger } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
 import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
@@ -36,6 +36,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     hideHistory() { this.history.hideHistory(); }
     @ViewChild(TabOptionalComponent)
     optional: TabOptionalComponent;
+
+   
+    
+
     hideOptional() { this.optional.hideOptional() }
 
     public keyDetails: any;
@@ -778,6 +782,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 }
             );
         this.currentSuggestion = "";
+        
     }
 
     public onConfirm(translation: Translation) {
@@ -856,6 +861,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     //     return result || !this.users.length;
     // }
 
+
+    
 
     reloadKeyDetails(index) {
         this.dataIsLoaded = true;
