@@ -73,6 +73,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             (result) => {
                 if (result.isEditing !== undefined) {
                     this.isEditing = result.isEditing
+                    if (!this.isEditing) {
+                        clearInterval(this.loop);
+                    }
                 } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
                 } else {
@@ -172,7 +175,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.previousKeyId = this.currentKeyId;
         this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
         this.loop = setInterval(() => {
-            if (this.previousKeyId !== this.currentKeyId || !this.isEditing) {
+            if (this.previousKeyId !== this.currentKeyId) {
                 this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
                 clearInterval(this.loop);
             } else {
