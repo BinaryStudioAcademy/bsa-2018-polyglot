@@ -17,6 +17,7 @@ namespace Polyglot.BusinessLogic
             {
                 var token = UserService.Token;
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var stringsUrl = "http://polyglotbsa.azurewebsites.net/api/" + relativeUrl;
 

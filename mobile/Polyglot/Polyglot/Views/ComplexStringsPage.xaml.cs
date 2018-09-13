@@ -13,11 +13,9 @@ namespace Polyglot.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ComplexStringsPage : ContentPage
     {
-        public ObservableCollection<string> Items { get; set; }
 
         public ComplexStringsPage(ViewModels.ComplexStringsViewModel complexStringsViewModel, int projectId)
         {
-
             BindingContext = complexStringsViewModel;
 
             InitializeComponent();
@@ -29,11 +27,13 @@ namespace Polyglot.Views
             if (e.Item == null)
                 return;
 
+            ((ListView)sender).SelectedItem = null;
+
             var complexString = e.Item as ComplexStringViewModel;
 
             var newPage = new TranslationsPage(new ViewModels.TranslationsViewModel(), complexString.Id, complexString.ProjectId);
             await Navigation.PushAsync(newPage);
-            ((ListView)sender).SelectedItem = null;
+
         }
     }
 }

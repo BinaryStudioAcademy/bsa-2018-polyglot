@@ -34,6 +34,8 @@ namespace Polyglot.Views
             if (e.Item == null)
                 return;
 
+            ((ListView)sender).SelectedItem = null;
+
             var translation = e.Item as TranslationViewModel;
 
             var actionSheet = "";

@@ -21,5 +21,13 @@ namespace Polyglot.Views
 
             optionalViewMoodel.Initialize(complexStringId, historyId);
         }
-    }
+
+        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item == null)
+                return;
+
+            ((ListView)sender).SelectedItem = null;
+        }
+        }
 }

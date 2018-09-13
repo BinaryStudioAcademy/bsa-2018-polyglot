@@ -14,9 +14,12 @@ namespace Polyglot.Views
         public int ComplexStringId { get; set; }
         public TranslationViewModel Translation { get; set; }
         public UserDTO User { get; set; }
+        public string PreviousTranslation { get; set; }
 
         public EditTranslationPage (int complexStringId,TranslationViewModel translation)
 		{
+            PreviousTranslation = translation.Translation;
+
             BindingContext = translation;
             ComplexStringId = complexStringId;
             Translation = translation;
@@ -40,6 +43,11 @@ namespace Polyglot.Views
                 UserId=User.Id
             };
 
+            if (editedTranslation.TranslationValue == PreviousTranslation)
+            {
+                return;
+            }
+
             var translationResult = await httpService.PutAsync<TranslationDTO>(translationsUrl, editedTranslation);
 
             if (translationResult!=null)
@@ -47,6 +55,7 @@ namespace Polyglot.Views
                 await DisplayAlert("Result", "Translation saved!", "Ok");
                 await Navigation.PopAsync();
             }
+           
         }
 
     }

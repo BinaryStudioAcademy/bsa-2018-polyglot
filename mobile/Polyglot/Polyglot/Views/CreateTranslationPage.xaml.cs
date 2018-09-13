@@ -13,23 +13,23 @@ using Xamarin.Forms.Xaml;
 
 namespace Polyglot.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class CreateTranslationPage : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class CreateTranslationPage : ContentPage
+    {
         public int ComplexStringId { get; set; }
         public TranslationViewModel Translation { get; set; }
         public UserDTO User { get; set; }
 
-        public CreateTranslationPage (int complexStringId, TranslationViewModel translation)
-		{
+        public CreateTranslationPage(int complexStringId, TranslationViewModel translation)
+        {
             BindingContext = translation;
 
             ComplexStringId = complexStringId;
             Translation = translation;
             User = UserService.CurrentUser;
 
-            InitializeComponent ();
-		}
+            InitializeComponent();
+        }
 
         private async void SaveTranslation_Clicked(object sender, EventArgs e)
         {
@@ -45,6 +45,11 @@ namespace Polyglot.Views
                 TranslationValue = Translation.Translation,
                 UserId = User.Id
             };
+
+            if (string.IsNullOrEmpty(editedTranslation.TranslationValue)|| editedTranslation.TranslationValue=="Not translated")
+            {
+                return;
+            }
 
             var translationResult = await httpService.PostAsync<TranslationDTO>(translationsUrl, editedTranslation);
 

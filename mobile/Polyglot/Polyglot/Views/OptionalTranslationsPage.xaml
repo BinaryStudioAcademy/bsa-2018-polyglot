@@ -9,6 +9,7 @@
         <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView 
             ItemsSource="{Binding OptionalTranslations}"
+            ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"
             HasUnevenRows="True"
             RowHeight="200"    >
