@@ -51,7 +51,7 @@ namespace Polyglot.Views
                 return;
             }
 
-            var translationResult = await httpService.PosttAsync<TranslationDTO>(translationsUrl, editedTranslation);
+            var translationResult = await httpService.PostAsync<TranslationDTO>(translationsUrl, editedTranslation);
 
             if (translationResult != null)
             {
