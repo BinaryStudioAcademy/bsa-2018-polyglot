@@ -914,4 +914,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     selectTab(index: number): void {
         this.selectedIndex = index;
     }
+
+    canNotAssign() : boolean{
+        return !this.users.length
+    }
 }
