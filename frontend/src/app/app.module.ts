@@ -129,6 +129,7 @@ import { GuidelineComponent } from './components/guideline/guideline.component';
 import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
 import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
 import { CommentsPipe } from './common/pipes/comments.pipe';
+import { OptionalTranslationMenuComponent } from './dialogs/optional-translation-menu/optional-translation-menu.component';
 
 
 @NgModule({
@@ -220,7 +221,8 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     GuidelineComponent,
     TranslatorGuideComponent,
     ManagerGuideComponent,
-    CommentsPipe
+    CommentsPipe,
+    OptionalTranslationMenuComponent
   ],
   imports: [
     BrowserModule,
