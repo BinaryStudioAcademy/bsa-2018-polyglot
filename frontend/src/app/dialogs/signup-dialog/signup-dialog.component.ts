@@ -81,20 +81,14 @@ export class SignupDialogComponent implements OnInit {
               },
               (err) => {
                 dialogRef.close();
-                if (err.code === 'auth/email-already-in-use') {
-                  this.snotify.clear();
-                  this.snotify.warning(`Email confirmation was already send to ${this.user.email}. Check your email.`, this.notificationConfig);
-                }
+                this.snotify.clear();
+                this.snotify.warning(`Email confirmation was already send to ${this.user.email}. Check your email.`, this.notificationConfig);
                 this.firebaseError = err.message;
               }
             );
             
           }, 
           (err) => {
-            if (err.code === 'auth/email-already-in-use') {
-              this.snotify.clear();
-              this.snotify.warning(`Email confirmation was already send to ${this.user.email}. Check your email.`, this.notificationConfig);
-            }
             dialogRef.componentInstance.error = err.message;
           }
         );

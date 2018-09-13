@@ -21,7 +21,6 @@ export class AuthService {
                 if(user){
                     await this.refreshToken();
                     this.appState.currentFirebaseUser = user;
-                    this.appState.LoginStatus = true;
                 }
             });
     }
