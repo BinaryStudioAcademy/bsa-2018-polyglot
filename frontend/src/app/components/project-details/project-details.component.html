@@ -31,7 +31,7 @@
 
 		<mat-tab label="Team">
 			<ng-template matTabContent>
-				<app-project-team [projectId]="project.id"></app-project-team>
+				<app-project-team [IsCurrentUserManager]="checkIfUserManager" [projectId]="project.id"></app-project-team>
 			</ng-template>
 		</mat-tab>
 
@@ -48,25 +48,25 @@
 			</ng-template>
 		</mat-tab>
 
-		<mat-tab label="Languagues">
+		<mat-tab *ngIf="checkIfUserCanAddLanguage" label="Languagues">
 			<ng-template matTabContent>
 				<app-languages [projectId]="project.id"></app-languages>
 			</ng-template>
 		</mat-tab>
 
-		<mat-tab label="Glossaries">
+		<mat-tab *ngIf="checkIfUserManager" label="Glossaries">
 			<ng-template matTabContent>
 				<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
 			</ng-template>
 		</mat-tab>
 
-		<mat-tab label="Settings">
+		<mat-tab *ngIf="checkIfUserManager" label="Settings">
 			<ng-template matTabContent>
 				<app-project-edit [project]="project"></app-project-edit>
 			</ng-template>
 		</mat-tab>
 
-		<mat-tab label="Files">
+		<mat-tab *ngIf="checkIfUserCanAddKey" label="Files">
 			<ng-template matTabContent>
 				<div class="file-container">
 					<app-upload-file></app-upload-file>
