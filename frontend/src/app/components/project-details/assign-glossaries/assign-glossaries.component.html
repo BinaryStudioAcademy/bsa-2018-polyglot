@@ -1,6 +1,11 @@
-<h2 *ngIf="AssignedGlossaries.length != 0">Assigned Glossaries</h2>
 
-<table *ngIf="AssignedGlossaries.length != 0" mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8">
+<div *ngIf="IsLoad" class="spinner">
+    <mat-spinner [diameter]="100"></mat-spinner>
+</div>
+
+<h2 *ngIf="!IsLoad && AssignedGlossaries.length != 0">Assigned Glossaries</h2>
+
+<table *ngIf="!IsLoad && AssignedGlossaries.length != 0" mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -32,9 +37,9 @@
 </table>
 
 
-<h2 *ngIf="NotAssignedGlossaries.length != 0">Not Assigned Glossaries</h2>
+<h2 *ngIf="!IsLoad && NotAssignedGlossaries.length != 0">Not Assigned Glossaries</h2>
 
-<table *ngIf="NotAssignedGlossaries.length != 0" mat-table [dataSource]="notAssignedSource" class="mat-elevation-z8">
+<table *ngIf="!IsLoad && NotAssignedGlossaries.length != 0" mat-table [dataSource]="notAssignedSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>

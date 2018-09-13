@@ -8,6 +8,6 @@ namespace Polyglot.DataAccess.Helpers
     {
         AddNewLanguage,
         AddNewKey,
-        SelectNewLanguage
+        CanAcceptTranslations
     }
 }
