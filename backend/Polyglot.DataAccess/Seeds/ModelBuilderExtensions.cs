@@ -153,7 +153,22 @@ namespace Polyglot.DataAccess.Seeds
                 new Language { Id = 3, Name = "German", Code = "de" },
                 new Language { Id = 4, Name = "Spanish", Code = "es" },
                 new Language { Id = 5, Name = "Italian", Code = "it" },
-                new Language { Id = 6, Name = "Chinese", Code = "zh" }
+                new Language { Id = 6, Name = "Chinese", Code = "zh" },
+                new Language { Id = 1, Name = "French", Code = "fr" },
+                new Language { Id = 2, Name = "Japanese", Code = "ja" },
+                new Language { Id = 3, Name = "Arabic", Code = "ar" },
+                new Language { Id = 4, Name = "Czech", Code = "cs" },
+                new Language { Id = 5, Name = "Esperanto", Code = "eo   " },
+                new Language { Id = 6, Name = "Finnish", Code = "fi" },
+                new Language { Id = 1, Name = "Georgian", Code = "ka" },
+                new Language { Id = 2, Name = "Greek", Code = "el" },
+                new Language { Id = 3, Name = "Hindi", Code = "hi" },
+                new Language { Id = 4, Name = "Hungarian", Code = "hu" },
+                new Language { Id = 5, Name = "Korean", Code = "ko" },
+                new Language { Id = 6, Name = "Polish", Code = "pl" },
+                new Language { Id = 1, Name = "Portuguese", Code = "pt" },
+                new Language { Id = 2, Name = "Swedish", Code = "sv" },
+                new Language { Id = 3, Name = "Turkish", Code = "tr" }
                 );
 
 
