@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
+using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.Helpers;
 
@@ -112,6 +113,15 @@ namespace Polyglot.Controllers
             var success = await chatService.DeleteDialog(id);
             return success == null ? StatusCode(409) as IActionResult
                 : Ok(success);
+        }
+
+        //POST: /chat/startDialog
+        [HttpPost("startDialog")]
+        public async Task<IActionResult> StartChatWithUser([FromBody]UserProfileDTO user)
+        {
+            var d = await chatService.StartChatWithUser(user);
+            return d == null ? StatusCode(409) as IActionResult
+                : Ok(d);
         }
     }
 }

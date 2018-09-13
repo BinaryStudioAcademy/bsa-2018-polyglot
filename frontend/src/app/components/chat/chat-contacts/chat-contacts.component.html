@@ -16,7 +16,9 @@
                             </button>
                         -->
                             <mat-form-field class="team-details_filter">
-                                <input matInput placeholder="Filter">
+                                <input class="filter-input" matInput placeholder="Filter"
+                                    (input)="filterChange($event)">
+                                    <mat-spinner *ngIf="timeOutFilter" [diameter]="20" matSuffix></mat-spinner>
                             </mat-form-field>
                         </mat-toolbar>
 
@@ -61,7 +63,22 @@
             </div>
 
             <div [hidden]="!isSearchMode">
-                SEARCH MODE
+                <ul>
+                    <li *ngFor="let user of searchUsers" (click)="setDialog(user)">
+                        <mat-card class="person-card dialog-card">
+                            <mat-card-header>
+                                <a class="person-img">
+                                    <img class="person-avatar" mat-card-avatar src="{{user.avatarUrl}}">
+                                </a>
+                                <div class="person-card-text">
+                                    <div class="person-name">{{user.fullName}}</div>
+                                    <div class="person-role">{{user.role}}</div>
+                                </div>
+                            </mat-card-header>
+                        </mat-card>
+                    </li>
+    
+                </ul>
             </div>
 
             </ng-template>

@@ -6,6 +6,7 @@
         messageRead,
         typing,
         personConnected,
-        personDisconnected
+        personDisconnected,
+        dialogsChanged
     }
 }
