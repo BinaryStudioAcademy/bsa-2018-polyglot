@@ -19,6 +19,7 @@ export class AssignGlossariesComponent implements OnInit {
     displayedColumns: string[] = ['name', 'originLanguage', 'action_btn'];
     assignedDataSource: MatTableDataSource<Glossary>;
     notAssignedSource: MatTableDataSource<Glossary>;
+    public IsLoad: boolean = true;
 
     constructor(
         private projectService: ProjectService,
@@ -30,7 +31,7 @@ export class AssignGlossariesComponent implements OnInit {
     }
 
     refresh() {
-
+        this.IsLoad = true;
         this.projectService.getAssignedGlossaries(this.projectId).subscribe(
             (data) => {
                 this.AssignedGlossaries = data;
@@ -40,8 +41,8 @@ export class AssignGlossariesComponent implements OnInit {
             (data) => {
                 this.NotAssignedGlossaries = data;
                 this.notAssignedSource = new MatTableDataSource(this.NotAssignedGlossaries);
+                this.IsLoad = false;
             });
-
     }
 
     public isAssigned(item: Glossary): boolean {

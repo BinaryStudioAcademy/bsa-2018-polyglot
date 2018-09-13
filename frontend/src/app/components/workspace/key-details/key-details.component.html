@@ -53,16 +53,15 @@
 							</button>
 
 							<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
-								<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
+								<div class="optional-container" >
 									<mat-form-field class="textarea-translation">
-										<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" placeholder="Write here your optional translation"
+										<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" 
+										(click)="$event.preventDefault(); $event.stopPropagation();" placeholder="Write here your optional translation"
 										 cdkAutosizeMaxRows="10">
 										</textarea>
 									</mat-form-field>
-
 									<button [disabled]="!currentSuggestion || currentSuggestion.length<1" mat-raised-button color="primary" (click)="suggestTranslation(i, t.id, currentSuggestion)">Suggest
 									</button>
-
 								</div>
 							</mat-menu>
 

@@ -20,6 +20,8 @@ import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { UserService } from "../../../services/user.service";
 import { Hub } from "../../../models/signalrModels/hub";
+import { RightService } from "../../../services/right.service";
+import { RightDefinition } from "../../../models/rightDefinition";
 
 @Component({
     selector: "app-workspace-key-details",
@@ -35,7 +37,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild(TabOptionalComponent)
     optional: TabOptionalComponent;
 
-    @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+   
     
 
     hideOptional() { this.optional.hideOptional() }
@@ -78,7 +80,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     private signalRConnection;
     glossaryWords: any[] = [];
     divHidden: boolean;
-
+    rights: RightDefinition[];
     users: UserProfilePrev[] = [];
     currentUserId: number;
     selectedIndex = 0;
@@ -94,7 +96,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         private service: TranslationService,
         private projectService: ProjectService,
         private translatorsService: ProjecttranslatorsService,
-        private userService: UserService) {
+        private userService: UserService,
+        private rightService: RightService) {
         eventService.listen().subscribe((data: any) => {
             if (data == "reload") {
                 this.reloadKeyDetails(this.currentKeyId);
@@ -117,6 +120,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
+                this.rightService.getUserRightsInProject(this.projectId).subscribe((rights)=>{
+                    this.rights = rights;
+                });
                 this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
                     this.users = data;
                 });
@@ -780,7 +786,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 }
             );
         this.currentSuggestion = "";
-        this.trigger.closeMenu();
+        
     }
 
     public onConfirm(translation: Translation) {
@@ -812,11 +818,25 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     public canBeConfirmed(translation: Translation) {
-        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+        console.log(translation.id);
+        console.log(!translation.isConfirmed);
+        if(translation.id && !translation.isConfirmed && translation.translationValue){
+            if(this.userService.getCurrentUser().userRole === Role.Manager){
+                return true;
+            }
+            return this.rights.includes(RightDefinition.CanAcceptTranslations);
+        }
+        return false;
     }
 
     public canUnBeConfirmed(translation: Translation) {
-        return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+        if(translation.id && translation.isConfirmed){
+            if(this.userService.getCurrentUser().userRole === Role.Manager){
+                return true;
+            }
+            return this.rights.includes(RightDefinition.CanAcceptTranslations);
+        }
+        return false;
     }
 
 

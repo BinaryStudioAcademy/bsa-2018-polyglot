@@ -7,7 +7,7 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container">
-        <mat-sidenav class="contacts-list" #snav [mode]="'side'" opened>
+        <mat-sidenav class="contacts-list" #snav [mode]="'side'">
             <mat-nav-list>
 
                 <app-chat-contacts (onItemSelect)="onSelected($event)" [person]="selectedPerson"></app-chat-contacts>
@@ -21,7 +21,16 @@
 
 
                 <ng-template #mainWindow>
-                        
+                    <div class="placeholder-container" >
+                        <h1 class="greeting">
+                            Hello <i>{{user.fullName}}</i> !
+                        </h1>
+                        <img class="owner-img" height="100px" width="100px" src="{{user.avatarUrl}}" alt="user.fullName[0]">
+                        <button (click)="snav.toggle()" class="btn" mat-flat-button>Start</button>
+                        <p class="description">
+                            Find a person with the help of search or select chat group to start conversation.
+                        </p>
+                    </div>                        
                 </ng-template>
 
             

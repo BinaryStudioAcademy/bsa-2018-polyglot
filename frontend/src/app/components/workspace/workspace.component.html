@@ -57,11 +57,11 @@
             </mat-form-field> -->
             </div>
 
-            <div *ngIf="project">
-                <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
-                <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
-            </div>
-        </mat-card>
+        <div *ngIf="project">
+            <button [disabled]="!isCurrentUserCanAddNewString()" class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
+            <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
+        </div>
+    </mat-card>
 
         <!-- <div class="mt-1 mb-1" *ngIf="!isLoad">
     <mat-card class="no-string-div">

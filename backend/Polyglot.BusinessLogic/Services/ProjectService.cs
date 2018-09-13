@@ -13,6 +13,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
+using Castle.Core.Internal;
 using Nest;
 using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.Common.DTOs;
@@ -44,7 +45,7 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IGlossaryService glossaryService;
         private readonly IElasticClient elasticClient;
         private readonly ICurrentUser currentUser;
-
+        private static readonly Random rand = new Random();
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IMongoRepository<ProjectPriority> priorityRep,
@@ -215,6 +216,7 @@ namespace Polyglot.BusinessLogic.Services
             {
                 await projPrioritiesProvider.CreateAsync(new ProjectPriority()
                 {
+                    Id = rand.Next(Int32.MinValue, Int32.MaxValue - 1),
                     UserId = currentUserId.Value,
                     Total = 1,
                     Priorities = new List<Priority>() { new Priority() { ProjectId = projectId, PriorityValue = 1 } }
@@ -831,7 +833,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id && !t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,
@@ -854,7 +856,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id || t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,

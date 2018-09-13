@@ -10,23 +10,28 @@
     </mat-icon>
 </button>
 <mde-popover #notifPopover="mdePopover" [mdePopoverOverlapTrigger]="false" mdePopoverArrowColor="#fff" [mdePopoverArrowOffsetX]="21">
-    <mat-card class="card" *ngFor="let notification of userNotifications">
-        <mat-card-header>
-            <mat-card-title class="card-main">
-                <div>
-                    <div>From:
-                        <strong>{{notification.sender.fullName}}</strong>
-                    </div>
-                    <p>
-                        <i>{{notification.message}}</i>
-                    </p>
-                </div>
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="card-navigation">
-            <a *ngFor="let notificationOption of notification.options" mat-button color="primary" class="card-navigation-button" (click)="buttonClick(notification, notificationOption.optionDefinition)">
-                {{getStringEnum(notificationOption.optionDefinition)}}
-            </a>
-        </mat-card-content>
-    </mat-card>
+    <div class=popover>
+
+            <mat-card class="card" *ngFor="let notification of userNotifications">
+                    <mat-card-header>
+                        <mat-card-title class="card-main">
+                            <div>
+                                <div>From:
+                                    <strong>{{notification.sender.fullName}}</strong>
+                                </div>
+                                <p>
+                                    <i>{{notification.message}}</i>
+                                </p>
+                            </div>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="card-navigation">
+                        <a *ngFor="let notificationOption of notification.options" mat-button mat-raised-button color="primary"  class="card-navigation-button" (click)="buttonClick(notification, notificationOption.optionDefinition)">
+                            {{getStringEnum(notificationOption.optionDefinition)}}
+                        </a>
+                    </mat-card-content>
+                </mat-card>
+
+    </div>
+    
 </mde-popover>

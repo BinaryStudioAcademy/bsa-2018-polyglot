@@ -1,3 +1,8 @@
+<div *ngIf="!isLoad" class="spinner">
+    <mat-spinner [diameter]="100"></mat-spinner>
+</div>
+
+
 <div class="reports-container" *ngIf="isLoad">
     
         <mat-card class="bar" >
