@@ -43,9 +43,8 @@ namespace Polyglot.Views
 
         private async void Logout_Click(object sender, EventArgs e)
 	    {
-	        var newPage = new NavigationPage(new LoginPage());
             UserService.Logout();
-	        await Navigation.PushModalAsync(newPage);
+            App.Current.MainPage = new LoginPage();        
         }
 
 	    private void ToTeams_Clicked(object sender, EventArgs e)

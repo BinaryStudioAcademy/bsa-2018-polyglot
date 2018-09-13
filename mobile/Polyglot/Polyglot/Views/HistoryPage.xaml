@@ -9,16 +9,13 @@
         <ListView 
             ItemsSource="{Binding History}"
             CachingStrategy="RecycleElement"
-            HasUnevenRows="True"
-            RowHeight="250">
+            HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Vertical" >
-                            <Label Font="bold, 15">From</Label>
-                            <Label Text="{Binding From}"   />
-                            <Label Font="bold, 15">To</Label>
-                            <Label HeightRequest="30"  Text="{Binding To}" />
+                        <StackLayout Margin="10, 10, 10, 10" Orientation="Vertical" >
+                            <Label Font="15" Text="{Binding To}" />
+                            <Label Font="10" HorizontalTextAlignment="End" Text="{Binding When}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

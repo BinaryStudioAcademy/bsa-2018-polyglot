@@ -4,7 +4,7 @@
              x:Class="Polyglot.Views.ComplexStringsPage"
              Title="Complex Strings">
     <StackLayout>
-        <Label IsVisible="{Binding IsEmpty}" >No Complex Strings</Label>
+        <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}" >No Complex Strings</Label>
         <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView  ItemsSource="{Binding ComplexStrings}"
             ItemTapped="Handle_ItemTapped"
@@ -14,7 +14,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout>
+                        <StackLayout  Margin="10, 10, 10, 10">
                             <Label HorizontalOptions="Start" Font="bold, 20" Margin="0, 10, 0, 0" TextColor="Black" Text="{Binding Key}" />
                             <Label Font="15"  MinimumHeightRequest="100" TextColor="Gray" Text="{Binding OriginalValue}" />
                         </StackLayout>

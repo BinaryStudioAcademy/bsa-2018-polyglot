@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Polyglot.BusinessLogic;
+using Polyglot.BusinessLogic.DTO;
+using Polyglot.BusinessLogic.Services;
+using Polyglot.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +16,44 @@ namespace Polyglot.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CreateTranslationPage : ContentPage
 	{
-		public CreateTranslationPage ()
+        public int ComplexStringId { get; set; }
+        public TranslationViewModel Translation { get; set; }
+        public UserDTO User { get; set; }
+
+        public CreateTranslationPage (int complexStringId, TranslationViewModel translation)
 		{
-			InitializeComponent ();
+            BindingContext = translation;
+
+            ComplexStringId = complexStringId;
+            Translation = translation;
+            User = UserService.CurrentUser;
+
+            InitializeComponent ();
 		}
-	}
+
+        private async void SaveTranslation_Clicked(object sender, EventArgs e)
+        {
+            var httpService = new HttpService();
+            var translationsUrl = "complexstrings/" + ComplexStringId + "/translations";
+
+
+            var editedTranslation = new TranslationDTO
+            {
+                Id = Guid.NewGuid(),
+                CreatedOn = DateTime.UtcNow,
+                LanguageId = Translation.LanguageId,
+                TranslationValue = Translation.Translation,
+                UserId = User.Id
+            };
+
+            var translationResult = await httpService.PostAsync<TranslationDTO>(translationsUrl, editedTranslation);
+
+            if (translationResult != null)
+            {
+                Translation.Id = translationResult.Id.ToString();
+                await DisplayAlert("Result", "Translation saved!", "Ok");
+                await Navigation.PopAsync();
+            }
+        }
+    }
 }

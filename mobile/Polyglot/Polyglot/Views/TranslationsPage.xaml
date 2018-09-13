@@ -9,16 +9,16 @@
             ItemsSource="{Binding Translations}"
             ItemTapped="Handle_ItemTapped"
             CachingStrategy="RecycleElement"
-        RowHeight="100">
+            HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <StackLayout Orientation="Vertical"  WidthRequest="100">
-                                <Label  Font="bold, 20"  TextColor="Black" Text="{Binding Language}" />
+                        <StackLayout Margin="5, 10, 5, 10"  Orientation="Horizontal">
+                            <StackLayout WidthRequest="220">
+                                <Label  Font="bold, 15"  TextColor="Black" Text="{Binding Language}" />
                             </StackLayout>
-                            <StackLayout WidthRequest="100" HorizontalOptions="FillAndExpand" Orientation="Vertical">
-                                <Label Margin="10, 0, 0, 0" HorizontalOptions="StartAndExpand" Font="20"  TextColor="Gray" Text="{Binding Translation}" />
+                            <StackLayout Orientation="Vertical">
+                                <Label  HorizontalOptions="FillAndExpand"   Font="15" TextColor="Gray" HorizontalTextAlignment="Start" Text="{Binding Translation}" />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

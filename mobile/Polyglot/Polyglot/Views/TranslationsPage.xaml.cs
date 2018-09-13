@@ -22,7 +22,6 @@ namespace Polyglot.Views
         {
             BindingContext = translationsViewModel;
 
-            NavigationPage.SetHasNavigationBar(this, false);
             ComplexStringId = complexStringId;
 
             InitializeComponent();
@@ -35,11 +34,11 @@ namespace Polyglot.Views
             if (e.Item == null)
                 return;
 
-            var tr = e.Item as TranslationViewModel;
+            var translation = e.Item as TranslationViewModel;
 
             var actionSheet = "";
 
-            if (string.IsNullOrEmpty(tr.Id))
+            if (string.IsNullOrEmpty(translation.Id))
             {
                 actionSheet = await DisplayActionSheet("Choose the option", "Cancel", null, "Create translation", "Comments");
             }
@@ -60,25 +59,25 @@ namespace Polyglot.Views
                     break;
 
                 case "History":                   
-                    var historyPage = new HistoryPage(new HistoryViewModel(), ComplexStringId, tr.Id);
+                    var historyPage = new HistoryPage(new HistoryViewModel(), ComplexStringId, translation.Id);
                     await Navigation.PushAsync(historyPage);
 
                     break;
 
                 case "Optional translations":                   
-                    var optionalPage = new OptionalTranslationsPage(new OptionalTranslationsViewModel(), ComplexStringId, tr.Id);
+                    var optionalPage = new OptionalTranslationsPage(new OptionalTranslationsViewModel(), ComplexStringId, translation.Id);
                     await Navigation.PushAsync(optionalPage);
 
                     break;
 
                 case "Edit translation":
-                    var editTranslationPage = new EditTranslationPage();
+                    var editTranslationPage = new EditTranslationPage(ComplexStringId, translation);
                     await Navigation.PushAsync(editTranslationPage);
 
                     break;
 
                 case "Create translation":
-                    var createTranslationPage = new CreateTranslationPage();
+                    var createTranslationPage = new CreateTranslationPage(ComplexStringId, translation);
                     await Navigation.PushAsync(createTranslationPage);
 
                     break;
