@@ -31,7 +31,7 @@
 
 		<mat-tab label="Team">
 			<ng-template matTabContent>
-				<app-project-team [projectId]="project.id"></app-project-team>
+				<app-project-team [IsCurrentUserManager]="checkIfUserManager" [projectId]="project.id"></app-project-team>
 			</ng-template>
 		</mat-tab>
 
