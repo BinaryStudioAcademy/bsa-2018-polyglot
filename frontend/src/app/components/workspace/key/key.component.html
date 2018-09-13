@@ -1,4 +1,4 @@
-<button (click)="$event.preventDefault(); $event.stopPropagation();" mat-button [matMenuTriggerFor]="menu"><mat-icon aria-label="dropdown-menu">more_horiz</mat-icon></button>
+<button (click)="$event.preventDefault(); $event.stopPropagation();" mat-button [matMenuTriggerFor]="menu"><mat-icon aria-label="dropdown-menu">more_vert</mat-icon></button>
     <mat-menu #menu="matMenu" xPosition="before">
       <button (click)="onEditStringClick()" mat-menu-item>Edit</button>
       <button (click)="onDeleteString()" mat-menu-item>Delete</button>
@@ -10,7 +10,7 @@
   <p class="text-justify d-flex flex-wrap align-items-center mt-1">
     {{key.base}}
   <mat-chip-list class="tags mt-1">
-    <mat-chip style="height: 20px;margin-left: 0" color="accent" *ngFor="let tag of key.tags">{{tag}}</mat-chip>
+    <mat-chip style="height: 20px;margin-left: 0;color:white;" color="accent" [style.background-color]="tag.color" *ngFor="let tag of key.tags">{{tag.name}}</mat-chip>
   </mat-chip-list>
   <mat-icon *ngIf="key.pictureLink" class="picture-icon" (click)="onPictureIconClick(key); $event.preventDefault(); $event.stopPropagation();" matTooltip="Show photo" matTooltipPosition="above">
       photo_size_select_actual

@@ -62,6 +62,7 @@ import {
     MatProgressSpinnerModule
 } from "@angular/material";
 import { MatSortModule } from "@angular/material/sort";
+
 import { SearchComponent } from "./components/search/search.component";
 import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 import { ConfirmEqualValidatorDirective } from "./directives/confirm-equal-validator.directive.ts";
@@ -106,18 +107,31 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
 import { TranslatorGuardService } from './services/guards/translator-guard.service';
 import { TabOptionalComponent } from './components/workspace/key-details/tab-optional/tab-optional.component';
+import { SelectColorDialogComponent } from './dialogs/select-color-dialog/select-color-dialog.component';
+
+
 import { ChatComponent } from "./components/chat/chat.component";
 import { ChatContactsComponent } from './components/chat/chat-contacts/chat-contacts.component';
 import { ChatWindowComponent } from './components/chat/chat-window/chat-window.component';
 import { TeamProjectComponent } from "./components/team-details/team-project/team-project.component";
 import { TeamMembersComponent } from "./components/team-details/team-members/team-members.component";
 import { TeamDetailsComponent } from "./components/team-details/team-details.component";
+import { NotificationsComponent } from './components/notifications/notifications.component';
+import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
+import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pipe';
+import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { GuidelineComponent } from './components/guideline/guideline.component';
+import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
+import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
+import { CommentsPipe } from './common/pipes/comments.pipe';
+import { OptionalTranslationMenuComponent } from './dialogs/optional-translation-menu/optional-translation-menu.component';
+
 
 @NgModule({
   exports: [
@@ -189,16 +203,27 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     DownloadFileComponent,
     StarRatingComponent,
     UserProfileComponent,
-    TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
+    SelectColorDialogComponent,
     TeamDetailsComponent,
     TeamMembersComponent,
     ChatComponent,
     ChatContactsComponent,
     ChatWindowComponent,
     ListTranslatorsComponent,
-    TabOptionalComponent
+    TabOptionalComponent,
+    NotificationsComponent,
+    TeamAddMemberComponent,
+    ChooseProficiencyDialogComponent,
+    TranslatorSearchByNamePipe,
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent,
+    GuidelineComponent,
+    TranslatorGuideComponent,
+    ManagerGuideComponent,
+    CommentsPipe,
+    OptionalTranslationMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -234,7 +259,9 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     NgxChartsModule,
     NgxInfiniteScrollerModule,
     InfiniteScrollModule,
-    MentionModule
+    MentionModule,
+    InfiniteScrollModule
+
   ],
   entryComponents: [
     LoginDialogComponent,
@@ -253,7 +280,11 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
     GlossaryCreateDialogComponent,
     GlossaryEditDialogComponent,
     GlossaryStringDialogComponent,
-    SaveStringConfirmComponent
+    SaveStringConfirmComponent,
+    SelectColorDialogComponent,
+    TeamAddMemberComponent,
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent
 
   ],
   providers: [HttpService, AuthService, AuthGuard,

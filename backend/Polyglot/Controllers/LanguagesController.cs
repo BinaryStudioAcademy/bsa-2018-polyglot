@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
-using Polyglot.DataAccess.Entities;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -12,11 +12,13 @@ namespace Polyglot.Controllers
     [ApiController]
     public class LanguagesController : ControllerBase
     {
-        private readonly ICRUDService<Language, LanguageDTO> service;
+        private readonly ILanguageService service;
+        private readonly ICurrentUser _currentUser;
 
-        public LanguagesController(ICRUDService<Language, LanguageDTO> service)
+        public LanguagesController(ILanguageService service, ICurrentUser currentUser)
         {
             this.service = service;
+            _currentUser = currentUser;
         }
 
         // GET: Languages
@@ -68,6 +70,33 @@ namespace Polyglot.Controllers
         {
             var success = await service.TryDeleteAsync(id);
             return success ? Ok() : StatusCode(304) as IActionResult;
+        }
+
+        // PUT: Languages/5
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserLanguages(int id)
+        {
+
+            var entities = await service.GetTranslatorLanguages(id);
+            return entities == null ? NotFound($"This user hasn't languages") as IActionResult
+                : Ok(entities);
+        }
+
+        // PUT: Languages/user
+        [HttpPut("user")]
+        public async Task<IActionResult> SetCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
+        {
+            var entity = await service.SetTranslatorLanguages((await _currentUser.GetCurrentUserProfile()).Id, languages);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpDelete("user")]
+        public async Task<IActionResult> DeleteCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
+        {
+            var entity = await service.DeleteTranslatorsLanguages((await _currentUser.GetCurrentUserProfile()).Id, languages);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
         }
     }
 }

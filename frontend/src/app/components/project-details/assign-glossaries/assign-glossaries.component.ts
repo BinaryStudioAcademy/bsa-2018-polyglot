@@ -4,6 +4,7 @@ import { Glossary, Project } from '../../../models';
 import { GlossaryService } from '../../../services/glossary.service';
 import { MatTableDataSource } from '@angular/material';
 import { forkJoin } from 'rxjs';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
     selector: 'app-assign-glossaries',
@@ -19,10 +20,12 @@ export class AssignGlossariesComponent implements OnInit {
     displayedColumns: string[] = ['name', 'originLanguage', 'action_btn'];
     assignedDataSource: MatTableDataSource<Glossary>;
     notAssignedSource: MatTableDataSource<Glossary>;
+    public IsLoad: boolean = true;
 
     constructor(
         private projectService: ProjectService,
-        private glossariesService: GlossaryService
+        private glossariesService: GlossaryService,
+        private stateService: AppStateService
     ) { }
 
     ngOnInit() {
@@ -30,7 +33,7 @@ export class AssignGlossariesComponent implements OnInit {
     }
 
     refresh() {
-
+        this.IsLoad = true;
         this.projectService.getAssignedGlossaries(this.projectId).subscribe(
             (data) => {
                 this.AssignedGlossaries = data;
@@ -38,10 +41,15 @@ export class AssignGlossariesComponent implements OnInit {
             });
         this.projectService.getNotAssignedGlossaries(this.projectId).subscribe(
             (data) => {
-                this.NotAssignedGlossaries = data;
+                this.NotAssignedGlossaries = [];
+                data.forEach(gl => {
+                    if(gl.userProfile && gl.userProfile.id === this.stateService.currentDatabaseUser.id){
+                        this.NotAssignedGlossaries.push(gl);
+                    }
+                });
                 this.notAssignedSource = new MatTableDataSource(this.NotAssignedGlossaries);
+                this.IsLoad = false;
             });
-
     }
 
     public isAssigned(item: Glossary): boolean {

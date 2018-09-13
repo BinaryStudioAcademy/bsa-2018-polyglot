@@ -15,22 +15,24 @@
         <input matInput (keyup)="applyFilter($event.target.value)"  placeholder="Search">
     </mat-form-field>
   <div class = "top-buttons">
-  <button mat-raised-button class="top-button" (click)="delete(teamId)" color="warn" type="button">Delete team</button>
+  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="delete(teamId)" color="warn" type="button">Delete team</button>
+  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="addMember()" color="primary" type="button">Add member</button>
   <button *ngIf="isMember()" class="top-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam()>Leave team</button>
 
 </div>
 </div>
-<div *ngIf = "displayNoRecords">
-    Not found
+
+<div  *ngIf="!team || team.teamTranslators.length === 0 || displayNoRecords">
+    <p class="no-members">No Translators</p>
 </div>
 
-<table *ngIf = "!displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+<table *ngIf = "team && team.teamTranslators.length !== 0 && !displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
 
  <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef> </th>
     <td mat-cell *matCellDef="let element"> 
         <button *ngIf="element.teamId != id" mat-icon-button color="green">
-                <mat-icon aria-label="">person_add</mat-icon>
+            <img mat-card-avatar class="manager-img" src="{{element.avatarUrl}}">
         </button>
     </td>
   </ng-container>
@@ -38,9 +40,11 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
     <td mat-cell *matCellDef="let element"> <a (click)="userService.redirectById(element.userId)" style="cursor: pointer;">{{element.fullName}}</a> </td>
   </ng-container>
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-    <td mat-cell *matCellDef="let element">{{element.email}} </td>
+  <ng-container matColumnDef="rating">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rating </th>
+    <td mat-cell *matCellDef="let element" style="pointer-events: none !important">
+        <app-star-rating [rating]="element.rating" [starCount]="5"></app-star-rating> 
+    </td>
   </ng-container>
   <ng-container matColumnDef="rights">
       <th mat-header-cell *matHeaderCellDef > Rights </th>
@@ -48,13 +52,16 @@
           <div *ngIf="element.teamId === teamId" id="right-checkboxes">
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)" (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)" (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Select new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Can accept translations</mat-checkbox>
             </div>
       </td>
   </ng-container>  
     <ng-container matColumnDef="options" class="icons-container">
         <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">            
+        <td mat-cell *matCellDef="let element">  
+            <a *ngIf="userService.isCurrentUserManager()" mat-button color="warn" class="button" routerLinkActive="active" (click)='removeTranslator(element)'>
+                <i class="fas fa-ban"></i> Remove translator
+            </a>
         </td>
     </ng-container>
 
@@ -62,6 +69,6 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   
 </table>
-<mat-paginator *ngIf = "!displayNoRecords && IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+<!-- <mat-paginator *ngIf = "!displayNoRecords && IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator> -->
 
 <ng-snotify></ng-snotify>  

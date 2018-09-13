@@ -2,8 +2,12 @@
 {
     public enum Proficiency
     {
-        Beginner,
-        Medium,
-        Expert
+        
+        Elementary,
+        Intermediate,
+        UpperIntermediate,
+        Advanced,
+        Proficiency,
+        
     }
 }

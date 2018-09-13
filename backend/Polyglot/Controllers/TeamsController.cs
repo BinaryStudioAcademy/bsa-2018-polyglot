@@ -4,7 +4,6 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.DataAccess.Entities;
 using AutoMapper;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Helpers;
@@ -18,27 +17,41 @@ namespace Polyglot.Controllers
     {
         private readonly ITeamService service;
         private readonly IRightService rightService;
+        private readonly ICurrentUser _currentUser;
         private readonly ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService;
 
+
         public TeamsController(ITeamService service, ICRUDService<TeamTranslator, TranslatorDTO> teamTranslatorService, IMapper mapper,
-                                IRightService rightService)
+                                IRightService rightService, ICurrentUser currentUser)
         {
             this.service = service;
             this.teamTranslatorService = teamTranslatorService;
             this.rightService = rightService;
+            _currentUser = currentUser;
         }
 
         // GET: Teams
         [HttpGet]
         public async Task<IActionResult> GetAllTeams()
         {
-            var teams = await service.GetAllTeamsAsync(); 
+            var teams = await service.GetAllTeamsAsync();
             return teams == null ? NotFound("No teams found!") as IActionResult
                 : Ok(teams);
         }
 
-        // GET: teams/:id
-        [HttpGet("{id}", Name = "GetTeam")]
+		[HttpGet("search")]
+		public async Task<IActionResult> SearchTeams(string query)
+		{
+			if (query == null)
+				query = "";
+
+			var projects = await service.SearchTeams(query);
+			return projects == null ? NotFound("No Teams found!") as IActionResult
+				: Ok(projects);
+		}
+
+		// GET: teams/:id
+		[HttpGet("{id}", Name = "GetTeam")]
         public async Task<IActionResult> GetTeam(int id)
 
 
@@ -58,8 +71,17 @@ namespace Polyglot.Controllers
                 : Ok(translators);
         }
 
-        // GET: teams/translators/:id
-        [HttpGet("translators/{id}", Name = "GetTranslator")]
+		// GET: teams/translators
+		[HttpGet("filteredtranslators", Name = "GetFilteredtranslators")]
+		public async Task<IActionResult> GetFilteredtranslators([FromQuery(Name = "prof")] int prof, [FromQuery(Name = "languages")] int[] languages)
+		{
+			var translators = await service.GetFilteredtranslators(prof, languages);
+			return translators == null ? NotFound("No translators found!") as IActionResult
+				: Ok(translators);
+		}
+
+		// GET: teams/translators/:id
+		[HttpGet("translators/{id}", Name = "GetTranslator")]
         public async Task<IActionResult> GetTranslator(int id)
         {
             var translators = await service.GetTranslatorAysnc(id);
@@ -125,6 +147,18 @@ namespace Polyglot.Controllers
             return Ok();
         }
 
+        [HttpPut("translators")]
+
+
+        public async Task<IActionResult> AddTeamTranslators([FromBody]TeamTranslatorsDTO teamTransalors)
+        {
+            var entity = await service.TryAddTeamAsync(teamTransalors);
+
+            return Ok(entity);
+
+        }
+
+
         // DELETE: ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DisbandTeam(int id)
@@ -145,6 +179,25 @@ namespace Polyglot.Controllers
         public async Task<IActionResult> RemoveRightFromTranslator(int teamId, int userId, [FromBody]RightDefinition rightDefinition)
         {
             var entity = await rightService.RemoveTranslatorRight(userId, teamId, rightDefinition);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+
+        [HttpPut("{teamId}/activate")]
+        public async Task<IActionResult> ActivateCurrentUser(int teamId)
+        {
+            int currentUserId = (await _currentUser.GetCurrentUserProfile()).Id;
+            var entity = await service.ActivateUserInTeam(currentUserId, teamId);
+            return entity == null ? StatusCode(304) as IActionResult
+                : Ok(entity);
+        }
+
+        [HttpDelete("{teamId}/removeUser/{userId}")]
+        public async Task<IActionResult> RemoveUserFromTeam(int teamId, int userId)
+        {
+            
+            var entity = await service.DeleteUserFromTeam(userId, teamId);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

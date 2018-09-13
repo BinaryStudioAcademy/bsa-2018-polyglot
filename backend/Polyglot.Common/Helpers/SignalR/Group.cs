@@ -7,6 +7,7 @@
         chatShared,
         chatTeams,
         chatProject,
-        chatUser
+        chatUser,
+        notification
     }
 }

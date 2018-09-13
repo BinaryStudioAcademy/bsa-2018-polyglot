@@ -22,6 +22,7 @@ import { UserService } from "../../services/user.service";
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
     public checked = true;
+    searchQuery: string;
 
     constructor(
         private userService: UserService,
@@ -29,7 +30,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         private projectService: ProjectService,
         public dialog: MatDialog,
         private snotifyService: SnotifyService
-    ) {}
+    ) { }
 
     public cards: Project[];
     isLoad: boolean = true;
@@ -51,11 +52,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.projectService.getAll().subscribe(pr => {
             if (pr) {
                 this.cards = pr;
-                this.projectService.getProjectsTranslationStatistics(this.cards.map(project => project.id)).subscribe(statistics => {
-                    for (let i = 0; i < this.cards.length; i++) {
-                        this.cards[i].projectStatistics = statistics.find(project => project.projectId === this.cards[i].id);
-                        }
-                    });
+                this.cards.sort((a: Project, b: Project) => {
+                    if (a.priority > b.priority) return -1;
+                    if (a.priority < b.priority) return 1;
+                    return 0;
+                });
+
                 if (
                     this.cards.length === 0 &&
                     this.onPage === true &&
@@ -88,5 +90,21 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     isCurrentUserManager() {
         return this.userService.isCurrentUserManager();
+    }
+
+    search() {
+        this.searchQuery = this.searchQuery.trim();
+        this.projectService.searchProjects(this.searchQuery)
+            .subscribe(pr => {
+                this.cards = pr;
+            });
+
+    }
+
+    increasePriority(projectId: number) {
+        debugger;
+        this.projectService.increasePriority(projectId).subscribe((a) => {
+            debugger;
+        });
     }
 }

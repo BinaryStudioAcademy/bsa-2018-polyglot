@@ -1,16 +1,25 @@
-<h2 *ngIf="AssignedGlossaries.length != 0">Assigned Glossaries</h2>
 
-<table *ngIf="AssignedGlossaries.length != 0" mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8">
+<div *ngIf="IsLoad" class="spinner">
+    <mat-spinner [diameter]="100"></mat-spinner>
+</div>
+
+<h2 *ngIf="!IsLoad && AssignedGlossaries.length != 0">Assigned Glossaries</h2>
+
+<table *ngIf="!IsLoad && AssignedGlossaries.length != 0" mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    <td mat-cell *matCellDef="let element" routerLinkActive="active" [routerLink]="['/dashboard/glossaries', element.id]">
+        {{element.name}}
+    </td>
   </ng-container>
 
 
   <ng-container matColumnDef="originLanguage">
     <th mat-header-cell *matHeaderCellDef>Language</th>
-    <td mat-cell *matCellDef="let element">{{element.originLanguage.name}}</td>
+    <td routerLinkActive="active" [routerLink]="['/dashboard/glossaries', element.id]" mat-cell *matCellDef="let element">
+      {{element.originLanguage.name}}
+    </td>
 
   </ng-container>
 
@@ -28,19 +37,23 @@
 </table>
 
 
-<h2 *ngIf="NotAssignedGlossaries.length != 0">Not Assigned Glossaries</h2>
+<h2 *ngIf="!IsLoad && NotAssignedGlossaries.length != 0">Not Assigned Glossaries</h2>
 
-<table *ngIf="NotAssignedGlossaries.length != 0" mat-table [dataSource]="notAssignedSource" class="mat-elevation-z8">
+<table *ngIf="!IsLoad && NotAssignedGlossaries.length != 0" mat-table [dataSource]="notAssignedSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    <td mat-cell *matCellDef="let element" routerLinkActive="active" [routerLink]="['/dashboard/glossaries', element.id]">
+      {{element.name}}
+    </td>
   </ng-container>
 
 
   <ng-container matColumnDef="originLanguage">
     <th mat-header-cell *matHeaderCellDef>Language</th>
-    <td mat-cell *matCellDef="let element">{{element.originLanguage.name}}</td>
+    <td mat-cell *matCellDef="let element" routerLinkActive="active" [routerLink]="['/dashboard/glossaries', element.id]">
+      {{element.originLanguage.name}}
+    </td>
 
   </ng-container>
 

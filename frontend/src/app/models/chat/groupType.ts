@@ -1,5 +1,6 @@
 export enum GroupType {
     users,
     projects,
-    teams
+    teams,
+    direct
 }

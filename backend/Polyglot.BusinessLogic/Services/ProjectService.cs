@@ -13,7 +13,9 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
+using Castle.Core.Internal;
 using Nest;
+using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
 using Polyglot.DataAccess.Entities;
@@ -24,25 +26,32 @@ using ComplexString = Polyglot.DataAccess.MongoModels.ComplexString;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.SignalR.Responses;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using Language = Polyglot.DataAccess.Entities.Language;
+using Polyglot.DataAccess.Entities.Chat;
+using Polyglot.Common.DTOs.Chat;
+using KBCsv;
 
 namespace Polyglot.BusinessLogic.Services
 {
+    [Authorize]
     public class ProjectService : CRUDService<Project, ProjectDTO>, IProjectService
     {
         private readonly IMongoRepository<DataAccess.MongoModels.ComplexString> stringsProvider;
+        private readonly IMongoRepository<ProjectPriority> projPrioritiesProvider;
         public IFileStorageProvider fileStorageProvider;
         private readonly IComplexStringService stringService;
         private readonly ISignalRWorkspaceService signalrService;
         ICRUDService<UserProfile, UserProfileDTO> userService;
         private readonly IGlossaryService glossaryService;
-        private readonly IElasticClient _elasticClient;
-
-
+        private readonly IElasticClient elasticClient;
+        private readonly ICurrentUser currentUser;
+        private static readonly Random rand = new Random();
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
+            IMongoRepository<ProjectPriority> priorityRep,
             IFileStorageProvider provider, IComplexStringService stringService, IUserService userService,
-            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient)
+            ISignalRWorkspaceService signalrService, IGlossaryService glossaryService, IElasticClient elasticClient, ICurrentUser currentUser)
             : base(uow, mapper)
         {
             stringsProvider = rep;
@@ -51,7 +60,9 @@ namespace Polyglot.BusinessLogic.Services
             this.userService = userService;
             this.signalrService = signalrService;
             this.glossaryService = glossaryService;
-            _elasticClient = elasticClient;
+            this.elasticClient = elasticClient;
+            this.projPrioritiesProvider = priorityRep;
+            this.currentUser = currentUser;
         }
 
         public async Task FileParseDictionary(int id, IFormFile file)
@@ -102,8 +113,20 @@ namespace Polyglot.BusinessLogic.Services
                     {
                         dictionary[data.Attribute("name").Value] = data.Element("value").Value;
                     }
+                    break;
 
+                case "application/vnd.ms-excel":
+                case "text/csv":
+                    using (var textReader = new StreamReader(file.OpenReadStream()))
+                    using (var reader = new CsvReader(textReader, true))
+                    {
+                        while (reader.HasMoreRecords)
+                        {
+                            var dataRecord = await reader.ReadDataRecordAsync();
 
+                            dictionary[dataRecord[0]] = dataRecord[1];
+                        }
+                    }
                     break;
 
                 default:
@@ -129,9 +152,9 @@ namespace Polyglot.BusinessLogic.Services
                         ProjectId = id,
                         Translations = new List<Translation>(),
                         Comments = new List<Comment>(),
-                        Tags = new List<string>(),
+                        Tags = new List<int>(),
                         CreatedOn = DateTime.Now,
-                        CreatedBy = (await CurrentUser.GetCurrentUserProfile()).Id
+                        CreatedBy = (await currentUser.GetCurrentUserProfile()).Id
                     });
             }
 
@@ -184,6 +207,17 @@ namespace Polyglot.BusinessLogic.Services
                     string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
                     arr = Encoding.UTF8.GetBytes(temp);
                     break;
+
+                case ".csv":
+                    string tempCSV = "";
+                    foreach (var c in targetStrings)
+                    {
+                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\",\"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
+                    }
+                    arr = Encoding.UTF8.GetBytes(tempCSV);
+                    break;
+
                 default:
                     throw new NotImplementedException();
 
@@ -193,6 +227,42 @@ namespace Polyglot.BusinessLogic.Services
 
         }
         
+        public async Task IncreasePriority(int projectId)
+        {
+            var currentUserId = (await currentUser.GetCurrentUserProfile())?.Id;
+            if(!currentUserId.HasValue)
+            {
+                return;
+            }
+
+            var currentPriority = (await projPrioritiesProvider.GetAllAsync(pp => pp.UserId == currentUserId.Value))?.FirstOrDefault();
+            if(currentPriority == null)
+            {
+                await projPrioritiesProvider.CreateAsync(new ProjectPriority()
+                {
+                    Id = rand.Next(Int32.MinValue, Int32.MaxValue - 1),
+                    UserId = currentUserId.Value,
+                    Total = 1,
+                    Priorities = new List<Priority>() { new Priority() { ProjectId = projectId, PriorityValue = 1 } }
+                });
+            }
+            else
+            {
+                var currentProjectPriority = currentPriority.Priorities.FirstOrDefault(p => p.ProjectId == projectId);
+                if(currentProjectPriority == null)
+                {
+                    currentPriority.Priorities.Add(new Priority() { ProjectId = projectId, PriorityValue = 1 });
+                }
+                else
+                {
+                    currentProjectPriority.PriorityValue++;
+                }
+
+                currentPriority.Total++;
+                await projPrioritiesProvider.Update(currentPriority);
+            }
+        }
+
         #region Teams
 
         public async Task<IEnumerable<TeamPrevDTO>> GetProjectTeams(int projectId)
@@ -220,12 +290,37 @@ namespace Polyglot.BusinessLogic.Services
                 .Select(x => x.TeamId);
 
             var idForAdd = teamIds.Except(teamsIdInDB);
+            var projectDialog = await uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatProject && d.Identifier == projectId);
+            List<Team> assignedTeams = new List<Team>();
 
             foreach (var item in idForAdd)
             {
                 await uow.GetRepository<ProjectTeam>().CreateAsync(new ProjectTeam() { ProjectId = projectId, TeamId = item });
+                assignedTeams.Add(await uow.GetRepository<Team>().GetAsync(item));
             }
 
+            var participants = assignedTeams
+                .SelectMany(t => t.TeamTranslators)
+                .Select(tt => tt.UserProfile)
+                .ToList();
+
+            participants.AddRange(assignedTeams.Select(t => t.CreatedBy));
+
+            participants = participants.GroupBy(up => up.Id)
+                .SelectMany(g => g.Select(sg => sg))
+                .Except(projectDialog.DialogParticipants.Select(dp => dp.Participant))
+                .ToList();
+
+            participants.ForEach(p =>
+            {
+                projectDialog.DialogParticipants.Add(new DialogParticipant()
+                {
+                    Participant = p
+                });
+            });
+
+            await uow.GetRepository<ChatDialog>().Update(projectDialog);
             await uow.SaveAsync();
 
             var project = await uow.GetRepository<Project>().GetAsync(projectId);
@@ -396,9 +491,27 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Project overrides
 
+		public async Task<List<ProjectDTO>> SearchProjects(string query)
+		{
+			IEnumerable<ProjectDTO> all = await GetListAsync();
+
+			List<ProjectDTO> selected = new List<ProjectDTO>();
+
+			foreach(var pr in all)
+			{
+				if(pr.Name.Contains(query))
+				{
+					selected.Add(pr);
+				}
+			}
+
+			return selected;
+		}
+
+
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await currentUser.GetCurrentUserProfile();
             List<Project> result = new List<Project>();
             if (user.UserRole == Role.Manager)
             {
@@ -413,21 +526,64 @@ namespace Polyglot.BusinessLogic.Services
 
                 result = result.Distinct().ToList();
             }
-            return mapper.Map<List<ProjectDTO>>(result);
+
+			var mapped = mapper.Map<List<ProjectDTO>>(result);
+            var projectsPriority = (
+                await projPrioritiesProvider.GetAllAsync(p => p.UserId == user.Id)
+                )
+                ?.FirstOrDefault();
+
+            int? currentPriority = 0;
+            // Add progress to DTO here
+            foreach (var p in mapped)
+			{
+                currentPriority = projectsPriority?.Priorities.FirstOrDefault(pp => pp.ProjectId == p.Id)?.PriorityValue;
+                if(currentPriority.HasValue && projectsPriority.Total > 0)
+                {
+                    p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
+                }
+
+				List<ComplexString> temp = new List<ComplexString>();
+                temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+                int languagesAmount = p.ProjectLanguageses.Count;
+                int max = temp.Count * languagesAmount;
+                int currentProgress = 0;
+                foreach (var str in temp)
+                {
+                    currentProgress += str.Translations.Count;
+                }
+                if (currentProgress == 0 || max == 0)
+                {
+                    p.Progress = 0;
+                }
+                else
+                {
+                    p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+                }
+            }
+			return mapped;
         }
 
         public override async Task<ProjectDTO> PostAsync(ProjectDTO entity)
         {
-            //var managerDto = mapper.Map<UserProfileDTO>(await CurrentUser.GetCurrentUserProfile());
-            //entity.UserProfile = managerDto;
             var ent = mapper.Map<Project>(entity);
-            // ent.MainLanguage = await uow.GetRepository<Language>().GetAsync(entity.MainLanguage.Id);
             ent.MainLanguage = null;
-            ent.UserProfile = await CurrentUser.GetCurrentUserProfile();
+            ent.UserProfile = await currentUser.GetCurrentUserProfile();
 
             var target = await uow.GetRepository<Project>().CreateAsync(ent);
             await uow.SaveAsync();
 
+            var dialog = new ChatDialog()
+            {
+                DialogName = target.Name,
+                DialogType = ChatGroup.chatProject,
+                Identifier = target.Id,
+                DialogParticipants = new List<DialogParticipant>() { new DialogParticipant() { Participant = target.UserProfile } }
+            };
+
+            await uow.GetRepository<ChatDialog>().CreateAsync(dialog);
+
+            
             return mapper.Map<ProjectDTO>(target);
         }
 
@@ -470,7 +626,6 @@ namespace Polyglot.BusinessLogic.Services
             return target != null ? mapper.Map<ProjectDTO>(target) : null;
         }
 
-
         public override async Task<bool> TryDeleteAsync(int identifier)
         {
             if (uow != null)
@@ -487,6 +642,14 @@ namespace Polyglot.BusinessLogic.Services
                 }
                 await stringsProvider.DeleteAll(str => str.ProjectId == identifier);
                 await uow.GetRepository<Project>().DeleteAsync(identifier);
+                var targetTeamDialogId = uow.GetRepository<ChatDialog>()
+                .GetAsync(d => d.DialogType == ChatGroup.chatProject && d.Identifier == identifier)
+                ?.Id;
+
+                if (targetTeamDialogId.HasValue)
+                {
+                    await uow.GetRepository<ChatDialog>().DeleteAsync(targetTeamDialogId.Value);
+                }
                 await uow.SaveAsync();
                 return true;
             }
@@ -507,39 +670,89 @@ namespace Polyglot.BusinessLogic.Services
         public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsAsync(int id)
         {
             var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(strings);
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var map = mapper.Map<List<ComplexStringDTO>>(strings);
+
+            for (int i = 0; i < map.Count; i++)
+            {
+                map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+            } 
+
+            return map;
         }
 
-        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page)
+        public async Task<IEnumerable<ComplexStringDTO>> GetProjectStringsWithPaginationAsync(int id, int itemsOnPage, int page, string search)
         {
-            var skipItems = itemsOnPage * page;
+			// check if Elastic is connected
+			// if true use elastic else use mongo			
+			if (ElasticRepository.isElasticUsed)
+			{
+				// sorts string by creation date
+				var sorter = new SortDescriptor<DataAccess.ElasticsearchModels.ComplexStringIndex>();
+				sorter.Field("CreatedAt", Nest.SortOrder.Ascending);
 
-            var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+				// ElasticSearch query equals to
+				// ({id} == projectId) && (search == str.key || search == str.OriginalValue)
+				// ProjectId MUST match and either Key or OriginalValue must match
+				var result = await elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(x => x
+						.Sort(s => sorter)
+						.From(page * itemsOnPage)
+						.Size(itemsOnPage)
+						.Query(q => q
+							.Bool(b => b
+								.Must(mu => mu
+									.Match(ma => ma
+										.Field(f => f.ProjectId.ToString())
+										.Query(id.ToString())
+									), mu => mu
+									.Bool(bb => bb
+										.MinimumShouldMatch(1)
+										.Should(sh => sh
+											.Match(m => m
+												.Field( f=> f.Key)
+												.Query(search)
+											), sh => sh
+											.Match(m => m
+												.Field(f => f.OriginalValue)
+												.Query(search)
+											)
+										)
+									)
+								)
+							)						
+						)							
+					);
+				// adding tags to dto`s
+				var models = result.Documents.ToList();
+				var tags = await uow.GetRepository<Tag>().GetAllAsync();
+				var dtos = mapper.Map<List<ComplexStringDTO>>(models);
+				for (int i = 0; i < dtos.Count; i++)
+				{
+					dtos[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => models[i].Tags.Contains(x.Id)));
+				}
+				return dtos;
+			}
+			else
+			{				
+				var skipItems = itemsOnPage * page;
+                var strings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+                var tags = await uow.GetRepository<Tag>().GetAllAsync();
+                var map = mapper.Map<List<ComplexStringDTO>>(strings);
+                for (int i = 0; i < map.Count; i++)
+                {
+                    map[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => strings[i].Tags.Contains(x.Id)));
+                }
+                var paginatedStrings = map.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
+                return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
+			}			
+		}
 
-            var paginatedStrings = strings.OrderBy(x => x.Id).Skip(skipItems).Take(itemsOnPage);
-
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(paginatedStrings);
-
-            //var result = await _elasticClient.SearchAsync<ComplexStringIndex>((x) =>
-            //    x.Query(q => q
-            //            .Match(m => m
-            //                .Field(f => f.ProjectId)
-            //                .Query(id.ToString())
-            //            )
-            //        )
-            //        .From(page * itemsOnPage)
-            //        .Size(itemsOnPage)
-            //);
-
-            //return mapper.Map<IEnumerable<ComplexStringDTO>>(result.Documents);
-
-        }
 
         public async Task<IEnumerable<ComplexStringDTO>> GetListByFilterAsync(IEnumerable<string> options, int projectId)
         {
             List<FilterType> criteriaFilters = new List<FilterType>();
             List<string> tagFilters = new List<string>();
-            List<ComplexString> result = new List<ComplexString>();
+            List<ComplexStringDTO> result = new List<ComplexStringDTO>();
 
             foreach (var opt in options)
             {
@@ -564,21 +777,27 @@ namespace Polyglot.BusinessLogic.Services
             if (criteriaFilters.Contains(FilterType.Untranslated))
                 finalFilter = AndAlso(finalFilter, x => x.Translations.Count == 0);
 
-            if (criteriaFilters.Contains(FilterType.WithTags))
-                finalFilter = AndAlso(finalFilter, x => x.Tags.Count != 0);
-
             if (criteriaFilters.Contains(FilterType.WithPhoto))
                 finalFilter = AndAlso(finalFilter, x => x.PictureLink != null);
 
             var criteriaResult = await stringsProvider.GetAllAsync(finalFilter);
 
+
+            var tags = await uow.GetRepository<Tag>().GetAllAsync();
+            var mappedStrings = mapper.Map<List<ComplexStringDTO>>(criteriaResult);
+
+            for (int i = 0; i < mappedStrings.Count; i++)
+            {
+                mappedStrings[i].Tags = mapper.Map<List<TagDTO>>(tags.Where(x => criteriaResult[i].Tags.Contains(x.Id)));
+            }
+
             if (tagFilters.Count != 0)
             {
                 foreach (var tag in tagFilters)
                 {
-                    foreach (var res in criteriaResult)
+                    foreach (var res in mappedStrings)
                     {
-                        if(res.Tags.Contains(tag))
+                        if (res.Tags.Select(x => x.Name).Contains(tag))
                             result.Add(res);
                     }
                 }
@@ -586,10 +805,10 @@ namespace Polyglot.BusinessLogic.Services
             }
             else
             {
-                result = criteriaResult;
+                result = mappedStrings;
             }
 
-            return mapper.Map<IEnumerable<ComplexStringDTO>>(result);
+            return result;
         }
 
         private Expression<Func<T, bool>> AndAlso<T>(
@@ -616,10 +835,12 @@ namespace Polyglot.BusinessLogic.Services
             var chart1 = await GetTranskatedStringToLanguagesStatistic(id);
             var chart2 = await GetNotTranskatedStringToLanguagesStatistic(id);
 
-            charts.Add(chart1);
+			charts.Add(chart1);
             charts.Add(chart2);
 
-            return new ProjectStatisticDTO
+			charts.Add(await GetTagStatistic(id));
+			charts.Add(await GetTranslatorStatistic(id));
+			return new ProjectStatisticDTO
             {
                 Charts = charts
             };
@@ -638,7 +859,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id && !t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,
@@ -661,7 +882,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id || t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,
@@ -670,8 +891,90 @@ namespace Polyglot.BusinessLogic.Services
             }
             return chart1;
         }
+		public async Task<ChartDTO> GetTagStatistic(int id)
+		{
+			var complexStrings = await this.GetProjectStringsAsync(id);
 
-        private async Task<List<Language>> GetProjectLanuagesData(int id)
+			var chart = new ChartDTO
+			{
+				Name = "Count strings with different tags",
+				Values = new List<Point>()
+			};
+
+			List<Point> points = new List<Point>();
+			foreach (var complexString in complexStrings)
+			{
+				foreach (var tag in complexString.Tags)
+				{
+					var point = points.FirstOrDefault(p => p.Name == tag.Name);
+					if (point == null)
+					{
+						points.Add(new Point() { Name = tag.Name, Value = 1 });
+
+					}
+					else
+					{
+						points.ForEach(p => {
+							if (p.Name == tag.Name)
+							{
+								p.Value++;
+							}
+						});
+					}
+				}
+			}
+			chart.Values.AddRange(points);
+			if (points.Count > 0)
+			{
+				chart.MaxValue = points.Max(p => p.Value);
+			}
+			return chart;
+		}
+
+		public async Task<ChartDTO> GetTranslatorStatistic(int id)
+		{
+			var complexStrings = (await this.GetProjectStringsAsync(id)).ToList();
+			
+
+			var chart = new ChartDTO
+			{
+				Name = "Count translations by translator",
+				Values = new List<Point>()
+			};
+
+			List<Point> points = new List<Point>();
+			foreach (var complexString in complexStrings)
+			{
+				for (int i = 0; i < complexString.Translations.Count(); i++)
+				{
+					complexString.Translations[i].AssignedTranslatorName = (await userService.GetOneAsync(complexString.Translations[i].AssignedTranslatorId)).FullName;
+				}
+				foreach (var translation in complexString.Translations)
+				{
+					var point = points.FirstOrDefault(p => p.Name == translation.AssignedTranslatorName);
+					if (point == null && translation.AssignedTranslatorId!=0)
+					{
+						points.Add(new Point() { Name = translation.AssignedTranslatorName, Value = 1 });
+					}
+					else if(point != null)
+					{
+						points.ForEach(p => {
+							if (p.Name == translation.AssignedTranslatorName)
+							{
+								p.Value++;
+							}
+						});
+					}
+				}
+			}
+			chart.Values.AddRange(points);
+			if (points.Count > 0)
+			{
+				chart.MaxValue = points.Max(p => p.Value);
+			} 
+			return chart;
+		}
+		private async Task<List<Language>> GetProjectLanuagesData(int id)
         {
             var languages = await uow.GetRepository<Language>().GetAllAsync();
             var projectLanguages = (await uow.GetRepository<Project>().GetAsync(id)).ProjectLanguageses;
@@ -695,12 +998,10 @@ namespace Polyglot.BusinessLogic.Services
         {
             Translated,
             Untranslated,
-            WithTags,
             WithPhoto
         }
 
         #endregion
-
 
         #region Glossary
 
@@ -826,7 +1127,7 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     Message = $"Complex string with key {projectString.Key}" +
                     $" was assigned to the project",
-                    DateTime = DateTime.Now
+                    DateTime = projectString.CreatedOn
                 });
 
                 var comments = await this.stringService.GetCommentsAsync(projectString.Id);

@@ -8,7 +8,9 @@ import { Hub } from "../../models/signalrModels/hub";
 import { ProjectService } from "../../services/project.service";
 import { ChatService } from "../../services/chat.service";
 import { AppStateService } from "../../services/app-state.service";
-import { ChatMessage } from "../../models";
+import { ChatMessage, ChatDialog, ChatUser } from "../../models";
+import { UserProfile } from '../../models';
+
 
 @Component({
     selector: "app-chat",
@@ -16,12 +18,12 @@ import { ChatMessage } from "../../models";
     styleUrls: ["./chat.component.sass"]
 })
 export class ChatComponent implements OnInit {
-    selectedUser: any = 
-    {
-        fullName: ""
-    };
+    selectedDialog: ChatDialog;
+    selectedPerson: ChatUser;
     mobileQuery: MediaQueryList;
+    isInterlocutorSelected = false;
     private _mobileQueryListener: () => void;
+    user: UserProfile;
 
     constructor(
         private renderer: Renderer2,
@@ -39,45 +41,21 @@ export class ChatComponent implements OnInit {
     }
 
     ngOnInit() {
-        setTimeout(() => {
-            this.signalRService.createConnection(
-                SignalrGroups[SignalrGroups.chatShared],
-                Hub[Hub.chatHub]
-            );
-        }, 1000);
-
-        this.signalRService.createConnection(
-            `${SignalrGroups[SignalrGroups.chatUser]}${this.appState.currentDatabaseUser.id}`,
-            Hub[Hub.chatHub]
-        );
-        this.subscribeChatEvents();
+        this.user = this.appState.currentDatabaseUser;
     }
 
     ngOnDestroy() {
         this.mobileQuery.removeListener(this._mobileQueryListener);
-        this.signalRService.closeConnection(
-            SignalrGroups[SignalrGroups.chatShared]
-        );
-        this.signalRService.closeConnection(
-            `${SignalrGroups[SignalrGroups.chatUser]}
-            ${this.appState.currentDatabaseUser.id}`
-        );
     }
 
     onSelected($event){
-        debugger;
-        this.selectedUser = $event;
+        
+        this.selectedDialog = $event;
     }
 
-    subscribeChatEvents() {
-        this.signalRService.connection.on(
-            ChatActions[ChatActions.messageReceived],
-            (message: ChatMessage) => {
-                console.log("message received");
-                console.log(message);
-            }
-        );
+    onPersonSelected($event){
+        
+        this.selectedPerson = $event;
     }
 
-    
 }

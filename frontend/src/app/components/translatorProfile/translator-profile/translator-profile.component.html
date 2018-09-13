@@ -1,112 +1,126 @@
 <div class="container" *ngIf="userProfile">
-    <div class="item" 
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="20px">
-        <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
+    <div class="item" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="20px">
+        <!-- <div class="avatar" fxFlex="25%" fxLayoutAlign="center" fxLayoutAlign.xs="center">
             <img src="{{userProfile.avatarUrl}}" alt="avatar" (click)="editPhoto()">
+        </div> -->
+
+        <div class="parent" (click)="editPhoto()">
+            <div class="child bg-five" [ngStyle]="{'background-image': 'url(' + userProfile.avatarUrl + ')'}">
+                <p>Click to change</p>
+            </div>
         </div>
+
         <div fxFlex="75%" fxLayout="column" fxLayout.sm="column" fxLayoutAlign.sm="center stretch">
             <div fxFlex="50%">
                 <div class="user-name">
                     {{userProfile.fullName}}
                 </div>
-                <mat-card-subtitle>
-                    Registration date : <span> {{userProfile.registrationDate | date:'shortDate'}}</span>
+                <mat-card-subtitle style="margin-top: 5px">
+                    Registration date : <span> {{userProfile.registrationDate | date:'longDate'}}</span>
                 </mat-card-subtitle>
             </div>
             <div class="user-rating" fxFlex="50%">
-                <mat-card-subtitle *ngIf="userProfile.ratings && userProfile.ratings.length != 0">Rating                    
-                    <span>  {{calculateAvarageRating()}}/5
+                <mat-card-subtitle *ngIf="userProfile.ratings && userProfile.ratings.length != 0">Rating
+                    <span> {{calculateAvarageRating()}}/5
                         <i class="material-icons" style="color: orange ;">star</i>
                     </span>
                 </mat-card-subtitle>
 
-                <mat-card-subtitle *ngIf="!userProfile.ratings || userProfile.ratings.length === 0">No Rating                   
-                    
+                <mat-card-subtitle *ngIf="!userProfile.ratings || userProfile.ratings.length === 0">No Rating
+
                 </mat-card-subtitle>
             </div>
         </div>
     </div>
-    
-    <div class="" style="margin-top: 20px;"
-        fxLayout
-        fxLayoutAlign="center"
-        fxLayout.xs="column"
-        fxLayoutGap="20px">
-        <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" class="left-card" >   
+
+    <div class="left-cards" style="margin-top: 20px;" fxLayout fxLayoutAlign="center" fxLayout.xs="column" fxLayoutGap="20px">
+        <div fxLayout="column" fxLayoutGap="20px" fxFlex="25%" fxFlex.sm="35%" fxLayout.xs="column" class="left-card">
             <div class="item left-card" fxFlex>
                 <div>
-                          <h2 class="title">Teams</h2>
-                          <hr>
-                          <mat-card-subtitle *ngIf="!teams || teams.length === 0">You are not a member of any team.</mat-card-subtitle>
-                          <div class="team-list">
-                              <div *ngFor="let t of teams; let i = index">
-                                  <div class="team-card">
-                                        <h3 class="team" mat-list-item>
-                                            {{i+1}}. <a class="team-name" [routerLink]="['/team/details', t.id]" [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
-                                        </h3>
-                                    </div>
-                              </div>
-                          </div>      
+                    <h2 class="title">Teams</h2>
+                    <hr>
+                    <mat-card-subtitle *ngIf="!teams || teams.length === 0">You are not a member of any team.</mat-card-subtitle>
+                    <div class="team-list">
+                        <div *ngFor="let t of teams; let i = index">
+                            <div class="team-card">
+                                <h3 class="team" mat-list-item>
+                                    {{i+1}}. <a *ngIf="isOwnersProfile()" class="team-name" [routerLink]="['/team/details', t.id]"
+                                        [routerLinkActive]="'active'">Team {{t.name || t.id}}</a>
+                                    <span *ngIf="!isOwnersProfile()" class="team-name">Team {{t.name || t.id}}</span>
+                                </h3>
+                            </div>
                         </div>
                     </div>
-                <div class="item" fxFlex>  
-            <div class="left-card">
-              <h2 class="title"> Languages</h2>
-              <hr>
-              <div class="languages-list">
-              <br>
-              <div *ngFor="let l of Languages">
-                      <mat-card-header>
-                        <mat-card-title>{{l.Name}}</mat-card-title>
-                        <mat-card-subtitle>{{l.Proficiency}}/100</mat-card-subtitle>
-                      </mat-card-header>
-                      <mat-card-content>
-                    <mat-progress-bar mode="determinate" value="{{l.Proficiency}}"></mat-progress-bar>
-                      </mat-card-content>
-              </div>  
-            </div>  
-        </div>
-    </div>
+                </div>
+            </div>
+            <div class="item" fxFlex>
+                <div class="left-card">
+                    <strong class="title"> Languages</strong>
+                    <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openProficiencyDialog()">
+                        <mat-icon>
+                            settings
+                        </mat-icon>
+                    </button>
+                    <button *ngIf="isOwnersProfile()" mat-icon-button class="no-hover-effect" (click)="openAddRemoveLanguageDialog()">
+                        <mat-icon>
+                            add
+                        </mat-icon>
+                    </button>
+                    <hr>
+                    <mat-card-subtitle *ngIf="!Languages || Languages.length === 0">You have not added any languages yet.</mat-card-subtitle>
+                    <div class="languages-list">
+                        <br>
+                        <div *ngFor="let translatorLanguage of Languages">
+                            <mat-card-header>
+                                <mat-card-title>{{translatorLanguage?.language?.name}}</mat-card-title>
+                                <mat-card-subtitle>{{getStringProficiency(translatorLanguage?.proficiency)}}</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <mat-progress-bar mode="determinate" value="{{translatorLanguage.proficiency*14.29+15}}"></mat-progress-bar>
+                            </mat-card-content>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <div fxLayout="column" fxFlex="75%" fxFlex.sm="65%" fxLayout.xs="column" fxLayoutAlign="center stretch" fxLayoutAlign.xs="center stretch">
             <div fxFlex>
-                    
+
                 <mat-card>
                     <h2>Personal detail</h2>
                     <hr>
                     <mat-card-subtitle>Birth : <span> {{userProfile.birthDate | date:'shortDate'}}</span></mat-card-subtitle>
-                    <mat-card-title>Location</mat-card-title><hr>    
+                    <mat-card-title>Location</mat-card-title>
+                    <hr>
                     <mat-card-subtitle>Country : <span> {{userProfile.country}}</span></mat-card-subtitle>
                     <mat-card-subtitle>City : <span> {{userProfile.city}}</span></mat-card-subtitle>
                     <mat-card-subtitle>Region : <span> {{userProfile.region}}</span></mat-card-subtitle>
                     <mat-card-subtitle>Address : <span> {{userProfile.address}}</span></mat-card-subtitle>
                     <mat-card-subtitle>Postal code : <span> {{userProfile.postalCode}}</span></mat-card-subtitle>
-                    <mat-card-title>Contacts</mat-card-title><hr>
+                    <mat-card-title>Contacts</mat-card-title>
+                    <hr>
                     <mat-card-subtitle>Phone : <span> {{userProfile.phone}}</span></mat-card-subtitle>
                 </mat-card>
-                <div class="review">
+                <div *ngIf="!isTranslator()" class="review">
                     <mat-card *ngIf="!isOwnersProfile()">
                         <app-tab-review *ngIf="userProfile" [(userProfile)]="userProfile"></app-tab-review>
                     </mat-card>
                     <mat-card class="review-cards" *ngIf="userProfile.ratings && userProfile.ratings.length != 0">
-                            <h2>Reviews: </h2>
-                            <div *ngFor="let review of userProfile.ratings">
-                            <mat-card  class="review-card">
+                        <h2>Reviews: </h2>
+                        <div *ngFor="let review of userProfile.ratings">
+                            <mat-card class="review-card">
                                 <br>
                                 <div>
-                                <a (click)="userService.redirectById(review.createdById)">
-                                    <img  class="review-avatar" mat-card-avatar src="{{review.createdBy.avatarUrl}}">
-                                </a>
-                                <a (click)="userService.redirectById(review.createdById)" class="review-name" >
-                                    {{review.createdBy.fullName}}
-                                </a>
-                                <span class="stars">
-                                    {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
-                                 </span>
+                                    <a (click)="userService.redirectById(review.createdById)">
+                                        <img class="review-avatar" mat-card-avatar src="{{review.createdBy.avatarUrl}}">
+                                    </a>
+                                    <a (click)="userService.redirectById(review.createdById)" class="review-name">
+                                        {{review.createdBy.fullName}}
+                                    </a>
+                                    <span class="stars">
+                                        {{review.rate}} / 5<i class="material-icons" style="color: orange ;">star</i>
+                                    </span>
                                 </div>
                                 <br>
                                 <mat-card-content>
@@ -117,7 +131,7 @@
                                     </mat-card-subtitle>
                                 </mat-card-content>
                             </mat-card>
-                            </div>
+                        </div>
                     </mat-card>
                 </div>
             </div>

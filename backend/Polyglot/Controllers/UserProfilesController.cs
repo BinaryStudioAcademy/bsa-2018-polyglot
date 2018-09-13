@@ -6,12 +6,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
-using Polyglot.DataAccess.Entities;
 using Polyglot.DataAccess.FileRepository;
 using Polyglot.DataAccess.Interfaces;
 
@@ -29,16 +26,18 @@ namespace Polyglot.Controllers
         private readonly IFileStorageProvider fileStorageProvider;
         private readonly IMapper mapper;
         private readonly IRightService rightService;
+        private readonly ICurrentUser _currentUser;
 
 
         public UserProfilesController(IUserService service, IRatingService ratingService, ITeamService teamService, IFileStorageProvider fileStorageProvider, IMapper mapper,
-                                      IRightService rightService)
+                                      IRightService rightService, ICurrentUser currentUser)
         {
             this.service = service;
             this.ratingService = ratingService;
             this.teamService = teamService;
             this.fileStorageProvider = fileStorageProvider;
             this.rightService = rightService;
+            _currentUser = currentUser;
             this.mapper = mapper;
         }
 
@@ -139,7 +138,7 @@ namespace Polyglot.Controllers
         [HttpPut("photo")]
         public async Task<IActionResult> AddCropedPhoto(IFormFile formFile)
         {
-            var currentUser = mapper.Map<UserProfileDTO>(await CurrentUser.GetCurrentUserProfile());
+            var currentUser = mapper.Map<UserProfileDTO>(await _currentUser.GetCurrentUserProfile());
             if (currentUser == null)
             {
                 return Unauthorized();
@@ -187,6 +186,15 @@ namespace Polyglot.Controllers
             var rights = (await rightService.GetUserRightsInProject(projectId));
             return rights == null ? NotFound($"Rights not found!") as IActionResult
                : Ok(rights);
+        }
+
+        // GET: UserProfiles
+        [HttpGet("name/{fullName}")]
+        public async Task<IActionResult> GetUserProfilesByNameStartWith(string fullName)
+        {
+            var user = await service.GetUsersByNameStartsWith(fullName);
+            return user == null ? NotFound($"Users not found!") as IActionResult
+               : Ok(user);
         }
     }
 }

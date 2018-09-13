@@ -1,13 +1,13 @@
-﻿using Polyglot.Common.DTOs.Chat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Polyglot.Core.SignalR.Responses;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Interfaces.SignalR
 {
     public interface ISignalRChatService
     {
-        Task MessageReveived(string groupName, ChatMessageDTO message);
+        Task DialogsChanges(string groupName, int dialogId);
+        // не работает из-за currentUser == null
+        //Task MessageReveived(string groupName, int dialogId, int messageId, string messageText);
+        Task MessageReveived(string groupName, ChatMessageResponce data);
     }
 }

@@ -19,11 +19,11 @@ namespace Polyglot.DataAccess.MongoModels
 
         public List<Translation> Translations { get; set; }
         public List<Comment> Comments { get; set; }
-        public List<string> Tags { get; set; }
+        public List<int> Tags { get; set; }
 
         public ComplexString()
         {
-
+			Tags = new List<int>();
         }
 
         public IIndexObject GetIndexObject()
@@ -38,7 +38,9 @@ namespace Polyglot.DataAccess.MongoModels
                 Key = Key,
                 OriginalValue = OriginalValue,
                 PictureLink = PictureLink,
-                ProjectId = ProjectId
+                ProjectId = ProjectId,
+				Tags = Tags,
+				CreatedBy = CreatedBy
             };
         }
     }

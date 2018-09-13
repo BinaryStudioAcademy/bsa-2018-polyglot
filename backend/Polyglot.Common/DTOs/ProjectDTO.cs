@@ -15,6 +15,8 @@ namespace Polyglot.Common.DTOs
 
         public string ImageUrl { get; set; }
 
+        public int Priority { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public UserProfileDTO UserProfile { get; set; }
@@ -27,9 +29,11 @@ namespace Polyglot.Common.DTOs
 
         public List<GlossaryDTO> ProjectGlossaries { get; set; }
 
-        public List<TagDTO> ProjectTags { get; set; }
+        public List<TagDTO> Tags { get; set; }
 
         public virtual List<TeamDTO> ProjectTeams { get; set; }
+
+		public int Progress { get; set; }
 
         public ProjectDTO()
         {
@@ -38,7 +42,7 @@ namespace Polyglot.Common.DTOs
             Translations = new List<TranslationDTO>();
             ProjectLanguageses = new List<LanguageDTO>();
             ProjectGlossaries = new List<GlossaryDTO>();
-            ProjectTags = new List<TagDTO>();
+            Tags = new List<TagDTO>();
 			
         }
     }

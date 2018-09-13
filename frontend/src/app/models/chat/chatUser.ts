@@ -3,6 +3,8 @@ import { Role } from "..";
 export interface ChatUser {
     id: number;
 
+    uid: string;
+
     fullName: string;
 
     email: string;
@@ -12,6 +14,4 @@ export interface ChatUser {
     lastSeen: Date;
 
     isOnline: boolean;
-
-    lastMessageText: string;
 }

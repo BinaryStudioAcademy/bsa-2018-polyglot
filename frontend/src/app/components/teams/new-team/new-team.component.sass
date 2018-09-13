@@ -1,53 +1,56 @@
 .new-team
-  display: grid
-  
-.container
+  display: flex
   height: 100%
   width: 800px
   margin-left: auto
   margin-right: auto
-  
+
+.list-container
+  display: flex
+  width: 800px
+  padding: 10px
+  margin-top: 10px
+  margin-left: auto
+  margin-right: auto
+
+
 .new-team-container,
 .translators-list-container
   width: 100%
   padding: 10px
   margin-top: 10px
 
+
 .new-team-card
   margin: 0
   padding: 0
-  
-.add-from-header 
-  display: grid
-  grid-template-columns: 200px auto 200px 
 
-.teammate-card
+.add-from-header
   display: grid
-  grid-template-columns: 200px auto 50px 50px
-  width: 100%
-  margin: 10px
-  box-sizing: border-box
-  min-width: 160px
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)
-  padding: 10px
+  grid-template-columns: 150px auto
+  grid-template-rows: 40px 40px 40px
 
-  
-.temmate-header
-  grid-column-start: 1
-  padding: 0
-  margin: 0
-  display: grid
-  grid-template-rows: 60% auto
-  grid-template-columns: 50% auto 
-  height: 100%
+.team-name
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: span 2
+  margin-left: 10px
+  margin-top: auto
+  margin-bottom: 0
 
-.add-btn
-  grid-column-start: 3
-  margin-right: 20px
-  
+
 .save-btn
-  margin-right: 20px
   margin-left: auto
+  grid-column: 2
+  grid-row: 3
+
+.header-image
+  margin: 0
+  width: 150px
+  grid-column: 1
+  grid-row-start: 1
+  grid-row-end: span 3
+
 
 .rating
   margin-top: 10px
@@ -55,12 +58,6 @@
 .languages-list
   margin-right: 10px
 
-.header-image
-  margin-left: 10px
-  margin-bottom: auto
-  margin-top: auto
-  margin-right: auto
-  width: 120px
 
 
 .header-image-small
@@ -72,3 +69,118 @@
 .spinner
   margin-top: 100px
   margin-left: calc(400px - 50px)
+
+.mat-selection-list .mat-list-item, .mat-selection-list .mat-list-option
+  height: 100px
+
+.manager-img
+    height: 50px
+    width: 50px
+    border-radius: 50px
+    margin: 0
+
+.mat-selection-list .mat-list-text
+    display: flex
+    flex-direction: row
+.card-title
+  font-size: 16px
+  margin: 0
+.card-subtitle
+  font-size: 12px
+  margin: 0
+  pointer-events: none !important
+
+
+.button-add
+  position: fixed
+  right: 50px
+  bottom: 50px
+  width: 72px
+  height: 72px
+
+.title
+  display: grid
+  grid-template-columns: minmax(170px, 1fr)
+  width: 150px
+  margin-right: 40px
+  margin-left: 20px
+
+.manager-img
+  margin-right: 20px
+
+.item-container
+  display: flex
+  flex-direction: row
+  flex-wrap: nowrap
+  justify-content: flex-start
+  margin: 0
+  width: 100%
+  padding: 0
+  align-content: center
+  align-items: center
+  img
+    border-radius: 50px
+    margin-right: 5px
+
+
+.team-assign-icon
+    font-size: 150px
+    width: 150px
+    height: 150px
+    color: #BBBBBB
+
+
+ul
+  columns: 2
+  -webkit-columns: 2
+  -moz-columns: 2
+  margin: 0
+
+li
+  -webkit-column-break-inside: avoid
+  page-break-inside: avoid
+  break-inside: avoid
+  list-style-type: none
+
+.chips-wrapper
+  width: 100%
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+
+
+.mat-mini-fab
+  margin-right: 5px
+
+.mat-chip
+  padding: 0
+  padding-right: 5px
+
+.search-wrapper
+  display: flex
+  align-items: baseline
+  justify-content: flex-end
+  width: 400px
+  margin-top: 20px
+  margin-left: auto
+
+
+.advanced-search-burron
+  margin-left: 20px
+
+.buttons-wrappper
+  display: flex
+  justify-content: space-around
+
+.buttons-wrappper button
+  margin: 0 10px
+
+.prof-wrappper
+  display: flex
+  justify-content: center
+
+.search-full-width
+  width: 100%
+
+.mat-icon
+  cursor: pointer

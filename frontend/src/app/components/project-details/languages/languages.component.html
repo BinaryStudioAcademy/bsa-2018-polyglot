@@ -1,6 +1,6 @@
 <div class="container">
     <div class="select-lang-container">
-        <button mat-flat-button color="primary" (click)= "selectNew()">Select new language</button>
+        <button mat-flat-button color="primary" [disabled]="!isCurrentUserCanSelectNewString()" (click)= "selectNew()">Select new language</button>
         <div *ngIf="IsLangLoad" class="spinner-small">
             <mat-spinner [diameter]="25"></mat-spinner> 
         </div> 

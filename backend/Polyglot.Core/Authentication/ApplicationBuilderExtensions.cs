@@ -4,19 +4,23 @@ namespace Polyglot.Core.Authentication
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
-        {
-            app.UseWhen(
-                context => context.Request.Path.StartsWithSegments(""),
-                a => a.Use(async (context, next) =>
-                    {
-                        CurrentUser.CurrentContext = context;
-                        await next();
-                    }
-                )
-            );
-            return app;
-        }
+      //  public static IApplicationBuilder UseCustomizedIdentity(this IApplicationBuilder app)
+      //  {
+      //      app.UseWhen(
+      //          context => context.Request.Path.StartsWithSegments(""),
+      //          a => a.Use(async (context, next) =>
+      //              {
+						//if (!context.Request.Path.StartsWithSegments("/workspaceHub") &&
+						//	!context.Request.Path.StartsWithSegments("/chatHub"))
+						//{
+						//	CurrentUser.CurrentContext = context;
+						//}
+      //                  await next();
+      //              }
+      //          )
+      //      );
+      //      return app;
+      //  }
 
         //public static IServiceCollection AddFirebaseAuthentication(this IServiceCollection services, string projectId)
         //{

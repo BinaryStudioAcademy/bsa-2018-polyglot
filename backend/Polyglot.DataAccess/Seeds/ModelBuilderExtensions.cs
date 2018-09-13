@@ -152,89 +152,77 @@ namespace Polyglot.DataAccess.Seeds
                 new Language { Id = 2, Name = "Ukrainian", Code = "uk" },
                 new Language { Id = 3, Name = "German", Code = "de" },
                 new Language { Id = 4, Name = "Spanish", Code = "es" },
-                new Language { Id = 5, Name = "Italian", Code = "it" }
+                new Language { Id = 5, Name = "Italian", Code = "it" },
+                new Language { Id = 6, Name = "Chinese", Code = "zh" }
                 );
 
 
-            modelBuilder.Entity<Project>().HasData(
-                new
-                {
-                    Id = 1,
-                    UserProfileId = 1,
-                    Name = "Operation Red Sea",
-                    Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
-                    CreatedOn = DateTime.Now,
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                    MainLanguageId = 1
-                },
-                 new
-                 {
-                     Id = 2,
-                     UserProfileId = 2,
-                     Name = "Operation Barbarossa",
-                     Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
-                     CreatedOn = DateTime.Now,
-                     ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                     MainLanguageId = 1
-                 },
-            new
-            {
-                Id = 3,
-                UserProfileId = 3,
-                Name = "Operation Valkyrie",
-                Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
-                CreatedOn = DateTime.Now,
-                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-                MainLanguageId = 1
-            },
-            new
-            {
-                Id = 4,
-                UserProfileId = 4,
-                Name = "Angular",
-                Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
-                CreatedOn = DateTime.Now,
-                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-                MainLanguageId = 1
-            },
-             new
-             {
-                 Id = 5,
-                 UserProfileId = 5,
-                 Name = "ASP.NET Core",
-                 Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
-                 CreatedOn = DateTime.Now,
-                 ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                 MainLanguageId = 1
-             }
-                );
+            //modelBuilder.Entity<Project>().HasData(
+            //    new
+            //    {
+            //        Id = 1,
+            //        UserProfileId = 1,
+            //        Name = "Operation Red Sea",
+            //        Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
+            //        CreatedOn = DateTime.Now,
+            //        ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
+            //        MainLanguageId = 1
+            //    },
+            //     new
+            //     {
+            //         Id = 2,
+            //         UserProfileId = 2,
+            //         Name = "Operation Barbarossa",
+            //         Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
+            //         CreatedOn = DateTime.Now,
+            //         ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
+            //         MainLanguageId = 1
+            //     },
+            //new
+            //{
+            //    Id = 3,
+            //    UserProfileId = 3,
+            //    Name = "Operation Valkyrie",
+            //    Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
+            //    CreatedOn = DateTime.Now,
+            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
+            //    MainLanguageId = 1
+            //},
+            //new
+            //{
+            //    Id = 4,
+            //    UserProfileId = 4,
+            //    Name = "Angular",
+            //    Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
+            //    CreatedOn = DateTime.Now,
+            //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
+            //    MainLanguageId = 1
+            //},
+            // new
+            // {
+            //     Id = 5,
+            //     UserProfileId = 5,
+            //     Name = "ASP.NET Core",
+            //     Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
+            //     CreatedOn = DateTime.Now,
+            //     ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
+            //     MainLanguageId = 1
+            // }
+            //    );
 
-            modelBuilder.Entity<ProjectTag>().HasData(
-                new { Id = 1, ProjectId = 1, TagId = 1 },
-                new { Id = 2, ProjectId = 1, TagId = 2 },
-                new { Id = 3, ProjectId = 2, TagId = 2 },
-                new { Id = 4, ProjectId = 2, TagId = 4 },
-                new { Id = 5, ProjectId = 3, TagId = 5 },
-                new { Id = 6, ProjectId = 3, TagId = 6 },
-                new { Id = 7, ProjectId = 4, TagId = 3 },
-                new { Id = 8, ProjectId = 4, TagId = 4 },
-                new { Id = 9, ProjectId = 5, TagId = 7 },
-                new { Id = 10, ProjectId = 5, TagId = 8 }
-                );
-
-
-            modelBuilder.Entity<ProjectLanguage>().HasData(
-              new { Id = 1, ProjectId = 1, LanguageId = 1 },
-              new { Id = 2, ProjectId = 1, LanguageId = 2 },
-              new { Id = 3, ProjectId = 2, LanguageId = 1 },
-              new { Id = 4, ProjectId = 2, LanguageId = 3 },
-              new { Id = 5, ProjectId = 3, LanguageId = 1 },
-              new { Id = 6, ProjectId = 3, LanguageId = 4 },
-              new { Id = 7, ProjectId = 4, LanguageId = 1 },
-              new { Id = 8, ProjectId = 4, LanguageId = 5 },
-              new { Id = 9, ProjectId = 5, LanguageId = 1 },
-              new { Id = 10, ProjectId = 5, LanguageId = 3 }
-              );
+         
+            //modelBuilder.Entity<ProjectLanguage>().HasData(
+            //  new { Id = 1, ProjectId = 1, LanguageId = 1 },
+            //  new { Id = 2, ProjectId = 1, LanguageId = 2 },
+            //  new { Id = 3, ProjectId = 2, LanguageId = 1 },
+            //  new { Id = 4, ProjectId = 2, LanguageId = 3 },
+            //  new { Id = 5, ProjectId = 3, LanguageId = 1 },
+            //  new { Id = 6, ProjectId = 3, LanguageId = 4 },
+            //  new { Id = 7, ProjectId = 4, LanguageId = 1 },
+            //  new { Id = 8, ProjectId = 4, LanguageId = 5 },
+            //  new { Id = 9, ProjectId = 5, LanguageId = 1 },
+            //  new { Id = 10, ProjectId = 5, LanguageId = 3 }
+            //  );
 
             modelBuilder.Entity<TranslatorLanguage>().HasData(
              new { Id = 1, TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
@@ -251,8 +239,8 @@ namespace Polyglot.DataAccess.Seeds
 
             modelBuilder.Entity<Right>().HasData(
              new Right { Id = 1, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 2, Definition = RightDefinition.AddNewKey },
-             new Right { Id = 3, Definition = RightDefinition.AddNewKey },
+             new Right { Id = 2, Definition = RightDefinition.AddNewLanguage },
+             new Right { Id = 3, Definition = RightDefinition.CanAcceptTranslations },
              new Right { Id = 4, Definition = RightDefinition.AddNewKey },
              new Right { Id = 5, Definition = RightDefinition.AddNewKey }
             );
@@ -324,30 +312,31 @@ namespace Polyglot.DataAccess.Seeds
 
             //);
 
-            modelBuilder.Entity<ProjectGlossary>().HasData(
-                new { Id = 1, ProjectId = 1, GlossaryId = 1 },
-                new { Id = 2, ProjectId = 1, GlossaryId = 2 },
-                new { Id = 3, ProjectId = 2, GlossaryId = 3 },
-                new { Id = 4, ProjectId = 2, GlossaryId = 4 },
-                new { Id = 5, ProjectId = 3, GlossaryId = 5 },
-                new { Id = 6, ProjectId = 3, GlossaryId = 6 },
-                new { Id = 7, ProjectId = 4, GlossaryId = 7 },
-                new { Id = 8, ProjectId = 4, GlossaryId = 8 },
-                new { Id = 9, ProjectId = 5, GlossaryId = 9 },
-                new { Id = 10, ProjectId = 5, GlossaryId = 10 }
+           // modelBuilder.Entity<ProjectGlossary>().HasData(
+           //     new { Id = 1, ProjectId = 1, GlossaryId = 1 },
+           //     new { Id = 2, ProjectId = 1, GlossaryId = 2 },
+           //     new { Id = 3, ProjectId = 2, GlossaryId = 3 },
+           //     new { Id = 4, ProjectId = 2, GlossaryId = 4 },
+           //     new { Id = 5, ProjectId = 3, GlossaryId = 5 },
+           //     new { Id = 6, ProjectId = 3, GlossaryId = 6 },
+           //     new { Id = 7, ProjectId = 4, GlossaryId = 7 },
+           //     new { Id = 8, ProjectId = 4, GlossaryId = 8 },
+           //     new { Id = 9, ProjectId = 5, GlossaryId = 9 },
+           //     new { Id = 10, ProjectId = 5, GlossaryId = 10 }
 
 
-           );
+           //);
 
 
-            modelBuilder.Entity<ComplexString>().HasData(
-               new { Id = 1, ProjectId = 3, TranslationKey = "title" },
-               new { Id = 2, ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
-               new { Id = 3, ProjectId = 4, TranslationKey = "Perspectives" },
-               new { Id = 4, ProjectId = 1, TranslationKey = "Production" },
-               new { Id = 5, ProjectId = 2, TranslationKey = "article" }
+            //modelBuilder.Entity<ComplexString>().HasData(
+            //   new { Id = 1, ProjectId = 3, TranslationKey = "title" },
+            //   new { Id = 2, ProjectId = 5, TranslationKey = "Differences between Angular and AngularJS" },
+            //   new { Id = 3, ProjectId = 4, TranslationKey = "Perspectives" },
+            //   new { Id = 4, ProjectId = 1, TranslationKey = "Production" },
+            //   new { Id = 5, ProjectId = 2, TranslationKey = "article" }
 
-               );
+            //   );
+
 
         }
 
@@ -479,7 +468,7 @@ namespace Polyglot.DataAccess.Seeds
                 var rights = new List<Right> {
                     new Right { Definition = RightDefinition.AddNewKey },
                     new Right { Definition = RightDefinition.AddNewLanguage },
-                    new Right { Definition = RightDefinition.SelectNewLanguage },
+                    new Right { Definition = RightDefinition.CanAcceptTranslations },
                     
                 };
                 context.AddRange(rights);
@@ -509,16 +498,16 @@ namespace Polyglot.DataAccess.Seeds
             if (!context.TranslatorLanguages.Any())
             {
                 var translatorLanguages = new List<TranslatorLanguage> {
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = "Medium" },
-                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = "Beginner" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = "Expert" },
-                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = "Medium" }
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 1, Proficiency = Proficiency.Advanced },
+                    new TranslatorLanguage { TranslatorId = 1, LanguageId = 2, Proficiency = Proficiency.Elementary },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 1, Proficiency = Proficiency.UpperIntermediate },
+                    new TranslatorLanguage { TranslatorId = 2, LanguageId = 3, Proficiency = Proficiency.Intermediate },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 1, Proficiency = Proficiency.UpperIntermediate },
+                    new TranslatorLanguage { TranslatorId = 3, LanguageId = 4, Proficiency = Proficiency.UpperIntermediate },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 1, Proficiency = Proficiency.UpperIntermediate },
+                    new TranslatorLanguage { TranslatorId = 4, LanguageId = 5, Proficiency = Proficiency.Advanced },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 1, Proficiency = Proficiency.UpperIntermediate },
+                    new TranslatorLanguage { TranslatorId = 5, LanguageId = 3, Proficiency = Proficiency.Proficiency }
                    };
 
                 context.AddRange(translatorLanguages);
@@ -545,24 +534,24 @@ namespace Polyglot.DataAccess.Seeds
             //    context.SaveChanges();
             //}
 
-            if (!context.Tags.Any())
-            {
-                var tags = new List<Tag> {
-                   new Tag {  Color = "Apple", Name = "csharp" },
-                   new Tag {  Color = "Aqua", Name = "asp-net-core" },
-                   new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
-                   new Tag {  Color = "Awesome", Name = "angular" },
-                   new Tag {  Color = "Azure", Name = "binary-studio" },
-                   new Tag { Color = "Bittersweet", Name = "bsa18" },
-                   new Tag {  Color = "Blue bell", Name = "firebase" },
-                   new Tag {  Color = "Capri", Name = "www" },
-                   new Tag {  Color = "Cameo pink", Name = "seeds" },
-                   new Tag { Color = "Blue-gray", Name = "mock" }
-               };
+            //if (!context.Tags.Any())
+            //{
+            //    var tags = new List<Tag> {
+            //       new Tag {  Color = "Apple", Name = "csharp" },
+            //       new Tag {  Color = "Aqua", Name = "asp-net-core" },
+            //       new Tag {  Color = "Atomic tangerine", Name = "dotnet" },
+            //       new Tag {  Color = "Awesome", Name = "angular" },
+            //       new Tag {  Color = "Azure", Name = "binary-studio" },
+            //       new Tag { Color = "Bittersweet", Name = "bsa18" },
+            //       new Tag {  Color = "Blue bell", Name = "firebase" },
+            //       new Tag {  Color = "Capri", Name = "www" },
+            //       new Tag {  Color = "Cameo pink", Name = "seeds" },
+            //       new Tag { Color = "Blue-gray", Name = "mock" }
+            //   };
 
-                context.AddRange(tags);
-                context.SaveChanges();
-            }
+            //    context.AddRange(tags);
+            //    context.SaveChanges();
+            //}
 
             //if (!context.Teams.Any())
             //{
@@ -622,97 +611,92 @@ namespace Polyglot.DataAccess.Seeds
             //    context.SaveChanges();
             //}
 
-            if (!context.Projects.Any())
-            {
-                var managers = context.UserProfiles.ToList();
-                var projects = new List<Project> {
-                   new Project
-               {
-                   UserProfile = managers.FirstOrDefault(m => m.Id == 1),
-                   Name = "Operation Red Sea",
-                   Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
-                   CreatedOn = DateTime.Now,
-                   Technology ="films",
-                   ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
-                   ProjectTeams =  new List<ProjectTeam>(),
-                   ProjectTags = {
-                           new ProjectTag { TagId = 1, ProjectId = 1 },
-                           new ProjectTag { TagId = 2, ProjectId = 1 },
-                           new ProjectTag { TagId = 3, ProjectId = 1 },
-                   },
-                   ProjectLanguageses = {
-                           new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
-                           new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
-                   },
+           // if (!context.Projects.Any())
+           // {
+           //     var managers = context.UserProfiles.ToList();
+           //     var projects = new List<Project> {
+           //        new Project
+           //    {
+           //        UserProfile = managers.FirstOrDefault(m => m.Id == 1),
+           //        Name = "Operation Red Sea",
+           //        Description = "Operation Red Sea (Chinese: 红海行动) is a 2018 Chinese action war film directed by Dante Lam and starring Zhang Yi, Huang Jingyu, Hai Qing, Du Jiang and Prince Mak. The film is loosely based on the evacuation of the 225 foreign nationals and almost 600 Chinese citizens from Yemen's southern port of Aden during late March in the 2015 Civil War.",
+           //        CreatedOn = DateTime.Now,
+           //        Technology ="films",
+           //        ImageUrl = "https://upload.wikimedia.org/wikipedia/en/6/61/Operation_Red_Sea_poster.jpg",
+           //        ProjectTeams =  new List<ProjectTeam>(),
+           //        ProjectLanguageses = {
+           //                new ProjectLanguage { LanguageId = 1, ProjectId = 1 },
+           //                new ProjectLanguage { LanguageId = 2, ProjectId = 1 },
+           //        },
 
-                   MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
-                   },
+           //        MainLanguage = context.Languages.FirstOrDefault(l=>l.Id==1)
+           //        },
 
-                   new Project
-                {
+           //        new Project
+           //     {
 
-                    UserProfile = managers.FirstOrDefault(m => m.Id == 1),
-                    Name = "Operation Barbarossa",
-                    Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
-                    CreatedOn = DateTime.Now,
-                    Technology ="history",
-                    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
-                    MainLanguageId = 1,
-                    ProjectLanguageses = {
-                        new ProjectLanguage { LanguageId = 2, ProjectId = 2 },
-                        new ProjectLanguage { LanguageId = 3, ProjectId = 2 },
-                    }
-                },
-                   new Project
-           {
+           //         UserProfile = managers.FirstOrDefault(m => m.Id == 1),
+           //         Name = "Operation Barbarossa",
+           //         Description = "Operation Barbarossa (German: Unternehmen Barbarossa) was the code name for the Axis invasion of the Soviet Union, which started on Sunday, 22 June 1941, during World War II.",
+           //         CreatedOn = DateTime.Now,
+           //         Technology ="history",
+           //         ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Operation_Barbarossa_Infobox.jpg",
+           //         MainLanguageId = 1,
+           //         ProjectLanguageses = {
+           //             new ProjectLanguage { LanguageId = 2, ProjectId = 2 },
+           //             new ProjectLanguage { LanguageId = 3, ProjectId = 2 },
+           //         }
+           //     },
+           //        new Project
+           //{
 
-               UserProfile = managers.FirstOrDefault(m => m.Id == 2),
-               Name = "Operation Valkyrie",
-               Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
-               CreatedOn = DateTime.Now,
-               Technology ="history",
-               ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
-               MainLanguageId = 1,
-               ProjectLanguageses = {
-                   new ProjectLanguage { LanguageId = 2, ProjectId = 3 },
-                   new ProjectLanguage { LanguageId = 3, ProjectId = 3 },
-               }
-           },
-                   new Project
-           {
+           //    UserProfile = managers.FirstOrDefault(m => m.Id == 2),
+           //    Name = "Operation Valkyrie",
+           //    Description = "Operation Valkyrie (German: Unternehmen Walküre) was a German World War II emergency continuity of government operations plan issued to the Territorial Reserve Army of Germany to execute and implement in case of a general breakdown in civil order of the nation.",
+           //    CreatedOn = DateTime.Now,
+           //    Technology ="history",
+           //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/54/Claus_von_Stauffenberg_portrait_%281907-1944%29.JPG",
+           //    MainLanguageId = 1,
+           //    ProjectLanguageses = {
+           //        new ProjectLanguage { LanguageId = 2, ProjectId = 3 },
+           //        new ProjectLanguage { LanguageId = 3, ProjectId = 3 },
+           //    }
+           //},
+           //        new Project
+           //{
 
-               UserProfile = managers.FirstOrDefault(m => m.Id == 3),
-               Name = "Angular",
-               Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
-               CreatedOn = DateTime.Now,
-               Technology ="web",
-               ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
-               MainLanguageId = 1,
-               ProjectLanguageses = {
-                   new ProjectLanguage { LanguageId = 2, ProjectId = 4 },
-                   new ProjectLanguage { LanguageId = 5, ProjectId = 4 },
-               }
-           },
-                   new Project
-           {
+           //    UserProfile = managers.FirstOrDefault(m => m.Id == 3),
+           //    Name = "Angular",
+           //    Description = "Angular (commonly referred to as Angular 2 +  or Angular v2 and above) is a TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations.",
+           //    CreatedOn = DateTime.Now,
+           //    Technology ="web",
+           //    ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/512px-Angular_full_color_logo.svg.png",
+           //    MainLanguageId = 1,
+           //    ProjectLanguageses = {
+           //        new ProjectLanguage { LanguageId = 2, ProjectId = 4 },
+           //        new ProjectLanguage { LanguageId = 5, ProjectId = 4 },
+           //    }
+           //},
+           //        new Project
+           //{
 
-                UserProfile = managers.FirstOrDefault(m => m.Id == 4),
-                Name = "ASP.NET Core",
-                Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
-                CreatedOn = DateTime.Now,
-                Technology ="programming",
-                ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
-                MainLanguageId = 1,
-                ProjectLanguageses = {
-                   new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
-                   new ProjectLanguage { LanguageId = 5, ProjectId = 5 },
-               }
-           }
-           };
+           //     UserProfile = managers.FirstOrDefault(m => m.Id == 4),
+           //     Name = "ASP.NET Core",
+           //     Description = "ASP.NET Core is a free and open-source web framework, and higher performance than ASP.NET, developed by Microsoft and the community.",
+           //     CreatedOn = DateTime.Now,
+           //     Technology ="programming",
+           //     ImageUrl = "https://ardalis.com/wp-content/uploads/2017/05/aspnetcore-logo-591x360.png",
+           //     MainLanguageId = 1,
+           //     ProjectLanguageses = {
+           //        new ProjectLanguage { LanguageId = 2, ProjectId = 5 },
+           //        new ProjectLanguage { LanguageId = 5, ProjectId = 5 },
+           //    }
+           //}
+           //};
 
-                context.AddRange(projects);
-                context.SaveChanges();
-            }
+           //     context.AddRange(projects);
+           //     context.SaveChanges();
+           // }
 
             //if (!context.ComplexStrings.Any())
             //{

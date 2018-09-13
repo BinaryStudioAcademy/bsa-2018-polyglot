@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
-import { UserProfile } from '../models';
+import { UserProfile, Role } from '../models';
 import { BehaviorSubject } from 'rxjs';
 import { WorkspaceState } from '../models/workspace-state';
 
@@ -20,14 +19,19 @@ export class AppStateService {
         this.currentFirebaseUserSubject.next(v);
     }
 
+    getFirebaseUser(){
+        return this.currentFirebaseUserSubject.asObservable();
+    }
+
     // Database user
-    private currentDatabaseUserSubject: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
+    private currentDatabaseUserSubject: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(/*{ userRole: Role.Translator }*/null);
 
     public get currentDatabaseUser(): UserProfile {
         return this.currentDatabaseUserSubject.value;
     }
 
     public set currentDatabaseUser(v: UserProfile) {
+        
         this.currentDatabaseUserSubject.next(v);
     }
 
@@ -42,6 +46,7 @@ export class AppStateService {
     }
 
     public set currentFirebaseToken(v: string) {
+        localStorage.setItem('currentFirebaseToken', v);
         this.currentFirebaseTokenSubject.next(v);
     }
 
@@ -81,9 +86,9 @@ export class AppStateService {
         this.LoginStatus = localStorage.getItem('LoginStatus') === 'true';
         //this.workspaceState.next(JSON.parse(localStorage.getItem('workspaceState')));
     }
+  
 
-
-    updateState(user: firebase.User, token: string, loginStatus: boolean, dbUser?: UserProfile) {
+    updateState(user?: firebase.User, token?: string, loginStatus?: boolean, dbUser?: UserProfile) {
         this.currentFirebaseUser = user;
         this.currentFirebaseToken = token;
         this.LoginStatus = loginStatus;
@@ -92,7 +97,5 @@ export class AppStateService {
         //localStorage
         localStorage.setItem('currentFirebaseToken', this.currentFirebaseToken);
         localStorage.setItem('LoginStatus', `${this.LoginStatus}`);
-
-
     }
 }

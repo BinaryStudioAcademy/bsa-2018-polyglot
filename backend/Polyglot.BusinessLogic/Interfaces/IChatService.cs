@@ -2,27 +2,32 @@
 using System.Threading.Tasks;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
-using Polyglot.Common.Helpers;
+using Polyglot.DataAccess.Helpers;
 
 namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IChatService
     {
-        Task<ChatContactsDTO> GetContactsAsync(ChatGroup targetGroup, int targetGroupItemId);
+        Task<IEnumerable<ChatDialogDTO>> GetDialogsAsync(ChatGroup targetGroup);
 
-        Task<ChatUserStateDTO> GetUserStateAsync(int userId);
+        Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId);
 
-        Task<IEnumerable<ChatUserStateDTO>> GetContactsStateAsync();
+      //  Task<ChatUserStateDTO> GetUserStateAsync(int userId);
 
-        Task<IEnumerable<ProjectDTO>> GetProjectsAsync();
+      //  Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync();
+      
+        Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog);
 
-        Task<IEnumerable<TeamPrevDTO>> GetTeamsAsync();
+        Task<bool> DeleteDialog(int id);
+
+        Task<ChatMessageDTO> SendMessage(ChatMessageDTO message);
 
         Task<ChatMessageDTO> GetMessageAsync(int messageId);
 
-        Task<ChatMessageDTO> SendMessage(ChatMessageDTO message, ChatGroup targetGroup, int targetGroupItemId);
+        Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user);
 
-        Task<IEnumerable<ChatMessageDTO>> GetGroupMessagesHistoryAsync(ChatGroup targetGroup, int targetGroupItemId);
-        
+        Task ReadMessages(int dialogId, string whoUid);
+
+        Task ChangeUserStatus(string targetUserUid, bool isOnline);
     }
 }
