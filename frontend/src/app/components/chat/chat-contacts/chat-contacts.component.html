@@ -16,9 +16,12 @@
                             </button>
                         -->
                             <mat-form-field class="team-details_filter">
-                                <input class="filter-input" matInput placeholder="Filter"
-                                    (input)="filterChange($event)">
+                                <input class="filter-input" matInput placeholder="Search"
+                                    (input)="filterChange($event)" #filterInput name="filterInput">
                                     <mat-spinner *ngIf="timeOutFilter" [diameter]="20" matSuffix></mat-spinner>
+                                    <button matSuffix *ngIf="!timeOutFilter" mat-button mat-icon-button   (click)="filterInput.value = null; resetFilterInput();">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
                             </mat-form-field>
                         </mat-toolbar>
 

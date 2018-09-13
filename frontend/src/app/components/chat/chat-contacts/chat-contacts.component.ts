@@ -242,5 +242,9 @@ export class ChatContactsComponent implements OnInit {
         });
         return chosenDialog;
     }
+
+    resetFilterInput(){
+        this.isSearchMode=false;
+    }
     
 }
