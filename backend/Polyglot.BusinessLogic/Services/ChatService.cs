@@ -373,8 +373,6 @@ namespace Polyglot.BusinessLogic.Services
                 numberofUnread += dialog.UnreadMessagesCount;
             }
             return numberofUnread;
-
-
         }
 
         #region Private members
