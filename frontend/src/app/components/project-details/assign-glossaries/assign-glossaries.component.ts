@@ -4,6 +4,7 @@ import { Glossary, Project } from '../../../models';
 import { GlossaryService } from '../../../services/glossary.service';
 import { MatTableDataSource } from '@angular/material';
 import { forkJoin } from 'rxjs';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
     selector: 'app-assign-glossaries',
@@ -23,7 +24,8 @@ export class AssignGlossariesComponent implements OnInit {
 
     constructor(
         private projectService: ProjectService,
-        private glossariesService: GlossaryService
+        private glossariesService: GlossaryService,
+        private stateService: AppStateService
     ) { }
 
     ngOnInit() {
@@ -39,7 +41,11 @@ export class AssignGlossariesComponent implements OnInit {
             });
         this.projectService.getNotAssignedGlossaries(this.projectId).subscribe(
             (data) => {
-                this.NotAssignedGlossaries = data;
+                data.forEach(gl => {
+                    if(gl.userProfile.id = this.stateService.currentDatabaseUser.id){
+                        this.NotAssignedGlossaries.push(gl);
+                    }
+                });
                 this.notAssignedSource = new MatTableDataSource(this.NotAssignedGlossaries);
                 this.IsLoad = false;
             });
