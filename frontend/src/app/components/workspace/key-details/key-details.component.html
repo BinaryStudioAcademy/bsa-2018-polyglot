@@ -32,10 +32,10 @@
 								<mat-icon style="font-size: 22px">translate</mat-icon>
 							</button>
 							<mat-menu #optionalMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false" class="no-menu-scroll">
-								<div class="optional-container" (click)="$event.preventDefault(); $event.stopPropagation();">
+								<div class="optional-container">
 									<mat-form-field class="textarea-translation">
 										<textarea [(ngModel)]="currentSuggestion" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" placeholder="Write here your optional translation"
-										 cdkAutosizeMaxRows="10">
+										 cdkAutosizeMaxRows="10" (click)="$event.preventDefault(); $event.stopPropagation();">
 														</textarea>
 									</mat-form-field>
 									<button [disabled]="!currentSuggestion || currentSuggestion.length<1" mat-raised-button color="primary" (click)="suggestTranslation(i, t.id, currentSuggestion)">Suggest</button>

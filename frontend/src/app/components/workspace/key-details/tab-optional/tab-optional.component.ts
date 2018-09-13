@@ -20,6 +20,7 @@ export class TabOptionalComponent implements OnInit {
     }
 
     showOptional(stringId, translationId) {
+        this.translationSelected = true;
         this.optional = [];
         this.IsLoaded = false;
         if (stringId && translationId) {
