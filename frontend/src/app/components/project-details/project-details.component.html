@@ -55,7 +55,9 @@
 		</mat-tab>
 
 		<mat-tab label="Glossaries">
-			<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
+			<ng-template matTabContent>
+				<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Settings">
