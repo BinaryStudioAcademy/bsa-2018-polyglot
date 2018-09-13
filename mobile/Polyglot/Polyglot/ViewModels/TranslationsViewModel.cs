@@ -43,13 +43,11 @@ namespace Polyglot.ViewModels
 
         public async void Initialize(int complexStringId, int projectId)
         {
-            var httpService = new HttpService();
-
             var translationsUrl = "complexstrings/" + complexStringId + "/translations";
-            var translations = await httpService.GetAsync<List<TranslationDTO>>(translationsUrl);
+            var translations = await HttpService.GetAsync<List<TranslationDTO>>(translationsUrl);
 
             var langUrl = "projects/" + projectId + "/languages/";
-            var languages = await httpService.GetAsync<List<LanguageDTO>>(langUrl);
+            var languages = await HttpService.GetAsync<List<LanguageDTO>>(langUrl);
 
             Translations = from lang in languages
                            join tr in translations

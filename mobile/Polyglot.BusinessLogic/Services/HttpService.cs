@@ -11,14 +11,15 @@ namespace Polyglot.BusinessLogic
 {
     public class HttpService
     {
-        public async Task<TResult> GetAsync<TResult>(string relativeUrl)
+        public static async Task<TResult> GetAsync<TResult>(string relativeUrl)
         {
-            using(  var httpClient = new HttpClient())
+            using(var httpClient = new HttpClient())
             {
                 var token = UserService.Token;
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var stringsUrl = "http://polyglotbsa.azurewebsites.net/api/" + relativeUrl;
+
                 var response = await httpClient.GetAsync(stringsUrl);
 
                 response.EnsureSuccessStatusCode();
@@ -32,7 +33,7 @@ namespace Polyglot.BusinessLogic
         }
 
 
-        public async Task<TResult> PosttAsync<TResult>(string relativeUrl, TResult contentObject)
+        public async Task<TResult> PostAsync<TResult>(string relativeUrl, TResult contentObject)
         {
             using (var httpClient = new HttpClient())
             {

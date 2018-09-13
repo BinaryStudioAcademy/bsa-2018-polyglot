@@ -60,8 +60,7 @@ namespace Polyglot.ViewModels
         public async void Initialize()
         {
             var url = "projects";
-            var httpService = new HttpService();
-            var projects = await httpService.GetAsync<List<ProjectDTO>>(url);
+            var projects = await HttpService.GetAsync<List<ProjectDTO>>(url);
 
             Projects = projects.Select(x => new ProjectViewModel
             {

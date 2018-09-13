@@ -15,7 +15,7 @@
                 </StackLayout>
                 <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" x:Name="Rating"> 
                     <Label FontSize="15" Text="Rating:"></Label>
-                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=TranslatorRating}"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=TranslatorRating, StringFormat='{0}/5'}"></Label>
                 </StackLayout>
                 <StackLayout Padding="20,10,20,0">
                     <Label Text="Personal detail" TextColor="Black" Margin="0" FontSize="18"/>

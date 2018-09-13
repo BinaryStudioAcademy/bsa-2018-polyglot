@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using App;
 using Newtonsoft.Json;
+using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.DTO;
 using Polyglot.BusinessLogic.Services;
 
@@ -62,23 +63,21 @@ namespace Polyglot.ViewModels
             set => SetProperty(ref _translatorRating, value);
         }
 
-        public ProfileViewModel(UserDTO profile)
+        public async Task LoadProfile(int userId)
         {
-            User = profile;
+            if (userId != -1)
+            {
+                User = await HttpService.GetAsync<UserDTO>("userprofiles/" + userId);
+            }
+            else
+            {
+                User = UserService.CurrentUser;
+            }
         }
 
         public async Task<List<TranslatorLanguageDTO>> GetUserLanguages(int userId)
         {
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserService.Token);
-            var response = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net/api/languages/user/"+ userId);
-
-            //will throw an exception if not successful
-            response.EnsureSuccessStatusCode();
-
-            string content = await response.Content.ReadAsStringAsync();
-
-            Languages = JsonConvert.DeserializeObject<List<TranslatorLanguageDTO>>(content);
+            Languages = await HttpService.GetAsync<List<TranslatorLanguageDTO>>("languages/user/" + userId);
 
             LanguagesLength = 50 * Languages.Count + 10;
 
@@ -87,25 +86,16 @@ namespace Polyglot.ViewModels
 
         public async Task<List<RatingDTO>> GetUserReviews(int userId)
         {
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserService.Token);
-            var response = await httpClient.GetAsync("http://polyglotbsa.azurewebsites.net/api/userprofiles/" + userId + "/ratings");
-
-            //will throw an exception if not successful
-            response.EnsureSuccessStatusCode();
-
-            string content = await response.Content.ReadAsStringAsync();
-
-            Ratings = JsonConvert.DeserializeObject<List<RatingDTO>>(content);
-
-            TranslatorRating = (int)Ratings.Select(x => x.Rate).ToList().Average();
+            Ratings = await HttpService.GetAsync<List<RatingDTO>>("userprofiles/" + userId + "/ratings");
 
             foreach (var rating in Ratings)
             {
                 rating.User.AvatarUrl = rating.User.AvatarUrl == "/assets/images/default-avatar.jpg" ? "http://polyglotbsa.azurewebsites.net/assets/images/default-avatar.jpg" : rating.User.AvatarUrl;
             }
 
-            ReviewsLength = 80 * Ratings.Count + 20;
+            TranslatorRating = (int)Ratings.Select(x => x.Rate).ToList().Average();
+
+            ReviewsLength = 80 * Ratings.Count;
 
             return Ratings;
         }

@@ -30,7 +30,7 @@ namespace Polyglot.Views
 
 	    private async void ToProfile_Click(object sender, EventArgs e)
 	    {
-	        var newPage = new NavigationPage(new ProfilePage(UserService.CurrentUser));
+	        var newPage = new NavigationPage(new ProfilePage(new ProfileViewModel(),-1));
 	        await Navigation.PushAsync(newPage);
 	        IsPresented = false;
         }
