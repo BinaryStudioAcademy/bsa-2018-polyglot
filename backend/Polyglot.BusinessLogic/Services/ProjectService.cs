@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Authorization;
 using Language = Polyglot.DataAccess.Entities.Language;
 using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.Common.DTOs.Chat;
+using KBCsv;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -112,8 +113,20 @@ namespace Polyglot.BusinessLogic.Services
                     {
                         dictionary[data.Attribute("name").Value] = data.Element("value").Value;
                     }
+                    break;
 
+                case "application/vnd.ms-excel":
+                case "text/csv":
+                    using (var textReader = new StreamReader(file.OpenReadStream()))
+                    using (var reader = new CsvReader(textReader, true))
+                    {
+                        while (reader.HasMoreRecords)
+                        {
+                            var dataRecord = await reader.ReadDataRecordAsync();
 
+                            dictionary[dataRecord[0]] = dataRecord[1];
+                        }
+                    }
                     break;
 
                 default:
@@ -194,6 +207,17 @@ namespace Polyglot.BusinessLogic.Services
                     string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
                     arr = Encoding.UTF8.GetBytes(temp);
                     break;
+
+                case ".csv":
+                    string tempCSV = "";
+                    foreach (var c in targetStrings)
+                    {
+                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
+                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\",\"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
+                    }
+                    arr = Encoding.UTF8.GetBytes(tempCSV);
+                    break;
+
                 default:
                     throw new NotImplementedException();
 
@@ -518,25 +542,25 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
                 }
-				List<ComplexString> temp = new List<ComplexString>();
 
-				temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
-				int languagesAmount = p.ProjectLanguageses.Count;
-				int max = temp.Count * languagesAmount;
-				int currentProgress = 0;
-				foreach(var str in temp)
-				{
-					currentProgress += str.Translations.Count;
-				}
-				if(currentProgress == 0 || max == 0)
-				{
-					p.Progress = 0;
-				}
-				else
-				{
-					p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
-				}				
-			}
+				List<ComplexString> temp = new List<ComplexString>();
+                temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
+                int languagesAmount = p.ProjectLanguageses.Count;
+                int max = temp.Count * languagesAmount;
+                int currentProgress = 0;
+                foreach (var str in temp)
+                {
+                    currentProgress += str.Translations.Count;
+                }
+                if (currentProgress == 0 || max == 0)
+                {
+                    p.Progress = 0;
+                }
+                else
+                {
+                    p.Progress = Convert.ToInt32((Convert.ToDouble(currentProgress) / Convert.ToDouble(max)) * 100);
+                }
+            }
 			return mapped;
         }
 
@@ -811,10 +835,12 @@ namespace Polyglot.BusinessLogic.Services
             var chart1 = await GetTranskatedStringToLanguagesStatistic(id);
             var chart2 = await GetNotTranskatedStringToLanguagesStatistic(id);
 
-            charts.Add(chart1);
+			charts.Add(chart1);
             charts.Add(chart2);
 
-            return new ProjectStatisticDTO
+			charts.Add(await GetTagStatistic(id));
+			charts.Add(await GetTranslatorStatistic(id));
+			return new ProjectStatisticDTO
             {
                 Charts = charts
             };
@@ -865,8 +891,90 @@ namespace Polyglot.BusinessLogic.Services
             }
             return chart1;
         }
+		public async Task<ChartDTO> GetTagStatistic(int id)
+		{
+			var complexStrings = await this.GetProjectStringsAsync(id);
 
-        private async Task<List<Language>> GetProjectLanuagesData(int id)
+			var chart = new ChartDTO
+			{
+				Name = "Count strings with different tags",
+				Values = new List<Point>()
+			};
+
+			List<Point> points = new List<Point>();
+			foreach (var complexString in complexStrings)
+			{
+				foreach (var tag in complexString.Tags)
+				{
+					var point = points.FirstOrDefault(p => p.Name == tag.Name);
+					if (point == null)
+					{
+						points.Add(new Point() { Name = tag.Name, Value = 1 });
+
+					}
+					else
+					{
+						points.ForEach(p => {
+							if (p.Name == tag.Name)
+							{
+								p.Value++;
+							}
+						});
+					}
+				}
+			}
+			chart.Values.AddRange(points);
+			if (points.Count > 0)
+			{
+				chart.MaxValue = points.Max(p => p.Value);
+			}
+			return chart;
+		}
+
+		public async Task<ChartDTO> GetTranslatorStatistic(int id)
+		{
+			var complexStrings = (await this.GetProjectStringsAsync(id)).ToList();
+			
+
+			var chart = new ChartDTO
+			{
+				Name = "Count translations by translator",
+				Values = new List<Point>()
+			};
+
+			List<Point> points = new List<Point>();
+			foreach (var complexString in complexStrings)
+			{
+				for (int i = 0; i < complexString.Translations.Count(); i++)
+				{
+					complexString.Translations[i].AssignedTranslatorName = (await userService.GetOneAsync(complexString.Translations[i].AssignedTranslatorId)).FullName;
+				}
+				foreach (var translation in complexString.Translations)
+				{
+					var point = points.FirstOrDefault(p => p.Name == translation.AssignedTranslatorName);
+					if (point == null && translation.AssignedTranslatorId!=0)
+					{
+						points.Add(new Point() { Name = translation.AssignedTranslatorName, Value = 1 });
+					}
+					else if(point != null)
+					{
+						points.ForEach(p => {
+							if (p.Name == translation.AssignedTranslatorName)
+							{
+								p.Value++;
+							}
+						});
+					}
+				}
+			}
+			chart.Values.AddRange(points);
+			if (points.Count > 0)
+			{
+				chart.MaxValue = points.Max(p => p.Value);
+			} 
+			return chart;
+		}
+		private async Task<List<Language>> GetProjectLanuagesData(int id)
         {
             var languages = await uow.GetRepository<Language>().GetAllAsync();
             var projectLanguages = (await uow.GetRepository<Project>().GetAsync(id)).ProjectLanguageses;

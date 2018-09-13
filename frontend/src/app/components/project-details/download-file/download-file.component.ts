@@ -16,7 +16,7 @@ export class DownloadFileComponent implements OnInit {
   @Input() project;
 
   public selectedFormat: string = '.json';
-  public formats: string[] = ['.json', '.resx'];
+  public formats: string[] = ['.json', '.resx', '.csv'];
   public selectedLanguage;
   public languages = [];
 

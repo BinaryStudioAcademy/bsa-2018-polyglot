@@ -776,10 +776,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             .subscribe(
                 res => {
                     this.snotifyService.success("Your suggestion was added");
-                    this.optional.showOptional(
-                        this.currentKeyId,
-                        this.keyDetails.translations[index].id
-                    );
                 },
                 err => {
                     this.snotifyService.error("Your suggestion wasn`t added");
@@ -818,13 +814,16 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     public canBeConfirmed(translation: Translation) {
-        console.log(translation.id);
-        console.log(!translation.isConfirmed);
         if(translation.id && !translation.isConfirmed && translation.translationValue){
             if(this.userService.getCurrentUser().userRole === Role.Manager){
                 return true;
             }
-            return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            if(this.rights){
+                return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            }
+            else{
+                return false;
+            }
         }
         return false;
     }
@@ -834,7 +833,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             if(this.userService.getCurrentUser().userRole === Role.Manager){
                 return true;
             }
-            return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            if(this.rights){
+                return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            }
+            else{
+                return false;
+            }
         }
         return false;
     }
