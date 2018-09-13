@@ -23,6 +23,9 @@
                         <li *ngFor="let p of dialog.participants">
                             <button mat-fab class="person-button" (click)="selectPerson(p)">
                                 <img class="person-avatar" mat-card-avatar src="{{p?.avatarUrl}}">
+                                <span [hidden]="!p?.isOnline" class="online-status-container">
+                                    <mat-icon  class="online-status-icon">brightness_1</mat-icon>
+                                </span>
                             </button>
                         </li>
                     </ul>

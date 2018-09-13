@@ -355,14 +355,25 @@ namespace Polyglot.BusinessLogic.Services
         private void FormGroupDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {
             List<ChatDialogDTO> result = dest;
+            var rep = uow.GetRepository<UserState>();
             result.ForEach(d =>
             {
                 var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
                 d.UnreadMessagesCount = accordingSourceDialog.Messages
                         .Where(m => m.SenderId != currentUser.Id && !m.IsRead)
                         .Count();
-                
+                d.Participants.ToList().ForEach((u) => Task.WaitAll(FormUser(u)));
             });
+
+            async Task FormUser(ChatUserDTO user)
+            {
+                var userState = await rep.GetAsync(s => s.ChatUserId == user.Id);
+                if(userState != null)
+                {
+                    user.IsOnline = userState.IsOnline;
+                    user.LastSeen = userState.LastSeen;
+                }
+            }
         }
 
         private void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
