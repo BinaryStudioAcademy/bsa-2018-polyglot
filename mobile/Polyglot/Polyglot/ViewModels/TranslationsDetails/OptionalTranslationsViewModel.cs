@@ -55,8 +55,7 @@ namespace Polyglot.ViewModels.TranslationsDetails
         public async void Initialize(int complexStringId, string translationId)
         {
             var url = "complexstrings/" + complexStringId + "/" + translationId + "/optional";
-            var httpService = new HttpService();
-            var optionalTranslations = await httpService.GetAsync<List<OptionalTranslationDTO>>(url);
+            var optionalTranslations = await HttpService.GetAsync<List<OptionalTranslationDTO>>(url);
 
             OptionalTranslations = optionalTranslations.Select(x => new OptionalTranslationViewModel
             {

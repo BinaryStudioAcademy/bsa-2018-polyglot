@@ -25,8 +25,8 @@ namespace Polyglot.Views
 	    {
 	        IsBusy = true;
             loginBtn.IsVisible = false;
-	        UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
-            //UserService.Token = await _vm.LoginByEmail("89e75c7d12@mailox.biz", "qwerty123");
+	        //UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
+            UserService.Token = await _vm.LoginByEmail("89e75c7d12@mailox.biz", "qwerty123");
 	        await UserService.GetCurrentUserInstance();
 	        var newPage = new NavigationPage(new MainPage());
 	        await Navigation.PushModalAsync(newPage);

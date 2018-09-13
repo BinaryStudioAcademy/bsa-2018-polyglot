@@ -11,11 +11,14 @@ namespace Polyglot.Views
 	public partial class ProfilePage : ContentPage
 	{
 	    public ProfileViewModel _vm;
-        public ProfilePage (UserDTO profile)
-		{
-		    _vm = new ProfileViewModel(profile);
+        public ProfilePage (ProfileViewModel vm,int userId)
+        {
+            _vm = vm;
 
 		    BindingContext = _vm;
+
+            _vm.LoadProfile(userId);
+
             InitializeComponent();
 
 		    NavigationPage.SetHasNavigationBar(this, false);
