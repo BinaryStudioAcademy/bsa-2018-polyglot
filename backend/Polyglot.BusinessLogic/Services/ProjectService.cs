@@ -947,7 +947,11 @@ namespace Polyglot.BusinessLogic.Services
 			{
 				for (int i = 0; i < complexString.Translations.Count(); i++)
 				{
-					complexString.Translations[i].AssignedTranslatorName = (await userService.GetOneAsync(complexString.Translations[i].AssignedTranslatorId)).FullName;
+					var user = await userService.GetOneAsync(complexString.Translations[i].AssignedTranslatorId);
+					if (user != null)
+					{
+						complexString.Translations[i].AssignedTranslatorName = user.FullName;
+					}
 				}
 				foreach (var translation in complexString.Translations)
 				{

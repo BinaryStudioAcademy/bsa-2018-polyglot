@@ -5,7 +5,7 @@
 <div class="reports-container" *ngIf="isLoad">
     <mat-card class="bar card">
         <h2>{{charts[3].name}}</h2>
-        <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="charts[3].data" [gradient]="gradient" [xAxis]="showXAxis"
+        <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="charts[3].data" [gradient]="gradient" [xAxis]="showXAxis"  [yAxis]="showYAxis"
             [barPadding]="10" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
             [legendTitle]="legendTitle">
         </ngx-charts-bar-vertical>
