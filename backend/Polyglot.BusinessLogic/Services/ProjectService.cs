@@ -465,6 +465,24 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Project overrides
 
+		public async Task<List<ProjectDTO>> SearchProjects(string query)
+		{
+			IEnumerable<ProjectDTO> all = await GetListAsync();
+
+			List<ProjectDTO> selected = new List<ProjectDTO>();
+
+			foreach(var pr in all)
+			{
+				if(pr.Name.Contains(query))
+				{
+					selected.Add(pr);
+				}
+			}
+
+			return selected;
+		}
+
+
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
             var user = await currentUser.GetCurrentUserProfile();

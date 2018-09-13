@@ -1,5 +1,5 @@
 <div class="key-details mt-1 mb-1" *ngIf="isEmpty">
-	<mat-card class="no-items-div">
+	<mat-card class="comments-container">
 		<p>No languages</p>
 	</mat-card>
 </div>
@@ -48,7 +48,7 @@
 							 (mouseleave)="toggleDisable(false)" matTooltipPosition="after" color="primary" matTooltip="Assign user">
 								<mat-icon>more_vert</mat-icon>
 							</button>
-							<div *ngIf="t.assignedTranslatorId" class="optional-btn" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
+							<div *ngIf="t.assignedTranslatorId" class="optional-btn translator-avatar" matTooltipPosition="after" matTooltip="{{t.assignedTranslatorName}}">
 								<img src="{{t.assignedTranslatorAvatarUrl}}" alt="ava" class="translator-ava">
 							</div>
 							<button *ngIf="canUnBeConfirmed(t)" mat-icon-button (click)="onUnConfirm(t)" (mouseenter)="toggleDisable(true)" class="optional-btn unconfirm-btn"
@@ -70,7 +70,7 @@
 						 [ngStyle]="{'top': setPosition(i)}"></div>
 						<mat-form-field class="textarea-translation">
 							<mat-label class="language-label">{{t.languageName}}</mat-label>
-							<textarea style="color: rgba(0,0,0,0)" (keydown)="enterPress($event);" (keyup)="onTextChange(i); isCanSave(i, t);" matInput
+							<textarea style="color: rgba(0,0,0,0);" (keydown)="enterPress($event);" (keyup)="onTextChange(i); isCanSave(i, t);" matInput
 							 [(ngModel)]="t.translationValue" [(ngModel)]="currentTranslation" cdkTextareaAutosize placeholder="Write here to start translating"
 							 cdkAutosizeMinRows="2" placeholder="Write here to start translating" cdkAutosizeMaxRows="10" class="translation-input"></textarea>
 
