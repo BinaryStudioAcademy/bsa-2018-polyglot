@@ -9,6 +9,8 @@ import { ProjectService } from "../../services/project.service";
 import { ChatService } from "../../services/chat.service";
 import { AppStateService } from "../../services/app-state.service";
 import { ChatMessage, ChatDialog, ChatUser } from "../../models";
+import { UserProfile } from '../../models';
+
 
 @Component({
     selector: "app-chat",
@@ -21,13 +23,15 @@ export class ChatComponent implements OnInit {
     mobileQuery: MediaQueryList;
     isInterlocutorSelected = false;
     private _mobileQueryListener: () => void;
+    user: UserProfile;
 
     constructor(
         private renderer: Renderer2,
         private changeDetectorRef: ChangeDetectorRef,
         private media: MediaMatcher,
         private signalRService: SignalrService,
-        private chatService: ChatService
+        private chatService: ChatService,
+        private appState: AppStateService
     ) {
         this.mobileQuery = media.matchMedia("(max-width: 600px)");
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -37,7 +41,7 @@ export class ChatComponent implements OnInit {
     }
 
     ngOnInit() {
-        
+        this.user = this.appState.currentDatabaseUser;
     }
 
     ngOnDestroy() {
@@ -53,4 +57,5 @@ export class ChatComponent implements OnInit {
         
         this.selectedPerson = $event;
     }
+
 }

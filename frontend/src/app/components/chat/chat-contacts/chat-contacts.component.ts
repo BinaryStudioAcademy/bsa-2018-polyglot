@@ -7,7 +7,7 @@ import {
     Input
 } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
-import { ChatUser, Project, Team, GroupType } from "../../../models";
+import { ChatUser, Project, Team, GroupType, UserProfile } from "../../../models";
 import { ChatDialog } from "../../../models/chat/chatDialog";
 import { AppStateService } from "../../../services/app-state.service";
 import { SignalrService } from "../../../services/signalr.service";
@@ -15,6 +15,7 @@ import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
 import { FormControl } from "@angular/forms";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-chat-contacts",
@@ -30,6 +31,9 @@ export class ChatContactsComponent implements OnInit {
     public isOnPersonsPage: boolean;
     currentUserId: number;
     selectedDialogId: number;
+    filterInput: string;
+    timeOutFilter: boolean = false;
+    searchUsers: UserProfile[];
 
     private signalRConnection;
 
@@ -47,7 +51,8 @@ export class ChatContactsComponent implements OnInit {
     constructor(
         private chatService: ChatService,
         private appState: AppStateService,
-        private signalRService: SignalrService
+        private signalRService: SignalrService,
+        private userService: UserService
     ) {
         // this.isOnPersonsPage = true;
     }
@@ -122,7 +127,16 @@ export class ChatContactsComponent implements OnInit {
                 }
             }
         );
+        this.signalRConnection.on(
+            ChatActions[ChatActions.dialogsChanged],
+            (responce: any) => {
+                    this.chatService.getDialogs().subscribe(dialogs => {
+                    this.dialogs = dialogs.filter(d => d.participants.length > 0);
+                    this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
+                });
+            });
     }
+ 
 
     selectDialog(dialog: ChatDialog) {
         this.unreadMessagesTotal["persons"] -= dialog.unreadMessagesCount;
@@ -177,4 +191,60 @@ export class ChatContactsComponent implements OnInit {
                 }
             });
     }
+
+
+    filterChange(event){
+        if(event.target.value.length > 0){
+            this.isSearchMode = true;
+            this.searchUsers = [];
+            if(!this.timeOutFilter){
+                this.timeOutFilter = true;
+                setTimeout(()=>{
+                    this.filterInput = event.target.value;
+                    this.timeOutFilter = false;
+                    if(this.filterInput.length > 0){
+                        this.userService.getUserProfilesByNameStartWith(this.filterInput).subscribe((users)=>{
+                            this.searchUsers = users; 
+                            this.timeOutFilter = false;                       
+                        });
+                    }
+                }, 1000);             
+            }
+        }
+        else{
+            this.isSearchMode = false;
+        }
+    }
+
+    setDialog(user: UserProfile){
+        let dialog = this.getDialogByUserId(user.id);
+        if(dialog){
+            this.selectedDialogId = dialog.id;
+            this.onItemSelect.emit(dialog);
+        }
+        else{
+            this.chatService.startChatWithUser(user).subscribe(dialog =>{
+                this.selectedDialogId = dialog.id;
+                this.dialogs.push(dialog);
+                this.onItemSelect.emit(dialog);
+            });
+        }
+    }
+
+    private getDialogByUserId(id: number){
+        let chosenDialog = null;
+        this.dialogs.forEach((dialog: ChatDialog) => {
+            dialog.participants.forEach((participant: ChatUser) => {
+                if(participant.id == id){
+                    chosenDialog = dialog;
+                }
+            });
+        });
+        return chosenDialog;
+    }
+
+    resetFilterInput(){
+        this.isSearchMode=false;
+    }
+    
 }
