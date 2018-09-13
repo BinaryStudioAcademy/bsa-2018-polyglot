@@ -541,8 +541,8 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
                 }
-				List<ComplexString> temp = new List<ComplexString>();
 
+				List<ComplexString> temp = new List<ComplexString>();
                 temp = await stringsProvider.GetAllAsync(str => str.ProjectId == p.Id);
                 int languagesAmount = p.ProjectLanguageses.Count;
                 int max = temp.Count * languagesAmount;
