@@ -13,6 +13,7 @@ using Polyglot.Common.DTOs.NoSQL;
 using Polyglot.DataAccess.MongoRepository;
 using Polyglot.DataAccess.SqlRepository;
 using System.Text;
+using Castle.Core.Internal;
 using Nest;
 using Polyglot.DataAccess.Elasticsearch;
 using Polyglot.Common.DTOs;
@@ -832,7 +833,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.Any(t => t.LanguageId == language.Id && !t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,
@@ -855,7 +856,7 @@ namespace Polyglot.BusinessLogic.Services
 
             foreach (var language in languages)
             {
-                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id));
+                var count = complexStrings.Count(cs => cs.Translations.All(t => t.LanguageId != language.Id || t.TranslationValue.IsNullOrEmpty()));
                 chart1.Values.Add(new Point
                 {
                     Name = language.Name,
