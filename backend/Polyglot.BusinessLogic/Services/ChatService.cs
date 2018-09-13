@@ -361,6 +361,7 @@ namespace Polyglot.BusinessLogic.Services
                 d.UnreadMessagesCount = accordingSourceDialog.Messages
                         .Where(m => m.SenderId != currentUser.Id && !m.IsRead)
                         .Count();
+                
             });
         }
 
@@ -368,7 +369,10 @@ namespace Polyglot.BusinessLogic.Services
         {
             List<ChatDialogDTO> result = dest;
             string lastMessage;
-            result.ForEach(d =>
+            var rep = uow.GetRepository<UserState>();
+            result.ForEach((dd) => Task.WaitAll(FormInterlocutor(dd)));
+            
+            async Task FormInterlocutor(ChatDialogDTO d)
             {
                 var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
                 var interlocator = accordingSourceDialog
@@ -382,7 +386,7 @@ namespace Polyglot.BusinessLogic.Services
                     lastMessage = accordingSourceDialog
                         .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
                         ?.Body;
-                    d.LastMessageText = lastMessage != null ? lastMessage : ""; 
+                    d.LastMessageText = lastMessage != null ? lastMessage : "";
 
                     if (d.LastMessageText.Length > 155)
                     {
@@ -393,12 +397,22 @@ namespace Polyglot.BusinessLogic.Services
                         .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
                         .Count();
 
+                    var userState = await rep.GetAsync(s => s.ChatUserId == interlocator.Id);
                     d.Participants = new List<ChatUserDTO>()
                     {
-                        mapper.Map<ChatUserDTO>(interlocator)
+                        mapper.Map<ChatUserDTO>(interlocator, opt => opt.AfterMap((src1, dest1) => {
+
+                            if(userState != null)
+                            {
+                                var dd = (ChatUserDTO)dest1;
+                                dd.IsOnline = userState.IsOnline;
+                                dd.LastSeen = userState.LastSeen;
+                            }
+
+                            }))
                     };
                 }
-            });
+            }
         }
 
         
