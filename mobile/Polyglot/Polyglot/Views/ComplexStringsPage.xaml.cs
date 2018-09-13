@@ -21,7 +21,6 @@ namespace Polyglot.Views
             BindingContext = complexStringsViewModel;
 
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this,false);
             complexStringsViewModel.Initialize(projectId);
         }
 

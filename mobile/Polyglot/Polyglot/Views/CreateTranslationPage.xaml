@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Polyglot.Views.CreateTranslationPage">
+             x:Class="Polyglot.Views.CreateTranslationPage"
+             Title="Create Translation">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Create Translation"
+            <Label Text="{Binding BaseString}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            <Editor Text="{Binding Translation}"></Editor>
+            <Button Clicked="SaveTranslation_Clicked" Text="Save"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

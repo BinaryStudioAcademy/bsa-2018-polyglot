@@ -29,7 +29,7 @@ namespace Polyglot
 
             var projectId = c.Id;
 
-            var newPage = new NavigationPage(new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId));
+            var newPage = new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId);
             await Navigation.PushAsync(newPage);
             ((ListView)sender).SelectedItem = null;
         }

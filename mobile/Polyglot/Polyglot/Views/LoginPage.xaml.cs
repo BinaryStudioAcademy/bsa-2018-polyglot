@@ -15,7 +15,6 @@ namespace Polyglot.Views
 		public LoginPage()
 		{
 			InitializeComponent();
-		    NavigationPage.SetHasNavigationBar(this, false);
             _vm = new LoginViewModel();
 		    BindingContext = this;
 		    IsBusy = false;
@@ -28,8 +27,8 @@ namespace Polyglot.Views
 	        UserService.Token = await _vm.LoginByEmail(Email.Text, Password.Text);
             //UserService.Token = await _vm.LoginByEmail("01f2d5e591@nicemail.pro", "йцукен123");
 	        await UserService.GetCurrentUserInstance();
-	        var newPage = new NavigationPage(new MainPage());
-	        await Navigation.PushModalAsync(newPage);
+	        var newPage = new MainPage();
+            App.Current.MainPage = newPage;
 	        IsBusy = false;
 	    }
 	}

@@ -7,11 +7,13 @@ namespace Polyglot
 {
     public partial class App : Application
     {
+        public new static App Current => Application.Current as App;
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
+            MainPage = new LoginPage();
         }
 
         protected override void OnStart()

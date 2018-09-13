@@ -30,7 +30,8 @@ namespace Polyglot.ViewModels
         public IEnumerable<TranslationViewModel> Translations
         {
             get => _translations;
-            set {
+            set
+            {
                 if (!SetProperty(ref _translations, value))
                 {
                     return;
@@ -57,8 +58,11 @@ namespace Polyglot.ViewModels
                            from t in val.DefaultIfEmpty()
                            select new TranslationViewModel
                            {
-                               Id= t == null ? "" : t.Id.ToString(),
+                               Id = t == null ? "" : t.Id.ToString(),
                                Language = lang.Name,
+                               UserId = t == null ? 0 : t.UserId,
+                               LanguageId = lang.Id,
+                               CreatedOn = t == null ? new DateTime() : t.CreatedOn,
                                Translation = t == null ? "Not translated" : t.TranslationValue
                            };
 

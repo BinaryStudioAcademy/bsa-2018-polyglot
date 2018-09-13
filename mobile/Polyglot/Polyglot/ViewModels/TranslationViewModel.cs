@@ -1,4 +1,6 @@
 ﻿using App;
+using Polyglot.BusinessLogic;
+using Polyglot.BusinessLogic.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +21,27 @@ namespace Polyglot.ViewModels
         {
             get => _language;
             set => SetProperty(ref _language, value);
+        }
+
+        private int _languageId;
+        public int LanguageId
+        {
+            get => _languageId;
+            set => SetProperty(ref _languageId, value);
+        }
+
+        private int _userId;
+        public int UserId
+        {
+            get => _userId;
+            set => SetProperty(ref _userId, value);
+        }
+
+        private DateTime _createdOn;
+        public DateTime CreatedOn
+        {
+            get => _createdOn;
+            set => SetProperty(ref _createdOn, value);
         }
 
         private string _translation;
