@@ -807,7 +807,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     public canBeConfirmed(translation: Translation) {
-        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager && translation.translationValue;
     }
 
     public canUnBeConfirmed(translation: Translation) {
