@@ -35,10 +35,22 @@ namespace Polyglot.Views
 	        IsPresented = false;
         }
 
-	    private async void Logout_Click(object sender, EventArgs e)
+	    private async void ToProject_Clicked(object sender, EventArgs e)
+	    {
+	        Detail = new NavigationPage(new DashboardPage(new DashboardViewModel()));
+	        IsPresented = false;
+        }
+
+        private async void Logout_Click(object sender, EventArgs e)
 	    {
             UserService.Logout();
             App.Current.MainPage = new LoginPage();        
         }
-    }
+
+	    private void ToTeams_Clicked(object sender, EventArgs e)
+	    {
+	        Detail = new NavigationPage(new TeamPage());
+	        IsPresented = false;
+        }
+	}
 }

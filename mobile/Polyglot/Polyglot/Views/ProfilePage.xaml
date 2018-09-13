@@ -7,15 +7,15 @@
         <ScrollView>
             <StackLayout >
                 <abstractions:CircleImage x:Name="Avatar" Margin="0,30,0,20"  WidthRequest="120" HeightRequest="120"></abstractions:CircleImage>
-                <Label HorizontalOptions="CenterAndExpand" FontSize="20" TextColor="Black" Text="{Binding Path=FullName}"/>
+                <Label HorizontalOptions="CenterAndExpand" FontSize="20" TextColor="Black" Text="{Binding Path=User.FullName}"/>
                 <Label HorizontalOptions="CenterAndExpand" FontSize="15"  TextColor="Black" x:Name="Role"/>
                 <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <Label FontSize="15" Text="Registration date :"></Label>
-                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=RegistrationDate, StringFormat='.{0:dd/MM/yyyy}'}"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=User.RegistrationDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
                 </StackLayout>
                 <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" x:Name="Rating"> 
                     <Label FontSize="15" Text="Rating:"></Label>
-                    <Label FontSize="15" TextColor="Black" Text="3/5"></Label>
+                    <Label FontSize="15" TextColor="Black" Text="{Binding Path=TranslatorRating}"></Label>
                 </StackLayout>
                 <StackLayout Padding="20,10,20,0">
                     <Label Text="Personal detail" TextColor="Black" Margin="0" FontSize="18"/>
@@ -25,48 +25,89 @@
                     HorizontalOptions="FillAndExpand" />
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Birth :"></Label>
-                        <Label TextColor="Black" Text="{Binding Path=BirthDate, StringFormat='.{0:dd/MM/yyyy}'}"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=User.BirthDate, StringFormat='{0:dd/MM/yyyy}'}"></Label>
                     </StackLayout>
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Country :"></Label>
-                        <Label TextColor="Black" Text="{Binding Path=Country}"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=User.Country}"></Label>
                     </StackLayout>
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="City :"></Label>
-                        <Label TextColor="Black" Text="{Binding Path=City}"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=User.City}"></Label>
                     </StackLayout>
                     <StackLayout Margin="0" Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Phone :"></Label>
-                        <Label TextColor="Black" Text="{Binding Path=Phone}"></Label>
+                        <Label TextColor="Black" Text="{Binding Path=User.Phone}"></Label>
                     </StackLayout>
                 </StackLayout >
-                <StackLayout Padding="20,10,0,10" x:Name="Languages">
+                <StackLayout Padding="20,10,20,0" x:Name="Languages">
                     <Label Text="Languages" TextColor="Black" Margin="0" FontSize="18"/>
                     <BoxView Margin="0"
                              Color="Black"
                              HeightRequest="1" 
                              HorizontalOptions="FillAndExpand" />
+                    <StackLayout HeightRequest="{Binding Path=LanguagesLength}">
+                        <ListView x:Name="languageList"
+                              HasUnevenRows="True"
+                              SelectionMode="None"
+                              CachingStrategy="RecycleElement"
+                              ItemsSource="{Binding Path=Languages}"
+                              >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ViewCell.View>
+                                        <StackLayout>
+                                            <Label Text="{Binding Path=Language.Name}" FontSize="18"/>
+                                            <Label Text="{Binding Path=Proficiency}" />
+                                        </StackLayout>
+                                    </ViewCell.View>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackLayout>
-                <StackLayout Padding="20,10,0,10" x:Name="Projects">
-                    <Label Text="Projects" TextColor="Black" Margin="0" FontSize="18"/>
-                    <BoxView Margin="0"
-                             Color="Black"
-                             HeightRequest="1" 
-                             HorizontalOptions="FillAndExpand" />
-                </StackLayout >
-                <StackLayout Padding="20,10,0,10" x:Name="Teams">
-                    <Label Text="Teams" TextColor="Black" Margin="0" FontSize="18"/>
-                    <BoxView Margin="0"
-                             Color="Black"
-                             HeightRequest="1" 
-                             HorizontalOptions="FillAndExpand" />
-                </StackLayout >
-                <StackLayout Padding="20,10,0,10" x:Name="Reviews">
+            </StackLayout>
+                <StackLayout x:Name="Reviews" Padding="20,0,20,0">
                     <Label Text="Reviews" TextColor="Black" Margin="0" FontSize="18"/>
                     <BoxView Margin="0"
                              Color="Black"
                              HeightRequest="1" 
                              HorizontalOptions="FillAndExpand" />
+                    <StackLayout HeightRequest="{Binding Path=ReviewsLength}">
+                    <ListView x:Name="RatingList"
+                              SelectionMode="None"
+                              HasUnevenRows="True"
+                              CachingStrategy="RecycleElement"
+                              ItemsSource="{Binding Path=Ratings}"
+                              >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ViewCell.View>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="0.5*" />
+                                                    <ColumnDefinition Width="0.5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <abstractions:CircleImage  Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Grid.Row="0" WidthRequest="30" HeightRequest="30" Source="{Binding Path=CreatedBy.AvatarUrl}"></abstractions:CircleImage>
+                                                <Label Grid.Column="0" Grid.Row="1"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="{Binding Path=CreatedBy.FullName}" />
+                                                <Label Grid.Column="1" Grid.Row="0" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="{Binding Path=Comment , StringFormat='Comment : {0}'}" />
+                                                <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                                    <Label Text="{Binding Path=CreatedAt}" />
+                                                    <Label Text="{Binding Path=Rate, StringFormat='Rating : {0}/5'}" />
+                                                </StackLayout>
+                                            </Grid>
+                                        </ViewCell.View>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    </StackLayout>
                 </StackLayout>
             </StackLayout>
         </ScrollView>
