@@ -23,7 +23,7 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string;
+    public searchQuery: string = ' ';
     public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
