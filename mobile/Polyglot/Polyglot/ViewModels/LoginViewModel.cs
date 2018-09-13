@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -25,6 +26,11 @@ namespace Polyglot.ViewModels
                 var response = await client.PostAsync(
                     "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDgXd8_8yIRLd5G5KWHmH60NlRl_qY6vGU",
                     content);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    return string.Empty;
+                }
 
                 var result = await response.Content.ReadAsStringAsync();
                 return JObject.Parse(result)["idToken"].ToString();
