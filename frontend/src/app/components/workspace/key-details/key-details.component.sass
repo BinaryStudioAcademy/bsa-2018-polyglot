@@ -9,14 +9,16 @@
   white-space: nowrap
   overflow: hidden 
   text-overflow: ellipsis
+  pointer-events: none
 
 .mat-panel-title
   width: 10%
   min-width: 70px
+  pointer-events: none
 
 .buttons
   display: flex
-  justify-content: flex-start 
+  justify-content: flex-end 
   min-width: 200px  
 
 .optional-btn
@@ -32,15 +34,11 @@
 .confirmed
   background-color: rgb(248, 248, 248)
  
-.unconfirm-btn
-  margin-left: auto
+.mat-tab-body-content
+  overflow: hidden
 
 .textarea-translation textarea
   padding-top: 10px;
-
-
-.confirm-btn
-  margin-left: auto
   
 .button-translation
   display: flex;
@@ -99,7 +97,6 @@
   ::-webkit-scrollbar-thumb:hover
     background: #555
 
-
 .language
   display: inline-block
   width: 25%
@@ -117,7 +114,6 @@
   height: 36px
   mat-icon
     font-size: 25px
-
 
 .optional-container
   margin: 20px
@@ -151,13 +147,14 @@
     border-radius: 7%
     z-index: 5
 
-
-
 .translation-div
   position: absolute
   word-wrap: break-word
   line-height: 15.5px
   z-index: 1
   pointer-events: none
+
+
+
 
 

@@ -7,7 +7,7 @@ namespace Polyglot.DataAccess.MongoModels
     {
         public int UserId { get; set; }
 
-        public long Total { get; set; }
+        public int Total { get; set; }
 
         public List<Priority> Priorities { get; set; }
 

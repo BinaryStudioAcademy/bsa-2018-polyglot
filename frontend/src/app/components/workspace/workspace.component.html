@@ -11,9 +11,12 @@
                     <mat-icon matSuffix *ngIf="searchQuery" (click)="searchQuery=''; searchChanges()" style="cursor: pointer;">close</mat-icon>
                     <mat-icon matSuffix style="cursor: pointer;">search</mat-icon>
                     <input (change)="searchChanges()" matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                    <mat-icon matSuffix style="cursor: pointer;" [matMenuTriggerFor]="filters">tune</mat-icon>
 
                 </mat-form-field>
-                <button style="margin-left:10px" mat-flat-button color="primary" [matMenuTriggerFor]="filters">Advanced search</button>
+               
+               
+
                 <mat-menu #filters="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false" class="no-menu-scroll">
                     <div style="padding: 20px!important;padding-top:0px!important;">
                         <div>
@@ -78,8 +81,9 @@
 
 
         <div class="d-flex workspace-height" *ngIf="keys.length !== 0 && isLoad">
+            
             <mat-card class="keys-list d-flex my-1 p-0">
-                <div style="width: 100%;">
+                    <div style="width: 100%;">
 
                     <mat-nav-list class="keys-list__nav key-list-style" ngxInfiniteScroller horizontal="false" (onScrollUp)="onScrollUp()" (onScrollDown)="onScrollDown()">
 

@@ -23,7 +23,7 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string = ' ';
+    public searchQuery: string;
     public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
@@ -73,6 +73,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
             (result) => {
                 if (result.isEditing !== undefined) {
                     this.isEditing = result.isEditing
+                    if (!this.isEditing) {
+                        clearInterval(this.loop);
+                    }
                 } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
                 } else {
@@ -91,7 +94,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     ngOnInit() {
         console.log(this.stringsInProgress);
         this.filters = [];
-        // this.searchQuery = "";
+        this.searchQuery = '';
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             forkJoin(
@@ -172,7 +175,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.previousKeyId = this.currentKeyId;
         this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
         this.loop = setInterval(() => {
-            if (this.previousKeyId !== this.currentKeyId || !this.isEditing) {
+            if (this.previousKeyId !== this.currentKeyId) {
                 this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
                 clearInterval(this.loop);
             } else {
