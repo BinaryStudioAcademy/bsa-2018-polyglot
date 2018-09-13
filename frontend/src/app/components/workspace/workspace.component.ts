@@ -14,6 +14,8 @@ import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
 import { EventService } from "../../services/event.service";
 import { Hub } from "../../models/signalrModels/hub";
+import { RightService } from "../../services/right.service";
+import { RightDefinition } from "../../models/rightDefinition";
 
 @Component({
     selector: "app-workspace",
@@ -46,6 +48,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private madiv;
     private signalRConnection;
     isEditing: boolean;
+    private rights: RightDefinition[];
 
     filters: Array<string>;
 
@@ -66,7 +69,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
         private eventService: EventService,
-        private differs: KeyValueDiffers
+        private differs: KeyValueDiffers,
+        private rightService: RightService
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
@@ -92,7 +96,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        console.log(this.stringsInProgress);
         this.filters = [];
         // this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -157,6 +160,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 });
 
             this.currentPage++;
+            this.rightService.getUserRightsInProject(params.projectId).subscribe((rights)=>{
+                this.rights = rights;
+            });
         });
     }
 
@@ -462,5 +468,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     this.projectTags = Array.from(new Set(this.projectTags));
                 });
         this.currentPage++;
+    }
+
+    isCurrentUserCanAddNewString(): boolean{
+        if(this.userService.isCurrentUserManager()){
+            return true;
+        }
+        return this.rights.includes(RightDefinition.AddNewKey);
     }
 }
