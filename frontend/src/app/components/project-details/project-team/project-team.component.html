@@ -14,7 +14,7 @@
             <mat-card-title class="card-title">
                 <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> {{t.name || t.id}}</a>
             </mat-card-title>
-          <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
+          <mat-card-subtitle style="margin-top: -18px" class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
       
       </mat-card-header>
