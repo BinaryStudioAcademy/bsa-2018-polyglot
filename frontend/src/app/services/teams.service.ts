@@ -17,6 +17,10 @@ export class TeamService {
     return this.dataService.sendRequest(RequestMethod.Get, this.api, undefined, undefined);
   }
 
+  searchTeams(query: string): Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api, 'search/' + '?query=' + query);
+  }
+
   getTeam(id: number): Observable<Team> {
 
     return this.dataService.sendRequest(RequestMethod.Get, this.api, id, undefined);

@@ -43,8 +43,19 @@ namespace Polyglot.Controllers
 				: Ok(projects);
 		}
 
-        // GET: Projects/5
-        [HttpGet("{id}", Name = "GetProject")]
+		[HttpGet("search")]
+		public async Task<IActionResult> SearchProjects(string query)
+		{
+			if (query == null)
+				query = "";
+
+			var projects = await service.SearchProjects(query);
+			return projects == null ? NotFound("No projects found!") as IActionResult
+				: Ok(projects);
+		}
+
+		// GET: Projects/5
+		[HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
             var project = await service.GetOneAsync(id);

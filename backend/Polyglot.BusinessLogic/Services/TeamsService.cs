@@ -30,6 +30,22 @@ namespace Polyglot.BusinessLogic.Services
             this.notificationService = notificationService;
         }
 
+		public async Task<List<TeamPrevDTO>> SearchTeams(string query)
+		{
+			IEnumerable<TeamPrevDTO> all = await GetAllTeamsAsync();
+
+			List<TeamPrevDTO> selected = new List<TeamPrevDTO>();
+
+			foreach(var t in all)
+			{
+				if(t.Name.Contains(query))
+				{
+					selected.Add(t);
+				}
+			}
+			return selected;
+		}
+
         public async Task<IEnumerable<TeamPrevDTO>> GetAllTeamsAsync()
         {
             var user = await _currentUser.GetCurrentUserProfile();

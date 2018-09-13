@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.DataAccess.Helpers;
 
@@ -22,6 +23,8 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChatMessageDTO> SendMessage(ChatMessageDTO message);
 
         Task<ChatMessageDTO> GetMessageAsync(int messageId);
+
+        Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user);
 
         Task ReadMessages(int dialogId, string whoUid);
 

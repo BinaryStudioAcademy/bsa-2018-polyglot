@@ -44,7 +44,7 @@ namespace Polyglot.BusinessLogic.Services
         private readonly IGlossaryService glossaryService;
         private readonly IElasticClient elasticClient;
         private readonly ICurrentUser currentUser;
-
+        private static readonly Random rand = new Random();
 
         public ProjectService(IUnitOfWork uow, IMapper mapper, IMongoRepository<DataAccess.MongoModels.ComplexString> rep,
             IMongoRepository<ProjectPriority> priorityRep,
@@ -226,6 +226,7 @@ namespace Polyglot.BusinessLogic.Services
             {
                 await projPrioritiesProvider.CreateAsync(new ProjectPriority()
                 {
+                    Id = rand.Next(Int32.MinValue, Int32.MaxValue - 1),
                     UserId = currentUserId.Value,
                     Total = 1,
                     Priorities = new List<Priority>() { new Priority() { ProjectId = projectId, PriorityValue = 1 } }
@@ -476,6 +477,24 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Project overrides
 
+		public async Task<List<ProjectDTO>> SearchProjects(string query)
+		{
+			IEnumerable<ProjectDTO> all = await GetListAsync();
+
+			List<ProjectDTO> selected = new List<ProjectDTO>();
+
+			foreach(var pr in all)
+			{
+				if(pr.Name.Contains(query))
+				{
+					selected.Add(pr);
+				}
+			}
+
+			return selected;
+		}
+
+
         public override async Task<IEnumerable<ProjectDTO>> GetListAsync()
         {
             var user = await currentUser.GetCurrentUserProfile();
@@ -507,7 +526,7 @@ namespace Polyglot.BusinessLogic.Services
                 currentPriority = projectsPriority?.Priorities.FirstOrDefault(pp => pp.ProjectId == p.Id)?.PriorityValue;
                 if(currentPriority.HasValue && projectsPriority.Total > 0)
                 {
-                    p.Priority = (int)(currentPriority.Value * 100 / projectsPriority.Total);
+                    p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
                 }
 				List<ComplexString> temp = new List<ComplexString>();
 

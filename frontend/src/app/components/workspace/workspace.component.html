@@ -54,7 +54,7 @@
         </div>
 
         <div *ngIf="project">
-            <button class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
+            <button [disabled]="!isCurrentUserCanAddNewString()" class="mx-1" mat-flat-button type="button" (click)="onAddNewStringClick()">Add new string</button>
             <button class="mx-1" mat-flat-button color="primary" type="button" [routerLink]="['/project/details', project.id]">Project Details</button>
         </div>
     </mat-card>

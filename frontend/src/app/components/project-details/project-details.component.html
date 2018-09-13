@@ -11,12 +11,20 @@
 			<ng-template matTabContent>
 				<div *ngIf="project" class="overview-content">
 					<img class="project-image" src="{{project.imageUrl}}">
-					<h2 *ngIf="project.description !== null && project.description!=='' ">Description:</h2>
-					<p>{{project.description}}</p>
-					<h2>Technology:</h2>
-					<p>{{project.technology}}</p>
-					<h2>Main Languague:</h2>
-					<p>{{project.mainLanguage.name}}</p>
+					<div style="display: flex">
+						<div style="width: 50%">
+							<h3>Technology:</h3>
+							<p>{{project.technology}}</p>
+						</div>
+						<div style="width: 50%">
+							<h3>Main language:</h3>
+							<p>{{project.mainLanguage.name}}</p>
+						</div>
+					</div>
+					<div>
+						<h3 *ngIf="project.description !== null && project.description!=='' ">Description:</h3>
+						<p>{{project.description}}</p>
+					</div>
 				</div>
 			</ng-template>
 		</mat-tab>
@@ -47,7 +55,9 @@
 		</mat-tab>
 
 		<mat-tab label="Glossaries">
-			<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
+			<ng-template matTabContent>
+				<app-assign-glossaries [projectId] = "project.id"></app-assign-glossaries>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Settings">

@@ -35,7 +35,6 @@ export class HttpService {
         body: any = {},
         respType: string = 'json',
         typeOfContent: string = "json") {
-
         return this.createRequest(type, endpoint, params, body, respType, typeOfContent).pipe(
             catchError((res: HttpErrorResponse) => this.handleError(res)),
             flatMap((response: any) => {
@@ -46,7 +45,7 @@ export class HttpService {
                                 catchError((res: HttpErrorResponse) => this.handleError(res)),
                                 flatMap((response: any) => {
                                     if (response === "T") {
-                                        from(this.authService.logout()).subscribe(() => {})
+                                        return this.authService.logout()
                                     } else {
                                         return of(response);
                                     }
