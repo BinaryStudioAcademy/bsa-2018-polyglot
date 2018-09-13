@@ -9,6 +9,7 @@ namespace Polyglot.Common.DTOs
     {
         public string Name { get; set; }
         public List<Point> Values { get; set; }
+		public int MaxValue { get; set; } 
     }
 
     public class Point
