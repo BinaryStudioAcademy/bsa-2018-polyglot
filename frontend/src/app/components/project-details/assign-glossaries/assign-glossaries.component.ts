@@ -41,8 +41,9 @@ export class AssignGlossariesComponent implements OnInit {
             });
         this.projectService.getNotAssignedGlossaries(this.projectId).subscribe(
             (data) => {
+                this.NotAssignedGlossaries = [];
                 data.forEach(gl => {
-                    if(gl.userProfile.id = this.stateService.currentDatabaseUser.id){
+                    if(gl.userProfile && gl.userProfile.id === this.stateService.currentDatabaseUser.id){
                         this.NotAssignedGlossaries.push(gl);
                     }
                 });
