@@ -21,11 +21,12 @@
 
 </div>
 </div>
-<div *ngIf = "displayNoRecords">
-    Not found
+
+<div  *ngIf="!team || team.teamTranslators.length === 0 || displayNoRecords">
+    <p class="no-members">No Translators</p>
 </div>
 
-<table *ngIf = "!displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+<table *ngIf = "team && team.teamTranslators.length !== 0 && !displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
 
  <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef> </th>
@@ -51,7 +52,7 @@
           <div *ngIf="element.teamId === teamId" id="right-checkboxes">
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)" (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)" (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Select new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Can accept translations</mat-checkbox>
             </div>
       </td>
   </ng-container>  

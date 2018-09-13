@@ -124,8 +124,14 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pipe';
 import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { GuidelineComponent } from './components/guideline/guideline.component';
+import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
+import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
 import { CommentsPipe } from './common/pipes/comments.pipe';
+import { OptionalTranslationMenuComponent } from './dialogs/optional-translation-menu/optional-translation-menu.component';
+
 
 @NgModule({
   exports: [
@@ -210,8 +216,14 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     NotificationsComponent,
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
+    TranslatorSearchByNamePipe,
+    ChooseProficiencyDialogComponent,
     AddRemoveLanguagesDialogComponent,
-    CommentsPipe
+    GuidelineComponent,
+    TranslatorGuideComponent,
+    ManagerGuideComponent,
+    CommentsPipe,
+    OptionalTranslationMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -249,7 +261,6 @@ import { CommentsPipe } from './common/pipes/comments.pipe';
     InfiniteScrollModule,
     MentionModule,
     InfiniteScrollModule
-   
   ],
   entryComponents: [
     LoginDialogComponent,

@@ -143,9 +143,13 @@ namespace Polyglot.DataAccess.Migrations
 
                     b.Property<int?>("OriginLanguageId");
 
+                    b.Property<int?>("UserProfileId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OriginLanguageId");
+
+                    b.HasIndex("UserProfileId");
 
                     b.ToTable("Glossaries");
                 });
@@ -542,6 +546,10 @@ namespace Polyglot.DataAccess.Migrations
                     b.HasOne("Polyglot.DataAccess.Entities.Language", "OriginLanguage")
                         .WithMany("Glossaries")
                         .HasForeignKey("OriginLanguageId");
+
+                    b.HasOne("Polyglot.DataAccess.Entities.UserProfile", "UserProfile")
+                        .WithMany()
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("Polyglot.DataAccess.Entities.GlossaryString", b =>

@@ -11,6 +11,9 @@ import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { SignalrSubscribeActions } from "../../../models/signalrModels/signalr-subscribe-actions";
 import { SignalrService } from "../../../services/signalr.service";
 import { Hub } from "../../../models/signalrModels/hub";
+import { RightService } from "../../../services/right.service";
+import { RightDefinition } from "../../../models/rightDefinition";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: "app-languages",
@@ -26,16 +29,22 @@ export class LanguagesComponent implements OnInit {
     public IsLangLoad: boolean = false;
     public IsLoading: any = {};
     private signalRConnection;
+    private rights: RightDefinition[];
 
     constructor(
         private projectService: ProjectService,
         private langService: LanguageService,
         private snotifyService: SnotifyService,
         public dialog: MatDialog,
-        private signalrService: SignalrService
+        private signalrService: SignalrService,
+        private rightService: RightService,
+        private userService: UserService
     ) {}
 
     ngOnInit() {
+        this.rightService.getUserRightsInProject(this.projectId).subscribe((rights)=>{
+            this.rights = rights;
+        });
         this.projectService
             .getProjectLanguagesStatistic(this.projectId)
             .subscribe(
@@ -87,7 +96,7 @@ export class LanguagesComponent implements OnInit {
                         `Some new languages were added to project`,
                         "Language added"
                     );
-                    this.IsLoad = true;
+                    
                     this.projectService
                         .getProjectLanguagesStatistic(this.projectId)
                         .subscribe(
@@ -262,6 +271,10 @@ export class LanguagesComponent implements OnInit {
                                     );
                                     this.langs.sort(this.compareProgress);
                                     this.IsLoad = false;
+                                    this.snotifyService.success(
+                                        "Language added",
+                                        "Success!"
+                                    );
                                 } else {
                                     this.snotifyService.error(
                                         "An error occurred while adding languages to project, please try again",
@@ -304,6 +317,12 @@ export class LanguagesComponent implements OnInit {
     }
 
     onDeleteLanguage(languageId: number) {
+        if(this.langs.length === 1)
+        {
+            this.snotifyService.error('You can not delete all languages from the project!' , "Warining!!!")
+            return;
+        }
+
         if (
             this.langs.filter(l => l.id === languageId)[0]
                 .translatedStringsCount > 0
@@ -368,5 +387,12 @@ export class LanguagesComponent implements OnInit {
         if (a.progress < b.progress) return -1;
         if (a.progress > b.progress) return 1;
         return 0;
+    }
+
+    isCurrentUserCanSelectNewString(): boolean{
+        if(this.userService.isCurrentUserManager()){
+            return true;
+        }
+        return this.rights.includes(RightDefinition.AddNewLanguage);
     }
 }

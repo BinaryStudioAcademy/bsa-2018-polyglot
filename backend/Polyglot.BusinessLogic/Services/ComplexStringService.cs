@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Castle.Core.Internal;
 using Nest;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.BusinessLogic.Interfaces.SignalR;
@@ -65,7 +66,7 @@ namespace Polyglot.BusinessLogic.Services
                 ComplexStringDTO stringDTO = _mapper.Map<ComplexStringDTO>(target);
                 foreach (var translation in stringDTO.Translations)
                 {
-                    if(translation.AssignedTranslatorId != 0)
+                    if (translation.AssignedTranslatorId != 0)
                     {
                         UserProfileDTO user = await _userProfileService.GetOneAsync(translation.AssignedTranslatorId);
                         translation.AssignedTranslatorAvatarUrl = user.AvatarUrl;
@@ -90,7 +91,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-      
+
         public async Task<TranslationDTO> SetStringTranslation(int identifier, TranslationDTO translation)
         {
             var target = await _complexStringRepository.GetAsync(identifier);
@@ -218,9 +219,9 @@ namespace Polyglot.BusinessLogic.Services
             var currentTranslation = complexString.Translations.FirstOrDefault(x => x.Id == translationId);
             var currentHistory = currentTranslation?.History.FirstOrDefault(x => x.Id == historyId);
 
-            if (currentTranslation!=null&&currentHistory!=null)
-            {           
-                currentTranslation?.History.RemoveAll(x=>x.CreatedOn>currentHistory?.CreatedOn);
+            if (currentTranslation != null && currentHistory != null)
+            {
+                currentTranslation?.History.RemoveAll(x => x.CreatedOn > currentHistory?.CreatedOn);
 
                 currentTranslation.TranslationValue = currentHistory.TranslationValue;
                 currentTranslation.CreatedOn = currentHistory.CreatedOn;
@@ -238,47 +239,49 @@ namespace Polyglot.BusinessLogic.Services
         }
 
 
-		public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
-		{
-			var targetString = await _complexStringRepository.GetAsync(stringId);
-			var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
+        public async Task<AdditionalTranslationDTO> AddOptionalTranslation(int stringId, Guid translationId, string value)
+        {
+            var targetString = await _complexStringRepository.GetAsync(stringId);
+            var targetTranslation = targetString.Translations.FirstOrDefault(t => t.Id == translationId);
 
-			targetTranslation.OptionalTranslations.Add(
-				new AdditionalTranslation() {
-					TranslationValue = value,
-					UserId = (await _currentUser.GetCurrentUserProfile()).Id,
-					CreatedOn = DateTime.Now
-					//Type = Translation.TranslationType.Human
-				});
+            targetTranslation.OptionalTranslations.Add(
+                new AdditionalTranslation()
+                {
+                    TranslationValue = value,
+                    UserId = (await _currentUser.GetCurrentUserProfile()).Id,
+                    CreatedOn = DateTime.Now
+                    //Type = Translation.TranslationType.Human
+                });
 
-			var result = await _complexStringRepository.Update(targetString);
-			return _mapper.Map<AdditionalTranslationDTO>
-				(result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
-		}
+            var result = await _complexStringRepository.Update(targetString);
+            return _mapper.Map<AdditionalTranslationDTO>
+                (result.Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations.LastOrDefault());
+        }
 
-		public async Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId)
-		{
-			List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
+        public async Task<IEnumerable<OptionalTranslationDTO>> GetOptionalTranslations(int stringId, Guid translationId)
+        {
+            List<OptionalTranslationDTO> target = new List<OptionalTranslationDTO>();
 
-			var source = (await _complexStringRepository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
+            var source = (await _complexStringRepository.GetAsync(stringId)).Translations.FirstOrDefault(t => t.Id == translationId).OptionalTranslations;
 
-			foreach(var opt in source)
-			{
-				var user = await _unitOfWork.GetRepository<UserProfile>().GetAsync(opt.UserId);
+            foreach (var opt in source)
+            {
+                var user = await _unitOfWork.GetRepository<UserProfile>().GetAsync(opt.UserId);
 
-				target.Add(
-					new OptionalTranslationDTO() {
-						UserPictureURL = user.AvatarUrl,
-						UserName = user.FullName,
-						DateTime = opt.CreatedOn,
-						TranslationValue = opt.TranslationValue
-					});
-			}
-			target.Reverse();
-			return target;
-		}
+                target.Add(
+                    new OptionalTranslationDTO()
+                    {
+                        UserPictureURL = user.AvatarUrl,
+                        UserName = user.FullName,
+                        DateTime = opt.CreatedOn,
+                        TranslationValue = opt.TranslationValue
+                    });
+            }
+            target.Reverse();
+            return target;
+        }
 
-		public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
+        public async Task<ComplexStringDTO> ModifyComplexString(ComplexStringDTO entity)
         {
             var target = await _complexStringRepository.Update(_mapper.Map<ComplexString>(entity));
             if (target != null)
@@ -332,7 +335,7 @@ namespace Polyglot.BusinessLogic.Services
             return null;
         }
 
-        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment , int itemsOnPage)
+        public async Task<IEnumerable<CommentDTO>> SetComment(int identifier, CommentDTO comment, int itemsOnPage)
         {
             var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
@@ -342,9 +345,9 @@ namespace Polyglot.BusinessLogic.Services
                 target.Comments.Add(currentComment);
                 var result = await _complexStringRepository.Update(target);
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
-                
+
                 await _signalRWorkspaceService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
-                
+
                 return commentsWithUsers.OrderByDescending(x => x.CreatedOn).Take(itemsOnPage);
 
             }
@@ -357,7 +360,7 @@ namespace Polyglot.BusinessLogic.Services
             var target = await _complexStringRepository.GetAsync(identifier);
             if (target != null)
             {
-                
+
                 var currentComment = target.Comments.FirstOrDefault(x => x.Id == commentId);
 
                 var comments = target.Comments;
@@ -365,7 +368,7 @@ namespace Polyglot.BusinessLogic.Services
                 target.Comments = comments;
 
                 var result = await _complexStringRepository.Update(target);
-                
+
                 var commentsWithUsers = await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(result.Comments));
                 await _signalRWorkspaceService.СommentsChanged($"{Group.complexString}{identifier}", identifier);
                 return commentsWithUsers.Reverse();
@@ -381,9 +384,9 @@ namespace Polyglot.BusinessLogic.Services
             {
                 var comments = _mapper.Map<List<Comment>>(target.Comments);
                 var currentComment = comments.FirstOrDefault(x => x.Id == comment.Id);
-                
+
                 currentComment.Text = comment.Text;
-                
+
                 target.Comments = comments;
 
                 var result = await _complexStringRepository.Update(target);
@@ -398,7 +401,7 @@ namespace Polyglot.BusinessLogic.Services
 
         }
 
-                
+
         public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int identifier)
         {
             var target = await _complexStringRepository.GetAsync(identifier);
@@ -409,7 +412,7 @@ namespace Polyglot.BusinessLogic.Services
 
             return null;
         }
-        
+
         public async Task<IEnumerable<CommentDTO>> GetCommentsWithPaginationAsync(int identifier, int itemsOnPage, int page)
         {
             var skipItems = itemsOnPage * page;
@@ -418,7 +421,7 @@ namespace Polyglot.BusinessLogic.Services
 
             if (target != null)
             {
-                
+
                 var paginatedComments = target.Comments.OrderByDescending(x => x.CreatedOn).Skip(skipItems).Take(itemsOnPage);
                 return await GetFullUserInComments(_mapper.Map<IEnumerable<CommentDTO>>(paginatedComments));
             }
@@ -426,17 +429,17 @@ namespace Polyglot.BusinessLogic.Services
             return null;
 
         }
-        
+
         private async Task<IEnumerable<CommentDTO>> GetFullUserInComments(IEnumerable<CommentDTO> comments)
         {
-            foreach(var com in comments)
+            foreach (var com in comments)
             {
                 com.User = await _userProfileService.GetOneAsync(com.User.Id);
             }
             return comments;
         }
 
-        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId,int itemsOnPage, int page)
+        public async Task<IEnumerable<HistoryDTO>> GetHistoryAsync(int identifier, Guid translationId, int itemsOnPage, int page)
         {
             var complexString = await GetComplexString(identifier);
             var translation = complexString.Translations.FirstOrDefault(t => t.Id == translationId);
@@ -450,44 +453,102 @@ namespace Polyglot.BusinessLogic.Services
 
             if (translation.History.Count == 0)
             {
-                var user = await _userProfileService.GetOneAsync(translation.UserId);
-                history.Add(new HistoryDTO {
-                    Id = translation.Id,
-                    UserName = user.FullName,
-                    AvatarUrl = user.AvatarUrl,
-                    Action = "translated",
-                    From = $"{complexString.OriginalValue}",
-                    To = $"{translation.TranslationValue}",
-                    When = translation.CreatedOn
-                });
+                if (!translation.TranslationValue.IsNullOrEmpty())
+                {
+                    var user = await _userProfileService.GetOneAsync(translation.UserId);
+                    history.Add(new HistoryDTO
+                    {
+                        Id = translation.Id,
+                        UserName = user.FullName,
+                        AvatarUrl = user.AvatarUrl,
+                        Action = "translated",
+                        From = $"{complexString.OriginalValue}",
+                        To = $"{translation.TranslationValue}",
+                        When = translation.CreatedOn
+                    });
+                }
             }
             else
             {
                 var first = await _userProfileService.GetOneAsync(translation.History[0].UserId);
-                history.Add(new HistoryDTO
+                if (!translation.History[0].TranslationValue.IsNullOrEmpty())
                 {
-                    Id = translation.History[0].Id,
-                    UserName = first.FullName,
-                    AvatarUrl = first.AvatarUrl,
-                    Action = "translated",
-                    From = $"{complexString.OriginalValue}",
-                    To = $"{translation.History[0].TranslationValue}",
-                    When = translation.History[0].CreatedOn
-                });
+                    history.Add(new HistoryDTO
+                    {
+                        Id = translation.History[0].Id,
+                        UserName = first.FullName,
+                        AvatarUrl = first.AvatarUrl,
+                        Action = "translated",
+                        From = $"{complexString.OriginalValue}",
+                        To = $"{translation.History[0].TranslationValue}",
+                        When = translation.History[0].CreatedOn
+                    });
+                }
 
                 for (int i = 1; i < translation.History.Count; i++)
                 {
-                    var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
-                    history.Add(new HistoryDTO
+                    if (translation.History[i - 1].TranslationValue.IsNullOrEmpty())
                     {
-                        Id = translation.History[i].Id,
-                        UserName = user.FullName,
-                        AvatarUrl = user.AvatarUrl,
-                        Action = "changed",
-                        From = $"{translation.History[i-1].TranslationValue}",
-                        To = $"{translation.History[i].TranslationValue}",
-                        When = translation.History[i].CreatedOn
-                    });
+                        if (i >= 2)
+                        {
+                            var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
+                            history.Add(new HistoryDTO
+                            {
+                                Id = translation.History[i].Id,
+                                UserName = user.FullName,
+                                AvatarUrl = user.AvatarUrl,
+                                Action = "changed",
+                                From = $"{translation.History[i - 2].TranslationValue}",
+                                To = $"{translation.History[i].TranslationValue}",
+                                When = translation.History[i].CreatedOn
+                            });
+                        }
+                        else
+                        {
+                            var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
+                            history.Add(new HistoryDTO
+                            {
+                                Id = translation.History[i].Id,
+                                UserName = user.FullName,
+                                AvatarUrl = user.AvatarUrl,
+                                Action = "changed",
+                                From = $"{complexString.OriginalValue}",
+                                To = $"{translation.History[i].TranslationValue}",
+                                When = translation.History[i].CreatedOn
+                            });
+                        }
+                    }
+                    else if (translation.History[i].TranslationValue.IsNullOrEmpty())
+                    {
+                        if (i != translation.History.Count)
+                        {
+                            var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
+                            history.Add(new HistoryDTO
+                            {
+                                Id = translation.History[i].Id,
+                                UserName = user.FullName,
+                                AvatarUrl = user.AvatarUrl,
+                                Action = "changed",
+                                From = $"{translation.History[i - 1].TranslationValue}",
+                                To = $"{translation.History[i + 1].TranslationValue}",
+                                When = translation.History[i].CreatedOn
+                            });
+                        }
+                    }
+                    else 
+                    {
+                        var user = await _userProfileService.GetOneAsync(translation.History[i].UserId);
+                        history.Add(new HistoryDTO
+                        {
+                            Id = translation.History[i].Id,
+                            UserName = user.FullName,
+                            AvatarUrl = user.AvatarUrl,
+                            Action = "changed",
+                            From = $"{translation.History[i - 1].TranslationValue}",
+                            To = $"{translation.History[i].TranslationValue}",
+                            When = translation.History[i].CreatedOn
+                        });
+                    }
                 }
             }
 
@@ -497,7 +558,7 @@ namespace Polyglot.BusinessLogic.Services
 
             return paginatedHistory;
         }
-        
+
         public async Task<string> ReIndex()
         {
             var allPosts = (await _complexStringRepository.GetAllAsync()).ToList();
@@ -506,7 +567,7 @@ namespace Polyglot.BusinessLogic.Services
 
             return res;
         }
-        
+
         public async Task ChangeStringStatus(int id, bool status, string groupName)
         {
             if (status)

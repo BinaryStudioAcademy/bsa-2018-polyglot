@@ -1,0 +1,13 @@
+<div class="content">
+
+    <h1 class="title">Guideline</h1>
+    <h2 class="subtitle">Hello, <i>{{user.fullName}}</i> ! Let me explain you how to use Polyglot.</h2>
+
+    <app-translator-guide *ngIf="user && user.userRole==0"></app-translator-guide>
+    <app-manager-guide *ngIf="user && user.userRole==1"></app-manager-guide>
+
+    <h3 class="bottom subtitle">If you still have questions please write an email to
+        <a class="link" href="mailto:polyglot.support@gmail.com">polyglot.support@gmail.com</a> 
+    </h3>
+    <h1 class="title">Thank you for using Polyglot!</h1>
+</div>

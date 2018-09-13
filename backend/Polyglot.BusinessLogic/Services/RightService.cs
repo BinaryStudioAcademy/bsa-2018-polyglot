@@ -48,7 +48,7 @@ namespace Polyglot.BusinessLogic.Services
                 TeamTranslatorId = translator.Id
             });
 
-            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            var newTranslator = await uow.GetRepository<TeamTranslator>().Update(translator);
             await uow.SaveAsync();
 
             return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;
@@ -66,7 +66,7 @@ namespace Polyglot.BusinessLogic.Services
 
             translator.TranslatorRights.Remove(translatorRight);
 
-            var newTranslator = uow.GetRepository<TeamTranslator>().Update(translator);
+            var newTranslator = await uow.GetRepository<TeamTranslator>().Update(translator);
             await uow.SaveAsync();
 
             return newTranslator != null ? mapper.Map<TranslatorDTO>(newTranslator) : null;

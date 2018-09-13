@@ -6,15 +6,25 @@ import { from, Observable, of } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { UserService } from './user.service';
 import { Router } from '@angular/router';
+import { async } from '@angular/core/testing';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
+
     constructor(private _firebaseAuth: AngularFireAuth,
         private appState: AppStateService,
-        private router: Router) { }
+        private router: Router) {
+            this._firebaseAuth.auth.onAuthStateChanged(async (user) => {
+                if(user){
+                    await this.refreshToken();
+                    this.appState.currentFirebaseUser = user;
+                    this.appState.LoginStatus = true;
+                }
+            });
+    }
 
     signInWithGoogle() {
         return from(this._firebaseAuth.auth.signInWithPopup(
@@ -54,9 +64,9 @@ export class AuthService {
     }
 
     async refreshToken() {
-        const firebaseToken = await this._firebaseAuth.auth.currentUser.getIdToken(true);
-        localStorage.setItem('currentFirebaseToken', firebaseToken);
-        this.appState.currentFirebaseToken = firebaseToken;
-        
+        if (this._firebaseAuth.auth.currentUser) {
+            const firebaseToken = await this._firebaseAuth.auth.currentUser.getIdToken(true);
+            this.appState.currentFirebaseToken = firebaseToken;
+        }
     }
 }

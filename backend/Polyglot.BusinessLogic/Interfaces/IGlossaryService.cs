@@ -9,6 +9,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 {
     public interface IGlossaryService : ICRUDService<Glossary, GlossaryDTO>
     {
+        Task<IEnumerable<GlossaryDTO>> GetUsersGlossaries(int userId);
         Task<GlossaryDTO> AddString(int glossaryId, GlossaryStringDTO glossaryString);
         Task<GlossaryDTO> UpdateString(int glossaryId, GlossaryStringDTO glossaryString);
         Task<bool> DeleteString(int glossaryId, int glossaryStringId);

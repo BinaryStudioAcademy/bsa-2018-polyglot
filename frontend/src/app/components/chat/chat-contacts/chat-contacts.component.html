@@ -16,7 +16,12 @@
                             </button>
                         -->
                             <mat-form-field class="team-details_filter">
-                                <input matInput placeholder="Filter">
+                                <input class="filter-input" matInput placeholder="Search"
+                                    (input)="filterChange($event)" #filterInput name="filterInput">
+                                    <mat-spinner *ngIf="timeOutFilter" [diameter]="20" matSuffix></mat-spinner>
+                                    <button matSuffix *ngIf="!timeOutFilter" mat-button mat-icon-button   (click)="filterInput.value = null; resetFilterInput();">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
                             </mat-form-field>
                         </mat-toolbar>
 
@@ -28,6 +33,9 @@
                                         <a class="person-img" [matBadgeHidden]="d.unreadMessagesCount < 1" [matBadge]="d.unreadMessagesCount"
                                             matBadgeColor="warn" matBadgeSize="medium">
                                             <img class="person-avatar" mat-card-avatar src="{{d?.participants[0].avatarUrl}}">
+                                            <span [hidden]="!d?.participants[0].isOnline" class="online-status-container">
+                                                <mat-icon  class="online-status-icon">brightness_1</mat-icon>
+                                            </span>
                                         </a>
                                         <div class="person-card-text">
                                             <div class="person-name">{{d?.participants[0].fullName}}</div>
@@ -44,12 +52,12 @@
                                         <mat-menu #menu="matMenu" xPosition="before" class="person-options">
                                             <button (click)="deleteDialog(d)" mat-menu-item>Delete</button>
                                         </mat-menu>
-                                        <div class="online-status-container">
+                                     <!--   <div class="online-status-container">
                                             <span [hidden]="d?.participants[0].isOnline" class="online-status-text">last seen
                                                 {{d?.participants[0].lastSeen | date: 'medium'}}</span>
                                             <span [hidden]="!d?.participants[0].isOnline" class="online-status-text">online</span>
                                             <mat-icon class="online-status-icon" [style.color]="d?.participants[0].isOnline ? 'green' : '#F1F1F1'">brightness_1</mat-icon>
-                                        </div>
+                                              </div>-->
                                     </mat-card-header>
                                 </mat-card>
                             </li>
@@ -58,7 +66,22 @@
             </div>
 
             <div [hidden]="!isSearchMode">
-                SEARCH MODE
+                <ul>
+                    <li *ngFor="let user of searchUsers" (click)="setDialog(user)">
+                        <mat-card class="person-card dialog-card">
+                            <mat-card-header>
+                                <a class="person-img">
+                                    <img class="person-avatar" mat-card-avatar src="{{user.avatarUrl}}">
+                                </a>
+                                <div class="person-card-text">
+                                    <div class="person-name">{{user.fullName}}</div>
+                                    <div class="person-role">{{user.role}}</div>
+                                </div>
+                            </mat-card-header>
+                        </mat-card>
+                    </li>
+    
+                </ul>
             </div>
 
             </ng-template>

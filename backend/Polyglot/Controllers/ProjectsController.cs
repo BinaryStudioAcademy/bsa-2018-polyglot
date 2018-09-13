@@ -43,8 +43,19 @@ namespace Polyglot.Controllers
 				: Ok(projects);
 		}
 
-        // GET: Projects/5
-        [HttpGet("{id}", Name = "GetProject")]
+		[HttpGet("search")]
+		public async Task<IActionResult> SearchProjects(string query)
+		{
+			if (query == null)
+				query = "";
+
+			var projects = await service.SearchProjects(query);
+			return projects == null ? NotFound("No projects found!") as IActionResult
+				: Ok(projects);
+		}
+
+		// GET: Projects/5
+		[HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> GetProject(int id)
         {
             var project = await service.GetOneAsync(id);
@@ -347,6 +358,9 @@ namespace Polyglot.Controllers
                 case ".json":
                     ex = "application/json";
                     break;
+                case ".csv":
+                    ex = "text/csv";
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -361,6 +375,13 @@ namespace Polyglot.Controllers
             return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
         }
 
+        // PUT: projects/:id/priority
+        [HttpPut("{projectId}/priority")]
+        public async Task<IActionResult> IncreasePriority(int projectId)
+        {
+            await service.IncreasePriority(projectId);
+            return Ok();
+        }
     }
 
 }

@@ -1,28 +1,45 @@
+\:host
+  display: flex
+
 .mat-panel-description
-  width: 40%
+  width: 50%
+  min-width: 100px  
+ 
+.description, .none-translation
+  white-space: nowrap
+  overflow: hidden 
+  text-overflow: ellipsis
+  pointer-events: none
 
 .mat-panel-title
-  width: 20%
+  width: 10%
+  min-width: 70px
+  pointer-events: none
 
+.buttons
+  display: flex
+  justify-content: flex-end 
+  min-width: 200px  
+
+.optional-btn
+  margin: 0
 .header-translation
   height: auto !important;
+  margin-right: 0
 
 .textarea-translation
   width: 100%;
   padding-top: 10px;
 
 .confirmed
-  background-color: rgba(0, 255, 0, 0.1)
+  background-color: rgb(248, 248, 248)
+ 
+.mat-tab-body-content
+  overflow: hidden
 
 .textarea-translation textarea
   padding-top: 10px;
-
-.confirm-btn
-  color: rgb(0, 255, 0)
-
-.none-translation
-  text-align: center;
-
+  
 .button-translation
   display: flex;
   justify-content: space-between;
@@ -30,15 +47,8 @@
 .language-label
   font-size: 16px
 
-
-\:host
-  display: flex
-
-  .mat-paginator
+.mat-paginator
     width: 100%
-
-.material-icons
-  font-size: 12px
 
 .key-details
   height: fit-content
@@ -87,7 +97,6 @@
   ::-webkit-scrollbar-thumb:hover
     background: #555
 
-
 .language
   display: inline-block
   width: 25%
@@ -105,8 +114,6 @@
   height: 36px
   mat-icon
     font-size: 25px
-.optional-btn
-  align-self: center
 
 .optional-container
   margin: 20px
@@ -138,16 +145,16 @@
     padding: 6px
     border: 1px solid #3f51b5
     border-radius: 7%
-
-.description
-  white-space: nowrap
-  width: 573px
-  overflow: hidden 
-  text-overflow: ellipsis
+    z-index: 5
 
 .translation-div
   position: absolute
   word-wrap: break-word
-  width: 90%
   line-height: 15.5px
-  z-index: 3
+  z-index: 1
+  pointer-events: none
+
+
+
+
+

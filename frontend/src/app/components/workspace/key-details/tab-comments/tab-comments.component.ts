@@ -34,7 +34,6 @@ export class TabCommentsComponent implements OnInit {
     });
     public body: string;
     public users : any[] = [];
-
     private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;

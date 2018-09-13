@@ -15,8 +15,8 @@
 				<mat-icon mat-list-icon>settings</mat-icon> Settings</a>
 			<a mat-button routerLinkActive="active" routerLink="/profile">
 				<mat-icon mat-list-icon>account_box</mat-icon> Profile</a>
-			<a mat-button routerLinkActive="active">
-				<mat-icon mat-list-icon>help</mat-icon> Help & Feedback</a>
+			<a mat-button routerLinkActive="active" routerLink="/guideline">
+				<mat-icon mat-list-icon>help</mat-icon>Guideline</a>
 			<mat-divider></mat-divider>
 			<a routerLinkActive="active" mat-button color="warn" (click)="onLogoutClick();snav.toggle();">
 				<mat-icon mat-list-icon>block</mat-icon> Logout</a>
@@ -30,14 +30,16 @@
 			<label class="companyName" routerLink="/">Polyglot</label>
 			<span class="example-spacer"></span>
 			<div fxShow="true" fxHide.lt-md="true">
-				<a mat-button routerLink="/about-us" routerLinkActive="active">About us</a>
-				<a mat-button *ngIf="isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-				<a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onLoginClick()">Login</a>
 				<a mat-button *ngIf="!isLoggedIn()" onclick="this.blur()" (click)="onSignUpClick()">SignUp</a>
+				<button mat-icon-button routerLink="/dashboard" class="no-hover-effect" *ngIf="isLoggedIn()">
+					<mat-icon class="chat" aria-label="Chat icon">
+						home
+					</mat-icon>
+				</button>
 				<button mat-icon-button routerLink="/chat" class="no-hover-effect" *ngIf="isLoggedIn()">
 					<mat-icon class="chat" aria-label="Chat icon">
-						chat
+						mail
 					</mat-icon>
 				</button>
 				<app-notifications [(userNotifications)]="notifications" *ngIf="isLoggedIn()"></app-notifications>

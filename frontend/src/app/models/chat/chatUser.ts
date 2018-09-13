@@ -3,6 +3,8 @@ import { Role } from "..";
 export interface ChatUser {
     id: number;
 
+    uid: string;
+
     fullName: string;
 
     email: string;
