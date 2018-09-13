@@ -514,7 +514,7 @@ namespace Polyglot.BusinessLogic.Services
                 currentPriority = projectsPriority?.Priorities.FirstOrDefault(pp => pp.ProjectId == p.Id)?.PriorityValue;
                 if(currentPriority.HasValue && projectsPriority.Total > 0)
                 {
-                    p.Priority = (int)(currentPriority.Value * 100 / projectsPriority.Total);
+                    p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
                 }
 				List<ComplexString> temp = new List<ComplexString>();
 
