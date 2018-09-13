@@ -14,11 +14,11 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Margin="5, 10, 5, 10"  Orientation="Horizontal">
-                            <StackLayout WidthRequest="220">
+                            <StackLayout WidthRequest="220" Orientation="Vertical">
                                 <Label  Font="bold, 15"  TextColor="Black" Text="{Binding Language}" />
                             </StackLayout>
-                            <StackLayout Orientation="Vertical">
-                                <Label  HorizontalOptions="FillAndExpand"   Font="15" TextColor="Gray" HorizontalTextAlignment="Start" Text="{Binding Translation}" />
+                            <StackLayout  HorizontalOptions="Fill">
+                                <Label   Font="15" TextColor="Gray" Text="{Binding Translation}" />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

@@ -25,13 +25,14 @@ namespace Polyglot
             if (e.Item == null)
                 return;
 
+            ((ListView)sender).SelectedItem = null;
+
             var c = e.Item as ProjectViewModel;
 
             var projectId = c.Id;
 
             var newPage = new ComplexStringsPage(new ViewModels.ComplexStringsViewModel(), projectId);
             await Navigation.PushAsync(newPage);
-            ((ListView)sender).SelectedItem = null;
         }
     }
 }
