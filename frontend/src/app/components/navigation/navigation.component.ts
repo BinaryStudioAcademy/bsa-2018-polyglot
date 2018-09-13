@@ -20,168 +20,171 @@ import { Hub } from '../../models/signalrModels/hub';
 
 
 @Component({
-  providers: [AuthService],
-  selector: 'app-navigation',
-  templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.sass']
+    providers: [AuthService],
+    selector: 'app-navigation',
+    templateUrl: './navigation.component.html',
+    styleUrls: ['./navigation.component.sass']
 })
 export class NavigationComponent implements OnDestroy {
 
-  mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
-  private signalRConnection;
-  manager : UserProfile;
-  notifications: Notification[];
-  role: string;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    private signalRConnection;
+    manager: UserProfile;
+    notifications: Notification[];
+    role: string;
 
-  constructor(
-    changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher,
-    public dialog: MatDialog,
-    private authService: AuthService,
-    private userService: UserService,
-    private appState: AppStateService,
-    private router: Router,
-    private eventService: EventService,
-    private appStateService: AppStateService,
-    private signalRService: SignalrService,
-    private notificationService: NotificationService
-  ) {
-    this.mobileQuery = media.matchMedia('(max-width: 960px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-    this.eventService.listen().subscribe(
-      (event) => {
-        switch(event) {
-          case 'signUp':
-            this.onSignUpClick();
-            break;
-          case 'login':
-            this.onLoginClick();
-            break;
-        }
-      }
-    );
-  }
-
-  ngOnInit(): void {
-    this.updateCurrentUser();
-    this.appStateService.getDatabaseUser().subscribe(data => {
-      if(data){
-        this.manager = data;
-
-        this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
-          if (notifications) {
-            this.notifications = notifications;
-            this.signalRConnection = this.signalRService.connect(
-              `${SignalrGroups[SignalrGroups.notification]}${
-                this.manager.id
-                }`,
-                Hub.navigationHub
-            );
-            this.subscribeNotificationChanges();
-          }
-        });
-      }
-    });
-  }
-
-  subscribeNotificationChanges(){
-    this.signalRConnection.on(            
-      SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
-      (response: any) => {
-          if (this.signalRService.validateResponse(response)) {
-              this.notificationService
-                  .getCurrenUserNotifications()
-                  .subscribe(notifications => {
-                      console.log(notifications);
-                      if (notifications) {
-                        this.notifications = notifications;
-                      }
-                  });
-          }
-      });
-  }
-
-  onLoginClick() {
-    let dialogRef = this.dialog.open(LoginDialogComponent);
-    dialogRef.componentInstance.reloadEvent.subscribe(
-      () => {
-        this.manager = this.userService.getCurrentUser();
-        this.role = this.roleToString(this.manager.userRole);
-      }
-    );
-  }
-
-  onSignUpClick() {
-    let dialogRef = this.dialog.open(SignupDialogComponent);
-    dialogRef.componentInstance.reloadEvent.subscribe(
-      () => {
-        this.manager = this.userService.getCurrentUser();
-        this.role = this.roleToString(this.manager.userRole);
-      }
-    );
-  }
-
-  onNewStrClick() {
-    this.dialog.open(StringDialogComponent);
-  }
-
-  onLogoutClick() {
-    this.authService.logout().subscribe(() => {});
-  }
-
-  isLoggedIn() {
-    return this.appState.LoginStatus;
-  }
-
-  ngOnDestroy(): void {
-    this.signalRService.leaveGroup(
-      `${SignalrGroups[SignalrGroups.notification]}${this.manager.id}`,
-      Hub.navigationHub
-  );
-    this.mobileQuery.removeListener(this._mobileQueryListener);
-  }
-
-  private updateCurrentUser() {
-    if (this.appState.LoginStatus){
-      if (!this.userService.getCurrentUser()) {
-        this.userService.getUser().subscribe(
-          (user: UserProfile)=> {
-            this.userService.updateCurrentUser(user);
-            this.manager = this.userService.getCurrentUser();
-            this.role = this.roleToString(this.manager.userRole);
-          },
-          err => {
-            console.log('err', err);
-          }
+    constructor(
+        changeDetectorRef: ChangeDetectorRef,
+        media: MediaMatcher,
+        public dialog: MatDialog,
+        private authService: AuthService,
+        private userService: UserService,
+        private router: Router,
+        private eventService: EventService,
+        private appStateService: AppStateService,
+        private signalRService: SignalrService,
+        private notificationService: NotificationService
+    ) {
+        this.mobileQuery = media.matchMedia('(max-width: 960px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+        this.eventService.listen().subscribe(
+            (event) => {
+                switch (event) {
+                    case 'signUp':
+                        this.onSignUpClick();
+                        break;
+                    case 'login':
+                        this.onLoginClick();
+                        break;
+                }
+            }
         );
-        // this.email = this.appState.currentFirebaseUser.email;
-      }
-      else {
-        this.manager = this.userService.getCurrentUser();
-      }
-    } else {
-      this.manager = {
-        fullName: "",
-        avatarUrl: "",
-        lastName: ""
-      };
-      // this.email = '';
-      this.role = '';
     }
-  }
 
-  roleToString(roleId: number) {
-    let roleStr: string;
-    switch(roleId) {
-      case 0:
-        roleStr = 'Translator';
-        break;
-      case 1:
-        roleStr = 'Manager';
-        break;
+    ngOnInit(): void {
+        this.appStateService.getFirebaseUser().subscribe(data => {
+            if(data){
+                this.updateCurrentUser();
+            }
+        });
+        this.appStateService.getDatabaseUser().subscribe(data => {
+            if (data) {
+                this.manager = data;
+
+                this.notificationService.getCurrenUserNotifications().subscribe(notifications => {
+                    if (notifications) {
+                        this.notifications = notifications;
+                        this.signalRConnection = this.signalRService.connect(
+                            `${SignalrGroups[SignalrGroups.notification]}${
+                            this.manager.id
+                            }`,
+                            Hub.navigationHub
+                        );
+                        this.subscribeNotificationChanges();
+                    }
+                });
+            }
+        });
     }
-    return roleStr;
-  }
+
+    subscribeNotificationChanges() {
+        this.signalRConnection.on(
+            SignalrSubscribeActions[SignalrSubscribeActions.notificationSend],
+            (response: any) => {
+                if (this.signalRService.validateResponse(response)) {
+                    this.notificationService
+                        .getCurrenUserNotifications()
+                        .subscribe(notifications => {
+                            console.log(notifications);
+                            if (notifications) {
+                                this.notifications = notifications;
+                            }
+                        });
+                }
+            });
+    }
+
+    onLoginClick() {
+        let dialogRef = this.dialog.open(LoginDialogComponent);
+        dialogRef.componentInstance.reloadEvent.subscribe(
+            () => {
+                this.manager = this.userService.getCurrentUser();
+                this.role = this.roleToString(this.manager.userRole);
+            }
+        );
+    }
+
+    onSignUpClick() {
+        let dialogRef = this.dialog.open(SignupDialogComponent);
+        dialogRef.componentInstance.reloadEvent.subscribe(
+            () => {
+                this.manager = this.userService.getCurrentUser();
+                this.role = this.roleToString(this.manager.userRole);
+            }
+        );
+    }
+
+    onNewStrClick() {
+        this.dialog.open(StringDialogComponent);
+    }
+
+    onLogoutClick() {
+        this.authService.logout().subscribe(() => { });
+    }
+
+    isLoggedIn() {
+        return this.appStateService.LoginStatus;
+    }
+
+    ngOnDestroy(): void {
+        this.signalRService.leaveGroup(
+            `${SignalrGroups[SignalrGroups.notification]}${this.manager.id}`,
+            Hub.navigationHub
+        );
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
+
+    private updateCurrentUser() {
+        if (this.appStateService.LoginStatus) {
+            if (!this.userService.getCurrentUser()) {
+                this.userService.getUser().subscribe(
+                    (user: UserProfile) => {
+                        this.userService.updateCurrentUser(user);
+                        this.manager = this.userService.getCurrentUser();
+                        this.role = this.roleToString(this.manager.userRole);
+                    },
+                    err => {
+                        console.log('err', err);
+                    }
+                );
+                // this.email = this.appState.currentFirebaseUser.email;
+            }
+            else {
+                this.manager = this.userService.getCurrentUser();
+            }
+        } else {
+            this.manager = {
+                fullName: "",
+                avatarUrl: "",
+                lastName: ""
+            };
+            // this.email = '';
+            this.role = '';
+        }
+    }
+
+    roleToString(roleId: number) {
+        let roleStr: string;
+        switch (roleId) {
+            case 0:
+                roleStr = 'Translator';
+                break;
+            case 1:
+                roleStr = 'Manager';
+                break;
+        }
+        return roleStr;
+    }
 }
