@@ -1,27 +1,36 @@
+<div *ngIf="!isLoad" class ="spinner-wraper">
+    <mat-spinner class="spinner"></mat-spinner>
+</div>
+
 <div class="reports-container" *ngIf="isLoad">
-    
-        <mat-card class="bar" >
-            <h2>{{charts[0].name}}</h2>
-        <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="charts[0].data" [gradient]="gradient" [xAxis]="showXAxis"
+    <mat-card class="bar card">
+        <h2>{{charts[3].name}}</h2>
+        <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="charts[3].data" [gradient]="gradient" [xAxis]="showXAxis"
             [barPadding]="10" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel"
             [legendTitle]="legendTitle">
         </ngx-charts-bar-vertical>
     </mat-card>
 
-    <mat-card class="pie" >
-            <h2>{{charts[1].name}}</h2>
-        <ngx-charts-pie-chart [view]="view" [scheme]="colorScheme" [results]="charts[1].data" [explodeSlices]="explodeSlices" [labels]="showLabels"
+    <mat-card class="pie card">
+        <h2>{{charts[2].name}}</h2>
+        <ngx-charts-pie-chart [view]="view" [scheme]="colorScheme" [results]="charts[2].data" [explodeSlices]="explodeSlices" [labels]="showLabels"
             [doughnut]="doughnut" [gradient]="gradient">
         </ngx-charts-pie-chart>
     </mat-card>
-   
+
     <mat-card class="advanced-pie">
+        <mat-slide-toggle [checked]="checked" color="primary" #toggle>
+            Translated/non translated strings
+        </mat-slide-toggle>
+        <div *ngIf="toggle.checked">
+            <h2>{{charts[0].name}}</h2>
+            <ngx-charts-advanced-pie-chart [view]="pieView" [scheme]="colorScheme" [results]="charts[0].data" [gradient]="gradient">
+            </ngx-charts-advanced-pie-chart>
+        </div>
+        <div *ngIf="!toggle.checked">
             <h2>{{charts[1].name}}</h2>
-            <ngx-charts-advanced-pie-chart
-            [view]="pieView"
-            [scheme]="colorScheme"
-            [results]="charts[1].data"
-            [gradient]="gradient">
-          </ngx-charts-advanced-pie-chart>
+            <ngx-charts-advanced-pie-chart [view]="pieView" [scheme]="colorSchemeNight" [results]="charts[1].data" [gradient]="gradient">
+            </ngx-charts-advanced-pie-chart>
+        </div>
     </mat-card>
 </div>
