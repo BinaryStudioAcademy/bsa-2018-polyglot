@@ -815,7 +815,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     public canBeConfirmed(translation: Translation) {
         console.log(translation.id);
         console.log(!translation.isConfirmed);
-        if(translation.id && !translation.isConfirmed){
+        if(translation.id && !translation.isConfirmed && translation.translationValue){
             if(this.userService.getCurrentUser().userRole === Role.Manager){
                 return true;
             }
