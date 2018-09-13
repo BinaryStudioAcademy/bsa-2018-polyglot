@@ -52,7 +52,7 @@
           <div *ngIf="element.teamId === teamId" id="right-checkboxes">
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)" (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
                 <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)" (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
-                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Select new language</mat-checkbox>
+                <mat-checkbox class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Can accept translations</mat-checkbox>
             </div>
       </td>
   </ng-container>  
