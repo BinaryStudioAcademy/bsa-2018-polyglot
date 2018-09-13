@@ -42,30 +42,34 @@
                     Proficiency</mat-chip>
             </div>
         </mat-chip-list>
-       
-            <mat-form-field class="search-form ">
-                <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
-                <mat-icon matSuffix>search</mat-icon>
-                <mat-icon matSuffix *ngIf="searchQuery" (click)="searchQuery='';">close</mat-icon>
-                <mat-icon matSuffix aria-label="filter" [matMenuTriggerFor]="filters">tune</mat-icon>
-            </mat-form-field>
-
-            <mat-menu #filters="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
-                <div (click)="$event.stopPropagation();" class="prof-wrappper">
-                    <mat-form-field>
-                        <mat-select placeholder="Language level" #selectedCategory>
-                            <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
-                                {{proficiency}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="buttons-wrappper">
-                    <button mat-raised-button (click)="selectLanguages();" (click)="$event.stopPropagation();">Select languages</button>
-                    <button mat-flat-button (click)="onFilterApply(selectedCategory.value)">Apply</button>
-                </div>
-            </mat-menu>
         
+<div class="search-wrapper">
+    <mat-form-field class="search-full-width">
+        <mat-icon matSuffix *ngIf="searchQuery" (click)="searchQuery='';" > close</mat-icon>
+        <mat-icon matSuffix>search</mat-icon>
+        <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+        <mat-icon matSuffix [matMenuTriggerFor]="filters"  >tune</mat-icon>
+    </mat-form-field>
+
+    <mat-menu #filters="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
+        <div (click)="$event.stopPropagation();" class="prof-wrappper">
+            <mat-form-field>
+                <mat-select placeholder="Language level" #selectedCategory>
+                    <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
+                        {{proficiency}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="buttons-wrappper">
+            <button mat-raised-button (click)="selectLanguages();" (click)="$event.stopPropagation();">Select languages</button>
+            <button mat-flat-button (click)="onFilterApply(selectedCategory.value)">Apply</button>
+        </div>
+    </mat-menu>
+</div>
+            
+        
+
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>
