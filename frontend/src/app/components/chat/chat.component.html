@@ -1,13 +1,13 @@
 <div class="example-container">
     <mat-toolbar color="primary" class="example-toolbar">
         <button mat-icon-button (click)="snav.toggle()">
-            <mat-icon [matBadgeHidden]="true" matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
+            <mat-icon [matBadgeHidden]="false" matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
         </button>
         <h1 class="example-app-name">Chat</h1>
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container">
-        <mat-sidenav class="contacts-list" #snav [mode]="'side'">
+        <mat-sidenav class="contacts-list" #snav [mode]="'side'" opened>
             <mat-nav-list>
 
                 <app-chat-contacts (onItemSelect)="onSelected($event)" [person]="selectedPerson"></app-chat-contacts>
@@ -21,7 +21,7 @@
 
 
                 <ng-template #mainWindow>
-                        main window placeholder
+                        
                 </ng-template>
 
             

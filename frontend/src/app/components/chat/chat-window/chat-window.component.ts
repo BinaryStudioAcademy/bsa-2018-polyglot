@@ -12,13 +12,13 @@ import {
 import { ProjectService } from "../../../services/project.service";
 import { MatSnackBar } from "@angular/material";
 import { ChatService } from "../../../services/chat.service";
-import { GroupType, ChatMessage, ChatUser } from "../../../models";
+import { GroupType, ChatUser } from "../../../models";
 import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { AppStateService } from "../../../services/app-state.service";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
-import { ChatDialog } from "../../../models/chat/chatDialog";
+import { ChatMessage } from "../../../models/chat/chatMessage";
 
 @Component({
     selector: "app-chat-window",
@@ -80,7 +80,6 @@ export class ChatWindowComponent implements OnInit {
         this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
             (userUid: string) => {
-                debugger;
                 if(this.dialog.participants.find(p => p.uid === userUid))
                 {
                     for(let i = 0; i < this.messages.length; i++){
@@ -175,8 +174,6 @@ export class ChatWindowComponent implements OnInit {
                 .getDialogMessages(targetGroup, targetGroupDialogId)
                 .subscribe(messages => {
                     if (messages) {
-                        
-
                         if(this.isDirect)
                         {
                             this.messages = messages.filter(m => m.senderId == this.currentInterlocutorId || 
@@ -220,7 +217,6 @@ export class ChatWindowComponent implements OnInit {
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
                     if(message){
-                        debugger;
                         let index = this.messages.findIndex(m => m.clientId === message.clientId);
                         if(index >= 0)
                         {
