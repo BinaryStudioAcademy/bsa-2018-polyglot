@@ -1,7 +1,7 @@
 <div class="container">
   <h3>You can also export all your translations</h3>
   <p>Just select language and file extension and click <strong>Download</strong></p>
-  <p>(For this moment we work only with .json and .resx)</p> 
+  <p>(For this moment we work only with .json, .resx and .csv)</p> 
   <mat-form-field>
     <mat-select class="mat-select" placeholder="Language" [(ngModel)]="selectedLanguage">
       <mat-option *ngFor="let l of languages" [value]="l">

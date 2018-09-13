@@ -12,5 +12,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<bool> IsExistByUidAsync();
 
         Task<bool> PutUserBool(UserProfileDTO userProfileDTO);
+
+        Task<IEnumerable<UserProfileDTO>> GetUsersByNameStartsWith(string startsWith);
     }
 }

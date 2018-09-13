@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription, forkJoin } from "rxjs";
+import { Subscription, forkJoin, empty } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
 import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
@@ -14,6 +14,8 @@ import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
 import { EventService } from "../../services/event.service";
 import { Hub } from "../../models/signalrModels/hub";
+import { RightService } from "../../services/right.service";
+import { RightDefinition } from "../../models/rightDefinition";
 
 @Component({
     selector: "app-workspace",
@@ -46,6 +48,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private madiv;
     private signalRConnection;
     isEditing: boolean;
+    private rights: RightDefinition[];
 
     filters: Array<string>;
 
@@ -66,13 +69,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
         private eventService: EventService,
-        private differs: KeyValueDiffers
+        private differs: KeyValueDiffers,
+        private rightService: RightService
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
                 if (result.isEditing !== undefined) {
                     this.isEditing = result.isEditing
+                    if (!this.isEditing) {
+                        clearInterval(this.loop);
+                    }
                 } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
                 } else {
@@ -89,7 +96,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        console.log(this.stringsInProgress);
         this.filters = [];
         // this.searchQuery = "";
         this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -154,6 +160,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 });
 
             this.currentPage++;
+            this.rightService.getUserRightsInProject(params.projectId).subscribe((rights)=>{
+                this.rights = rights;
+            });
         });
     }
 
@@ -172,7 +181,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         this.previousKeyId = this.currentKeyId;
         this.complexStringService.changeStringStatus(keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, true).subscribe(() => {});
         this.loop = setInterval(() => {
-            if (this.previousKeyId !== this.currentKeyId || !this.isEditing) {
+            if (this.previousKeyId !== this.currentKeyId) {
                 this.complexStringService.changeStringStatus(this.previousKeyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, false).subscribe(() => {});
                 clearInterval(this.loop);
             } else {
@@ -417,9 +426,31 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         } else if (key.translations.length === 0) {
             return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
-            return "7px solid #ffcc00"; // partially
+            let emptyCount = 0;
+            for (let i = 0; i < key.translations.length; i++) {
+                if (!key.translations[i].translationValue) {
+                    emptyCount++;
+                }
+            }
+            if (!emptyCount) {
+                return "7px solid #ffcc00"; // partially
+            } else {
+                return "7px solid #a91818"; // not started
+            }
         } else if (key.translations.length === this.projectLanguagesCount) {
-            return "7px solid #00b300"; // completed
+            let emptyCount = 0;
+            for (let i = 0; i < key.translations.length; i++) {
+                if (!key.translations[i].translationValue) {
+                    emptyCount++;
+                }
+            }
+            if (!emptyCount) {
+                return "7px solid #00b300"; // completed
+            } else if (emptyCount === key.translations.length) {
+                return "7px solid #a91818"; // not started
+            } else {
+                return "7px solid #ffcc00"; // partially
+            }
         }
     }
 
@@ -459,5 +490,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     this.projectTags = Array.from(new Set(this.projectTags));
                 });
         this.currentPage++;
+    }
+
+    isCurrentUserCanAddNewString(): boolean{
+        if(this.userService.isCurrentUserManager()){
+            return true;
+        }
+        return this.rights.includes(RightDefinition.AddNewKey);
     }
 }

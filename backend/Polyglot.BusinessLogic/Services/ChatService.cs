@@ -53,8 +53,8 @@ namespace Polyglot.BusinessLogic.Services
             var dialogs = await uow.GetRepository<ChatDialog>()
                 .GetAllAsync(d => d.DialogType == targetGroup && d.DialogParticipants.Select(dp => dp.Participant).Contains(currentUser));
 
-            if (dialogs == null || dialogs.Count < 1)
-                return null;
+            if (dialogs.Count < 1)
+                return mapper.Map<IEnumerable<ChatDialogDTO>>(dialogs);
 
             List<ChatDialogDTO> result = null;
 
@@ -117,8 +117,8 @@ namespace Polyglot.BusinessLogic.Services
             var targetDialog = await uow.GetRepository<ChatDialog>().GetAsync(message.DialogId);
             if (targetDialog == null)
             {
-#warning create dialog
-                return null;
+                var user = await uow.GetRepository<UserProfile>().GetAsync(u => u.Id==message.ClientId);
+                targetDialog = mapper.Map<ChatDialog>(await StartChatWithUser(mapper.Map<UserProfileDTO>(user)));
             }
             
             var currentUserId = (await currentUser.GetCurrentUserProfile())?.Id;
@@ -249,18 +249,46 @@ namespace Polyglot.BusinessLogic.Services
                     );
 
                 await uow.SaveAsync();
+                foreach(var participant in newDialog.DialogParticipants)
+                {
+                    await this.signalRChatService.DialogsChanges($"{ChatGroup.direct.ToString()}{participant.ParticipantId}", newDialog.Id);
+                }
                 return mapper.Map<ChatDialogDTO>(newDialog);
             }
             else
             {
-                return null;
+                return mapper.Map<ChatDialogDTO>(d);
             }
         }
 
+        public async Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user)
+        {
+            ChatUserDTO chatUser = mapper.Map<ChatUserDTO>(user);
+            ChatDialogDTO dialog = new ChatDialogDTO()
+            {
+                DialogType = ChatGroup.dialog
+            };
+
+            List<ChatUserDTO> dp = new List<ChatUserDTO>();
+            dp.Add(mapper.Map<ChatUserDTO>(user));
+            dialog.Participants = dp;
+
+            return await CreateDialog(dialog);
+
+        }
+
+
         public async Task<bool> DeleteDialog(int id)
         {
+            var dialogParticipantIds = (await uow.GetRepository<ChatDialog>().GetAsync(id)).DialogParticipants.Select(p => p.ParticipantId).ToList();
             await uow.GetRepository<ChatDialog>().DeleteAsync(id);
-            return await uow.SaveAsync() > 0;
+            var res = await uow.SaveAsync() > 0;
+            foreach (var participantId in dialogParticipantIds)
+            {
+                await this.signalRChatService.DialogsChanges($"{ChatGroup.direct.ToString()}{participantId}", (int)participantId);
+            }
+            return res;
+
         }
 
         public async Task ReadMessages(int dialogId, string whoUid)

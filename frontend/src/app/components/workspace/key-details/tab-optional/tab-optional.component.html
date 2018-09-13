@@ -1,5 +1,5 @@
 <div *ngIf="!translationSelected">
-  <p class="message">Select transaltion to view...</p>
+  <p class="message">Select translation to view...</p>
 </div>
 
 <div class="spinner" style="overflow: hidden;" *ngIf="!IsLoaded&&translationSelected">
@@ -11,7 +11,7 @@
 </div>
 
 
-<div class="content" *ngIf="optional">
+<div class="content" *ngIf="optional && translationSelected">
   <div class="opt" *ngFor="let opt of optional">
     <mat-card class="story-card">
       <div class="head">
