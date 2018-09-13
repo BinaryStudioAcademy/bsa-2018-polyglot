@@ -45,6 +45,7 @@ namespace Polyglot.Views
             if (translationResult!=null)
             {
                 await DisplayAlert("Result", "Translation saved!", "Ok");
+                await Navigation.PopAsync();
             }
         }
 

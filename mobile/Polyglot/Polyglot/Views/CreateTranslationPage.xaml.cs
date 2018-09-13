@@ -50,7 +50,9 @@ namespace Polyglot.Views
 
             if (translationResult != null)
             {
+                Translation.Id = translationResult.Id.ToString();
                 await DisplayAlert("Result", "Translation saved!", "Ok");
+                await Navigation.PopAsync();
             }
         }
     }

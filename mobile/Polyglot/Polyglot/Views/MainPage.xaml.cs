@@ -37,7 +37,7 @@ namespace Polyglot.Views
 
 	    private async void ToProject_Clicked(object sender, EventArgs e)
 	    {
-	        Detail = new NavigationPage(new DashboardPage(new DashboardViewModel()));
+	        Detail = new NavigationPage(new Dashboard(new DashboardViewModel()));
 	        IsPresented = false;
         }
 

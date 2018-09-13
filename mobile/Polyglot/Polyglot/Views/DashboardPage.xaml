@@ -4,7 +4,7 @@
              x:Class="Polyglot.Dashboard"
              Title="Dashboard">
     <StackLayout>
-        <Label IsVisible="{Binding IsEmpty}">No Projects</Label>
+        <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No Projects</Label>
         <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
         <ListView 
             ItemsSource="{Binding Projects}"
@@ -17,7 +17,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" >
+                        <StackLayout  Margin="10, 10, 10, 10" Orientation="Horizontal" >
                             <Label IsVisible="False" Text="{Binding Id}"   />
                             <Image WidthRequest="90" HeightRequest="50" Source="{Binding ImageUrl}"></Image>
                             <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">

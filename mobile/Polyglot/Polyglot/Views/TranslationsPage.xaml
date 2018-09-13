@@ -13,12 +13,12 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <StackLayout WidthRequest="140">
+                        <StackLayout Margin="5, 10, 5, 10"  Orientation="Horizontal">
+                            <StackLayout WidthRequest="220">
                                 <Label  Font="bold, 15"  TextColor="Black" Text="{Binding Language}" />
                             </StackLayout>
                             <StackLayout Orientation="Vertical">
-                                <Label Margin="10, 0, 0, 0"  Font="15"  TextColor="Gray" Text="{Binding Translation}" />
+                                <Label  HorizontalOptions="FillAndExpand"   Font="15" TextColor="Gray" HorizontalTextAlignment="Start" Text="{Binding Translation}" />
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

@@ -13,11 +13,9 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Vertical" >
-                            <Label Font="bold, 15" TextColor="Black">From</Label>
-                            <Label Text="{Binding From}"   />
-                            <Label Font="bold, 15" TextColor="Black">To</Label>
-                            <Label Text="{Binding To}" />
+                        <StackLayout Margin="10, 10, 10, 10" Orientation="Vertical" >
+                            <Label Font="15" Text="{Binding To}" />
+                            <Label Font="10" HorizontalTextAlignment="End" Text="{Binding When}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
