@@ -28,10 +28,15 @@
             </mat-card-header>
             
             
-            <div mat-card-image >
-              <div  class="img-container" >    
-
-                <a *ngFor="let p of t.persons | slice:0:9"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"></a>
+            <div mat-card-image *ngIf="t.persons.length <= 9">
+              <div  class="img-container" >
+                <a *ngFor="let p of t.persons"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"></a>
+              </div>
+            </div>
+            <div mat-card-image *ngIf="t.persons.length > 9">
+              <div  class="img-container" >
+                <a *ngFor="let p of t.persons | slice:0:8"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"></a>
+                <div class="circle">+{{t.persons.length - 8}}</div>
               </div>
             </div>  
           
