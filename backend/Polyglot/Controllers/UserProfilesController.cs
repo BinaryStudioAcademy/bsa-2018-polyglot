@@ -94,7 +94,7 @@ namespace Polyglot.Controllers
 
         // PUT: UserProfiles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody]UserProfileDTO user)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
