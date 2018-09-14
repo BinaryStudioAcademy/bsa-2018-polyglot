@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             x:Class="Polyglot.Views.TeamPage"
+             Title="Teams">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="RatingList"
+                              SelectionMode="None"
+                              HasUnevenRows="True"
+                              CachingStrategy="RecycleElement"
+                              ItemsSource="{Binding Path=Teams}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <StackLayout Padding="20,10,0,10" BackgroundColor="DeepSkyBlue">
+                                    <Label BackgroundColor="DeepSkyBlue" TextColor="White" FontSize="20" Text="{Binding Path=Name}"></Label>
+                                </StackLayout>
+                                <ListView x:Name="RatingList"
+                                          SelectionMode="None"
+                                          HasUnevenRows="True"
+                                          CachingStrategy="RecycleElement"
+                                          ItemsSource="{Binding Path=Persons}"
+                                          HeightRequest="{Binding Path=ListHeight}">
+                                          <!--ItemTapped="RatingList_OnItemTapped"-->
+                                        
+                                        <ListView.ItemTemplate >
+                                            <DataTemplate>
+                                            <ViewCell>
+                                                <StackLayout Padding="10,10,0,10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                                    <abstractions:CircleImage WidthRequest="30" HeightRequest="30" Source="{Binding Path=AvatarUrl}"></abstractions:CircleImage>
+                                                    <Label VerticalTextAlignment="Center" Margin="10,0,0,0" Text="{Binding Path=FullName}"></Label>
+                                                    </StackLayout>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
