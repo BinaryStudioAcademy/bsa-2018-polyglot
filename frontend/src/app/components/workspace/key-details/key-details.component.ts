@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MatTableDataSource, MatPaginator, MatDialog, MatMenuTrigger } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
@@ -26,7 +26,8 @@ import { RightDefinition } from "../../../models/rightDefinition";
 @Component({
     selector: "app-workspace-key-details",
     templateUrl: "./key-details.component.html",
-    styleUrls: ["./key-details.component.sass"]
+    styleUrls: ["./key-details.component.sass"],
+    encapsulation: ViewEncapsulation.None
 })
 export class KeyDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator)

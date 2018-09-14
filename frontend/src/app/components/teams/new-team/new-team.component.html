@@ -49,6 +49,7 @@
         <mat-icon matSuffix>search</mat-icon>
         <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
         <mat-icon matSuffix [matMenuTriggerFor]="filters"  >tune</mat-icon>
+        <mat-icon matSuffix (click)="clearFilter();">refresh</mat-icon>
     </mat-form-field>
 
     <mat-menu #filters="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
@@ -64,7 +65,7 @@
         <div class="buttons-wrappper">
             <button mat-raised-button (click)="selectLanguages();" class="select-lang-button" (click)="$event.stopPropagation();">Select languages</button>
             <div  class="buttons-wrappper">
-                <button mat-raised-button (click)="clearFilter();" (click)="$event.stopPropagation();">Clear</button>
+                <button mat-raised-button (click)="clearFilter(); $event.stopPropagation();">Clear</button>
                 <button mat-flat-button (click)="onFilterApply(selected)">Apply</button>
             </div>
         </div>
