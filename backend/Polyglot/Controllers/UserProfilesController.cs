@@ -99,7 +99,15 @@ namespace Polyglot.Controllers
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
 
+            var user = await service.GetByUidAsync();
+
+            if (user != null)
+            {
+                project.RegistrationDate = user.RegistrationDate;
+            }
+
             var entity = await service.PutAsync(project);
+
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -154,7 +162,7 @@ namespace Polyglot.Controllers
                     await photo.CopyToAsync(ms);
                     byteArr = ms.ToArray();
                 }
-                
+
                 currentUser.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
                 var result = await service.PutUserBool(currentUser);
 
@@ -162,7 +170,7 @@ namespace Polyglot.Controllers
                     ? StatusCode(400) as IActionResult
                     : Ok(currentUser);
             }
-            
+
             return BadRequest();
         }
 

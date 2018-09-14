@@ -1,7 +1,8 @@
+
 <div class="container">
-    <form [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
+    <form  class ="comment-input" [formGroup]="commentForm" fxLayoutWrap (submit)="addComment(commentForm.value.commentBody)">
         <mat-form-field class="field-full-width">
-            <input [(ngModel)]="body" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="500">
+            <input [(ngModel)]="body" [mention] = "users" [mentionConfig]="{labelKey:'fullName', maxItems:5}" #textArea rows="4" matInput placeholder="Enter comment" formControlName="commentBody" maxlength="255">
         </mat-form-field>
         <div class="button-container">
             <button mat-flat-button class="save-button mx-1" [disabled]="!body || body.length<1">Save</button>

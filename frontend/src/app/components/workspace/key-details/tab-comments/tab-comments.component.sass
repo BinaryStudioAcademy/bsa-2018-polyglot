@@ -1,5 +1,6 @@
 .container
     margin-bottom: 50px
+    width: 100%
     
 form
     margin-top: 5px
@@ -13,6 +14,14 @@ form
     margin-top: 10px
     display: block
     word-break: break-all
+    width: 100%
+    overflow-x: hidden
+.comment-input
+    width: 100%
+.mat-form-field
+    width: 95%
+    margin-right: 10px   
+
 
 .comment-card 
     background-color: #f7f7f7
@@ -30,6 +39,7 @@ form
     margin: 0
     margin-bottom: 10px
     padding: 0
+
 .mat-list-item-content
     padding: 0
     margin: 0
@@ -104,3 +114,23 @@ form
 
 textarea.ng-invalid 
     border-color: red
+
+\:host /deep/ mention-list
+    background-color: rgb(255, 255, 255)
+    z-index: 100
+    cursor: pointer
+    -webkit-box-shadow: 2px 1px 7px -1px rgba(0,0,0,0.58)
+    -moz-box-shadow: 2px 1px 7px -1px rgba(0,0,0,0.58)
+    box-shadow: 2px 1px 7px -1px rgba(0,0,0,0.58)  
+    margin-top: 5px
+    position: absolute
+    top: 22px !important
+    left: 163px !important
+      
+       
+\:host /deep/ ul 
+    list-style: none
+    padding: 0;
+    margin: 4px
+    list-style-type: none;
+    font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif

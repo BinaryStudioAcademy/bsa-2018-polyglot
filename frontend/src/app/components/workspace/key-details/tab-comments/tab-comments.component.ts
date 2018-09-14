@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../../../services/user.service';
 import { ComplexStringService } from '../../../../services/complex-string.service';
 import { FormBuilder } from '@angular/forms';
@@ -9,11 +9,15 @@ import { MatDialog, MatList } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { UserProfile } from '../../../../models';
+import { MentionDirective, MentionModule } from 'angular2-mentions/mention';
+import { ProjectService } from '../../../../services/project.service';
 
 @Component({
     selector: 'app-tab-comments',
     templateUrl: './tab-comments.component.html',
     styleUrls: ['./tab-comments.component.sass']
+    
 })
 export class TabCommentsComponent implements OnInit {
 
@@ -30,7 +34,7 @@ export class TabCommentsComponent implements OnInit {
         commentBody: ['']
     });
     public body: string;
-
+    public users : any[] = [];
     private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;
@@ -40,12 +44,31 @@ export class TabCommentsComponent implements OnInit {
         private complexStringService: ComplexStringService,
         private dialog: MatDialog,
         private snotifyService: SnotifyService,
-        private activatedRoute: ActivatedRoute) { }
+        private activatedRoute: ActivatedRoute,
+        private projectService: ProjectService) { }
 
 
     ngOnInit() {
         this.routeSub = this.activatedRoute.params.subscribe((params) => {
             this.keyId = params.keyId;
+            this.complexStringService.getById(this.keyId).subscribe(data =>{
+                this.projectService.getById(data.projectId).subscribe(proj =>{
+                    this.users.push(proj.userProfile);
+                    
+                    this.projectService.getProjectTeams(proj.id).subscribe(teams =>{
+                        teams.forEach(team => {
+                            team.persons.forEach(element => {
+                                this.users.push(element);
+                            });
+                        });
+                        this.users = this.users.filter((user, index, self) =>   //remove duplicates
+                            index === self.findIndex((t) => (
+                                t.id === user.id
+                            ))
+                        )
+                    })
+                }) 
+            });
         });
     }
 

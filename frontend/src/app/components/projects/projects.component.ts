@@ -102,9 +102,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     increasePriority(projectId: number) {
-        debugger;
         this.projectService.increasePriority(projectId).subscribe((a) => {
-            debugger;
         });
     }
 }
