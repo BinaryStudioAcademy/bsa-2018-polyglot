@@ -31,7 +31,7 @@
             <div mat-card-image >
               <div  class="img-container" >    
 
-                <a *ngFor="let p of t.persons"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"></a>
+                <a *ngFor="let p of t.persons | slice:0:9"  (click)="userService.redirectById(p.id)"><img height="60" src="{{p.avatarUrl}}"></a>
               </div>
             </div>  
           
