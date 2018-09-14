@@ -25,7 +25,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user);
 
         Task ReadMessages(int dialogId, string whoUid);
-
+        
         Task<int> ChangeUserStatus(string targetUserUid, bool isOnline);
+
+        Task<int> GetNumberOfUnreadMessages(int userId);
     }
 }

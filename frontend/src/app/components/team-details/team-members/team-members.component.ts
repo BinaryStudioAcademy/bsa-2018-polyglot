@@ -40,6 +40,7 @@ export class TeamMembersComponent implements OnInit {
     public pageSize: number = 5;
     displayNoRecords: boolean = false;
     team: Team;
+    isCurrentUserManager: boolean;
 
     desc: string = "Are you sure you want to remove this team?";
     btnOkText: string = "Delete";
@@ -50,6 +51,7 @@ export class TeamMembersComponent implements OnInit {
     btnOkTextLeave: string = "Yes";
     btnCancelTextLeave: string = "No";
     answerLeave: boolean;
+    
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -89,6 +91,7 @@ export class TeamMembersComponent implements OnInit {
             this.team = data;
         })
         this.getTranslators();
+        this.isCurrentUserManager = this.stateService.currentDatabaseUser.userRole === 1 ? true : false;
         // this.checkPaginatorNecessity();
 
     }
@@ -333,5 +336,7 @@ export class TeamMembersComponent implements OnInit {
                 this.snotifyService.error("An error occured while deleting this user", "Error!");
             });
     }
+
+    
 
 }

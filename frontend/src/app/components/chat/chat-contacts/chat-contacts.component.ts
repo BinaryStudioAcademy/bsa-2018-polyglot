@@ -1,26 +1,12 @@
-import {
-    Component,
-    OnInit,
-    EventEmitter,
-    Output,
-    SimpleChanges,
-    Input
-} from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, SimpleChanges, Input } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
-import {
-    ChatUser,
-    Project,
-    Team,
-    GroupType,
-    UserProfile
-} from "../../../models";
+import { ChatUser, UserProfile } from "../../../models";
 import { ChatDialog } from "../../../models/chat/chatDialog";
 import { AppStateService } from "../../../services/app-state.service";
 import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
-import { FormControl } from "@angular/forms";
 import { UserService } from "../../../services/user.service";
 import { UserState } from "../../../models/chat/userState";
 
@@ -61,7 +47,7 @@ export class ChatContactsComponent implements OnInit {
         private signalRService: SignalrService,
         private userService: UserService
     ) {
-        // this.isOnPersonsPage = true;
+        
     }
 
     ngOnInit() {
@@ -139,45 +125,52 @@ export class ChatContactsComponent implements OnInit {
                 });
             }
         );
-        this.signalRConnection.on(ChatActions[ChatActions.userStateUpdated],
-        (userStateId: number) => {
-            debugger;
-            if(userStateId && userStateId !== this.currentUserId)
-            {
-                this.chatService.getUserState(userStateId)
-                .subscribe((state: UserState) => {
-                    debugger;
-                    this.dialogs.map<ChatUser[]>(d => d.participants).forEach(chatUserGroup => {
-                        var targetUser = chatUserGroup.find(u => u.id === state.chatUserId                        );
-                        if(targetUser)
-                        {
-                            targetUser.isOnline = state.isOnline;
-                            targetUser.lastSeen = state.lastSeen;
-                        }
-                    });
+        this.signalRConnection.on(
+            ChatActions[ChatActions.userStateUpdated],
+            (userStateId: number) => {
+                if (userStateId && userStateId !== this.currentUserId) {
+                    this.chatService
+                        .getUserState(userStateId)
+                        .subscribe((state: UserState) => {
+                            this.dialogs
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
 
-                    this.projects.map<ChatUser[]>(d => d.participants).forEach(chatUserGroup => {
-                        var targetUser = chatUserGroup.find(u => u.id === state.chatUserId                        );
-                        if(targetUser)
-                        {
-                            targetUser.isOnline = state.isOnline;
-                            targetUser.lastSeen = state.lastSeen;
-                        }
-                    });
+                            this.projects
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
 
-                    this.teams.map<ChatUser[]>(d => d.participants).forEach(chatUserGroup => {
-                        var targetUser = chatUserGroup.find(u => u.id === state.chatUserId                        );
-                        if(targetUser)
-                        {
-                            targetUser.isOnline = state.isOnline;
-                            targetUser.lastSeen = state.lastSeen;
-                        }
-                    });
-
-                    this.teams = this.teams;
-                });
+                            this.teams
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
+                        });
+                }
             }
-        });
+        );
     }
 
     selectDialog(dialog: ChatDialog) {

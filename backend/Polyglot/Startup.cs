@@ -69,10 +69,10 @@ namespace Polyglot
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 app.UseDeveloperExceptionPage();
-            }
+            //}
 
             BusinessLogicModule.ConfigureMiddleware(app);
             CommonModule.ConfigureMiddleware(app);

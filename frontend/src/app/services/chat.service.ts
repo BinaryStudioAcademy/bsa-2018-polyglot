@@ -50,25 +50,14 @@ export class ChatService {
   startChatWithUser(user: UserProfile) : Observable<ChatDialog> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/startDialog', undefined, user);
   }
+  
+  GetNumberOfUnreadMesages() : Observable<number> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/getNumberOfUnread');
+  }
 
   getUserState(id: number) : Observable<UserState> {
     return this.dataService.sendRequest(RequestMethod.Get, this.api + '/users/' + id + '/state');
   }
-  //createMessage(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
-//
-  //editMessage(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
-//
-  //deleteMessage(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
-//
-//
-  //deleteContact(project: FormData) : Observable<Project> {
-  //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
-  //}
+
 
 }

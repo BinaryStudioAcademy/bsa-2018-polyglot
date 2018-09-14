@@ -28,9 +28,9 @@
         </div>
       </div>
 
-      <div class="action-btn-container">
+      <div *ngIf="IsCurrentUserManager" class="action-btn-container">
           
-        <button mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
+        <button  mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
          Unassign
         </button>
       </div>

@@ -17,6 +17,7 @@ import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-
 export class ProjectTeamComponent implements OnInit {
 
   @Input() projectId: number;
+  @Input() IsCurrentUserManager: boolean;
   public assignedTeams: Array<any> = [];
   public IsLoad: boolean = true;
   public IsLoading: any = {};
