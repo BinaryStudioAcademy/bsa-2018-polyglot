@@ -9,6 +9,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Common.DTOs.Chat;
 using Polyglot.Common.Helpers;
+using Polyglot.Core.Authentication;
 
 namespace Polyglot.Controllers
 {
@@ -19,10 +20,12 @@ namespace Polyglot.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService chatService;
+        private readonly ICurrentUser currentUser;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService, ICurrentUser currentUser)
         {
             this.chatService = chatService;
+            this.currentUser = currentUser;
         }
 
         // GET: /chat/dialogs
@@ -122,6 +125,24 @@ namespace Polyglot.Controllers
             var d = await chatService.StartChatWithUser(user);
             return d == null ? StatusCode(409) as IActionResult
                 : Ok(d);
+        }
+        
+        // GET: /chat/users/:id/state
+        [HttpGet("users/{id}/state")]
+        public async Task<IActionResult> GetUserState(int id)
+        {
+            var userState = await chatService.GetUserStateAsync(id);
+            return userState == null ? NotFound("User state not found!") as IActionResult
+                : Ok(userState);
+        }
+
+        //POST: /chat/getNumberOfUnread
+        [HttpGet("getNumberOfUnread")]
+        public async Task<IActionResult> GetNumberOfUnread()
+        {
+            var currentUserId = (await this.currentUser.GetCurrentUserProfile()).Id;
+            int unreadMessages = await chatService.GetNumberOfUnreadMessages(currentUserId);
+            return Ok(unreadMessages);
         }
     }
 }

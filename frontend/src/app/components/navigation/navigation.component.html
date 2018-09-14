@@ -38,7 +38,8 @@
 					</mat-icon>
 				</button>
 				<button mat-icon-button routerLink="/chat" class="no-hover-effect" *ngIf="isLoggedIn()">
-					<mat-icon class="chat" aria-label="Chat icon">
+					<mat-icon class="chat" [matBadgeHidden]="getNumberOfUnread() < 1" aria-label="Chat icon" [matBadge]="getNumberOfUnread()" matBadgePosition="above after"
+					matBadgeColor="warn">
 						mail
 					</mat-icon>
 				</button>

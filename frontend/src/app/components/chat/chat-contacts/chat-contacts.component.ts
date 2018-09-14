@@ -1,21 +1,14 @@
-import {
-    Component,
-    OnInit,
-    EventEmitter,
-    Output,
-    SimpleChanges,
-    Input
-} from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, SimpleChanges, Input } from "@angular/core";
 import { ChatService } from "../../../services/chat.service";
-import { ChatUser, Project, Team, GroupType, UserProfile } from "../../../models";
+import { ChatUser, UserProfile } from "../../../models";
 import { ChatDialog } from "../../../models/chat/chatDialog";
 import { AppStateService } from "../../../services/app-state.service";
 import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
-import { FormControl } from "@angular/forms";
 import { UserService } from "../../../services/user.service";
+import { UserState } from "../../../models/chat/userState";
 
 @Component({
     selector: "app-chat-contacts",
@@ -54,7 +47,7 @@ export class ChatContactsComponent implements OnInit {
         private signalRService: SignalrService,
         private userService: UserService
     ) {
-        // this.isOnPersonsPage = true;
+        
     }
 
     ngOnInit() {
@@ -65,36 +58,28 @@ export class ChatContactsComponent implements OnInit {
         );
         this.subscribeChatEvents();
 
-        setTimeout(() => {
-            this.chatService
-                .getProjectsList()
-                .subscribe((dialogs: ChatDialog[]) => {
-                    if (dialogs) {
-                        this.projects = dialogs;
-                    }
-                });
-        }, 500);
-
-        setTimeout(() => {
-            this.chatService.getDialogs().subscribe((dialogs: ChatDialog[]) => {
-                if (dialogs && dialogs.length > 0) {
-                    this.dialogs = dialogs.filter(
-                        d => d.participants.length > 0
-                    );
-                    this.unreadMessagesTotal["persons"] = this.dialogs
-                        .map(d => d.unreadMessagesCount)
-                        .reduce((acc, current) => acc + current);
+        this.chatService
+            .getProjectsList()
+            .subscribe((dialogs: ChatDialog[]) => {
+                if (dialogs) {
+                    this.projects = dialogs;
                 }
             });
-        }, 1000);
 
-        setTimeout(() => {
-            this.chatService.getTeamsList().subscribe((teams: ChatDialog[]) => {
-                if (teams) {
-                    this.teams = teams;
-                }
-            });
-        }, 1500);
+        this.chatService.getDialogs().subscribe((dialogs: ChatDialog[]) => {
+            if (dialogs && dialogs.length > 0) {
+                this.dialogs = dialogs.filter(d => d.participants.length > 0);
+                this.unreadMessagesTotal["persons"] = this.dialogs
+                    .map(d => d.unreadMessagesCount)
+                    .reduce((acc, current) => acc + current);
+            }
+        });
+
+        this.chatService.getTeamsList().subscribe((teams: ChatDialog[]) => {
+            if (teams) {
+                this.teams = teams;
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -130,13 +115,63 @@ export class ChatContactsComponent implements OnInit {
         this.signalRConnection.on(
             ChatActions[ChatActions.dialogsChanged],
             (responce: any) => {
-                    this.chatService.getDialogs().subscribe(dialogs => {
-                    this.dialogs = dialogs.filter(d => d.participants.length > 0);
-                    this.unreadMessagesTotal['persons'] = this.dialogs.map(d => d.unreadMessagesCount).reduce((acc, current) => acc + current);
+                this.chatService.getDialogs().subscribe(dialogs => {
+                    this.dialogs = dialogs.filter(
+                        d => d.participants.length > 0
+                    );
+                    this.unreadMessagesTotal["persons"] = this.dialogs
+                        .map(d => d.unreadMessagesCount)
+                        .reduce((acc, current) => acc + current);
                 });
-            });
+            }
+        );
+        this.signalRConnection.on(
+            ChatActions[ChatActions.userStateUpdated],
+            (userStateId: number) => {
+                if (userStateId && userStateId !== this.currentUserId) {
+                    this.chatService
+                        .getUserState(userStateId)
+                        .subscribe((state: UserState) => {
+                            this.dialogs
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
+
+                            this.projects
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
+
+                            this.teams
+                                .map<ChatUser[]>(d => d.participants)
+                                .forEach(chatUserGroup => {
+                                    var targetUser = chatUserGroup.find(
+                                        u => u.id === state.chatUserId
+                                    );
+                                    if (targetUser) {
+                                        targetUser.isOnline = state.isOnline;
+                                        targetUser.lastSeen = state.lastSeen;
+                                    }
+                                });
+                        });
+                }
+            }
+        );
     }
- 
 
     selectDialog(dialog: ChatDialog) {
         this.unreadMessagesTotal["persons"] -= dialog.unreadMessagesCount;
@@ -192,38 +227,37 @@ export class ChatContactsComponent implements OnInit {
             });
     }
 
-
-    filterChange(event){
-        if(event.target.value.length > 0){
+    filterChange(event) {
+        if (event.target.value.length > 0) {
             this.isSearchMode = true;
             this.searchUsers = [];
-            if(!this.timeOutFilter){
+            if (!this.timeOutFilter) {
                 this.timeOutFilter = true;
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.filterInput = event.target.value;
                     this.timeOutFilter = false;
-                    if(this.filterInput.length > 0){
-                        this.userService.getUserProfilesByNameStartWith(this.filterInput).subscribe((users)=>{
-                            this.searchUsers = users; 
-                            this.timeOutFilter = false;                       
-                        });
+                    if (this.filterInput.length > 0) {
+                        this.userService
+                            .getUserProfilesByNameStartWith(this.filterInput)
+                            .subscribe(users => {
+                                this.searchUsers = users;
+                                this.timeOutFilter = false;
+                            });
                     }
-                }, 1000);             
+                }, 1000);
             }
-        }
-        else{
+        } else {
             this.isSearchMode = false;
         }
     }
 
-    setDialog(user: UserProfile){
+    setDialog(user: UserProfile) {
         let dialog = this.getDialogByUserId(user.id);
-        if(dialog){
+        if (dialog) {
             this.selectedDialogId = dialog.id;
             this.onItemSelect.emit(dialog);
-        }
-        else{
-            this.chatService.startChatWithUser(user).subscribe(dialog =>{
+        } else {
+            this.chatService.startChatWithUser(user).subscribe(dialog => {
                 this.selectedDialogId = dialog.id;
                 this.dialogs.push(dialog);
                 this.onItemSelect.emit(dialog);
@@ -231,11 +265,11 @@ export class ChatContactsComponent implements OnInit {
         }
     }
 
-    private getDialogByUserId(id: number){
+    private getDialogByUserId(id: number) {
         let chosenDialog = null;
         this.dialogs.forEach((dialog: ChatDialog) => {
             dialog.participants.forEach((participant: ChatUser) => {
-                if(participant.id == id){
+                if (participant.id == id) {
                     chosenDialog = dialog;
                 }
             });
@@ -243,8 +277,7 @@ export class ChatContactsComponent implements OnInit {
         return chosenDialog;
     }
 
-    resetFilterInput(){
-        this.isSearchMode=false;
+    resetFilterInput() {
+        this.isSearchMode = false;
     }
-    
 }

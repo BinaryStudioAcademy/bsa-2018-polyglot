@@ -1,5 +1,5 @@
 export interface UserState {
-    userId: number;
+    chatUserId: number;
 
     lastSeen: Date;
 

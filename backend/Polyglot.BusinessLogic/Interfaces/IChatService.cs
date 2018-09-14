@@ -12,9 +12,7 @@ namespace Polyglot.BusinessLogic.Interfaces
 
         Task<IEnumerable<ChatMessageDTO>> GetDialogMessagesAsync(ChatGroup targetGroup, int targetGroupDialogId);
 
-      //  Task<ChatUserStateDTO> GetUserStateAsync(int userId);
-
-      //  Task<IEnumerable<ChatUserStateDTO>> GetUsersStateAsync();
+        Task<ChatUserStateDTO> GetUserStateAsync(int id);
       
         Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog);
 
@@ -27,7 +25,9 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<ChatDialogDTO> StartChatWithUser(UserProfileDTO user);
 
         Task ReadMessages(int dialogId, string whoUid);
+        
+        Task<int> ChangeUserStatus(string targetUserUid, bool isOnline);
 
-        Task ChangeUserStatus(string targetUserUid, bool isOnline);
+        Task<int> GetNumberOfUnreadMessages(int userId);
     }
 }
