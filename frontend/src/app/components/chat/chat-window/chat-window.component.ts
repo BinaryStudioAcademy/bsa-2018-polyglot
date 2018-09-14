@@ -157,7 +157,7 @@ export class ChatWindowComponent implements OnInit {
                 case(0):
                 case(1):
                 targetGroup = GroupType.users;
-                targetGroupDialogId = this.currentInterlocutorId;
+                targetGroupDialogId = this.dialog.participants[0].hash;
                 break;
                 case(2):
                 targetGroup = GroupType.projects;
@@ -238,8 +238,5 @@ export class ChatWindowComponent implements OnInit {
     }
 
     openSnackBar() {
-        this.snackBar.open("mmmmmmmm", "sdfsdf", {
-            duration: 2000
-        });
     }
 }

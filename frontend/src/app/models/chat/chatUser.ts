@@ -5,6 +5,8 @@ export interface ChatUser {
 
     uid: string;
 
+    hash: number;
+
     fullName: string;
 
     email: string;

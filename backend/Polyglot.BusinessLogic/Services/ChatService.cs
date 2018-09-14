@@ -96,7 +96,7 @@ namespace Polyglot.BusinessLogic.Services
                 case ChatGroup.dialog:
                 case ChatGroup.direct:
                     {
-                        dialogIdentifer = currentUser.Id + targetGroupDialogId;
+                        dialogIdentifer = currentUser.GetHashCode() + targetGroupDialogId;
                         break;
                     }
                 case ChatGroup.chatProject:
@@ -219,7 +219,7 @@ namespace Polyglot.BusinessLogic.Services
             if (currentUser == null)
                 return null;
 
-            var targetIdentifier = dialog.Participants.Sum(p => p.Id) + currentUser.Id;
+            var targetIdentifier = dialog.Participants.Sum(p => p.GetHashCode()) + currentUser.GetHashCode();
             var d = await uow.GetRepository<ChatDialog>()
                 .GetAsync(dd => dd.Identifier == targetIdentifier && dd.DialogType == ChatGroup.dialog);
 
