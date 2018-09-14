@@ -5,5 +5,6 @@ export enum ChatActions {
     messageRead,
     personConnected,
     personDisconnected,
-    dialogsChanged
+    dialogsChanged,
+    userStateUpdated
 }

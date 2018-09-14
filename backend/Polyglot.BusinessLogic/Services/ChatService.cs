@@ -16,6 +16,7 @@ using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.Core.SignalR.Responses;
+using Polyglot.BusinessLogic.Hubs;
 
 namespace Polyglot.BusinessLogic.Services
 {
@@ -198,9 +199,10 @@ namespace Polyglot.BusinessLogic.Services
             return targetDialog != null ? mapper.Map<ChatMessageDTO>(message) : null;
         }
 
-        public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
+        public async Task<ChatUserStateDTO> GetUserStateAsync(int id)
         {
-            throw new NotImplementedException();
+            var state = await uow.GetRepository<UserState>().GetAsync(id);
+            return state != null ? mapper.Map<ChatUserStateDTO>(state) : null;
         }
         
         public async Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog)
@@ -323,7 +325,7 @@ namespace Polyglot.BusinessLogic.Services
             }
         }
 
-        public async Task ChangeUserStatus(string targetUserUid, bool isOnline)
+        public async Task<int> ChangeUserStatus(string targetUserUid, bool isOnline)
         {
             var targetUserState = await uow.GetRepository<UserState>().GetAsync(u => string.Equals(u.ChatUser.Uid, targetUserUid));
             if(targetUserState != null)
@@ -346,11 +348,35 @@ namespace Polyglot.BusinessLogic.Services
                     await uow.GetRepository<UserState>().CreateAsync(targetUserState);
                 }
             }
-#warning разослать уведомление
             await uow.SaveAsync();
+            await NotifyChatUsers(targetUserState);
+
+            return targetUserState.ChatUserId;
         }
 
         #region Private members
+
+        private async Task NotifyChatUsers(UserState newUserState)
+        {
+            var onlineUsersIds = ChatHub.ConnectedUsers.Values.Where(v => v != newUserState.ChatUserId);
+            if(onlineUsersIds.Count() < 1)
+            {
+                return;
+            }
+
+            var targetUsersIds = (await uow.GetRepository<ChatDialog>()
+                .GetAllAsync())
+                .SelectMany(d => d.DialogParticipants)
+                .Select(dp => dp.ParticipantId.Value)
+                .GroupBy(k => k)
+                .Select(p => p.Key)
+                .Where(p => onlineUsersIds.Contains(p));
+
+            foreach (var id in targetUsersIds)
+            {
+                await signalRChatService.UserStateUpdated(id, newUserState.Id);
+            }
+        }
 
         private void FormGroupDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {

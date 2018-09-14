@@ -3,10 +3,11 @@
         <div *ngIf="isDirect; else group">
             <div class="interlocutor-name">{{interlocutors[currentInterlocutorId]?.fullName}}</div>
             <div class="last-seen">
-                  <!--  last seen
-                    {{interlocutors[currentInterlocutorId]?.lastSeen | date: 'medium'}} -->
                 {{interlocutors[currentInterlocutorId]?.isOnline ? "Online"
-                : "Offline"}} 
+                : "Last seen "}}
+                <span class="last-seen-date">
+                    {{interlocutors[currentInterlocutorId]?.isOnline ? "" : interlocutors[currentInterlocutorId]?.lastSeen | date:'MMM d, h:mm a'}} 
+                </span>
             </div>
         </div>
         <ng-template #group>
@@ -14,8 +15,8 @@
                 <div class="group-info">
                     <div class="group-name">{{currentGroupName}}</div>
                     <div class="participants-count-container">
-                        <span class="participants-count">Participants: {{groupParticipantsCount}}</span>
-                        <span class="participants-online-count">Online: {{groupParticipantsOnlineCount}}</span>
+                        <span class="participants-count">Participants: {{dialog?.participants.length}}</span>
+                        <span class="participants-online-count">Online: {{onlineParticipants}}</span>
                     </div>
                 </div>
                 <div class="participants-items">

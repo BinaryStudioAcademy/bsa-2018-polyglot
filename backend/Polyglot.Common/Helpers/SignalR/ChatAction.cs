@@ -7,6 +7,7 @@
         typing,
         personConnected,
         personDisconnected,
-        dialogsChanged
+        dialogsChanged,
+        userStateUpdated
     }
 }

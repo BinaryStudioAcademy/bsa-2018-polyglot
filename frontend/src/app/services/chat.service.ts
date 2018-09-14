@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { HttpService, RequestMethod } from './http.service';
 import { GroupType, Project, Team, ChatMessage, UserProfile } from '../models';
 import { ChatDialog } from '../models/chat/chatDialog';
+import { UserState } from '../models/chat/userState';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,10 @@ export class ChatService {
 
   startChatWithUser(user: UserProfile) : Observable<ChatDialog> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/startDialog', undefined, user);
+  }
+
+  getUserState(id: number) : Observable<UserState> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/users/' + id + '/state');
   }
   //createMessage(project: FormData) : Observable<Project> {
   //  return this.dataService.sendRequest(RequestMethod.Post, this.api, '', project, undefined, 'form-data');
