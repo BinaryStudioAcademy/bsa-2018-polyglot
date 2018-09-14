@@ -9,6 +9,8 @@ namespace Polyglot.Common.DTOs.Chat
 
         public string Uid { get; set; }
 
+        public int Hash { get; set; }
+
         public string FullName { get; set; }
 
         public string Email { get; set; }
@@ -20,5 +22,11 @@ namespace Polyglot.Common.DTOs.Chat
         public DateTime LastSeen { get; set; }
 
         public bool IsOnline { get; set; }
+
+        public override int GetHashCode()
+        {
+            var hash = 13;
+            return hash * 25 + this.Id;
+        }
     }
 }
