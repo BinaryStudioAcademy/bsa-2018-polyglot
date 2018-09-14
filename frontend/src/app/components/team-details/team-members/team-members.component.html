@@ -1,74 +1,71 @@
 <h2>Team {{teamName}}</h2>
 <div class="container team-details_menu">
-    <!--
-  <mat-form-field class="search-full-width team-details_search">
-    <input type="search" matInput placeholder="Search" [(ngModel)]="emailToSearch" [formControl]="emailFormControl">
-    <mat-error *ngIf="emailFormControl.hasError('email')">
-            Please enter a valid email address
-    </mat-error>
-    <button class="btn search" mat-raised-button color="primary" matSuffix (click)="searchTranslators()">
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-form-field>
-  -->
-  <mat-form-field class="team-details_filter">
-        <input matInput (keyup)="applyFilter($event.target.value)"  placeholder="Search">
+    <mat-form-field class="team-details_filter">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
     </mat-form-field>
-  <div class = "top-buttons">
-  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="delete(teamId)" color="warn" type="button">Delete team</button>
-  <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="addMember()" color="primary" type="button">Add member</button>
-  <button *ngIf="isMember()" class="top-btn"  mat-raised-button color="warn" type="button" (click)=leaveTeam()>Leave team</button>
-
-</div>
-</div>
-
-<div  *ngIf="!team || team.teamTranslators.length === 0 || displayNoRecords">
-    <p class="no-members">No Translators</p>
+    <div class="top-buttons">
+        <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="delete(teamId)"
+            color="warn" type="button">Delete team</button>
+        <button mat-raised-button class="top-button" *ngIf="userService.isCurrentUserManager()" (click)="addMember()"
+            color="primary" type="button">Add member</button>
+        <button *ngIf="isMember()" class="top-btn" mat-raised-button color="warn" type="button" (click)=leaveTeam()>Leave
+            team</button>
+    </div>
 </div>
 
-<table *ngIf = "team && team.teamTranslators.length !== 0 && !displayNoRecords" mat-table [dataSource]="dataSource" matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+<div *ngIf="!team || team.teamTranslators.length === 0 || displayNoRecords" >
+    <p class="no-members">No found</p>
+</div>
 
- <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef> </th>
-    <td mat-cell *matCellDef="let element"> 
-        <button *ngIf="element.teamId != id" mat-icon-button color="green">
-            <img mat-card-avatar class="manager-img" src="{{element.avatarUrl}}">
-        </button>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="fullName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-    <td mat-cell *matCellDef="let element"> <a (click)="userService.redirectById(element.userId)" style="cursor: pointer;">{{element.fullName}}</a> </td>
-  </ng-container>
-  <ng-container matColumnDef="rating">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rating </th>
-    <td mat-cell *matCellDef="let element" style="pointer-events: none !important">
-        <app-star-rating [rating]="element.rating" [starCount]="5"></app-star-rating> 
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="rights">
-      <th mat-header-cell *matHeaderCellDef > Rights </th>
-      <td  mat-cell *matCellDef="let element">
-          <div *ngIf="element.teamId === teamId" id="right-checkboxes">
-                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)" (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
-                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)" (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
-                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)" (change)="changeTranslatorRight($event, element.userId, 2)"> Can accept translations</mat-checkbox>
+<table *ngIf="team && team.teamTranslators.length !== 0 && !displayNoRecords" mat-table [dataSource]="dataSource"
+    matSort matSortDirection="asc" class="mat-elevation-z8 team-datails_table">
+
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element">
+            <button *ngIf="element.teamId != id" mat-icon-button color="green">
+                <img mat-card-avatar class="manager-img" src="{{element.avatarUrl}}">
+            </button>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let element"> <a (click)="userService.redirectById(element.userId)" style="cursor: pointer;">{{element.fullName}}</a>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="rating">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Rating </th>
+        <td mat-cell *matCellDef="let element" style="pointer-events: none !important">
+            <app-star-rating [rating]="element.rating" [starCount]="5"></app-star-rating>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="rights">
+        <th mat-header-cell *matHeaderCellDef> Rights </th>
+        <td mat-cell *matCellDef="let element">
+            <div *ngIf="element.teamId === teamId" id="right-checkboxes">
+                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 0)"
+                    (change)="changeTranslatorRight($event, element.userId, 0)"> Add new language</mat-checkbox>
+                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 1)"
+                    (change)="changeTranslatorRight($event, element.userId, 1)"> Add new key</mat-checkbox>
+                <mat-checkbox [disabled]="!isCurrentUserManager" class="checkbox-right" [checked]="checkTranslatorRight(element.userId, 2)"
+                    (change)="changeTranslatorRight($event, element.userId, 2)"> Can accept translations</mat-checkbox>
             </div>
-      </td>
-  </ng-container>  
+        </td>
+    </ng-container>
     <ng-container matColumnDef="options" class="icons-container">
         <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">  
-            <a *ngIf="userService.isCurrentUserManager()" mat-button color="warn" class="button" routerLinkActive="active" (click)='removeTranslator(element)'>
+        <td mat-cell *matCellDef="let element">
+            <a *ngIf="userService.isCurrentUserManager()" mat-button color="warn" class="button" routerLinkActive="active"
+                (click)='removeTranslator(element)'>
                 <i class="fas fa-ban"></i> Remove translator
             </a>
         </td>
     </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 </table>
 <!-- <mat-paginator *ngIf = "!displayNoRecords && IsPagenationNeeded" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator> -->
 
-<ng-snotify></ng-snotify>  
+<ng-snotify></ng-snotify>
