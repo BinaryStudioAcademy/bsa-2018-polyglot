@@ -12,6 +12,9 @@ import { environment } from '../../../../../environments/environment';
 import { UserProfile } from '../../../../models';
 import { MentionDirective, MentionModule } from 'angular2-mentions/mention';
 import { ProjectService } from '../../../../services/project.service';
+import { NotificationService } from '../../../../services/notification.service';
+import { AppStateService } from '../../../../services/app-state.service';
+import { NotificationAction } from '../../../../models/NotificationAction';
 
 @Component({
     selector: 'app-tab-comments',
@@ -44,7 +47,9 @@ export class TabCommentsComponent implements OnInit {
         private dialog: MatDialog,
         private snotifyService: SnotifyService,
         private activatedRoute: ActivatedRoute,
-        private projectService: ProjectService) { }
+        private projectService: ProjectService,
+        private notificationService: NotificationService,
+        private stateService: AppStateService) { }
 
 
     ngOnInit() {
@@ -105,6 +110,7 @@ export class TabCommentsComponent implements OnInit {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
                         this.comments = comments;
+                        this.tryNotifyUsers(this.newComment.text);
 
                         setTimeout(() => {
                             this.matList.nativeElement.scrollTop = 0;
@@ -184,6 +190,21 @@ export class TabCommentsComponent implements OnInit {
 
     public commentId(index, comment: Comment): string {
         return comment.id;
+    }
+
+    public tryNotifyUsers(text: string){
+        const currentUser = this.stateService.currentDatabaseUser;
+        this.users.forEach(user => {
+            if(text.includes('@' + user.fullName)){
+                this.notificationService.sendNotification({
+                    SenderId: currentUser.id,
+                    receiverId: user.id,
+                    message: `You was mentioned by ${currentUser.fullName}`,
+                    payload: this.keyId,
+                    notificationAction: NotificationAction.None
+                }).subscribe();
+            }
+        });
     }
 
     getComments(page: number = 1, saveResultsCallback: (comments) => void) {
