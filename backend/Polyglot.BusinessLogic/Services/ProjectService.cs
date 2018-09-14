@@ -234,7 +234,7 @@ namespace Polyglot.BusinessLogic.Services
             {
                 return;
             }
-
+            
             var currentPriority = (await projPrioritiesProvider.GetAllAsync(pp => pp.UserId == currentUserId.Value))?.FirstOrDefault();
             if(currentPriority == null)
             {
@@ -242,8 +242,7 @@ namespace Polyglot.BusinessLogic.Services
                 {
                     Id = rand.Next(Int32.MinValue, Int32.MaxValue - 1),
                     UserId = currentUserId.Value,
-                    Total = 1,
-                    Priorities = new List<Priority>() { new Priority() { ProjectId = projectId, PriorityValue = 1 } }
+                    Priorities = new List<Priority>() { new Priority() { ProjectId = projectId } }
                 });
             }
             else
@@ -251,14 +250,14 @@ namespace Polyglot.BusinessLogic.Services
                 var currentProjectPriority = currentPriority.Priorities.FirstOrDefault(p => p.ProjectId == projectId);
                 if(currentProjectPriority == null)
                 {
-                    currentPriority.Priorities.Add(new Priority() { ProjectId = projectId, PriorityValue = 1 });
+                    currentProjectPriority = new Priority() { ProjectId = projectId};
                 }
                 else
                 {
-                    currentProjectPriority.PriorityValue++;
+                    currentPriority.Priorities.Remove(currentProjectPriority);
                 }
 
-                currentPriority.Total++;
+                currentPriority.Priorities.Insert(0, currentProjectPriority);
                 await projPrioritiesProvider.Update(currentPriority);
             }
         }
@@ -533,14 +532,18 @@ namespace Polyglot.BusinessLogic.Services
                 )
                 ?.FirstOrDefault();
 
-            int? currentPriority = 0;
+            Priority currentPriority;
             // Add progress to DTO here
             foreach (var p in mapped)
 			{
-                currentPriority = projectsPriority?.Priorities.FirstOrDefault(pp => pp.ProjectId == p.Id)?.PriorityValue;
-                if(currentPriority.HasValue && projectsPriority.Total > 0)
+                currentPriority = projectsPriority?.Priorities.FirstOrDefault(pp => pp.ProjectId == p.Id);
+                if(currentPriority != null)
                 {
-                    p.Priority = (int)(((long)currentPriority.Value) * 100 / projectsPriority.Total);
+                    p.Priority = projectsPriority.Priorities.IndexOf(currentPriority);
+                }
+                else
+                {
+                    p.Priority = 1000;
                 }
 
 				List<ComplexString> temp = new List<ComplexString>();
