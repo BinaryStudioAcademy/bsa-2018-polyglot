@@ -9,6 +9,8 @@ namespace Polyglot.Common.DTOs.Chat
 
         public string Uid { get; set; }
 
+        public int Hash { get; set; }
+
         public string FullName { get; set; }
 
         public string Email { get; set; }
