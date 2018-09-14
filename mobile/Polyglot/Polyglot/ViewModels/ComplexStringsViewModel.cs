@@ -57,7 +57,7 @@ namespace Polyglot.ViewModels
 
         public async void Initialize(int projectId)
         {
-            var url = "projects/" + projectId + "/paginatedStrings?itemsOnPage=9&page=0&search=";
+            var url = "projects/" + projectId + "/paginatedStrings?itemsOnPage=50&page=0&search=";
             var complexStrings = await HttpService.GetAsync<List<ComplexStringDTO>>(url);
 
             ComplexStrings = complexStrings.Select(x => new ComplexStringViewModel

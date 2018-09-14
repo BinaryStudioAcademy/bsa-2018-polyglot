@@ -23,8 +23,9 @@
                                           HasUnevenRows="True"
                                           CachingStrategy="RecycleElement"
                                           ItemsSource="{Binding Path=Persons}"
-                                          ItemTapped="RatingList_OnItemTapped"
                                           HeightRequest="{Binding Path=ListHeight}">
+                                          <!--ItemTapped="RatingList_OnItemTapped"-->
+                                        
                                         <ListView.ItemTemplate >
                                             <DataTemplate>
                                             <ViewCell>

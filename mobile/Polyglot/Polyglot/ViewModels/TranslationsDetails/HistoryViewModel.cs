@@ -54,7 +54,7 @@ namespace Polyglot.ViewModels
 
         public async void Initialize(int complexStringId, string TranslationId)
         {
-            var url = "complexstrings/" + complexStringId + "/history/" + TranslationId+ "?itemsOnPage=20&page=0";
+            var url = "complexstrings/" + complexStringId + "/history/" + TranslationId+ "?itemsOnPage=50&page=0";
             var history = await HttpService.GetAsync<List<HistoryDTO>>(url);
 
             History = history.Select(x => new HistoryItemViewModel

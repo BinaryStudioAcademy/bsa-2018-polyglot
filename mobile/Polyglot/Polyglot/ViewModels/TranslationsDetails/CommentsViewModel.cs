@@ -54,7 +54,7 @@ namespace Polyglot.ViewModels.TranslationsDetails
 
         public async void Initialize(int complexStringId)
         {
-            var stringsUrl = "complexstrings/" + complexStringId + "/paginatedComments?itemsOnPage=20&page=0";
+            var stringsUrl = "complexstrings/" + complexStringId + "/paginatedComments?itemsOnPage=50&page=0";
             var comments = await HttpService.GetAsync<List<CommentDTO>>(stringsUrl);
 
             Comments = comments.Select(x => new CommentVievModel

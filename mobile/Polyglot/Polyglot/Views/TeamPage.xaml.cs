@@ -17,18 +17,18 @@ namespace Polyglot.Views
 		    _vm.LoadTeams();
 		}
 
-	    private async void RatingList_OnItemTapped(object sender, ItemTappedEventArgs e)
-	    {
-	        if (e.Item == null)
-	            return;
+	    //private async void RatingList_OnItemTapped(object sender, ItemTappedEventArgs e)
+	    //{
+	    //    if (e.Item == null)
+	    //        return;
 
-	        var c = e.Item as UserProfilePrevDTO;
+	    //    var c = e.Item as UserProfilePrevDTO;
 
-	        var profileId = c.Id;
+	    //    var profileId = c.Id;
 
-	        var newPage = new ProfilePage(new ProfileViewModel(),profileId);
-	        await Navigation.PushAsync(newPage);
-	        ((ListView)sender).SelectedItem = null;
-        }
+	    //    var newPage = new ProfilePage(new ProfileViewModel(),profileId);
+	    //    await Navigation.PushAsync(newPage);
+	    //    ((ListView)sender).SelectedItem = null;
+     //   }
 	}
 }
