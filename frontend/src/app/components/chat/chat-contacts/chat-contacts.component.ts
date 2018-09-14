@@ -128,7 +128,7 @@ export class ChatContactsComponent implements OnInit {
         this.signalRConnection.on(
             ChatActions[ChatActions.userStateUpdated],
             (userStateId: number) => {
-                if (userStateId && userStateId !== this.currentUserId) {
+                if (userStateId) {
                     this.chatService
                         .getUserState(userStateId)
                         .subscribe((state: UserState) => {
@@ -187,7 +187,7 @@ export class ChatContactsComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.person.currentValue) {
             let person: ChatUser = changes.person.currentValue;
-            let targetId = person.id + this.currentUserId;
+            let targetId = person.hash +  (13 * 25 + this.currentUserId);
             let targetDialog = this.dialogs.filter(
                 d =>
                     d.identifier == targetId &&
