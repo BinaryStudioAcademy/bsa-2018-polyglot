@@ -94,19 +94,12 @@ namespace Polyglot.Controllers
 
         // PUT: UserProfiles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
+        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO user)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
-
-            var user = await service.GetByUidAsync();
-
-            if (user != null)
-            {
-                project.RegistrationDate = user.RegistrationDate;
-            }
-
-            var entity = await service.PutAsync(project);
+                      
+            var entity = await service.PutAsync(user);
 
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
