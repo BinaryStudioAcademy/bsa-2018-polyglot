@@ -7,6 +7,7 @@ namespace Polyglot.DataAccess.Helpers
     public enum OptionDefinition : int
     {
         Accept,
-        Decline
+        Decline,
+        Close
     }
 }

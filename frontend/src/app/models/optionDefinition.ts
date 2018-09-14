@@ -1,4 +1,5 @@
 export enum OptionDefinition{
     Accept,
-    Decline
+    Decline,
+    Close
 }

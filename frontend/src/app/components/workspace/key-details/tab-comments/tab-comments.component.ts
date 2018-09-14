@@ -15,6 +15,7 @@ import { ProjectService } from '../../../../services/project.service';
 import { NotificationService } from '../../../../services/notification.service';
 import { AppStateService } from '../../../../services/app-state.service';
 import { NotificationAction } from '../../../../models/NotificationAction';
+import { OptionDefinition } from '../../../../models/optionDefinition';
 
 @Component({
     selector: 'app-tab-comments',
@@ -201,7 +202,8 @@ export class TabCommentsComponent implements OnInit {
                     receiverId: user.id,
                     message: `You was mentioned by ${currentUser.fullName}`,
                     payload: this.keyId,
-                    notificationAction: NotificationAction.None
+                    notificationAction: NotificationAction.None,
+                    options: [{optionDefinition: OptionDefinition.Close}]
                 }).subscribe();
             }
         });
