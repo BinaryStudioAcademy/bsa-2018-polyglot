@@ -37,8 +37,6 @@ export class ChatWindowComponent implements OnInit {
     public isDirect: boolean;
     public currentUserId: number;
     public currentGroupName: string;
-    public groupParticipantsCount: number;
-    public groupParticipantsOnlineCount: number;
 
     private signalRConnection;
 
@@ -122,8 +120,6 @@ export class ChatWindowComponent implements OnInit {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
                 this.currentGroupName = this.dialog.dialogName; 
-                this.groupParticipantsCount = this.dialog.participants.length;
-                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
                 this.isDirect = false;
                 break;
                 case(3):
@@ -131,14 +127,16 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
-                this.currentGroupName = this.dialog.dialogName; 
-                this.groupParticipantsCount = this.dialog.participants.length;
-                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
+                this.currentGroupName = this.dialog.dialogName;
                 this.isDirect = false;
                 break;
             }
         }
         this.getMessagesHistory();
+    }
+
+    get onlineParticipants() :number {
+        return this.dialog.participants.filter(p => p.isOnline).length;
     }
 
     ngAfterViewChecked() {
@@ -222,9 +220,6 @@ export class ChatWindowComponent implements OnInit {
                         {
                             this.messages[index] = message;
                             this.messages[index].isRecieving = false;
-                            //this.messages[index].isRead = message.isRead;
-                            //this.messages[index].senderId = message.senderId;
-                            //this.messages[index].receivedDate = message.receivedDate;
                         }
                     }
                 });

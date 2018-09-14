@@ -31,6 +31,7 @@ export class NewTeamComponent implements OnInit {
 
     public selectedTranslators: Array<any> = [];
     disabled: boolean = true;
+    selected = 'Beginner';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -180,6 +181,11 @@ export class NewTeamComponent implements OnInit {
                 err => {
                     this.snotifyService.error("Translators wasn`t loaded", "Error!");
                 });
+    }
+
+    clearFilter() {
+        this.selectedLanguages = [];
+        this.selected = "Beginner";
     }
 }
 

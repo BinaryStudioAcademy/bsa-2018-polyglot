@@ -4,6 +4,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.Authentication;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Hubs
@@ -12,6 +13,8 @@ namespace Polyglot.BusinessLogic.Hubs
     public class ChatHub : BaseHub
     {
         private readonly IChatService chatService;
+
+        internal static Dictionary<string, int> ConnectedUsers { get; set; } = new Dictionary<string, int>();
 
         public ChatHub(IChatService chatService)
         {
@@ -30,13 +33,16 @@ namespace Polyglot.BusinessLogic.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            await chatService.ChangeUserStatus(targetUserUid: Context.UserIdentifier, isOnline: true);
+
+            int userDbId = await chatService.ChangeUserStatus(targetUserUid: Context.UserIdentifier, isOnline: true);
+            ConnectedUsers.TryAdd(Context.UserIdentifier, userDbId);
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await chatService.ChangeUserStatus(targetUserUid: Context.UserIdentifier, isOnline: false);
+            ConnectedUsers.Remove(Context.UserIdentifier);
             await base.OnDisconnectedAsync(exception);
         }
 
