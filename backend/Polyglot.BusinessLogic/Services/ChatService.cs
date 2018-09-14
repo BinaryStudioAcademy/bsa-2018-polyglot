@@ -326,9 +326,9 @@ namespace Polyglot.BusinessLogic.Services
                     }
 
                     var r = await uow.SaveAsync();
-                    int currentUserid = (await currentUser.GetCurrentUserProfile()).Id;
-                    await signalRNavigationService.NumberOfMessagesChanges($"{Group.notification.ToString()}{currentUserId}", await this.GetNumberOfUnreadMessages((int)currentUserId));
                 }
+                int currentUserid = (await currentUser.GetCurrentUserProfile()).Id;
+                await signalRNavigationService.NumberOfMessagesChanges($"{Group.notification.ToString()}{currentUserid}", await this.GetNumberOfUnreadMessages((int)currentUserid));
             }
         }
 
