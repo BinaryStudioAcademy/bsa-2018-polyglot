@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../../../services/user.service';
 import { ComplexStringService } from '../../../../services/complex-string.service';
 import { FormBuilder } from '@angular/forms';
@@ -17,6 +17,7 @@ import { ProjectService } from '../../../../services/project.service';
     selector: 'app-tab-comments',
     templateUrl: './tab-comments.component.html',
     styleUrls: ['./tab-comments.component.sass']
+    
 })
 export class TabCommentsComponent implements OnInit {
 
