@@ -183,6 +183,7 @@ export class NewTeamComponent implements OnInit {
                     this.allTranslators = d.map(x => Object.assign({}, x));
                 },
                 err => {
+                    
                     this.snotifyService.error("Translators wasn`t loaded", "Error!");
                 });
     }
