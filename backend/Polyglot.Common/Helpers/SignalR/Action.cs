@@ -11,6 +11,7 @@
         languageTranslationCommitted,
         complexStringTranslatingStarted,
         complexStringTranslatingFinished,
-        notificationSend
+        notificationSend,
+        numberOfMessagesChanges
     }
 }

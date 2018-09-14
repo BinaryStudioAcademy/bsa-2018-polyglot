@@ -1,6 +1,6 @@
 <div class="container">
     <div class="select-lang-container">
-        <button mat-flat-button color="primary" [disabled]="!isCurrentUserCanSelectNewString()" (click)= "selectNew()">Select new language</button>
+        <button mat-flat-button color="primary" *ngIf="isCurrentUserCanSelectNewLanguage()" (click)= "selectNew()">Select new language</button>
         <div *ngIf="IsLangLoad" class="spinner-small">
             <mat-spinner [diameter]="25"></mat-spinner> 
         </div> 
@@ -28,7 +28,7 @@
                 </div>
                 <button [disabled]="IsLoading[l.id]" (click)="onDeleteLanguage(l.id)" mat-icon-button>
                     <span [hidden]="!IsLoading[l.id]" class="delete-spinner"><mat-spinner [diameter]="25"></mat-spinner> </span>
-                    <mat-icon matTooltip="Delete language"  aria-label="">delete_sweep</mat-icon>
+                    <mat-icon *ngIf="isCurrentUserCanSelectNewLanguage()" matTooltip="Delete language"  aria-label="">delete_sweep</mat-icon>
                 </button>
                 
               </div>

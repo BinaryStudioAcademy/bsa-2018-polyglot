@@ -24,6 +24,7 @@ export class ChatComponent implements OnInit {
     isInterlocutorSelected = false;
     private _mobileQueryListener: () => void;
     user: UserProfile;
+    numberOfUnreadMessages: number;
 
     constructor(
         private renderer: Renderer2,
@@ -58,4 +59,11 @@ export class ChatComponent implements OnInit {
         this.selectedPerson = $event;
     }
 
+    onNumberOfMessagesChanged($event){
+        this.numberOfUnreadMessages = $event;   
+    }
+
+    getNumberOfUnreadMessages(){
+        return this.numberOfUnreadMessages;
+    }
 }
