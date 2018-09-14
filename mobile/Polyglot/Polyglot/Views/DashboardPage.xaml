@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Polyglot.Dashboard"
+             Title="Dashboard">
+    <StackLayout>
+        <Label Margin="0, 50, 0, 0" Font="15"  HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}">No Projects</Label>
+        <ActivityIndicator x:Name="Spinner" IsVisible="{Binding IsLoad}" IsRunning="{Binding IsLoad}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"></ActivityIndicator>
+        <ListView 
+            ItemsSource="{Binding Projects}"
+            SelectedItem="{Binding SelectedProject, Mode=OneWayToSource}"
+            ItemTapped="Handle_ItemTapped"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows="True"
+            RowHeight="100"
+               x:Name="list">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout  Margin="10, 10, 10, 10" Orientation="Horizontal" >
+                            <Label IsVisible="False" Text="{Binding Id}"   />
+                            <Image WidthRequest="90" HeightRequest="50" Source="{Binding ImageUrl}"></Image>
+                            <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                                <Label Margin="10, 10" TextColor="Black" Font="bold, 20" HorizontalTextAlignment="Start" Text="{Binding Name}"   />
+                                <Label Font="15" HeightRequest="30" HorizontalTextAlignment="Start" LineBreakMode="TailTruncation"  Text="{Binding Description}"  />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>
