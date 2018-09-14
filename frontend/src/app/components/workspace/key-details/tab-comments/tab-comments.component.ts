@@ -9,6 +9,13 @@ import { MatDialog, MatList } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { UserProfile } from '../../../../models';
+import { MentionDirective, MentionModule } from 'angular2-mentions/mention';
+import { ProjectService } from '../../../../services/project.service';
+import { NotificationService } from '../../../../services/notification.service';
+import { AppStateService } from '../../../../services/app-state.service';
+import { NotificationAction } from '../../../../models/NotificationAction';
+import { OptionDefinition } from '../../../../models/optionDefinition';
 
 @Component({
     selector: 'app-tab-comments',
@@ -30,7 +37,7 @@ export class TabCommentsComponent implements OnInit {
         commentBody: ['']
     });
     public body: string;
-
+    public users : any[] = [];
     private url: string = environment.apiUrl;
     private currentPage = 0;
     private elementsOnPage = 7;
@@ -40,12 +47,33 @@ export class TabCommentsComponent implements OnInit {
         private complexStringService: ComplexStringService,
         private dialog: MatDialog,
         private snotifyService: SnotifyService,
-        private activatedRoute: ActivatedRoute) { }
+        private activatedRoute: ActivatedRoute,
+        private projectService: ProjectService,
+        private notificationService: NotificationService,
+        private stateService: AppStateService) { }
 
 
     ngOnInit() {
         this.routeSub = this.activatedRoute.params.subscribe((params) => {
             this.keyId = params.keyId;
+            this.complexStringService.getById(this.keyId).subscribe(data =>{
+                this.projectService.getById(data.projectId).subscribe(proj =>{
+                    this.users.push(proj.userProfile);
+                    
+                    this.projectService.getProjectTeams(proj.id).subscribe(teams =>{
+                        teams.forEach(team => {
+                            team.persons.forEach(element => {
+                                this.users.push(element);
+                            });
+                        });
+                        this.users = this.users.filter((user, index, self) =>   //remove duplicates
+                            index === self.findIndex((t) => (
+                                t.id === user.id
+                            ))
+                        )
+                    })
+                }) 
+            });
         });
     }
 
@@ -83,6 +111,7 @@ export class TabCommentsComponent implements OnInit {
                         this.snotifyService.success("Comment added", "Success!");
                         this.commentForm.reset();
                         this.comments = comments;
+                        this.tryNotifyUsers(this.newComment.text);
 
                         setTimeout(() => {
                             this.matList.nativeElement.scrollTop = 0;
@@ -162,6 +191,22 @@ export class TabCommentsComponent implements OnInit {
 
     public commentId(index, comment: Comment): string {
         return comment.id;
+    }
+
+    public tryNotifyUsers(text: string){
+        const currentUser = this.stateService.currentDatabaseUser;
+        this.users.forEach(user => {
+            if(text.includes('@' + user.fullName)){
+                this.notificationService.sendNotification({
+                    SenderId: currentUser.id,
+                    receiverId: user.id,
+                    message: `You was mentioned by ${currentUser.fullName}`,
+                    payload: this.keyId,
+                    notificationAction: NotificationAction.None,
+                    options: [{optionDefinition: OptionDefinition.Close}]
+                }).subscribe();
+            }
+        });
     }
 
     getComments(page: number = 1, saveResultsCallback: (comments) => void) {

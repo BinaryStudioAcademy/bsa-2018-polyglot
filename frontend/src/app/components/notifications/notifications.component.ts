@@ -37,7 +37,12 @@ export class NotificationsComponent implements OnInit {
         switch(notification.notificationAction)
         {
             case NotificationAction.None:
-                break; //Do some stuff here if notification havent actions
+            switch(notificationOption){
+                case OptionDefinition.Close:
+                    this.deleteNotification(notification.id);
+                break;
+            }
+            break; //Do some stuff here if notification havent actions
 
             case NotificationAction.JoinTeam:
             switch(notificationOption){

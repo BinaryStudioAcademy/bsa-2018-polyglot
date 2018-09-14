@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { MentionModule } from 'angular2-mentions/mention';
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
@@ -257,8 +258,9 @@ import { OptionalTranslationMenuComponent } from './dialogs/optional-translation
     MatTabsModule,
     NgxChartsModule,
     NgxInfiniteScrollerModule,
+    InfiniteScrollModule,
+    MentionModule,
     InfiniteScrollModule
-
   ],
   entryComponents: [
     LoginDialogComponent,
