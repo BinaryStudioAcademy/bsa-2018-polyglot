@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, DoCheck, KeyValueDiffers, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription, forkJoin } from "rxjs";
+import { Subscription, forkJoin, empty } from "rxjs";
 import { Project, UserProfile, Language } from "../../models";
 import { ProjectService } from "../../services/project.service";
 import { MatDialog } from "@angular/material";
@@ -14,6 +14,8 @@ import { SignalrService } from "../../services/signalr.service";
 import { SignalrSubscribeActions } from "../../models/signalrModels/signalr-subscribe-actions";
 import { EventService } from "../../services/event.service";
 import { Hub } from "../../models/signalrModels/hub";
+import { RightService } from "../../services/right.service";
+import { RightDefinition } from "../../models/rightDefinition";
 
 @Component({
     selector: "app-workspace",
@@ -23,7 +25,7 @@ import { Hub } from "../../models/signalrModels/hub";
 export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     public project: Project;
     public keys: any[] = [];
-    public searchQuery: string = ' ';
+    public searchQuery: string;
     public currentSearchQuery: string = '';
     public selectedKey: any;
     public isEmpty;
@@ -45,6 +47,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     private differ;
     private madiv;
     private signalRConnection;
+    isEditing: boolean;
+    private rights: RightDefinition[];
 
     filters: Array<string>;
 
@@ -65,12 +69,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         private complexStringService: ComplexStringService,
         private signalrService: SignalrService,
         private eventService: EventService,
-        private differs: KeyValueDiffers
+        private differs: KeyValueDiffers,
+        private rightService: RightService
     ) {
         this.user = userService.getCurrentUser();
         this.eventService.listen().subscribe(
             (result) => {
-                if (result.status && !this.stringsInProgress.includes(result.keyId)) {
+                if (result.isEditing !== undefined) {
+                    this.isEditing = result.isEditing
+                    if (!this.isEditing) {
+                        clearInterval(this.loop);
+                    }
+                } else if (result.status && !this.stringsInProgress.includes(result.keyId)) {
                     this.sendStringStatusMessage(result.keyId);
                 } else {
                     this.complexStringService.changeStringStatus(result.keyId, `${SignalrGroups[SignalrGroups.project]}${this.project.id}`, result.status).subscribe(() => {});
@@ -86,9 +96,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     answer: boolean;
 
     ngOnInit() {
-        console.log(this.stringsInProgress);
         this.filters = [];
-        // this.searchQuery = "";
+        this.searchQuery = '';
         this.routeSub = this.activatedRoute.params.subscribe(params => {
             //making api call using service service.get(params.projectId); ..
             forkJoin(
@@ -151,6 +160,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 });
 
             this.currentPage++;
+            this.rightService.getUserRightsInProject(params.projectId).subscribe((rights)=>{
+                this.rights = rights;
+            });
         });
     }
 
@@ -269,7 +281,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     subscribeProjectChanges() {
-        debugger;
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.complexStringAdded],
             (response: any) => {
@@ -302,6 +313,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 console.log(response.ids[0]);
                 if (!this.stringsInProgress.includes(response.ids[0])) {
                     this.stringsInProgress.push(response.ids[0]);
+                    setTimeout(() => {
+                        if (this.stringsInProgress.includes(response.ids[0])) {
+                            this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
+                        }
+                    }, 9700);
                 }            
             }
         );
@@ -314,6 +330,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                 if (this.stringsInProgress.includes(response.ids[0])) {
                     this.stringsInProgress.splice(this.stringsInProgress.indexOf(response.ids[0]), 1);
                 }
+            }
+        );
+        this.signalRConnection.on(
+            SignalrSubscribeActions[
+                SignalrSubscribeActions.languageTranslationCommitted
+            ],
+            (response: any) => {
+                this.projectService.getProjectStrings(this.project.id).subscribe(
+                    responseKeys => {
+                        this.keys = responseKeys;
+                    }
+                );
             }
         );
     }
@@ -398,9 +426,31 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
         } else if (key.translations.length === 0) {
             return "7px solid #a91818"; // not started
         } else if (key.translations.length < this.projectLanguagesCount) {
-            return "7px solid #ffcc00"; // partially
+            let emptyCount = 0;
+            for (let i = 0; i < key.translations.length; i++) {
+                if (!key.translations[i].translationValue) {
+                    emptyCount++;
+                }
+            }
+            if (!emptyCount) {
+                return "7px solid #ffcc00"; // partially
+            } else {
+                return "7px solid #a91818"; // not started
+            }
         } else if (key.translations.length === this.projectLanguagesCount) {
-            return "7px solid #00b300"; // completed
+            let emptyCount = 0;
+            for (let i = 0; i < key.translations.length; i++) {
+                if (!key.translations[i].translationValue) {
+                    emptyCount++;
+                }
+            }
+            if (!emptyCount) {
+                return "7px solid #00b300"; // completed
+            } else if (emptyCount === key.translations.length) {
+                return "7px solid #a91818"; // not started
+            } else {
+                return "7px solid #ffcc00"; // partially
+            }
         }
     }
 
@@ -409,7 +459,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     searchChanges() {
-        
         this.currentSearchQuery = this.searchQuery;
         this.currentPage = 0;
         this.projectService
@@ -441,5 +490,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy, DoCheck {
                     this.projectTags = Array.from(new Set(this.projectTags));
                 });
         this.currentPage++;
+    }
+
+    isCurrentUserCanAddNewString(): boolean{
+        if(this.userService.isCurrentUserManager()){
+            return true;
+        }
+        if(this.rights){
+            return this.rights.includes(RightDefinition.AddNewKey);
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -42,7 +42,12 @@ namespace Polyglot.DataAccess.Entities
             Ratings = new List<Rating>();
             Projects = new List<Project>();
         }
-        
+
+        public override int GetHashCode()
+        {
+            var hash = 13;
+            return hash * 25 + this.Id;
+        }
     }
 }
 

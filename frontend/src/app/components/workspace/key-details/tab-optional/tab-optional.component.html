@@ -1,4 +1,17 @@
-<div class="content" *ngIf="optional">
+<div *ngIf="!translationSelected">
+  <p class="message">Select translation to view...</p>
+</div>
+
+<div class="spinner" style="overflow: hidden;" *ngIf="!IsLoaded&&translationSelected">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="IsLoaded && translationSelected && optional.length===0">
+  <p class="message">There is no suggestion...</p>
+</div>
+
+
+<div class="content" *ngIf="optional && translationSelected">
   <div class="opt" *ngFor="let opt of optional">
     <mat-card class="story-card">
       <div class="head">

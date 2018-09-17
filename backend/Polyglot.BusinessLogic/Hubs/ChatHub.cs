@@ -4,6 +4,7 @@ using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.Helpers.SignalR;
 using Polyglot.Core.Authentication;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Polyglot.BusinessLogic.Hubs
@@ -13,6 +14,8 @@ namespace Polyglot.BusinessLogic.Hubs
     {
         private readonly IChatService chatService;
 
+        internal static Dictionary<string, int> ConnectedUsers { get; set; } = new Dictionary<string, int>();
+
         public ChatHub(IChatService chatService)
         {
             this.chatService = chatService;
@@ -20,33 +23,35 @@ namespace Polyglot.BusinessLogic.Hubs
 
         public override async Task JoinGroup(string groupName)
         {
-            var c = Context;
             await base.JoinGroup(groupName);
         }
 
         public override Task LeaveGroup(string groupName)
         {
-            var c = Context;
             return base.LeaveGroup(groupName);
         }
 
         public override async Task OnConnectedAsync()
         {
-            var c = Context.ConnectionId;
+
+            int userDbId = await chatService.ChangeUserStatus(targetUserUid: Context.UserIdentifier, isOnline: true);
+            ConnectedUsers.TryAdd(Context.UserIdentifier, userDbId);
             await base.OnConnectedAsync();
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var c = Context;
-            return base.OnDisconnectedAsync(exception);
+            await chatService.ChangeUserStatus(targetUserUid: Context.UserIdentifier, isOnline: false);
+            ConnectedUsers.Remove(Context.UserIdentifier);
+            await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task MessageRead(string whose)
+        public async Task MessageRead(int dialogId, string whose)
         {
-            var c = Context;
             // отсылаем собеседнику 'whose' свой id, чтобы он знал что все его сообщения вы прочитали
-            await Clients.Group(whose).SendAsync(ChatAction.messageRead.ToString(), 1111);
+            Clients.Group(whose).SendAsync(ChatAction.messageRead.ToString(), Context.UserIdentifier);
+
+            await chatService.ReadMessages(dialogId, Context.UserIdentifier);
         }
 
         public async Task Typing()

@@ -2,14 +2,14 @@
   <mat-slide-toggle (change)="changeLayout()" [checked]="checked" color="primary" #toggle>
     Card view
   </mat-slide-toggle>
-  <form class="search-form">
+  <div class="search-form">
     <mat-form-field class="search-full-width">
-      <input type="search" matInput placeholder="Search">
-      <button mat-raised-button color="primary" matSuffix>
+      <input [(ngModel)]="searchQuery" type="search" matInput placeholder="Search">
+      <button (click)="search()" mat-raised-button color="primary" matSuffix>
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>
-  </form>
+  </div>
 </div>
 <mat-spinner *ngIf="isLoad" class="spinner"></mat-spinner>
 
@@ -27,17 +27,17 @@
         </a>
         <div class="title">
           <mat-card-title class="card-title">
-            <a style="text-decoration: none; color:black" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
+            <a style="text-decoration: none; color:black" (click)="increasePriority(card.id)" [routerLink]="['/project/details', card.id]"> {{card.name}}</a>
           </mat-card-title>
 
           <mat-card-subtitle (click)="userService.redirectById(card.userProfile.id)" class="card-subtitle manager-name">{{card.userProfile.fullName}}</mat-card-subtitle>
         </div>
       </mat-card-header>
       <div class="img-container">
-        <a [routerLink]="['/workspace', card.id]">
+        <a (click)="increasePriority(card.id)" [routerLink]="['/workspace', card.id]">
           <img *ngIf="card.imageUrl !== null" class="content-img" mat-card-image src={{card.imageUrl}} alt="Photo of a project" onError="this.src='/assets/images/project.jpg'">
         </a>
-        <a [routerLink]="['/workspace', card.id]">
+        <a (click)="increasePriority(card.id)" [routerLink]="['/workspace', card.id]">
           <img *ngIf="card.imageUrl == null" class="content-img" mat-card-image src="/assets/images/project.jpg" alt="Photo of a project">
         </a>
       </div>
@@ -54,8 +54,8 @@
         </mat-card-content>
       </div>
       <mat-card-actions class="card-buttons">
-        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]">WORKSPACE</button>
-        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]">DETAILS</button>
+        <button mat-raised-button color="primary" [routerLink]="['/workspace', card.id]" (click)="increasePriority(card.id)">WORKSPACE</button>
+        <button mat-raised-button color="primary" [routerLink]="['/project/details', card.id]"  (click)="increasePriority(card.id)">DETAILS</button>
       </mat-card-actions>
     </mat-card>
   </div>

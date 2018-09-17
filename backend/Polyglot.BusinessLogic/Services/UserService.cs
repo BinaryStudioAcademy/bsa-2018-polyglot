@@ -14,17 +14,17 @@ namespace Polyglot.BusinessLogic.Services
     [Authorize]
     public class UserService : CRUDService<UserProfile, UserProfileDTO>, IUserService
     {
-        public UserService(IUnitOfWork uow, IMapper mapper)
+        private readonly ICurrentUser _currentUser;
+
+        public UserService(IUnitOfWork uow, IMapper mapper, ICurrentUser currentUser)
             :base(uow, mapper)
         {
-
+            _currentUser = currentUser;
         }
-
-
 
         public async Task<UserProfileDTO> GetByUidAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             if (user == null)
             {
                 return null;
@@ -35,7 +35,7 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<bool> IsExistByUidAsync()
         {
-            var user = await CurrentUser.GetCurrentUserProfile();
+            var user = await _currentUser.GetCurrentUserProfile();
             return user != null;
         }
 
@@ -49,6 +49,13 @@ namespace Polyglot.BusinessLogic.Services
             }
 
             return false;
+        }
+
+        public async Task<IEnumerable<UserProfileDTO>> GetUsersByNameStartsWith(string startsWith)
+        {
+            int currentUserId = (await _currentUser.GetCurrentUserProfile()).Id;
+            return mapper.Map<IEnumerable<UserProfileDTO>>(await uow.GetRepository<UserProfile>()
+                .GetAllAsync(u => u.FullName.ToLower().StartsWith(startsWith.ToLower()) && u.Id != currentUserId));
         }
     }
 }

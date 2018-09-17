@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polyglot.BusinessLogic.Interfaces;
@@ -39,6 +40,7 @@ namespace Polyglot.BusinessLogic
             services.AddScoped<ISignalRChatService, SignalRChatService>();
             services.AddScoped<ISignaRNavigationService, SignalRNavigationService>();
 
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
             services.AddSingleton<TranslationTimerService>();
         }
 

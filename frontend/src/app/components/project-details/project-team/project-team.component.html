@@ -1,3 +1,7 @@
+<div *ngIf="IsLoad" class="spinner">
+    <mat-spinner [diameter]="100"></mat-spinner>
+</div>
+
 <div class="container">
   <div class="teams-container">
      <mat-card class="example-card" *ngFor="let t of assignedTeams">
@@ -10,7 +14,7 @@
             <mat-card-title class="card-title">
                 <a style="text-decoration: none; color:black" routerLink="/team/details/{{t.id}}"> {{t.name || t.id}}</a>
             </mat-card-title>
-          <mat-card-subtitle class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
+          <mat-card-subtitle style="margin-top: -18px" class="card-subtitle" (click)="userService.redirectById(t?.createdBy?.id)">{{t.createdBy.fullName}}</mat-card-subtitle>
         </div>
       
       </mat-card-header>
@@ -24,9 +28,9 @@
         </div>
       </div>
 
-      <div class="action-btn-container">
+      <div *ngIf="IsCurrentUserManager" class="action-btn-container">
           
-        <button mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
+        <button  mat-raised-button  color="warn" (click)="dismissTeam(t.id)">
          Unassign
         </button>
       </div>

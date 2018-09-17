@@ -1,7 +1,7 @@
 <div class="example-container">
     <mat-toolbar color="primary" class="example-toolbar">
         <button mat-icon-button (click)="snav.toggle()">
-            <mat-icon [matBadgeHidden]="true" matBadge="15" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
+            <mat-icon [matBadgeHidden]="getNumberOfUnreadMessages() < 1" [matBadge]="getNumberOfUnreadMessages()" matBadgeColor="warn" matBadgeSize="medium">menu</mat-icon>
         </button>
         <h1 class="example-app-name">Chat</h1>
     </mat-toolbar>
@@ -10,7 +10,7 @@
         <mat-sidenav class="contacts-list" #snav [mode]="'side'">
             <mat-nav-list>
 
-                <app-chat-contacts (onItemSelect)="onSelected($event)" [person]="selectedPerson"></app-chat-contacts>
+                <app-chat-contacts (onNumberOfMessagesChanged)="onNumberOfMessagesChanged($event)" (onItemSelect)="onSelected($event)" [person]="selectedPerson"></app-chat-contacts>
 
             </mat-nav-list>
         </mat-sidenav>
@@ -21,7 +21,16 @@
 
 
                 <ng-template #mainWindow>
-                        main window placeholder
+                    <div class="placeholder-container" >
+                        <h1 class="greeting">
+                            Hello <i>{{user.fullName}}</i> !
+                        </h1>
+                        <img class="owner-img" height="100px" width="100px" src="{{user.avatarUrl}}" alt="user.fullName[0]">
+                        <button (click)="snav.toggle()" class="btn" mat-flat-button>Start</button>
+                        <p class="description">
+                            Find a person with the help of search or select chat group to start conversation.
+                        </p>
+                    </div>                        
                 </ng-template>
 
             

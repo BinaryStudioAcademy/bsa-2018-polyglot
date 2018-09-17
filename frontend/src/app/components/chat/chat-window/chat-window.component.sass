@@ -20,6 +20,7 @@
     transform: scale(1.1)
 
 .person-button
+  position: relative
   background: #78909C
   height: 40px
   width: 40px
@@ -38,10 +39,20 @@ ul
   padding-top: 15px
   list-style: none
 
+.last-seen
+  padding-top: 3px
+  padding-left: 15px
+
+.last-seen-date
+  color: #808084
+
 .participants-count-container
   font-size: 14px
   .participants-count
     margin-right: 20px
+
+.participants-items ul li
+  margin-right: 5px
 
 .message
   position: relative
@@ -108,13 +119,16 @@ ul
 .recieved-read-container
   position: relative
   height: 12px
-  color: green
   .recieved-icon,
-  .read-icon
+  .read-icon,
+  .error-icon
     position: absolute
     left: -20px
     top: -2px
     height: 12px
+    color: green
+  .error-icon
+    color: #E71426
   .mat-icon
     height: 12px
     font-size: 16px
@@ -171,3 +185,15 @@ ul
 
 .chat-messages-container
   background-color: #E8EDF3
+
+.online-status-container
+  position: absolute
+  right: -3px
+  bottom: -10px
+  .online-status-icon
+    height: 17px
+    width: 17px
+    color: #4BCB1C
+    font-size: 20px
+    border-radius: 50%
+    box-shadow: 2px 3px 8px -2px rgba(0,0,0,0.75)

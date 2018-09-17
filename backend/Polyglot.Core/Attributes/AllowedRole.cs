@@ -18,7 +18,9 @@ namespace Polyglot.Core.Attributes
 
         public async void OnAuthorization(AuthorizationFilterContext context)
         {
-            var currentUserRole = (await CurrentUser.GetCurrentUserProfile()).UserRole;
+            ICurrentUser currentUser = context.HttpContext.RequestServices?.GetService(typeof(ICurrentUser)) as ICurrentUser;
+
+            var currentUserRole = ( await currentUser.GetCurrentUserProfile()).UserRole;
 
             if (currentUserRole != _allowedRole)
             {

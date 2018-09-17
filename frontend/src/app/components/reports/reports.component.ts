@@ -14,7 +14,7 @@ export class ReportsComponent implements OnInit {
   public isLoad: boolean = false;
 
   view: any[] = [350, 350];
-  pieView: any[] = [850, 400];
+  pieView: any[] = [850, 300];
 
   charts: any;
   explodeSlices = false;
@@ -31,8 +31,9 @@ export class ReportsComponent implements OnInit {
   showYAxisLabel = true;
   yAxisLabel = 'Translations';
   timeline = true;
-  legendTitle = 'Languages'
-  colorScheme = 'vivid'
+  legendTitle = 'Languages';
+  colorScheme = 'vivid';
+  colorSchemeNight = 'night';
 
   constructor(private projectService: ProjectService, ) {
   }

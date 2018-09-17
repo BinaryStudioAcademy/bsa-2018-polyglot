@@ -15,6 +15,8 @@ namespace Polyglot.Common.DTOs
 
         public string ImageUrl { get; set; }
 
+        public int Priority { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public UserProfileDTO UserProfile { get; set; }

@@ -1,34 +1,34 @@
 .new-team
   display: flex
   height: 100%
-  width: 600px
+  width: 800px
   margin-left: auto
   margin-right: auto
-  
+
 .list-container
   display: flex
-  width: 600px
+  width: 800px
   padding: 10px
   margin-top: 10px
   margin-left: auto
   margin-right: auto
-  
+
 
 .new-team-container,
 .translators-list-container
   width: 100%
   padding: 10px
   margin-top: 10px
-  
+
 
 .new-team-card
   margin: 0
   padding: 0
-  
-.add-from-header 
+
+.add-from-header
   display: grid
-  grid-template-columns: 150px auto 
-  grid-template-rows: 40px 40px 40px  
+  grid-template-columns: 150px auto
+  grid-template-rows: 40px 40px 40px
 
 .team-name
   grid-column: 2
@@ -37,7 +37,7 @@
   margin-left: 10px
   margin-top: auto
   margin-bottom: 0
-  
+
 
 .save-btn
   margin-left: auto
@@ -71,14 +71,14 @@
   margin-left: calc(400px - 50px)
 
 .mat-selection-list .mat-list-item, .mat-selection-list .mat-list-option
-  height: 80px
+  height: 100px
 
 .manager-img
     height: 50px
     width: 50px
     border-radius: 50px
     margin: 0
-   
+
 .mat-selection-list .mat-list-text
     display: flex
     flex-direction: row
@@ -89,14 +89,14 @@
   font-size: 12px
   margin: 0
   pointer-events: none !important
-  
+
 
 .button-add
- position: fixed
- right: 50px
- bottom: 50px
- width: 72px
- height: 72px
+  position: fixed
+  right: 50px
+  bottom: 50px
+  width: 72px
+  height: 72px
 
 .title
   display: grid
@@ -105,14 +105,14 @@
   margin-right: 40px
   margin-left: 20px
 
-.manager-img 
+.manager-img
   margin-right: 20px
 
 .item-container
   display: flex
   flex-direction: row
-  flex-wrap: wrap
-  justify-content: flex-start 
+  flex-wrap: nowrap
+  justify-content: flex-start
   margin: 0
   width: 100%
   padding: 0
@@ -121,8 +121,8 @@
   img
     border-radius: 50px
     margin-right: 5px
-    
-    
+
+
 .team-assign-icon
     font-size: 150px
     width: 150px
@@ -130,7 +130,7 @@
     color: #BBBBBB
 
 
-ul 
+ul
   columns: 2
   -webkit-columns: 2
   -moz-columns: 2
@@ -138,11 +138,59 @@ ul
 
 li
   -webkit-column-break-inside: avoid
-  page-break-inside: avoid 
-  break-inside: avoid 
+  page-break-inside: avoid
+  break-inside: avoid
   list-style-type: none
 
 .chips-wrapper
   width: 100%
   display: flex
-  justify-content: center 
+  flex-wrap: wrap
+  justify-content: center
+
+
+.mat-mini-fab
+  margin-right: 5px
+
+.mat-chip
+  padding: 0
+  padding-right: 5px
+
+.search-wrapper
+  display: flex
+  align-items: baseline
+  justify-content: flex-end
+  width: 400px
+  margin-top: 20px
+  margin-left: auto
+
+
+.advanced-search-burron
+  margin-left: 20px
+
+.buttons-wrappper
+  display: flex
+  justify-content: space-around
+  flex-wrap: wrap;
+
+.buttons-wrappper button
+  margin: 0 10px
+
+.prof-wrappper
+  display: flex
+  justify-content: center
+
+.search-full-width
+  width: 100%
+
+.mat-icon
+  cursor: pointer
+
+.select-lang-button
+    margin-bottom: 15px !important
+
+.no-members
+  font-size: 70px
+  text-align: center
+  align-items: center
+  color: #f3f3f3

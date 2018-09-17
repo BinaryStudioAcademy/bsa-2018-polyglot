@@ -4,7 +4,8 @@
         <div class="new-team-card">
             <div class="add-from-header">
                 <div class="new-team-header-image">
-                    <img class="header-image" src="https://www.yellow.com.mt/sys/articles/1043/59c4cb3932838_translators.jpg" alt="Your photo">
+                    <img class="header-image" src="https://www.yellow.com.mt/sys/articles/1043/59c4cb3932838_translators.jpg"
+                        alt="Your photo">
                 </div>
                 <mat-form-field class="team-name">
                     <input matInput required appNoWhiteSpace placeholder="Team name" [(ngModel)]="name" #teamName="ngModel">
@@ -22,28 +23,73 @@
 
 <div class=list-container>
     <div class="translators-list-container">
-
         <mat-chip-list>
             <div class="chips-wrapper">
-                    <mat-chip style="background-color: #ff7b25;">Beginner</mat-chip>
-                    <mat-chip style="background-color: #e3eaa7;">Intermediate</mat-chip>
-                    <mat-chip style="background-color: #82b74b;">Advanced</mat-chip>
-                    <mat-chip style="background-color: #92a8d1">Proficiency</mat-chip>
-                    <mat-chip style="background-color: #944dff;">Native</mat-chip>
-        
-
-
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>A2</button>
+                    Elementary
+                </mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>B1</button>
+                    Intermediate</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>B2</button>
+                    Upper Intermediate</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>C1</button>
+                    Advanced</mat-chip>
+                <mat-chip color="primary">
+                    <button mat-mini-fab disabled>C2</button>
+                    Proficiency</mat-chip>
             </div>
-            
-
         </mat-chip-list>
+
+        <div class="search-wrapper">
+            <mat-form-field class="search-full-width">
+                <mat-icon matSuffix *ngIf="searchQuery" (click)="searchQuery='';"> close</mat-icon>
+                <mat-icon matSuffix>search</mat-icon>
+                <input matInput type="text" placeholder="Search" [(ngModel)]="searchQuery">
+                <mat-icon matSuffix [matMenuTriggerFor]="filters">tune</mat-icon>
+                <mat-icon matSuffix (click)="clearFilter();">refresh</mat-icon>
+            </mat-form-field>
+
+            <mat-menu #filters="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
+                <div (click)="$event.stopPropagation();" class="prof-wrappper">
+                    <mat-form-field>
+                        <mat-select placeholder="Language level" [(value)]="selected">
+                            <mat-option *ngFor="let proficiency of profTypes()" [value]="proficiency">
+                                {{proficiency}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="buttons-wrappper">
+                    <button mat-raised-button (click)="selectLanguages();" class="select-lang-button" (click)="$event.stopPropagation();">Select
+                        languages</button>
+                    <div class="buttons-wrappper">
+                        <button mat-raised-button (click)="clearFilter(); $event.stopPropagation();">Clear</button>
+                        <button mat-flat-button (click)="onFilterApply(selected)">Apply</button>
+                    </div>
+                </div>
+            </mat-menu>
+        </div>
+
+
         <div class="translators-list-wrapper">
             <div *ngIf="IsLoad" class="spinner">
                 <mat-spinner></mat-spinner>
             </div>
+            <div class="no-members" *ngIf="!IsLoad && !allTranslators.length">No found</div>
+
+            <div class="no-members" *ngIf="IsLoad && (allTranslators | translatorSearchByName: searchQuery).length === 0">
+                    No matches
+            </div>
+
+
             <mat-selection-list #translatorListElement>
-                <mat-list-option class="list-item" (click)="change($event, translatorListElement)" *ngFor="let t of allTranslators" [selected]="t.selected"
-                    [value]="t">
+
+                <mat-list-option class="list-item" (click)="change($event, translatorListElement)" *ngFor="let t of allTranslators | translatorSearchByName : searchQuery"
+                    [selected]="t.selected" [value]="t">
                     <div class="item-container">
                         <img class="manager-img" src="{{getAvatarUrl(t)}}">
                         <div class="title">
@@ -55,30 +101,23 @@
                                 <app-star-rating [rating]="t.rating" [starCount]="5"></app-star-rating>
                             </mat-card-subtitle>
                         </div>
-                        <span *ngIf="t.translatorLanguages.length > 0" class="languages-list">
-                            <ul>
-                                <li *ngFor="let l of t.translatorLanguages">
-                                    <mat-chip *ngIf="l.proficiency===0" style="background-color: #ff7b25;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===2" style="background-color: #e3eaa7;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===4" style="background-color: #82b74b;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===5" style="background-color: #92a8d1;">{{l.language.name}}</mat-chip>
-                                    <mat-chip *ngIf="l.proficiency===6" style="background-color: #944dff;">{{l.language.name}}</mat-chip>
-                                </li>
-                            </ul>  
-                        </span>
-                        <span *ngIf="t.translatorLanguages.length == 0" class="languages-list">
-                            <ul>
-                                <li>
-                                    <mat-chip style="background-color: #d64161;">No data</mat-chip>
-                                </li>
-                            </ul>
+                        <mat-chip-list *ngIf="t.translatorLanguages.length > 0" class="languages-list">
+                            <div class="chips-wrapper">
+                                <mat-chip color="primary" *ngFor="let l of t.translatorLanguages">
+                                    <button *ngIf="l.proficiency===0" mat-mini-fab disabled>A2 </button>
+                                    <button *ngIf="l.proficiency===1" mat-mini-fab disabled>B1 </button>
+                                    <button *ngIf="l.proficiency===2" mat-mini-fab disabled>B2 </button>
+                                    <button *ngIf="l.proficiency===3" mat-mini-fab disabled>C1 </button>
+                                    <button *ngIf="l.proficiency===4" mat-mini-fab disabled>C2 </button>
+                                    {{l.language.name}}
+                                </mat-chip>
+                            </div>
 
-                        </span>
+                        </mat-chip-list>
                     </div>
                     <mat-divider></mat-divider>
                 </mat-list-option>
             </mat-selection-list>
-
         </div>
     </div>
 </div>

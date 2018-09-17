@@ -12,13 +12,13 @@ import {
 import { ProjectService } from "../../../services/project.service";
 import { MatSnackBar } from "@angular/material";
 import { ChatService } from "../../../services/chat.service";
-import { GroupType, ChatMessage, ChatUser } from "../../../models";
+import { GroupType, ChatUser } from "../../../models";
 import { SignalrService } from "../../../services/signalr.service";
 import { SignalrGroups } from "../../../models/signalrModels/signalr-groups";
 import { AppStateService } from "../../../services/app-state.service";
 import { Hub } from "../../../models/signalrModels/hub";
 import { ChatActions } from "../../../models/signalrModels/chat-actions";
-import { ChatDialog } from "../../../models/chat/chatDialog";
+import { ChatMessage } from "../../../models/chat/chatMessage";
 
 @Component({
     selector: "app-chat-window",
@@ -37,8 +37,6 @@ export class ChatWindowComponent implements OnInit {
     public isDirect: boolean;
     public currentUserId: number;
     public currentGroupName: string;
-    public groupParticipantsCount: number;
-    public groupParticipantsOnlineCount: number;
 
     private signalRConnection;
 
@@ -58,7 +56,7 @@ export class ChatWindowComponent implements OnInit {
     ngOnDestroy() {
         this.signalRService.leaveGroup(`${SignalrGroups[SignalrGroups.dialog]}${this.dialog.id}`, Hub.chatHub);
     }
-
+    
     subscribeChatEvents() {
         this.signalRConnection.on(
             ChatActions[ChatActions.messageReceived],
@@ -67,7 +65,11 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.chatService.getMessage(responce.messageId)
                         .subscribe((message: ChatMessage) => {
-                            this.messages.push(message);
+                            if(!this.messages.find(m => m.id === message.id))
+                            {
+                                this.messages.push(message);
+                                this.signalRService.readMessage(this.dialog.id, this.currentInterlocutorId);
+                            }
                         });
                 }
             }
@@ -75,9 +77,9 @@ export class ChatWindowComponent implements OnInit {
 
         this.signalRConnection.on(
             ChatActions[ChatActions.messageRead],
-            (userId: number) => {
-                
-                if(this.interlocutors[userId]){
+            (userUid: string) => {
+                if(this.dialog.participants.find(p => p.uid === userUid))
+                {
                     for(let i = 0; i < this.messages.length; i++){
                         this.messages[i].isRead = true;
                     }
@@ -118,8 +120,6 @@ export class ChatWindowComponent implements OnInit {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
                 this.currentGroupName = this.dialog.dialogName; 
-                this.groupParticipantsCount = this.dialog.participants.length;
-                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
                 this.isDirect = false;
                 break;
                 case(3):
@@ -127,14 +127,16 @@ export class ChatWindowComponent implements OnInit {
                 {
                     this.interlocutors[this.dialog.participants[i].id] = this.dialog.participants[i];
                 }
-                this.currentGroupName = this.dialog.dialogName; 
-                this.groupParticipantsCount = this.dialog.participants.length;
-                this.groupParticipantsOnlineCount = this.dialog.participants.filter(p => p.isOnline).length;
+                this.currentGroupName = this.dialog.dialogName;
                 this.isDirect = false;
                 break;
             }
         }
         this.getMessagesHistory();
+    }
+
+    get onlineParticipants() :number {
+        return this.dialog.participants.filter(p => p.isOnline).length;
     }
 
     ngAfterViewChecked() {
@@ -155,7 +157,7 @@ export class ChatWindowComponent implements OnInit {
                 case(0):
                 case(1):
                 targetGroup = GroupType.users;
-                targetGroupDialogId = this.currentInterlocutorId;
+                targetGroupDialogId = this.dialog.participants[0].hash;
                 break;
                 case(2):
                 targetGroup = GroupType.projects;
@@ -170,13 +172,11 @@ export class ChatWindowComponent implements OnInit {
                 .getDialogMessages(targetGroup, targetGroupDialogId)
                 .subscribe(messages => {
                     if (messages) {
-                        
-
                         if(this.isDirect)
                         {
                             this.messages = messages.filter(m => m.senderId == this.currentInterlocutorId || 
                                     m.senderId == this.currentUserId);
-                            this.signalRService.readMessage(this.currentInterlocutorId);
+                            this.signalRService.readMessage(this.dialog.id, this.currentInterlocutorId);
                         }
                         else 
                         {
@@ -189,24 +189,45 @@ export class ChatWindowComponent implements OnInit {
 
     sendMessage() {
         if (this.currentMessage.length > 0) {
-            let message = {
-            dialogId: this.dialog.id,
-            body: this.currentMessage
+            const messageid =  Date.now();
+            let message: ChatMessage = {
+                id: undefined,
+                clientId: messageid,
+                senderId: this.currentUserId,
+                body: this.currentMessage,
+                receivedDate: undefined,
+                isRead: false,
+                isRecieved: false,
+                isRecieving: true,
+                dialogId: this.dialog.id
             };
             this.currentMessage = "";
+            this.messages.push(message);
+
+            setTimeout((id = messageid) => {
+                let targetMessage = this.messages.find(m => m.clientId === id);
+                if(targetMessage && !targetMessage.isRecieved)
+                {
+                    targetMessage.isRecieving = false;
+                }
+            }, 7000);
 
             this.chatService.sendMessage(GroupType.users,
                 message).subscribe((message: ChatMessage) => {
-                    
                     if(message){
-                        this.messages.push(message);
+                        let index = this.messages.findIndex(m => m.clientId === message.clientId);
+                        if(index >= 0)
+                        {
+                            this.messages[index] = message;
+                            this.messages[index].isRecieving = false;
+                        }
                     }
                 });
         }
     }
 
     selectPerson(person){
-        if(person)
+        if(person && person.id !== this.currentUserId)
         {
             this.onPersonSelect.emit(person);
         }
@@ -217,8 +238,5 @@ export class ChatWindowComponent implements OnInit {
     }
 
     openSnackBar() {
-        this.snackBar.open("mmmmmmmm", "sdfsdf", {
-            duration: 2000
-        });
     }
 }

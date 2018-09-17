@@ -1,4 +1,9 @@
-<div class="container" *ngIf="allActivities && allActivities.length != 0" fxLayout="row">
+<div *ngIf="IsLoad" class="spinner">
+    <mat-spinner [diameter]="100"></mat-spinner>
+</div>
+
+
+<div class="container" *ngIf="!IsLoad && allActivities && allActivities.length != 0" fxLayout="row">
     <div fxFlex="30%" class = "filter">
         <mat-form-field class="date-input">
             <input matInput (dateChange)="onFilterChange()" [(ngModel)]="from" [matDatepicker]="pickerFrom" placeholder="From">
@@ -23,6 +28,6 @@
         </div>
     </div>
 </div>
-<div  *ngIf="!allActivities || allActivities.length == 0">
+<div  *ngIf="!IsLoad && (!allActivities || allActivities.length == 0)">
     <p class="no-activities">No Activities</p>
 </div>

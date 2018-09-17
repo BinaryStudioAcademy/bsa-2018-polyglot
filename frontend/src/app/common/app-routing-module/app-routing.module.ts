@@ -28,6 +28,7 @@ import { UserProfileComponent } from '../../components/user-profile/user-profile
 import { ChatComponent } from '../../components/chat/chat.component';
 import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
 import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
+import { GuidelineComponent } from '../../components/guideline/guideline.component';
 
 
   
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'newproject', canActivate: [AuthGuard, TranslatorGuardService], component: NewProjectComponent },
   { path: 'newteam', canActivate: [AuthGuard, TranslatorGuardService], component: NewTeamComponent },
   { path: 'profile/settings', canActivate: [AuthGuard], component: UserSettingsComponent },
+  { path: 'guideline', canActivate: [AuthGuard], component: GuidelineComponent},
 
   {
     path: 'dashboard',
@@ -48,8 +50,8 @@ const routes: Routes = [
       { path: '', redirectTo: '/dashboard/projects', pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'teams', component: TeamsComponent },
-      { path: 'glossaries', component: GlossariesComponent },
-      { path: 'glossaries/:glossaryId', component: GlossaryComponent },
+      { path: 'glossaries', canActivate: [TranslatorGuardService], component: GlossariesComponent },
+      { path: 'glossaries/:glossaryId', canActivate: [TranslatorGuardService], component: GlossaryComponent },
       { path: 'strings', component: NoFoundComponent }
     ]
   },

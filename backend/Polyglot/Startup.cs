@@ -8,6 +8,7 @@ using Polyglot.BusinessLogic;
 using Polyglot.BusinessLogic.Hubs;
 using Polyglot.Common;
 using Polyglot.Core;
+using Polyglot.Core.Authentication;
 using Polyglot.DataAccess;
 
 namespace Polyglot
@@ -54,6 +55,9 @@ namespace Polyglot
                 services.AddSignalR().AddAzureSignalR();
             }
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
+
             BusinessLogicModule.ConfigureServices(services, Configuration);
             CommonModule.ConfigureServices(services);
             CoreModule.ConfigureServices(services);
@@ -65,10 +69,10 @@ namespace Polyglot
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 app.UseDeveloperExceptionPage();
-            }
+            //}
 
             BusinessLogicModule.ConfigureMiddleware(app);
             CommonModule.ConfigureMiddleware(app);

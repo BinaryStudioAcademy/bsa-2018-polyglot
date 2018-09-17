@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Polyglot.BusinessLogic.Interfaces;
 using Polyglot.Common.DTOs;
 using Polyglot.Core.Authentication;
-using Polyglot.DataAccess.Entities;
 
 namespace Polyglot.Controllers
 {
@@ -14,10 +13,12 @@ namespace Polyglot.Controllers
     public class LanguagesController : ControllerBase
     {
         private readonly ILanguageService service;
+        private readonly ICurrentUser _currentUser;
 
-        public LanguagesController(ILanguageService service)
+        public LanguagesController(ILanguageService service, ICurrentUser currentUser)
         {
             this.service = service;
+            _currentUser = currentUser;
         }
 
         // GET: Languages
@@ -85,7 +86,7 @@ namespace Polyglot.Controllers
         [HttpPut("user")]
         public async Task<IActionResult> SetCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
         {
-            var entity = await service.SetTranslatorLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
+            var entity = await service.SetTranslatorLanguages((await _currentUser.GetCurrentUserProfile()).Id, languages);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -93,7 +94,7 @@ namespace Polyglot.Controllers
         [HttpDelete("user")]
         public async Task<IActionResult> DeleteCurrenUserLanguages([FromBody]TranslatorLanguageDTO[] languages)
         {
-            var entity = await service.DeleteTranslatorsLanguages((await CurrentUser.GetCurrentUserProfile()).Id, languages);
+            var entity = await service.DeleteTranslatorsLanguages((await _currentUser.GetCurrentUserProfile()).Id, languages);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }

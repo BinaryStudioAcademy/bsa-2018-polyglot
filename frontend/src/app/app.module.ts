@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { MentionModule } from 'angular2-mentions/mention';
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
@@ -106,7 +107,6 @@ import { TabReviewComponent } from './components/translatorProfile/tab-review/ta
 import { StarRatingComponent } from './components/translatorProfile/star-rating/star-rating.component';
 import { MachineTranslationMenuComponent } from './dialogs/machine-translation-menu/machine-translation-menu.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { TabGlossaryComponent } from './components/workspace/key-details/tab-glossary/tab-glossary.component';
 import { SnotifyGlobalConfig } from './common/SnotifyGlobalConfig';
 import { AssignGlossariesComponent } from './components/project-details/assign-glossaries/assign-glossaries.component';
 import { ListTranslatorsComponent } from './dialogs/list-translators/list-translators.component';
@@ -124,7 +124,14 @@ import { TeamDetailsComponent } from "./components/team-details/team-details.com
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TeamAddMemberComponent } from './dialogs/team-add-member/team-add-member.component';
 import { ChooseProficiencyDialogComponent } from './dialogs/choose-proficiency-dialog/choose-proficiency-dialog.component';
+import { TranslatorSearchByNamePipe } from './pipes/translator-search-by-name.pipe';
 import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-languages-dialog/add-remove-languages-dialog.component';
+import { GuidelineComponent } from './components/guideline/guideline.component';
+import { TranslatorGuideComponent } from './components/guideline/translator-guide/translator-guide.component';
+import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
+import { CommentsPipe } from './common/pipes/comments.pipe';
+import { OptionalTranslationMenuComponent } from './dialogs/optional-translation-menu/optional-translation-menu.component';
+
 
 @NgModule({
   exports: [
@@ -196,7 +203,6 @@ import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-language
     DownloadFileComponent,
     StarRatingComponent,
     UserProfileComponent,
-    TabGlossaryComponent,
     AssignGlossariesComponent,
     TabOptionalComponent,
     SelectColorDialogComponent,
@@ -210,7 +216,14 @@ import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-language
     NotificationsComponent,
     TeamAddMemberComponent,
     ChooseProficiencyDialogComponent,
-    AddRemoveLanguagesDialogComponent
+    TranslatorSearchByNamePipe,
+    ChooseProficiencyDialogComponent,
+    AddRemoveLanguagesDialogComponent,
+    GuidelineComponent,
+    TranslatorGuideComponent,
+    ManagerGuideComponent,
+    CommentsPipe,
+    OptionalTranslationMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -245,8 +258,10 @@ import { AddRemoveLanguagesDialogComponent } from './dialogs/add-remove-language
     MatTabsModule,
     NgxChartsModule,
     NgxInfiniteScrollerModule,
+    InfiniteScrollModule,
+    MentionModule,
     InfiniteScrollModule
-   
+
   ],
   entryComponents: [
     LoginDialogComponent,

@@ -31,16 +31,16 @@ notifications:
     on_build_success: true
     on_build_failure: true
     on_build_status_changed: true
-deploy:
-  - provider: WebDeploy
-    server:
-      secure: zch084bYYMjr0naE0/aKSkLsWQ8z6qV69JF9oRPEAOBjuHPOmveznq71pdM1fKuz1BNsf7ZfSkM309/AehGYmhhj1iWe0Glu0exjAIlLqbs=
-    website:
-      secure: YLtSO680AhtWb+z0OQHmfA==
-    username:
-      secure: Ea6MTSea5LnvA3+mky63Ww==
-    password:
-      secure: VFzIPoXztNfAKYa9dkJlOKX+6o38oWLUrJaJZj7C6anrji3bda5YbotHItCwnxBjdLSuxT65QuiYjbnUhfWXHQ==
-    remove_files: true
-    app_offline: true
-    artifact: api    
+# deploy:
+#   - provider: WebDeploy
+#     server:
+#       secure: zch084bYYMjr0naE0/aKSkLsWQ8z6qV69JF9oRPEAOBjuHPOmveznq71pdM1fKuz1BNsf7ZfSkM309/AehGYmhhj1iWe0Glu0exjAIlLqbs=
+#     website:
+#       secure: YLtSO680AhtWb+z0OQHmfA==
+#     username:
+#       secure: Ea6MTSea5LnvA3+mky63Ww==
+#     password:
+#       secure: VFzIPoXztNfAKYa9dkJlOKX+6o38oWLUrJaJZj7C6anrji3bda5YbotHItCwnxBjdLSuxT65QuiYjbnUhfWXHQ==
+#     remove_files: true
+#     app_offline: true
+#     artifact: api    

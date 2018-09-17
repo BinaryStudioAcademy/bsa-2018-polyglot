@@ -15,6 +15,8 @@ export class ProjectActivitiesComponent implements OnInit {
     from: Date;
     to: Date;
     filterUserName: string;
+    IsLoad: boolean = true;
+
     constructor(private projectService: ProjectService) {}
 
     ngOnInit() {
@@ -23,6 +25,7 @@ export class ProjectActivitiesComponent implements OnInit {
             .subscribe(data => {
                 this.allActivities = Object.assign([], data);
                 this.filteredActivities = Object.assign([], data);
+                this.IsLoad = false;
             });
     }
 

@@ -15,7 +15,7 @@ export class FooterComponent implements OnInit {
   }
 
   onLogoutClick() {
-    this.authService.logout();
+    this.authService.logout().subscribe(() => {});
   }
 
   isLoggedIn() {

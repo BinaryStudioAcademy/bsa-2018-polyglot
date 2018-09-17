@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
+import { MatTableDataSource, MatPaginator, MatDialog, MatMenuTrigger } from "@angular/material";
 import { ComplexStringService } from "../../../services/complex-string.service";
 import { Language, Translation, Role } from "../../../models";
 import { SnotifyService } from "ng-snotify";
@@ -20,11 +20,14 @@ import { EventService } from "../../../services/event.service";
 import { Comment } from "../../../models/comment";
 import { UserService } from "../../../services/user.service";
 import { Hub } from "../../../models/signalrModels/hub";
+import { RightService } from "../../../services/right.service";
+import { RightDefinition } from "../../../models/rightDefinition";
 
 @Component({
     selector: "app-workspace-key-details",
     templateUrl: "./key-details.component.html",
-    styleUrls: ["./key-details.component.sass"]
+    styleUrls: ["./key-details.component.sass"],
+    encapsulation: ViewEncapsulation.None
 })
 export class KeyDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator)
@@ -34,6 +37,11 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     hideHistory() { this.history.hideHistory(); }
     @ViewChild(TabOptionalComponent)
     optional: TabOptionalComponent;
+
+   
+    
+
+    hideOptional() { this.optional.hideOptional() }
 
     public keyDetails: any;
     public translationsDataSource: MatTableDataSource<any>;
@@ -73,7 +81,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     private signalRConnection;
     glossaryWords: any[] = [];
     divHidden: boolean;
-
+    rights: RightDefinition[];
     users: UserProfilePrev[] = [];
     currentUserId: number;
     selectedIndex = 0;
@@ -89,9 +97,10 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         private service: TranslationService,
         private projectService: ProjectService,
         private translatorsService: ProjecttranslatorsService,
-        private userService: UserService) {
+        private userService: UserService,
+        private rightService: RightService) {
         eventService.listen().subscribe((data: any) => {
-            if (data=="reload") {
+            if (data == "reload") {
                 this.reloadKeyDetails(this.currentKeyId);
             }
         });
@@ -101,7 +110,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         this.refresh();
     }
 
-    refresh(){
+    refresh() {
         this.dataIsLoaded = true;
         this.isMachineTranslation = false;
         this.currentUserId = this.appState.currentDatabaseUser.id;
@@ -112,6 +121,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 this.isLoad = false;
                 this.keyDetails = data;
                 this.projectId = this.keyDetails.projectId;
+                this.rightService.getUserRightsInProject(this.projectId).subscribe((rights)=>{
+                    this.rights = rights;
+                });
                 this.translatorsService.getById(this.projectId).subscribe((data: UserProfilePrev[]) => {
                     this.users = data;
                 });
@@ -209,9 +221,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                                         response.senderFullName
                                     );
                                     this.history.showHistory(this.currentKeyId, this.keyDetails.translations[this.index].id);
-                                    this.expandedArray[this.index].oldValue=translations[this.index].translationValue;
-                                    if(this.expandedArray[this.index].isOpened===false)
-                                    {
+                                    this.expandedArray[this.index].oldValue = translations[this.index].translationValue;
+                                    if (this.expandedArray[this.index].isOpened === false) {
                                         this.history.translationSelected = false;
                                     }
                                 }
@@ -256,6 +267,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             )
                         };
                         this.languages = this.appState.getWorkspaceState.languages;
+                        if (!this.languages.length)
+                        this.isEmpty=true;
                         this.keyDetails.translations = this.keyDetails.translations.filter(
                             t => t.languageId !== removedLanguageId
                         );
@@ -268,8 +281,6 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             }
         );
 
-
-
         this.signalRConnection.on(
             SignalrSubscribeActions[SignalrSubscribeActions.languagesAdded],
             (response: any) => {
@@ -281,12 +292,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     onTextChange(i) {
-        let words =  this.translationInputs.item(i).value.split(' ');
+        let words = this.translationInputs.item(i).value.split(' ');
         let result = '';
         for (let i = 0; i < words.length; i++) {
             for (let j = 0; j < this.glossaryWords.length; j++) {
                 if (words[i].toLowerCase() === this.glossaryWords[j].termText.toLowerCase()) {
-                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
+                    words[i] = '<div style="display: inline; background: #fffa6b; border-radius: 10%; pointer-events: auto;" class="child">' + words[i] + '<span style="position: absolute; display: inline-block; visibility: hidden; color: #6600cc; z-index: 5; background-color: #cce6ff;">' + this.glossaryWords[j].explanationText + '</span></div>';
                 }
             }
             if (words[i] === '') {
@@ -300,15 +311,15 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.translationDivs.item(i).innerHTML = result;
 
-        let glosWords: any =  document.querySelectorAll('.child');
+        let glosWords: any = document.querySelectorAll('.child');
         for (let n = 0; n < glosWords.length; n++) {
-            glosWords[n].addEventListener('mouseover', function(e) {
+            glosWords[n].addEventListener('mouseover', function (e) {
                 let chil: any = glosWords[n].children[0];
                 chil.style.top = `${glosWords[n].offsetTop - 17}px`;
                 chil.style.left = `${glosWords[n].offsetLeft}px`;
-                chil.style.visibility = 'visible';           
+                chil.style.visibility = 'visible';
             });
-            glosWords[n].addEventListener('mouseout', function(e) {
+            glosWords[n].addEventListener('mouseout', function (e) {
                 let chil: any = glosWords[n].children[0];
                 chil.style.visibility = 'hidden';
             });
@@ -322,25 +333,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     setPosition(i) {
-        let position;
-        switch (i) {
-            case 0:
-                position = '38px';
-                break;
-            case 1:
-                position = '86px';
-                break;
-            case 2:
-                position = '134px';
-                break;
-            case 3:
-                position = '182px';
-                break;
-            case 4:
-                position = '230px';
-                break;
-        }
-        return position;
+        return `${38 + i * 48}px`;
     }
 
     handleNewLanguagesAdded(languagesIds) {
@@ -376,7 +369,13 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                         };
                     })
                 );
-                this.isLoad = false;
+                this.isLoad = true;
+                this.isEmpty = false;
+                this.snotifyService.info(
+                    `Some new languages were added to project`,
+                    "Language added"
+                );
+                
             },
             err => {
                 this.snotifyService.error("Languages update failed", "Error");
@@ -433,13 +432,20 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     setStep(index: number) {
         this.divHidden = false;
+        this.translationDivs.item(index).style.width = `${this.translationInputs.item(index).clientWidth}px`;
+        let textarea: any = document.querySelectorAll('.textarea-translation').item(index);
+        textarea.style.width = `${this.translationInputs.item(index).clientWidth}px`;
+        this.eventService.filter({
+            isEditing: true
+        });
         this.onTextChange(index);
         this.index = index;
         this.eventService.filter({
-                keyId: this.currentKeyId,
-                status: true
-            });
-        this.history.translationSelected=true;
+            keyId: this.currentKeyId,
+            status: true
+        });
+        this.history.translationSelected = true;
+        this.optional.translationSelected = true;
         if (index === undefined) {
             return;
         }
@@ -485,13 +491,17 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     getLanguages() {
-        if (
-            !this.appState.getWorkspaceState ||
-            !this.appState.getWorkspaceState.languages
-        )
+        if (!this.appState.getWorkspaceState || !this.appState.getWorkspaceState.languages) {
+            
             return;
+        }
+
 
         this.languages = this.appState.getWorkspaceState.languages;
+        if (!this.languages.length) {
+            this.isEmpty = true;
+            return;
+        }
 
         const temp = this.languages.length;
         this.expandedArray = new Array();
@@ -505,9 +515,12 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 languageId: element.id,
                 languageCode: element.code,
                 ...this.getProp(element.id)
+
             };
+
         });
         this.isLoad = true;
+
     }
 
     getProp(id: number) {
@@ -526,6 +539,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
 
     onSave(index: number, t: any) {
+        this.eventService.filter({
+            isEditing: false
+        });
         this.eventService.filter({
             keyId: this.currentKeyId,
             status: false
@@ -561,6 +577,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             oldValue: ""
                         };
                         this.hideHistory();
+
                         this.optional.showOptional(
                             this.currentKeyId,
                             this.keyDetails.translations[index].id
@@ -581,7 +598,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                             isOpened: false,
                             oldValue: ""
                         };
-                        this.keyDetails.translations[index].history=d.history;
+                        this.keyDetails.translations[index].history = d.history;
                         this.hideHistory();
                         this.optional.showOptional(
                             this.currentKeyId,
@@ -596,6 +613,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     }
     onClose(index: number, translation: any) {
         this.eventService.filter({
+            isEditing: false
+        });
+        this.eventService.filter({
             keyId: this.currentKeyId,
             status: false
         });
@@ -605,6 +625,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             this.expandedArray[index].isOpened = false;
             this.currentTranslation = "";
             this.hideHistory();
+            this.hideOptional();
             return;
         }
         const dialogRef = this.dialog.open(SaveStringConfirmComponent, {
@@ -629,6 +650,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
                 ].translationValue = this.expandedArray[index].oldValue;
                 this.expandedArray[index] = { isOpened: false, oldValue: "" };
                 this.hideHistory();
+                this.hideOptional();
                 if (this.isMachineTranslation) {
                     this.keyDetails.translations[
                         index
@@ -662,7 +684,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
         this.keyDetails.translations[$event.keyId].translationValue =
             $event.translation;
-        
+
         this.translationInputs[$event.keyId].value = $event.translation;
         this.setStep($event.keyId);
     }
@@ -737,19 +759,16 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
             .subscribe(
                 res => {
                     this.snotifyService.success("Your suggestion was added");
-                    this.optional.showOptional(
-                        this.currentKeyId,
-                        this.keyDetails.translations[index].id
-                    );
                 },
                 err => {
                     this.snotifyService.error("Your suggestion wasn`t added");
                 }
             );
         this.currentSuggestion = "";
+        
     }
-    
-    public onConfirm(translation: Translation){
+
+    public onConfirm(translation: Translation) {
         this.dataProvider.confirmTranslation(translation, this.keyDetails.id).subscribe(
             res => {
                 this.refresh();
@@ -763,7 +782,7 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         )
     }
 
-    public onUnConfirm(translation: Translation){
+    public onUnConfirm(translation: Translation) {
         this.dataProvider.unConfirmTranslation(translation, this.keyDetails.id).subscribe(
             res => {
                 this.refresh();
@@ -777,12 +796,34 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
         )
     }
 
-    public canBeConfirmed(translation: Translation){
-        return translation.id && !translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    public canBeConfirmed(translation: Translation) {
+        if(translation.id && !translation.isConfirmed && translation.translationValue){
+            if(this.userService.getCurrentUser().userRole === Role.Manager){
+                return true;
+            }
+            if(this.rights){
+                return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 
-    public canUnBeConfirmed(translation: Translation){
-        return translation.id && translation.isConfirmed && this.userService.getCurrentUser().userRole === Role.Manager;
+    public canUnBeConfirmed(translation: Translation) {
+        if(translation.id && translation.isConfirmed){
+            if(this.userService.getCurrentUser().userRole === Role.Manager){
+                return true;
+            }
+            if(this.rights){
+                return this.rights.includes(RightDefinition.CanAcceptTranslations);
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 
 
@@ -803,6 +844,8 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
     //     return result || !this.users.length;
     // }
 
+
+    
 
     reloadKeyDetails(index) {
         this.dataIsLoaded = true;
@@ -884,5 +927,9 @@ export class KeyDetailsComponent implements OnInit, AfterViewInit {
 
     selectTab(index: number): void {
         this.selectedIndex = index;
+    }
+
+    canNotAssign() : boolean{
+        return !this.users.length
     }
 }
