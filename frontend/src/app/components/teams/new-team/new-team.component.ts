@@ -24,6 +24,7 @@ export class NewTeamComponent implements OnInit {
     IsLoad: boolean = true;
     allTranslators: Translator[] = [];
     teamTranslators: Translator[] = [];
+    translatorsRefresh: Translator[] = [];
     public defaultAvatar: String = "/assets/images/anonymus.jpg"
     public name: string;
     // displayedColumns = ['id', 'name', 'rating', 'language', 'action'];
@@ -31,6 +32,7 @@ export class NewTeamComponent implements OnInit {
 
     public selectedTranslators: Array<any> = [];
     disabled: boolean = true;
+    selected = 'Elementary';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -78,6 +80,7 @@ export class NewTeamComponent implements OnInit {
                 this.IsLoad = false;
                 if (translators && translators.length > 0) {
                     this.allTranslators = translators;
+                    this.translatorsRefresh = this.allTranslators;
                 }
                 else {
                     this.allTranslators = [];
@@ -149,6 +152,8 @@ export class NewTeamComponent implements OnInit {
         return Proficiency[prof];
     }
 
+    
+
     selectLanguages(): void {
         let dialogRef = this.dialog.open(SelectProjectLanguageComponent, {
             data: {
@@ -178,8 +183,15 @@ export class NewTeamComponent implements OnInit {
                     this.allTranslators = d.map(x => Object.assign({}, x));
                 },
                 err => {
+                    
                     this.snotifyService.error("Translators wasn`t loaded", "Error!");
                 });
+    }
+
+    clearFilter() {
+        this.selectedLanguages = [];
+        this.selected = "Beginner";
+        this.allTranslators = this.translatorsRefresh;
     }
 }
 

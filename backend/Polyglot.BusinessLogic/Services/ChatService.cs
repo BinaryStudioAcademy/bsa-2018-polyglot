@@ -16,6 +16,7 @@ using Polyglot.BusinessLogic.Interfaces.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Polyglot.DataAccess.Entities.Chat;
 using Polyglot.Core.SignalR.Responses;
+using Polyglot.BusinessLogic.Hubs;
 using Polyglot.Common.Helpers.SignalR;
 
 namespace Polyglot.BusinessLogic.Services
@@ -95,7 +96,7 @@ namespace Polyglot.BusinessLogic.Services
                 case ChatGroup.dialog:
                 case ChatGroup.direct:
                     {
-                        dialogIdentifer = currentUser.Id + targetGroupDialogId;
+                        dialogIdentifer = currentUser.GetHashCode() + targetGroupDialogId;
                         break;
                     }
                 case ChatGroup.chatProject:
@@ -202,9 +203,10 @@ namespace Polyglot.BusinessLogic.Services
             return targetDialog != null ? mapper.Map<ChatMessageDTO>(message) : null;
         }
 
-        public Task<ChatUserStateDTO> GetUserStateAsync(int userId)
+        public async Task<ChatUserStateDTO> GetUserStateAsync(int id)
         {
-            throw new NotImplementedException();
+            var state = await uow.GetRepository<UserState>().GetAsync(id);
+            return state != null ? mapper.Map<ChatUserStateDTO>(state) : null;
         }
         
         public async Task<ChatDialogDTO> CreateDialog(ChatDialogDTO dialog)
@@ -217,7 +219,7 @@ namespace Polyglot.BusinessLogic.Services
             if (currentUser == null)
                 return null;
 
-            var targetIdentifier = dialog.Participants.Sum(p => p.Id) + currentUser.Id;
+            var targetIdentifier = dialog.Participants.Sum(p => p.GetHashCode()) + currentUser.GetHashCode();
             var d = await uow.GetRepository<ChatDialog>()
                 .GetAsync(dd => dd.Identifier == targetIdentifier && dd.DialogType == ChatGroup.dialog);
 
@@ -324,13 +326,13 @@ namespace Polyglot.BusinessLogic.Services
                     }
 
                     var r = await uow.SaveAsync();
-                    int currentUserid = (await currentUser.GetCurrentUserProfile()).Id;
-                    await signalRNavigationService.NumberOfMessagesChanges($"{Group.notification.ToString()}{currentUserId}", await this.GetNumberOfUnreadMessages((int)currentUserId));
                 }
+                int currentUserid = (await currentUser.GetCurrentUserProfile()).Id;
+                await signalRNavigationService.NumberOfMessagesChanges($"{Group.notification.ToString()}{currentUserid}", await this.GetNumberOfUnreadMessages((int)currentUserid));
             }
         }
 
-        public async Task ChangeUserStatus(string targetUserUid, bool isOnline)
+        public async Task<int> ChangeUserStatus(string targetUserUid, bool isOnline)
         {
             var targetUserState = await uow.GetRepository<UserState>().GetAsync(u => string.Equals(u.ChatUser.Uid, targetUserUid));
             if(targetUserState != null)
@@ -353,8 +355,10 @@ namespace Polyglot.BusinessLogic.Services
                     await uow.GetRepository<UserState>().CreateAsync(targetUserState);
                 }
             }
-#warning разослать уведомление
             await uow.SaveAsync();
+            await NotifyChatUsers(targetUserState);
+
+            return targetUserState.ChatUserId;
         }
 
         public async Task<int> GetNumberOfUnreadMessages(int userId)
@@ -377,23 +381,60 @@ namespace Polyglot.BusinessLogic.Services
 
         #region Private members
 
+        private async Task NotifyChatUsers(UserState newUserState)
+        {
+            var onlineUsersIds = ChatHub.ConnectedUsers.Values.Where(v => v != newUserState.ChatUserId);
+            if(onlineUsersIds.Count() < 1)
+            {
+                return;
+            }
+
+            var targetUsersIds = (await uow.GetRepository<ChatDialog>()
+                .GetAllAsync())
+                .SelectMany(d => d.DialogParticipants)
+                .Select(dp => dp.ParticipantId.Value)
+                .GroupBy(k => k)
+                .Select(p => p.Key)
+                .Where(p => onlineUsersIds.Contains(p));
+
+            foreach (var id in targetUsersIds)
+            {
+                await signalRChatService.UserStateUpdated(id, newUserState.Id);
+            }
+        }
+
         private void FormGroupDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {
             List<ChatDialogDTO> result = dest;
+            var rep = uow.GetRepository<UserState>();
             result.ForEach(d =>
             {
                 var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
                 d.UnreadMessagesCount = accordingSourceDialog.Messages
                         .Where(m => m.SenderId != currentUser.Id && !m.IsRead)
                         .Count();
+                d.Participants.ToList().ForEach((u) => Task.WaitAll(FormUser(u)));
             });
+
+            async Task FormUser(ChatUserDTO user)
+            {
+                var userState = await rep.GetAsync(s => s.ChatUserId == user.Id);
+                if(userState != null)
+                {
+                    user.IsOnline = userState.IsOnline;
+                    user.LastSeen = userState.LastSeen;
+                }
+            }
         }
 
         private void FormUserDialogs(List<ChatDialog> src, List<ChatDialogDTO> dest, UserProfile currentUser)
         {
             List<ChatDialogDTO> result = dest;
             string lastMessage;
-            result.ForEach(d =>
+            var rep = uow.GetRepository<UserState>();
+            result.ForEach((dd) => Task.WaitAll(FormInterlocutor(dd)));
+            
+            async Task FormInterlocutor(ChatDialogDTO d)
             {
                 var accordingSourceDialog = src.Find(dialog => dialog.Id == d.Id);
                 var interlocator = accordingSourceDialog
@@ -407,7 +448,7 @@ namespace Polyglot.BusinessLogic.Services
                     lastMessage = accordingSourceDialog
                         .Messages.LastOrDefault(m => m.SenderId == interlocator.Id)
                         ?.Body;
-                    d.LastMessageText = lastMessage != null ? lastMessage : ""; 
+                    d.LastMessageText = lastMessage != null ? lastMessage : "";
 
                     if (d.LastMessageText.Length > 155)
                     {
@@ -418,12 +459,22 @@ namespace Polyglot.BusinessLogic.Services
                         .Where(m => m.SenderId == interlocator.Id && !m.IsRead)
                         .Count();
 
+                    var userState = await rep.GetAsync(s => s.ChatUserId == interlocator.Id);
                     d.Participants = new List<ChatUserDTO>()
                     {
-                        mapper.Map<ChatUserDTO>(interlocator)
+                        mapper.Map<ChatUserDTO>(interlocator, opt => opt.AfterMap((src1, dest1) => {
+
+                            if(userState != null)
+                            {
+                                var dd = (ChatUserDTO)dest1;
+                                dd.IsOnline = userState.IsOnline;
+                                dd.LastSeen = userState.LastSeen;
+                            }
+
+                            }))
                     };
                 }
-            });
+            }
         }
 
         

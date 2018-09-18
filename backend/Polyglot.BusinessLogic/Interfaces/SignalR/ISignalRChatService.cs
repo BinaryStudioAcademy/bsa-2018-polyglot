@@ -9,5 +9,7 @@ namespace Polyglot.BusinessLogic.Interfaces.SignalR
         // не работает из-за currentUser == null
         //Task MessageReveived(string groupName, int dialogId, int messageId, string messageText);
         Task MessageReveived(string groupName, ChatMessageResponce data);
+
+        Task UserStateUpdated(int userId, int userStateId);
     }
 }

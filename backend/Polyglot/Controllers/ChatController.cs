@@ -126,6 +126,15 @@ namespace Polyglot.Controllers
             return d == null ? StatusCode(409) as IActionResult
                 : Ok(d);
         }
+        
+        // GET: /chat/users/:id/state
+        [HttpGet("users/{id}/state")]
+        public async Task<IActionResult> GetUserState(int id)
+        {
+            var userState = await chatService.GetUserStateAsync(id);
+            return userState == null ? NotFound("User state not found!") as IActionResult
+                : Ok(userState);
+        }
 
         //POST: /chat/getNumberOfUnread
         [HttpGet("getNumberOfUnread")]

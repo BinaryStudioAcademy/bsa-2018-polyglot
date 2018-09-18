@@ -94,12 +94,13 @@ namespace Polyglot.Controllers
 
         // PUT: UserProfiles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyTranslatorRight(int id, [FromBody]UserProfileDTO project)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody]UserProfileDTO user)
         {
             if (!ModelState.IsValid)
                 return BadRequest() as IActionResult;
+                      
+            var entity = await service.PutAsync(user);
 
-            var entity = await service.PutAsync(project);
             return entity == null ? StatusCode(304) as IActionResult
                 : Ok(entity);
         }
@@ -154,7 +155,7 @@ namespace Polyglot.Controllers
                     await photo.CopyToAsync(ms);
                     byteArr = ms.ToArray();
                 }
-                
+
                 currentUser.AvatarUrl = await fileStorageProvider.UploadFileAsync(byteArr, FileType.Photo, Path.GetExtension(photo.FileName));
                 var result = await service.PutUserBool(currentUser);
 
@@ -162,7 +163,7 @@ namespace Polyglot.Controllers
                     ? StatusCode(400) as IActionResult
                     : Ok(currentUser);
             }
-            
+
             return BadRequest();
         }
 

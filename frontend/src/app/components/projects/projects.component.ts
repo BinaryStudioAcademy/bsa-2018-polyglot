@@ -53,8 +53,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             if (pr) {
                 this.cards = pr;
                 this.cards.sort((a: Project, b: Project) => {
-                    if (a.priority > b.priority) return -1;
-                    if (a.priority < b.priority) return 1;
+                    if (a.priority < b.priority) return -1;
+                    if (a.priority > b.priority) return 1;
                     return 0;
                 });
 
@@ -102,9 +102,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     increasePriority(projectId: number) {
-        debugger;
         this.projectService.increasePriority(projectId).subscribe((a) => {
-            debugger;
         });
     }
 }

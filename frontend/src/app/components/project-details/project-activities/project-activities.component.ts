@@ -25,7 +25,6 @@ export class ProjectActivitiesComponent implements OnInit {
             .subscribe(data => {
                 this.allActivities = Object.assign([], data);
                 this.filteredActivities = Object.assign([], data);
-                debugger;
                 this.IsLoad = false;
             });
     }

@@ -92,6 +92,7 @@ export class UserSettingsComponent implements OnInit {
   saveChanges(userProfile : UserProfile) {
     userProfile.fullName = `${userProfile.firstName} ${userProfile.lastName}`;
     userProfile.avatarUrl = this.manager.avatarUrl;
+    userProfile.registrationDate=this.manager.registrationDate;
     this.userService.update(userProfile.id, userProfile).subscribe(
         (d) => {
             this.appStateService.currentDatabaseUser = d;
