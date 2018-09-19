@@ -6,7 +6,7 @@ branches:
   - master
   - develop
 notifications:
-  slack: academy2018:0hVvpbtAXM1gcBdegKbDII64
+  slack: dzpolyglotworkspace:OF9EVHVnD3Q9thz6IMBsq4KU
 before_script:
 - cd frontend
 - npm install
