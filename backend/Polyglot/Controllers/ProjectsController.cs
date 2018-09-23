@@ -358,9 +358,6 @@ namespace Polyglot.Controllers
                 case ".json":
                     ex = "application/json";
                     break;
-                case ".csv":
-                    ex = "text/csv";
-                    break;
                 default:
                     throw new NotImplementedException();
             }

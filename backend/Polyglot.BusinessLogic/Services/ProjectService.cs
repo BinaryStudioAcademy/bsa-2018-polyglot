@@ -84,22 +84,6 @@ namespace Polyglot.BusinessLogic.Services
                     dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
                     break;
 
-                /*
-                    using (var reader = new StreamReader(file.OpenReadStream()))
-                    {
-                        str = reader.ReadToEnd();
-                    }
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(str);						
-                    XmlElement root = doc.DocumentElement;
-                    XmlNodeList childnodes = root.SelectNodes("*");
-                    foreach (XmlNode n in childnodes)
-                    {							
-                        dictionary[n.Name] = n.InnerXml;
-                    }
-                    break;
-                    */
-
                 case "application/xml":
                 case "application/octet-stream":
 
@@ -112,20 +96,6 @@ namespace Polyglot.BusinessLogic.Services
                     foreach (XElement data in doc.Element("root")?.Elements("data"))
                     {
                         dictionary[data.Attribute("name").Value] = data.Element("value").Value;
-                    }
-                    break;
-
-                case "application/vnd.ms-excel":
-                case "text/csv":
-                    using (var textReader = new StreamReader(file.OpenReadStream()))
-                    using (var reader = new CsvReader(textReader, true))
-                    {
-                        while (reader.HasMoreRecords)
-                        {
-                            var dataRecord = await reader.ReadDataRecordAsync();
-
-                            dictionary[dataRecord[0]] = dataRecord[1];
-                        }
                     }
                     break;
 
@@ -206,16 +176,6 @@ namespace Polyglot.BusinessLogic.Services
                     }
                     string temp = JsonConvert.SerializeObject(myDictionary, Formatting.Indented);
                     arr = Encoding.UTF8.GetBytes(temp);
-                    break;
-
-                case ".csv":
-                    string tempCSV = "";
-                    foreach (var c in targetStrings)
-                    {
-                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
-                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\",\"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
-                    }
-                    arr = Encoding.UTF8.GetBytes(tempCSV);
                     break;
 
                 default:
