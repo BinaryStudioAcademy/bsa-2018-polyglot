@@ -14,6 +14,7 @@ namespace Polyglot.BusinessLogic.Interfaces
         Task<IEnumerable<ActivityDTO>> GetAllActivitiesByProjectId(int id);
 
         Task<byte[]> GetFile(int id, int languageId, string format);
+		Task<byte[]> GetFullLocal(int id, string format);
 
         Task IncreasePriority(int projectId);
 

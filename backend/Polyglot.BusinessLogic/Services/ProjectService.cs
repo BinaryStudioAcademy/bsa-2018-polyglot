@@ -186,6 +186,12 @@ namespace Polyglot.BusinessLogic.Services
             return arr;
 
         }
+
+		public async Task<byte[]> GetFullLocal(int id, string format)
+		{
+
+			return null;
+		}
         
         public async Task IncreasePriority(int projectId)
         {

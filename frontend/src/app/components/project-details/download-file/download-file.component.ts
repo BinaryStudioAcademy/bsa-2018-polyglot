@@ -40,5 +40,10 @@ export class DownloadFileComponent implements OnInit {
 
     downloadFullLocal() {
         // Create new method
+        this.projectService.getProjectLocal(this.project.id, this.selectedFormat)
+            .subscribe((data) => {
+                debugger;
+                //
+            });
     }
 }
