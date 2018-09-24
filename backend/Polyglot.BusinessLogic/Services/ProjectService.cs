@@ -189,8 +189,56 @@ namespace Polyglot.BusinessLogic.Services
 
 		public async Task<byte[]> GetFullLocal(int id, string format)
 		{
+			Export export = new Export();
 
-			return null;
+			Project targetProject = await uow.GetRepository<Project>().GetAsync(id);
+			List<Language> targetLanguages = targetProject.ProjectLanguageses.Select(pl => pl.Language).ToList();
+			List<ComplexString> targetStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+			byte[] arr = null;
+
+			// filling metadata
+			export.MetaData = new FileMetaDTO()
+			{
+				Project = targetProject.Name,
+				Description = targetProject.Description,
+				Owner = targetProject.UserProfile.FullName,
+				SupportedLanguages = targetLanguages.Select(l => l.Name.ToLower()).ToList(),
+				Updated = DateTime.Now.ToString(),
+				Translators = new List<string>()				
+			};
+			
+
+			// taking translations			
+			foreach (var language in targetLanguages)
+			{
+				Dictionary<string, string> records = new Dictionary<string, string>();
+				foreach (var c in targetStrings)
+				{
+					var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
+
+					if (translation != null)
+					{
+						records.Add(c.Key, translation.TranslationValue);
+						export.MetaData.Translators.Add(
+							(await uow.GetRepository<UserProfile>().GetAsync(translation.UserId))
+							.FullName);
+					}
+					else
+					{
+						records.Add(c.Key, c.OriginalValue);
+					}
+				}
+				export.Locales.Add(language.Name.ToLower(), records);
+			}
+
+			export.MetaData.Translators = export.MetaData.Translators.Distinct().ToList();
+
+			string file = JsonConvert.SerializeObject(export, Formatting.Indented);
+			arr = Encoding.UTF8.GetBytes(file);
+		
+			
+
+			return arr;
 		}
         
         public async Task IncreasePriority(int projectId)

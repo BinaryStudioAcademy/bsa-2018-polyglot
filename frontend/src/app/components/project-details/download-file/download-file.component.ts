@@ -43,7 +43,11 @@ export class DownloadFileComponent implements OnInit {
         this.projectService.getProjectLocal(this.project.id, this.selectedFormat)
             .subscribe((data) => {
                 debugger;
-                //
+
+                saveAs(data, `${this.project.name}${this.selectedFormat}`);
+                this.snotifyService.success("File Downloaded", "Success!");
+            }, err => {
+                this.snotifyService.error("File wasn`t downloaded", "Error!");
             });
     }
 }
