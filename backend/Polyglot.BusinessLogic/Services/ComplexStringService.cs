@@ -311,6 +311,13 @@ namespace Polyglot.BusinessLogic.Services
 
         public async Task<ComplexStringDTO> AddComplexString(ComplexStringDTO entity)
         {
+			var strings = await _unitOfWork.GetRepository<DataAccess.Entities.ComplexString>().GetAllAsync(x => x.ProjectId == entity.ProjectId);
+			if (strings.Where(x => x.TranslationKey == entity.Key).Count() > 0)
+			{
+				throw new Exception();
+			}
+
+
             var sqlComplexString = new Polyglot.DataAccess.Entities.ComplexString
             {
                 TranslationKey = entity.Key,

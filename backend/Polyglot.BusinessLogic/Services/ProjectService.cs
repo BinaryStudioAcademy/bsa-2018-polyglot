@@ -103,8 +103,16 @@ namespace Polyglot.BusinessLogic.Services
                     throw new NotImplementedException();
             }
 
-            foreach (var i in dictionary)
+			var projectStrings = await uow.GetRepository<DataAccess.Entities.ComplexString>().GetAllAsync(p => p.ProjectId == id);
+
+			foreach (var i in dictionary)
             {
+				if(projectStrings.Where(x => x.TranslationKey == i.Key).Count() > 0)
+				{
+					throw new Exception();
+				}
+				
+
                 var sqlComplexString = new DataAccess.Entities.ComplexString()
                 {
                     TranslationKey = i.Key,
