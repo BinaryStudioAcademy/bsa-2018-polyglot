@@ -1,7 +1,7 @@
 <div class="container">
   <h3>You can also export all your translations</h3>
-  <p>Just select language and file extension and click <strong>Download</strong></p>
-  <p>(For this moment we work only with .json, .resx and .csv)</p> 
+  <p>(For this moment we work only with .json and .resx)</p> 
+  <p>Just select language and file extension and click <strong>Download</strong></p> 
   <mat-form-field>
     <mat-select class="mat-select" placeholder="Language" [(ngModel)]="selectedLanguage">
       <mat-option *ngFor="let l of languages" [value]="l">
@@ -19,6 +19,17 @@
   </div>
 
   <button (click)="download()" mat-flat-button color="primary" [disabled]="!selectedFormat || !selectedLanguage">
+    Download
+  </button>
+
+  <p>
+    Or you can download all localizations in one file.
+  </p>
+  <p>
+   Such files are ready to be connected to your Web App.
+  </p>
+
+  <button (click)="downloadFullLocal()" mat-flat-button color="primary" [disabled]="!selectedFormat">
     Download
   </button>
 

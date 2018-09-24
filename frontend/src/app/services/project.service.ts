@@ -111,6 +111,11 @@ getProjectLanguageStatistic(projectId: number, langId: number) : Observable<Lang
                   '?langId=' + languageId + '&extension=' + extension, undefined, 'blob', 'form-data');
   }
 
+  getProjectLocal(projectId: number, extension: string) : Observable<any> {
+    return this.dataService.sendRequest(RequestMethod.Get, this.api + '/' + projectId + '/fullexport/',
+                  '?extension=' + extension, undefined, 'blob', 'form-data');
+  }
+
   getProjectStringsByFilter(projectId: number,options: Array<string>) : Observable<any> {
     return this.dataService.sendRequest(RequestMethod.Post, this.api + '/' + projectId + '/filteredstring', undefined, options);
   }
