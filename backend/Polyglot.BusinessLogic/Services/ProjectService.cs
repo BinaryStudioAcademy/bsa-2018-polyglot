@@ -190,6 +190,7 @@ namespace Polyglot.BusinessLogic.Services
 		public async Task<byte[]> GetFullLocal(int id, string format)
 		{
 			Export export = new Export();
+			string file;
 
 			Project targetProject = await uow.GetRepository<Project>().GetAsync(id);
 			List<Language> targetLanguages = targetProject.ProjectLanguageses.Select(pl => pl.Language).ToList();
@@ -207,34 +208,82 @@ namespace Polyglot.BusinessLogic.Services
 				Translators = new List<string>(),
 				Source = "Polyglot.net"
 			};
-			
 
-			// taking translations			
-			foreach (var language in targetLanguages)
+
+
+			switch (format)
 			{
-				Dictionary<string, string> records = new Dictionary<string, string>();
-				foreach (var c in targetStrings)
-				{
-					var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
+				case ".json":
+					foreach (var language in targetLanguages)
+					{
+						Dictionary<string, string> records = new Dictionary<string, string>();
+						foreach (var c in targetStrings)
+						{
+							var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
 
-					if (translation != null)
-					{
-						records.Add(c.Key, translation.TranslationValue);
-						export.MetaData.Translators.Add(
-							(await uow.GetRepository<UserProfile>().GetAsync(translation.UserId))
-							.FullName);
+							if (translation != null)
+							{
+								records.Add(c.Key, translation.TranslationValue);
+								export.MetaData.Translators.Add(
+									(await uow.GetRepository<UserProfile>().GetAsync(translation.UserId))
+									.FullName);
+							}
+							else
+							{
+								records.Add(c.Key, c.OriginalValue);
+							}
+						}
+						export.Locales.Add(language.Name.ToLower(), records);
 					}
-					else
+					export.MetaData.Translators = export.MetaData.Translators.Distinct().ToList();
+					file = JsonConvert.SerializeObject(export, Formatting.Indented);
+					break;
+
+				case ".resx":
+					XDocument xdoc = new XDocument();
+					XElement root = new XElement("root");
+
+					foreach(var language in targetLanguages)
 					{
-						records.Add(c.Key, c.OriginalValue);
-					}
-				}
-				export.Locales.Add(language.Name.ToLower(), records);
+						XElement lang = new XElement("language");
+						XAttribute n = new XAttribute("name", language.Name);
+						lang.Add(n);
+
+
+						foreach (var c in targetStrings)
+						{
+							var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
+
+							XElement key = new XElement("data");
+							XAttribute name = new XAttribute("name", c.Key);
+
+							key.Add(name);
+
+							if (translation != null)
+							{								
+								XElement value = new XElement("value", translation.TranslationValue);
+								key.Add(value);
+							}
+							else
+							{
+								XElement value = new XElement("value", c.OriginalValue);
+								key.Add(value);
+							}							
+							lang.Add(key);
+						}
+						root.Add(lang);
+					}					
+					xdoc.Add(root);
+					file = xdoc.ToString();
+					break;
+
+				default:
+					throw new NotImplementedException();
 			}
 
-			export.MetaData.Translators = export.MetaData.Translators.Distinct().ToList();
 
-			string file = JsonConvert.SerializeObject(export, Formatting.Indented);
+			// taking translations			
+			
 			arr = Encoding.UTF8.GetBytes(file);			
 
 			return arr;
