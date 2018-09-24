@@ -204,7 +204,8 @@ namespace Polyglot.BusinessLogic.Services
 				Owner = targetProject.UserProfile.FullName,
 				SupportedLanguages = targetLanguages.Select(l => l.Name.ToLower()).ToList(),
 				Updated = DateTime.Now.ToString(),
-				Translators = new List<string>()				
+				Translators = new List<string>(),
+				Source = "Polyglot.net"
 			};
 			
 
@@ -234,9 +235,7 @@ namespace Polyglot.BusinessLogic.Services
 			export.MetaData.Translators = export.MetaData.Translators.Distinct().ToList();
 
 			string file = JsonConvert.SerializeObject(export, Formatting.Indented);
-			arr = Encoding.UTF8.GetBytes(file);
-		
-			
+			arr = Encoding.UTF8.GetBytes(file);			
 
 			return arr;
 		}
