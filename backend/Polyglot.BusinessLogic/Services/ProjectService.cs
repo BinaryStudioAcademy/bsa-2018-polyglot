@@ -795,6 +795,49 @@ namespace Polyglot.BusinessLogic.Services
 							)						
 						)							
 					);
+
+				#region elasticSearch test
+				/*
+				SearchRequest<DataAccess.ElasticsearchModels.ComplexStringIndex> request =
+					new SearchRequest<DataAccess.ElasticsearchModels.ComplexStringIndex>()
+					{
+						Sort = new List<ISort> { new SortField { Field = "CreatedAt", Order = SortOrder.Ascending } },
+						From = page * itemsOnPage,
+						Size = itemsOnPage,
+						Query = new BoolQuery
+						{
+							Must = new QueryContainer[]
+							{
+								new MatchQuery
+								{
+									Field = new Field("ProjectId")
+								},
+								new BoolQuery
+								{
+									MinimumShouldMatch = new MinimumShouldMatch(1),
+									Should = new QueryContainer[]
+									{
+										new MatchQuery
+										{
+											Field = new Field("Key"),
+											Query = search
+										},
+										new MatchQuery
+										{
+											Field = new Field("OriginalValue"),
+											Query = search
+										}
+									}
+								}
+							}
+						}
+					};
+				var result2 = await elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(request);
+				*/
+
+				#endregion
+
+
 				// adding tags to dto`s
 				var models = result.Documents.ToList();
 				var tags = await uow.GetRepository<Tag>().GetAllAsync();
