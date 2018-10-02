@@ -6,7 +6,6 @@ import { ProjectsComponent } from '../../components/projects/projects.component'
 import { TeamsComponent } from '../../components/teams/teams.component';
 import { GlossariesComponent } from '../../components/glossaries/glossaries.component';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
-import { NoFoundComponent } from '../../components/no-found/no-found.component';
 import { LandingComponent } from '../../components/landing/landing.component';
 
 import { AuthGuard } from '../../services/guards/auth-guard.service';
@@ -29,8 +28,9 @@ import { ChatComponent } from '../../components/chat/chat.component';
 import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
 import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
 import { GuidelineComponent } from '../../components/guideline/guideline.component';
-import { InternalserverComponent } from '../../components/errors/internalserver/internalserver.component';
 import { ForbiddenComponent } from '../../components/errors/forbidden/forbidden.component';
+import { NoFoundComponent } from '../../components/errors/no-found/no-found.component';
+import { InternalserverComponent } from '../../components/errors/internalserver/internalserver.component';
 
 
   
@@ -72,9 +72,9 @@ const routes: Routes = [
   { path: 'chat', canActivate: [AuthGuard], component: ChatComponent },
   { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
-  { path: '403', component: ForbiddenComponent},
-  { path: '404', component: NoFoundComponent },
-  { path: '500', component: InternalserverComponent },
+  { path: 'forbidden', component: ForbiddenComponent},
+  { path: 'not-found', component: NoFoundComponent },
+  { path: 'internal-server-error', component: InternalserverComponent },
   { path: '**', redirectTo: '/404' }
 ];
 

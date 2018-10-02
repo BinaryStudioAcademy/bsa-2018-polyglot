@@ -28,7 +28,7 @@ import { TeamsComponent } from "./components/teams/teams.component";
 import { GlossariesComponent } from "./components/glossaries/glossaries.component";
 import { AppRoutingModule } from "./common/app-routing-module/app-routing.module";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
-import { NoFoundComponent } from "./components/no-found/no-found.component";
+import { NoFoundComponent } from "./components/errors/no-found/no-found.component";
 import { LoginDialogComponent } from "./dialogs/login-dialog/login-dialog.component";
 import { SignupDialogComponent } from "./dialogs/signup-dialog/signup-dialog.component";
 import { AppComponent } from "./app.component";
