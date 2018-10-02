@@ -131,6 +131,8 @@ import { TranslatorGuideComponent } from './components/guideline/translator-guid
 import { ManagerGuideComponent } from './components/guideline/manager-guide/manager-guide.component';
 import { CommentsPipe } from './common/pipes/comments.pipe';
 import { OptionalTranslationMenuComponent } from './dialogs/optional-translation-menu/optional-translation-menu.component';
+import { InternalserverComponent } from './components/errors/internalserver/internalserver.component';
+import { ForbiddenComponent } from './components/errors/forbidden/forbidden.component';
 
 
 @NgModule({
@@ -223,7 +225,9 @@ import { OptionalTranslationMenuComponent } from './dialogs/optional-translation
     TranslatorGuideComponent,
     ManagerGuideComponent,
     CommentsPipe,
-    OptionalTranslationMenuComponent
+    OptionalTranslationMenuComponent,
+    InternalserverComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,
