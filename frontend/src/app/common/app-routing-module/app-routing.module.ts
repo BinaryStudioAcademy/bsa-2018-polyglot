@@ -29,6 +29,8 @@ import { ChatComponent } from '../../components/chat/chat.component';
 import { TranslatorGuardService } from '../../services/guards/translator-guard.service';
 import { ChatWindowComponent } from '../../components/chat/chat-window/chat-window.component';
 import { GuidelineComponent } from '../../components/guideline/guideline.component';
+import { InternalserverComponent } from '../../components/errors/internalserver/internalserver.component';
+import { ForbiddenComponent } from '../../components/errors/forbidden/forbidden.component';
 
 
   
@@ -67,14 +69,12 @@ const routes: Routes = [
       }
     ]
   },
-  { 
-    path: 'chat', 
-    canActivate: [AuthGuard], 
-    component: ChatComponent
-  },
+  { path: 'chat', canActivate: [AuthGuard], component: ChatComponent },
   { path: 'user/:userId', canActivate: [AuthGuard], component: UserProfileComponent },
   { path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent },
+  { path: '403', component: ForbiddenComponent},
   { path: '404', component: NoFoundComponent },
+  { path: '500', component: InternalserverComponent },
   { path: '**', redirectTo: '/404' }
 ];
 
