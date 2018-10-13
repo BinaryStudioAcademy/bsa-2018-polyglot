@@ -84,22 +84,6 @@ namespace Polyglot.BusinessLogic.Services
                     dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(str);
                     break;
 
-                /*
-                    using (var reader = new StreamReader(file.OpenReadStream()))
-                    {
-                        str = reader.ReadToEnd();
-                    }
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(str);						
-                    XmlElement root = doc.DocumentElement;
-                    XmlNodeList childnodes = root.SelectNodes("*");
-                    foreach (XmlNode n in childnodes)
-                    {							
-                        dictionary[n.Name] = n.InnerXml;
-                    }
-                    break;
-                    */
-
                 case "application/xml":
                 case "application/octet-stream":
 
@@ -115,26 +99,20 @@ namespace Polyglot.BusinessLogic.Services
                     }
                     break;
 
-                case "application/vnd.ms-excel":
-                case "text/csv":
-                    using (var textReader = new StreamReader(file.OpenReadStream()))
-                    using (var reader = new CsvReader(textReader, true))
-                    {
-                        while (reader.HasMoreRecords)
-                        {
-                            var dataRecord = await reader.ReadDataRecordAsync();
-
-                            dictionary[dataRecord[0]] = dataRecord[1];
-                        }
-                    }
-                    break;
-
                 default:
                     throw new NotImplementedException();
             }
 
-            foreach (var i in dictionary)
+			var projectStrings = await uow.GetRepository<DataAccess.Entities.ComplexString>().GetAllAsync(p => p.ProjectId == id);
+
+			foreach (var i in dictionary)
             {
+				if(projectStrings.Where(x => x.TranslationKey == i.Key).Count() > 0)
+				{
+					throw new Exception();
+				}
+				
+
                 var sqlComplexString = new DataAccess.Entities.ComplexString()
                 {
                     TranslationKey = i.Key,
@@ -208,16 +186,6 @@ namespace Polyglot.BusinessLogic.Services
                     arr = Encoding.UTF8.GetBytes(temp);
                     break;
 
-                case ".csv":
-                    string tempCSV = "";
-                    foreach (var c in targetStrings)
-                    {
-                        if (c.Translations.FirstOrDefault(x => x.LanguageId == languageId) != null)
-                            tempCSV = String.Concat(tempCSV, $"\"{c.Key}\",\"{c.Translations.FirstOrDefault(x => x.LanguageId == languageId).TranslationValue}\"\n");
-                    }
-                    arr = Encoding.UTF8.GetBytes(tempCSV);
-                    break;
-
                 default:
                     throw new NotImplementedException();
 
@@ -226,6 +194,108 @@ namespace Polyglot.BusinessLogic.Services
             return arr;
 
         }
+
+		public async Task<byte[]> GetFullLocal(int id, string format)
+		{
+			Export export = new Export();
+			string file;
+
+			Project targetProject = await uow.GetRepository<Project>().GetAsync(id);
+			List<Language> targetLanguages = targetProject.ProjectLanguageses.Select(pl => pl.Language).ToList();
+			List<ComplexString> targetStrings = await stringsProvider.GetAllAsync(x => x.ProjectId == id);
+			byte[] arr = null;
+
+			// filling metadata
+			export.MetaData = new FileMetaDTO()
+			{
+				Project = targetProject.Name,
+				Description = targetProject.Description,
+				Owner = targetProject.UserProfile.FullName,
+				SupportedLanguages = targetLanguages.Select(l => l.Name.ToLower()).ToList(),
+				Updated = DateTime.Now.ToString(),
+				Translators = new List<string>(),
+				Source = "Polyglot.net"
+			};
+
+
+
+			switch (format)
+			{
+				case ".json":
+					foreach (var language in targetLanguages)
+					{
+						Dictionary<string, string> records = new Dictionary<string, string>();
+						foreach (var c in targetStrings)
+						{
+							var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
+
+							if (translation != null)
+							{
+								records.Add(c.Key, translation.TranslationValue);
+								export.MetaData.Translators.Add(
+									(await uow.GetRepository<UserProfile>().GetAsync(translation.UserId))
+									.FullName);
+							}
+							else
+							{
+								records.Add(c.Key, c.OriginalValue);
+							}
+						}
+						export.Locales.Add(language.Name.ToLower(), records);
+					}
+					export.MetaData.Translators = export.MetaData.Translators.Distinct().ToList();
+					file = JsonConvert.SerializeObject(export, Formatting.Indented);
+					break;
+
+				case ".resx":
+					XDocument xdoc = new XDocument();
+					XElement root = new XElement("root");
+
+					foreach(var language in targetLanguages)
+					{
+						XElement lang = new XElement("language");
+						XAttribute n = new XAttribute("name", language.Name);
+						lang.Add(n);
+
+
+						foreach (var c in targetStrings)
+						{
+							var translation = c.Translations.FirstOrDefault(x => x.LanguageId == language.Id);
+
+							XElement key = new XElement("data");
+							XAttribute name = new XAttribute("name", c.Key);
+
+							key.Add(name);
+
+							if (translation != null)
+							{								
+								XElement value = new XElement("value", translation.TranslationValue);
+								key.Add(value);
+							}
+							else
+							{
+								XElement value = new XElement("value", c.OriginalValue);
+								key.Add(value);
+							}							
+							lang.Add(key);
+						}
+						root.Add(lang);
+					}					
+					xdoc.Add(root);
+					file = xdoc.ToString();
+					break;
+
+				default:
+					throw new NotImplementedException();
+			}
+
+
+			// taking translations			
+			
+			arr = Encoding.UTF8.GetBytes(file);			
+
+			return arr;
+		}
         
         public async Task IncreasePriority(int projectId)
         {
@@ -725,6 +795,49 @@ namespace Polyglot.BusinessLogic.Services
 							)						
 						)							
 					);
+
+				#region elasticSearch test
+				/*
+				SearchRequest<DataAccess.ElasticsearchModels.ComplexStringIndex> request =
+					new SearchRequest<DataAccess.ElasticsearchModels.ComplexStringIndex>()
+					{
+						Sort = new List<ISort> { new SortField { Field = "CreatedAt", Order = SortOrder.Ascending } },
+						From = page * itemsOnPage,
+						Size = itemsOnPage,
+						Query = new BoolQuery
+						{
+							Must = new QueryContainer[]
+							{
+								new MatchQuery
+								{
+									Field = new Field("ProjectId")
+								},
+								new BoolQuery
+								{
+									MinimumShouldMatch = new MinimumShouldMatch(1),
+									Should = new QueryContainer[]
+									{
+										new MatchQuery
+										{
+											Field = new Field("Key"),
+											Query = search
+										},
+										new MatchQuery
+										{
+											Field = new Field("OriginalValue"),
+											Query = search
+										}
+									}
+								}
+							}
+						}
+					};
+				var result2 = await elasticClient.SearchAsync<DataAccess.ElasticsearchModels.ComplexStringIndex>(request);
+				*/
+
+				#endregion
+
+
 				// adding tags to dto`s
 				var models = result.Documents.ToList();
 				var tags = await uow.GetRepository<Tag>().GetAllAsync();

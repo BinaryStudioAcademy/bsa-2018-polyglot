@@ -358,9 +358,6 @@ namespace Polyglot.Controllers
                 case ".json":
                     ex = "application/json";
                     break;
-                case ".csv":
-                    ex = "text/csv";
-                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -369,7 +366,31 @@ namespace Polyglot.Controllers
             return temp;
         }
 
-        [HttpGet("{projectId}/right/{rightDefinition}")]
+		[HttpGet]
+		[Route("{id}/fullexport")]
+		public async Task<IActionResult> GetFullLocal(int id,  string extension)
+		{
+			var test = await service.GetFullLocal(id, extension);
+
+
+			string ex;
+			switch (extension)
+			{
+				case ".resx":
+					ex = "application/xml";
+					break;
+				case ".json":
+					ex = "application/json";
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+
+			var temp = File(test, ex);
+			return temp;
+		}
+
+		[HttpGet("{projectId}/right/{rightDefinition}")]
         public async Task<bool> CheckIfUserCan(int projectId, RightDefinition rightDefinition)
         {
             return await rightService.CheckIfCurrentUserCanInProject(rightDefinition, projectId);
